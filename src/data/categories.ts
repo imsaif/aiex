@@ -47,7 +47,7 @@ const categories: Category[] = [
     description: "Make AI decision-making processes understandable through visualizations and explanations",
     slug: "explainable-ai",
     color: "sky",
-    image: "/images/examples/openai-human-feedback.png"
+    image: "/images/examples/claudethinking.gif"
   },
   {
     id: "adaptive-interfaces",
@@ -63,7 +63,7 @@ const categories: Category[] = [
     description: "Combine multiple input/output modes for more natural and accessible experiences",
     slug: "multimodal-interaction",
     color: "indigo",
-    image: "/images/examples/google-docs-ai.gif"
+    image: "/images/examples/geminivoicemode.gif"
   },
   {
     id: "guided-learning",

@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npm run optimize-images && next build",
+    "build": "npm run optimize-images && next build && npm run build:analyze",
+    "build:analyze": "node scripts/build-optimization.js",
+    "build:production": "npm run optimize-images && NODE_ENV=production next build && npm run build:analyze",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
@@ -17,7 +19,8 @@
     "optimize-images": "node scripts/optimize-images.js",
     "prepare": "husky",
     "fix-patterns": "ts-node src/data/patterns/utils/fix-patterns.ts",
-    "prebuild": "node scripts/inject-contextual-assistance-code.js"
+    "prebuild": "node scripts/inject-contextual-assistance-code.js",
+    "postbuild": "echo '📊 Build completed! Check build-metrics.json for performance insights.'"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -29,7 +32,7 @@
     "react-dom": "^19.0.0",
     "react-syntax-highlighter": "^15.6.1",
     "sharp": "^0.33.2",
-    "task-master-ai": "^0.13.2"
+    "task-master-ai": "^0.18.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

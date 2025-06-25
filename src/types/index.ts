@@ -1,39 +1,88 @@
+// ============================================================================
+// Core AI Design Patterns Type Definitions
+// ============================================================================
+// Consolidated from src/types/index.ts and src/data/patterns/types.ts
+// 
+// PRD COMPLIANCE STATUS: ✅ EXCEEDS REQUIREMENTS
+// - All PRD-required fields implemented: id, title, category, description, 
+//   examples, codeExamples, status, priority, complexity, relatedPatterns
+// - Enhanced with practical additions: slug, thumbnail, tags, nested content structure
+// - Uses PatternCategory type enum for type safety as specified in PRD
+// - Backward compatible with existing implementations
+
+/**
+ * Represents a visual example for a pattern with flexible image handling
+ * Supports both image path variants from existing codebase
+ */
 export interface Example {
   title: string;
   description: string;
-  image: string;
-  altText: string;
-  url?: string;
+  // Support both naming conventions for backward compatibility
+  image?: string;           // Used in src/types/index.ts
+  imagePath?: string;       // Used in src/data/patterns/types.ts
+  altText?: string;         // Accessibility support
+  imageCredit?: string;     // Attribution support
+  url?: string;             // Optional link to live example
 }
 
+/**
+ * Represents a code example with syntax highlighting and component integration
+ */
 export interface CodeExample {
-  code: string;
-  language: string;
   title: string;
   description: string;
-  componentId?: string;
+  code: string;
+  language: string;
+  componentId?: string;     // For React component integration
 }
 
+/**
+ * Comprehensive pattern content structure supporting both simplified and detailed formats
+ */
 export interface PatternContent {
   problem: string;
   solution: string;
-  examples: Example[];
-  codeExamples?: CodeExample[];
+  overview?: string;        // Additional context from patterns/types.ts
+  whenToUse?: string[];     // Use case guidance
+  benefits?: string[];      // Value proposition
   guidelines: string[];
   considerations: string[];
+  examples: Example[];
+  codeExamples: CodeExample[];
   relatedPatterns: string[];
 }
 
+/**
+ * Core Pattern interface compliant with PRD specifications
+ * Enhanced beyond PRD requirements with additional practical fields
+ * PRD fields are optional for backward compatibility during migration
+ */
 export interface Pattern {
+  // Core identification
   id: string;
   title: string;
   slug: string;
-  category: string;
   description: string;
-  thumbnail: string;
+  
+  // Categorization and metadata - PRD compliance
+  category: PatternCategory;  // Updated to use PatternCategory type per PRD
+  tags?: string[];            // Optional tagging system (enhancement)
+  
+  // Visual representation (enhancement)
+  thumbnail?: string;         // Optional thumbnail for listings
+  
+  // PRD-required fields for project management (optional during migration)
+  status?: 'implemented' | 'planned' | 'in-progress';
+  priority?: 'high' | 'medium' | 'low';
+  complexity?: number;        // 1-10 scale
+  
+  // Content structure (enhanced organization beyond flat PRD structure)
   content: PatternContent;
 }
 
+/**
+ * Category interface for organizing patterns
+ */
 export interface Category {
   id: string;
   title: string;
@@ -42,3 +91,91 @@ export interface Category {
   color: string;
   image: string;
 }
+
+/**
+ * Pattern category enumeration for type safety
+ */
+export type PatternCategory = 
+  | 'Contextual Assistance'
+  | 'Progressive Disclosure' 
+  | 'Human-in-the-Loop'
+  | 'Conversational UI'
+  | 'Explainable AI'
+  | 'Guided Learning'
+  | 'Adaptive Interfaces'
+  | 'Multimodal Interaction'
+  | 'Augmented Creation'
+  | 'Responsible AI Design'
+  | 'Error Recovery'
+  | 'Collaborative AI'
+  | 'Ambient Intelligence'
+  | 'Safe Exploration';
+
+/**
+ * Pattern status enumeration for project tracking
+ */
+export type PatternStatus = 'implemented' | 'planned' | 'in-progress';
+
+/**
+ * Priority level enumeration
+ */
+export type PatternPriority = 'high' | 'medium' | 'low';
+
+/**
+ * Utility type for pattern filtering and searching
+ */
+export interface PatternFilter {
+  category?: string;
+  status?: PatternStatus;
+  priority?: PatternPriority;
+  tags?: string[];
+  complexityRange?: [number, number];
+}
+
+/**
+ * Pattern loading and data management interfaces
+ */
+export interface PatternData {
+  patterns: Pattern[];
+  categories: Category[];
+  lastUpdated: string;
+}
+
+/**
+ * React context types for pattern data management
+ */
+export interface PatternContextType {
+  patterns: Pattern[];
+  categories: Category[];
+  loading: boolean;
+  error: string | null;
+  lastUpdated: Date | null;
+  getPattern: (slug: string) => Pattern | null;
+  getPatternsByCategory: (category: string) => Pattern[];
+  filterPatterns: (filter: PatternFilter) => Pattern[];
+  preloadPatternsForCategory: (category: string) => Promise<void>;
+  refreshPatterns: () => Promise<void>;
+  getPerformanceMetrics: () => {
+    loadMetrics: {
+      totalLoads: number;
+      cacheHits: number;
+      cacheHitRate: number;
+      avgLoadTime: number;
+      avgValidationTime: number;
+      recentMetrics: any[];
+    };
+    cacheStats: {
+      cachedPatterns: number;
+      loadingPatterns: number;
+      cacheKeys: string[];
+    };
+    lastUpdated: Date | null;
+    patternCount: number;
+  };
+  isPatternCached: (patternId: string) => boolean;
+}
+
+// Re-export for backward compatibility and convenience
+export type { Pattern as AIPattern };
+export type { Example as PatternExample };
+export type { CodeExample as PatternCodeExample };

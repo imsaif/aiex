@@ -57,6 +57,7 @@ export const explainableai: Pattern = {
       "Human-in-the-Loop",
       "Responsible AI Design",
       "Error Recovery"
-    ]
+    ],
+    codeExamples: []
   }
 }; 

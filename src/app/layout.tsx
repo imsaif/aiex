@@ -5,6 +5,7 @@ import ScrollToTop from "@/components/ui/ScrollToTop";
 import { Suspense } from 'react';
 import PageTransition from "@/components/ui/PageTransition";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { PatternProvider } from "@/contexts";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,13 +27,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className="bg-white text-gray-900 antialiased font-sans min-h-screen">
-        <Suspense fallback={<div className="page-loading" />}>
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </Suspense>
-        <ScrollToTop />
-        <SpeedInsights />
+        <PatternProvider>
+          <Suspense fallback={<div className="page-loading" />}>
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </Suspense>
+          <ScrollToTop />
+          <SpeedInsights />
+        </PatternProvider>
       </body>
     </html>
   );

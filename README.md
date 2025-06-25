@@ -1,3 +1,31 @@
+# AI Design Patterns
+
+A comprehensive collection of AI design patterns and best practices for creating intuitive, ethical, and effective AI-powered user interfaces.
+
+## 🎯 Project Overview
+
+This project demonstrates and implements 14 essential AI design patterns, providing developers and designers with practical examples, code implementations, and best practices for building AI-powered applications.
+
+**Implementation Status: 7/14 patterns complete (50%)**
+
+### ✅ Implemented Patterns
+- **Contextual Assistance** - Proactive help based on user context
+- **Progressive Disclosure** - Gradual revelation of AI features  
+- **Human-in-the-Loop** - Balanced automation with human oversight
+- **Explainable AI** - Transparent AI decision-making
+- **Conversational UI** - Natural language interactions
+- **Adaptive Interfaces** - Behavior-driven interface optimization
+- **Multimodal Interaction** - Multiple input/output modes
+
+### 🚧 Coming Next
+- **Guided Learning** - AI capability tutorials and onboarding
+- **Augmented Creation** - AI-assisted content creation
+- **Responsible AI Design** - Ethics, bias mitigation, and inclusivity
+
+[View full implementation status →](./ai-design-patterns.md)
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

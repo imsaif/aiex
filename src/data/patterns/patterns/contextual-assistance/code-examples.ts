@@ -1,4 +1,4 @@
-import { CodeExample } from '../../types';
+import { CodeExample } from '../../../../types';
 
 // The build script will inject the real code string here
 // import { contextualAssistanceDemoCode } from './_code/contextual-assistance-demo.js';

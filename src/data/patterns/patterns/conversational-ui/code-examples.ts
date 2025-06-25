@@ -1,4 +1,4 @@
-import { CodeExample } from '../../types';
+import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
