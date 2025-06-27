@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-06-26T15:04:03.261Z",
+  "buildTime": 0,
+  "bundleSize": 2041,
+  "chunkCount": 22,
+  "warnings": [
+    "Bundle size 2041KB exceeds threshold"
+  ],
+  "errors": [],
+  "recommendations": [
+    "Consider code splitting and dynamic imports to reduce bundle size"
+  ]
+}

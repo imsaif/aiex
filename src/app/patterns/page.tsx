@@ -1,12 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import { loadAllPatterns } from '@/data/patterns/utils/pattern-loader';
+import patterns from '@/data/patterns';
 import { Pattern } from '@/types';
 import categories from '@/data/categories';
 
-export default async function PatternsPage() {
-  // Load patterns
-  const patterns = await loadAllPatterns();
+export default function PatternsPage() {
+  // Use directly imported patterns
 
   // Create a mapping from category name to color
   const categoryColorMap = categories.reduce((acc, category) => {

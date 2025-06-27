@@ -1,13 +1,5 @@
 import { Pattern } from '../../types';
-import { loadAllPatterns } from './utils/pattern-loader';
-
-// Load all patterns
-let patterns: Pattern[] = [];
-
-// Initialize patterns
-loadAllPatterns().then(loadedPatterns => {
-  patterns = loadedPatterns;
-});
+import patterns from '../patterns';
 
 // Helper functions for pattern management
 export const getPatternById = (id: string): Pattern | undefined => {

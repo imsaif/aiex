@@ -180,11 +180,12 @@ export const loadAllPatterns = async (): Promise<Pattern[]> => {
     patternIds.map(id => loadPattern(id))
   );
 
-  const validPatterns = patterns
+  const validPatterns: Pattern[] = patterns
     .filter((result): result is PromiseFulfilledResult<Pattern | null> => 
       result.status === 'fulfilled' && result.value !== null
     )
-    .map(result => result.value);
+    .map(result => result.value!)
+    .filter((pattern): pattern is Pattern => pattern !== null);
   
   if (isDevelopment) {
     const failedCount = patterns.length - validPatterns.length;

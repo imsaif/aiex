@@ -153,26 +153,6 @@ export interface PatternContextType {
   getPattern: (slug: string) => Pattern | null;
   getPatternsByCategory: (category: string) => Pattern[];
   filterPatterns: (filter: PatternFilter) => Pattern[];
-  preloadPatternsForCategory: (category: string) => Promise<void>;
-  refreshPatterns: () => Promise<void>;
-  getPerformanceMetrics: () => {
-    loadMetrics: {
-      totalLoads: number;
-      cacheHits: number;
-      cacheHitRate: number;
-      avgLoadTime: number;
-      avgValidationTime: number;
-      recentMetrics: any[];
-    };
-    cacheStats: {
-      cachedPatterns: number;
-      loadingPatterns: number;
-      cacheKeys: string[];
-    };
-    lastUpdated: Date | null;
-    patternCount: number;
-  };
-  isPatternCached: (patternId: string) => boolean;
 }
 
 // Re-export for backward compatibility and convenience

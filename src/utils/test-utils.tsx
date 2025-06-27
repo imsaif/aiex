@@ -42,7 +42,7 @@ export const createMockPattern = (overrides: Partial<Pattern> = {}): Pattern => 
   id: 'test-pattern',
   title: 'Test Pattern',
   slug: 'test-pattern',
-  category: 'Test Category',
+  category: 'Contextual Assistance',
   description: 'This is a test pattern for unit testing purposes',
   thumbnail: '/images/test-thumbnail.webp',
   content: {

@@ -6,6 +6,7 @@ import { explainableai } from './patterns/patterns/explainable-ai';
 import { conversationalui } from './patterns/patterns/conversational-ui';
 import { adaptiveinterfaces } from './patterns/patterns/adaptive-interfaces';
 import { multimodalinteraction } from './patterns/patterns/multimodal-interaction';
+import { guidedlearning } from './patterns/patterns/guided-learning';
 
 export const patterns: Pattern[] = [
   contextualassistance,
@@ -14,7 +15,8 @@ export const patterns: Pattern[] = [
   explainableai,
   conversationalui,
   adaptiveinterfaces,
-  multimodalinteraction
+  multimodalinteraction,
+  guidedlearning
 ];
 
 export default patterns;

@@ -124,22 +124,33 @@ export const PatternsArraySchema = z.array(PatternSchema)
 export const CategoriesArraySchema = z.array(CategorySchema)
 
 // Type exports - importing from types for consistency
-export type {
+import type {
   Example,
   CodeExample, 
   PatternContent,
-  Pattern,
+  Pattern as PatternType,
   Category,
   PatternCategory,
   PatternStatus,
   PatternPriority
 } from '../types'
 
+export type {
+  Example,
+  CodeExample, 
+  PatternContent,
+  Category,
+  PatternCategory,
+  PatternStatus,
+  PatternPriority
+}
+
+export type Pattern = PatternType
 export type PatternsArray = z.infer<typeof PatternsArraySchema>
 export type CategoriesArray = z.infer<typeof CategoriesArraySchema>
 
 // Enhanced validation functions with better error handling
-export const validatePattern = (pattern: unknown): Pattern => {
+export const validatePattern = (pattern: unknown): PatternType => {
   try {
     return PatternSchema.parse(pattern)
   } catch (error) {
@@ -148,7 +159,7 @@ export const validatePattern = (pattern: unknown): Pattern => {
   }
 }
 
-export const validatePatterns = (patterns: unknown): Pattern[] => {
+export const validatePatterns = (patterns: unknown): PatternType[] => {
   try {
     return PatternsArraySchema.parse(patterns)
   } catch (error) {

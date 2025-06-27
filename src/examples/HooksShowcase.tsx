@@ -68,13 +68,13 @@ function SearchExample() {
             <h3 
               className="font-medium"
               dangerouslySetInnerHTML={{ 
-                __html: highlights.title || pattern.title 
+                __html: (highlights as any).title || pattern.title 
               }}
             />
             <p 
               className="text-sm text-gray-600"
               dangerouslySetInnerHTML={{ 
-                __html: highlights.description || pattern.description 
+                __html: (highlights as any).description || pattern.description 
               }}
             />
           </div>
