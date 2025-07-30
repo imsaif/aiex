@@ -2,8 +2,13 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import Carousel from '@/components/ui/Carousel';
 import CodeExampleBlock from '@/components/ui/CodeExampleBlock';
+import FavoriteButton from '@/components/ui/FavoriteButton';
+import RelatedPatterns from '@/components/ui/RelatedPatterns';
+import { useRecentPatterns } from '@/hooks/useRecentPatterns';
+import { useInteractionTracking } from '@/hooks/usePageTracking';
 import { Pattern } from '@/types';
 
 interface ClientPageProps {
@@ -13,6 +18,17 @@ interface ClientPageProps {
 }
 
 export default function ClientPage({ pattern, previousPattern, nextPattern }: ClientPageProps) {
+  const { addRecentPattern } = useRecentPatterns();
+  const { trackPatternView } = useInteractionTracking();
+
+  // Track this pattern as recently viewed and for analytics
+  useEffect(() => {
+    if (pattern?.id && pattern?.title) {
+      addRecentPattern(pattern.id);
+      trackPatternView(pattern.id, pattern.title);
+    }
+  }, [pattern?.id, pattern?.title, addRecentPattern, trackPatternView]);
+
   // Fast, minimal animations for better performance
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -56,9 +72,22 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
       {/* Pattern Header */}
       <motion.div className="mb-10" variants={itemVariants}>
-        <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>
-        <div className="text-xl text-gray-600 leading-relaxed">
-          {pattern.description}
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>
+            <div className="text-xl text-gray-600 leading-relaxed">
+              {pattern.description}
+            </div>
+          </div>
+          <div className="ml-6 mt-3">
+            <FavoriteButton
+              patternId={pattern.id}
+              size="lg"
+              variant="button"
+              showLabel={true}
+              className="bg-white border-2 border-gray-200 hover:border-red-300"
+            />
+          </div>
         </div>
       </motion.div>
       
@@ -172,27 +201,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         
         {/* Related Patterns */}
         <motion.section variants={itemVariants}>
-          <div className="flex items-center mb-6">
-            <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-            <h2 className="text-2xl font-bold text-gray-900">Related Patterns</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {pattern.content.relatedPatterns.map((related, i) => (
-              <Link 
-                key={i} 
-                href={`/patterns/${related.toLowerCase().replace(/\s+/g, '-')}`}
-                className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 mr-3">
-                    <line x1="7" y1="17" x2="17" y2="7"/>
-                    <polyline points="7 7 17 7 17 17"/>
-                  </svg>
-                  <span className="text-lg font-medium text-gray-700">{related}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
+          <RelatedPatterns currentPattern={pattern} limit={6} />
         </motion.section>
 
         {/* Previous/Next Pattern Navigation */}

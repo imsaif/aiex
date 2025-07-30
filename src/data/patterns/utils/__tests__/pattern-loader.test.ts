@@ -10,40 +10,74 @@ import {
 } from '../pattern-loader';
 
 // Mock the pattern modules
-jest.mock('../patterns/contextual-assistance/index', () => ({
+jest.mock('../../patterns/contextual-assistance/index', () => ({
   contextualassistance: {
     id: 'contextual-assistance',
     title: 'Contextual Assistance',
     slug: 'contextual-assistance',
-    description: 'Test pattern',
+    description: 'This is a comprehensive test pattern for contextual assistance that meets minimum length requirements',
     category: 'Contextual Assistance',
+    thumbnail: '/images/test-pattern.jpg',
     content: {
-      problem: 'Test problem',
-      solution: 'Test solution',
-      examples: [],
-      codeExamples: [],
-      guidelines: ['Test guideline'],
-      considerations: ['Test consideration'],
-      relatedPatterns: []
+      problem: 'Test problem description that is comprehensive and detailed enough to meet validation requirements',
+      solution: 'Test solution description that provides detailed information about the pattern implementation',
+      examples: [
+        {
+          title: 'Test Example',
+          description: 'Test example description',
+          context: 'Test context',
+          implementation: 'Test implementation details',
+          image: '/images/test-example.jpg',
+          altText: 'Test example image'
+        }
+      ],
+      codeExamples: [
+        {
+          title: 'Test Code Example',
+          language: 'javascript',
+          code: 'console.log("test");',
+          description: 'Test code description'
+        }
+      ],
+      guidelines: ['Test guideline 1', 'Test guideline 2'],
+      considerations: ['Test consideration 1', 'Test consideration 2'],
+      relatedPatterns: ['progressive-disclosure']
     }
   }
 }));
 
-jest.mock('../patterns/progressive-disclosure/index', () => ({
+jest.mock('../../patterns/progressive-disclosure/index', () => ({
   progressivedisclosure: {
     id: 'progressive-disclosure',
     title: 'Progressive Disclosure',
     slug: 'progressive-disclosure',
-    description: 'Test pattern 2',
+    description: 'This is a comprehensive test pattern for progressive disclosure that meets minimum length requirements',
     category: 'Progressive Disclosure',
+    thumbnail: '/images/test-pattern-2.jpg',
     content: {
-      problem: 'Test problem 2',
-      solution: 'Test solution 2',
-      examples: [],
-      codeExamples: [],
-      guidelines: ['Test guideline 2'],
-      considerations: ['Test consideration 2'],
-      relatedPatterns: []
+      problem: 'Test problem description that is comprehensive and detailed enough to meet validation requirements',
+      solution: 'Test solution description that provides detailed information about the pattern implementation',
+      examples: [
+        {
+          title: 'Test Example 2',
+          description: 'Test example description 2',
+          context: 'Test context 2',
+          implementation: 'Test implementation details 2',
+          image: '/images/test-example-2.jpg',
+          altText: 'Test example image 2'
+        }
+      ],
+      codeExamples: [
+        {
+          title: 'Test Code Example 2',
+          language: 'typescript',
+          code: 'const test = "value";',
+          description: 'Test code description 2'
+        }
+      ],
+      guidelines: ['Test guideline 2-1', 'Test guideline 2-2'],
+      considerations: ['Test consideration 2-1', 'Test consideration 2-2'],
+      relatedPatterns: ['contextual-assistance']
     }
   }
 }));

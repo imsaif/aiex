@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Card from 'Card';
+import Card from '../Card';
 
 describe('Card', () => {
   const defaultProps = {};
@@ -38,4 +38,4 @@ describe('Card', () => {
     });
   });
 
-});\n
+});

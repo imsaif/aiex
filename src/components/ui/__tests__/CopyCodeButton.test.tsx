@@ -10,6 +10,15 @@ describe('CopyCodeButton', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock window.alert
+    global.alert = jest.fn();
+    // Mock clipboard API
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: jest.fn(),
+      },
+      writable: true,
+    });
   });
 
   describe('Rendering', () => {

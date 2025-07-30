@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import categories from '@/data/categories';
 import { useRouter } from 'next/navigation';
 import OptimizedMedia from '../ui/OptimizedMedia';
+import FavoriteButton from '../ui/FavoriteButton';
 
 // Create icons for each category
 const getCategoryIcon = (categoryId: string) => {
@@ -243,6 +244,14 @@ const PatternCategories = () => {
                         height={300}
                         priority={index < 6} // Prioritize loading the first 6 images
                       />
+                      {/* Favorite button overlay */}
+                      <div className="absolute top-2 right-2">
+                        <FavoriteButton 
+                          patternId={category.id}
+                          size="md"
+                          className="bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm"
+                        />
+                      </div>
                     </div>
                     {/* Icon inside the card, above heading/description */}
                     <div className={`h-10 w-10 rounded-xl overflow-hidden flex-shrink-0 mx-auto mb-3 relative ${getIconBgColor(category.id)}`}> 

@@ -2,6 +2,8 @@
 
 import Hero from '../components/sections/Hero';
 import PatternCategories from '../components/sections/PatternCategories';
+import RecentPatterns from '../components/sections/RecentPatterns';
+import SmartSuggestions from '../components/sections/SmartSuggestions';
 import Navbar from '../components/layout/Navbar';
 
 export default function Home() {
@@ -11,6 +13,12 @@ export default function Home() {
       <Hero />
       
       <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
+        {/* Recent Patterns Section */}
+        <RecentPatterns />
+        
+        {/* Smart Suggestions Section */}
+        <SmartSuggestions />
+        
         <section id="categories" className="py-12 md:py-16">
           <PatternCategories />
         </section>

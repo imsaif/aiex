@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card Snapshot matches snapshot 1`] = `
+<div
+  class="bg-white border border-gray-200 p-6 shadow-md rounded-lg  "
+/>
+`;
+
+exports[`Card Snapshot matches snapshot with different props 1`] = `
+<div
+  class="bg-white border border-gray-200 p-6 shadow-md rounded-lg  "
+/>
+`;

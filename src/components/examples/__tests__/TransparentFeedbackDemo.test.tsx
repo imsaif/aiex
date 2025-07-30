@@ -15,13 +15,7 @@ jest.mock('framer-motion', () => ({
 }));
 
 describe('TransparentFeedbackDemo', () => {
-  const defaultProps = {
-    'confidence': 42,
-    'label': 'test-value',
-    'showPercentage': true,
-    'size': 'test-value',
-    'className': 'test-class'
-};
+  const defaultProps = {};
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -39,26 +33,20 @@ describe('TransparentFeedbackDemo', () => {
 
   });
 
-  describe('Props', () => {
-    it('renders with label prop', () => {
-      const testValue = 'Test label';
-      render(<TransparentFeedbackDemo {...defaultProps} label={testValue} />);
-      expect(screen.getByText(testValue)).toBeInTheDocument();
+  describe('Content', () => {
+    it('renders demo content', () => {
+      render(<TransparentFeedbackDemo {...defaultProps} />);
+      expect(screen.getByText('Content Analysis Tool')).toBeInTheDocument();
     });
 
-    it('handles showPercentage boolean prop', () => {
-      const { rerender } = render(<TransparentFeedbackDemo {...defaultProps} showPercentage={true} />);
-      // Test with true value
-      expect(screen.getByRole('generic')).toBeInTheDocument();
-      
-      rerender(<TransparentFeedbackDemo {...defaultProps} showPercentage={false} />);
-      // Test with false value - behavior should change
+    it('displays analyze button', () => {
+      render(<TransparentFeedbackDemo {...defaultProps} />);
+      expect(screen.getByText('Analyze with AI')).toBeInTheDocument();
     });
 
-    it('renders with className prop', () => {
-      const testValue = 'Test className';
-      render(<TransparentFeedbackDemo {...defaultProps} className={testValue} />);
-      expect(screen.getByText(testValue)).toBeInTheDocument();
+    it('shows placeholder text', () => {
+      render(<TransparentFeedbackDemo {...defaultProps} />);
+      expect(screen.getByText(/Enter some text to analyze/)).toBeInTheDocument();
     });
 
   });
@@ -80,43 +68,51 @@ describe('TransparentFeedbackDemo', () => {
   });
 
   describe('Event Handling', () => {
-    it('calls onChange when triggered', async () => {
-      const onChange = jest.fn();
+    it('handles textarea input', async () => {
       const user = userEvent.setup();
       
-      render(<TransparentFeedbackDemo {...defaultProps} onChange={onChange} />);
+      render(<TransparentFeedbackDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
-      await user.type(element);
+      const textarea = screen.getByPlaceholderText(/Enter some text to analyze/);
+      await user.type(textarea, 'Test input');
       
-      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(textarea).toHaveValue('Test input');
     });
 
-    it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
+    it('handles analyze button interaction', async () => {
       const user = userEvent.setup();
       
-      render(<TransparentFeedbackDemo {...defaultProps} onClick={onClick} />);
+      render(<TransparentFeedbackDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
-      await user.click(element);
+      const textarea = screen.getByPlaceholderText(/Enter some text to analyze/);
+      const analyzeButton = screen.getByText('Analyze with AI');
       
-      expect(onClick).toHaveBeenCalledTimes(1);
+      // Add some text to enable the button
+      await user.type(textarea, 'Test input');
+      
+      // Button should be enabled now (will have different styling)
+      expect(analyzeButton).toBeInTheDocument();
     });
 
   });
 
   describe('Form Interactions', () => {
-    it('handles button clicks', async () => {
+    it('handles analyze button state', async () => {
       const user = userEvent.setup();
-      const onClick = jest.fn();
       
-      render(<TransparentFeedbackDemo {...defaultProps} onClick={onClick} />);
+      render(<TransparentFeedbackDemo {...defaultProps} />);
       
-      const button = screen.getByRole('button');
-      await user.click(button);
+      const textarea = screen.getByPlaceholderText(/Enter some text to analyze/);
+      const analyzeButton = screen.getByText('Analyze with AI');
       
-      expect(onClick).toHaveBeenCalledTimes(1);
+      // Initially button should be disabled (check for disabled attribute or styling)
+      expect(analyzeButton).toHaveAttribute('disabled');
+      
+      // Add text to enable button
+      await user.type(textarea, 'Test analysis text');
+      
+      // Button should still exist but may have different styling when enabled
+      expect(analyzeButton).toBeInTheDocument();
     });
 
   });

@@ -1,47 +1,65 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CopyCodeButton Snapshot matches snapshot 1`] = `
-<a
-  class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center"
-  href="#"
+<div
+  class="bg-gray-50 border rounded p-3 mb-4"
 >
-  <svg
-    class="h-4 w-4 mr-1"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
+  <div
+    class="text-gray-800 font-mono text-sm mb-2 whitespace-pre-wrap"
   >
-    <path
-      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-    />
-  </svg>
-  Copy Code
-</a>
+    test-value
+  </div>
+  <button
+    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center"
+    type="button"
+  >
+    <svg
+      class="h-4 w-4 mr-1"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      />
+    </svg>
+    Copy Code
+  </button>
+</div>
 `;
 
 exports[`CopyCodeButton Snapshot matches snapshot with different props 1`] = `
-<a
-  class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center"
-  href="#"
+<div
+  class="bg-gray-50 border rounded p-3 mb-4"
 >
-  <svg
-    class="h-4 w-4 mr-1"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
+  <div
+    class="text-gray-800 font-mono text-sm mb-2 whitespace-pre-wrap"
   >
-    <path
-      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-    />
-  </svg>
-  Copy Code
-</a>
+    test-value
+  </div>
+  <button
+    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center"
+    type="button"
+  >
+    <svg
+      class="h-4 w-4 mr-1"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      />
+    </svg>
+    Copy Code
+  </button>
+</div>
 `;

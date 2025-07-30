@@ -3,9 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useFavorites } from '../../hooks/useFavorites';
 
 const Navbar = () => {
   const pathname = usePathname();
+  const { favoriteCount } = useFavorites();
   
   const scrollToDiscover = (e: React.MouseEvent) => {
     // Only handle scroll on homepage
@@ -32,13 +34,29 @@ const Navbar = () => {
             <span className="text-xl font-medium tracking-tight">aiexd</span>
           </Link>
 
-          <div className="hidden md:flex ml-auto">
+          <div className="hidden md:flex ml-auto items-center space-x-4">
             <Link 
               href={pathname === '/' ? '#categories' : '/patterns'}
               className="text-gray-700 hover:text-gray-900 text-sm font-medium px-4 py-2"
               onClick={scrollToDiscover}
             >
               Patterns
+            </Link>
+            <Link 
+              href="/favorites"
+              className="text-gray-700 hover:text-gray-900 text-sm font-medium px-4 py-2 relative"
+            >
+              <div className="flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                Favorites
+                {favoriteCount > 0 && (
+                  <span className="ml-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+                    {favoriteCount}
+                  </span>
+                )}
+              </div>
             </Link>
           </div>
         </div>

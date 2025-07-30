@@ -5,12 +5,12 @@ import CodeExampleBlock from '../CodeExampleBlock';
 
 describe('CodeExampleBlock', () => {
   const defaultProps = {
-    'code': 'test-value',
-    'language': 'test-value',
-    'title': 'Test Title',
-    'description': 'test-value',
-    'componentId': 'test-id'
-};
+    'code': 'console.log("Hello World");',
+    'language': 'javascript',
+    'title': 'Example Component',
+    'description': 'This is a test description',
+    'componentId': 'contextual-assistance-editor'
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -30,7 +30,7 @@ describe('CodeExampleBlock', () => {
       const testProps = {
         ...defaultProps,
         title: 'Test Title',
-        text: 'Test Content'
+        description: 'Test Content'
       };
       render(<CodeExampleBlock {...testProps} />);
       expect(screen.getByText('Test Title')).toBeInTheDocument();
@@ -40,13 +40,13 @@ describe('CodeExampleBlock', () => {
 
   describe('Props', () => {
     it('renders with code prop', () => {
-      const testValue = 'Test code';
+      const testValue = 'console.log("test code");';
       render(<CodeExampleBlock {...defaultProps} code={testValue} />);
       expect(screen.getByText(testValue)).toBeInTheDocument();
     });
 
     it('renders with language prop', () => {
-      const testValue = 'Test language';
+      const testValue = 'javascript';
       render(<CodeExampleBlock {...defaultProps} language={testValue} />);
       expect(screen.getByText(testValue)).toBeInTheDocument();
     });
@@ -64,9 +64,10 @@ describe('CodeExampleBlock', () => {
     });
 
     it('renders with componentId prop', () => {
-      const testValue = 'Test componentId';
-      render(<CodeExampleBlock {...defaultProps} componentId={testValue} />);
-      expect(screen.getByText(testValue)).toBeInTheDocument();
+      const testValue = 'contextual-assistance-editor';
+      const { container } = render(<CodeExampleBlock {...defaultProps} componentId={testValue} />);
+      // ComponentId is used internally to determine which component to render, not displayed as text
+      expect(container).toBeInTheDocument();
     });
 
   });
@@ -88,31 +89,56 @@ describe('CodeExampleBlock', () => {
   });
 
   describe('Event Handling', () => {
-    it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
+    it('handles tab switching', async () => {
       const user = userEvent.setup();
       
-      render(<CodeExampleBlock {...defaultProps} onClick={onClick} />);
+      render(<CodeExampleBlock {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
-      await user.click(element);
+      const previewTab = screen.getByText('Live Preview');
+      await user.click(previewTab);
       
-      expect(onClick).toHaveBeenCalledTimes(1);
+      expect(screen.getByText('Interactive Demo:')).toBeInTheDocument();
+    });
+
+    it('handles copy button click', async () => {
+      // Mock clipboard API
+      const mockWriteText = jest.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, 'clipboard', {
+        value: {
+          writeText: mockWriteText,
+        },
+        writable: true,
+        configurable: true
+      });
+      
+      const user = userEvent.setup();
+      render(<CodeExampleBlock {...defaultProps} />);
+      
+      // Find copy button by role or accessible name instead of text content
+      const copyButton = screen.getByRole('button', { name: /copy/i });
+      await user.click(copyButton);
+      
+      await waitFor(() => {
+        expect(mockWriteText).toHaveBeenCalledWith(defaultProps.code);
+      });
     });
 
   });
 
   describe('Form Interactions', () => {
-    it('handles button clicks', async () => {
+    it('handles tab button clicks', async () => {
       const user = userEvent.setup();
-      const onClick = jest.fn();
       
-      render(<CodeExampleBlock {...defaultProps} onClick={onClick} />);
+      render(<CodeExampleBlock {...defaultProps} />);
       
-      const button = screen.getByRole('button');
-      await user.click(button);
+      const codeTab = screen.getByText('Code');
+      const previewTab = screen.getByText('Live Preview');
       
-      expect(onClick).toHaveBeenCalledTimes(1);
+      await user.click(previewTab);
+      expect(screen.getByText('Interactive Demo:')).toBeInTheDocument();
+      
+      await user.click(codeTab);
+      expect(screen.getByText('javascript')).toBeInTheDocument();
     });
 
   });

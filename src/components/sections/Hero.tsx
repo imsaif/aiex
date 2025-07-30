@@ -2,9 +2,13 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import Button from '../ui/Button';
+import AdvancedSearchBar from '../ui/AdvancedSearchBar';
+import { Pattern } from '../../types';
 
 export default function Hero() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -67,6 +71,11 @@ export default function Hero() {
     if (discoverSection) {
       discoverSection.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  // Handle pattern selection from search
+  const handlePatternSelect = (pattern: Pattern) => {
+    router.push(`/patterns/${pattern.id}`);
   };
 
   // Generate particles
@@ -165,16 +174,35 @@ export default function Hero() {
             Explore real-world examples of effective AI interfaces and learn from the best implementations
           </motion.p>
           
-          <div className="mt-10 flex justify-center">
+          {/* Advanced Search Bar */}
+          <motion.div 
+            className="mb-10 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          >
+            <AdvancedSearchBar 
+              onPatternSelect={handlePatternSelect}
+              placeholder="Search patterns, categories, or use cases..."
+              className="w-full"
+            />
+          </motion.div>
+          
+          <motion.div 
+            className="flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+          >
             <Button 
               variant="gradient" 
               size="lg"
               className="text-base px-8 py-4"
               onClick={scrollToDiscover}
             >
-              Explore Patterns
+              Browse All Patterns
             </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

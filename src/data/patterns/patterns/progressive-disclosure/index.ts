@@ -6,6 +6,7 @@ export const progressivedisclosure: Pattern = {
   slug: "progressive-disclosure",
   category: "Progressive Disclosure",
   description: "Reveal information, options, or AI-powered features gradually, reducing cognitive load and making complex tasks approachable.",
+  tags: ["step by step", "gradual reveal", "complexity management", "UX layers", "feature discovery", "simplification", "cognitive load"],
   thumbnail: "/images/examples/loom-ai.gif",
   content: {
     problem: "AI-powered products often have complex features that can overwhelm users if shown all at once. Novice users may abandon the product, while advanced users may struggle to find advanced options hidden in cluttered UIs.",

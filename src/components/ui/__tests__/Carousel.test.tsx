@@ -4,7 +4,22 @@ import userEvent from '@testing-library/user-event';
 import Carousel from '../Carousel';
 
 describe('Carousel', () => {
-  const defaultProps = {};
+  const defaultProps = {
+    examples: [
+      {
+        title: 'Test Example 1',
+        description: 'Test description 1',
+        image: '/test-image-1.jpg',
+        altText: 'Test alt 1'
+      },
+      {
+        title: 'Test Example 2', 
+        description: 'Test description 2',
+        image: '/test-image-2.jpg',
+        altText: 'Test alt 2'
+      }
+    ]
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();

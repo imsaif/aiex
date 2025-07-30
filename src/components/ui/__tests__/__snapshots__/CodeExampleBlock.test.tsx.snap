@@ -10,12 +10,12 @@ exports[`CodeExampleBlock Snapshot matches snapshot 1`] = `
     <h3
       class="text-xl font-semibold text-gray-800 mb-2"
     >
-      Test Title
+      Example Component
     </h3>
     <p
       class="text-gray-600"
     >
-      test-value
+      This is a test description
     </p>
   </div>
   <div
@@ -75,7 +75,7 @@ exports[`CodeExampleBlock Snapshot matches snapshot 1`] = `
       <span
         class="font-mono"
       >
-        test-value
+        javascript
       </span>
       <button
         class="text-gray-300 hover:text-white transition-colors flex items-center"
@@ -103,10 +103,10 @@ exports[`CodeExampleBlock Snapshot matches snapshot 1`] = `
       customstyle="[object Object]"
     >
       <code
-        class="language-test-value"
+        class="language-javascript"
         role="code"
       >
-        test-value
+        console.log("Hello World");
       </code>
     </pre>
   </div>
@@ -123,12 +123,12 @@ exports[`CodeExampleBlock Snapshot matches snapshot with different props 1`] = `
     <h3
       class="text-xl font-semibold text-gray-800 mb-2"
     >
-      Test Title
+      Example Component
     </h3>
     <p
       class="text-gray-600"
     >
-      test-value
+      This is a test description
     </p>
   </div>
   <div
@@ -188,7 +188,7 @@ exports[`CodeExampleBlock Snapshot matches snapshot with different props 1`] = `
       <span
         class="font-mono"
       >
-        test-value
+        javascript
       </span>
       <button
         class="text-gray-300 hover:text-white transition-colors flex items-center"
@@ -216,10 +216,10 @@ exports[`CodeExampleBlock Snapshot matches snapshot with different props 1`] = `
       customstyle="[object Object]"
     >
       <code
-        class="language-test-value"
+        class="language-javascript"
         role="code"
       >
-        test-value
+        console.log("Hello World");
       </code>
     </pre>
   </div>
