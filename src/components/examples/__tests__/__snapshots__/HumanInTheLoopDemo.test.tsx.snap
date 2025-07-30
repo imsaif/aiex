@@ -1,0 +1,743 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
+<div
+  class="space-y-8"
+>
+  <div
+    class="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+  >
+    <div
+      class="flex flex-col md:flex-row items-center gap-6"
+    >
+      <img
+        alt="Content moderation"
+        class="w-32 h-32 object-contain"
+        src="https://img.icons8.com/color/480/content-moderation.png"
+      />
+      <div>
+        <h2
+          class="text-2xl font-bold text-gray-800 mb-2"
+        >
+          Human-in-the-Loop AI Moderation
+        </h2>
+        <p
+          class="text-gray-600"
+        >
+          This pattern demonstrates how AI can flag potentially problematic content for human review, creating an effective collaboration between automated systems and human judgment.
+        </p>
+        <div
+          class="flex items-center gap-4 mt-4"
+        >
+          <div
+            class="flex flex-col items-center"
+          >
+            <img
+              alt="AI"
+              class="w-10 h-10"
+              src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+            />
+            <span
+              class="text-xs text-gray-500 mt-1"
+            >
+              AI Flags
+            </span>
+          </div>
+          <div
+            class="w-8 h-0.5 bg-gray-300"
+          />
+          <div
+            class="flex flex-col items-center"
+          >
+            <img
+              alt="Human"
+              class="w-10 h-10"
+              src="https://img.icons8.com/fluency/96/person-male.png"
+            />
+            <span
+              class="text-xs text-gray-500 mt-1"
+            >
+              Human Decides
+            </span>
+          </div>
+          <div
+            class="w-8 h-0.5 bg-gray-300"
+          />
+          <div
+            class="flex flex-col items-center"
+          >
+            <img
+              alt="Feedback loop"
+              class="w-10 h-10"
+              src="https://img.icons8.com/fluency/96/refresh.png"
+            />
+            <span
+              class="text-xs text-gray-500 mt-1"
+            >
+              System Learns
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 gap-8"
+  >
+    <div
+      class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden h-full flex flex-col"
+    >
+      <div
+        class="bg-gray-50 p-5 border-b border-gray-200"
+      >
+        <div
+          class="flex items-center gap-3"
+        >
+          <img
+            alt="AI"
+            class="w-6 h-6"
+            src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+          />
+          <h3
+            class="text-xl font-semibold text-gray-800"
+          >
+            Text Post Moderation
+          </h3>
+        </div>
+        <p
+          class="text-gray-700 text-sm mt-2"
+        >
+          Review AI-flagged social media posts and make the final moderation decision.
+        </p>
+        <span
+          class="block text-xs text-gray-400 mt-1"
+        >
+          (Post 
+          1
+           of 
+          4
+          )
+        </span>
+      </div>
+      <div
+        class="flex-1 p-4 flex flex-col justify-between"
+      >
+        <div>
+          <div
+            class="mb-2 text-gray-700"
+          >
+            <span
+              class="font-semibold text-blue-700"
+            >
+              @alice
+            </span>
+            : 
+            I can't believe this happened! DM me for the details.
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            AI Decision: 
+            <span
+              class="font-semibold text-pink-600"
+            >
+              Flagged for Review
+            </span>
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            Reason: 
+            Possible sharing of sensitive information.
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-2"
+          >
+            AI Confidence: 
+            <span
+              class="font-semibold text-violet-700"
+            >
+              91
+              %
+            </span>
+          </div>
+        </div>
+        <div
+          class="flex gap-2 mt-2"
+        >
+          <button
+            class="px-3 py-1 rounded bg-green-100 text-green-800 border border-green-200 hover:bg-green-200 transition"
+          >
+            Approve
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition"
+          >
+            Reject
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200 transition"
+          >
+            Override
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden h-full flex flex-col"
+    >
+      <div
+        class="bg-gray-50 p-5 border-b border-gray-200"
+      >
+        <div
+          class="flex items-center gap-3"
+        >
+          <img
+            alt="AI"
+            class="w-6 h-6"
+            src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+          />
+          <h3
+            class="text-xl font-semibold text-gray-800"
+          >
+            Image Moderation
+          </h3>
+        </div>
+        <p
+          class="text-gray-700 text-sm mt-2"
+        >
+          Review AI-flagged user-uploaded images and make the final moderation decision.
+        </p>
+        <span
+          class="block text-xs text-gray-400 mt-1"
+        >
+          (Image 
+          1
+           of 
+          4
+          )
+        </span>
+      </div>
+      <div
+        class="flex-1 p-4 flex flex-col justify-between"
+      >
+        <div>
+          <div
+            class="mb-2 flex items-center gap-3"
+          >
+            <img
+              alt="User upload"
+              class="w-20 h-20 object-cover rounded border border-gray-200"
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&h=400&q=80"
+            />
+            <span
+              class="font-semibold text-blue-700"
+            >
+              @eve
+            </span>
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            AI Decision: 
+            <span
+              class="font-semibold text-pink-600"
+            >
+              No Action Needed
+            </span>
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            Reason: 
+            No inappropriate content detected.
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-2"
+          >
+            AI Confidence: 
+            <span
+              class="font-semibold text-violet-700"
+            >
+              99
+              %
+            </span>
+          </div>
+        </div>
+        <div
+          class="flex gap-2 mt-2"
+        >
+          <button
+            class="px-3 py-1 rounded bg-green-100 text-green-800 border border-green-200 hover:bg-green-200 transition"
+          >
+            Approve
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition"
+          >
+            Reject
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200 transition"
+          >
+            Override
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+  >
+    <h2
+      class="text-2xl font-bold text-gray-800 mb-4"
+    >
+      Examples in the Wild
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <img
+          alt="Grammarly writing suggestions"
+          class="w-full h-48 object-cover"
+          src="/images/examples/grammarly-suggestions.gif"
+        />
+        <div
+          class="p-4"
+        >
+          <h3
+            class="font-semibold text-lg text-gray-800"
+          >
+            Grammarly Writing Assistant
+          </h3>
+          <p
+            class="text-sm text-gray-600 mt-2"
+          >
+            Grammarly suggests grammar, spelling, and style improvements as users write, but requires human approval before changes are applied, maintaining user control over the final text.
+          </p>
+        </div>
+      </div>
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <img
+          alt="Google Photos face detection"
+          class="w-full h-48 object-cover"
+          src="/images/examples/google-face-detection.gif"
+        />
+        <div
+          class="p-4"
+        >
+          <h3
+            class="font-semibold text-lg text-gray-800"
+          >
+            Google Photos Face Detection
+          </h3>
+          <p
+            class="text-sm text-gray-600 mt-2"
+          >
+            Google Photos automatically detects faces in images but relies on users to confirm identities, allowing humans to verify AI suggestions before they're applied.
+          </p>
+        </div>
+      </div>
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <img
+          alt="OpenAI human feedback"
+          class="w-full h-48 object-cover"
+          src="/images/examples/openai-human-feedback.png"
+        />
+        <div
+          class="p-4"
+        >
+          <h3
+            class="font-semibold text-lg text-gray-800"
+          >
+            OpenAI RLHF
+          </h3>
+          <p
+            class="text-sm text-gray-600 mt-2"
+          >
+            OpenAI uses Reinforcement Learning from Human Feedback (RLHF) to improve their models, having humans rate AI outputs to train reward models that guide further refinement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] = `
+<div
+  class="space-y-8"
+>
+  <div
+    class="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+  >
+    <div
+      class="flex flex-col md:flex-row items-center gap-6"
+    >
+      <img
+        alt="Content moderation"
+        class="w-32 h-32 object-contain"
+        src="https://img.icons8.com/color/480/content-moderation.png"
+      />
+      <div>
+        <h2
+          class="text-2xl font-bold text-gray-800 mb-2"
+        >
+          Human-in-the-Loop AI Moderation
+        </h2>
+        <p
+          class="text-gray-600"
+        >
+          This pattern demonstrates how AI can flag potentially problematic content for human review, creating an effective collaboration between automated systems and human judgment.
+        </p>
+        <div
+          class="flex items-center gap-4 mt-4"
+        >
+          <div
+            class="flex flex-col items-center"
+          >
+            <img
+              alt="AI"
+              class="w-10 h-10"
+              src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+            />
+            <span
+              class="text-xs text-gray-500 mt-1"
+            >
+              AI Flags
+            </span>
+          </div>
+          <div
+            class="w-8 h-0.5 bg-gray-300"
+          />
+          <div
+            class="flex flex-col items-center"
+          >
+            <img
+              alt="Human"
+              class="w-10 h-10"
+              src="https://img.icons8.com/fluency/96/person-male.png"
+            />
+            <span
+              class="text-xs text-gray-500 mt-1"
+            >
+              Human Decides
+            </span>
+          </div>
+          <div
+            class="w-8 h-0.5 bg-gray-300"
+          />
+          <div
+            class="flex flex-col items-center"
+          >
+            <img
+              alt="Feedback loop"
+              class="w-10 h-10"
+              src="https://img.icons8.com/fluency/96/refresh.png"
+            />
+            <span
+              class="text-xs text-gray-500 mt-1"
+            >
+              System Learns
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 gap-8"
+  >
+    <div
+      class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden h-full flex flex-col"
+    >
+      <div
+        class="bg-gray-50 p-5 border-b border-gray-200"
+      >
+        <div
+          class="flex items-center gap-3"
+        >
+          <img
+            alt="AI"
+            class="w-6 h-6"
+            src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+          />
+          <h3
+            class="text-xl font-semibold text-gray-800"
+          >
+            Text Post Moderation
+          </h3>
+        </div>
+        <p
+          class="text-gray-700 text-sm mt-2"
+        >
+          Review AI-flagged social media posts and make the final moderation decision.
+        </p>
+        <span
+          class="block text-xs text-gray-400 mt-1"
+        >
+          (Post 
+          1
+           of 
+          4
+          )
+        </span>
+      </div>
+      <div
+        class="flex-1 p-4 flex flex-col justify-between"
+      >
+        <div>
+          <div
+            class="mb-2 text-gray-700"
+          >
+            <span
+              class="font-semibold text-blue-700"
+            >
+              @alice
+            </span>
+            : 
+            I can't believe this happened! DM me for the details.
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            AI Decision: 
+            <span
+              class="font-semibold text-pink-600"
+            >
+              Flagged for Review
+            </span>
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            Reason: 
+            Possible sharing of sensitive information.
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-2"
+          >
+            AI Confidence: 
+            <span
+              class="font-semibold text-violet-700"
+            >
+              91
+              %
+            </span>
+          </div>
+        </div>
+        <div
+          class="flex gap-2 mt-2"
+        >
+          <button
+            class="px-3 py-1 rounded bg-green-100 text-green-800 border border-green-200 hover:bg-green-200 transition"
+          >
+            Approve
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition"
+          >
+            Reject
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200 transition"
+          >
+            Override
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden h-full flex flex-col"
+    >
+      <div
+        class="bg-gray-50 p-5 border-b border-gray-200"
+      >
+        <div
+          class="flex items-center gap-3"
+        >
+          <img
+            alt="AI"
+            class="w-6 h-6"
+            src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+          />
+          <h3
+            class="text-xl font-semibold text-gray-800"
+          >
+            Image Moderation
+          </h3>
+        </div>
+        <p
+          class="text-gray-700 text-sm mt-2"
+        >
+          Review AI-flagged user-uploaded images and make the final moderation decision.
+        </p>
+        <span
+          class="block text-xs text-gray-400 mt-1"
+        >
+          (Image 
+          1
+           of 
+          4
+          )
+        </span>
+      </div>
+      <div
+        class="flex-1 p-4 flex flex-col justify-between"
+      >
+        <div>
+          <div
+            class="mb-2 flex items-center gap-3"
+          >
+            <img
+              alt="User upload"
+              class="w-20 h-20 object-cover rounded border border-gray-200"
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&h=400&q=80"
+            />
+            <span
+              class="font-semibold text-blue-700"
+            >
+              @eve
+            </span>
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            AI Decision: 
+            <span
+              class="font-semibold text-pink-600"
+            >
+              No Action Needed
+            </span>
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-1"
+          >
+            Reason: 
+            No inappropriate content detected.
+          </div>
+          <div
+            class="text-xs text-gray-500 mb-2"
+          >
+            AI Confidence: 
+            <span
+              class="font-semibold text-violet-700"
+            >
+              99
+              %
+            </span>
+          </div>
+        </div>
+        <div
+          class="flex gap-2 mt-2"
+        >
+          <button
+            class="px-3 py-1 rounded bg-green-100 text-green-800 border border-green-200 hover:bg-green-200 transition"
+          >
+            Approve
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition"
+          >
+            Reject
+          </button>
+          <button
+            class="px-3 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200 transition"
+          >
+            Override
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+  >
+    <h2
+      class="text-2xl font-bold text-gray-800 mb-4"
+    >
+      Examples in the Wild
+    </h2>
+    <div
+      class="grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <img
+          alt="Grammarly writing suggestions"
+          class="w-full h-48 object-cover"
+          src="/images/examples/grammarly-suggestions.gif"
+        />
+        <div
+          class="p-4"
+        >
+          <h3
+            class="font-semibold text-lg text-gray-800"
+          >
+            Grammarly Writing Assistant
+          </h3>
+          <p
+            class="text-sm text-gray-600 mt-2"
+          >
+            Grammarly suggests grammar, spelling, and style improvements as users write, but requires human approval before changes are applied, maintaining user control over the final text.
+          </p>
+        </div>
+      </div>
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <img
+          alt="Google Photos face detection"
+          class="w-full h-48 object-cover"
+          src="/images/examples/google-face-detection.gif"
+        />
+        <div
+          class="p-4"
+        >
+          <h3
+            class="font-semibold text-lg text-gray-800"
+          >
+            Google Photos Face Detection
+          </h3>
+          <p
+            class="text-sm text-gray-600 mt-2"
+          >
+            Google Photos automatically detects faces in images but relies on users to confirm identities, allowing humans to verify AI suggestions before they're applied.
+          </p>
+        </div>
+      </div>
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <img
+          alt="OpenAI human feedback"
+          class="w-full h-48 object-cover"
+          src="/images/examples/openai-human-feedback.png"
+        />
+        <div
+          class="p-4"
+        >
+          <h3
+            class="font-semibold text-lg text-gray-800"
+          >
+            OpenAI RLHF
+          </h3>
+          <p
+            class="text-sm text-gray-600 mt-2"
+          >
+            OpenAI uses Reinforcement Learning from Human Feedback (RLHF) to improve their models, having humans rate AI outputs to train reward models that guide further refinement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

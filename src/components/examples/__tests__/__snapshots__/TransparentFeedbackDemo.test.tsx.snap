@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransparentFeedbackDemo Snapshot matches snapshot 1`] = `
+<div
+  class="max-w-full mx-auto"
+>
+  <div
+    class="mb-5 bg-gray-50 p-3 rounded-lg border border-gray-200 text-sm text-gray-700"
+  >
+    <p>
+      This demo shows how AI confidence indicators help users understand the reliability of AI predictions. Try typing some text and analyze it to see the confidence levels for different aspects.
+    </p>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+  >
+    <div
+      class="bg-white p-4 rounded-lg border border-gray-200"
+    >
+      <h3
+        class="text-lg font-semibold text-gray-800 mb-3"
+      >
+        Content Analysis Tool
+      </h3>
+      <textarea
+        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px]"
+        placeholder="Enter some text to analyze with AI. Try including positive/negative words or personal information to see how it affects the analysis."
+      />
+      <div
+        class="mt-3 flex justify-end"
+      >
+        <button
+          class="px-4 py-2 rounded-md font-medium text-white bg-gray-400"
+          disabled=""
+        >
+          Analyze with AI
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-start h-full"
+    >
+      <div
+        class="w-full flex items-center justify-center bg-white p-8 rounded-lg border border-gray-200 h-full"
+      >
+        <div
+          class="text-center text-gray-500"
+        >
+          <svg
+            class="h-12 w-12 mx-auto mb-4 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+          <h3
+            class="text-lg font-medium mb-2"
+          >
+            No Analysis Yet
+          </h3>
+          <p
+            class="text-sm"
+          >
+            Enter some text and click "Analyze with AI" to see confidence indicators
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TransparentFeedbackDemo Snapshot matches snapshot with different props 1`] = `
+<div
+  class="max-w-full mx-auto"
+>
+  <div
+    class="mb-5 bg-gray-50 p-3 rounded-lg border border-gray-200 text-sm text-gray-700"
+  >
+    <p>
+      This demo shows how AI confidence indicators help users understand the reliability of AI predictions. Try typing some text and analyze it to see the confidence levels for different aspects.
+    </p>
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 gap-4"
+  >
+    <div
+      class="bg-white p-4 rounded-lg border border-gray-200"
+    >
+      <h3
+        class="text-lg font-semibold text-gray-800 mb-3"
+      >
+        Content Analysis Tool
+      </h3>
+      <textarea
+        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px]"
+        placeholder="Enter some text to analyze with AI. Try including positive/negative words or personal information to see how it affects the analysis."
+      />
+      <div
+        class="mt-3 flex justify-end"
+      >
+        <button
+          class="px-4 py-2 rounded-md font-medium text-white bg-gray-400"
+          disabled=""
+        >
+          Analyze with AI
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex items-start h-full"
+    >
+      <div
+        class="w-full flex items-center justify-center bg-white p-8 rounded-lg border border-gray-200 h-full"
+      >
+        <div
+          class="text-center text-gray-500"
+        >
+          <svg
+            class="h-12 w-12 mx-auto mb-4 text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+          <h3
+            class="text-lg font-medium mb-2"
+          >
+            No Analysis Yet
+          </h3>
+          <p
+            class="text-sm"
+          >
+            Enter some text and click "Analyze with AI" to see confidence indicators
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,511 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SkeletonLoader Snapshot matches snapshot 1`] = `
+<div
+  class="max-w-6xl mx-auto py-8 px-4 animate-pulse"
+>
+  <div
+    class="flex items-center space-x-2 mb-6"
+  >
+    <div
+      class="h-4 w-10 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-4 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-14 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-4 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-32 bg-gray-200 rounded"
+    />
+  </div>
+  <div
+    class="mb-10"
+  >
+    <div
+      class="h-12 w-3/4 bg-gray-200 rounded mb-6"
+    />
+    <div
+      class="h-6 w-full bg-gray-200 rounded mb-4"
+    />
+    <div
+      class="h-6 w-2/3 bg-gray-200 rounded"
+    />
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+  >
+    <div
+      class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
+    >
+      <div
+        class="flex items-center mb-4"
+      >
+        <div
+          class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+        />
+        <div
+          class="h-7 w-28 bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="space-y-3"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-3/4 bg-gray-200 rounded"
+        />
+      </div>
+    </div>
+    <div
+      class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
+    >
+      <div
+        class="flex items-center mb-4"
+      >
+        <div
+          class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+        />
+        <div
+          class="h-7 w-28 bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="space-y-3"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-3/4 bg-gray-200 rounded"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-12"
+  >
+    <div
+      class="flex items-center mb-6"
+    >
+      <div
+        class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+      />
+      <div
+        class="h-7 w-44 bg-gray-200 rounded"
+      />
+    </div>
+    <div
+      class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm h-64"
+    />
+  </div>
+  <div
+    class="mb-12"
+  >
+    <div
+      class="flex items-center mb-6"
+    >
+      <div
+        class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+      />
+      <div
+        class="h-7 w-64 bg-gray-200 rounded"
+      />
+    </div>
+    <div
+      class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
+    >
+      <div
+        class="flex flex-col md:flex-row"
+      >
+        <div
+          class="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-gray-200"
+        >
+          <div
+            class="h-7 w-48 bg-gray-200 rounded mb-6"
+          />
+          <div
+            class="space-y-4"
+          >
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex-1 p-6 md:p-8 bg-gray-50"
+        >
+          <div
+            class="h-7 w-48 bg-gray-200 rounded mb-6"
+          />
+          <div
+            class="space-y-4"
+          >
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="flex items-center mb-6"
+    >
+      <div
+        class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+      />
+      <div
+        class="h-7 w-44 bg-gray-200 rounded"
+      />
+    </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`SkeletonLoader Snapshot matches snapshot with different props 1`] = `
+<div
+  class="max-w-6xl mx-auto py-8 px-4 animate-pulse"
+>
+  <div
+    class="flex items-center space-x-2 mb-6"
+  >
+    <div
+      class="h-4 w-10 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-4 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-14 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-4 bg-gray-200 rounded"
+    />
+    <div
+      class="h-4 w-32 bg-gray-200 rounded"
+    />
+  </div>
+  <div
+    class="mb-10"
+  >
+    <div
+      class="h-12 w-3/4 bg-gray-200 rounded mb-6"
+    />
+    <div
+      class="h-6 w-full bg-gray-200 rounded mb-4"
+    />
+    <div
+      class="h-6 w-2/3 bg-gray-200 rounded"
+    />
+  </div>
+  <div
+    class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+  >
+    <div
+      class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
+    >
+      <div
+        class="flex items-center mb-4"
+      >
+        <div
+          class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+        />
+        <div
+          class="h-7 w-28 bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="space-y-3"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-3/4 bg-gray-200 rounded"
+        />
+      </div>
+    </div>
+    <div
+      class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm"
+    >
+      <div
+        class="flex items-center mb-4"
+      >
+        <div
+          class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+        />
+        <div
+          class="h-7 w-28 bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="space-y-3"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+        <div
+          class="h-5 w-3/4 bg-gray-200 rounded"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="mb-12"
+  >
+    <div
+      class="flex items-center mb-6"
+    >
+      <div
+        class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+      />
+      <div
+        class="h-7 w-44 bg-gray-200 rounded"
+      />
+    </div>
+    <div
+      class="bg-white rounded-lg p-4 border border-gray-200 shadow-sm h-64"
+    />
+  </div>
+  <div
+    class="mb-12"
+  >
+    <div
+      class="flex items-center mb-6"
+    >
+      <div
+        class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+      />
+      <div
+        class="h-7 w-64 bg-gray-200 rounded"
+      />
+    </div>
+    <div
+      class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
+    >
+      <div
+        class="flex flex-col md:flex-row"
+      >
+        <div
+          class="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-gray-200"
+        >
+          <div
+            class="h-7 w-48 bg-gray-200 rounded mb-6"
+          />
+          <div
+            class="space-y-4"
+          >
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex-1 p-6 md:p-8 bg-gray-50"
+        >
+          <div
+            class="h-7 w-48 bg-gray-200 rounded mb-6"
+          />
+          <div
+            class="space-y-4"
+          >
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+            <div
+              class="flex items-start"
+            >
+              <div
+                class="h-6 w-6 bg-gray-100 border border-gray-300 rounded-full mr-3"
+              />
+              <div
+                class="h-5 w-full bg-gray-200 rounded"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div
+      class="flex items-center mb-6"
+    >
+      <div
+        class="bg-gray-200 w-1 h-8 mr-3 rounded-full"
+      />
+      <div
+        class="h-7 w-44 bg-gray-200 rounded"
+      />
+    </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+      </div>
+      <div
+        class="bg-white rounded-lg p-6 shadow-sm border border-gray-200"
+      >
+        <div
+          class="h-5 w-full bg-gray-200 rounded"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

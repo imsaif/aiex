@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScrollToTop Snapshot matches snapshot 1`] = `null`;
+
+exports[`ScrollToTop Snapshot matches snapshot with different props 1`] = `null`;

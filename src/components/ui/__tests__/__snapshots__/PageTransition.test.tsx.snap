@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageTransition Snapshot matches snapshot 1`] = `
+<div
+  animate="[object Object]"
+  class="w-full"
+  exit="[object Object]"
+  initial="[object Object]"
+  transition="[object Object]"
+>
+  test-value
+</div>
+`;
+
+exports[`PageTransition Snapshot matches snapshot with different props 1`] = `
+<div
+  animate="[object Object]"
+  class="w-full"
+  exit="[object Object]"
+  initial="[object Object]"
+  transition="[object Object]"
+>
+  test-value
+</div>
+`;

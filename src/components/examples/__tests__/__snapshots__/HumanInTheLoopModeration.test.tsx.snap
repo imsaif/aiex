@@ -1,0 +1,447 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HumanInTheLoopModeration Snapshot matches snapshot 1`] = `
+<div
+  class="w-full grid grid-cols-1 md:grid-cols-3 gap-4"
+>
+  <div
+    class="md:col-span-2 bg-white rounded-lg shadow p-4"
+  >
+    <h2
+      class="text-xl font-semibold mb-4"
+    >
+      Content Moderation Queue
+    </h2>
+    <div
+      class="border rounded-lg p-4 mb-4"
+    >
+      <div
+        class="flex flex-wrap justify-between mb-2"
+      >
+        <span
+          class="font-medium text-gray-700"
+        >
+          user123
+        </span>
+        <span
+          class="text-sm text-gray-500"
+        >
+          15/6/2023, 7:53:00 pm
+        </span>
+      </div>
+      <p
+        class="mb-4 p-3 bg-gray-50 rounded border"
+      >
+        Check out this amazing offer! Click here to get 80% off: bit.ly/notascam
+      </p>
+      <div
+        class="flex flex-wrap items-center gap-2 mb-4"
+      >
+        <span
+          class="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"
+        >
+          AI Flagged
+        </span>
+        <span
+          class="text-sm text-gray-500"
+        >
+          87
+          % confidence
+        </span>
+        <span
+          class="text-sm text-gray-700"
+        >
+          Reason: 
+          Potential scam or misleading content
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-3"
+      >
+        <button
+          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+        >
+          Approve
+        </button>
+        <button
+          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+        >
+          Reject
+        </button>
+        <button
+          class="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+        >
+          Escalate
+        </button>
+      </div>
+    </div>
+    <div
+      class="mt-4"
+    >
+      <h3
+        class="font-medium mb-2"
+      >
+        Test with your own content
+      </h3>
+      <form
+        class="space-y-3"
+      >
+        <textarea
+          class="w-full p-2 border rounded-lg"
+          placeholder="Type content to test moderation system..."
+          rows="3"
+        />
+        <div
+          class="flex flex-wrap items-center gap-2"
+        >
+          <button
+            class="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 transition disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+            type="submit"
+          >
+            Submit for Moderation
+          </button>
+          <p
+            class="text-xs text-gray-500"
+          >
+            Try including words like "password" or "click here" to trigger the AI moderation
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div
+    class="bg-white rounded-lg shadow p-4 space-y-4"
+  >
+    <div>
+      <h2
+        class="text-xl font-semibold mb-3"
+      >
+        Moderation Stats
+      </h2>
+      <div
+        class="grid grid-cols-2 gap-3"
+      >
+        <div
+          class="p-2 bg-gray-50 rounded border"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Content Reviewed
+          </div>
+          <div
+            class="font-medium text-lg"
+          >
+            0
+          </div>
+        </div>
+        <div
+          class="p-2 bg-green-50 rounded border border-green-100"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Approved
+          </div>
+          <div
+            class="font-medium text-lg text-green-600"
+          >
+            0
+          </div>
+        </div>
+        <div
+          class="p-2 bg-red-50 rounded border border-red-100"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Rejected
+          </div>
+          <div
+            class="font-medium text-lg text-red-600"
+          >
+            0
+          </div>
+        </div>
+        <div
+          class="p-2 bg-amber-50 rounded border border-amber-100"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Escalated
+          </div>
+          <div
+            class="font-medium text-lg text-amber-600"
+          >
+            0
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2
+        class="text-xl font-semibold mb-2"
+      >
+        How It Works
+      </h2>
+      <ol
+        class="list-decimal list-inside space-y-1 text-sm"
+      >
+        <li>
+          Content is first processed by AI moderation
+        </li>
+        <li>
+          High-confidence safe content may be auto-approved
+        </li>
+        <li>
+          Flagged or uncertain content goes to human review
+        </li>
+        <li>
+          Human moderators have final decision authority
+        </li>
+        <li>
+          The system learns from human decisions over time
+        </li>
+      </ol>
+    </div>
+    <div
+      class="p-3 bg-amber-50 rounded border border-amber-100"
+    >
+      <h3
+        class="font-medium text-amber-800 mb-1"
+      >
+        Key Principle
+      </h3>
+      <p
+        class="text-sm text-amber-700"
+      >
+        Human-in-the-loop systems combine AI efficiency with human judgment to create safer, more reliable content moderation.
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`HumanInTheLoopModeration Snapshot matches snapshot with different props 1`] = `
+<div
+  class="w-full grid grid-cols-1 md:grid-cols-3 gap-4"
+>
+  <div
+    class="md:col-span-2 bg-white rounded-lg shadow p-4"
+  >
+    <h2
+      class="text-xl font-semibold mb-4"
+    >
+      Content Moderation Queue
+    </h2>
+    <div
+      class="border rounded-lg p-4 mb-4"
+    >
+      <div
+        class="flex flex-wrap justify-between mb-2"
+      >
+        <span
+          class="font-medium text-gray-700"
+        >
+          user123
+        </span>
+        <span
+          class="text-sm text-gray-500"
+        >
+          15/6/2023, 7:53:00 pm
+        </span>
+      </div>
+      <p
+        class="mb-4 p-3 bg-gray-50 rounded border"
+      >
+        Check out this amazing offer! Click here to get 80% off: bit.ly/notascam
+      </p>
+      <div
+        class="flex flex-wrap items-center gap-2 mb-4"
+      >
+        <span
+          class="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800"
+        >
+          AI Flagged
+        </span>
+        <span
+          class="text-sm text-gray-500"
+        >
+          87
+          % confidence
+        </span>
+        <span
+          class="text-sm text-gray-700"
+        >
+          Reason: 
+          Potential scam or misleading content
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-3"
+      >
+        <button
+          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+        >
+          Approve
+        </button>
+        <button
+          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+        >
+          Reject
+        </button>
+        <button
+          class="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+        >
+          Escalate
+        </button>
+      </div>
+    </div>
+    <div
+      class="mt-4"
+    >
+      <h3
+        class="font-medium mb-2"
+      >
+        Test with your own content
+      </h3>
+      <form
+        class="space-y-3"
+      >
+        <textarea
+          class="w-full p-2 border rounded-lg"
+          placeholder="Type content to test moderation system..."
+          rows="3"
+        />
+        <div
+          class="flex flex-wrap items-center gap-2"
+        >
+          <button
+            class="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 transition disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+            type="submit"
+          >
+            Submit for Moderation
+          </button>
+          <p
+            class="text-xs text-gray-500"
+          >
+            Try including words like "password" or "click here" to trigger the AI moderation
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div
+    class="bg-white rounded-lg shadow p-4 space-y-4"
+  >
+    <div>
+      <h2
+        class="text-xl font-semibold mb-3"
+      >
+        Moderation Stats
+      </h2>
+      <div
+        class="grid grid-cols-2 gap-3"
+      >
+        <div
+          class="p-2 bg-gray-50 rounded border"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Content Reviewed
+          </div>
+          <div
+            class="font-medium text-lg"
+          >
+            0
+          </div>
+        </div>
+        <div
+          class="p-2 bg-green-50 rounded border border-green-100"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Approved
+          </div>
+          <div
+            class="font-medium text-lg text-green-600"
+          >
+            0
+          </div>
+        </div>
+        <div
+          class="p-2 bg-red-50 rounded border border-red-100"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Rejected
+          </div>
+          <div
+            class="font-medium text-lg text-red-600"
+          >
+            0
+          </div>
+        </div>
+        <div
+          class="p-2 bg-amber-50 rounded border border-amber-100"
+        >
+          <div
+            class="text-sm text-gray-600"
+          >
+            Escalated
+          </div>
+          <div
+            class="font-medium text-lg text-amber-600"
+          >
+            0
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2
+        class="text-xl font-semibold mb-2"
+      >
+        How It Works
+      </h2>
+      <ol
+        class="list-decimal list-inside space-y-1 text-sm"
+      >
+        <li>
+          Content is first processed by AI moderation
+        </li>
+        <li>
+          High-confidence safe content may be auto-approved
+        </li>
+        <li>
+          Flagged or uncertain content goes to human review
+        </li>
+        <li>
+          Human moderators have final decision authority
+        </li>
+        <li>
+          The system learns from human decisions over time
+        </li>
+      </ol>
+    </div>
+    <div
+      class="p-3 bg-amber-50 rounded border border-amber-100"
+    >
+      <h3
+        class="font-medium text-amber-800 mb-1"
+      >
+        Key Principle
+      </h3>
+      <p
+        class="text-sm text-amber-700"
+      >
+        Human-in-the-loop systems combine AI efficiency with human judgment to create safer, more reliable content moderation.
+      </p>
+    </div>
+  </div>
+</div>
+`;
