@@ -30,8 +30,14 @@
     "design-style-guide": "node scripts/design-consistency-agent.js style-guide",
     "design-fix": "node scripts/design-consistency-agent.js fix",
     "design-fix-all": "node scripts/design-consistency-agent.js fix-all",
+    "progress-report": "node scripts/project-progress-agent.js report",
+    "progress-status": "node scripts/project-progress-agent.js status",
+    "progress-agents": "node scripts/project-progress-agent.js agents",
+    "progress-next": "node scripts/project-progress-agent.js next",
+    "progress-update": "node scripts/project-progress-agent.js update",
+    "progress-sync": "node scripts/project-progress-agent.js sync",
     "prebuild": "node scripts/inject-contextual-assistance-code.js",
-    "postbuild": "echo '📊 Build completed! Check build-metrics.json for performance insights.'"
+    "postbuild": "echo '📊 Build completed! Check build-metrics.json for performance insights.' && npm run progress-update"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
