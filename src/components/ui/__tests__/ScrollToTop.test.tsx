@@ -58,7 +58,6 @@ describe('ScrollToTop', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
       const user = userEvent.setup();
       
       render(<ScrollToTop {...defaultProps} onClick={onClick} />);

@@ -44,7 +44,6 @@ describe('CopyCodeButton', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
       const user = userEvent.setup();
       
       render(<CopyCodeButton {...defaultProps} onClick={onClick} />);

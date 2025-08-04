@@ -324,43 +324,45 @@ export default function GuidedLearningTutorial() {
       )}
 
       {/* Tutorial CSS */}
-      <style jsx>{\`
-        .tutorial-highlight {
-          position: relative;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5) !important;
-          border-radius: 4px;
-          z-index: 10;
-        }
-        
-        .tutorial-highlight::after {
-          content: '';
-          position: absolute;
-          top: -8px;
-          right: -8px;
-          width: 16px;
-          height: 16px;
-          background: #3B82F6;
-          border-radius: 50%;
-          animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-          0% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      <style dangerouslySetInnerHTML={{
+        __html: \`
+          .tutorial-highlight {
+            position: relative;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5) !important;
+            border-radius: 4px;
+            z-index: 10;
           }
           
-          70% {
-            transform: scale(1);
-            box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+          .tutorial-highlight::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            background: #3B82F6;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
           }
           
-          100% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+          @keyframes pulse {
+            0% {
+              transform: scale(0.95);
+              box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+            
+            70% {
+              transform: scale(1);
+              box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+            
+            100% {
+              transform: scale(0.95);
+              box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
           }
-        }
-      \`}</style>
+        \`
+      }} />
     </div>
   );
 }`

@@ -98,7 +98,6 @@ describe('OptimizedMedia', () => {
     });
 
     it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
       const user = userEvent.setup();
       
       const { container } = render(<OptimizedMedia {...defaultProps} onClick={onClick} />);

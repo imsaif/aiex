@@ -75,7 +75,6 @@ describe('Hero', () => {
     });
 
     it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
       const user = userEvent.setup();
       
       render(<Hero {...defaultProps} onClick={onClick} />);
@@ -91,8 +90,6 @@ describe('Hero', () => {
   describe('Form Interactions', () => {
     it('handles button clicks', async () => {
       const user = userEvent.setup();
-      const onClick = jest.fn();
-      
       render(<Hero {...defaultProps} onClick={onClick} />);
       
       const button = screen.getByRole('button');

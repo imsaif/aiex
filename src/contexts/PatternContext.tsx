@@ -12,11 +12,31 @@ const PatternContext = createContext<PatternContextType | undefined>(undefined);
  * PatternProvider component that provides pattern data and utilities to child components
  */
 export function PatternProvider({ children }: { children: ReactNode }) {
-  const [allPatterns] = useState<Pattern[]>(patterns);
+  const [allPatterns, setAllPatterns] = useState<Pattern[]>([]);
   const [categories] = useState<Category[]>(categoriesData);
-  const [loading] = useState(false); // No loading needed for static imports
-  const [error] = useState<string | null>(null);
-  const [lastUpdated] = useState<Date>(new Date());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const loadPatterns = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        // Use static import wrapped in Promise for consistent async behavior
+        const patternsData = await Promise.resolve(patterns);
+        setAllPatterns(patternsData);
+        setLastUpdated(new Date());
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load patterns');
+        setAllPatterns([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPatterns();
+  }, []);
 
   // Optimized pattern getter with memoization
   const getPattern = useCallback((slug: string): Pattern | null => {

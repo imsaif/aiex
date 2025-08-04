@@ -63,7 +63,6 @@ describe('PatternCategories', () => {
     });
 
     it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
       const user = userEvent.setup();
       
       render(<PatternCategories {...defaultProps} onClick={onClick} />);

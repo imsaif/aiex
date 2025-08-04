@@ -55,7 +55,6 @@ describe('Carousel', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const onClick = jest.fn();
       const user = userEvent.setup();
       
       render(<Carousel {...defaultProps} onClick={onClick} />);
@@ -71,8 +70,6 @@ describe('Carousel', () => {
   describe('Form Interactions', () => {
     it('handles button clicks', async () => {
       const user = userEvent.setup();
-      const onClick = jest.fn();
-      
       render(<Carousel {...defaultProps} onClick={onClick} />);
       
       const button = screen.getByRole('button');

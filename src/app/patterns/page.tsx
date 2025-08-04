@@ -46,24 +46,6 @@ export default function PatternsPage() {
         </p>
       </div>
 
-      {/* Categories filter tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
-        {categoriesWithColors.map(category => (
-          <a 
-            key={category.name}
-            href={`#${category.name.toLowerCase().replace(/\s+/g, '-')}`}
-            className={`inline-block px-4 py-2 rounded-full text-sm font-medium bg-${category.color}-100 text-${category.color}-800 hover:bg-${category.color}-200 transition-colors`}
-          >
-            {category.name}
-          </a>
-        ))}
-        <Link 
-          href="/"
-          className="inline-block px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors ml-auto"
-        >
-          Back to Home
-        </Link>
-      </div>
       
       {/* Patterns by category */}
       {categoriesWithColors.map(category => (

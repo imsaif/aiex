@@ -7,7 +7,6 @@ import Carousel from '@/components/ui/Carousel';
 import CodeExampleBlock from '@/components/ui/CodeExampleBlock';
 import FavoriteButton from '@/components/ui/FavoriteButton';
 import RelatedPatterns from '@/components/ui/RelatedPatterns';
-import { useRecentPatterns } from '@/hooks/useRecentPatterns';
 import { useInteractionTracking } from '@/hooks/usePageTracking';
 import { Pattern } from '@/types';
 
@@ -18,16 +17,14 @@ interface ClientPageProps {
 }
 
 export default function ClientPage({ pattern, previousPattern, nextPattern }: ClientPageProps) {
-  const { addRecentPattern } = useRecentPatterns();
   const { trackPatternView } = useInteractionTracking();
 
-  // Track this pattern as recently viewed and for analytics
+  // Track this pattern for analytics
   useEffect(() => {
     if (pattern?.id && pattern?.title) {
-      addRecentPattern(pattern.id);
       trackPatternView(pattern.id, pattern.title);
     }
-  }, [pattern?.id, pattern?.title, addRecentPattern, trackPatternView]);
+  }, [pattern?.id, pattern?.title, trackPatternView]);
 
   // Fast, minimal animations for better performance
   const containerVariants = {

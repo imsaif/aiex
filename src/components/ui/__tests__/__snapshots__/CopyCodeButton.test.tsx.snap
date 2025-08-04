@@ -2,64 +2,94 @@
 
 exports[`CopyCodeButton Snapshot matches snapshot 1`] = `
 <div
-  class="bg-gray-50 border rounded p-3 mb-4"
+  class="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden "
 >
   <div
-    class="text-gray-800 font-mono text-sm mb-2 whitespace-pre-wrap"
+    class="text-gray-800 font-mono text-sm p-3 whitespace-pre-wrap bg-gray-50 border-b border-gray-200"
   >
     test-value
   </div>
-  <button
-    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center"
-    type="button"
+  <div
+    class="p-2 bg-white flex justify-between items-center"
   >
-    <svg
-      class="h-4 w-4 mr-1"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
+    <span
+      class="text-gray-500 text-sm font-mono"
     >
-      <path
-        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-      />
-    </svg>
-    Copy Code
-  </button>
+      1
+       line
+       • 
+      10
+       chars
+    </span>
+    <button
+      class="inline-flex items-center px-3 py-2 text-sm font-medium rounded transition-colors text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+      title="Copy code to clipboard"
+      type="button"
+    >
+      <svg
+        class="h-4 w-4 mr-1"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        />
+      </svg>
+      <span>
+        Copy
+      </span>
+    </button>
+  </div>
 </div>
 `;
 
 exports[`CopyCodeButton Snapshot matches snapshot with different props 1`] = `
 <div
-  class="bg-gray-50 border rounded p-3 mb-4"
+  class="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden "
 >
   <div
-    class="text-gray-800 font-mono text-sm mb-2 whitespace-pre-wrap"
+    class="text-gray-800 font-mono text-sm p-3 whitespace-pre-wrap bg-gray-50 border-b border-gray-200"
   >
     test-value
   </div>
-  <button
-    class="text-blue-600 hover:text-blue-800 font-medium text-sm inline-flex items-center"
-    type="button"
+  <div
+    class="p-2 bg-white flex justify-between items-center"
   >
-    <svg
-      class="h-4 w-4 mr-1"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
+    <span
+      class="text-gray-500 text-sm font-mono"
     >
-      <path
-        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-      />
-    </svg>
-    Copy Code
-  </button>
+      1
+       line
+       • 
+      10
+       chars
+    </span>
+    <button
+      class="inline-flex items-center px-3 py-2 text-sm font-medium rounded transition-colors text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+      title="Copy code to clipboard"
+      type="button"
+    >
+      <svg
+        class="h-4 w-4 mr-1"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        />
+      </svg>
+      <span>
+        Copy
+      </span>
+    </button>
+  </div>
 </div>
 `;

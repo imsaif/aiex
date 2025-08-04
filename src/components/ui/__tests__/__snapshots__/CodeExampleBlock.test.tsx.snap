@@ -78,14 +78,15 @@ exports[`CodeExampleBlock Snapshot matches snapshot 1`] = `
         javascript
       </span>
       <button
-        class="text-gray-300 hover:text-white transition-colors flex items-center"
+        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 text-gray-300 hover:text-white bg-transparent border-none hover:bg-gray-700"
+        title="Copy code to clipboard"
+        type="button"
       >
         <svg
-          class="h-4 w-4 mr-1"
+          class="h-3 w-3 mr-1"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
@@ -191,14 +192,15 @@ exports[`CodeExampleBlock Snapshot matches snapshot with different props 1`] = `
         javascript
       </span>
       <button
-        class="text-gray-300 hover:text-white transition-colors flex items-center"
+        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md transition-colors bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 text-gray-300 hover:text-white bg-transparent border-none hover:bg-gray-700"
+        title="Copy code to clipboard"
+        type="button"
       >
         <svg
-          class="h-4 w-4 mr-1"
+          class="h-3 w-3 mr-1"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"

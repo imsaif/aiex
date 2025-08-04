@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { searchPatterns, getCategories, SearchResult, highlightMatches } from '../../utils/search';
+import { searchPatterns, SearchResult, highlightMatches } from '../../utils/search';
 import { useInteractionTracking } from '../../hooks/usePageTracking';
 import { Pattern } from '../../types';
 
@@ -22,7 +22,6 @@ export default function AdvancedSearchBar({
   maxResults = 8
 }: AdvancedSearchBarProps) {
   const [query, setQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -30,25 +29,20 @@ export default function AdvancedSearchBar({
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { trackSearch } = useInteractionTracking();
-  
-  const categories = getCategories();
 
-  // Perform search when query or category changes
+  // Perform search when query changes
   useEffect(() => {
     const performSearch = async () => {
-      if (query.trim().length >= 2 || selectedCategory) {
+      if (query.trim().length >= 2) {
         const searchResults = await searchPatterns(query, {
           limit: maxResults,
-          category: selectedCategory || undefined,
           minScore: 0.6
         });
         setResults(searchResults);
         setIsOpen(showResults && searchResults.length > 0);
         
         // Track search analytics
-        if (query.trim().length >= 2) {
-          trackSearch(query, searchResults.length);
-        }
+        trackSearch(query, searchResults.length);
       } else {
         setResults([]);
         setIsOpen(false);
@@ -57,7 +51,7 @@ export default function AdvancedSearchBar({
     };
 
     performSearch();
-  }, [query, selectedCategory, maxResults, showResults]);
+  }, [query, maxResults, showResults]);
 
   // Handle click outside to close results
   useEffect(() => {
@@ -109,7 +103,6 @@ export default function AdvancedSearchBar({
 
   const clearSearch = () => {
     setQuery('');
-    setSelectedCategory('');
     setResults([]);
     setIsOpen(false);
     inputRef.current?.focus();
@@ -138,7 +131,7 @@ export default function AdvancedSearchBar({
         </div>
 
         {/* Clear Button */}
-        {(query || selectedCategory) && (
+        {query && (
           <button
             onClick={clearSearch}
             className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-600"
@@ -150,32 +143,6 @@ export default function AdvancedSearchBar({
         )}
       </div>
 
-      {/* Category Filter */}
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button
-          onClick={() => setSelectedCategory('')}
-          className={`px-3 py-1 text-sm rounded-full transition-colors ${
-            !selectedCategory 
-              ? 'bg-blue-100 text-blue-700 border border-blue-200' 
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          All Categories
-        </button>
-        {categories.map(category => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-3 py-1 text-sm rounded-full transition-colors ${
-              selectedCategory === category 
-                ? 'bg-blue-100 text-blue-700 border border-blue-200' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
 
       {/* Search Results */}
       {isOpen && results.length > 0 && (

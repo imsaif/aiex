@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import categories from '@/data/categories';
+import categories from '../../data/categories';
 import { useRouter } from 'next/navigation';
 import OptimizedMedia from '../ui/OptimizedMedia';
 import FavoriteButton from '../ui/FavoriteButton';
