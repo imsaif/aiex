@@ -14,6 +14,9 @@ jest.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+// Mock scrollIntoView
+Element.prototype.scrollIntoView = jest.fn();
+
 describe('SearchAssistanceDemo', () => {
   const defaultProps = {};
 
@@ -50,54 +53,57 @@ describe('SearchAssistanceDemo', () => {
   });
 
   describe('Event Handling', () => {
-    it('calls onChange when triggered', async () => {
+    it('handles input change correctly', async () => {
       const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
-      const elements = screen.getAllByRole('button');
-      const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      const searchInput = screen.getByPlaceholderText('Search for patterns...');
+      await user.type(searchInput, 'contextual');
       
-      // Component handles change internally
-      expect(element).toBeInTheDocument();
+      expect(searchInput).toHaveValue('contextual');
     });
 
-    it('calls onKeyDown when triggered', async () => {
+    it('handles keyboard navigation', async () => {
       const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
-      const elements = screen.getAllByRole('button');
-      const element = elements[0]; // Adjust selector as needed
+      const searchInput = screen.getByPlaceholderText('Search for patterns...');
+      
+      // Type to trigger suggestions
+      await user.type(searchInput, 'contextual');
+      
+      // Test arrow key navigation
+      await user.keyboard('{ArrowDown}');
       await user.keyboard('{Enter}');
       
-      // Component handles keydown internally
-      expect(element).toBeInTheDocument();
+      // Component handles navigation internally
+      expect(searchInput).toBeInTheDocument();
     });
 
-    it('calls onFocus when triggered', async () => {
-      const onFocus = jest.fn();
-      const user = userEvent.setup();
-      
-      render(<SearchAssistanceDemo {...defaultProps} />);
-      
-      const elements = screen.getAllByRole('button');
-      const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
-      
-      // Component handles focus internally
-      expect(element).toBeInTheDocument();
-    });
-
-    it('calls onClick when triggered', async () => {
+    it('handles focus events', async () => {
       const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
-      const elements = screen.getAllByRole('button');
-      const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      const searchInput = screen.getByPlaceholderText('Search for patterns...');
       
-      // Component handles click internally
-      expect(element).toBeInTheDocument();
+      // Type something first
+      await user.type(searchInput, 'test');
+      await user.tab(); // Blur
+      await user.click(searchInput); // Focus again
+      
+      expect(searchInput).toHaveFocus();
+    });
+
+    it('handles recent search button clicks', async () => {
+      const user = userEvent.setup();
+      render(<SearchAssistanceDemo {...defaultProps} />);
+      
+      // Recent searches should be visible when input is empty
+      const recentButton = screen.getByRole('button', { name: 'progressive disclosure' });
+      await user.click(recentButton);
+      
+      const searchInput = screen.getByPlaceholderText('Search for patterns...');
+      expect(searchInput).toHaveValue('progressive disclosure');
     });
 
   });
@@ -115,15 +121,17 @@ describe('SearchAssistanceDemo', () => {
       expect(input).toHaveValue('test input');
     });
 
-    it('handles button clicks', async () => {
+    it('handles recent search button clicks', async () => {
       const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
-      const button = screen.getByRole('button');
+      // Click a specific recent search button by name
+      const button = screen.getByRole('button', { name: 'contextual assistance' });
       await user.click(button);
       
-      // Component handles click internally
-      expect(button).toBeInTheDocument();
+      // Verify the input value was updated
+      const input = screen.getByRole('textbox');
+      expect(input).toHaveValue('contextual assistance');
     });
 
   });

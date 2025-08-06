@@ -1,0 +1,265 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Hero Snapshot matches snapshot 1`] = `
+<div
+  class="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16"
+>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-purple-50"
+  >
+    <div
+      class="absolute inset-0 pointer-events-none"
+    >
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 21.22572118331769%; top: 60.56454111205169%; width: 41.777906788764334px; height: 41.777906788764334px; background: rgba(99, 102, 241, 0.4); animation-delay: 0s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 26.979803757701724%; top: 39.195707396952486%; width: 27.102661515575278px; height: 27.102661515575278px; background: rgba(99, 102, 241, 0.4); animation-delay: 0.5s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 20.188454262450193%; top: 94.88581341744558%; width: 47.94409043626879px; height: 47.94409043626879px; background: rgba(219, 39, 119, 0.4); animation-delay: 1s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 20.90302122655614%; top: 32.58073422645103%; width: 12.835508632381533px; height: 12.835508632381533px; background: rgba(126, 34, 206, 0.4); animation-delay: 1.5s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 9.488025425653168%; top: 46.67909422199364%; width: 29.864505774009224px; height: 29.864505774009224px; background: rgba(126, 34, 206, 0.4); animation-delay: 2s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 0.3984241146697709%; top: 78.94405811574592%; width: 14.318159004320188px; height: 14.318159004320188px; background: rgba(79, 70, 229, 0.3); animation-delay: 2.5s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 18.132888975558803%; top: 13.455412432295688%; width: 35.07434218357696px; height: 35.07434218357696px; background: rgba(126, 34, 206, 0.4); animation-delay: 3s;"
+      />
+    </div>
+  </div>
+  <div
+    class="absolute left-[15%] top-[20%] w-24 h-24 md:w-36 md:h-36 rounded-full bg-gradient-to-r from-pink-300 to-pink-400 opacity-20 blur-2xl"
+  />
+  <div
+    class="absolute right-[20%] bottom-[30%] w-32 h-32 md:w-48 md:h-48 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 opacity-15 blur-3xl"
+  />
+  <div
+    class="absolute left-[25%] bottom-[15%] w-20 h-20 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-indigo-400 to-indigo-600 opacity-20 blur-2xl"
+  />
+  <div
+    class="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 py-16 md:py-20 relative z-10"
+  >
+    <div
+      class="text-center max-w-4xl mx-auto"
+    >
+      <h1
+        animate="[object Object]"
+        class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        Discover AI Design
+        <br />
+        <span
+          class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
+        >
+          Inspiration & Patterns
+        </span>
+      </h1>
+      <p
+        animate="[object Object]"
+        class="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        Explore real-world examples of effective AI interfaces and learn from the best implementations
+      </p>
+      <div
+        animate="[object Object]"
+        class="mb-10 max-w-2xl mx-auto"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        <div
+          class="relative w-full"
+        >
+          <div
+            class="relative"
+          >
+            <input
+              class="w-full px-4 py-3 pl-12 pr-12 text-gray-700 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200"
+              placeholder="Search patterns, categories, or use cases..."
+              type="text"
+              value=""
+            />
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"
+            >
+              <svg
+                class="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        animate="[object Object]"
+        class="flex justify-center"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        <button
+          class="relative inline-flex items-center justify-center rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 focus:ring-indigo-500 px-6 py-3 text-base  text-base px-8 py-4"
+        >
+          Browse All Patterns
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Hero Snapshot matches snapshot with different props 1`] = `
+<div
+  class="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16"
+>
+  <div
+    class="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-purple-50"
+  >
+    <div
+      class="absolute inset-0 pointer-events-none"
+    >
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 13.531981590794583%; top: 81.25686289513017%; width: 58.52368260768636px; height: 58.52368260768636px; background: rgba(219, 39, 119, 0.4); animation-delay: 0s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 49.66999393750206%; top: 89.60950415711689%; width: 33.19833590946095px; height: 33.19833590946095px; background: rgba(147, 51, 234, 0.3); animation-delay: 0.5s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 25.82139859132837%; top: 68.76296022126405%; width: 22.00771246638169px; height: 22.00771246638169px; background: rgba(79, 70, 229, 0.3); animation-delay: 1s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 31.829829916831407%; top: 66.44301711437544%; width: 29.113842275646498px; height: 29.113842275646498px; background: rgba(126, 34, 206, 0.4); animation-delay: 1.5s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 72.34844700583885%; top: 65.8172050798788%; width: 37.832791949483536px; height: 37.832791949483536px; background: rgba(79, 70, 229, 0.3); animation-delay: 2s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 66.28208900575368%; top: 62.71466840986437%; width: 50.00312550805894px; height: 50.00312550805894px; background: rgba(79, 70, 229, 0.3); animation-delay: 2.5s;"
+      />
+      <div
+        class="absolute rounded-full blur-xl particle-float"
+        style="left: 52.28936578099939%; top: 47.17971532905334%; width: 37.440586346117996px; height: 37.440586346117996px; background: rgba(126, 34, 206, 0.4); animation-delay: 3s;"
+      />
+    </div>
+  </div>
+  <div
+    class="absolute left-[15%] top-[20%] w-24 h-24 md:w-36 md:h-36 rounded-full bg-gradient-to-r from-pink-300 to-pink-400 opacity-20 blur-2xl"
+  />
+  <div
+    class="absolute right-[20%] bottom-[30%] w-32 h-32 md:w-48 md:h-48 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 opacity-15 blur-3xl"
+  />
+  <div
+    class="absolute left-[25%] bottom-[15%] w-20 h-20 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-indigo-400 to-indigo-600 opacity-20 blur-2xl"
+  />
+  <div
+    class="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 py-16 md:py-20 relative z-10"
+  >
+    <div
+      class="text-center max-w-4xl mx-auto"
+    >
+      <h1
+        animate="[object Object]"
+        class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        Discover AI Design
+        <br />
+        <span
+          class="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
+        >
+          Inspiration & Patterns
+        </span>
+      </h1>
+      <p
+        animate="[object Object]"
+        class="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        Explore real-world examples of effective AI interfaces and learn from the best implementations
+      </p>
+      <div
+        animate="[object Object]"
+        class="mb-10 max-w-2xl mx-auto"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        <div
+          class="relative w-full"
+        >
+          <div
+            class="relative"
+          >
+            <input
+              class="w-full px-4 py-3 pl-12 pr-12 text-gray-700 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200"
+              placeholder="Search patterns, categories, or use cases..."
+              type="text"
+              value=""
+            />
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"
+            >
+              <svg
+                class="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        animate="[object Object]"
+        class="flex justify-center"
+        initial="[object Object]"
+        transition="[object Object]"
+      >
+        <button
+          class="relative inline-flex items-center justify-center rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 focus:ring-indigo-500 px-6 py-3 text-base  text-base px-8 py-4"
+        >
+          Browse All Patterns
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

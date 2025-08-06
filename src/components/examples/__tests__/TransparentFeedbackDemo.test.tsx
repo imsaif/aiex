@@ -46,7 +46,7 @@ describe('TransparentFeedbackDemo', () => {
 
     it('shows placeholder text', () => {
       render(<TransparentFeedbackDemo {...defaultProps} />);
-      expect(screen.getByText(/Enter some text to analyze/)).toBeInTheDocument();
+      expect(screen.getByPlaceholderText(/Enter some text to analyze/)).toBeInTheDocument();
     });
 
   });
