@@ -8,6 +8,11 @@ import { adaptiveinterfaces } from './patterns/patterns/adaptive-interfaces';
 import { multimodalinteraction } from './patterns/patterns/multimodal-interaction';
 import { guidedlearning } from './patterns/patterns/guided-learning';
 import { augmentedcreation } from './patterns/patterns/augmented-creation';
+import { responsibleaidesign } from './patterns/patterns/responsible-ai-design';
+import { errorrecovery } from './patterns/patterns/error-recovery';
+import { collaborativeai } from './patterns/patterns/collaborative-ai';
+import { ambientintelligence } from './patterns/patterns/ambient-intelligence';
+import { safeexploration } from './patterns/patterns/safe-exploration';
 
 export const patterns: Pattern[] = [
   contextualassistance,
@@ -18,7 +23,12 @@ export const patterns: Pattern[] = [
   adaptiveinterfaces,
   multimodalinteraction,
   guidedlearning,
-  augmentedcreation
+  augmentedcreation,
+  responsibleaidesign,
+  errorrecovery,
+  collaborativeai,
+  ambientintelligence,
+  safeexploration
 ];
 
 export default patterns;
