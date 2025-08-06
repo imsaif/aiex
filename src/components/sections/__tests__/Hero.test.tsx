@@ -9,9 +9,30 @@ jest.mock('framer-motion', () => ({
     div: 'div',
     button: 'button',
     span: 'span',
-    p: 'p'
+    p: 'p',
+    h1: 'h1'
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  useMotionValue: () => ({
+    get: () => 0,
+    set: jest.fn(),
+  }),
+  useTransform: () => ({
+    get: () => 0,
+    set: jest.fn(),
+  }),
+  useSpring: () => ({
+    get: () => 0,
+    set: jest.fn(),
+  }),
+}));
+
+// Mock Next.js router
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    prefetch: jest.fn(),
+  }),
 }));
 
 describe('Hero', () => {

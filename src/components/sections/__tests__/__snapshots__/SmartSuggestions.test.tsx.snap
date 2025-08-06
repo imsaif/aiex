@@ -1,0 +1,907 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SmartSuggestions Snapshot matches snapshot 1`] = `
+<section
+  class="py-12"
+>
+  <div
+    initial="[object Object]"
+    transition="[object Object]"
+    viewport="[object Object]"
+    whileinview="[object Object]"
+  >
+    <div
+      class="flex items-center justify-between mb-8"
+    >
+      <div>
+        <h2
+          class="text-3xl sm:text-4xl font-extrabold mb-2 text-center md:text-left tracking-tight relative inline-block"
+        >
+          <span
+            class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500"
+          >
+            Popular Patterns
+          </span>
+          <div
+            class="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 w-full"
+          />
+        </h2>
+        <p
+          class="text-gray-600"
+        >
+          Discover the most useful AI design patterns
+        </p>
+      </div>
+    </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+    >
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/contextual-assistance"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Contextual Assistance"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/Smart-compose_Taco_Tuesday.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Contextual Assistance
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Provide timely help and suggestions based on the user's current task, history, and needs without requiring explicit requests.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Contextual Assistance
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/progressive-disclosure"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Progressive Disclosure"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/loom-ai.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Progressive Disclosure
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Reveal information, options, or AI-powered features gradually, reducing cognitive load and making complex tasks approachable.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Progressive Disclosure
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/human-in-the-loop"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Human-in-the-Loop"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/grammarly-suggestions.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Human-in-the-Loop
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Balance automation with human oversight and intervention for critical decisions, ensuring AI augments rather than replaces human judgment.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Human-in-the-Loop
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/explainable-ai"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Explainable AI (XAI)"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/claudethinking.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Explainable AI (XAI)
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Make AI decision-making processes understandable through visualizations, explanations, and transparent reasoning paths.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Explainable AI
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+`;
+
+exports[`SmartSuggestions Snapshot matches snapshot with different props 1`] = `
+<section
+  class="py-12"
+>
+  <div
+    initial="[object Object]"
+    transition="[object Object]"
+    viewport="[object Object]"
+    whileinview="[object Object]"
+  >
+    <div
+      class="flex items-center justify-between mb-8"
+    >
+      <div>
+        <h2
+          class="text-3xl sm:text-4xl font-extrabold mb-2 text-center md:text-left tracking-tight relative inline-block"
+        >
+          <span
+            class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500"
+          >
+            Popular Patterns
+          </span>
+          <div
+            class="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 w-full"
+          />
+        </h2>
+        <p
+          class="text-gray-600"
+        >
+          Discover the most useful AI design patterns
+        </p>
+      </div>
+    </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+    >
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/contextual-assistance"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Contextual Assistance"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/Smart-compose_Taco_Tuesday.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Contextual Assistance
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Provide timely help and suggestions based on the user's current task, history, and needs without requiring explicit requests.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Contextual Assistance
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/progressive-disclosure"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Progressive Disclosure"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/loom-ai.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Progressive Disclosure
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Reveal information, options, or AI-powered features gradually, reducing cognitive load and making complex tasks approachable.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Progressive Disclosure
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/human-in-the-loop"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Human-in-the-Loop"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/grammarly-suggestions.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Human-in-the-Loop
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Balance automation with human oversight and intervention for critical decisions, ensuring AI augments rather than replaces human judgment.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Human-in-the-Loop
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="group"
+        initial="[object Object]"
+        transition="[object Object]"
+        viewport="[object Object]"
+        whileinview="[object Object]"
+      >
+        <a
+          href="/patterns/explainable-ai"
+        >
+          <div
+            class="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-200 group-hover:border-gray-300"
+          >
+            <div
+              class="relative h-32 overflow-hidden bg-gray-50"
+            >
+              <div
+                class="relative w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                style="aspect-ratio: 300/128;"
+              >
+                <div
+                  class="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse"
+                >
+                  <svg
+                    class="w-8 h-8 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <img
+                  alt="Explainable AI (XAI)"
+                  class="w-full h-full object-contain opacity-0 transition-opacity duration-300"
+                  loading="lazy"
+                  src="/images/examples/claudethinking.gif"
+                />
+              </div>
+              <div
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <button
+                  aria-label="Add to favorites"
+                  class="p-1 rounded-full transition-colors text-gray-400 hover:text-red-500 bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
+                  title="Add to favorites"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="absolute top-2 left-2"
+              >
+                <div
+                  class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium"
+                >
+                  Popular
+                </div>
+              </div>
+            </div>
+            <div
+              class="p-4"
+            >
+              <h3
+                class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1"
+              >
+                Explainable AI (XAI)
+              </h3>
+              <p
+                class="text-sm text-gray-600 line-clamp-2 mb-2"
+              >
+                Make AI decision-making processes understandable through visualizations, explanations, and transparent reasoning paths.
+              </p>
+              <div
+                class="flex items-center justify-between"
+              >
+                <span
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700"
+                >
+                  Explainable AI
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+`;

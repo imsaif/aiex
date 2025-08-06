@@ -3,6 +3,11 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Carousel from '../Carousel';
 
+// Mock OptimizedMedia component
+jest.mock('../OptimizedMedia', () => {
+  return ({ src, alt, priority, ...props }: any) => <img src={src} alt={alt} {...props} />;
+});
+
 describe('Carousel', () => {
   const defaultProps = {
     examples: [
@@ -59,26 +64,30 @@ describe('Carousel', () => {
       
       render(<Carousel {...defaultProps} />);
       
-      const elements = screen.getAllByRole('button');
-      const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      // Get specific navigation buttons by aria-label
+      const prevButton = screen.getByLabelText('Previous image');
+      const nextButton = screen.getByLabelText('Next image');
+      
+      // Click next button
+      await user.click(nextButton);
       
       // Component handles click internally
-      expect(element).toBeInTheDocument();
+      expect(nextButton).toBeInTheDocument();
     });
 
   });
 
   describe('Form Interactions', () => {
-    it('handles button clicks', async () => {
+    it('handles navigation buttons', async () => {
       const user = userEvent.setup();
       render(<Carousel {...defaultProps} />);
       
-      const button = screen.getByRole('button');
-      await user.click(button);
+      // Test next button
+      const nextButton = screen.getByLabelText('Next image');
+      await user.click(nextButton);
       
       // Component handles click internally
-      expect(button).toBeInTheDocument();
+      expect(nextButton).toBeInTheDocument();
     });
 
   });

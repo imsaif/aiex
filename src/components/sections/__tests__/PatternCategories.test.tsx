@@ -9,10 +9,37 @@ jest.mock('framer-motion', () => ({
     div: 'div',
     button: 'button',
     span: 'span',
-    p: 'p'
+    p: 'p',
+    h2: 'h2'
   },
   AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
+
+// Mock Next.js components and hooks
+jest.mock('next/link', () => {
+  return ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>;
+});
+
+jest.mock('next/image', () => {
+  return ({ src, alt, ...props }: any) => <img src={src} alt={alt} {...props} />;
+});
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+}));
+
+// Mock OptimizedMedia component
+jest.mock('../../ui/OptimizedMedia', () => {
+  return ({ src, alt, priority, ...props }: any) => <img src={src} alt={alt} {...props} />;
+});
+
+// Mock FavoriteButton component
+jest.mock('../../ui/FavoriteButton', () => {
+  return ({ patternId, ...props }: any) => <button {...props}>♥</button>;
+});
 
 describe('PatternCategories', () => {
   const defaultProps = {};

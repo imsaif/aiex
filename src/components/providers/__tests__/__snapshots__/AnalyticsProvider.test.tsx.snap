@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AnalyticsProvider Snapshot matches snapshot 1`] = `test-value`;
+
+exports[`AnalyticsProvider Snapshot matches snapshot with different props 1`] = `test-value`;
