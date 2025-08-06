@@ -31,28 +31,28 @@ describe('Button Component', () => {
       render(<Button variant="primary">Primary</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('bg-indigo-600', 'text-white')
+      expect(button).toHaveClass('bg-indigo-600 text-white')
     })
 
     it('renders secondary variant correctly', () => {
       render(<Button variant="secondary">Secondary</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('bg-gray-100', 'text-gray-800')
+      expect(button).toHaveClass('bg-gray-100 text-gray-800')
     })
 
     it('renders outline variant correctly', () => {
       render(<Button variant="outline">Outline</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('border', 'border-gray-300', 'bg-white', 'text-gray-700')
+      expect(button).toHaveClass('border border-gray-300 bg-white text-gray-700')
     })
 
     it('renders gradient variant correctly', () => {
       render(<Button variant="gradient">Gradient</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('bg-gradient-to-r', 'from-indigo-500', 'to-purple-600')
+      expect(button).toHaveClass('bg-gradient-to-r from-indigo-500 to-purple-600')
     })
   })
 
@@ -61,21 +61,21 @@ describe('Button Component', () => {
       render(<Button size="sm">Small</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('px-3', 'py-1.5', 'text-sm')
+      expect(button).toHaveClass('px-3 py-1.5 text-sm')
     })
 
     it('renders medium size correctly', () => {
       render(<Button size="md">Medium</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('px-4', 'py-2', 'text-sm')
+      expect(button).toHaveClass('px-4 py-2 text-sm')
     })
 
     it('renders large size correctly', () => {
       render(<Button size="lg">Large</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('px-6', 'py-3', 'text-base')
+      expect(button).toHaveClass('px-6 py-3 text-base')
     })
   })
 
@@ -130,7 +130,7 @@ describe('Button Component', () => {
       render(<Button>Focus me</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2')
+      expect(button).toHaveClass('focus:outline-none focus:ring-2 focus:ring-offset-2')
     })
 
     it('supports aria attributes', () => {
@@ -151,15 +151,7 @@ describe('Button Component', () => {
       render(<Button>Base Classes</Button>)
       
       const button = screen.getByRole('button')
-      expect(button).toHaveClass(
-        'relative',
-        'inline-flex',
-        'items-center',
-        'justify-center',
-        'rounded-full',
-        'font-medium',
-        'cursor-pointer'
-      )
+      expect(button).toHaveClass('relative inline-flex items-center justify-center rounded-full font-medium cursor-pointer')
     })
   })
 }) 

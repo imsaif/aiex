@@ -54,7 +54,8 @@ describe('ProgressiveDisclosureEmailDemo', () => {
       const user = userEvent.setup();
       render(<ProgressiveDisclosureEmailDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
+      const elements = screen.getAllByRole('button');
+      const element = elements[0]; // Adjust selector as needed
       await user.click(element);
       
       // Component handles click internally
@@ -81,7 +82,7 @@ describe('ProgressiveDisclosureEmailDemo', () => {
     it('renders motion components correctly', () => {
       render(<ProgressiveDisclosureEmailDemo {...defaultProps} />);
       // Motion components should render as regular divs in test environment
-      expect(screen.getByRole('generic')).toBeInTheDocument();
+      expect(screen.getAllByRole('generic')[0]).toBeInTheDocument();
     });
 
     it('handles animation state changes', async () => {

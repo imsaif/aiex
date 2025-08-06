@@ -37,7 +37,7 @@ describe('SkeletonLoader', () => {
     it('renders motion components correctly', () => {
       render(<SkeletonLoader {...defaultProps} />);
       // Motion components should render as regular divs in test environment
-      expect(screen.getByRole('generic')).toBeInTheDocument();
+      expect(screen.getAllByRole('generic')[0]).toBeInTheDocument();
     });
 
     it('handles animation state changes', async () => {

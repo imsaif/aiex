@@ -54,7 +54,8 @@ describe('ContextualAssistanceDemo', () => {
       const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
+      const elements = screen.getAllByRole('button');
+      const element = elements[0]; // Adjust selector as needed
       await user.click(element);
       
       // Component handles change internally
@@ -65,7 +66,8 @@ describe('ContextualAssistanceDemo', () => {
       const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
+      const elements = screen.getAllByRole('button');
+      const element = elements[0]; // Adjust selector as needed
       await user.keyboard('{Enter}');
       
       // Component handles keydown internally
@@ -76,7 +78,8 @@ describe('ContextualAssistanceDemo', () => {
       const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
+      const elements = screen.getAllByRole('button');
+      const element = elements[0]; // Adjust selector as needed
       await user.click(element);
       
       // Component handles click internally
@@ -87,7 +90,8 @@ describe('ContextualAssistanceDemo', () => {
       const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
+      const elements = screen.getAllByRole('button');
+      const element = elements[0]; // Adjust selector as needed
       await user.hover(element);
       
       // Component handles hover internally
@@ -114,7 +118,7 @@ describe('ContextualAssistanceDemo', () => {
     it('renders motion components correctly', () => {
       render(<ContextualAssistanceDemo {...defaultProps} />);
       // Motion components should render as regular divs in test environment
-      expect(screen.getByRole('generic')).toBeInTheDocument();
+      expect(screen.getAllByRole('generic')[0]).toBeInTheDocument();
     });
 
     it('handles animation state changes', async () => {

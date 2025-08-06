@@ -7,13 +7,23 @@ interface ResponsiveImageProps {
   alt: string;
   className?: string;
   fallbackSrc?: string;
+  priority?: boolean;
+  sizes?: string;
+  width?: number;
+  height?: number;
+  loading?: 'eager' | 'lazy';
 }
 
 export default function ResponsiveImage({ 
   src, 
   alt, 
   className = "object-cover rounded shadow-sm", 
-  fallbackSrc = "/images/placeholder-image.png"
+  fallbackSrc = "/images/placeholder-image.png",
+  priority,
+  sizes,
+  width,
+  height,
+  loading
 }: ResponsiveImageProps) {
   const [imgSrc, setImgSrc] = useState(src);
   
@@ -22,6 +32,9 @@ export default function ResponsiveImage({
       src={imgSrc} 
       alt={alt} 
       className={className}
+      width={width}
+      height={height}
+      loading={loading}
       onError={() => setImgSrc(fallbackSrc)}
     />
   );

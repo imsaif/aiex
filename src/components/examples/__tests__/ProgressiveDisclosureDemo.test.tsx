@@ -15,7 +15,7 @@ jest.mock('framer-motion', () => ({
 }));
 
 describe('ProgressiveDisclosureDemo', () => {
-  const defaultProps = {};
+  const defaultProps = { example: 'email' as const };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -54,7 +54,8 @@ describe('ProgressiveDisclosureDemo', () => {
       const user = userEvent.setup();
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
+      const elements = screen.getAllByRole('button');
+      const element = elements[0]; // Adjust selector as needed
       await user.click(element);
       
       // Component handles click internally
@@ -65,7 +66,8 @@ describe('ProgressiveDisclosureDemo', () => {
       const user = userEvent.setup();
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       
-      const element = screen.getByRole('button'); // Adjust selector as needed
+      const elements = screen.getAllByRole('button');
+      const element = elements[0]; // Adjust selector as needed
       await user.click(element);
       
       // Component handles change internally
@@ -104,7 +106,7 @@ describe('ProgressiveDisclosureDemo', () => {
     it('renders motion components correctly', () => {
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       // Motion components should render as regular divs in test environment
-      expect(screen.getByRole('generic')).toBeInTheDocument();
+      expect(screen.getAllByRole('generic')[0]).toBeInTheDocument();
     });
 
     it('handles animation state changes', async () => {
@@ -125,8 +127,7 @@ describe('ProgressiveDisclosureDemo', () => {
 
     it('matches snapshot with different props', () => {
       const testProps = {
-        ...defaultProps,
-        // Add variant props for comprehensive snapshot testing
+        example: 'chatbot' as const
       };
       const { container } = render(<ProgressiveDisclosureDemo {...testProps} />);
       expect(container.firstChild).toMatchSnapshot();
