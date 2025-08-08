@@ -125,84 +125,6 @@ const GuidedLearningDemo = dynamic(
   }
 );
 
-// Dynamically import the AugmentedCreationDemo component
-const AugmentedCreationDemo = dynamic(
-  () => import('@/components/examples/AugmentedCreationDemo'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-);
-
-// Dynamically import the ResponsibleAiDesignDemo component
-const ResponsibleAiDesignDemo = dynamic(
-  () => import('@/components/examples/ResponsibleAiDesignDemo'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-);
-
-// Dynamically import the ErrorRecoveryDemo component
-const ErrorRecoveryDemo = dynamic(
-  () => import('@/components/examples/ErrorRecoveryDemo'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-);
-
-// Dynamically import the CollaborativeAiDemo component
-const CollaborativeAiDemo = dynamic(
-  () => import('@/components/examples/CollaborativeAiDemo'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-);
-
-// Dynamically import the AmbientIntelligenceDemo component
-const AmbientIntelligenceDemo = dynamic(
-  () => import('@/components/examples/AmbientIntelligenceDemo'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-);
-
-// Dynamically import the SafeExplorationDemo component
-const SafeExplorationDemo = dynamic(
-  () => import('@/components/examples/SafeExplorationDemo'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
-);
-
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -248,18 +170,6 @@ export default function CodeExampleBlock({
         return <MultimodalSearchDemo />;
       case 'guided-learning-tutorial':
         return <GuidedLearningDemo />;
-      case 'augmented-creation-demo':
-        return <AugmentedCreationDemo />;
-      case 'responsible-ai-design-demo':
-        return <ResponsibleAiDesignDemo />;
-      case 'error-recovery-demo':
-        return <ErrorRecoveryDemo />;
-      case 'collaborative-ai-demo':
-        return <CollaborativeAiDemo />;
-      case 'ambient-intelligence-demo':
-        return <AmbientIntelligenceDemo />;
-      case 'safe-exploration-demo':
-        return <SafeExplorationDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">

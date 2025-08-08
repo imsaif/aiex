@@ -1,0 +1,1051 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CollaborativeAiDemo Snapshot matches snapshot in initial state 1`] = `
+<div
+  class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+>
+  <header
+    class="mb-6 flex justify-between items-start"
+  >
+    <div>
+      <h2
+        class="text-2xl font-bold text-gray-900 mb-2"
+      >
+        Collaborative AI Workspace
+      </h2>
+      <p
+        class="text-gray-600"
+      >
+        Real-time collaboration with AI assistance
+      </p>
+    </div>
+    <button
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+    >
+      Hide
+       AI Insights
+    </button>
+  </header>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-4 gap-6"
+  >
+    <div
+      class="lg:col-span-3"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <div
+          class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Shared Document
+          </span>
+          <div
+            class="flex items-center space-x-2"
+          >
+            <div
+              class="flex -space-x-2"
+            >
+              <div
+                class="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+                title="Alice Johnson - online"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍💼
+                </span>
+                <div
+                  class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+                />
+              </div>
+              <div
+                class="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+                title="Bob Smith - online"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👨‍💻
+                </span>
+                <div
+                  class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+                />
+              </div>
+            </div>
+            <span
+              class="text-xs text-gray-500"
+            >
+              2
+               active
+            </span>
+          </div>
+        </div>
+        <textarea
+          class="w-full p-4 h-96 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Start collaborating... AI will provide suggestions as your team works together. Try typing at least 20 characters to see AI contributions."
+        />
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-blue-900 mb-3"
+        >
+          Team Members
+        </h3>
+        <div
+          class="space-y-2"
+        >
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍💼
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Alice Johnson
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                online
+              </div>
+            </div>
+            <div
+              class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+            />
+          </div>
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👨‍💻
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Bob Smith
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                online
+              </div>
+            </div>
+            <div
+              class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+            />
+          </div>
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍🎨
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-yellow-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Carol Williams
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                away
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-purple-50 border border-purple-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-purple-900 mb-3 flex items-center"
+        >
+          <span
+            class="mr-2"
+          >
+            🤖
+          </span>
+          AI Contributions
+        </h3>
+        <div
+          class="space-y-2 max-h-64 overflow-y-auto"
+        >
+          <p
+            class="text-sm text-purple-600 italic"
+          >
+            AI will provide suggestions as you collaborate...
+          </p>
+        </div>
+      </div>
+      <div
+        class="bg-green-50 border border-green-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-green-900 mb-2"
+        >
+          Collaboration Stats
+        </h3>
+        <div
+          class="space-y-2 text-sm"
+        >
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Active Members:
+            </span>
+            <span
+              class="font-medium"
+            >
+              2
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              AI Contributions:
+            </span>
+            <span
+              class="font-medium"
+            >
+              0
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Document Length:
+            </span>
+            <span
+              class="font-medium"
+            >
+              0
+               chars
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Status:
+            </span>
+            <span
+              class="font-medium"
+            >
+              Ready
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-yellow-900 mb-2"
+        >
+          Collaboration Tips
+        </h3>
+        <ul
+          class="text-sm space-y-1"
+        >
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            AI provides suggestions based on content length and context
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Click on AI contributions to see apply/dismiss options
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Team member activity updates automatically
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Toggle AI insights to focus on writing
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CollaborativeAiDemo Snapshot matches snapshot with document content 1`] = `
+<div
+  class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+>
+  <header
+    class="mb-6 flex justify-between items-start"
+  >
+    <div>
+      <h2
+        class="text-2xl font-bold text-gray-900 mb-2"
+      >
+        Collaborative AI Workspace
+      </h2>
+      <p
+        class="text-gray-600"
+      >
+        Real-time collaboration with AI assistance
+      </p>
+    </div>
+    <button
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+    >
+      Hide
+       AI Insights
+    </button>
+  </header>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-4 gap-6"
+  >
+    <div
+      class="lg:col-span-3"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <div
+          class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Shared Document
+          </span>
+          <div
+            class="flex items-center space-x-2"
+          >
+            <div
+              class="flex -space-x-2"
+            >
+              <div
+                class="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+                title="Alice Johnson - online"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍💼
+                </span>
+                <div
+                  class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+                />
+              </div>
+              <div
+                class="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+                title="Bob Smith - online"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👨‍💻
+                </span>
+                <div
+                  class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+                />
+              </div>
+            </div>
+            <span
+              class="text-xs text-gray-500"
+            >
+              2
+               active
+            </span>
+          </div>
+        </div>
+        <textarea
+          class="w-full p-4 h-96 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Start collaborating... AI will provide suggestions as your team works together. Try typing at least 20 characters to see AI contributions."
+        >
+          Test document content for snapshot
+        </textarea>
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-blue-900 mb-3"
+        >
+          Team Members
+        </h3>
+        <div
+          class="space-y-2"
+        >
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍💼
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Alice Johnson
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                online
+              </div>
+            </div>
+            <div
+              class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+            />
+          </div>
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👨‍💻
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Bob Smith
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                online
+              </div>
+            </div>
+            <div
+              class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+            />
+          </div>
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍🎨
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-yellow-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Carol Williams
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                away
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-purple-50 border border-purple-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-purple-900 mb-3 flex items-center"
+        >
+          <span
+            class="mr-2"
+          >
+            🤖
+          </span>
+          AI Contributions
+        </h3>
+        <div
+          class="space-y-2 max-h-64 overflow-y-auto"
+        >
+          <p
+            class="text-sm text-purple-600 italic"
+          >
+            AI will provide suggestions as you collaborate...
+          </p>
+        </div>
+      </div>
+      <div
+        class="bg-green-50 border border-green-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-green-900 mb-2"
+        >
+          Collaboration Stats
+        </h3>
+        <div
+          class="space-y-2 text-sm"
+        >
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Active Members:
+            </span>
+            <span
+              class="font-medium"
+            >
+              2
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              AI Contributions:
+            </span>
+            <span
+              class="font-medium"
+            >
+              0
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Document Length:
+            </span>
+            <span
+              class="font-medium"
+            >
+              34
+               chars
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Status:
+            </span>
+            <span
+              class="font-medium"
+            >
+              Ready
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-yellow-900 mb-2"
+        >
+          Collaboration Tips
+        </h3>
+        <ul
+          class="text-sm space-y-1"
+        >
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            AI provides suggestions based on content length and context
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Click on AI contributions to see apply/dismiss options
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Team member activity updates automatically
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Toggle AI insights to focus on writing
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CollaborativeAiDemo Snapshot matches snapshot with hidden AI insights 1`] = `
+<div
+  class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+>
+  <header
+    class="mb-6 flex justify-between items-start"
+  >
+    <div>
+      <h2
+        class="text-2xl font-bold text-gray-900 mb-2"
+      >
+        Collaborative AI Workspace
+      </h2>
+      <p
+        class="text-gray-600"
+      >
+        Real-time collaboration with AI assistance
+      </p>
+    </div>
+    <button
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+    >
+      Show
+       AI Insights
+    </button>
+  </header>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-4 gap-6"
+  >
+    <div
+      class="lg:col-span-3"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <div
+          class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Shared Document
+          </span>
+          <div
+            class="flex items-center space-x-2"
+          >
+            <div
+              class="flex -space-x-2"
+            >
+              <div
+                class="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+                title="Alice Johnson - online"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍💼
+                </span>
+                <div
+                  class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+                />
+              </div>
+              <div
+                class="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+                title="Bob Smith - online"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👨‍💻
+                </span>
+                <div
+                  class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+                />
+              </div>
+            </div>
+            <span
+              class="text-xs text-gray-500"
+            >
+              2
+               active
+            </span>
+          </div>
+        </div>
+        <textarea
+          class="w-full p-4 h-96 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Start collaborating... AI will provide suggestions as your team works together. Try typing at least 20 characters to see AI contributions."
+        />
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-blue-900 mb-3"
+        >
+          Team Members
+        </h3>
+        <div
+          class="space-y-2"
+        >
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍💼
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Alice Johnson
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                online
+              </div>
+            </div>
+            <div
+              class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+            />
+          </div>
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👨‍💻
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-green-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Bob Smith
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                online
+              </div>
+            </div>
+            <div
+              class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+            />
+          </div>
+          <div
+            class="flex items-center space-x-3"
+          >
+            <div
+              class="relative"
+            >
+              <div
+                class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center"
+              >
+                <span
+                  class="text-sm"
+                >
+                  👩‍🎨
+                </span>
+              </div>
+              <div
+                class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white bg-yellow-400"
+              />
+            </div>
+            <div
+              class="flex-1"
+            >
+              <div
+                class="text-sm font-medium text-gray-900"
+              >
+                Carol Williams
+              </div>
+              <div
+                class="text-xs text-gray-500 capitalize"
+              >
+                away
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-green-50 border border-green-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-green-900 mb-2"
+        >
+          Collaboration Stats
+        </h3>
+        <div
+          class="space-y-2 text-sm"
+        >
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Active Members:
+            </span>
+            <span
+              class="font-medium"
+            >
+              2
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              AI Contributions:
+            </span>
+            <span
+              class="font-medium"
+            >
+              0
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Document Length:
+            </span>
+            <span
+              class="font-medium"
+            >
+              0
+               chars
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-green-700"
+            >
+              Status:
+            </span>
+            <span
+              class="font-medium"
+            >
+              Ready
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+      >
+        <h3
+          class="font-medium text-yellow-900 mb-2"
+        >
+          Collaboration Tips
+        </h3>
+        <ul
+          class="text-sm space-y-1"
+        >
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            AI provides suggestions based on content length and context
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Click on AI contributions to see apply/dismiss options
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Team member activity updates automatically
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Toggle AI insights to focus on writing
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
