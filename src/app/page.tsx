@@ -1,11 +1,23 @@
 'use client';
 
+import Hero from '../components/sections/Hero';
+import PatternCategories from '../components/sections/PatternCategories';
+import SmartSuggestions from '../components/sections/SmartSuggestions';
+import Navbar from '../components/layout/Navbar';
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
-      <div className="p-8">
-        <h1 className="text-4xl font-bold">AI Design Patterns</h1>
-        <p className="text-lg text-gray-600 mt-4">Working basic version!</p>
+      <Navbar />
+      <Hero />
+      
+      <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
+        {/* Smart Suggestions Section */}
+        <SmartSuggestions />
+        
+        <section id="categories" className="py-12 md:py-16">
+          <PatternCategories />
+        </section>
       </div>
 
       {/* Footer */}
