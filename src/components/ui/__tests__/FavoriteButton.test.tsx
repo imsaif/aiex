@@ -7,9 +7,9 @@ describe('FavoriteButton', () => {
   const defaultProps = {
     'patternId': 'test-id',
     'className': 'test-class',
-    'size': 'test-value',
+    'size': 'md' as const,
     'showLabel': true,
-    'variant': 'test-value'
+    'variant': 'icon' as const
 };
 
   beforeEach(() => {

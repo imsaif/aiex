@@ -1,0 +1,634 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResponsibleAiDesignDemo Snapshot matches snapshot in initial state 1`] = `
+<div
+  class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+>
+  <header
+    class="mb-6"
+  >
+    <h2
+      class="text-2xl font-bold text-gray-900 mb-2"
+    >
+      Responsible AI Design Assistant
+    </h2>
+    <p
+      class="text-gray-600"
+    >
+      Analyze content for bias, inclusivity, and ethical considerations
+    </p>
+  </header>
+  <div
+    class="flex justify-between items-center mb-4"
+  >
+    <h3
+      class="text-lg font-semibold text-gray-800"
+    >
+      Content Analysis
+    </h3>
+    <button
+      class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+    >
+      <svg
+        class="w-4 h-4 mr-2"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        />
+      </svg>
+      Show
+       AI Ethics Principles
+    </button>
+  </div>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-3 gap-6"
+  >
+    <div
+      class="lg:col-span-2"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <div
+          class="bg-gray-50 px-4 py-2 border-b border-gray-200"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Content Input
+          </span>
+        </div>
+        <textarea
+          class="w-full p-4 h-48 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter content to analyze for bias and ethical considerations... (Try using words like 'he', 'young', 'see' to trigger different alerts)"
+        />
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="bg-purple-50 rounded-lg p-4"
+      >
+        <h3
+          class="font-semibold text-purple-900 mb-3 flex items-center"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+          Analysis Status
+        </h3>
+        <div
+          class="space-y-2 text-sm"
+        >
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-purple-700"
+            >
+              Content Length:
+            </span>
+            <span
+              class="font-medium"
+            >
+              0
+               characters
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-purple-700"
+            >
+              Analysis Status:
+            </span>
+            <span
+              class="font-medium"
+            >
+              Waiting for content
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-green-50 rounded-lg p-4"
+      >
+        <h3
+          class="font-semibold text-green-900 mb-3"
+        >
+          Best Practices
+        </h3>
+        <ul
+          class="text-sm space-y-2"
+        >
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Use inclusive language for all demographics
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Avoid assumptions about user abilities
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Provide clear explanations for AI decisions
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Test with diverse user groups regularly
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResponsibleAiDesignDemo Snapshot matches snapshot with content and analysis 1`] = `
+<div
+  class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+>
+  <header
+    class="mb-6"
+  >
+    <h2
+      class="text-2xl font-bold text-gray-900 mb-2"
+    >
+      Responsible AI Design Assistant
+    </h2>
+    <p
+      class="text-gray-600"
+    >
+      Analyze content for bias, inclusivity, and ethical considerations
+    </p>
+  </header>
+  <div
+    class="flex justify-between items-center mb-4"
+  >
+    <h3
+      class="text-lg font-semibold text-gray-800"
+    >
+      Content Analysis
+    </h3>
+    <button
+      class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+    >
+      <svg
+        class="w-4 h-4 mr-2"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        />
+      </svg>
+      Show
+       AI Ethics Principles
+    </button>
+  </div>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-3 gap-6"
+  >
+    <div
+      class="lg:col-span-2"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <div
+          class="bg-gray-50 px-4 py-2 border-b border-gray-200"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Content Input
+          </span>
+        </div>
+        <textarea
+          class="w-full p-4 h-48 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter content to analyze for bias and ethical considerations... (Try using words like 'he', 'young', 'see' to trigger different alerts)"
+        >
+          Sample content for testing
+        </textarea>
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="bg-purple-50 rounded-lg p-4"
+      >
+        <h3
+          class="font-semibold text-purple-900 mb-3 flex items-center"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+          Analysis Status
+        </h3>
+        <div
+          class="space-y-2 text-sm"
+        >
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-purple-700"
+            >
+              Content Length:
+            </span>
+            <span
+              class="font-medium"
+            >
+              26
+               characters
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-purple-700"
+            >
+              Analysis Status:
+            </span>
+            <span
+              class="font-medium"
+            >
+              Complete
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-green-50 rounded-lg p-4"
+      >
+        <h3
+          class="font-semibold text-green-900 mb-3"
+        >
+          Best Practices
+        </h3>
+        <ul
+          class="text-sm space-y-2"
+        >
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Use inclusive language for all demographics
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Avoid assumptions about user abilities
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Provide clear explanations for AI decisions
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Test with diverse user groups regularly
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResponsibleAiDesignDemo Snapshot matches snapshot with ethics principles shown 1`] = `
+<div
+  class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg"
+>
+  <header
+    class="mb-6"
+  >
+    <h2
+      class="text-2xl font-bold text-gray-900 mb-2"
+    >
+      Responsible AI Design Assistant
+    </h2>
+    <p
+      class="text-gray-600"
+    >
+      Analyze content for bias, inclusivity, and ethical considerations
+    </p>
+  </header>
+  <div
+    class="flex justify-between items-center mb-4"
+  >
+    <h3
+      class="text-lg font-semibold text-gray-800"
+    >
+      Content Analysis
+    </h3>
+    <button
+      class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+    >
+      <svg
+        class="w-4 h-4 mr-2"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+        />
+      </svg>
+      Hide
+       AI Ethics Principles
+    </button>
+  </div>
+  <div
+    class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200"
+  >
+    <h4
+      class="font-semibold text-blue-900 mb-3"
+    >
+      Core AI Ethics Principles
+    </h4>
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-4"
+    >
+      <div
+        class="space-y-2"
+      >
+        <div
+          class="flex items-start"
+        >
+          <div
+            class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"
+          />
+          <div>
+            <h5
+              class="font-medium text-blue-900"
+            >
+              Fairness
+            </h5>
+            <p
+              class="text-sm text-blue-700"
+            >
+              Avoid bias and discrimination in AI decisions
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start"
+        >
+          <div
+            class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"
+          />
+          <div>
+            <h5
+              class="font-medium text-blue-900"
+            >
+              Transparency
+            </h5>
+            <p
+              class="text-sm text-blue-700"
+            >
+              Make AI decisions explainable and understandable
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="space-y-2"
+      >
+        <div
+          class="flex items-start"
+        >
+          <div
+            class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"
+          />
+          <div>
+            <h5
+              class="font-medium text-blue-900"
+            >
+              Inclusivity
+            </h5>
+            <p
+              class="text-sm text-blue-700"
+            >
+              Design for all users regardless of background
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-start"
+        >
+          <div
+            class="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"
+          />
+          <div>
+            <h5
+              class="font-medium text-blue-900"
+            >
+              Accountability
+            </h5>
+            <p
+              class="text-sm text-blue-700"
+            >
+              Take responsibility for AI system outcomes
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-1 lg:grid-cols-3 gap-6"
+  >
+    <div
+      class="lg:col-span-2"
+    >
+      <div
+        class="border border-gray-200 rounded-lg overflow-hidden"
+      >
+        <div
+          class="bg-gray-50 px-4 py-2 border-b border-gray-200"
+        >
+          <span
+            class="text-sm font-medium text-gray-700"
+          >
+            Content Input
+          </span>
+        </div>
+        <textarea
+          class="w-full p-4 h-48 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter content to analyze for bias and ethical considerations... (Try using words like 'he', 'young', 'see' to trigger different alerts)"
+        />
+      </div>
+    </div>
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="bg-purple-50 rounded-lg p-4"
+      >
+        <h3
+          class="font-semibold text-purple-900 mb-3 flex items-center"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+          Analysis Status
+        </h3>
+        <div
+          class="space-y-2 text-sm"
+        >
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-purple-700"
+            >
+              Content Length:
+            </span>
+            <span
+              class="font-medium"
+            >
+              0
+               characters
+            </span>
+          </div>
+          <div
+            class="flex justify-between"
+          >
+            <span
+              class="text-purple-700"
+            >
+              Analysis Status:
+            </span>
+            <span
+              class="font-medium"
+            >
+              Waiting for content
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-green-50 rounded-lg p-4"
+      >
+        <h3
+          class="font-semibold text-green-900 mb-3"
+        >
+          Best Practices
+        </h3>
+        <ul
+          class="text-sm space-y-2"
+        >
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Use inclusive language for all demographics
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Avoid assumptions about user abilities
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Provide clear explanations for AI decisions
+          </li>
+          <li
+            class="flex items-start"
+          >
+            <span
+              class="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"
+            />
+            Test with diverse user groups regularly
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+`;
