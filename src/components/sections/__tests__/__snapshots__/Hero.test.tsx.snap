@@ -12,31 +12,31 @@ exports[`Hero Snapshot matches snapshot 1`] = `
     >
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 21.22572118331769%; top: 60.56454111205169%; width: 41.777906788764334px; height: 41.777906788764334px; background: rgba(99, 102, 241, 0.4); animation-delay: 0s;"
+        style="left: 76.58810452630449%; top: 3.456655366594674%; width: 58.47684625951033px; height: 58.47684625951033px; background: rgba(147, 51, 234, 0.3); animation-delay: 0s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 26.979803757701724%; top: 39.195707396952486%; width: 27.102661515575278px; height: 27.102661515575278px; background: rgba(99, 102, 241, 0.4); animation-delay: 0.5s;"
+        style="left: 51.49303079324932%; top: 76.54449622543373%; width: 43.97666769629365px; height: 43.97666769629365px; background: rgba(147, 51, 234, 0.3); animation-delay: 0.5s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 20.188454262450193%; top: 94.88581341744558%; width: 47.94409043626879px; height: 47.94409043626879px; background: rgba(219, 39, 119, 0.4); animation-delay: 1s;"
+        style="left: 94.57392322830938%; top: 7.095373388135995%; width: 26.431872268738356px; height: 26.431872268738356px; background: rgba(219, 39, 119, 0.4); animation-delay: 1s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 20.90302122655614%; top: 32.58073422645103%; width: 12.835508632381533px; height: 12.835508632381533px; background: rgba(126, 34, 206, 0.4); animation-delay: 1.5s;"
+        style="left: 33.48900767217968%; top: 23.097622238106386%; width: 19.954234129427817px; height: 19.954234129427817px; background: rgba(79, 70, 229, 0.3); animation-delay: 1.5s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 9.488025425653168%; top: 46.67909422199364%; width: 29.864505774009224px; height: 29.864505774009224px; background: rgba(126, 34, 206, 0.4); animation-delay: 2s;"
+        style="left: 50.68612112438051%; top: 71.01170447691369%; width: 53.02984421043268px; height: 53.02984421043268px; background: rgba(126, 34, 206, 0.4); animation-delay: 2s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 0.3984241146697709%; top: 78.94405811574592%; width: 14.318159004320188px; height: 14.318159004320188px; background: rgba(79, 70, 229, 0.3); animation-delay: 2.5s;"
+        style="left: 23.345349012331983%; top: 7.954896641342124%; width: 33.50163664185023px; height: 33.50163664185023px; background: rgba(219, 39, 119, 0.4); animation-delay: 2.5s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 18.132888975558803%; top: 13.455412432295688%; width: 35.07434218357696px; height: 35.07434218357696px; background: rgba(126, 34, 206, 0.4); animation-delay: 3s;"
+        style="left: 82.81155621000727%; top: 27.571724844624423%; width: 55.03723653010362px; height: 55.03723653010362px; background: rgba(99, 102, 241, 0.4); animation-delay: 3s;"
       />
     </div>
   </div>
@@ -144,31 +144,31 @@ exports[`Hero Snapshot matches snapshot with different props 1`] = `
     >
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 13.531981590794583%; top: 81.25686289513017%; width: 58.52368260768636px; height: 58.52368260768636px; background: rgba(219, 39, 119, 0.4); animation-delay: 0s;"
+        style="left: 8.851218119505644%; top: 1.4133584123422471%; width: 49.219575328304366px; height: 49.219575328304366px; background: rgba(99, 102, 241, 0.4); animation-delay: 0s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 49.66999393750206%; top: 89.60950415711689%; width: 33.19833590946095px; height: 33.19833590946095px; background: rgba(147, 51, 234, 0.3); animation-delay: 0.5s;"
+        style="left: 7.606540609552148%; top: 56.177921260232154%; width: 27.294602192661102px; height: 27.294602192661102px; background: rgba(219, 39, 119, 0.4); animation-delay: 0.5s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 25.82139859132837%; top: 68.76296022126405%; width: 22.00771246638169px; height: 22.00771246638169px; background: rgba(79, 70, 229, 0.3); animation-delay: 1s;"
+        style="left: 73.37389490957777%; top: 73.6317701590853%; width: 18.51292204907098px; height: 18.51292204907098px; background: rgba(99, 102, 241, 0.4); animation-delay: 1s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 31.829829916831407%; top: 66.44301711437544%; width: 29.113842275646498px; height: 29.113842275646498px; background: rgba(126, 34, 206, 0.4); animation-delay: 1.5s;"
+        style="left: 50.57865047153338%; top: 66.62102012701598%; width: 55.490919126151866px; height: 55.490919126151866px; background: rgba(126, 34, 206, 0.4); animation-delay: 1.5s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 72.34844700583885%; top: 65.8172050798788%; width: 37.832791949483536px; height: 37.832791949483536px; background: rgba(79, 70, 229, 0.3); animation-delay: 2s;"
+        style="left: 79.86658078986734%; top: 33.51691810125202%; width: 28.19935302691683px; height: 28.19935302691683px; background: rgba(99, 102, 241, 0.4); animation-delay: 2s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 66.28208900575368%; top: 62.71466840986437%; width: 50.00312550805894px; height: 50.00312550805894px; background: rgba(79, 70, 229, 0.3); animation-delay: 2.5s;"
+        style="left: 35.99852348014363%; top: 44.03445910825239%; width: 32.04353428109111px; height: 32.04353428109111px; background: rgba(79, 70, 229, 0.3); animation-delay: 2.5s;"
       />
       <div
         class="absolute rounded-full blur-xl particle-float"
-        style="left: 52.28936578099939%; top: 47.17971532905334%; width: 37.440586346117996px; height: 37.440586346117996px; background: rgba(126, 34, 206, 0.4); animation-delay: 3s;"
+        style="left: 38.233873035640855%; top: 34.1598941362611%; width: 20.316950135284152px; height: 20.316950135284152px; background: rgba(79, 70, 229, 0.3); animation-delay: 3s;"
       />
     </div>
   </div>

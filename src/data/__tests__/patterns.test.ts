@@ -1,5 +1,5 @@
 import { patterns } from '../patterns'
-import { validatePatterns, safeValidatePatterns } from '../../schemas/pattern.schema'
+import { safeValidatePatterns } from '../../schemas/pattern.schema'
 import { testPatternStructure } from '../../utils/test-utils'
 
 describe('Patterns Data', () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Simple dashboard item interface
@@ -205,7 +205,7 @@ export default function AdaptiveDashboardDemo() {
           </div>
           <div className="flex items-start space-x-2">
             <span className="text-blue-500 font-bold">4.</span>
-            <span>Toggle "Adaptive Mode" to see the difference with/without learning</span>
+            <span>Toggle &quot;Adaptive Mode&quot; to see the difference with/without learning</span>
           </div>
         </div>
         

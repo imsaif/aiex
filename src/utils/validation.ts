@@ -5,11 +5,8 @@
 
 import { 
   safeValidatePattern, 
-  safeValidatePatterns,
   safeValidateCategory,
-  safeValidateCategories,
-  Pattern,
-  Category
+  Pattern
 } from '../schemas/pattern.schema';
 import { ZodError } from 'zod';
 
@@ -89,7 +86,7 @@ export const validatePatternsDetailed = (patterns: unknown[]) => {
     validPatterns: valid.map(r => r.validation.data).filter(Boolean) as Pattern[],
     errors: invalid.map(r => ({
       index: r.index,
-      patternId: (r.pattern as any)?.id || `Pattern at index ${r.index}`,
+      patternId: (r.pattern as Record<string, unknown>)?.id as string || `Pattern at index ${r.index}`,
       errors: r.validation.errors
     }))
   };
@@ -170,7 +167,7 @@ export const validatePatternRelationships = (
  */
 export const generatePatternValidationReport = (pattern: unknown): string => {
   const validation = validatePatternDetailed(pattern);
-  const patternData = pattern as any;
+  const patternData = pattern as Record<string, unknown>;
   
   let report = `Pattern Validation Report\n`;
   report += `========================\n\n`;
@@ -194,6 +191,8 @@ export const generatePatternValidationReport = (pattern: unknown): string => {
  */
 export const validatePatternCLI = (patternPath: string) => {
   try {
+    // Note: This is a CLI utility that uses require() for dynamic imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const pattern = require(patternPath);
     const report = generatePatternValidationReport(pattern.default || pattern);
     console.log(report);

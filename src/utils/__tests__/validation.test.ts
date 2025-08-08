@@ -1,5 +1,4 @@
 import {
-  formatValidationErrors,
   validatePatternDetailed,
   validatePatternsDetailed,
   validateCategoryDetailed,

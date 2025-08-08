@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CopyCodeButton from '../CopyCodeButton';
 
@@ -44,7 +44,7 @@ describe('CopyCodeButton', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<CopyCodeButton {...defaultProps} />);
       

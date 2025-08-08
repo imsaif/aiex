@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ConversationalUiDemo from '../ConversationalUiDemo';
 
@@ -30,17 +30,18 @@ describe('ConversationalUiDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<ConversationalUiDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
       // Add specific interactions based on your component
+      // TODO: Use _user to simulate interactions when needed
     });
   });
 
   describe('Event Handling', () => {
     it('handles delays correctly', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<ConversationalUiDemo {...defaultProps} />);
       
@@ -53,7 +54,7 @@ describe('ConversationalUiDemo', () => {
     });
 
     it('handles submission correctly', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<ConversationalUiDemo {...defaultProps} />);
       
@@ -66,7 +67,7 @@ describe('ConversationalUiDemo', () => {
     });
 
     it('calls onChange when triggered', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<ConversationalUiDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
@@ -81,8 +82,8 @@ describe('ConversationalUiDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles input changes', async () => {
-      const user = userEvent.setup();
-      const onChange = jest.fn();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const _onChange = jest.fn(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<ConversationalUiDemo {...defaultProps} />);
       
@@ -93,7 +94,7 @@ describe('ConversationalUiDemo', () => {
     });
 
     it('handles button clicks', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<ConversationalUiDemo {...defaultProps} />);
       
       const button = screen.getByRole('button');

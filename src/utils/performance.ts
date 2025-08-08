@@ -44,7 +44,7 @@ export const optimizedAnimations = {
 /**
  * Debounce function for search and other frequent operations
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -59,7 +59,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function for scroll and resize events
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -93,7 +93,7 @@ export const prefersReducedMotion = () => {
 /**
  * Get animation variants based on user preferences
  */
-export const getAnimationVariants = (variants: any) => {
+export const getAnimationVariants = (variants: Record<string, unknown>) => {
   if (prefersReducedMotion()) {
     // Return simplified animations for reduced motion
     return {
@@ -127,7 +127,7 @@ export const createIntersectionObserver = (
 /**
  * Memory usage optimization for pattern data
  */
-export const optimizePatternData = (patterns: any[]) => {
+export const optimizePatternData = (patterns: Array<Record<string, unknown>>) => {
   // Remove unnecessary data for list views
   return patterns.map(pattern => ({
     id: pattern.id,

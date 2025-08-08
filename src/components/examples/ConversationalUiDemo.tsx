@@ -147,7 +147,7 @@ export default function ConversationalUiDemo() {
         );
         setIsWaitingForResponse(false);
       }
-    } catch (error) {
+    } catch {
       // Handle error
       setMessages(prev => 
         prev.map(msg => 

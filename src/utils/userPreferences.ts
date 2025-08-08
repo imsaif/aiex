@@ -22,13 +22,13 @@ export interface RecentPattern {
   timestamp: number;
 }
 
-// Default preferences
-const DEFAULT_PREFERENCES: UserPreferences = {
-  favorites: [],
-  recentPatterns: [],
-  theme: 'light',
-  searchHistory: []
-};
+// Default preferences (currently unused)
+// const DEFAULT_PREFERENCES: UserPreferences = {
+//   favorites: [],
+//   recentPatterns: [],
+//   theme: 'light',
+//   searchHistory: []
+// };
 
 /**
  * Check if we're in a browser environment
@@ -53,7 +53,7 @@ function getStorageItem<T>(key: string, defaultValue: T): T {
 /**
  * Safely set data to localStorage
  */
-function setStorageItem(key: string, value: any): void {
+function setStorageItem(key: string, value: unknown): void {
   if (!isBrowser) return;
   
   try {

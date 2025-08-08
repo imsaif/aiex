@@ -3,7 +3,7 @@
 
 interface AnalyticsEvent {
   type: 'page_view' | 'pattern_view' | 'search' | 'favorite' | 'copy_code' | 'export';
-  data?: Record<string, any>;
+  data?: Record<string, unknown>;
   timestamp: number;
   sessionId: string;
 }
@@ -77,7 +77,7 @@ const saveAnalytics = (analytics: Analytics): void => {
 };
 
 // Track an analytics event
-export const trackEvent = (type: AnalyticsEvent['type'], data?: Record<string, any>): void => {
+export const trackEvent = (type: AnalyticsEvent['type'], data?: Record<string, unknown>): void => {
   if (typeof window === 'undefined') return;
 
   const analytics = getAnalytics();

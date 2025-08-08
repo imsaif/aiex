@@ -126,7 +126,7 @@ export function usePatterns() {
  * Custom hook to get a single pattern by slug
  */
 export function usePattern(slug: string) {
-  const { patterns, loading, error, getPattern } = usePatterns();
+  const { loading, error, getPattern } = usePatterns();
   const pattern = useMemo(() => getPattern(slug), [getPattern, slug]);
   
   return { pattern, loading, error };

@@ -1,5 +1,3 @@
-/// <reference types="@testing-library/jest-dom" />
-
 import '@testing-library/jest-dom'
 
 declare global {
@@ -26,7 +24,7 @@ declare global {
       toHaveDescription(description?: string | RegExp): R
       toHaveDisplayValue(value: string | RegExp | Array<string | RegExp>): R
       toHaveErrorMessage(message?: string | RegExp): R
-      toHaveFormValues(expectedValues: Record<string, any>): R
+      toHaveFormValues(expectedValues: Record<string, unknown>): R
       toHaveRole(role: string): R
       toHaveTitle(title?: string | RegExp): R
     }

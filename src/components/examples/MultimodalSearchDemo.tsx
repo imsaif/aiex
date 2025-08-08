@@ -6,7 +6,7 @@ export default function MultimodalSearchDemo() {
   const [hasVoiceSupport, setHasVoiceSupport] = useState(false);
   const [results, setResults] = useState<string[]>([]);
   const [interactionMode, setInteractionMode] = useState('text');
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   // Check for voice support on component mount
   React.useEffect(() => {
@@ -44,8 +44,9 @@ export default function MultimodalSearchDemo() {
       return;
     }
 
-    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const recognition = new SpeechRecognition();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SpeechRecognitionClass = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    const recognition = new SpeechRecognitionClass();
     recognitionRef.current = recognition;
 
     recognition.continuous = false;
@@ -62,14 +63,14 @@ export default function MultimodalSearchDemo() {
       setInteractionMode('text');
     };
 
-    recognition.onresult = (event: any) => {
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = event.results[0][0].transcript;
       setQuery(transcript);
       const searchResults = mockSearch(transcript);
       setResults(searchResults);
     };
 
-    recognition.onerror = (event: any) => {
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error('Speech recognition error:', event.error);
       setIsListening(false);
       setInteractionMode('text');
@@ -84,7 +85,9 @@ export default function MultimodalSearchDemo() {
     setInteractionMode('text');
     
     // Debounced search
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     clearTimeout((window as any).searchTimeout);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).searchTimeout = setTimeout(() => {
       const searchResults = mockSearch(value);
       setResults(searchResults);

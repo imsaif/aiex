@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MultimodalSearchDemo from '../MultimodalSearchDemo';
 
@@ -30,7 +30,7 @@ describe('MultimodalSearchDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<MultimodalSearchDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -41,7 +41,7 @@ describe('MultimodalSearchDemo', () => {
   describe('Event Handling', () => {
     it('calls onRef when triggered', async () => {
       const onRef = jest.fn();
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<MultimodalSearchDemo {...defaultProps} />);
       
@@ -55,7 +55,7 @@ describe('MultimodalSearchDemo', () => {
 
     it('calls onModeStyles when triggered', async () => {
       const onModeStyles = jest.fn();
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<MultimodalSearchDemo {...defaultProps} />);
       
@@ -69,7 +69,7 @@ describe('MultimodalSearchDemo', () => {
 
     it('calls onMode when triggered', async () => {
       const onMode = jest.fn();
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<MultimodalSearchDemo {...defaultProps} />);
       
@@ -82,7 +82,7 @@ describe('MultimodalSearchDemo', () => {
     });
 
     it('calls onChange when triggered', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<MultimodalSearchDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
@@ -94,7 +94,7 @@ describe('MultimodalSearchDemo', () => {
     });
 
     it('calls onClick when triggered', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<MultimodalSearchDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
@@ -107,7 +107,7 @@ describe('MultimodalSearchDemo', () => {
 
     it('calls onDelay when triggered', async () => {
       const onDelay = jest.fn();
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<MultimodalSearchDemo {...defaultProps} />);
       
@@ -123,7 +123,7 @@ describe('MultimodalSearchDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles input changes', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       const onChange = jest.fn();
       
       render(<MultimodalSearchDemo {...defaultProps} />);
@@ -135,7 +135,7 @@ describe('MultimodalSearchDemo', () => {
     });
 
     it('handles button clicks', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<MultimodalSearchDemo {...defaultProps} />);
       
       const button = screen.getByRole('button');

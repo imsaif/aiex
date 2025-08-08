@@ -3,10 +3,11 @@
 exports[`FavoriteButton Snapshot matches snapshot 1`] = `
 <button
   aria-label="Remove from favorites"
-  class="undefined rounded-full transition-colors text-red-600 hover:text-red-700 test-class"
+  class="p-2 rounded-full transition-colors text-red-600 hover:text-red-700 test-class"
   title="Remove from favorites"
 >
   <svg
+    class="w-5 h-5"
     fill="currentColor"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -24,10 +25,11 @@ exports[`FavoriteButton Snapshot matches snapshot 1`] = `
 exports[`FavoriteButton Snapshot matches snapshot with different props 1`] = `
 <button
   aria-label="Remove from favorites"
-  class="undefined rounded-full transition-colors text-red-600 hover:text-red-700 test-class"
+  class="p-2 rounded-full transition-colors text-red-600 hover:text-red-700 test-class"
   title="Remove from favorites"
 >
   <svg
+    class="w-5 h-5"
     fill="currentColor"
     stroke="currentColor"
     viewBox="0 0 24 24"

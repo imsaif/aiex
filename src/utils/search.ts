@@ -2,8 +2,9 @@ import { Pattern } from '../types';
 import patterns from '../data/patterns';
 
 // Lazy load Fuse.js to reduce initial bundle size
-let fuseInstance: any = null;
-let FuseClass: any = null;
+type FuseType = unknown;
+let fuseInstance: FuseType | null = null;
+let FuseClass: new (list: Pattern[], options: object) => FuseType = null as unknown;
 
 const initializeFuse = async () => {
   if (!FuseClass) {
@@ -57,7 +58,7 @@ const fuseOptions = {
 export interface SearchResult {
   item: Pattern;
   score?: number;
-  matches?: any[];
+  matches?: Array<{ key: string; indices: [number, number][]; value: string }>;
 }
 
 export interface SearchOptions {
@@ -88,23 +89,23 @@ export async function searchPatterns(
 
   // Filter by category if specified
   if (category) {
-    results = results.filter((result: any) => 
+    results = results.filter((result: { item: Pattern; score?: number }) => 
       result.item.category.toLowerCase() === category.toLowerCase()
     );
   }
 
   // Filter by minimum score
-  results = results.filter((result: any) => 
+  results = results.filter((result: { score?: number }) => 
     !result.score || result.score <= minScore
   );
 
   // Limit results
   results = results.slice(0, limit);
 
-  return results.map((result: any) => ({
+  return results.map((result: { item: Pattern; score?: number; matches?: unknown[] }) => ({
     item: result.item,
     score: result.score,
-    matches: result.matches as any[]
+    matches: result.matches as Array<{ key: string; indices: [number, number][]; value: string }>
   }));
 }
 
@@ -167,7 +168,7 @@ export function getRelatedPatterns(currentPattern: Pattern, limit: number = 3): 
 /**
  * Highlight search matches in text
  */
-export function highlightMatches(text: string, matches: any[], key: string): string {
+export function highlightMatches(text: string, matches: Array<{ key: string; indices: [number, number][]; value: string }>, key: string): string {
   const match = matches.find(m => m.key === key);
   if (!match || !match.indices) return text;
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Pattern } from '@/types';
 import { usePatterns } from '@/contexts';
 
 const FAVORITES_STORAGE_KEY = 'aiexd-pattern-favorites';

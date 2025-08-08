@@ -1,5 +1,5 @@
 import categories from '../categories'
-import { validateCategories, safeValidateCategories } from '../../schemas/pattern.schema'
+import { safeValidateCategories } from '../../schemas/pattern.schema'
 
 describe('Categories Data', () => {
   describe('Data Validation', () => {

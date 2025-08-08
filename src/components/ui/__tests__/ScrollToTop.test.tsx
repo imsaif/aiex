@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ScrollToTop from '../ScrollToTop';
 
@@ -83,7 +83,7 @@ describe('ScrollToTop', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<ScrollToTop {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -93,7 +93,7 @@ describe('ScrollToTop', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       // Set scroll position above threshold to make button visible
       Object.defineProperty(window, 'scrollY', { value: 400, writable: true });

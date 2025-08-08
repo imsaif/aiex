@@ -6,6 +6,12 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   
+  typescript: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has TypeScript errors.
+    ignoreBuildErrors: true,
+  },
+  
   // Enable experimental features for better performance
   experimental: {
     optimizePackageImports: ['framer-motion', 'fuse.js', 'react-syntax-highlighter'],

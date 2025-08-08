@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { PatternProvider, usePatterns, usePattern, usePatternsByCategory } from '../PatternContext';
-import { Pattern, PatternFilter } from '../../types';
+import { PatternProvider, usePatterns } from '../PatternContext';
+import { PatternFilter } from '../../types';
 
 // Mock the patterns data with correct structure
 jest.mock('../../data/patterns', () => ({

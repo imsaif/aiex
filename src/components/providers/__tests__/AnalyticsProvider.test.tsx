@@ -1,11 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AnalyticsProvider from '../AnalyticsProvider';
 
 describe('AnalyticsProvider', () => {
   const defaultProps = {
-    'children': 'test-value'
+    'children': <div data-testid="test-child">test-value</div>
 };
 
   beforeEach(() => {

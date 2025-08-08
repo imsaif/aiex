@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AdaptiveLearningDemo from '../AdaptiveLearningDemo';
 
@@ -30,17 +30,18 @@ describe('AdaptiveLearningDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
       // Add specific interactions based on your component
+      // TODO: Use _user to simulate interactions when needed
     });
   });
 
   describe('Event Handling', () => {
     it('handles settings button click', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
@@ -52,7 +53,7 @@ describe('AdaptiveLearningDemo', () => {
     });
 
     it('handles answer input changes', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
@@ -66,7 +67,7 @@ describe('AdaptiveLearningDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles input changes', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
@@ -77,7 +78,7 @@ describe('AdaptiveLearningDemo', () => {
     });
 
     it('handles button clicks', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       

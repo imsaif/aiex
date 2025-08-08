@@ -1,6 +1,7 @@
-const fs = require('fs/promises');
-const path = require('path');
-const { Pattern } = require('../types');
+import { promises as fs } from 'fs';
+import path from 'path';
+// Pattern type no longer directly used in this file
+// import type { Pattern } from '../types';
 
 const PATTERNS_DIR = path.join(__dirname, '../patterns');
 
@@ -61,7 +62,7 @@ function generateWhenToUse(problem: string): string[] {
 }
 
 // Helper function to generate benefits based on solution
-function generateBenefits(solution: string): string[] {
+function generateBenefits(): string[] {
   return [
     'Improved user experience and satisfaction',
     'Enhanced system effectiveness and reliability',
@@ -127,7 +128,7 @@ async function fixAllPatterns() {
       try {
         await fs.access(indexPath);
         await fixPatternFile(indexPath);
-      } catch (error) {
+      } catch {
         console.error(`Skipping ${indexPath}: File not found`);
       }
     }

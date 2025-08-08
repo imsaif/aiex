@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CodeExampleBlock from '../CodeExampleBlock';
 
@@ -80,7 +80,7 @@ describe('CodeExampleBlock', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<CodeExampleBlock {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -90,7 +90,7 @@ describe('CodeExampleBlock', () => {
 
   describe('Event Handling', () => {
     it('handles tab switching', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<CodeExampleBlock {...defaultProps} />);
       
@@ -111,7 +111,7 @@ describe('CodeExampleBlock', () => {
         configurable: true
       });
       
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<CodeExampleBlock {...defaultProps} />);
       
       // Find copy button by role or accessible name instead of text content
@@ -127,7 +127,7 @@ describe('CodeExampleBlock', () => {
 
   describe('Form Interactions', () => {
     it('handles tab button clicks', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<CodeExampleBlock {...defaultProps} />);
       

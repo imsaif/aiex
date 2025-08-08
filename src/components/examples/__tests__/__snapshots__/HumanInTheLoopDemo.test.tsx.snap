@@ -13,7 +13,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
       <img
         alt="Content moderation"
         class="w-32 h-32 object-contain"
+        height="128"
         src="https://img.icons8.com/color/480/content-moderation.png"
+        width="128"
       />
       <div>
         <h2
@@ -35,7 +37,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
             <img
               alt="AI"
               class="w-10 h-10"
+              height="40"
               src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+              width="40"
             />
             <span
               class="text-xs text-gray-500 mt-1"
@@ -52,7 +56,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
             <img
               alt="Human"
               class="w-10 h-10"
+              height="40"
               src="https://img.icons8.com/fluency/96/person-male.png"
+              width="40"
             />
             <span
               class="text-xs text-gray-500 mt-1"
@@ -69,7 +75,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
             <img
               alt="Feedback loop"
               class="w-10 h-10"
+              height="40"
               src="https://img.icons8.com/fluency/96/refresh.png"
+              width="40"
             />
             <span
               class="text-xs text-gray-500 mt-1"
@@ -96,7 +104,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
           <img
             alt="AI"
             class="w-6 h-6"
+            height="24"
             src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+            width="24"
           />
           <h3
             class="text-xl font-semibold text-gray-800"
@@ -195,7 +205,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
           <img
             alt="AI"
             class="w-6 h-6"
+            height="24"
             src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+            width="24"
           />
           <h3
             class="text-xl font-semibold text-gray-800"
@@ -228,7 +240,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
             <img
               alt="User upload"
               class="w-20 h-20 object-cover rounded border border-gray-200"
+              height="80"
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&h=400&q=80"
+              width="80"
             />
             <span
               class="font-semibold text-blue-700"
@@ -303,7 +317,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
         <img
           alt="Grammarly writing suggestions"
           class="w-full h-48 object-cover"
+          height="192"
           src="/images/examples/grammarly-suggestions.gif"
+          width="400"
         />
         <div
           class="p-4"
@@ -326,7 +342,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
         <img
           alt="Google Photos face detection"
           class="w-full h-48 object-cover"
+          height="192"
           src="/images/examples/google-face-detection.gif"
+          width="400"
         />
         <div
           class="p-4"
@@ -349,7 +367,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot 1`] = `
         <img
           alt="OpenAI human feedback"
           class="w-full h-48 object-cover"
+          height="192"
           src="/images/examples/openai-human-feedback.png"
+          width="400"
         />
         <div
           class="p-4"
@@ -384,7 +404,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
       <img
         alt="Content moderation"
         class="w-32 h-32 object-contain"
+        height="128"
         src="https://img.icons8.com/color/480/content-moderation.png"
+        width="128"
       />
       <div>
         <h2
@@ -406,7 +428,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
             <img
               alt="AI"
               class="w-10 h-10"
+              height="40"
               src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+              width="40"
             />
             <span
               class="text-xs text-gray-500 mt-1"
@@ -423,7 +447,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
             <img
               alt="Human"
               class="w-10 h-10"
+              height="40"
               src="https://img.icons8.com/fluency/96/person-male.png"
+              width="40"
             />
             <span
               class="text-xs text-gray-500 mt-1"
@@ -440,7 +466,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
             <img
               alt="Feedback loop"
               class="w-10 h-10"
+              height="40"
               src="https://img.icons8.com/fluency/96/refresh.png"
+              width="40"
             />
             <span
               class="text-xs text-gray-500 mt-1"
@@ -467,7 +495,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
           <img
             alt="AI"
             class="w-6 h-6"
+            height="24"
             src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+            width="24"
           />
           <h3
             class="text-xl font-semibold text-gray-800"
@@ -566,7 +596,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
           <img
             alt="AI"
             class="w-6 h-6"
+            height="24"
             src="https://img.icons8.com/fluency/96/artificial-intelligence.png"
+            width="24"
           />
           <h3
             class="text-xl font-semibold text-gray-800"
@@ -599,7 +631,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
             <img
               alt="User upload"
               class="w-20 h-20 object-cover rounded border border-gray-200"
+              height="80"
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=facearea&w=400&h=400&q=80"
+              width="80"
             />
             <span
               class="font-semibold text-blue-700"
@@ -674,7 +708,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
         <img
           alt="Grammarly writing suggestions"
           class="w-full h-48 object-cover"
+          height="192"
           src="/images/examples/grammarly-suggestions.gif"
+          width="400"
         />
         <div
           class="p-4"
@@ -697,7 +733,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
         <img
           alt="Google Photos face detection"
           class="w-full h-48 object-cover"
+          height="192"
           src="/images/examples/google-face-detection.gif"
+          width="400"
         />
         <div
           class="p-4"
@@ -720,7 +758,9 @@ exports[`HumanInTheLoopDemo Snapshot matches snapshot with different props 1`] =
         <img
           alt="OpenAI human feedback"
           class="w-full h-48 object-cover"
+          height="192"
           src="/images/examples/openai-human-feedback.png"
+          width="400"
         />
         <div
           class="p-4"

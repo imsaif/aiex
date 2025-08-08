@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Carousel from '../Carousel';
 
@@ -50,7 +50,7 @@ describe('Carousel', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<Carousel {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -60,7 +60,7 @@ describe('Carousel', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       
       render(<Carousel {...defaultProps} />);
       
@@ -79,7 +79,7 @@ describe('Carousel', () => {
 
   describe('Form Interactions', () => {
     it('handles navigation buttons', async () => {
-      const user = userEvent.setup();
+      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
       render(<Carousel {...defaultProps} />);
       
       // Test next button
