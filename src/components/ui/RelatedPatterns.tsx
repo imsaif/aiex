@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { Pattern } from '@/types';
 import { getRelatedPatterns } from '@/utils/search';
 import OptimizedMedia from './OptimizedMedia';
-import FavoriteButton from './FavoriteButton';
 
 interface RelatedPatternsProps {
   currentPattern: Pattern;
@@ -63,15 +62,6 @@ export default function RelatedPatterns({
                       height={128}
                     />
                     
-                    {/* Favorite Button */}
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <FavoriteButton
-                        patternId={pattern.id}
-                        size="sm"
-                        className="bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
-                      />
-                    </div>
-
                     {/* Pattern Category */}
                     <div className="absolute top-2 left-2">
                       <div className={`px-2 py-1 rounded-full text-xs font-medium text-white ${

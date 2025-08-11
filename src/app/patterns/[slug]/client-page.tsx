@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import Carousel from '@/components/ui/Carousel';
 import CodeExampleBlock from '@/components/ui/CodeExampleBlock';
-import FavoriteButton from '@/components/ui/FavoriteButton';
 import RelatedPatterns from '@/components/ui/RelatedPatterns';
 import { useInteractionTracking } from '@/hooks/usePageTracking';
 import { Pattern } from '@/types';
@@ -69,22 +68,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
       {/* Pattern Header */}
       <motion.div className="mb-10" variants={itemVariants}>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>
-            <div className="text-xl text-gray-600 leading-relaxed">
-              {pattern.description}
-            </div>
-          </div>
-          <div className="ml-6 mt-3">
-            <FavoriteButton
-              patternId={pattern.id}
-              size="lg"
-              variant="button"
-              showLabel={true}
-              className="bg-white border-2 border-gray-200 hover:border-red-300"
-            />
-          </div>
+        <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>
+        <div className="text-xl text-gray-600 leading-relaxed">
+          {pattern.description}
         </div>
       </motion.div>
       

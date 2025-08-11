@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useRecentPatterns } from '../../hooks/useRecentPatterns';
 import OptimizedMedia from '../ui/OptimizedMedia';
-import FavoriteButton from '../ui/FavoriteButton';
 
 export default function RecentPatterns() {
   const { recentPatterns, isLoading, clearRecentPatterns } = useRecentPatterns();
@@ -88,15 +87,6 @@ export default function RecentPatterns() {
                       height={128}
                     />
                     
-                    {/* Favorite Button */}
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <FavoriteButton
-                        patternId={entry.pattern.id}
-                        size="sm"
-                        className="bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
-                      />
-                    </div>
-
                     {/* Recent indicator */}
                     <div className="absolute top-2 left-2">
                       <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
