@@ -96,4 +96,13 @@ docs/*-agent.md
 .next/
 .vercel/
 .swc/
-build-metrics.json 
+build-metrics.json
+
+# Generated files and reports
+consistency-report.json
+lint_output.txt
+*.log
+set-env.ps1
+
+# Test configs (if regenerated)
+tsconfig.test.json 
