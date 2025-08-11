@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import PatternCategories from '../PatternCategories';
 
@@ -68,7 +68,7 @@ describe('PatternCategories', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<PatternCategories {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -79,7 +79,7 @@ describe('PatternCategories', () => {
   describe('Event Handling', () => {
     it('calls onBgColor when triggered', async () => {
       const onBgColor = jest.fn();
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<PatternCategories {...defaultProps} />);
       
@@ -92,7 +92,7 @@ describe('PatternCategories', () => {
     });
 
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<PatternCategories {...defaultProps} />);
       

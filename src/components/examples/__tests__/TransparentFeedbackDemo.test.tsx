@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TransparentFeedbackDemo from '../TransparentFeedbackDemo';
 
@@ -59,7 +59,7 @@ describe('TransparentFeedbackDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<TransparentFeedbackDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -69,7 +69,7 @@ describe('TransparentFeedbackDemo', () => {
 
   describe('Event Handling', () => {
     it('handles textarea input', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<TransparentFeedbackDemo {...defaultProps} />);
       
@@ -80,7 +80,7 @@ describe('TransparentFeedbackDemo', () => {
     });
 
     it('handles analyze button interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<TransparentFeedbackDemo {...defaultProps} />);
       
@@ -98,7 +98,7 @@ describe('TransparentFeedbackDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles analyze button state', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<TransparentFeedbackDemo {...defaultProps} />);
       

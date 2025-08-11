@@ -30,7 +30,7 @@ describe('HumanInTheLoopDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<HumanInTheLoopDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -40,7 +40,7 @@ describe('HumanInTheLoopDemo', () => {
 
   describe('Event Handling', () => {
     it('handles illustration correctly', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<HumanInTheLoopDemo {...defaultProps} />);
       
@@ -53,7 +53,7 @@ describe('HumanInTheLoopDemo', () => {
     });
 
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<HumanInTheLoopDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
@@ -68,7 +68,7 @@ describe('HumanInTheLoopDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<HumanInTheLoopDemo {...defaultProps} />);
       
       const button = screen.getByRole('button');

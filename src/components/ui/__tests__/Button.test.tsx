@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '../../../utils/test-utils'
 import Button from '../Button'
 
+import { fireEvent } from '@testing-library/react';
 describe('Button Component', () => {
   describe('Rendering', () => {
     it('renders with default props', () => {

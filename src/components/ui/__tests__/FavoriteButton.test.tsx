@@ -55,7 +55,7 @@ describe('FavoriteButton', () => {
 
   describe('Event Handling', () => {
     it('handles button click to toggle favorite', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<FavoriteButton {...defaultProps} />);
       

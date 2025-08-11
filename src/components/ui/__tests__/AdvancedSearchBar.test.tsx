@@ -61,7 +61,7 @@ describe('AdvancedSearchBar', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<AdvancedSearchBar {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -72,12 +72,12 @@ describe('AdvancedSearchBar', () => {
   describe('Event Handling', () => {
     it('handles onPatternSelect when triggered', async () => {
       const onPatternSelect = jest.fn();
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdvancedSearchBar {...defaultProps} onPatternSelect={onPatternSelect} />);
       
       const input = screen.getByRole('textbox');
-      await _user.type(input, "test input");
+      await user.type(input, "test input");
       
       // The actual onPatternSelect would be called when a pattern is selected from search results
       // This test verifies the component renders with the prop without errors
@@ -85,42 +85,42 @@ describe('AdvancedSearchBar', () => {
     });
 
     it('handles keyboard navigation', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await _user.type(input, "test");
+      await user.type(input, "test");
       
       // Test keyboard interactions (component handles internally)
-      await _user.keyboard('{ArrowDown}');
-      await _user.keyboard('{Escape}');
+      await user.keyboard('{ArrowDown}');
+      await user.keyboard('{Escape}');
       
       expect(input).toBeInTheDocument();
     });
 
     it('handles focus events', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await _user.click(input);
+      await user.click(input);
       
       expect(input).toHaveFocus();
     });
 
     it('handles clear button click', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await _user.type(input, "test query");
+      await user.type(input, "test query");
       
       // Clear button should appear after typing
       const clearButton = screen.getByRole('button');
-      await _user.click(clearButton);
+      await user.click(clearButton);
       
       expect(input).toHaveValue('');
     });
@@ -129,23 +129,23 @@ describe('AdvancedSearchBar', () => {
 
   describe('Form Interactions', () => {
     it('handles input changes', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await _user.type(input, 'test input');
+      await user.type(input, 'test input');
       
       expect(input).toHaveValue('test input');
     });
 
     it('handles search functionality', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await _user.type(input, 'test query');
+      await user.type(input, 'test query');
       
       // Search should trigger internally after typing
       expect(input).toHaveValue('test query');

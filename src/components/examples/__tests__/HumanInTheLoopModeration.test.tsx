@@ -30,7 +30,7 @@ describe('HumanInTheLoopModeration', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<HumanInTheLoopModeration {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -40,7 +40,7 @@ describe('HumanInTheLoopModeration', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<HumanInTheLoopModeration {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
@@ -52,8 +52,8 @@ describe('HumanInTheLoopModeration', () => {
     });
 
     it('calls onSubmit when triggered', async () => {
-      const _onSubmit = jest.fn(); // eslint-disable-line @typescript-eslint/no-unused-vars
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const _onSubmit = jest.fn();
+      const user = userEvent.setup();
       
       render(<HumanInTheLoopModeration {...defaultProps} />);
       
@@ -66,7 +66,7 @@ describe('HumanInTheLoopModeration', () => {
     });
 
     it('calls onChange when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<HumanInTheLoopModeration {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
@@ -81,7 +81,7 @@ describe('HumanInTheLoopModeration', () => {
 
   describe('Form Interactions', () => {
     it('handles button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<HumanInTheLoopModeration {...defaultProps} />);
       
       const buttons = screen.queryAllByRole('button');

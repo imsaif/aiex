@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import RecentPatterns from '../RecentPatterns';
 
@@ -35,7 +35,7 @@ describe('RecentPatterns', () => {
 
   describe('Event Handling', () => {
     it('can clear recent patterns when button is clicked', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<RecentPatterns />);
       
@@ -53,7 +53,7 @@ describe('RecentPatterns', () => {
 
   describe('Form Interactions', () => {
     it('handles favorite button interactions', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<RecentPatterns />);
       

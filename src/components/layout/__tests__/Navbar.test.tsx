@@ -24,7 +24,7 @@ describe('Navbar', () => {
 
   describe('Event Handling', () => {
     it('handles button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       const { container } = render(<Navbar {...defaultProps} />);
       
       const buttons = screen.queryAllByRole('button');

@@ -63,7 +63,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-syntax-highlighter": "^15.6.1",
-    "sharp": "^0.33.5",
+    "sharp": "^0.34.3",
     "task-master-ai": "^0.18.0"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ProgressiveDisclosureDemo from '../ProgressiveDisclosureDemo';
 
@@ -41,7 +41,7 @@ describe('ProgressiveDisclosureDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -51,7 +51,7 @@ describe('ProgressiveDisclosureDemo', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       
       const buttons = screen.queryAllByRole('button');
@@ -66,7 +66,7 @@ describe('ProgressiveDisclosureDemo', () => {
     });
 
     it('calls onChange when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       
       const buttons = screen.queryAllByRole('button');
@@ -84,7 +84,7 @@ describe('ProgressiveDisclosureDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles input changes', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       
@@ -99,7 +99,7 @@ describe('ProgressiveDisclosureDemo', () => {
     });
 
     it('handles button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ProgressiveDisclosureDemo {...defaultProps} />);
       
       const buttons = screen.queryAllByRole('button');

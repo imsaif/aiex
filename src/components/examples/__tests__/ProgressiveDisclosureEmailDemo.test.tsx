@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ProgressiveDisclosureEmailDemo from '../ProgressiveDisclosureEmailDemo';
 
@@ -41,7 +41,7 @@ describe('ProgressiveDisclosureEmailDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ProgressiveDisclosureEmailDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -51,7 +51,7 @@ describe('ProgressiveDisclosureEmailDemo', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ProgressiveDisclosureEmailDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
@@ -66,7 +66,7 @@ describe('ProgressiveDisclosureEmailDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ProgressiveDisclosureEmailDemo {...defaultProps} />);
       
       const button = screen.getByRole('button');

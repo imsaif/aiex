@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SearchAssistanceDemo from '../SearchAssistanceDemo';
 
@@ -44,7 +44,7 @@ describe('SearchAssistanceDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -54,7 +54,7 @@ describe('SearchAssistanceDemo', () => {
 
   describe('Event Handling', () => {
     it('handles input change correctly', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
       const searchInput = screen.getByPlaceholderText('Search for patterns...');
@@ -64,7 +64,7 @@ describe('SearchAssistanceDemo', () => {
     });
 
     it('handles keyboard navigation', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
       const searchInput = screen.getByPlaceholderText('Search for patterns...');
@@ -81,7 +81,7 @@ describe('SearchAssistanceDemo', () => {
     });
 
     it('handles focus events', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
       const searchInput = screen.getByPlaceholderText('Search for patterns...');
@@ -95,7 +95,7 @@ describe('SearchAssistanceDemo', () => {
     });
 
     it('handles recent search button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
       // Recent searches should be visible when input is empty
@@ -110,7 +110,7 @@ describe('SearchAssistanceDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles input changes', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       const onChange = jest.fn();
       
       render(<SearchAssistanceDemo {...defaultProps} />);
@@ -122,7 +122,7 @@ describe('SearchAssistanceDemo', () => {
     });
 
     it('handles recent search button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<SearchAssistanceDemo {...defaultProps} />);
       
       // Click a specific recent search button by name

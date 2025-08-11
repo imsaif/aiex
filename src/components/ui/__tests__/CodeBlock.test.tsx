@@ -1,6 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '../../../utils/test-utils'
 import CodeBlock from '../CodeBlock'
 
+import { waitFor, fireEvent } from '@testing-library/react';
 describe('CodeBlock Component', () => {
   const mockCode = `function hello() {
   console.log("Hello, World!");

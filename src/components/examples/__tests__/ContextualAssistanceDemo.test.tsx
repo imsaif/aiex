@@ -41,59 +41,59 @@ describe('ContextualAssistanceDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
       // Add specific interactions based on your component
-      // TODO: Use _user to simulate interactions when needed
+      // TODO: Use user to simulate interactions when needed
     });
   });
 
   describe('Event Handling', () => {
     it('calls onChange when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await _user.click(element);
+      await user.click(element);
       
       // Component handles change internally
       expect(element).toBeInTheDocument();
     });
 
     it('calls onKeyDown when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await _user.keyboard('{Enter}');
+      await user.keyboard('{Enter}');
       
       // Component handles keydown internally
       expect(element).toBeInTheDocument();
     });
 
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await _user.click(element);
+      await user.click(element);
       
       // Component handles click internally
       expect(element).toBeInTheDocument();
     });
 
     it('calls onMouseEnter when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<ContextualAssistanceDemo {...defaultProps} />);
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await _user.hover(element);
+      await user.hover(element);
       
       // Component handles hover internally
       expect(element).toBeInTheDocument();
@@ -103,12 +103,12 @@ describe('ContextualAssistanceDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       const { container } = render(<ContextualAssistanceDemo {...defaultProps} />);
       
       const buttons = screen.queryAllByRole('button');
       if (buttons.length > 0) {
-        await _user.click(buttons[0]);
+        await user.click(buttons[0]);
         // Just verify the component is still rendered after interaction
         expect(container.firstChild).toBeInTheDocument();
       } else {

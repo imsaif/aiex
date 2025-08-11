@@ -30,35 +30,35 @@ describe('AdaptiveLearningDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
       // Add specific interactions based on your component
-      // TODO: Use _user to simulate interactions when needed
+      // TODO: Use user to simulate interactions when needed
     });
   });
 
   describe('Event Handling', () => {
     it('handles settings button click', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const settingsButton = screen.getAllByRole('button')[0]; // First button is settings
-      await _user.click(settingsButton);
+      await user.click(settingsButton);
       
       // Component handles the click internally - just verify it's clickable
       expect(settingsButton).toBeInTheDocument();
     });
 
     it('handles answer input changes', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const input = screen.getByPlaceholderText('Type your answer');
-      await _user.type(input, "test answer");
+      await user.type(input, "test answer");
       
       expect(input).toHaveValue("test answer");
     });
@@ -67,23 +67,23 @@ describe('AdaptiveLearningDemo', () => {
 
   describe('Form Interactions', () => {
     it('handles input changes', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await _user.type(input, 'test input');
+      await user.type(input, 'test input');
       
       expect(input).toHaveValue('test input');
     });
 
     it('handles button clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const button = screen.getByRole('button');
-      await _user.click(button);
+      await user.click(button);
       
       // Component handles the click internally
       expect(button).toBeInTheDocument();

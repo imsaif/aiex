@@ -41,24 +41,24 @@ describe('AdaptiveDashboardDemo', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<AdaptiveDashboardDemo {...defaultProps} />);
       
       // Simulate user interaction that changes state
       // Add specific interactions based on your component
-      // TODO: Use _user to simulate interactions when needed
+      // TODO: Use user to simulate interactions when needed
     });
   });
 
   describe('Event Handling', () => {
     it('handles user interactions', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdaptiveDashboardDemo {...defaultProps} />);
       
       const buttons = screen.getAllByRole('button');
       if (buttons.length > 0) {
-        await _user.click(buttons[0]);
+        await user.click(buttons[0]);
         // Test that clicking buttons works (component-specific behavior)
       }
     });
@@ -67,13 +67,13 @@ describe('AdaptiveDashboardDemo', () => {
 
   describe('Dashboard Interactions', () => {
     it('handles dashboard item clicks', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<AdaptiveDashboardDemo {...defaultProps} />);
       
       const dashboardItems = screen.getAllByRole('button');
       if (dashboardItems.length > 0) {
-        await _user.click(dashboardItems[0]);
+        await user.click(dashboardItems[0]);
         // Component should handle clicks internally
       }
     });

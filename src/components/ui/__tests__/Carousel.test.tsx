@@ -50,7 +50,7 @@ describe('Carousel', () => {
     });
 
     it('updates state on user interaction', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<Carousel {...defaultProps} />);
       
       // Simulate user interaction that changes state
@@ -60,7 +60,7 @@ describe('Carousel', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<Carousel {...defaultProps} />);
       
@@ -79,7 +79,7 @@ describe('Carousel', () => {
 
   describe('Form Interactions', () => {
     it('handles navigation buttons', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       render(<Carousel {...defaultProps} />);
       
       // Test next button

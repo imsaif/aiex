@@ -44,7 +44,7 @@ describe('CopyCodeButton', () => {
 
   describe('Event Handling', () => {
     it('calls onClick when triggered', async () => {
-      const _user = userEvent.setup(); // eslint-disable-line @typescript-eslint/no-unused-vars
+      const user = userEvent.setup();
       
       render(<CopyCodeButton {...defaultProps} />);
       
