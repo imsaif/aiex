@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npm run optimize-images && next build && npm run build:analyze",
+    "build": "next build",
+    "build:local": "npm run optimize-images && next build && npm run build:analyze",
     "build:analyze": "node scripts/build-optimization.js",
-    "build:production": "npm run optimize-images && NODE_ENV=production next build && npm run build:analyze",
+    "build:production": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
@@ -49,9 +50,7 @@
     "context:status": "node scripts/context-manager.js status",
     "workflow": "node scripts/workflow-automation.js",
     "workflow:run": "node scripts/workflow-automation.js run",
-    "workflow:list": "node scripts/workflow-automation.js list",
-    "prebuild": "node scripts/inject-contextual-assistance-code.js",
-    "postbuild": "echo '📊 Build completed! Check build-metrics.json for performance insights.' && npm run progress-update"
+    "workflow:list": "node scripts/workflow-automation.js list"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
