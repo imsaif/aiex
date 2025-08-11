@@ -39,15 +39,27 @@ describe('CodeExampleBlock', () => {
   });
 
   describe('Props', () => {
-    it('renders with code prop', () => {
+    it('renders with code prop', async () => {
+      const user = userEvent.setup();
       const testValue = 'console.log("test code");';
       render(<CodeExampleBlock {...defaultProps} code={testValue} />);
+      
+      // Code is hidden initially, need to toggle to see it
+      const showCodeButton = screen.getByText('Show Code');
+      await user.click(showCodeButton);
+      
       expect(screen.getByText(testValue)).toBeInTheDocument();
     });
 
-    it('renders with language prop', () => {
+    it('renders with language prop', async () => {
+      const user = userEvent.setup();
       const testValue = 'javascript';
       render(<CodeExampleBlock {...defaultProps} language={testValue} />);
+      
+      // Language is only shown in code view
+      const showCodeButton = screen.getByText('Show Code');
+      await user.click(showCodeButton);
+      
       expect(screen.getByText(testValue)).toBeInTheDocument();
     });
 
@@ -89,15 +101,21 @@ describe('CodeExampleBlock', () => {
   });
 
   describe('Event Handling', () => {
-    it('handles tab switching', async () => {
+    it('handles toggle between preview and code', async () => {
       const user = userEvent.setup();
       
       render(<CodeExampleBlock {...defaultProps} />);
       
-      const previewTab = screen.getByText('Live Preview');
-      await user.click(previewTab);
+      // Initially shows Live Preview
+      expect(screen.getByText('Live Preview')).toBeInTheDocument();
       
-      expect(screen.getByText('Interactive Demo:')).toBeInTheDocument();
+      // Click to show code
+      const toggleButton = screen.getByText('Show Code');
+      await user.click(toggleButton);
+      
+      // Now shows Code View
+      expect(screen.getByText('Code View')).toBeInTheDocument();
+      expect(screen.getByText('Show Preview')).toBeInTheDocument();
     });
 
     it('handles copy button click', async () => {
@@ -114,6 +132,10 @@ describe('CodeExampleBlock', () => {
       const user = userEvent.setup();
       render(<CodeExampleBlock {...defaultProps} />);
       
+      // First toggle to code view to see copy button
+      const showCodeButton = screen.getByText('Show Code');
+      await user.click(showCodeButton);
+      
       // Find copy button by role or accessible name instead of text content
       const copyButton = screen.getByRole('button', { name: /copy/i });
       await user.click(copyButton);
@@ -126,19 +148,24 @@ describe('CodeExampleBlock', () => {
   });
 
   describe('Form Interactions', () => {
-    it('handles tab button clicks', async () => {
+    it('handles toggle state changes', async () => {
       const user = userEvent.setup();
       
       render(<CodeExampleBlock {...defaultProps} />);
       
-      const codeTab = screen.getByText('Code');
-      const previewTab = screen.getByText('Live Preview');
+      // Initially in preview mode
+      expect(screen.getByText('Live Preview')).toBeInTheDocument();
+      const showCodeButton = screen.getByText('Show Code');
       
-      await user.click(previewTab);
-      expect(screen.getByText('Interactive Demo:')).toBeInTheDocument();
-      
-      await user.click(codeTab);
+      // Toggle to code view
+      await user.click(showCodeButton);
+      expect(screen.getByText('Code View')).toBeInTheDocument();
       expect(screen.getByText('javascript')).toBeInTheDocument();
+      
+      // Toggle back to preview
+      const showPreviewButton = screen.getByText('Show Preview');
+      await user.click(showPreviewButton);
+      expect(screen.getByText('Live Preview')).toBeInTheDocument();
     });
 
   });
