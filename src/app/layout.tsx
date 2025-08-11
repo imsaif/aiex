@@ -10,8 +10,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "aiexd | AI Design Patterns and Inspiration",
+  title: "aiux | AI Design Patterns and Inspiration",
   description: "Discover AI design inspiration and learn from real use cases",
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

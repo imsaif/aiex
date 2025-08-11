@@ -171,7 +171,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            Explore real-world examples of effective AI interfaces and learn from the best implementations
+            Real examples. Best practices.
           </motion.p>
           
           {/* Advanced Search Bar */}
@@ -183,7 +183,7 @@ export default function Hero() {
           >
             <AdvancedSearchBar 
               onPatternSelect={handlePatternSelect}
-              placeholder="Search patterns, categories, or use cases..."
+              placeholder="Search patterns..."
               className="w-full"
             />
           </motion.div>
@@ -200,7 +200,7 @@ export default function Hero() {
               className="text-base px-8 py-4"
               onClick={scrollToDiscover}
             >
-              Browse All Patterns
+              Explore
             </Button>
           </motion.div>
         </div>

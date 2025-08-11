@@ -1,9 +1,16 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+  /* Smooth scrolling for Safari */
+  -webkit-overflow-scrolling: touch;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
+  scroll-behavior: smooth;
 }
 
 :root {

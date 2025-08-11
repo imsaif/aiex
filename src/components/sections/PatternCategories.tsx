@@ -7,7 +7,6 @@ import { motion } from 'framer-motion';
 import categories from '../../data/categories';
 import { useRouter } from 'next/navigation';
 import OptimizedMedia from '../ui/OptimizedMedia';
-import FavoriteButton from '../ui/FavoriteButton';
 
 // Create icons for each category
 const getCategoryIcon = (categoryId: string) => {
@@ -133,40 +132,10 @@ const getCategoryIcon = (categoryId: string) => {
   }
 };
 
-// Get background color based on category - updated with brand colors
+// Get background color based on category - black and white theme
 const getIconBgColor = (categoryId: string) => {
-  switch(categoryId) {
-    case 'contextual-assistance':
-      return 'bg-indigo-100 text-indigo-600';
-    case 'progressive-disclosure':
-      return 'bg-violet-100 text-violet-600';
-    case 'human-in-the-loop':
-      return 'bg-purple-100 text-purple-600';
-    case 'conversational-ui':
-      return 'bg-fuchsia-100 text-fuchsia-600';
-    case 'adaptive-interfaces':
-      return 'bg-indigo-50 text-indigo-500';
-    case 'multimodal-interaction':
-      return 'bg-indigo-100 text-indigo-600';
-    case 'guided-learning':
-      return 'bg-emerald-100 text-emerald-600';
-    case 'augmented-creation':
-      return 'bg-orange-100 text-orange-600';
-    case 'explainable-ai':
-      return 'bg-sky-100 text-sky-600';
-    case 'responsible-ai-design':
-      return 'bg-green-100 text-green-600';
-    case 'error-recovery':
-      return 'bg-red-100 text-red-600';
-    case 'collaborative-ai':
-      return 'bg-violet-100 text-violet-600';
-    case 'ambient-intelligence':
-      return 'bg-lime-100 text-lime-600';
-    case 'safe-exploration':
-      return 'bg-cyan-100 text-cyan-600';
-    default:
-      return 'bg-indigo-100 text-indigo-600';
-  }
+  // All icons now use gray color scheme for better accessibility
+  return 'bg-gray-100 text-gray-600';
 };
 
 // Get card border gradient colors
@@ -244,14 +213,6 @@ const PatternCategories = () => {
                         height={300}
                         priority={index < 6} // Prioritize loading the first 6 images
                       />
-                      {/* Favorite button overlay */}
-                      <div className="absolute top-2 right-2">
-                        <FavoriteButton 
-                          patternId={category.id}
-                          size="md"
-                          className="bg-white/80 hover:bg-white shadow-sm backdrop-blur-sm"
-                        />
-                      </div>
                     </div>
                     {/* Icon inside the card, above heading/description */}
                     <div className={`h-10 w-10 rounded-xl overflow-hidden flex-shrink-0 mx-auto mb-3 relative ${getIconBgColor(category.id)}`}> 

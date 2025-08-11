@@ -25,13 +25,10 @@ export default function SmartSuggestions() {
       >
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold mb-2 text-center md:text-left tracking-tight relative inline-block">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-center md:text-left tracking-tight relative inline-block">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">Popular Patterns</span>
               <div className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 w-full"></div>
             </h2>
-            <p className="text-gray-600">
-              Discover the most useful AI design patterns
-            </p>
           </div>
         </div>
 
@@ -65,24 +62,13 @@ export default function SmartSuggestions() {
                         className="bg-white/90 hover:bg-white shadow-sm backdrop-blur-sm"
                       />
                     </div>
-
-                    {/* Popular indicator */}
-                    <div className="absolute top-2 left-2">
-                      <div className="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                        Popular
-                      </div>
-                    </div>
                   </div>
 
                   {/* Pattern Info */}
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">
+                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-1">
                       {pattern.title}
                     </h3>
-                    
-                    <p className="text-sm text-gray-600 line-clamp-2 mb-2">
-                      {pattern.description}
-                    </p>
 
                     <div className="flex items-center justify-between">
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">

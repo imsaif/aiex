@@ -2,8 +2,8 @@
 
 import Hero from '../components/sections/Hero';
 import PatternCategories from '../components/sections/PatternCategories';
-import SmartSuggestions from '../components/sections/SmartSuggestions';
 import Navbar from '../components/layout/Navbar';
+import ScrollToTop from '../components/ui/ScrollToTop';
 
 export default function Home() {
   return (
@@ -12,9 +12,6 @@ export default function Home() {
       <Hero />
       
       <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
-        {/* Smart Suggestions Section */}
-        <SmartSuggestions />
-        
         <section id="categories" className="py-12 md:py-16">
           <PatternCategories />
         </section>
@@ -26,11 +23,14 @@ export default function Home() {
           <p className="text-sm text-gray-600">
             Built with ☕ by Imran · 
             <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 ml-1">Portfolio</a> · 
-            <a href="https://github.com/reportkaro" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 ml-1">GitHub</a> · 
+            <a href="https://github.com/imsaif" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 ml-1">GitHub</a> · 
             <a href="https://www.linkedin.com/in/imsaif/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-900 ml-1">LinkedIn</a>
           </p>
         </div>
       </footer>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </main>
   );
 }
