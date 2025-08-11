@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-08-11T11:59:00.922Z",
+  "timestamp": "2025-08-11T13:09:00.749Z",
   "buildTime": 0,
-  "bundleSize": 2236,
+  "bundleSize": 2217,
   "chunkCount": 26,
   "warnings": [
-    "Bundle size 2236KB exceeds threshold"
+    "Bundle size 2217KB exceeds threshold"
   ],
   "errors": [],
   "recommendations": [

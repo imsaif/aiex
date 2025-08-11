@@ -58,6 +58,42 @@ node_modules/
 *.sln
 *.sw?
 # OS specific
+
 # Task files
 tasks.json
-tasks/ 
+tasks/
+
+# Testing artifacts (keep tests locally but not in repo)
+**/__tests__/
+**/*.test.*
+**/*.spec.*
+**/*.snap
+coverage/
+*.coverage
+jest.setup.js
+jest.config.js
+
+# Development tools
+.agent-context/
+.taskmaster/
+.windsurfrules
+.roomodes
+scripts/fix-*.js
+scripts/*-agent.js
+scripts/generate-*.js
+debug.js
+
+# IDE and workspace files
+.cursor/
+*.code-workspace
+.husky/
+
+# Documentation drafts
+docs/status.md
+docs/*-agent.md
+
+# Build and cache
+.next/
+.vercel/
+.swc/
+build-metrics.json 
