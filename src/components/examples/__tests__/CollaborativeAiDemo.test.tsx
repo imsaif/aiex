@@ -228,7 +228,7 @@ describe('CollaborativeAiDemo', () => {
         
         // Document should be updated
         await waitFor(() => {
-          expect(textarea.value).toContain('[AI');
+          expect((textarea as HTMLInputElement).value).toContain('[AI');
         });
       }
     });
@@ -298,7 +298,6 @@ describe('CollaborativeAiDemo', () => {
       render(<CollaborativeAiDemo {...defaultProps} />);
       
       // Should have pulse indicators for active members
-      const pulseElements = screen.getAllByTestId ? [] : document.querySelectorAll('.animate-pulse');
       // Note: We can't easily test for CSS classes in JSDOM, so we check for the presence of online status
       expect(screen.getAllByText('online')).toHaveLength(2);
     });

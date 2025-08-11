@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ConversationalUiDemo from '../ConversationalUiDemo';
 
@@ -47,7 +47,7 @@ describe('ConversationalUiDemo', () => {
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      await _user.click(element);
       
       // Component handles delay internally
       expect(element).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('ConversationalUiDemo', () => {
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      await _user.click(element);
       
       // Component handles submission internally
       expect(element).toBeInTheDocument();
@@ -72,7 +72,7 @@ describe('ConversationalUiDemo', () => {
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      await _user.click(element);
       
       // Component handles change internally
       expect(element).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('ConversationalUiDemo', () => {
       render(<ConversationalUiDemo {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await user.type(input, 'test input');
+      await _user.type(input, 'test input');
       
       expect(input).toHaveValue('test input');
     });
@@ -98,7 +98,7 @@ describe('ConversationalUiDemo', () => {
       render(<ConversationalUiDemo {...defaultProps} />);
       
       const button = screen.getByRole('button');
-      await user.click(button);
+      await _user.click(button);
       
       // Component handles click internally
       expect(button).toBeInTheDocument();

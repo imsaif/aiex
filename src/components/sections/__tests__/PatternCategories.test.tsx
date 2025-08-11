@@ -88,7 +88,7 @@ describe('PatternCategories', () => {
       await user.click(element);
       
       // Component handles background color internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onClick when triggered', async () => {
@@ -101,7 +101,7 @@ describe('PatternCategories', () => {
       await user.click(element);
       
       // Component handles click internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
   });

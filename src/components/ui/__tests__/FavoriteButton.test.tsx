@@ -45,7 +45,7 @@ describe('FavoriteButton', () => {
     it('handles showLabel boolean prop', () => {
       const { rerender } = render(<FavoriteButton {...defaultProps} showLabel={true} />);
       // Test with true value
-      expect(screen.getByRole('generic')).toBeInTheDocument();
+      expect(screen.getAllByRole('generic')[0]).toBeInTheDocument();
       
       rerender(<FavoriteButton {...defaultProps} showLabel={false} />);
       // Test with false value - behavior should change

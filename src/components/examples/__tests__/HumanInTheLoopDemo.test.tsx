@@ -49,7 +49,7 @@ describe('HumanInTheLoopDemo', () => {
       await user.click(element);
       
       // Component handles illustration internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onClick when triggered', async () => {
@@ -61,7 +61,7 @@ describe('HumanInTheLoopDemo', () => {
       await user.click(element);
       
       // Component handles click internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
   });

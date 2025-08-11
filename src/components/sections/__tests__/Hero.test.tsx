@@ -82,7 +82,7 @@ describe('Hero', () => {
       await user.click(element);
       
       // Component handles mouse move internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onDelay when triggered', async () => {
@@ -96,7 +96,7 @@ describe('Hero', () => {
       await user.click(element);
       
       // Component handles delay internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onClick when triggered', async () => {
@@ -109,7 +109,7 @@ describe('Hero', () => {
       await user.click(element);
       
       // Component handles click internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
   });

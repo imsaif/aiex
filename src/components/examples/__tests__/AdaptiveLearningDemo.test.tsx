@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AdaptiveLearningDemo from '../AdaptiveLearningDemo';
 
@@ -46,7 +46,7 @@ describe('AdaptiveLearningDemo', () => {
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const settingsButton = screen.getAllByRole('button')[0]; // First button is settings
-      await user.click(settingsButton);
+      await _user.click(settingsButton);
       
       // Component handles the click internally - just verify it's clickable
       expect(settingsButton).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('AdaptiveLearningDemo', () => {
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const input = screen.getByPlaceholderText('Type your answer');
-      await user.type(input, "test answer");
+      await _user.type(input, "test answer");
       
       expect(input).toHaveValue("test answer");
     });
@@ -72,7 +72,7 @@ describe('AdaptiveLearningDemo', () => {
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await user.type(input, 'test input');
+      await _user.type(input, 'test input');
       
       expect(input).toHaveValue('test input');
     });
@@ -83,7 +83,7 @@ describe('AdaptiveLearningDemo', () => {
       render(<AdaptiveLearningDemo {...defaultProps} />);
       
       const button = screen.getByRole('button');
-      await user.click(button);
+      await _user.click(button);
       
       // Component handles the click internally
       expect(button).toBeInTheDocument();

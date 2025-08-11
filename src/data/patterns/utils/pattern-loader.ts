@@ -121,7 +121,7 @@ export const loadPattern = async (patternId: string): Promise<Pattern | null> =>
         try {
           const importedModule = await import(`../patterns/${patternId}`);
           pattern = importedModule[patternId.replace(/-/g, '')];
-        } catch {
+        } catch (error) {
           console.error(`Failed to load pattern ${patternId}:`, error);
           return null;
         }

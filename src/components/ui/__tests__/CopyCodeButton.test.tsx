@@ -53,7 +53,7 @@ describe('CopyCodeButton', () => {
       await user.click(element);
       
       // Component handles click internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
   });

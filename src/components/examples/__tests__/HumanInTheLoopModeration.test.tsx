@@ -48,7 +48,7 @@ describe('HumanInTheLoopModeration', () => {
       await user.click(element);
       
       // Component handles click internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onSubmit when triggered', async () => {
@@ -62,7 +62,7 @@ describe('HumanInTheLoopModeration', () => {
       await user.click(element);
       
       // Component handles submission internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onChange when triggered', async () => {
@@ -74,7 +74,7 @@ describe('HumanInTheLoopModeration', () => {
       await user.click(element);
       
       // Component handles change internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
   });

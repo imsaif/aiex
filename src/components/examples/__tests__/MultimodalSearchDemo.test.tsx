@@ -50,7 +50,7 @@ describe('MultimodalSearchDemo', () => {
       await user.click(element);
       
       // Component handles ref internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onModeStyles when triggered', async () => {
@@ -64,7 +64,7 @@ describe('MultimodalSearchDemo', () => {
       await user.click(element);
       
       // Component handles mode styles internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onMode when triggered', async () => {
@@ -78,7 +78,7 @@ describe('MultimodalSearchDemo', () => {
       await user.click(element);
       
       // Component handles mode internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onChange when triggered', async () => {
@@ -90,7 +90,7 @@ describe('MultimodalSearchDemo', () => {
       await user.click(element);
       
       // Component handles change internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onClick when triggered', async () => {
@@ -102,7 +102,7 @@ describe('MultimodalSearchDemo', () => {
       await user.click(element);
       
       // Component handles click internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
     it('calls onDelay when triggered', async () => {
@@ -116,7 +116,7 @@ describe('MultimodalSearchDemo', () => {
       await user.click(element);
       
       // Component handles delay internally
-      expect(element).toBeInTheDocument();
+      expect(button).toBeInTheDocument();
     });
 
   });

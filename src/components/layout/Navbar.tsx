@@ -31,7 +31,7 @@ const Navbar = () => {
                 <path d="M12 10l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
               </svg>
             </span>
-            <span className="text-xl font-medium tracking-tight">aiexd</span>
+            <span className="text-xl font-medium tracking-tight">aiux</span>
           </Link>
 
           <div className="hidden md:flex ml-auto items-center space-x-4">

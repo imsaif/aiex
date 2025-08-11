@@ -41,6 +41,15 @@
     "progress-update": "node scripts/project-progress-agent.js update",
     "progress-sync": "node scripts/project-progress-agent.js sync",
     "generate-missing-demos": "node scripts/generate-missing-demo-components.js",
+    "orchestrate": "node scripts/agent-orchestrator.js",
+    "orchestrate:health": "node scripts/agent-orchestrator.js health",
+    "orchestrate:workflow": "node scripts/agent-orchestrator.js workflow",
+    "context": "node scripts/context-manager.js",
+    "context:prime": "node scripts/context-manager.js prime",
+    "context:status": "node scripts/context-manager.js status",
+    "workflow": "node scripts/workflow-automation.js",
+    "workflow:run": "node scripts/workflow-automation.js run",
+    "workflow:list": "node scripts/workflow-automation.js list",
     "prebuild": "node scripts/inject-contextual-assistance-code.js",
     "postbuild": "echo '📊 Build completed! Check build-metrics.json for performance insights.' && npm run progress-update"
   },
@@ -54,7 +63,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-syntax-highlighter": "^15.6.1",
-    "sharp": "^0.33.2",
+    "sharp": "^0.33.5",
     "task-master-ai": "^0.18.0"
   },
   "devDependencies": {

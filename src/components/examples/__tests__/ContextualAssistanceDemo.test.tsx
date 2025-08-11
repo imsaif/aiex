@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContextualAssistanceDemo from '../ContextualAssistanceDemo';
 
@@ -57,7 +57,7 @@ describe('ContextualAssistanceDemo', () => {
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      await _user.click(element);
       
       // Component handles change internally
       expect(element).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe('ContextualAssistanceDemo', () => {
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await user.keyboard('{Enter}');
+      await _user.keyboard('{Enter}');
       
       // Component handles keydown internally
       expect(element).toBeInTheDocument();
@@ -81,7 +81,7 @@ describe('ContextualAssistanceDemo', () => {
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await user.click(element);
+      await _user.click(element);
       
       // Component handles click internally
       expect(element).toBeInTheDocument();
@@ -93,7 +93,7 @@ describe('ContextualAssistanceDemo', () => {
       
       const elements = screen.getAllByRole('button');
       const element = elements[0]; // Adjust selector as needed
-      await user.hover(element);
+      await _user.hover(element);
       
       // Component handles hover internally
       expect(element).toBeInTheDocument();
@@ -108,7 +108,7 @@ describe('ContextualAssistanceDemo', () => {
       
       const buttons = screen.queryAllByRole('button');
       if (buttons.length > 0) {
-        await user.click(buttons[0]);
+        await _user.click(buttons[0]);
         // Just verify the component is still rendered after interaction
         expect(container.firstChild).toBeInTheDocument();
       } else {

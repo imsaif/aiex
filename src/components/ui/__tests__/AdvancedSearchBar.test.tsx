@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AdvancedSearchBar from '../AdvancedSearchBar';
 
@@ -77,7 +77,7 @@ describe('AdvancedSearchBar', () => {
       render(<AdvancedSearchBar {...defaultProps} onPatternSelect={onPatternSelect} />);
       
       const input = screen.getByRole('textbox');
-      await user.type(input, "test input");
+      await _user.type(input, "test input");
       
       // The actual onPatternSelect would be called when a pattern is selected from search results
       // This test verifies the component renders with the prop without errors
@@ -90,11 +90,11 @@ describe('AdvancedSearchBar', () => {
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await user.type(input, "test");
+      await _user.type(input, "test");
       
       // Test keyboard interactions (component handles internally)
-      await user.keyboard('{ArrowDown}');
-      await user.keyboard('{Escape}');
+      await _user.keyboard('{ArrowDown}');
+      await _user.keyboard('{Escape}');
       
       expect(input).toBeInTheDocument();
     });
@@ -105,7 +105,7 @@ describe('AdvancedSearchBar', () => {
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await user.click(input);
+      await _user.click(input);
       
       expect(input).toHaveFocus();
     });
@@ -116,11 +116,11 @@ describe('AdvancedSearchBar', () => {
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await user.type(input, "test query");
+      await _user.type(input, "test query");
       
       // Clear button should appear after typing
       const clearButton = screen.getByRole('button');
-      await user.click(clearButton);
+      await _user.click(clearButton);
       
       expect(input).toHaveValue('');
     });
@@ -134,7 +134,7 @@ describe('AdvancedSearchBar', () => {
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await user.type(input, 'test input');
+      await _user.type(input, 'test input');
       
       expect(input).toHaveValue('test input');
     });
@@ -145,7 +145,7 @@ describe('AdvancedSearchBar', () => {
       render(<AdvancedSearchBar {...defaultProps} />);
       
       const input = screen.getByRole('textbox');
-      await user.type(input, 'test query');
+      await _user.type(input, 'test query');
       
       // Search should trigger internally after typing
       expect(input).toHaveValue('test query');

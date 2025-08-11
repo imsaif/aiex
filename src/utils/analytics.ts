@@ -96,7 +96,7 @@ export const trackEvent = (type: AnalyticsEvent['type'], data?: Record<string, u
     
     case 'pattern_view':
       if (data?.patternId) {
-        analytics.patternViews[data.patternId] = (analytics.patternViews[data.patternId] || 0) + 1;
+        analytics.patternViews[data.patternId as string] = (analytics.patternViews[data.patternId as string] || 0) + 1;
       }
       break;
     

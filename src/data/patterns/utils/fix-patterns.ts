@@ -99,7 +99,7 @@ export const ${patternName.replace(/-/g, '')}: Pattern = {
     solution: "${content.match(/solution: "([^"]+)"/)?.[1] || ''}",
     overview: "${generateOverview(content.match(/description: "([^"]+)"/)?.[1] || '')}",
     whenToUse: ${JSON.stringify(generateWhenToUse(content.match(/problem: "([^"]+)"/)?.[1] || ''))},
-    benefits: ${JSON.stringify(generateBenefits(content.match(/solution: "([^"]+)"/)?.[1] || ''))},
+    benefits: ${JSON.stringify(generateBenefits())},
     examples,
     guidelines,
     considerations,

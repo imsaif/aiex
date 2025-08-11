@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AdaptiveDashboardDemo from '../AdaptiveDashboardDemo';
 
@@ -58,7 +58,7 @@ describe('AdaptiveDashboardDemo', () => {
       
       const buttons = screen.getAllByRole('button');
       if (buttons.length > 0) {
-        await user.click(buttons[0]);
+        await _user.click(buttons[0]);
         // Test that clicking buttons works (component-specific behavior)
       }
     });
@@ -73,7 +73,7 @@ describe('AdaptiveDashboardDemo', () => {
       
       const dashboardItems = screen.getAllByRole('button');
       if (dashboardItems.length > 0) {
-        await user.click(dashboardItems[0]);
+        await _user.click(dashboardItems[0]);
         // Component should handle clicks internally
       }
     });

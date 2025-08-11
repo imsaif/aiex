@@ -1,4 +1,4 @@
-import { render, screen } from '../../../utils/test-utils'
+import { render, screen, waitFor, fireEvent } from '../../../utils/test-utils'
 import CodeBlock from '../CodeBlock'
 
 describe('CodeBlock Component', () => {

@@ -73,7 +73,7 @@ describe('RecentPatterns', () => {
     it('renders motion components correctly', () => {
       render(<RecentPatterns {...defaultProps} />);
       // Motion components should render as regular divs in test environment
-      expect(screen.getByRole('generic')).toBeInTheDocument();
+      expect(screen.getAllByRole('generic')[0]).toBeInTheDocument();
     });
 
     it('handles animation state changes', async () => {

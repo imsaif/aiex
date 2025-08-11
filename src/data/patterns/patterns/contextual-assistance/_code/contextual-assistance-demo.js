@@ -260,10 +260,10 @@ export default function ContextualAssistanceDemo() {
       <div className="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-800">
         <p className="font-medium">Try typing one of these phrases to see contextual suggestions:</p>
         <ul className="mt-1 space-y-1 list-disc list-inside">
-          <li>"I want to"</li>
-          <li>"I need"</li>
-          <li>"Can you"</li>
-          <li>"How do I"</li>
+          <li>&quot;I want to&quot;</li>
+          <li>&quot;I need&quot;</li>
+          <li>&quot;Can you&quot;</li>
+          <li>&quot;How do I&quot;</li>
         </ul>
       </div>
     </div>

@@ -2,9 +2,9 @@ import { Pattern } from '../types';
 import patterns from '../data/patterns';
 
 // Lazy load Fuse.js to reduce initial bundle size
-type FuseType = unknown;
+type FuseType = any;
 let fuseInstance: FuseType | null = null;
-let FuseClass: new (list: Pattern[], options: object) => FuseType = null as unknown;
+let FuseClass: new (list: Pattern[], options: object) => FuseType = null as any;
 
 const initializeFuse = async () => {
   if (!FuseClass) {
@@ -85,7 +85,7 @@ export async function searchPatterns(
   } = options;
 
   const fuse = await initializeFuse();
-  let results = fuse.search(query, { limit: limit * 2 }); // Get more results to filter
+  let results = (fuse as any).search(query, { limit: limit * 2 }); // Get more results to filter
 
   // Filter by category if specified
   if (category) {
