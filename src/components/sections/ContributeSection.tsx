@@ -12,7 +12,9 @@ const ContributeSection = () => (
         Have a design pattern or best practice to share? Help grow the community by contributing your knowledge and expertise to our collection!
       </p>
       <a
-        href="#"
+        href="https://github.com/imsaif/aiex/blob/main/CONTRIBUTING.md"
+        target="_blank"
+        rel="noopener noreferrer"
         className="inline-block bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-300"
       >
         Submit a Pattern

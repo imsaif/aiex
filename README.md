@@ -39,7 +39,7 @@ This project provides a complete implementation of **all 14 essential AI design 
 - **Augmented Creation** - AI-assisted content generation
 - **Responsible AI Design** - Ethics, bias mitigation, and inclusivity
 
-[View live demo →](https://ai-design-patterns.vercel.app)
+[View live demo →](https://aiuxdesign.guide)
 
 ## 🛠️ Tech Stack
 
@@ -62,7 +62,7 @@ This project provides a complete implementation of **all 14 essential AI design 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ai-design-patterns.git
+git clone https://github.com/imsaif/aiex.git
 cd ai-design-patterns
 ```
 
@@ -211,7 +211,7 @@ The project implements a comprehensive design system with:
 
 ### Vercel (Recommended)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/ai-design-patterns)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/imsaif/aiex)
 
 The project is optimized for Vercel deployment with:
 - Automatic CI/CD pipeline
@@ -272,8 +272,8 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## 📧 Contact
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Website: [ai-design-patterns.vercel.app](https://ai-design-patterns.vercel.app)
+- GitHub: [@imsaif](https://github.com/imsaif)
+- Website: [aiuxdesign.guide](https://aiuxdesign.guide)
 
 ---
 
