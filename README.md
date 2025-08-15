@@ -12,6 +12,7 @@ This project provides a complete implementation of **all 14 essential AI design 
 - **Modern tech stack**: Next.js 15, React 19, TypeScript, Tailwind CSS
 - **481+ comprehensive tests** with 48% code coverage
 - **AI-powered development tools** for pattern generation and testing
+- **Usage tracking & cost analysis** with ccusage integration for Claude Code
 - **Responsive design** with dark mode support
 - **Optimized performance** with image optimization and code splitting
 
@@ -96,17 +97,7 @@ npm start                # Start production server
 
 # Testing
 npm test                 # Run all tests
-npm run test:watch       # Run tests in watch mode
-npm run test:coverage    # Generate coverage report
-
-# Code Quality
 npm run lint             # Run ESLint
-npm run type-check       # Check TypeScript types
-
-# AI-Powered Tools
-npm run generate-pattern # Generate new AI pattern
-npm run generate-test    # Generate tests for components
-npm run design-analyze   # Analyze design consistency
 ```
 
 ## 📂 Project Structure
@@ -115,97 +106,17 @@ npm run design-analyze   # Analyze design consistency
 ai-design-patterns/
 ├── src/
 │   ├── app/                    # Next.js 15 app router
-│   ├── components/             
-│   │   ├── ui/                 # Reusable UI components
-│   │   ├── examples/           # Interactive pattern demos
-│   │   ├── sections/           # Page sections
-│   │   └── layout/             # Navigation and structure
-│   ├── data/
-│   │   └── patterns/           # All 14 AI pattern implementations
+│   ├── components/             # React components
+│   ├── data/patterns/          # All 14 AI pattern implementations
 │   ├── hooks/                  # Custom React hooks
-│   ├── contexts/               # React context providers
-│   ├── schemas/                # Zod validation schemas
 │   └── utils/                  # Utility functions
-├── public/
-│   └── images/                 # Optimized images and assets
-├── scripts/                    # AI-powered development tools
+├── public/images/              # Optimized images and assets
 └── tests/                      # Test configuration
 ```
 
 ## 🧪 Testing
 
-The project includes comprehensive testing infrastructure with 481+ tests achieving 48% code coverage.
-
-### Running Tests
-
-```bash
-# Run all tests
-npm test
-
-# Watch mode for development
-npm run test:watch
-
-# Generate coverage report
-npm run test:coverage
-
-# Test specific components
-npm run test:components
-
-# Validate pattern data
-npm run test:patterns
-```
-
-### Test Coverage Goals
-
-- Current: 48% overall coverage
-- Target: 70% coverage threshold
-- 100% coverage on critical components (Button, CodeBlock)
-- All 14 patterns validated with schema tests
-
-## 🤖 AI-Powered Development Tools
-
-This project includes innovative AI agents that automate development tasks:
-
-### Pattern Generator
-```bash
-npm run generate-pattern     # Generate a new AI pattern
-npm run generate-all-patterns # Generate all missing patterns
-npm run list-patterns        # List pattern implementation status
-```
-
-### Test Generator
-```bash
-npm run generate-test        # Generate tests for a component
-npm run generate-all-tests   # Generate all missing tests
-npm run list-untested        # Find components without tests
-```
-
-### Design Consistency Tools
-```bash
-npm run design-analyze       # Analyze design consistency
-npm run design-report        # Generate design report
-npm run design-style-guide   # Create style guide
-npm run design-fix-all       # Auto-fix design issues
-```
-
-### Project Progress Monitoring
-```bash
-npm run progress-report      # Comprehensive progress report
-npm run progress-status      # Quick status summary
-npm run progress-agents      # AI agent activities
-npm run progress-next        # Get next priority tasks
-```
-
-## 🎨 Design System
-
-The project implements a comprehensive design system with:
-
-- **Color Palette**: Consistent color tokens for light/dark modes
-- **Typography**: Scaled type system with responsive sizing
-- **Spacing**: 8px grid system for consistent layouts
-- **Components**: 30+ reusable UI components
-- **Animations**: Framer Motion for smooth interactions
-- **Icons**: Lucide React icon system
+The project includes comprehensive testing infrastructure with 481+ tests achieving 48% code coverage. Run `npm test` to execute all tests.
 
 ## 🚢 Deployment
 
@@ -219,31 +130,10 @@ The project is optimized for Vercel deployment with:
 - Analytics and performance monitoring
 - Image optimization CDN
 
-### Manual Deployment
-
-```bash
-# Build for production
-npm run build
-
-# Start production server
-npm start
-```
-
-### Environment Variables
-
-Create a `.env.local` file for local development:
-
-```env
-# Optional - for analytics
-NEXT_PUBLIC_VERCEL_ANALYTICS_ID=your-analytics-id
-```
-
 ## 📚 Documentation
 
-- [Pattern Implementation Guide](./docs/patterns-guide.md)
 - [Contributing Guidelines](./CONTRIBUTING.md)
-- [Architecture Overview](./docs/architecture.md)
-- [API Documentation](./docs/api.md)
+- [Pattern Implementation Guide](./docs/patterns-guide.md)
 
 ## 🤝 Contributing
 
