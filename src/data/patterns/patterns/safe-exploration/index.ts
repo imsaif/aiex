@@ -12,8 +12,8 @@ export const safeexploration: Pattern = {
   category: "Safe Exploration",
   thumbnail: "/images/examples/openai-playground.gif",
   content: {
-    problem: "Users need to experiment with AI capabilities and learn through trial and error, but fear making mistakes or causing unintended consequences.",
-    solution: "Provide safe, controlled environments where users can explore AI features without risk, including sandboxing, undo mechanisms, and clear boundaries between safe and production use.",
+    problem: "Users want to experiment with AI capabilities but fear making mistakes or causing unintended consequences.",
+    solution: "Provide safe, controlled environments for exploring AI features with sandboxing, undo mechanisms, and clear safe/production boundaries.",
     examples,
     guidelines,
     considerations,

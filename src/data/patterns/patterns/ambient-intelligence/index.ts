@@ -12,8 +12,8 @@ export const ambientintelligence: Pattern = {
   category: "Ambient Intelligence",
   thumbnail: "/images/examples/siri-suggestions.gif",
   content: {
-    problem: "Users need intelligent assistance without the cognitive overhead of explicit interaction, especially in contexts where attention is focused elsewhere.",
-    solution: "Create AI systems that operate unobtrusively in the background, sensing context and providing assistance without requiring direct user interaction or interrupting current tasks.",
+    problem: "Users need intelligent assistance without cognitive overhead, especially when attention is focused elsewhere.",
+    solution: "Create AI systems that operate unobtrusively in the background, sensing context and providing assistance without interruption.",
     examples,
     guidelines,
     considerations,

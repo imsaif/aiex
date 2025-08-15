@@ -12,8 +12,8 @@ export const errorrecovery: Pattern = {
   category: "Error Recovery",
   thumbnail: "/images/examples/google-assistant-fallback.gif",
   content: {
-    problem: "AI systems inevitably make mistakes or encounter situations they cannot handle, potentially frustrating users or causing system failures.",
-    solution: "Design graceful degradation mechanisms and clear recovery paths that maintain user trust while providing alternative solutions when AI fails.",
+    problem: "AI systems inevitably make mistakes or encounter situations they cannot handle, potentially frustrating users.",
+    solution: "Design graceful degradation mechanisms and clear recovery paths that maintain user trust when AI fails.",
     examples,
     guidelines,
     considerations,

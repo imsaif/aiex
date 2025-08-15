@@ -50,12 +50,20 @@
     "context:status": "node scripts/context-manager.js status",
     "workflow": "node scripts/workflow-automation.js",
     "workflow:run": "node scripts/workflow-automation.js run",
-    "workflow:list": "node scripts/workflow-automation.js list"
+    "workflow:list": "node scripts/workflow-automation.js list",
+    "usage": "ccusage",
+    "usage:daily": "ccusage daily",
+    "usage:weekly": "ccusage weekly", 
+    "usage:monthly": "ccusage monthly",
+    "usage:session": "ccusage session",
+    "usage:blocks": "ccusage blocks",
+    "usage:json": "ccusage daily --json"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/typography": "^0.5.16",
     "@vercel/speed-insights": "^1.2.0",
+    "ccusage": "^15.9.4",
     "framer-motion": "^12.7.3",
     "fuse.js": "^7.1.0",
     "next": "15.4.6",

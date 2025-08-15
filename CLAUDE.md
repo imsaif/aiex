@@ -92,6 +92,20 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 - Optimized with memoization for performance
 - Error boundaries and loading states handled centrally
 
+#### 5. Usage Tracking & Cost Analysis
+- **ccusage** integration for Claude Code token usage analysis
+- Commands available for monitoring Claude Code costs and usage patterns:
+  - `npm run usage` - General usage analysis
+  - `npm run usage:daily` - Daily usage breakdown with costs
+  - `npm run usage:weekly` - Weekly usage summary  
+  - `npm run usage:monthly` - Monthly usage and cost analysis
+  - `npm run usage:session` - Session-based usage tracking
+  - `npm run usage:blocks` - Block-level usage analysis
+  - `npm run usage:json` - JSON output for integration/scripting
+- Automatically analyzes existing Claude Code JSONL logs from `~/.claude/projects/`
+- Provides detailed cost breakdowns by model (Sonnet-4, Opus-4, etc.)
+- Tracks input/output tokens, cache creation/reading, and total costs in USD
+
 #### 3. Component Architecture
 - **UI Components** (`src/components/ui/`): Reusable design system components
 - **Section Components** (`src/components/sections/`): Page-specific sections

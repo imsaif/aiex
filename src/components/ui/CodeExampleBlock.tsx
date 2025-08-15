@@ -381,7 +381,7 @@ export default function CodeExampleBlock({
         ) : (
           /* Live Preview */
           <div className="p-6 flex justify-center bg-gray-50 min-h-[400px]">
-            <div className={`w-full ${componentId === 'human-in-the-loop-moderation' || componentId === 'confidence-indicator' ? 'max-w-4xl' : 'max-w-lg'}`}>
+            <div className={`w-full ${componentId === 'human-in-the-loop-moderation' || componentId === 'confidence-indicator' || componentId === 'guided-learning-tutorial' ? 'max-w-6xl' : 'max-w-lg'}`}>
               {componentLoaded ? renderComponent() : (
                 <div className="flex items-center justify-center h-64">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>

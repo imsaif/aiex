@@ -174,14 +174,14 @@ export default function GuidedLearningDemo() {
   const isCompleted = completedSteps.size === tutorial.steps.length;
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
+    <div className="w-full p-4 relative min-h-[600px]">
       {/* Mock Dashboard Interface */}
-      <div className="bg-gray-50 rounded-lg p-6 mb-6">
+      <div className="bg-gray-50 rounded-lg p-8 mb-8">
         <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {/* Navigation Menu */}
-          <div className="navigation-menu bg-white rounded-lg p-4 shadow">
+          <div className="navigation-menu bg-white rounded-lg p-6 shadow">
             <h3 className="font-semibold mb-4">Navigation</h3>
             <ul className="space-y-2">
               <li><a href="#" className="text-blue-600 hover:underline">Dashboard</a></li>
@@ -192,7 +192,7 @@ export default function GuidedLearningDemo() {
           </div>
 
           {/* Analytics Section */}
-          <div className="md:col-span-3 analytics-section bg-white rounded-lg p-4 shadow">
+          <div className="md:col-span-3 analytics-section bg-white rounded-lg p-6 shadow">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold">Analytics Overview</h3>
               <div className="flex gap-2">
@@ -211,16 +211,16 @@ export default function GuidedLearningDemo() {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-blue-50 p-4 rounded">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-blue-50 p-6 rounded-lg">
                 <h4 className="font-medium">Total Users</h4>
                 <p className="text-2xl font-bold text-blue-600">1,234</p>
               </div>
-              <div className="bg-green-50 p-4 rounded">
+              <div className="bg-green-50 p-6 rounded-lg">
                 <h4 className="font-medium">Revenue</h4>
                 <p className="text-2xl font-bold text-green-600">$12,345</p>
               </div>
-              <div className="bg-purple-50 p-4 rounded">
+              <div className="bg-purple-50 p-6 rounded-lg">
                 <h4 className="font-medium">Conversion Rate</h4>
                 <p className="text-2xl font-bold text-purple-600">3.2%</p>
               </div>
@@ -268,7 +268,7 @@ export default function GuidedLearningDemo() {
         </div>
       ) : (
         /* Active Tutorial Overlay */
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center z-50 rounded-lg">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full m-4">
             {/* Progress Bar */}
             <div className="p-4 border-b">

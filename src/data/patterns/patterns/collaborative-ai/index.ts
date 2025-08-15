@@ -12,8 +12,8 @@ export const collaborativeai: Pattern = {
   category: "Collaborative AI",
   thumbnail: "/images/examples/notion-team-ai.gif",
   content: {
-    problem: "Teams need to collaborate effectively with AI systems while maintaining coordination, shared understanding, and human relationships.",
-    solution: "Create AI interfaces that enhance team collaboration by facilitating shared decision-making, maintaining context across team members, and supporting group workflows.",
+    problem: "Teams need to collaborate effectively with AI while maintaining coordination, shared understanding, and human relationships.",
+    solution: "Create AI interfaces that enhance team collaboration through shared decision-making, context maintenance, and group workflow support.",
     examples,
     guidelines,
     considerations,

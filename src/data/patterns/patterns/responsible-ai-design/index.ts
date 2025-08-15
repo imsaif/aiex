@@ -12,8 +12,8 @@ export const responsibleaidesign: Pattern = {
   category: "Responsible AI Design",
   thumbnail: "/images/examples/linkedin-bias-detection.gif",
   content: {
-    problem: "AI systems can perpetuate biases, make unfair decisions, or cause harm if not designed with ethical considerations and inclusive practices in mind.",
-    solution: "Implement design practices that prioritize fairness, transparency, accountability, and user welfare throughout the AI system lifecycle, from development to deployment.",
+    problem: "AI systems can perpetuate biases, make unfair decisions, or cause harm without ethical design practices.",
+    solution: "Prioritize fairness, transparency, accountability, and user welfare throughout the AI system lifecycle.",
     examples,
     guidelines,
     considerations,
