@@ -53,11 +53,13 @@
     "workflow:list": "node scripts/workflow-automation.js list",
     "usage": "ccusage",
     "usage:daily": "ccusage daily",
-    "usage:weekly": "ccusage weekly", 
+    "usage:weekly": "ccusage weekly",
     "usage:monthly": "ccusage monthly",
     "usage:session": "ccusage session",
     "usage:blocks": "ccusage blocks",
-    "usage:json": "ccusage daily --json"
+    "usage:json": "ccusage daily --json",
+    "error-status": "echo '=== TypeScript Errors ===' && (npx tsc --noEmit | grep -c 'error TS' || echo '0') && echo '=== ESLint Errors ===' && (npm run lint | grep -c 'Error:' || echo '0') && echo '=== Test Status ===' && npm test -- --passWithNoTests --silent",
+    "fix-all": "npm run ts-fix && npm run lint -- --fix && npm test -- --passWithNoTests"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

@@ -198,7 +198,7 @@ export async function smartSearch(query: string): Promise<SmartSearchResult> {
     return {
       patterns: matchedPatterns,
       confidence,
-      matchedKeywords: [...new Set(matchedKeywords)], // Remove duplicates
+      matchedKeywords: Array.from(new Set(matchedKeywords)), // Remove duplicates
       suggestion: generateSuggestion(matchedPatterns, lowerQuery),
     };
   }

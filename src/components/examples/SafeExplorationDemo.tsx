@@ -254,13 +254,13 @@ export default function SafeExplorationDemo() {
           </h3>
           <div className="grid md:grid-cols-2 gap-4 text-sm text-green-700">
             <div className="space-y-2">
-              <div>• <strong>Isolated Environment:</strong> Changes don't affect your main workspace</div>
+              <div>• <strong>Isolated Environment:</strong> Changes don&apos;t affect your main workspace</div>
               <div>• <strong>Automatic Backups:</strong> Your data is automatically backed up</div>
               <div>• <strong>Easy Undo:</strong> Every action can be reversed</div>
             </div>
             <div className="space-y-2">
               <div>• <strong>Time Limits:</strong> Experiments auto-expire for safety</div>
-              <div>• <strong>Clear Boundaries:</strong> You'll always know what's experimental</div>
+              <div>• <strong>Clear Boundaries:</strong> You&apos;ll always know what&apos;s experimental</div>
               <div>• <strong>Choose Your Level:</strong> From guided tutorials to free exploration</div>
             </div>
           </div>
@@ -517,7 +517,7 @@ export default function SafeExplorationDemo() {
             <ul className="text-sm text-green-700 space-y-1">
               <li className="flex items-start">
                 <span className="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                Start with templates if you're new
+                Start with templates if you&apos;re new
               </li>
               <li className="flex items-start">
                 <span className="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>

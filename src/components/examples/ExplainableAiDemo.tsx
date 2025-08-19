@@ -232,7 +232,7 @@ export default function ExplainableAiDemo() {
       {!input && !result && (
         <div className="mt-4 p-4 bg-gray-50 rounded-lg">
           <p className="text-sm text-gray-600">
-            <strong>Try this example:</strong> "I'm really excited about the new features in this product. The team has done an amazing job!"
+            <strong>Try this example:</strong> &quot;I&apos;m really excited about the new features in this product. The team has done an amazing job!&quot;
           </p>
         </div>
       )}

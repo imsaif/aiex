@@ -49,4 +49,4 @@ interface Window {
 }
 
 declare var SpeechRecognition: SpeechRecognitionConstructor | undefined;
-declare var webkitSpeechRecognition: SpeechRecognitionConstructor | undefined;
+declare let webkitSpeechRecognition: SpeechRecognitionConstructor | undefined;
