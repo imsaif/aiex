@@ -114,13 +114,13 @@ export const loadPattern = async (patternId: string): Promise<Pattern | null> =>
       
       // First try the new modular structure
       try {
-        const module = await import(`../patterns/${patternId}/index`);
-        pattern = module[patternId.replace(/-/g, '')];
-      } catch (error) {
+        const importedModule = await import(`../patterns/${patternId}/index`);
+        pattern = importedModule[patternId.replace(/-/g, '')];
+      } catch {
         // Fall back to the old structure
         try {
-          const module = await import(`../patterns/${patternId}`);
-          pattern = module[patternId.replace(/-/g, '')];
+          const importedModule = await import(`../patterns/${patternId}`);
+          pattern = importedModule[patternId.replace(/-/g, '')];
         } catch (error) {
           console.error(`Failed to load pattern ${patternId}:`, error);
           return null;
@@ -251,8 +251,8 @@ export const loadPatternWithFallback = async (
  */
 export const loadCodeExample = async (patternId: string, exampleId: string) => {
   try {
-    const module = await import(`../examples/${patternId}/${exampleId}`);
-    return module.default;
+    const importedModule = await import(`../examples/${patternId}/${exampleId}`);
+    return importedModule.default;
   } catch (error) {
     console.error(`Failed to load code example for ${patternId}/${exampleId}:`, error);
     return null;
@@ -268,7 +268,7 @@ export const loadCodeExamples = async (patternId: string, exampleIds: string[]) 
   );
   
   return examples
-    .filter((result): result is PromiseFulfilledResult<any> => 
+    .filter((result): result is PromiseFulfilledResult<unknown> => 
       result.status === 'fulfilled' && result.value !== null
     )
     .map(result => result.value);

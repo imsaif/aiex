@@ -1,9 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import CopyCodeButton from './CopyCodeButton';
+
+// Import syntax highlighter directly to avoid dynamic import issues
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import dynamic from 'next/dynamic';
 
 // Dynamically import the ContextualAssistanceDemo component with a more reliable approach
 const ContextualAssistanceDemo = dynamic(
@@ -109,6 +112,110 @@ const MultimodalSearchDemo = dynamic(
   }
 );
 
+// Dynamically import the GuidedLearningDemo component
+const GuidedLearningDemo = dynamic(
+  () => import('@/components/examples/GuidedLearningDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the AugmentedCreationDemo component
+const AugmentedCreationDemo = dynamic(
+  () => import('@/components/examples/AugmentedCreationDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the ResponsibleAiDesignDemo component
+const ResponsibleAiDesignDemo = dynamic(
+  () => import('@/components/examples/ResponsibleAiDesignDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the ErrorRecoveryDemo component
+const ErrorRecoveryDemo = dynamic(
+  () => import('@/components/examples/ErrorRecoveryDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the CollaborativeAiDemo component
+const CollaborativeAiDemo = dynamic(
+  () => import('@/components/examples/CollaborativeAiDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the AmbientIntelligenceDemo component
+const AmbientIntelligenceDemo = dynamic(
+  () => import('@/components/examples/AmbientIntelligenceDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the SafeExplorationDemo component
+const SafeExplorationDemo = dynamic(
+  () => import('@/components/examples/SafeExplorationDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the ExplainableAiDemo component
+const ExplainableAiDemo = dynamic(
+  () => import('@/components/examples/ExplainableAiDemo'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -124,20 +231,13 @@ export default function CodeExampleBlock({
   description,
   componentId,
 }: CodeExampleBlockProps) {
-  const [activeTab, setActiveTab] = useState<'code' | 'preview'>('code');
-  const [copied, setCopied] = useState(false);
+  const [showCode, setShowCode] = useState(false);
   const [componentLoaded, setComponentLoaded] = useState(false);
 
   useEffect(() => {
     // Mark components as loaded after initial render
     setComponentLoaded(true);
   }, []);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   // Render the appropriate component based on componentId
   const renderComponent = () => {
@@ -159,6 +259,22 @@ export default function CodeExampleBlock({
         return <AdaptiveLearningDemo />;
       case 'multimodal-search':
         return <MultimodalSearchDemo />;
+      case 'guided-learning-tutorial':
+        return <GuidedLearningDemo />;
+      case 'augmented-creation-demo':
+        return <AugmentedCreationDemo />;
+      case 'responsible-ai-design-demo':
+        return <ResponsibleAiDesignDemo />;
+      case 'error-recovery-demo':
+        return <ErrorRecoveryDemo />;
+      case 'collaborative-ai-demo':
+        return <CollaborativeAiDemo />;
+      case 'ambient-intelligence-demo':
+        return <AmbientIntelligenceDemo />;
+      case 'safe-exploration-demo':
+        return <SafeExplorationDemo />;
+      case 'explainable-ai-demo':
+        return <ExplainableAiDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">
@@ -182,63 +298,75 @@ export default function CodeExampleBlock({
         <p className="text-gray-600">{description}</p>
       </div>
 
-      {/* Tab navigation */}
-      <div className="flex border-b border-gray-200">
-        <button
-          className={`px-4 py-3 font-medium text-sm ${
-            activeTab === 'code'
-              ? 'text-blue-600 border-b-2 border-blue-600'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-          onClick={() => setActiveTab('code')}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-          </svg>
-          Code
-        </button>
-        <button
-          className={`px-4 py-3 font-medium text-sm ${
-            activeTab === 'preview'
-              ? 'text-blue-600 border-b-2 border-blue-600'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-          onClick={() => setActiveTab('preview')}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 inline mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          Live Preview
-        </button>
-      </div>
-
-      {/* Content area */}
+      {/* Content area with toggle */}
       <div className="relative">
-        {activeTab === 'code' ? (
+        {/* Header with Toggle */}
+        <div className="bg-gray-50 p-4 border-b border-gray-200 flex items-center justify-between">
+          <div className="flex items-center">
+            {showCode ? (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                <span className="font-semibold text-blue-600">Code View</span>
+                <span className="text-gray-600 ml-2 text-sm">- Implementation details</span>
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span className="font-semibold text-blue-600">Live Preview</span>
+                <span className="text-gray-600 ml-2 text-sm">- Interactive implementation</span>
+              </>
+            )}
+          </div>
+          
+          {/* Toggle Switch */}
+          <button
+            onClick={() => setShowCode(!showCode)}
+            className="flex items-center space-x-2 px-3 py-1.5 rounded-md bg-white border border-gray-300 hover:bg-gray-100 transition-colors"
+          >
+            {showCode ? (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span className="text-sm font-medium">Show Preview</span>
+              </>
+            ) : (
+              <>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                <span className="text-sm font-medium">Show Code</span>
+              </>
+            )}
+            
+            {/* Toggle Indicator */}
+            <div className="relative w-10 h-5 bg-gray-300 rounded-full transition-colors duration-200 ease-in-out"
+                 style={{ backgroundColor: showCode ? '#3B82F6' : '#D1D5DB' }}>
+              <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${
+                showCode ? 'transform translate-x-5' : ''
+              }`} />
+            </div>
+          </button>
+        </div>
+
+        {/* Content Area - Either Preview OR Code */}
+        {showCode ? (
+          /* Code View */
           <>
             <div className="flex items-center justify-between bg-gray-800 text-gray-300 text-xs px-4 py-2">
               <span className="font-mono">{language}</span>
-              <button
-                onClick={handleCopy}
-                className="text-gray-300 hover:text-white transition-colors flex items-center"
-              >
-                {copied ? (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    <span>Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                    <span>Copy</span>
-                  </>
-                )}
-              </button>
+              <CopyCodeButton 
+                code={code}
+                variant="standalone"
+                size="sm"
+                className="text-gray-300 hover:text-white bg-transparent border-none hover:bg-gray-700"
+              />
             </div>
             <SyntaxHighlighter
               language={language}
@@ -251,27 +379,22 @@ export default function CodeExampleBlock({
             </SyntaxHighlighter>
           </>
         ) : (
-          <div className="border-t border-gray-200">
-            <div className="bg-gray-50 p-4 border-b border-gray-200">
-              <p className="text-sm text-gray-700">
-                <span className="font-semibold text-blue-600 mr-1">Interactive Demo:</span> 
-                This is a working implementation of the code example. Try it out to see how it works!
-              </p>
-            </div>
-            <div className="p-6 flex justify-center bg-gray-50">
-              <div className={`w-full ${componentId === 'human-in-the-loop-moderation' || componentId === 'confidence-indicator' ? 'max-w-4xl' : 'max-w-lg'}`}>
-                {componentLoaded ? renderComponent() : (
-                  <div className="flex items-center justify-center h-64">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="bg-gray-50 p-4 border-t border-gray-200 text-xs text-gray-600">
-              <p>This preview shows a running implementation of the pattern. You can copy the code from the "Code" tab to use in your own project.</p>
+          /* Live Preview */
+          <div className="p-6 flex justify-center bg-gray-50 min-h-[400px]">
+            <div className={`w-full ${componentId === 'human-in-the-loop-moderation' || componentId === 'confidence-indicator' || componentId === 'guided-learning-tutorial' ? 'max-w-6xl' : 'max-w-lg'}`}>
+              {componentLoaded ? renderComponent() : (
+                <div className="flex items-center justify-center h-64">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                </div>
+              )}
             </div>
           </div>
         )}
+
+        {/* Footer Note */}
+        <div className="bg-gray-50 p-4 border-t border-gray-200 text-xs text-gray-600">
+          <p>{showCode ? 'Toggle to preview mode to see the interactive demo.' : 'Toggle to code view to see the implementation details.'}</p>
+        </div>
       </div>
     </div>
   );

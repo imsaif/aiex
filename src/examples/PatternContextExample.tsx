@@ -120,11 +120,10 @@ export function PatternSearchExample() {
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('');
   
-  if (loading) return <div>Loading patterns...</div>;
-  if (error) return <div>Error: {error}</div>;
-  
   // Filter patterns based on search term and category
   const searchResults = React.useMemo(() => {
+    if (loading || error || !patterns) return [];
+    
     let results = patterns;
     
     // Filter by category if selected
@@ -141,7 +140,10 @@ export function PatternSearchExample() {
     }
     
     return results;
-  }, [patterns, filterPatterns, searchTerm, selectedCategory]);
+  }, [patterns, filterPatterns, searchTerm, selectedCategory, loading, error]);
+  
+  if (loading) return <div>Loading patterns...</div>;
+  if (error) return <div>Error: {error}</div>;
   
   return (
     <div>

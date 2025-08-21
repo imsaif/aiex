@@ -267,7 +267,7 @@ export const AITransparencyDemo: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
                 <h3 className="text-lg font-medium mb-2">No Analysis Yet</h3>
-                <p className="text-sm">Enter some text and click "Analyze with AI" to see confidence indicators</p>
+                <p className="text-sm">Enter some text and click &quot;Analyze with AI&quot; to see confidence indicators</p>
               </div>
             </div>
           )}
@@ -278,7 +278,8 @@ export const AITransparencyDemo: React.FC = () => {
 };
 
 // For the full interactive demo in the examples section
-export function TransparentFeedbackDemo({ example = "confidence" }: { example?: string }) {
+export function TransparentFeedbackDemo({ example: _example = "confidence" }: { example?: string }) {
+  // _example parameter is intentionally unused in this demo implementation
   return (
     <div className="w-full mx-auto">
       <AITransparencyDemo />

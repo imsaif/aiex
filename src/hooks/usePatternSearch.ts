@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { usePatterns } from '@/contexts';
-import { Pattern } from '@/types';
 
 interface UsePatternSearchOptions {
   searchFields?: ('title' | 'description' | 'category' | 'tags')[];

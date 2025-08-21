@@ -13,8 +13,8 @@ export const getPatternsByCategory = (category: string): Pattern[] => {
 // Lazy loading for code examples
 export const loadCodeExample = async (patternId: string, exampleId: string) => {
   try {
-    const module = await import(`./examples/${patternId}/${exampleId}`);
-    return module.default;
+    const importedModule = await import(`./examples/${patternId}/${exampleId}`);
+    return importedModule.default;
   } catch (error) {
     console.error(`Failed to load code example for ${patternId}/${exampleId}:`, error);
     return null;

@@ -9,8 +9,8 @@ export const multimodalinteraction: Pattern = {
   description: "Combine multiple input and output modes (voice, touch, gesture, text, visual) to create more natural, accessible, and efficient user experiences.",
   thumbnail: "/images/examples/geminivoicemode.gif",
   content: {
-    problem: "Single-mode interfaces limit user expression and accessibility. Users have different preferences, contexts, and abilities that require flexible interaction methods. Traditional interfaces often force users to adapt to the technology rather than allowing natural communication.",
-    solution: "Design interfaces that seamlessly integrate multiple interaction modes, allowing users to switch between or combine voice commands, touch gestures, text input, visual cues, and other modalities based on their context, preferences, and abilities. The system should intelligently interpret and respond through the most appropriate output channels.",
+    problem: "Single-mode interfaces limit user expression and accessibility. Users need flexible interaction methods that adapt to their context and abilities.",
+    solution: "Integrate multiple interaction modes (voice, touch, text, gestures) allowing users to switch or combine them based on their preferences and situation.",
     examples: [
       {
         title: "Google Assistant Multimodal Queries",
@@ -33,28 +33,18 @@ export const multimodalinteraction: Pattern = {
     ],
     codeExamples,
     guidelines: [
-      "Design for input mode switching - allow users to seamlessly transition between voice, touch, keyboard, and other input methods",
-      "Provide appropriate feedback for each interaction mode (visual confirmation for voice commands, haptic feedback for touch)",
-      "Ensure accessibility by offering alternative interaction methods for users with different abilities",
-      "Use contextual awareness to suggest the most appropriate interaction mode for the current situation",
-      "Design consistent interaction patterns across all modalities while respecting the unique strengths of each",
-      "Provide clear affordances that communicate available interaction methods to users",
-      "Handle ambiguity gracefully when multiple input modes could be interpreted differently",
-      "Support simultaneous multimodal input when it enhances the user experience",
-      "Optimize for the primary use case while maintaining secondary mode functionality",
-      "Test extensively across all supported input and output combinations"
+      "Allow seamless switching between voice, touch, keyboard, and other input methods",
+      "Provide appropriate feedback for each interaction mode (visual, haptic, audio)",
+      "Offer alternative interaction methods for accessibility and different user abilities",
+      "Use contextual awareness to suggest the most appropriate interaction mode",
+      "Maintain consistent patterns across modalities while respecting each mode's strengths"
     ],
     considerations: [
-      "Performance implications of processing multiple input streams simultaneously",
-      "Privacy concerns when combining voice, camera, and other sensor data",
+      "Performance and battery impact of processing multiple input streams simultaneously",
+      "Privacy concerns when combining voice, camera, and sensor data",
       "Device capabilities and hardware requirements for different interaction modes",
-      "Battery life impact of always-on voice recognition or camera processing",
       "Cultural differences in gesture interpretation and interaction preferences",
-      "Learning curve for users discovering and mastering multiple interaction modes",
-      "Fallback strategies when primary interaction modes fail or are unavailable",
-      "Data processing and storage requirements for multimodal interaction history",
-      "Integration complexity when combining different SDKs and APIs for various input methods",
-      "Consistency challenges in maintaining unified experience across different modalities"
+      "Fallback strategies when primary interaction modes fail or are unavailable"
     ],
     relatedPatterns: [
       "Conversational UI",

@@ -115,7 +115,7 @@ const SearchAssistanceDemo = () => {
       <div className="mb-3">
         <h3 className="text-sm font-medium text-gray-700">AI-Enhanced Search</h3>
         <p className="text-xs text-gray-500 mt-1">
-          Try searching for terms like "contextual", "best pract", or "examples"
+          Try searching for terms like &quot;contextual&quot;, &quot;best pract&quot;, or &quot;examples&quot;
         </p>
       </div>
       

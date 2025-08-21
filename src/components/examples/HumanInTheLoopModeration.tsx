@@ -111,13 +111,14 @@ export default function HumanInTheLoopModeration() {
     if (!currentItem) return;
     
     // In a real app, this would update a database
-    const now = new Date().toISOString();
-    const moderated = {
-      ...currentItem,
-      humanDecision: decision,
-      moderatedAt: now,
-      moderatedBy: 'current-moderator'
-    };
+    // const now = new Date().toISOString(); // Used for timestamping in production
+    // Note: In a real app, this moderated object would be sent to the backend
+    // const moderated = {
+    //   ...currentItem,
+    //   humanDecision: decision,
+    //   moderatedAt: now,
+    //   moderatedBy: 'current-moderator'
+    // };
     
     // Update stats
     setStats(prev => ({
@@ -259,7 +260,7 @@ export default function HumanInTheLoopModeration() {
                 {isSubmitting ? 'Processing...' : 'Submit for Moderation'}
               </button>
               <p className="text-xs text-gray-500">
-                Try including words like "password" or "click here" to trigger the AI moderation
+                Try including words like &quot;password&quot; or &quot;click here&quot; to trigger the AI moderation
               </p>
             </div>
           </form>

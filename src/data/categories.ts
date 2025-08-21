@@ -12,7 +12,7 @@ const categories: Category[] = [
   {
     id: "contextual-assistance",
     title: "Contextual Assistance",
-    description: "Provide timely help and suggestions based on the user's current task and needs",
+    description: "Smart help when needed",
     slug: "contextual-assistance",
     color: "blue",
     image: "/images/examples/Smart-compose_Taco_Tuesday.gif"
@@ -20,7 +20,7 @@ const categories: Category[] = [
   {
     id: "progressive-disclosure",
     title: "Progressive Disclosure",
-    description: "Reveal information gradually to reduce cognitive load and complexity",
+    description: "Reveal complexity gradually",
     slug: "progressive-disclosure",
     color: "green",
     image: "/images/examples/loom-ai.gif"
@@ -28,7 +28,7 @@ const categories: Category[] = [
   {
     id: "human-in-the-loop",
     title: "Human-in-the-Loop",
-    description: "Balance automation with human oversight and intervention for critical decisions",
+    description: "Keep humans in control",
     slug: "human-in-the-loop",
     color: "amber",
     image: "/images/examples/grammarly-suggestions.gif"
@@ -36,7 +36,7 @@ const categories: Category[] = [
   {
     id: "conversational-ui",
     title: "Conversational UI",
-    description: "Design natural, human-like interactions through chat and voice interfaces",
+    description: "Natural chat and voice",
     slug: "conversational-ui",
     color: "purple",
     image: "/images/examples/slack-ai.gif"
@@ -44,7 +44,7 @@ const categories: Category[] = [
   {
     id: "explainable-ai",
     title: "Explainable AI (XAI)",
-    description: "Make AI decision-making processes understandable through visualizations and explanations",
+    description: "Transparent AI decisions",
     slug: "explainable-ai",
     color: "sky",
     image: "/images/examples/claudethinking.gif"
@@ -52,7 +52,7 @@ const categories: Category[] = [
   {
     id: "adaptive-interfaces",
     title: "Adaptive Interfaces",
-    description: "Create interfaces that learn from user behavior and adjust accordingly",
+    description: "Interfaces that learn and adapt",
     slug: "adaptive-interfaces",
     color: "gray",
     image: "/images/examples/netflix-adaptive.gif"
@@ -60,7 +60,7 @@ const categories: Category[] = [
   {
     id: "multimodal-interaction",
     title: "Multimodal Interaction",
-    description: "Combine multiple input/output modes for more natural and accessible experiences",
+    description: "Voice, touch, and vision combined",
     slug: "multimodal-interaction",
     color: "indigo",
     image: "/images/examples/geminivoicemode.gif"
@@ -68,7 +68,7 @@ const categories: Category[] = [
   {
     id: "guided-learning",
     title: "Guided Learning",
-    description: "Help users understand AI capabilities through tutorials and contextual examples",
+    description: "Learn AI step-by-step",
     slug: "guided-learning",
     color: "emerald",
     image: "/images/examples/duolingo-adaptive.gif"
@@ -76,7 +76,7 @@ const categories: Category[] = [
   {
     id: "augmented-creation",
     title: "Augmented Creation",
-    description: "Empower users to create content with AI as a collaborative partner",
+    description: "Create with AI assistance",
     slug: "augmented-creation",
     color: "orange",
     image: "/images/examples/github-copilot-highlighting.gif"
@@ -84,7 +84,7 @@ const categories: Category[] = [
   {
     id: "responsible-ai-design",
     title: "Responsible AI Design",
-    description: "Address ethical considerations, bias mitigation, and inclusivity in AI systems",
+    description: "Ethical and inclusive AI",
     slug: "responsible-ai-design",
     color: "rose",
     image: "/images/examples/chatgpt-limitations.png"
@@ -92,7 +92,7 @@ const categories: Category[] = [
   {
     id: "error-recovery",
     title: "Error Recovery & Graceful Degradation",
-    description: "Design AI interfaces that fail gracefully and provide meaningful recovery paths",
+    description: "Graceful failure handling",
     slug: "error-recovery",
     color: "amber",
     image: "/images/examples/google-face-detection.gif"
@@ -100,7 +100,7 @@ const categories: Category[] = [
   {
     id: "collaborative-ai",
     title: "Collaborative AI",
-    description: "Enable effective collaboration between multiple users and AI within shared workflows",
+    description: "Team up with AI",
     slug: "collaborative-ai",
     color: "violet",
     image: "/images/examples/notion-ai.gif"
@@ -108,7 +108,7 @@ const categories: Category[] = [
   {
     id: "ambient-intelligence",
     title: "Ambient Intelligence",
-    description: "Create unobtrusive AI that senses context and provides assistance without explicit interaction",
+    description: "Invisible, contextual assistance",
     slug: "ambient-intelligence",
     color: "lime",
     image: "/images/examples/superhuman-ai.gif"
@@ -116,7 +116,7 @@ const categories: Category[] = [
   {
     id: "safe-exploration",
     title: "Safe Exploration",
-    description: "Design controlled environments for experimenting with AI capabilities without risk",
+    description: "Risk-free AI exploration",
     slug: "safe-exploration",
     color: "cyan",
     image: "/images/examples/ada-health.webp"

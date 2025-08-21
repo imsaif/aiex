@@ -1,20 +1,73 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+  /* Smooth scrolling for Safari */
+  -webkit-overflow-scrolling: touch;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
+  scroll-behavior: smooth;
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Accessible grey and white color system */
+  --background-primary: #ffffff;
+  --background-secondary: #fafafa;
+  --background-tertiary: #f5f5f5;
+  
+  --surface-primary: #ffffff;
+  --surface-secondary: #f9f9f9;
+  --surface-elevated: #ffffff;
+  
+  --text-primary: #0d0d0d;
+  --text-secondary: #525252;
+  --text-tertiary: #737373;
+  --text-disabled: #a3a3a3;
+  
+  --border-primary: #e5e5e5;
+  --border-secondary: #d4d4d4;
+  --border-focus: #525252;
+  
+  --accent-primary: #0d0d0d;
+  --accent-hover: #262626;
+  --accent-subtle: #f5f5f5;
+
+  /* Legacy variables for backward compatibility */
+  --background: var(--background-primary);
+  --foreground: var(--text-primary);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark mode accessible colors */
+    --background-primary: #0f0f0f;
+    --background-secondary: #171717;
+    --background-tertiary: #1f1f1f;
+    
+    --surface-primary: #0f0f0f;
+    --surface-secondary: #171717;
+    --surface-elevated: #1f1f1f;
+    
+    --text-primary: #fafafa;
+    --text-secondary: #a3a3a3;
+    --text-tertiary: #737373;
+    --text-disabled: #525252;
+    
+    --border-primary: #262626;
+    --border-secondary: #404040;
+    --border-focus: #737373;
+    
+    --accent-primary: #fafafa;
+    --accent-hover: #e5e5e5;
+    --accent-subtle: #171717;
+
+    /* Legacy variables for backward compatibility */
+    --background: var(--background-primary);
+    --foreground: var(--text-primary);
   }
 }
 
@@ -43,4 +96,37 @@ body {
 @keyframes particleFloat {
   0% { transform: translateY(0); }
   100% { transform: translateY(-20px); }
+}
+
+/* Smart Search Chat Styles */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.chat-bubble-enter {
+  animation: chatBubbleEnter 0.3s ease-out;
+}
+
+@keyframes chatBubbleEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pattern-card-hover {
+  transition: all 0.2s ease-out;
+  transform-origin: center;
+}
+
+.pattern-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }

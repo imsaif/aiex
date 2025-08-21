@@ -32,7 +32,6 @@ function SearchExample() {
   const {
     searchTerm,
     setSearchTerm,
-    searchResults,
     highlightedResults,
     isSearching,
     resultCount,
@@ -68,13 +67,13 @@ function SearchExample() {
             <h3 
               className="font-medium"
               dangerouslySetInnerHTML={{ 
-                __html: (highlights as any).title || pattern.title 
+                __html: (highlights as Record<string, string>).title || pattern.title 
               }}
             />
             <p 
               className="text-sm text-gray-600"
               dangerouslySetInnerHTML={{ 
-                __html: (highlights as any).description || pattern.description 
+                __html: (highlights as Record<string, string>).description || pattern.description 
               }}
             />
           </div>
@@ -166,7 +165,6 @@ function PaginationExample() {
   const {
     patterns: paginatedPatterns,
     currentPage,
-    totalPages,
     goToPage,
     nextPage,
     previousPage,
@@ -302,7 +300,7 @@ function RecentPatternsExample() {
           <h3 className="font-medium mb-2">Recent & Most Viewed</h3>
           <div className="space-y-2">
             <p className="text-xs font-medium text-gray-600">Recently Viewed:</p>
-            {recentPatterns.map(({ pattern, viewedAt, viewCount }) => (
+            {recentPatterns.map(({ pattern, viewCount }) => (
               <div key={pattern.id} className="text-sm">
                 {pattern.title} ({viewCount}x)
               </div>

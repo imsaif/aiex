@@ -2,9 +2,13 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import Button from '../ui/Button';
+import SmartSearchChat from '../ui/SmartSearchChat';
+import { Pattern } from '../../types';
 
 export default function Hero() {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -69,34 +73,12 @@ export default function Hero() {
     }
   };
 
-  // Generate particles
-  const [particles, setParticles] = useState<{ x: number; y: number; size: number; color: string }[]>([]);
-  
-  useEffect(() => {
-    const generateParticles = () => {
-      const newParticles = [];
-      const colors = [
-        'rgba(99, 102, 241, 0.4)', // indigo-500
-        'rgba(126, 34, 206, 0.4)',  // purple-700
-        'rgba(219, 39, 119, 0.4)',  // pink-600
-        'rgba(79, 70, 229, 0.3)',   // indigo-600
-        'rgba(147, 51, 234, 0.3)'   // purple-600
-      ];
-      
-      for (let i = 0; i < 7; i++) { // Reduced from 15 to 7
-        newParticles.push({
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          size: Math.random() * 50 + 10,
-          color: colors[Math.floor(Math.random() * colors.length)]
-        });
-      }
-      
-      setParticles(newParticles);
-    };
-    
-    generateParticles();
-  }, []);
+  // Handle pattern selection from search
+  const handlePatternSelect = (pattern: Pattern) => {
+    router.push(`/patterns/${pattern.id}`);
+  };
+
+  // Simple static background elements - no random generation
 
   return (
     <div 
@@ -104,89 +86,66 @@ export default function Hero() {
       onMouseMove={handleMouseMove}
       className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16"
     >
-      {/* Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-purple-50">
-        {/* Static gradient background, removed animated SVG */}
-        {/* Particles with simple CSS animation */}
-        <div className="absolute inset-0 pointer-events-none">
-          {particles.map((particle, index) => (
-            <div
-              key={index}
-              className="absolute rounded-full blur-xl particle-float"
-              style={{
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                width: particle.size,
-                height: particle.size,
-                background: particle.color,
-                animationDelay: `${index * 0.5}s`
-              }}
-            />
-          ))}
-        </div>
-        {/* Animated grid removed for simplicity */}
-      </div>
-      {/* 3D decorative elements - reduced to 3 */}
-      <div
-        className="absolute left-[15%] top-[20%] w-24 h-24 md:w-36 md:h-36 rounded-full bg-gradient-to-r from-pink-300 to-pink-400 opacity-20 blur-2xl"
-        // Removed Framer Motion, static
-      />
-      <div
-        className="absolute right-[20%] bottom-[30%] w-32 h-32 md:w-48 md:h-48 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 opacity-15 blur-3xl"
-        // Removed Framer Motion, static
-      />
-      {/* Removed one floating and one pulsing element for simplicity */}
-      <div
-        className="absolute left-[25%] bottom-[15%] w-20 h-20 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-indigo-400 to-indigo-600 opacity-20 blur-2xl"
-        // Removed Framer Motion, static
-      />
-      {/* Rotating rings removed for simplicity */}
+      {/* Clean minimal background */}
+      <div className="absolute inset-0 bg-background-primary" />
+      {/* Minimal decorative elements */}
+      <div className="absolute left-[15%] top-[20%] w-24 h-24 md:w-36 md:h-36 rounded-full bg-accent-subtle opacity-40 blur-2xl" />
+      <div className="absolute right-[20%] bottom-[30%] w-32 h-32 md:w-48 md:h-48 rounded-full bg-background-tertiary opacity-60 blur-3xl" />
+      <div className="absolute left-[25%] bottom-[15%] w-20 h-20 md:w-32 md:h-32 rounded-full bg-accent-subtle opacity-30 blur-2xl" />
       {/* Main content */}
       <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 py-16 md:py-20 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
           <motion.h1 
-            className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight"
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-text-primary mb-6 tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             Discover AI Design<br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+            <span className="text-text-secondary">
               Inspiration & Patterns
             </span>
           </motion.h1>
           
           <motion.p 
-            className="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto"
+            className="text-xl md:text-2xl text-text-secondary mb-10 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            Explore real-world examples of effective AI interfaces and learn from the best implementations
+            Real examples. Best practices.
           </motion.p>
           
-          <div className="mt-10 flex justify-center">
+          {/* Smart Search Chat */}
+          <motion.div 
+            className="mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+          >
+            <SmartSearchChat 
+              onPatternSelect={handlePatternSelect}
+              className="w-full"
+            />
+          </motion.div>
+          
+          <motion.div 
+            className="flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
+          >
             <Button 
               variant="gradient" 
               size="lg"
               className="text-base px-8 py-4"
               onClick={scrollToDiscover}
             >
-              Explore Patterns
+              Explore
             </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
   );
 }
-
-/*
-.particle-float {
-  animation: particleFloat 8s ease-in-out infinite alternate;
-}
-@keyframes particleFloat {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-20px); }
-}
-*/

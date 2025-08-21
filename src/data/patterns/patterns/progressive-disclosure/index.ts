@@ -6,10 +6,11 @@ export const progressivedisclosure: Pattern = {
   slug: "progressive-disclosure",
   category: "Progressive Disclosure",
   description: "Reveal information, options, or AI-powered features gradually, reducing cognitive load and making complex tasks approachable.",
+  tags: ["step by step", "gradual reveal", "complexity management", "UX layers", "feature discovery", "simplification", "cognitive load"],
   thumbnail: "/images/examples/loom-ai.gif",
   content: {
-    problem: "AI-powered products often have complex features that can overwhelm users if shown all at once. Novice users may abandon the product, while advanced users may struggle to find advanced options hidden in cluttered UIs.",
-    solution: "Use progressive disclosure to reveal information, options, or AI-powered features only as users need them. Start with the essentials, then offer advanced or contextual AI features as users interact or request more, keeping the interface clean and approachable.",
+    problem: "Complex AI features can overwhelm users if shown all at once, leading to abandonment or difficulty finding advanced options.",
+    solution: "Reveal information and AI features progressively as needed. Start with essentials, then offer advanced features as users interact or request more.",
     examples: [
       {
         title: "Loom AI Video Tools",

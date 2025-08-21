@@ -1,0 +1,245 @@
+# Parallel Agent Debugging Workflow Template
+# This GitHub Actions workflow can be used as a template for automated parallel debugging
+# Customize the commands and agents based on your project's specific needs
+
+name: 🚀 Parallel Agent Debugging
+
+on:
+  workflow_dispatch:
+    inputs:
+      debug_level:
+        description: 'Debug Level (basic, comprehensive, full)'
+        required: true
+        default: 'comprehensive'
+        type: choice
+        options:
+        - basic
+        - comprehensive  
+        - full
+
+jobs:
+  assessment:
+    name: 📊 Error Assessment
+    runs-on: ubuntu-latest
+    outputs:
+      typescript_errors: ${{ steps.assessment.outputs.typescript_errors }}
+      test_failures: ${{ steps.assessment.outputs.test_failures }}
+      eslint_issues: ${{ steps.assessment.outputs.eslint_issues }}
+      build_status: ${{ steps.assessment.outputs.build_status }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run diagnostic assessment
+        id: assessment
+        run: |
+          echo "🔍 Running diagnostic assessment..."
+          
+          # TypeScript errors
+          TS_ERRORS=$(npx tsc --noEmit 2>&1 | grep -c "error TS" || echo "0")
+          echo "typescript_errors=$TS_ERRORS" >> $GITHUB_OUTPUT
+          echo "TypeScript Errors: $TS_ERRORS"
+          
+          # Jest test failures  
+          TEST_OUTPUT=$(npm test -- --passWithNoTests --watchAll=false 2>&1 || true)
+          TEST_FAILURES=$(echo "$TEST_OUTPUT" | grep -o "[0-9]* failing" | grep -o "[0-9]*" || echo "0")
+          echo "test_failures=$TEST_FAILURES" >> $GITHUB_OUTPUT
+          echo "Test Failures: $TEST_FAILURES"
+          
+          # ESLint issues
+          ESLINT_ISSUES=$(npx eslint src --format=json | jq '[.[].messages] | flatten | length' || echo "0")
+          echo "eslint_issues=$ESLINT_ISSUES" >> $GITHUB_OUTPUT  
+          echo "ESLint Issues: $ESLINT_ISSUES"
+          
+          # Build status
+          if npm run build; then
+            echo "build_status=success" >> $GITHUB_OUTPUT
+            echo "Build Status: ✅ SUCCESS"
+          else
+            echo "build_status=failed" >> $GITHUB_OUTPUT
+            echo "Build Status: ❌ FAILED"
+          fi
+
+  parallel-debugging:
+    name: 🛠️ Parallel Agent Execution
+    runs-on: ubuntu-latest
+    needs: assessment
+    if: needs.assessment.outputs.typescript_errors > 0 || needs.assessment.outputs.test_failures > 0 || needs.assessment.outputs.eslint_issues > 0
+    
+    strategy:
+      matrix:
+        agent:
+          - name: "typescript-specialist"
+            focus: "TypeScript compilation errors"
+            condition: ${{ needs.assessment.outputs.typescript_errors > 0 }}
+          - name: "test-recovery-specialist" 
+            focus: "Jest test failures and worker issues"
+            condition: ${{ needs.assessment.outputs.test_failures > 0 }}
+          - name: "eslint-cleanup-specialist"
+            focus: "Code quality and linting issues"
+            condition: ${{ needs.assessment.outputs.eslint_issues > 0 }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Execute Specialized Agent - ${{ matrix.agent.name }}
+        if: matrix.agent.condition
+        run: |
+          echo "🤖 Executing ${{ matrix.agent.name }}"
+          echo "Focus: ${{ matrix.agent.focus }}"
+          
+          case "${{ matrix.agent.name }}" in
+            "typescript-specialist")
+              echo "🔧 Running TypeScript fixes..."
+              # Add your TypeScript fixing logic here
+              npx tsc --noEmit --listFiles > ts-errors-before.txt || true
+              # Custom TypeScript fixing scripts would go here
+              npx tsc --noEmit --listFiles > ts-errors-after.txt || true
+              ;;
+              
+            "test-recovery-specialist")
+              echo "🧪 Running Jest test recovery..."  
+              # Add your Jest test fixing logic here
+              npm test -- --passWithNoTests --watchAll=false > test-results-before.txt || true
+              # Custom Jest fixing scripts would go here
+              npm test -- --passWithNoTests --watchAll=false > test-results-after.txt || true
+              ;;
+              
+            "eslint-cleanup-specialist")
+              echo "🧹 Running ESLint cleanup..."
+              # Add your ESLint fixing logic here
+              npx eslint src --format=json > eslint-errors-before.json || true
+              npx eslint src --fix || true
+              npx eslint src --format=json > eslint-errors-after.json || true
+              ;;
+          esac
+          
+      - name: Upload Agent Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-results-${{ matrix.agent.name }}
+          path: |
+            *-before.*
+            *-after.*
+            
+  coordination:
+    name: 🎯 Results Coordination & Validation
+    runs-on: ubuntu-latest
+    needs: [assessment, parallel-debugging]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js  
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Download all agent results
+        uses: actions/download-artifact@v4
+        
+      - name: Final validation suite
+        run: |
+          echo "🎯 Running final validation suite..."
+          
+          echo "TypeScript Check:"
+          npx tsc --noEmit && echo "✅ TypeScript: PASSED" || echo "❌ TypeScript: FAILED"
+          
+          echo "Jest Tests:"
+          npm test -- --passWithNoTests --watchAll=false && echo "✅ Tests: PASSED" || echo "❌ Tests: FAILED"
+          
+          echo "ESLint Check:"  
+          npx eslint src && echo "✅ ESLint: PASSED" || echo "❌ ESLint: FAILED"
+          
+          echo "Build Check:"
+          npm run build && echo "✅ Build: PASSED" || echo "❌ Build: FAILED"
+          
+      - name: Generate Summary Report
+        run: |
+          echo "# 🚀 Parallel Agent Debugging Results" > summary.md
+          echo "" >> summary.md
+          echo "## Original Assessment" >> summary.md
+          echo "- TypeScript Errors: ${{ needs.assessment.outputs.typescript_errors }}" >> summary.md
+          echo "- Test Failures: ${{ needs.assessment.outputs.test_failures }}" >> summary.md  
+          echo "- ESLint Issues: ${{ needs.assessment.outputs.eslint_issues }}" >> summary.md
+          echo "- Build Status: ${{ needs.assessment.outputs.build_status }}" >> summary.md
+          echo "" >> summary.md
+          echo "## Agents Deployed" >> summary.md
+          echo "- 🔧 TypeScript Error Specialist" >> summary.md
+          echo "- 🧪 Jest Test Recovery Specialist" >> summary.md
+          echo "- 🧹 ESLint Cleanup Specialist" >> summary.md
+          echo "" >> summary.md
+          echo "## Final Validation Results" >> summary.md
+          echo "See job output for detailed results..." >> summary.md
+          
+      - name: Upload Summary Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: debugging-summary
+          path: summary.md
+
+  # Optional: Auto-create PR with fixes
+  create-pr:
+    name: 📋 Create PR with Fixes  
+    runs-on: ubuntu-latest
+    needs: coordination
+    if: github.event.inputs.debug_level == 'full'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "🚀 Parallel agent debugging fixes"
+          title: "🚀 Parallel Agent Debugging Results"
+          body: |
+            ## 🤖 Automated Parallel Agent Debugging
+            
+            This PR contains fixes applied by specialized debugging agents:
+            
+            - 🔧 **TypeScript Error Specialist**: Fixed compilation errors
+            - 🧪 **Jest Test Recovery Specialist**: Resolved test failures  
+            - 🧹 **ESLint Cleanup Specialist**: Cleaned up code quality issues
+            
+            ### Original Issues
+            - TypeScript Errors: ${{ needs.assessment.outputs.typescript_errors }}
+            - Test Failures: ${{ needs.assessment.outputs.test_failures }}
+            - ESLint Issues: ${{ needs.assessment.outputs.eslint_issues }}
+            
+            ### Review Required
+            Please review the changes carefully as agents may have:
+            - Over-cleaned some imports
+            - Made assumptions about code usage
+            - Applied fixes that need manual verification
+            
+            🔗 See [Parallel Agent Debugging Workflow](./PARALLEL_AGENT_DEBUGGING_WORKFLOW.md) for details.
+          branch: parallel-agent-fixes
+          delete-branch: true

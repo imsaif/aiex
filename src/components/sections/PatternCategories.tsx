@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import categories from '@/data/categories';
+import categories from '../../data/categories';
 import { useRouter } from 'next/navigation';
 import OptimizedMedia from '../ui/OptimizedMedia';
 
@@ -132,54 +132,46 @@ const getCategoryIcon = (categoryId: string) => {
   }
 };
 
-// Get background color based on category - updated with brand colors
+// Get background color based on category - using standard Tailwind colors for reliability
 const getIconBgColor = (categoryId: string) => {
   switch(categoryId) {
     case 'contextual-assistance':
-      return 'bg-indigo-100 text-indigo-600';
+      return 'bg-blue-50 text-blue-500';
     case 'progressive-disclosure':
-      return 'bg-violet-100 text-violet-600';
+      return 'bg-purple-50 text-purple-500';
     case 'human-in-the-loop':
-      return 'bg-purple-100 text-purple-600';
+      return 'bg-amber-50 text-amber-500';
     case 'conversational-ui':
-      return 'bg-fuchsia-100 text-fuchsia-600';
-    case 'adaptive-interfaces':
-      return 'bg-indigo-50 text-indigo-500';
-    case 'multimodal-interaction':
-      return 'bg-indigo-100 text-indigo-600';
-    case 'guided-learning':
-      return 'bg-emerald-100 text-emerald-600';
-    case 'augmented-creation':
-      return 'bg-orange-100 text-orange-600';
+      return 'bg-teal-50 text-teal-500';
     case 'explainable-ai':
-      return 'bg-sky-100 text-sky-600';
+      return 'bg-indigo-50 text-indigo-500';
+    case 'adaptive-interfaces':
+      return 'bg-green-50 text-green-500';
+    case 'multimodal-interaction':
+      return 'bg-rose-50 text-rose-500';
+    case 'guided-learning':
+      return 'bg-orange-50 text-orange-500';
+    case 'augmented-creation':
+      return 'bg-cyan-50 text-cyan-500';
     case 'responsible-ai-design':
-      return 'bg-green-100 text-green-600';
+      return 'bg-emerald-50 text-emerald-500';
     case 'error-recovery':
-      return 'bg-red-100 text-red-600';
+      return 'bg-violet-50 text-violet-500';
     case 'collaborative-ai':
-      return 'bg-violet-100 text-violet-600';
+      return 'bg-pink-50 text-pink-500';
     case 'ambient-intelligence':
-      return 'bg-lime-100 text-lime-600';
+      return 'bg-slate-50 text-slate-500';
     case 'safe-exploration':
-      return 'bg-cyan-100 text-cyan-600';
+      return 'bg-neutral-50 text-neutral-500';
     default:
-      return 'bg-indigo-100 text-indigo-600';
+      return 'bg-accent-subtle text-text-secondary';
   }
 };
 
-// Get card border gradient colors
+// Get card border style - minimal approach
 const getCardBorderStyle = (index: number) => {
-  const gradients = [
-    'from-indigo-500 to-purple-500',
-    'from-purple-500 to-pink-500',
-    'from-pink-500 to-indigo-500',
-    'from-indigo-400 to-fuchsia-500',
-    'from-fuchsia-500 to-purple-500',
-    'from-purple-400 to-indigo-500',
-  ];
-  
-  return gradients[index % gradients.length];
+  // Simple border without gradients
+  return 'border-border-primary';
 };
 
 const PatternCategories = () => {
@@ -207,11 +199,11 @@ const PatternCategories = () => {
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
       >
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">
+        <span className="text-text-primary">
           Discover
         </span>
         <motion.div 
-          className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500"
+          className="absolute -bottom-2 left-0 h-1 bg-accent-primary"
           initial={{ width: 0 }}
           whileInView={{ width: '100%' }}
           transition={{ duration: 0.7, delay: 0.2 }}
@@ -231,8 +223,8 @@ const PatternCategories = () => {
                 onClick={(e) => handleCardClick(e, category.slug)}
                 className="block"
               >
-                <div className={`group relative p-[1px] rounded-2xl overflow-hidden bg-gradient-to-br ${getCardBorderStyle(index)}`}>
-                  <div className="bg-white dark:bg-gray-900 rounded-2xl overflow-hidden relative p-4 flex flex-col h-full">
+                <div className="group relative rounded-2xl overflow-hidden border border-border-primary hover:border-border-secondary transition-colors duration-200">
+                  <div className="bg-surface-primary rounded-2xl overflow-hidden relative p-4 flex flex-col h-full">
                     {/* Card image at the top */}
                     <div className="relative w-full h-56 overflow-hidden rounded-xl mb-4">
                       <OptimizedMedia
@@ -250,8 +242,8 @@ const PatternCategories = () => {
                     </div>
                     {/* Card heading and description below the icon */}
                     <div>
-                      <h3 className="font-medium text-lg text-gray-900 mb-1 text-center">{category.title}</h3>
-                      <p className="text-gray-500 text-sm text-center">{category.description}</p>
+                      <h3 className="font-medium text-lg text-text-primary mb-1 text-center">{category.title}</h3>
+                      <p className="text-text-secondary text-sm text-center">{category.description}</p>
                     </div>
                   </div>
                 </div>

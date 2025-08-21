@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 // Add icons and illustrations
 const aiIcon = "https://img.icons8.com/fluency/96/artificial-intelligence.png";
@@ -92,7 +93,7 @@ function TextModerationDemo() {
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden h-full flex flex-col">
       <div className="bg-gray-50 p-5 border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <img src={aiIcon} alt="AI" className="w-6 h-6" />
+          <Image src={aiIcon} alt="AI" width={24} height={24} className="w-6 h-6" />
           <h3 className="text-xl font-semibold text-gray-800">Text Post Moderation</h3>
         </div>
         <p className="text-gray-700 text-sm mt-2">
@@ -163,7 +164,7 @@ function ImageModerationDemo() {
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden h-full flex flex-col">
       <div className="bg-gray-50 p-5 border-b border-gray-200">
         <div className="flex items-center gap-3">
-          <img src={aiIcon} alt="AI" className="w-6 h-6" />
+          <Image src={aiIcon} alt="AI" width={24} height={24} className="w-6 h-6" />
           <h3 className="text-xl font-semibold text-gray-800">Image Moderation</h3>
         </div>
         <p className="text-gray-700 text-sm mt-2">
@@ -174,7 +175,7 @@ function ImageModerationDemo() {
       <div className="flex-1 p-4 flex flex-col justify-between">
         <div>
           <div className="mb-2 flex items-center gap-3">
-            <img src={img.imageUrl} alt="User upload" className="w-20 h-20 object-cover rounded border border-gray-200" />
+            <Image src={img.imageUrl} alt="User upload" width={80} height={80} className="w-20 h-20 object-cover rounded border border-gray-200" />
             <span className="font-semibold text-blue-700">{img.user}</span>
           </div>
           <div className="text-xs text-gray-500 mb-1">AI Decision: <span className="font-semibold text-pink-600">{img.aiDecision}</span></div>
@@ -226,9 +227,11 @@ function ExamplesInTheWild() {
         
         {/* Grammarly Writing Assistant */}
         <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <img 
+          <Image 
             src={exampleImages.grammarly} 
             alt="Grammarly writing suggestions" 
+            width={400}
+            height={192}
             className="w-full h-48 object-cover"
           />
           <div className="p-4">
@@ -242,25 +245,29 @@ function ExamplesInTheWild() {
         
         {/* Google Photos Face Detection */}
         <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <img 
+          <Image 
             src={exampleImages.googleFace} 
             alt="Google Photos face detection" 
+            width={400}
+            height={192}
             className="w-full h-48 object-cover"
           />
           <div className="p-4">
             <h3 className="font-semibold text-lg text-gray-800">Google Photos Face Detection</h3>
             <p className="text-sm text-gray-600 mt-2">
               Google Photos automatically detects faces in images but relies on users to confirm identities, 
-              allowing humans to verify AI suggestions before they're applied.
+              allowing humans to verify AI suggestions before they&apos;re applied.
             </p>
           </div>
         </div>
         
         {/* OpenAI Human Feedback */}
         <div className="border border-gray-200 rounded-lg overflow-hidden">
-          <img 
+          <Image 
             src={exampleImages.openai} 
             alt="OpenAI human feedback" 
+            width={400}
+            height={192}
             className="w-full h-48 object-cover"
           />
           <div className="p-4">
@@ -282,9 +289,11 @@ export default function HumanInTheLoopDemo() {
       {/* Header with illustration */}
       <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
         <div className="flex flex-col md:flex-row items-center gap-6">
-          <img 
+          <Image 
             src={moderationIllustration} 
             alt="Content moderation" 
+            width={128}
+            height={128}
             className="w-32 h-32 object-contain"
           />
           <div>
@@ -295,17 +304,17 @@ export default function HumanInTheLoopDemo() {
             </p>
             <div className="flex items-center gap-4 mt-4">
               <div className="flex flex-col items-center">
-                <img src={aiIcon} alt="AI" className="w-10 h-10" />
+                <Image src={aiIcon} alt="AI" width={40} height={40} className="w-10 h-10" />
                 <span className="text-xs text-gray-500 mt-1">AI Flags</span>
               </div>
               <div className="w-8 h-0.5 bg-gray-300"></div>
               <div className="flex flex-col items-center">
-                <img src={humanIcon} alt="Human" className="w-10 h-10" />
+                <Image src={humanIcon} alt="Human" width={40} height={40} className="w-10 h-10" />
                 <span className="text-xs text-gray-500 mt-1">Human Decides</span>
               </div>
               <div className="w-8 h-0.5 bg-gray-300"></div>
               <div className="flex flex-col items-center">
-                <img src={loopIcon} alt="Feedback loop" className="w-10 h-10" />
+                <Image src={loopIcon} alt="Feedback loop" width={40} height={40} className="w-10 h-10" />
                 <span className="text-xs text-gray-500 mt-1">System Learns</span>
               </div>
             </div>

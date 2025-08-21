@@ -3,13 +3,12 @@ import { CodeExample } from '../../../../types';
 export const codeExamples: CodeExample[] = [
   {
     title: "Interactive Tutorial with Step-by-Step Guidance",
-    description: "A React component that demonstrates guided learning through an interactive tutorial system. It breaks complex tasks into manageable steps, provides contextual hints, and tracks user progress.",
+    description: "Interactive tutorial system with step-by-step guidance, contextual hints, and progress tracking.",
     language: "tsx",
     componentId: "guided-learning-tutorial",
     code: `import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Check, HelpCircle, Target } from 'lucide-react';
 
-// Types for tutorial system
 interface TutorialStep {
   id: string;
   title: string;
@@ -30,7 +29,6 @@ interface Tutorial {
   steps: TutorialStep[];
 }
 
-// Mock tutorial data
 const sampleTutorial: Tutorial = {
   id: 'dashboard-basics',
   title: 'Dashboard Basics',
@@ -42,7 +40,7 @@ const sampleTutorial: Tutorial = {
       id: 'welcome',
       title: 'Welcome to Your Dashboard',
       description: 'Let\\'s explore the main features of your dashboard',
-      content: 'Your dashboard is your central hub for managing all activities. We\\'ll guide you through each section step by step.',
+      content: 'Your dashboard is your central hub. We\\'ll guide you through each section.',
       action: 'observe'
     },
     {
@@ -50,7 +48,7 @@ const sampleTutorial: Tutorial = {
       title: 'Navigation Menu',
       description: 'Learn about the main navigation',
       target: '.navigation-menu',
-      content: 'The navigation menu on the left contains all the main sections. Click on "Analytics" to continue.',
+      content: 'The left navigation contains main sections. Click "Analytics" to continue.',
       action: 'click',
       hint: 'Look for the Analytics link in the left sidebar'
     },
@@ -59,7 +57,7 @@ const sampleTutorial: Tutorial = {
       title: 'Analytics Overview',
       description: 'Understanding your analytics data',
       target: '.analytics-section',
-      content: 'The analytics section shows key metrics about your performance. Notice the different chart types and time periods available.',
+      content: 'This section shows key performance metrics with various chart types and time periods.',
       action: 'observe'
     },
     {
@@ -67,7 +65,7 @@ const sampleTutorial: Tutorial = {
       title: 'Using Filters',
       description: 'Filter your data effectively',
       target: '.filter-dropdown',
-      content: 'Use the date filter to change the time period. Select "Last 7 days" from the dropdown.',
+      content: 'Use the date filter to change time periods. Select "Last 7 days".',
       action: 'select',
       hint: 'Click on the date filter dropdown and select "Last 7 days"'
     },
@@ -76,7 +74,7 @@ const sampleTutorial: Tutorial = {
       title: 'Exporting Data',
       description: 'Learn to export your reports',
       target: '.export-button',
-      content: 'You can export your data as PDF or CSV. Click the export button to see the options.',
+      content: 'Export data as PDF or CSV. Click the export button to see options.',
       action: 'click',
       hint: 'Look for the download icon in the top right of the analytics section'
     }
@@ -324,43 +322,45 @@ export default function GuidedLearningTutorial() {
       )}
 
       {/* Tutorial CSS */}
-      <style jsx>{\`
-        .tutorial-highlight {
-          position: relative;
-          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5) !important;
-          border-radius: 4px;
-          z-index: 10;
-        }
-        
-        .tutorial-highlight::after {
-          content: '';
-          position: absolute;
-          top: -8px;
-          right: -8px;
-          width: 16px;
-          height: 16px;
-          background: #3B82F6;
-          border-radius: 50%;
-          animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-          0% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      <style dangerouslySetInnerHTML={{
+        __html: \`
+          .tutorial-highlight {
+            position: relative;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5) !important;
+            border-radius: 4px;
+            z-index: 10;
           }
           
-          70% {
-            transform: scale(1);
-            box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+          .tutorial-highlight::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            background: #3B82F6;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
           }
           
-          100% {
-            transform: scale(0.95);
-            box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+          @keyframes pulse {
+            0% {
+              transform: scale(0.95);
+              box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+            
+            70% {
+              transform: scale(1);
+              box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+            
+            100% {
+              transform: scale(0.95);
+              box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
           }
-        }
-      \`}</style>
+        \`
+      }} />
     </div>
   );
 }`

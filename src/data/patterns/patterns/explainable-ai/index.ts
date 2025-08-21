@@ -1,4 +1,5 @@
 import { Pattern } from '../../../../types';
+import { codeExamples } from './code-examples';
 
 export const explainableai: Pattern = {
   id: "explainable-ai",
@@ -58,6 +59,6 @@ export const explainableai: Pattern = {
       "Responsible AI Design",
       "Error Recovery"
     ],
-    codeExamples: []
+    codeExamples: codeExamples
   }
 }; 
