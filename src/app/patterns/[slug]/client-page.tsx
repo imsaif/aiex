@@ -2,9 +2,19 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Carousel from '@/components/ui/Carousel';
-import CodeExampleBlock from '@/components/ui/CodeExampleBlock';
+import dynamic from 'next/dynamic';
 import { Pattern } from '@/types';
+
+// Lazy load heavy components to reduce initial bundle size
+const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
+  loading: () => <div className="animate-pulse bg-gray-200 h-64 rounded-lg"></div>,
+  ssr: false
+});
+
+const CodeExampleBlock = dynamic(() => import('@/components/ui/CodeExampleBlock'), {
+  loading: () => <div className="animate-pulse bg-gray-200 h-40 rounded-lg"></div>,
+  ssr: false
+});
 
 interface ClientPageProps {
   pattern: Pattern;
@@ -13,26 +23,15 @@ interface ClientPageProps {
 }
 
 export default function ClientPage({ pattern, previousPattern, nextPattern }: ClientPageProps) {
-  // Fast, minimal animations for better performance
+  // Minimal animations - simplified for better performance
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        when: "beforeChildren",
-        staggerChildren: 0.01, // Reduced stagger time
-        duration: 0.1,        // Faster animation 
-        ease: "easeOut"
-      }
-    }
+    visible: { opacity: 1, transition: { duration: 0.1 } }
   };
 
   const itemVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.1, ease: "easeOut" } // Faster animation
-    }
+    visible: { opacity: 1, transition: { duration: 0.1 } }
   };
 
   return (

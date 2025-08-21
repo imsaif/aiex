@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
-import patterns from '@/data/patterns';
+import { getPattern, patternMetadata } from '@/data/patterns';
 import { Metadata } from 'next';
 import ClientPage from './client-page';
 
 // Generate static params for all patterns at build time
 export async function generateStaticParams() {
-  return patterns.map((pattern) => ({
+  return patternMetadata.map((pattern) => ({
     slug: pattern.slug,
   }));
 }
@@ -13,20 +13,20 @@ export async function generateStaticParams() {
 // Generate metadata for each pattern page
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const pattern = patterns.find(p => p.slug === slug);
+  const patternMeta = patternMetadata.find(p => p.slug === slug);
 
-  if (!pattern) {
+  if (!patternMeta) {
     return {
       title: 'Pattern Not Found',
     };
   }
 
   return {
-    title: `${pattern.title} | AI Design Patterns`,
-    description: pattern.description,
+    title: `${patternMeta.title} | AI Design Patterns`,
+    description: patternMeta.description,
     openGraph: {
-      title: pattern.title,
-      description: pattern.description,
+      title: patternMeta.title,
+      description: patternMeta.description,
       type: 'article',
     },
   };
@@ -36,8 +36,8 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
   // Await params before accessing properties (Next.js 15 requirement)
   const { slug } = await params;
   
-  // Find the requested pattern
-  const pattern = patterns.find(p => p.slug === slug);
+  // Load pattern data dynamically (only when needed)
+  const pattern = await getPattern(slug);
 
   if (!pattern) {
     notFound();

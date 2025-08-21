@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import patterns from '@/data/patterns';
+import { patternMetadata as patterns } from '@/data/patterns';
 import { Pattern } from '@/types';
 import categories from '@/data/categories';
 
@@ -72,7 +72,7 @@ export default function PatternsPage() {
             {category.name}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {patternsByCategory[category.name].map((pattern: Pattern) => (
+            {patternsByCategory[category.name].map((pattern) => (
               <Link key={pattern.id} href={`/patterns/${pattern.slug}`}>
                 <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all duration-300">
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-3`}>
