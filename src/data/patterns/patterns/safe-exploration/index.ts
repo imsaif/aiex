@@ -10,7 +10,7 @@ export const safeexploration: Pattern = {
   slug: "safe-exploration",
   description: "Design controlled environments for experimenting with AI capabilities without risk",
   category: "Safe Exploration",
-  thumbnail: "/images/examples/openai-playground.gif",
+  thumbnail: "/images/examples/huggingfacemodels.gif",
   content: {
     problem: "Users want to experiment with AI capabilities but fear making mistakes or causing unintended consequences.",
     solution: "Provide safe, controlled environments for exploring AI features with sandboxing, undo mechanisms, and clear safe/production boundaries.",

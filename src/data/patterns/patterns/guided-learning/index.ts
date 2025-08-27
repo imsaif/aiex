@@ -7,7 +7,7 @@ export const guidedlearning: Pattern = {
   slug: "guided-learning",
   category: "Guided Learning",
   description: "Break complex tasks into guided steps that adapt to user knowledge levels.",
-  thumbnail: "/images/examples/duolingo-guided.gif",
+  thumbnail: "/images/examples/duolingo-adaptive.gif",
   content: {
     problem: "Complex AI systems overwhelm users with too many options, leading to confusion and poor adoption.",
     solution: "Create step-by-step learning experiences with contextual hints and adaptive difficulty to guide users progressively.",
@@ -15,20 +15,20 @@ export const guidedlearning: Pattern = {
       {
         title: "Figma Interactive Tutorials",
         description: "Interactive tutorials that highlight UI elements with contextual instructions.",
-        image: "/images/examples/figma-tutorial.gif",
-        altText: "Figma interactive tutorial walkthrough"
+        image: "/images/examples/applepencil.gif",
+        altText: "Apple Pencil guided tutorial demonstrating features step by step"
       },
       {
         title: "GitHub Codespaces Onboarding",
         description: "Guided environment setup with progressive disclosure based on user selections.",
-        image: "/images/examples/codespaces-onboarding.gif",
-        altText: "GitHub Codespaces guided setup process"
+        image: "/images/examples/gitautocode.gif",
+        altText: "GitHub auto-coding features with guided learning prompts"
       },
       {
         title: "Notion Formula Builder",
         description: "Step-by-step formula creation with real-time previews and suggestions.",
-        image: "/images/examples/notion-formulas.gif",
-        altText: "Notion guided formula creation"
+        image: "/images/examples/notion-ai.gif",
+        altText: "Notion AI providing guided assistance for content creation"
       }
     ],
     codeExamples,

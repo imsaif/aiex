@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "build:local": "npm run optimize-images && next build && npm run build:analyze",
+    "build:local": "next build && npm run build:analyze",
     "build:analyze": "node scripts/build-optimization.js",
     "build:production": "NODE_ENV=production next build",
     "start": "next start",

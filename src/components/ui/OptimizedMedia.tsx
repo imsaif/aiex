@@ -11,9 +11,6 @@ interface OptimizedMediaProps {
   className?: string;
   priority?: boolean;
   onClick?: () => void;
-  autoplay?: boolean;
-  loop?: boolean;
-  muted?: boolean;
 }
 
 // Hook for intersection observer-based lazy loading
@@ -55,15 +52,11 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
   height = 600,
   className = '',
   priority = false,
-  onClick,
-  autoplay = true,
-  loop = true,
-  muted = true
+  onClick
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const extension = src.split('.').pop()?.toLowerCase();
-  const basePath = src.replace(/\.[^/.]+$/, ''); // Remove extension for format variants
   
   // Progressive loading with intersection observer
   const { elementRef, isVisible } = useIntersectionObserver();
@@ -102,61 +95,19 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
       
       {shouldLoad && (
         <>
-          {extension === 'gif' ? (
-            // Modern format support for GIFs with video fallbacks
-            <div className="w-full h-full">
-              <picture>
-                {/* AVIF animated - Best compression (88% browser support) */}
-                <source 
-                  srcSet={`${basePath}.avif`} 
-                  type="image/avif" 
-                />
-                
-                {/* Video fallbacks for animated content */}
-                <video
-                  autoPlay={autoplay}
-                  loop={loop}
-                  muted={muted}
-                  playsInline
-                  onLoadedData={handleLoadComplete}
-                  onError={handleLoadError}
-                  onClick={onClick}
-                  className={`w-full h-full object-contain ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-                >
-                  {/* WebM - Best compression for video (91% support) */}
-                  <source src={`${basePath}.webm`} type="video/webm" />
-                  
-                  {/* MP4 - Universal fallback (97% support) */}
-                  <source src={`${basePath}.mp4`} type="video/mp4" />
-                  
-                  {/* Original GIF fallback */}
-                  <img 
-                    src={src} 
-                    alt={alt} 
-                    onLoad={handleLoadComplete}
-                    onError={handleLoadError}
-                    onClick={onClick}
-                    className="w-full h-full object-contain"
-                  />
-                </video>
-              </picture>
-            </div>
-          ) : (
-            // For regular images, use Next.js optimized Image component
-            <Image
-              src={src || '/placeholder-image.png'}
-              alt={alt}
-              width={width}
-              height={height}
-              className={`object-contain ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-              onLoad={handleLoadComplete}
-              onError={handleLoadError}
-              onClick={onClick}
-              priority={priority}
-              placeholder="blur"
-              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-            />
-          )}
+          <Image
+            src={src || '/placeholder-image.png'}
+            alt={alt}
+            width={width}
+            height={height}
+            className={`object-contain ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
+            onLoad={handleLoadComplete}
+            onError={handleLoadError}
+            onClick={onClick}
+            priority={priority}
+            placeholder="blur"
+            unoptimized={extension === 'gif'} // Add unoptimized for GIFs to prevent 404s for video formats
+          />
           
           {/* Error fallback */}
           {loadError && (
@@ -175,4 +126,4 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
   );
 };
 
-export default OptimizedMedia; 
+export default OptimizedMedia;

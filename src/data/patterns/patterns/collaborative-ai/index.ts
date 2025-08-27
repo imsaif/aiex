@@ -10,7 +10,7 @@ export const collaborativeai: Pattern = {
   slug: "collaborative-ai",
   description: "Enable effective collaboration between multiple users and AI within shared workflows",
   category: "Collaborative AI",
-  thumbnail: "/images/examples/notion-team-ai.gif",
+  thumbnail: "/images/examples/notion-ai.gif",
   content: {
     problem: "Teams need to collaborate effectively with AI while maintaining coordination, shared understanding, and human relationships.",
     solution: "Create AI interfaces that enhance team collaboration through shared decision-making, context maintenance, and group workflow support.",

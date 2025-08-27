@@ -4,19 +4,19 @@ export const examples: Example[] = [
   {
     title: "LinkedIn Bias Detection",
     description: "Tools that detect and mitigate bias in job recommendations and candidate matching algorithms.",
-    image: "/images/examples/linkedin-bias-detection.gif",
-    altText: "LinkedIn bias detection interface"
+    image: "/images/examples/openai-human-feedback.png",
+    altText: "OpenAI human feedback system for responsible AI development"
   },
   {
     title: "Google AI Principles",
     description: "Comprehensive framework for responsible AI development with clear ethical guidelines and review processes.",
-    image: "/images/examples/google-ai-principles.png",
-    altText: "Google AI principles dashboard"
+    image: "/images/examples/chatgpt-limitations.png",
+    altText: "ChatGPT displaying responsible AI limitations and guidelines"
   },
   {
     title: "Microsoft Responsible AI",
     description: "Tools and practices for identifying and addressing potential harms in AI systems before deployment.",
-    image: "/images/examples/microsoft-responsible-ai.gif",
-    altText: "Microsoft responsible AI toolkit"
+    image: "/images/examples/microsoft-copilot.gif",
+    altText: "Microsoft Copilot implementing responsible AI practices"
   }
 ];
