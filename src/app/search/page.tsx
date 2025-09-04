@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import allPatterns from '@/data/patterns';
@@ -10,7 +10,7 @@ import Navbar from '@/components/layout/Navbar';
 import CategoryNavigation from '@/components/layout/CategoryNavigation';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 
-export default function SearchResultsPage() {
+function SearchResultsContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('query') || '';
   const [searchQuery, setSearchQuery] = useState(initialQuery);
@@ -106,5 +106,13 @@ export default function SearchResultsPage() {
 
       <ScrollToTop />
     </main>
+  );
+}
+
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchResultsContent />
+    </Suspense>
   );
 }
