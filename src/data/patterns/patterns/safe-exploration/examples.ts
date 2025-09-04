@@ -9,7 +9,7 @@ export const examples: Example[] = [
   },
   {
     title: "GitHub Copilot Labs",
-    description: "Experimental features and safe testing environment for new AI coding capabilities before they reach production.",
+    description: "Experimental features and safe testing environment for new AI coding capabilities before production.",
     image: "/images/examples/github-copilot-highlighting.gif",
     altText: "GitHub Copilot providing safe code exploration and suggestions"
   },

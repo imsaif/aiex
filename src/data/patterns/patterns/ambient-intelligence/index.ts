@@ -8,8 +8,8 @@ export const ambientintelligence: Pattern = {
   id: "ambient-intelligence",
   title: "Ambient Intelligence",
   slug: "ambient-intelligence",
-  description: "Create unobtrusive AI that senses context and provides assistance without explicit interaction",
-  category: "Ambient Intelligence",
+  description: "Create unobtrusive AI that senses context and provides assistance without explicit interaction.",
+  category: "Adaptive & Intelligent Systems",
   thumbnail: "/images/examples/siri-conversation.gif",
   content: {
     problem: "Users need intelligent assistance without cognitive overhead, especially when attention is focused elsewhere.",

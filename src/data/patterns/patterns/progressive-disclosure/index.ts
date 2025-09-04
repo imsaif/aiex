@@ -4,29 +4,29 @@ export const progressivedisclosure: Pattern = {
   id: "progressive-disclosure",
   title: "Progressive Disclosure",
   slug: "progressive-disclosure",
-  category: "Progressive Disclosure",
-  description: "Reveal information, options, or AI-powered features gradually, reducing cognitive load and making complex tasks approachable.",
+  category: "Natural Interaction",
+  description: "Gradually reveal information, options, or AI features to reduce cognitive load and simplify complex tasks.",
   tags: ["step by step", "gradual reveal", "complexity management", "UX layers", "feature discovery", "simplification", "cognitive load"],
   thumbnail: "/images/examples/loom-ai.gif",
   content: {
-    problem: "Complex AI features can overwhelm users if shown all at once, leading to abandonment or difficulty finding advanced options.",
-    solution: "Reveal information and AI features progressively as needed. Start with essentials, then offer advanced features as users interact or request more.",
+    problem: "Complex AI features shown all at once can overwhelm users, causing abandonment or difficulty finding advanced options.",
+    solution: "Progressively reveal information and AI features. Start with essentials, then offer advanced features as users interact or request more.",
     examples: [
       {
         title: "Loom AI Video Tools",
-        description: "When editing a video, only basic options are shown; advanced AI features (like auto-transcription, highlights) are revealed as needed.",
+        description: "Basic video editing options are shown; advanced AI features (e.g., auto-transcription, highlights) are revealed as needed.",
         image: "/images/examples/loom-ai.gif",
         altText: "Loom AI progressive disclosure in action"
       },
       {
         title: "Google Docs AI Features",
-        description: "Google Docs starts with basic writing tools, then progressively reveals AI-powered features like Smart Compose, grammar suggestions, and advanced formatting options as users engage with the document.",
+        description: "Google Docs starts with basic writing tools, then progressively reveals AI features like Smart Compose and grammar suggestions as users engage with the document.",
         image: "/images/examples/google-docs-ai.gif",
         altText: "Google Docs AI progressive feature disclosure"
       },
       {
         title: "Superhuman AI Email",
-        description: "Superhuman's email interface begins with essential email actions, then reveals AI-powered features like smart replies, email scheduling, and advanced search as users explore the interface.",
+        description: "Superhuman's email interface shows essential actions, then reveals AI features like smart replies and email scheduling as users explore.",
         image: "/images/examples/superhuman-ai.gif",
         altText: "Superhuman AI progressive email features"
       }
@@ -34,7 +34,7 @@ export const progressivedisclosure: Pattern = {
     codeExamples: [
       {
         title: "Progressive Disclosure in Email Summarization",
-        description: "This React component demonstrates progressive disclosure by revealing AI-powered email summaries and actions step by step. It maintains a clean interface by only showing additional options when the user explicitly requests them.",
+        description: "This React component demonstrates progressive disclosure by revealing AI email summaries and actions step-by-step, maintaining a clean interface by showing additional options only when requested.",
         language: "tsx",
         componentId: "progressive-disclosure-email-demo",
         code: `import React, { useState } from 'react';
@@ -256,18 +256,18 @@ export default function ProgressiveDisclosureEmailDemo() {
       }
     ],
     guidelines: [
-      "Start with the most essential information or actions; reveal advanced AI features only as needed.",
-      "Use clear triggers (like 'Show more', tooltips, or step-by-step flows) to let users access additional AI-powered options.",
-      "Avoid overwhelming users with too many choices or settings at once.",
-      "Test with both novice and advanced users to ensure the right balance of simplicity and power.",
+      "Start with essential information; reveal advanced AI features only when needed.",
+      "Use clear triggers (e.g., 'Show more', tooltips, step-by-step flows) to access additional AI options.",
+      "Avoid overwhelming users with too many choices or settings.",
+      "Test with novice and advanced users to balance simplicity and power.",
       "Provide contextual explanations or AI tips as users progress."
     ],
     considerations: [
-      "Too many layers of disclosure can frustrate users—keep it to 2-3 levels where possible.",
-      "Make it obvious how to access more options or information.",
-      "Ensure accessibility for all users, including keyboard and screen reader support.",
+      "Limit disclosure to 2-3 layers to avoid user frustration.",
+      "Clearly indicate how to access more options.",
+      "Ensure accessibility for all users (keyboard, screen reader support).",
       "Tailor progressive disclosure to user segments (e.g., show more to advanced users).",
-      "Monitor usage analytics to refine what is hidden or revealed by default."
+      "Monitor usage analytics to refine default hidden/revealed content."
     ],
     relatedPatterns: [
       "Contextual Assistance",
@@ -275,4 +275,4 @@ export default function ProgressiveDisclosureEmailDemo() {
       "Transparent Feedback"
     ]
   }
-}; 
+};

@@ -48,13 +48,13 @@ export default function PatternsPage() {
 
       
       {/* Patterns by category */}
-      {categoriesWithColors.map(category => (
-        <div key={category.name} id={category.name.toLowerCase().replace(/\s+/g, '-')} className="mb-12">
+      {categories.map(category => (
+        <div key={category.id} id={category.slug} className="mb-12">
           <h2 className={`text-2xl font-bold mb-6 pb-2 border-b-2 border-${category.color}-300`}>
-            {category.name}
+            {category.title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {patternsByCategory[category.name].map((pattern) => (
+            {patterns.filter(pattern => pattern.category === category.title).map((pattern) => (
               <Link key={pattern.id} href={`/patterns/${pattern.slug}`}>
                 <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all duration-300">
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-3`}>
@@ -79,4 +79,4 @@ export default function PatternsPage() {
       </div>
     </main>
   );
-} 
+}

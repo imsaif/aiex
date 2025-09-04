@@ -8,12 +8,12 @@ export const adaptiveinterfaces: Pattern = {
   id: "adaptive-interfaces",
   title: "Adaptive Interfaces",
   slug: "adaptive-interfaces",
-  category: "Adaptive Interfaces",
-  description: "Interfaces that learn from user behavior and automatically adjust layout and functionality to match individual usage patterns.",
+  category: "Adaptive & Intelligent Systems",
+  description: "Interfaces that learn user behavior and automatically adjust layout and functionality to match individual usage patterns.",
   thumbnail: "/images/examples/netflix-adaptive.gif",
   content: {
-    problem: "Static interfaces treat all users the same, causing inefficient workflows and feature discovery issues.",
-    solution: "Create systems that observe user behavior to automatically adapt layout and feature visibility while remaining transparent and user-controllable.",
+    problem: "Static interfaces treat all users identically, leading to inefficient workflows and feature discovery issues.",
+    solution: "Design systems that observe user behavior to automatically adapt layout and feature visibility, remaining transparent and user-controllable.",
     examples,
     guidelines,
     considerations,
@@ -24,4 +24,4 @@ export const adaptiveinterfaces: Pattern = {
     ],
     codeExamples
   }
-}; 
+};

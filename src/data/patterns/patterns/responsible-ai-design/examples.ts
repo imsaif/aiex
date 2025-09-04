@@ -3,7 +3,7 @@ import { Example } from '../../../../types';
 export const examples: Example[] = [
   {
     title: "LinkedIn Bias Detection",
-    description: "Tools that detect and mitigate bias in job recommendations and candidate matching algorithms.",
+    description: "Tools detecting and mitigating bias in job recommendations and candidate matching algorithms.",
     image: "/images/examples/openai-human-feedback.png",
     altText: "OpenAI human feedback system for responsible AI development"
   },

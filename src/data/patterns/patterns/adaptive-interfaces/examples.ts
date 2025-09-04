@@ -3,13 +3,13 @@ import { Example } from '../../../../types';
 export const examples: Example[] = [
   {
     title: "Netflix Adaptive Interface",
-    description: "Personalizes the homepage layout, content recommendations, and viewing options based on individual user behavior, viewing history, and preferences.",
+    description: "Personalizes homepage layout, content recommendations, and viewing options based on user behavior, history, and preferences.",
     image: "/images/examples/netflix-adaptive.gif",
     altText: "Netflix adaptive interface personalizing content recommendations"
   },
   {
     title: "Spotify Adaptive Playlists",
-    description: "Automatically adjusts playlist recommendations, interface themes, and music discovery features based on listening habits, time of day, and user context.",
+    description: "Automatically adjusts playlist recommendations, interface themes, and music discovery based on listening habits, time of day, and user context.",
     image: "/images/examples/spotify-adaptive.gif",
     altText: "Spotify's adaptive playlist and music discovery interface"
   },
@@ -19,4 +19,4 @@ export const examples: Example[] = [
     image: "/images/examples/duolingo-adaptive.gif",
     altText: "Duolingo's adaptive learning interface adjusting to user progress"
   }
-]; 
+];

@@ -105,7 +105,6 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
             onError={handleLoadError}
             onClick={onClick}
             priority={priority}
-            placeholder="blur"
             unoptimized={extension === 'gif'} // Add unoptimized for GIFs to prevent 404s for video formats
           />
           

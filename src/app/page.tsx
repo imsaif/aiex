@@ -4,6 +4,7 @@ import Hero from '../components/sections/Hero';
 import PatternCategories from '../components/sections/PatternCategories';
 import Navbar from '../components/layout/Navbar';
 import ScrollToTop from '../components/ui/ScrollToTop';
+import categories from '../data/categories'; // Import categories data
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
       
       <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
         <section id="categories" className="py-12 md:py-16">
-          <PatternCategories />
+          <PatternCategories categories={categories} />
         </section>
       </div>
 

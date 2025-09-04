@@ -5,16 +5,16 @@ export const guidedlearning: Pattern = {
   id: "guided-learning",
   title: "Guided Learning",
   slug: "guided-learning",
-  category: "Guided Learning",
-  description: "Break complex tasks into guided steps that adapt to user knowledge levels.",
+  category: "Adaptive & Intelligent Systems",
+  description: "Break complex tasks into guided steps, adapting to user knowledge levels.",
   thumbnail: "/images/examples/duolingo-adaptive.gif",
   content: {
-    problem: "Complex AI systems overwhelm users with too many options, leading to confusion and poor adoption.",
-    solution: "Create step-by-step learning experiences with contextual hints and adaptive difficulty to guide users progressively.",
+    problem: "Complex AI systems overwhelm users with too many options, causing confusion and poor adoption.",
+    solution: "Create step-by-step learning experiences with contextual hints and adaptive difficulty to progressively guide users.",
     examples: [
       {
         title: "Figma Interactive Tutorials",
-        description: "Interactive tutorials that highlight UI elements with contextual instructions.",
+        description: "Interactive tutorials highlighting UI elements with contextual instructions.",
         image: "/images/examples/applepencil.gif",
         altText: "Apple Pencil guided tutorial demonstrating features step by step"
       },
@@ -33,23 +33,23 @@ export const guidedlearning: Pattern = {
     ],
     codeExamples,
     guidelines: [
-      "Start simple, gradually introduce complexity",
-      "Show clear progress indicators and next steps",
-      "Use contextual hints for unfamiliar concepts",
-      "Allow skipping ahead or revisiting steps",
-      "Provide immediate feedback on user actions",
-      "Include checkpoints to maintain motivation",
-      "Adapt difficulty based on user performance"
+      "Start simple; gradually introduce complexity.",
+      "Show clear progress indicators and next steps.",
+      "Use contextual hints for unfamiliar concepts.",
+      "Allow skipping ahead or revisiting steps.",
+      "Provide immediate feedback on user actions.",
+      "Include checkpoints to maintain motivation.",
+      "Adapt difficulty based on user performance."
     ],
     considerations: [
-      "Balance guidance with user autonomy",
-      "Support different learning styles and paces",
-      "Don't block expert users with mandatory steps",
-      "Allow non-linear navigation through content",
-      "Design clear error recovery paths",
-      "Avoid cognitive overload at each step",
-      "Ensure responsive design across devices",
-      "Monitor drop-off points for improvements"
+      "Balance guidance with user autonomy.",
+      "Support diverse learning styles and paces.",
+      "Avoid blocking expert users with mandatory steps.",
+      "Allow non-linear content navigation.",
+      "Design clear error recovery paths.",
+      "Avoid cognitive overload at each step.",
+      "Ensure responsive design across devices.",
+      "Monitor drop-off points for improvements."
     ],
     relatedPatterns: [
       "Progressive Disclosure",
@@ -59,4 +59,4 @@ export const guidedlearning: Pattern = {
       "Onboarding Flow"
     ]
   }
-}; 
+};

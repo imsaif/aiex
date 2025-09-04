@@ -9,7 +9,7 @@ export const examples: Example[] = [
   },
   {
     title: "Google Pixel Call Screen",
-    description: "Automatically screens unknown calls and provides context without user intervention, filtering spam while preserving important calls.",
+    description: "Automatically screens unknown calls, providing context without user intervention, filtering spam while preserving important calls.",
     image: "/images/examples/google-face-detection.gif",
     altText: "Google AI detecting and organizing faces in photos"
   },

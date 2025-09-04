@@ -15,7 +15,7 @@ export const examples: Example[] = [
   },
   {
     title: "Tesla Autopilot Handoff",
-    description: "Clear visual and audio cues alert drivers when the AI needs human intervention, ensuring safe transitions.",
+    description: "Clear visual and audio cues alert drivers when AI needs human intervention, ensuring safe transitions.",
     image: "/images/examples/tesladashboard.gif",
     altText: "Tesla dashboard showing system handoff and error recovery states"
   }

@@ -96,20 +96,10 @@ export interface Category {
  * Pattern category enumeration for type safety
  */
 export type PatternCategory = 
-  | 'Contextual Assistance'
-  | 'Progressive Disclosure' 
-  | 'Human-in-the-Loop'
-  | 'Conversational UI'
-  | 'Explainable AI'
-  | 'Guided Learning'
-  | 'Adaptive Interfaces'
-  | 'Multimodal Interaction'
-  | 'Augmented Creation'
-  | 'Responsible AI Design'
-  | 'Error Recovery'
-  | 'Collaborative AI'
-  | 'Ambient Intelligence'
-  | 'Safe Exploration';
+  | 'Adaptive & Intelligent Systems'
+  | 'Human-AI Collaboration'
+  | 'Trustworthy & Reliable AI'
+  | 'Natural Interaction';
 
 /**
  * Pattern status enumeration for project tracking
