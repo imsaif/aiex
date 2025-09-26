@@ -1,45 +1,41 @@
-// Define the Category type directly in this file to avoid import issues
-interface Category {
-  id: string;
-  title: string;
-  description: string;
-  slug: string;
-  color: string;
-  image: string;
-}
+import { Category } from '../types';
 
 const categories: Category[] = [
   {
     id: "adaptive-intelligent-systems",
     title: "Adaptive & Intelligent Systems",
-    description: "Patterns for AI that learns and adapts",
+    description: "Design AI systems that learn from user behavior and adapt in real-time",
     slug: "adaptive-intelligent-systems",
     color: "blue",
-    image: "/images/examples/duolingo-adaptive.gif" // Example image, can be updated
+    image: "/images/examples/claudethinking.gif",
+    icon: "Brain"
   },
   {
     id: "human-ai-collaboration",
     title: "Human-AI Collaboration",
-    description: "Patterns for effective human-AI partnership",
+    description: "Create seamless partnerships between humans and AI for enhanced productivity",
     slug: "human-ai-collaboration",
     color: "green",
-    image: "/images/examples/grammarly-suggestions.gif" // Example image, can be updated
+    image: "/images/categories/human-ai-collaboration.gif",
+    icon: "Users"
   },
   {
     id: "trustworthy-reliable-ai",
     title: "Trustworthy & Reliable AI",
-    description: "Patterns for building trust and handling failures",
+    description: "Build AI systems that are transparent, fair, and robust against failures",
     slug: "trustworthy-reliable-ai",
     color: "purple",
-    image: "/images/examples/chatgpt-limitations.png" // Example image, can be updated
+    image: "/images/categories/trustworthy-reliable-ai.gif",
+    icon: "Shield"
   },
   {
     id: "natural-interaction",
     title: "Natural Interaction",
-    description: "Patterns for intuitive AI communication",
+    description: "Enable intuitive and natural communication between users and AI",
     slug: "natural-interaction",
     color: "orange",
-    image: "/images/examples/geminivoicemode.gif" // Example image, can be updated
+    image: "/images/categories/natural-interaction.gif",
+    icon: "MessageCircle"
   }
 ];
 

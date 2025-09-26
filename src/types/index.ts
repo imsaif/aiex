@@ -63,19 +63,19 @@ export interface Pattern {
   title: string;
   slug: string;
   description: string;
-  
+
   // Categorization and metadata - PRD compliance
   category: PatternCategory;  // Updated to use PatternCategory type per PRD
   tags?: string[];            // Optional tagging system (enhancement)
-  
+
   // Visual representation (enhancement)
   thumbnail?: string;         // Optional thumbnail for listings
-  
+
   // PRD-required fields for project management (optional during migration)
   status?: 'implemented' | 'planned' | 'in-progress';
   priority?: 'high' | 'medium' | 'low';
   complexity?: number;        // 1-10 scale
-  
+
   // Content structure (enhanced organization beyond flat PRD structure)
   content: PatternContent;
 }
@@ -90,12 +90,13 @@ export interface Category {
   slug: string;
   color: string;
   image: string;
+  icon?: string; // Optional Lucide icon name
 }
 
 /**
  * Pattern category enumeration for type safety
  */
-export type PatternCategory = 
+export type PatternCategory =
   | 'Adaptive & Intelligent Systems'
   | 'Human-AI Collaboration'
   | 'Trustworthy & Reliable AI'
@@ -146,6 +147,5 @@ export interface PatternContextType {
 }
 
 // Re-export for backward compatibility and convenience
-export type { Pattern as AIPattern };
-export type { Example as PatternExample };
-export type { CodeExample as PatternCodeExample };
+export type { Pattern as AIPattern, CodeExample as PatternCodeExample, Example as PatternExample };
+

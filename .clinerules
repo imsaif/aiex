@@ -1,0 +1,59 @@
+# IMPORTANT:
+# Always read project_milestone.md for current goals and progress.
+# Reference docs/architecture.md for system architecture and tech stack.
+# Reference docs/patterns-guide.md for AI design pattern implementation guidelines.
+# After completing a task, update project_milestone.md and relevant documentation.
+
+## Project Context
+This project is a Next.js 15, React 19, TypeScript, Tailwind CSS application focused on AI Design Patterns. It uses a sophisticated agent orchestration system for development tasks.
+
+## Core Development Rules
+
+### 🎯 Focus & Scope
+- Concentrate on the specific task assigned, typically related to AI design patterns.
+- Avoid unrelated changes or scope creep.
+- Reference existing patterns in the codebase, especially within `src/data/patterns/patterns/`.
+
+### 📚 Documentation First
+- Check `project_milestone.md` for current phase and goals.
+- Review `docs/architecture.md` for overall system design.
+- Review `docs/patterns-guide.md` for pattern-specific implementation details.
+- Update relevant documentation (e.g., `docs/api.md`, `docs/architecture.md`, pattern-specific `examples.ts`, `guidelines.ts`, `considerations.ts`) when adding new features or patterns.
+
+### 🔧 Code Quality Standards
+- Use TypeScript strict mode (enforced by `tsconfig.json`).
+- Write tests for new features and bug fixes (aim for >80% coverage, use `npm test`).
+- Follow existing code organization patterns (refer to `docs/architecture.md` for project structure).
+- Use functional components with hooks for React.
+- Implement proper error handling, especially in API routes and interactive demos.
+- Adhere to ESLint and Prettier configurations (run `npm run lint -- --fix`).
+
+### 🔄 AI Collaboration Workflow
+1. **Planning Phase**: Analyze requirements, create detailed plan (using `plan_mode_respond`).
+2. **Implementation Phase**: Generate/modify code following established patterns and rules.
+3. **Review Phase**: Check for correctness, consistency, and completeness.
+4. **Validation**: Run `npm run ts-validate`, `npm run design-analyze`, and `npm test`.
+
+### 📁 File Organization Rules
+- Keep files concise and focused on a single responsibility.
+- Use clear, descriptive names for files, components, and variables.
+- Follow the established folder structure as outlined in `docs/architecture.md`.
+- Pattern-specific files should reside in `src/data/patterns/patterns/[slug]/`.
+
+### 🧪 Testing Strategy
+- Write tests before implementing features (TDD when possible).
+- Test edge cases and error conditions.
+- Include integration tests where appropriate.
+- Leverage the existing 481+ test suite (`npm test`).
+- Use `npm run generate-test` for AI-assisted test generation.
+
+### 🔒 Security & Performance
+- Validate all inputs, especially in API routes.
+- Use environment variables for secrets.
+- Consider performance implications of changes (e.g., image optimization, code splitting).
+- Follow security best practices for Next.js and React.
+
+### 🚀 Deployment Considerations
+- Ensure changes work in the Vercel production environment.
+- Consider backward compatibility for existing patterns.
+- Update environment variable documentation if new ones are introduced.

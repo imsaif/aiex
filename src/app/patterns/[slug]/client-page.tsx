@@ -1,9 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
+import categories from '@/data/categories';
 import { Pattern } from '@/types';
+import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 
 // Lazy load heavy components to reduce initial bundle size
 const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
@@ -35,14 +36,14 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
   };
 
   return (
-    <motion.main 
+    <motion.main
       className="max-w-6xl mx-auto py-8 px-4"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       {/* Breadcrumb Navigation */}
-      <motion.nav 
+      <motion.nav
         className="flex items-center space-x-2 text-sm text-gray-500 mb-6"
         variants={itemVariants}
       >
@@ -55,16 +56,19 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
       {/* Pattern Header */}
       <motion.div className="mb-10" variants={itemVariants}>
+        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-${categories.find(c => c.title === pattern.category)?.color}-100 text-${categories.find(c => c.title === pattern.category)?.color}-800 mb-3`}>
+          {pattern.category}
+        </span>
         <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>
         <div className="text-xl text-gray-600 leading-relaxed">
           {pattern.description}
         </div>
       </motion.div>
-      
+
       {/* Main Content - Full Width */}
       <div className="space-y-12">
         {/* Problem and Solution Side by Side */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
           variants={itemVariants}
         >
@@ -88,7 +92,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </div>
           </section>
         </motion.div>
-        
+
         {/* Image Carousel for Examples */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
           <motion.section variants={itemVariants}>
@@ -101,7 +105,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </div>
           </motion.section>
         )}
-        
+
         {/* Code Examples */}
         {pattern.content.codeExamples && pattern.content.codeExamples.length > 0 && (
           <motion.section variants={itemVariants}>
@@ -109,7 +113,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
               <h2 className="text-2xl font-bold text-gray-900">Interactive Code Example</h2>
             </div>
-            
+
             <div className="space-y-8">
               {pattern.content.codeExamples.map((example, index) => (
                 <CodeExampleBlock
@@ -124,14 +128,14 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </div>
           </motion.section>
         )}
-        
+
         {/* Implementation Guidelines and Design Considerations */}
         <motion.section variants={itemVariants}>
           <div className="flex items-center mb-6">
             <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
             <h2 className="text-2xl font-bold text-gray-900">Implementation & Considerations</h2>
           </div>
-          
+
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
             <div className="flex flex-col md:flex-row">
               <div className="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-gray-200">
@@ -149,7 +153,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
                   ))}
                 </div>
               </div>
-              
+
               <div className="flex-1 p-6 md:p-8 bg-gray-50">
                 <h3 className="text-xl font-semibold text-gray-800 mb-5 pb-2 border-b border-gray-100">
                   Design Considerations
@@ -168,7 +172,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </div>
           </div>
         </motion.section>
-        
+
         {/* Related Patterns */}
         <motion.section variants={itemVariants}>
           <div className="flex items-center mb-6">
@@ -177,15 +181,15 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {pattern.content.relatedPatterns.map((related, i) => (
-              <Link 
-                key={i} 
+              <Link
+                key={i}
                 href={`/patterns/${related.toLowerCase().replace(/\s+/g, '-')}`}
                 className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 mr-3">
-                    <line x1="7" y1="17" x2="17" y2="7"/>
-                    <polyline points="7 7 17 7 17 17"/>
+                    <line x1="7" y1="17" x2="17" y2="7" />
+                    <polyline points="7 7 17 7 17 17" />
                   </svg>
                   <span className="text-lg font-medium text-gray-700">{related}</span>
                 </div>
@@ -195,17 +199,17 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         </motion.section>
 
         {/* Previous/Next Pattern Navigation */}
-        <motion.div 
+        <motion.div
           className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 pt-8 mt-12"
           variants={itemVariants}
         >
           {previousPattern ? (
-            <Link 
+            <Link
               href={`/patterns/${previousPattern.slug}`}
               className="flex items-center text-gray-600 hover:text-gray-800 group mb-4 sm:mb-0"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 group-hover:transform group-hover:-translate-x-1 transition-transform">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
               <span>
                 <span className="block text-sm text-gray-500">Previous Pattern</span>
@@ -213,13 +217,13 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               </span>
             </Link>
           ) : <div />}
-          
+
           <Link href="/patterns" className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-gray-700 rounded-full hover:from-pink-500/20 hover:to-violet-500/20 transition-colors font-medium border border-gray-200">
             View All Patterns
           </Link>
-          
+
           {nextPattern ? (
-            <Link 
+            <Link
               href={`/patterns/${nextPattern.slug}`}
               className="flex items-center text-gray-600 hover:text-gray-800 text-right group mt-4 sm:mt-0"
             >
@@ -228,7 +232,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
                 <span className="font-medium">{nextPattern.title}</span>
               </span>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2 group-hover:transform group-hover:translate-x-1 transition-transform">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
           ) : <div />}
@@ -236,4 +240,4 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
       </div>
     </motion.main>
   );
-} 
+}

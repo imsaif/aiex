@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface OptimizedMediaProps {
   src: string;
@@ -11,6 +11,8 @@ interface OptimizedMediaProps {
   className?: string;
   priority?: boolean;
   onClick?: () => void;
+  fill?: boolean; // Add fill prop
+  sizes?: string; // Add sizes prop for Next/Image fill
 }
 
 // Hook for intersection observer-based lazy loading
@@ -28,10 +30,10 @@ const useIntersectionObserver = (options = {}) => {
           observer.disconnect();
         }
       },
-      { 
+      {
         rootMargin: '50px', // Load 50px before entering viewport
         threshold: 0.1,
-        ...options 
+        ...options
       }
     );
 
@@ -52,18 +54,20 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
   height = 600,
   className = '',
   priority = false,
-  onClick
+  onClick,
+  fill = false, // Destructure fill prop with default value
+  sizes, // Destructure sizes prop
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const extension = src.split('.').pop()?.toLowerCase();
-  
+
   // Progressive loading with intersection observer
   const { elementRef, isVisible } = useIntersectionObserver();
-  
+
   // Don't lazy load if priority is set
   const shouldLoad = priority || isVisible;
-  
+
   // Handle media load completion
   const handleLoadComplete = () => {
     setIsLoading(false);
@@ -74,10 +78,23 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
     setLoadError(true);
     setIsLoading(false);
   };
-  
-  return (
-    <div ref={elementRef} className={`relative ${className}`} style={{ aspectRatio: `${width}/${height}` }}>
-      {/* Loading placeholder */}
+
+  const imageComponent = (
+    <Image
+      src={src || '/placeholder-image.png'}
+      alt={alt}
+      {...(fill ? { fill: true, sizes: sizes || '100vw' } : { width, height })}
+      className={`object-cover ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 ${fill ? 'absolute inset-0' : ''}`}
+      onLoad={handleLoadComplete}
+      onError={handleLoadError}
+      onClick={onClick}
+      priority={priority}
+      unoptimized={extension === 'gif'}
+    />
+  );
+
+  const content = (
+    <>
       {!shouldLoad && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
           <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,29 +103,15 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
         </div>
       )}
 
-      {/* Loading indicator while media loads */}
       {shouldLoad && isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 animate-pulse">
           <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
         </div>
       )}
-      
+
       {shouldLoad && (
         <>
-          <Image
-            src={src || '/placeholder-image.png'}
-            alt={alt}
-            width={width}
-            height={height}
-            className={`object-contain ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-            onLoad={handleLoadComplete}
-            onError={handleLoadError}
-            onClick={onClick}
-            priority={priority}
-            unoptimized={extension === 'gif'} // Add unoptimized for GIFs to prevent 404s for video formats
-          />
-          
-          {/* Error fallback */}
+          {imageComponent}
           {loadError && (
             <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-500">
               <div className="text-center">
@@ -121,6 +124,12 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
           )}
         </>
       )}
+    </>
+  );
+
+  return (
+    <div ref={elementRef} className={`relative ${className}`} style={!fill ? { aspectRatio: `${width}/${height}` } : undefined}>
+      {content}
     </div>
   );
 };
