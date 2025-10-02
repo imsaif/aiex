@@ -5,9 +5,9 @@ import patterns from '@/data/patterns';
 import * as LucideIcons from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, Suspense } from 'react';
 
-export default function PatternsPage() {
+function PatternsContent() {
   const searchParams = useSearchParams();
   const categorySlug = searchParams.get('category');
   const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -104,5 +104,24 @@ export default function PatternsPage() {
         </Link>
       </div>
     </main>
+  );
+}
+
+export default function PatternsPage() {
+  return (
+    <Suspense fallback={
+      <main className="max-w-6xl mx-auto py-8 px-4">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-12 bg-gray-200 rounded w-1/2 mb-8"></div>
+          <div className="space-y-8">
+            <div className="h-64 bg-gray-200 rounded"></div>
+            <div className="h-64 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </main>
+    }>
+      <PatternsContent />
+    </Suspense>
   );
 }
