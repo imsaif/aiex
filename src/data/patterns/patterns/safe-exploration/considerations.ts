@@ -1,6 +1,4 @@
-Error Recovery & Graceful Degradation
-Design AI interfaces that fail gracefully and provide meaningful recovery paths.Error Recovery & Graceful Degradation
-Design AI interfaces that fail gracefully and provide meaningful recovery paths.export const considerations: string[] = [
+export const considerations: string[] = [
   "Ensure exploration environments truly prevent unintended consequences.",
   "Balance safety with realistic representation of AI capabilities.",
   "Provide clear pathways from exploration to productive use.",

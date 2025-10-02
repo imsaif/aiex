@@ -36,6 +36,33 @@ const categories: Category[] = [
     color: "orange",
     image: "/images/categories/natural-interaction.gif",
     icon: "MessageCircle"
+  },
+  {
+    id: "performance-efficiency",
+    title: "Performance & Efficiency",
+    description: "Optimize AI interactions for speed, resource usage, and user productivity",
+    slug: "performance-efficiency",
+    color: "yellow",
+    image: "/images/categories/performance-efficiency.gif",
+    icon: "Zap"
+  },
+  {
+    id: "privacy-control",
+    title: "Privacy & Control",
+    description: "Empower users with data control and transparent privacy practices",
+    slug: "privacy-control",
+    color: "red",
+    image: "/images/categories/privacy-control.gif",
+    icon: "Lock"
+  },
+  {
+    id: "accessibility-inclusion",
+    title: "Accessibility & Inclusion",
+    description: "Design AI that works for diverse users and contexts",
+    slug: "accessibility-inclusion",
+    color: "indigo",
+    image: "/images/categories/accessibility-inclusion.gif",
+    icon: "Heart"
   }
 ];
 

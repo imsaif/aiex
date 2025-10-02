@@ -13,6 +13,16 @@ import { errorrecovery } from './patterns/patterns/error-recovery';
 import { collaborativeai } from './patterns/patterns/collaborative-ai';
 import { ambientintelligence } from './patterns/patterns/ambient-intelligence';
 import { safeexploration } from './patterns/patterns/safe-exploration';
+import { predictiveanticipation } from './patterns/patterns/predictive-anticipation';
+import { confidencevisualization } from './patterns/patterns/confidence-visualization';
+import { feedbackloops } from './patterns/patterns/feedback-loops';
+import { gracefulhandoff } from './patterns/patterns/graceful-handoff';
+import { contextswitching } from './patterns/patterns/context-switching';
+import { intelligentcaching } from './patterns/patterns/intelligent-caching';
+import { progressiveenhancement } from './patterns/patterns/progressive-enhancement';
+import { privacyfirstdesign } from './patterns/patterns/privacy-first-design';
+import { selectivememory } from './patterns/patterns/selective-memory';
+import { universalaccesspatterns } from './patterns/patterns/universal-access-patterns';
 
 export const patterns: Pattern[] = [
   contextualassistance,
@@ -28,7 +38,17 @@ export const patterns: Pattern[] = [
   errorrecovery,
   collaborativeai,
   ambientintelligence,
-  safeexploration
+  safeexploration,
+  predictiveanticipation,
+  confidencevisualization,
+  feedbackloops,
+  gracefulhandoff,
+  contextswitching,
+  intelligentcaching,
+  progressiveenhancement,
+  privacyfirstdesign,
+  selectivememory,
+  universalaccesspatterns
 ];
 
 export default patterns;
