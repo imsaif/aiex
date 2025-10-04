@@ -381,7 +381,16 @@ export default function CodeExampleBlock({
         ) : (
           /* Live Preview */
           <div className="p-6 flex justify-center bg-gray-50 min-h-[400px]">
-            <div className={`w-full ${componentId === 'human-in-the-loop-moderation' || componentId === 'confidence-indicator' || componentId === 'guided-learning-tutorial' ? 'max-w-6xl' : 'max-w-lg'}`}>
+            <div className={`w-full ${
+              // Components that need full width (max-w-6xl)
+              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo'].includes(componentId)
+                ? 'max-w-6xl'
+                // Components that need large width (max-w-4xl)
+                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo'].includes(componentId)
+                ? 'max-w-4xl'
+                // Default to medium width for smaller components
+                : 'max-w-lg'
+            }`}>
               {componentLoaded ? renderComponent() : (
                 <div className="flex items-center justify-center h-64">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>

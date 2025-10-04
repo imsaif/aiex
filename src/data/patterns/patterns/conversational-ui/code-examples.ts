@@ -3,294 +3,171 @@ import { CodeExample } from '../../../../types';
 export const codeExamples: CodeExample[] = [
   {
     title: "Simple Conversational Bot Interface",
-    description: "This React component implements a conversational UI for a customer support bot that can answer questions, handle escalations to human agents, and maintain conversation context.",
+    description: "A clean, minimal chat interface demonstrating conversational UI patterns with user and bot message bubbles.",
     language: "tsx",
     componentId: "conversational-ui-bot",
     code: `import React, { useState, useRef, useEffect } from 'react';
 
-// Define message types
-type MessageRole = 'user' | 'bot' | 'system';
-
 interface Message {
   id: string;
   content: string;
-  role: MessageRole;
-  timestamp: Date;
-  isLoading?: boolean;
+  role: 'user' | 'bot';
 }
 
-// Simple knowledge base for demo purposes
-const knowledgeBase = {
-  'pricing': 'Our pricing starts at $10/month for the basic plan, $25/month for pro, and $50/month for enterprise.',
-  'refund': 'We offer a 30-day money-back guarantee for all our plans. You can request a refund from your account page.',
-  'account': 'You can manage your account settings by clicking on your profile picture in the top right corner.',
-  'contact': 'You can reach our support team at support@example.com or call us at (555) 123-4567.',
-  'hours': 'Our support team is available Monday through Friday, 9am to 5pm Eastern Time.'
-};
+// Simple bot responses
+const getBotResponse = (message: string): string => {
+  const lower = message.toLowerCase();
 
-// Function to get response from knowledge base or handle escalation
-const getBotResponse = async (message: string): Promise<string> => {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
-  const lowercaseMessage = message.toLowerCase();
-  
-  // Check if user wants to talk to a human
-  if (lowercaseMessage.includes('human') || 
-      lowercaseMessage.includes('agent') || 
-      lowercaseMessage.includes('person') || 
-      lowercaseMessage.includes('representative')) {
-    return "I'll connect you with a human support agent right away. Please hold while I transfer your chat...";
+  if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+    return "Hello! I'm here to help. What can I do for you?";
   }
-  
-  // Check knowledge base for relevant responses
-  for (const [keyword, response] of Object.entries(knowledgeBase)) {
-    if (lowercaseMessage.includes(keyword)) {
-      return response;
-    }
+
+  if (lower.includes('help')) {
+    return "I can assist you with questions, provide information, or just chat. What would you like to know?";
   }
-  
-  // Handle greetings
-  if (lowercaseMessage.includes('hello') || 
-      lowercaseMessage.includes('hi') || 
-      lowercaseMessage.includes('hey')) {
-    return "Hello! I'm your AI assistant. How can I help you today?";
+
+  if (lower.includes('thanks') || lower.includes('thank')) {
+    return "You're welcome! Anything else I can help with?";
   }
-  
-  // Handle thanks
-  if (lowercaseMessage.includes('thank') || 
-      lowercaseMessage.includes('thanks')) {
-    return "You're welcome! Is there anything else I can help you with?";
+
+  if (lower.includes('bye') || lower.includes('goodbye')) {
+    return "Goodbye! Feel free to come back anytime.";
   }
-  
-  // Default response
-  return "I'm not sure I understand your question. You can ask me about our pricing, refund policy, account settings, or contact information. If you'd prefer to speak with a human agent, just let me know.";
+
+  return "I understand. Could you tell me more about what you need help with?";
 };
 
 export default function ConversationalUiDemo() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hello! I'm your AI assistant. How can I help you today?",
-      role: 'bot',
-      timestamp: new Date()
+      content: "Hi! I'm your AI assistant. How can I help you today?",
+      role: 'bot'
     }
   ]);
   const [inputValue, setInputValue] = useState('');
-  const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
-  const [isTransferringToHuman, setIsTransferringToHuman] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // Auto-scroll to bottom of chat
-  useEffect(() => {
+
+  // Auto-scroll only when sending messages
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!inputValue.trim() || isWaitingForResponse) return;
-    
-    // Generate a unique ID for the message
-    const userMessageId = Date.now().toString();
-    const botResponseId = (Date.now() + 1).toString();
-    
+
+    if (!inputValue.trim() || isTyping) return;
+
     // Add user message
     const userMessage: Message = {
-      id: userMessageId,
+      id: Date.now().toString(),
       content: inputValue,
-      role: 'user',
-      timestamp: new Date()
+      role: 'user'
     };
-    
-    // Add temporary bot message with loading state
-    const tempBotMessage: Message = {
-      id: botResponseId,
-      content: '',
-      role: 'bot',
-      timestamp: new Date(),
-      isLoading: true
-    };
-    
-    setMessages(prev => [...prev, userMessage, tempBotMessage]);
+
+    setMessages(prev => [...prev, userMessage]);
+    const userInput = inputValue;
     setInputValue('');
-    setIsWaitingForResponse(true);
-    
-    try {
-      // Get response from AI
-      const responseContent = await getBotResponse(inputValue);
-      
-      // Check if we need to transfer to human
-      if (responseContent.includes("I'll connect you with a human")) {
-        setIsTransferringToHuman(true);
-        
-        // Simulate a human joining after a delay
-        setTimeout(() => {
-          setMessages(prev => [
-            ...prev.filter(m => m.id !== botResponseId),
-            {
-              id: botResponseId,
-              content: responseContent,
-              role: 'bot',
-              timestamp: new Date()
-            },
-            {
-              id: Date.now().toString(),
-              content: "This is Sarah from customer support. I can see your conversation history. How can I help you today?",
-              role: 'system',
-              timestamp: new Date()
-            }
-          ]);
-          setIsTransferringToHuman(false);
-          setIsWaitingForResponse(false);
-        }, 3000);
-      } else {
-        // Update the temporary bot message with the actual response
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === botResponseId 
-              ? { ...msg, content: responseContent, isLoading: false } 
-              : msg
-          )
-        );
-        setIsWaitingForResponse(false);
-      }
-    } catch (error) {
-      // Handle error
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === botResponseId 
-            ? { 
-                ...msg, 
-                content: "Sorry, I'm having trouble connecting. Please try again in a moment.", 
-                isLoading: false 
-              } 
-            : msg
-        )
-      );
-      setIsWaitingForResponse(false);
-    }
-  };
+    setIsTyping(true);
 
-  // Render the appropriate message bubble based on role
-  const renderMessage = (message: Message) => {
-    // Show loading animation for bot messages
-    if (message.isLoading) {
-      return (
-        <div key={message.id} className="flex items-start mb-4">
-          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.584 2.568a.75.75 0 01.832 0l7 4a.75.75 0 010 1.312l-7 4a.75.75 0 01-.832 0l-7-4a.75.75 0 010-1.312l7-4z" clipRule="evenodd" />
-              <path fillRule="evenodd" d="M10 6.5a.75.75 0 01.75.75v6.5a.75.75 0 01-1.5 0v-6.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div className="bg-gray-100 rounded-lg py-2 px-4 max-w-xs sm:max-w-md relative">
-            <div className="flex space-x-2">
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-            </div>
-          </div>
-        </div>
-      );
-    }
+    // Scroll after user message
+    setTimeout(scrollToBottom, 100);
 
-    switch (message.role) {
-      case 'user':
-        return (
-          <div key={message.id} className="flex items-start mb-4 justify-end">
-            <div className="bg-blue-500 text-white rounded-lg py-2 px-4 max-w-xs sm:max-w-md">
-              {message.content}
-            </div>
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center ml-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-              </svg>
-            </div>
-          </div>
-        );
-      case 'bot':
-        return (
-          <div key={message.id} className="flex items-start mb-4">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white mr-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M9.584 2.568a.75.75 0 01.832 0l7 4a.75.75 0 010 1.312l-7 4a.75.75 0 01-.832 0l-7-4a.75.75 0 010-1.312l7-4z" clipRule="evenodd" />
-                <path fillRule="evenodd" d="M10 6.5a.75.75 0 01.75.75v6.5a.75.75 0 01-1.5 0v-6.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="bg-gray-100 rounded-lg py-2 px-4 max-w-xs sm:max-w-md">
-              {message.content}
-            </div>
-          </div>
-        );
-      case 'system':
-        return (
-          <div key={message.id} className="flex items-start mb-4">
-            <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white mr-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <div className="bg-green-100 rounded-lg py-2 px-4 max-w-xs sm:max-w-md">
-              {message.content}
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
+    // Simulate bot thinking delay
+    setTimeout(() => {
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: getBotResponse(userInput),
+        role: 'bot'
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+      setIsTyping(false);
+
+      // Scroll after bot message
+      setTimeout(scrollToBottom, 100);
+    }, 600);
   };
 
   return (
-    <div className="flex flex-col h-[600px] border border-gray-300 rounded-md bg-white shadow-sm">
-      {/* Chat header */}
-      <div className="bg-white px-4 py-3 border-b border-gray-200 flex items-center">
-        <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white mr-3">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-          </svg>
+    <div className="flex flex-col h-[500px] border border-gray-300 rounded-lg bg-white shadow-sm">
+      {/* Header */}
+      <div className="bg-blue-600 px-4 py-3 rounded-t-lg flex items-center">
+        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3 text-2xl">
+          🤖
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-gray-800">Support Assistant</h3>
-          <p className="text-sm text-gray-500">
-            {isWaitingForResponse && isTransferringToHuman 
-              ? "Connecting to a support agent..." 
-              : "Online • Usually responds in a few minutes"}
-          </p>
+          <h3 className="text-lg font-semibold text-white">AI Assistant</h3>
+          <p className="text-sm text-blue-100">Online</p>
         </div>
       </div>
-      
-      {/* Chat messages */}
-      <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
-        {messages.map(message => renderMessage(message))}
+
+      {/* Messages */}
+      <div className="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-3">
+        {messages.map(message => (
+          <div
+            key={message.id}
+            className={\`flex items-end gap-2 \${message.role === 'user' ? 'justify-end' : 'justify-start'}\`}
+          >
+            {message.role === 'bot' && (
+              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-lg flex-shrink-0">
+                🤖
+              </div>
+            )}
+            <div
+              className={\`rounded-lg py-2 px-4 max-w-xs \${
+                message.role === 'user'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white border border-gray-200 text-gray-800'
+              }\`}
+            >
+              {message.content}
+            </div>
+            {message.role === 'user' && (
+              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-lg flex-shrink-0">
+                👤
+              </div>
+            )}
+          </div>
+        ))}
+
+        {isTyping && (
+          <div className="flex items-end gap-2">
+            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-lg flex-shrink-0">
+              🤖
+            </div>
+            <div className="bg-white border border-gray-200 rounded-lg py-2 px-4">
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+              </div>
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
-      
-      {/* Input area */}
-      <form onSubmit={handleSendMessage} className="border-t border-gray-200 p-4 bg-white">
-        <div className="flex items-center">
+
+      {/* Input */}
+      <form onSubmit={handleSendMessage} className="border-t border-gray-200 p-4 bg-white rounded-b-lg">
+        <div className="flex gap-2">
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            disabled={isWaitingForResponse && isTransferringToHuman}
+            placeholder="Type a message..."
+            className="flex-1 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isTyping}
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            disabled={!inputValue.trim() || isWaitingForResponse}
+            className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!inputValue.trim() || isTyping}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L10 9.414l-1.293 1.293a1 1 0 11-1.414-1.414z" clipRule="evenodd" />
-            </svg>
+            Send
           </button>
-        </div>
-        <div className="mt-2 text-xs text-gray-500">
-          {isWaitingForResponse && isTransferringToHuman 
-            ? "Connecting you to a human support agent..."
-            : "Ask about pricing, refunds, account settings, or contact information. You can also ask to speak with a human agent."}
         </div>
       </form>
     </div>

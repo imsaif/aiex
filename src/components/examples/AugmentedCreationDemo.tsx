@@ -1,207 +1,336 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-interface CreativeSuggestion {
+interface Suggestion {
   id: string;
-  type: 'text' | 'image' | 'style';
-  content: string;
-  confidence: number;
+  type: 'grammar' | 'style' | 'continuation';
+  original: string;
+  replacement: string;
+  reason: string;
+  position: number;
 }
 
-interface CreationSession {
-  content: string;
-  suggestions: CreativeSuggestion[];
-  history: string[];
+interface ContinuationOption {
+  id: string;
+  text: string;
+  tone: 'formal' | 'casual' | 'neutral';
 }
 
 export default function AugmentedCreationDemo() {
-  const [session, setSession] = useState<CreationSession>({
-    content: '',
-    suggestions: [],
-    history: []
-  });
-  const [activeTab, setActiveTab] = useState<'write' | 'design' | 'code'>('write');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [content, setContent] = useState('I think AI is very good for helping people write better.');
+  const [tone, setTone] = useState<'formal' | 'casual' | 'neutral'>('neutral');
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [continuations, setContinuations] = useState<ContinuationOption[]>([]);
+  const [acceptedCount, setAcceptedCount] = useState(0);
+  const [rejectedCount, setRejectedCount] = useState(0);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const generateSuggestions = async (content: string) => {
-    if (content.length < 10) return;
-    
-    setIsGenerating(true);
-    
-    // Simulate AI suggestion generation
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    
-    const suggestions: CreativeSuggestion[] = [
-      {
-        id: '1',
-        type: 'text',
-        content: 'Continue with: "This innovative approach could revolutionize how we think about..."',
-        confidence: 0.85
-      },
-      {
-        id: '2',
-        type: 'style',
-        content: 'Make this more conversational and engaging',
-        confidence: 0.78
-      },
-      {
-        id: '3',
-        type: 'text',
-        content: 'Add supporting examples or case studies here',
-        confidence: 0.72
-      }
-    ];
-    
-    setSession(prev => ({ ...prev, suggestions }));
-    setIsGenerating(false);
-  };
-
-  const applySuggestion = (suggestion: CreativeSuggestion) => {
-    let newContent = session.content;
-    
-    if (suggestion.type === 'text') {
-      newContent += ' ' + suggestion.content;
-    }
-    
-    setSession(prev => ({
-      ...prev,
-      content: newContent,
-      history: [...prev.history, prev.content],
-      suggestions: prev.suggestions.filter(s => s.id !== suggestion.id)
-    }));
-  };
-
-  const undoLastChange = () => {
-    if (session.history.length > 0) {
-      const previousContent = session.history[session.history.length - 1];
-      setSession(prev => ({
-        ...prev,
-        content: previousContent,
-        history: prev.history.slice(0, -1)
-      }));
-    }
-  };
-
+  // Generate suggestions based on content
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      generateSuggestions(session.content);
-    }, 2000);
+    if (content.length < 5) {
+      setSuggestions([]);
+      setContinuations([]);
+      return;
+    }
 
-    return () => clearTimeout(timeoutId);
-  }, [session.content]);
+    setIsAnalyzing(true);
+    const timer = setTimeout(() => {
+      // Grammar and style suggestions
+      const newSuggestions: Suggestion[] = [];
+
+      if (content.includes('very good')) {
+        newSuggestions.push({
+          id: '1',
+          type: 'style',
+          original: 'very good',
+          replacement: tone === 'formal' ? 'highly effective' : tone === 'casual' ? 'awesome' : 'excellent',
+          reason: 'Stronger word choice',
+          position: content.indexOf('very good')
+        });
+      }
+
+      if (content.includes('I think')) {
+        newSuggestions.push({
+          id: '2',
+          type: 'style',
+          original: 'I think',
+          replacement: tone === 'formal' ? 'It is evident that' : tone === 'casual' ? 'Honestly,' : 'Research shows that',
+          reason: tone === 'formal' ? 'More authoritative' : 'Better engagement',
+          position: content.indexOf('I think')
+        });
+      }
+
+      setSuggestions(newSuggestions);
+
+      // Generate continuation options based on tone
+      const continuationOptions: ContinuationOption[] = [
+        {
+          id: 'c1',
+          tone: 'formal',
+          text: ' Furthermore, artificial intelligence systems demonstrate remarkable capability in enhancing written communication through contextual analysis and stylistic refinement.'
+        },
+        {
+          id: 'c2',
+          tone: 'casual',
+          text: ' Plus, it catches those embarrassing typos and helps you sound way more professional without even trying!'
+        },
+        {
+          id: 'c3',
+          tone: 'neutral',
+          text: ' It can improve clarity, fix grammar mistakes, and suggest better phrasing in real-time.'
+        }
+      ];
+
+      setContinuations(continuationOptions);
+      setIsAnalyzing(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [content, tone]);
+
+  const applySuggestion = (suggestion: Suggestion) => {
+    const newContent = content.substring(0, suggestion.position) +
+                      suggestion.replacement +
+                      content.substring(suggestion.position + suggestion.original.length);
+    setContent(newContent);
+    setSuggestions(suggestions.filter(s => s.id !== suggestion.id));
+    setAcceptedCount(prev => prev + 1);
+  };
+
+  const rejectSuggestion = (suggestionId: string) => {
+    setSuggestions(suggestions.filter(s => s.id !== suggestionId));
+    setRejectedCount(prev => prev + 1);
+  };
+
+  const applyContinuation = (continuation: ContinuationOption) => {
+    setContent(prev => prev + continuation.text);
+    setContinuations([]);
+    setAcceptedCount(prev => prev + 1);
+  };
+
+  const renderContentWithHighlights = () => {
+    if (suggestions.length === 0) {
+      return <div className="whitespace-pre-wrap">{content}</div>;
+    }
+
+    let lastIndex = 0;
+    const parts: JSX.Element[] = [];
+
+    // Sort suggestions by position
+    const sortedSuggestions = [...suggestions].sort((a, b) => a.position - b.position);
+
+    sortedSuggestions.forEach((suggestion, idx) => {
+      // Add text before suggestion
+      if (suggestion.position > lastIndex) {
+        parts.push(
+          <span key={`text-${idx}`}>
+            {content.substring(lastIndex, suggestion.position)}
+          </span>
+        );
+      }
+
+      // Add highlighted suggestion
+      parts.push(
+        <span
+          key={`suggestion-${idx}`}
+          className="relative inline-block group cursor-pointer"
+        >
+          <span className="line-through text-red-600 bg-red-50 px-1 rounded">
+            {suggestion.original}
+          </span>
+          <span className="text-green-600 bg-green-50 px-1 ml-1 rounded font-medium">
+            {suggestion.replacement}
+          </span>
+          <span className="invisible group-hover:visible absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+            {suggestion.reason}
+          </span>
+        </span>
+      );
+
+      lastIndex = suggestion.position + suggestion.original.length;
+    });
+
+    // Add remaining text
+    if (lastIndex < content.length) {
+      parts.push(
+        <span key="text-end">
+          {content.substring(lastIndex)}
+        </span>
+      );
+    }
+
+    return <div className="whitespace-pre-wrap leading-relaxed">{parts}</div>;
+  };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <header className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">AI Creative Assistant</h2>
-        <p className="text-gray-600">Collaborate with AI to enhance your creative process</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">AI Writing Assistant</h2>
+        <p className="text-gray-600">Real-time suggestions to enhance your writing</p>
       </header>
 
-      <div className="flex mb-4 space-x-1 bg-gray-100 rounded-lg p-1">
-        {(['write', 'design', 'code'] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-              activeTab === tab 
-                ? 'bg-white text-blue-600 shadow-sm' 
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
-          </button>
-        ))}
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">Creative Canvas</span>
-              <button
-                onClick={undoLastChange}
-                disabled={session.history.length === 0}
-                className="text-xs px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Undo
-              </button>
+        {/* Main Editor */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Tone Slider */}
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-sm font-medium text-gray-700">Writing Tone</label>
+              <span className="text-sm text-gray-600 capitalize">{tone}</span>
             </div>
-            <textarea
-              ref={textareaRef}
-              className="w-full p-4 h-64 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Start creating... AI will suggest improvements as you work"
-              value={session.content}
-              onChange={(e) => setSession(prev => ({ ...prev, content: e.target.value }))}
-            />
+            <div className="flex items-center space-x-4">
+              <span className="text-xs text-gray-500">Casual</span>
+              <input
+                type="range"
+                min="0"
+                max="2"
+                value={tone === 'casual' ? 0 : tone === 'neutral' ? 1 : 2}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  setTone(value === 0 ? 'casual' : value === 1 ? 'neutral' : 'formal');
+                }}
+                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              />
+              <span className="text-xs text-gray-500">Formal</span>
+            </div>
           </div>
+
+          {/* Text Editor with Inline Suggestions */}
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+              <span className="text-sm font-medium text-gray-700">Your Content</span>
+            </div>
+            <div className="bg-white p-4 min-h-[300px]">
+              <textarea
+                className="w-full h-full min-h-[250px] resize-none focus:outline-none text-gray-800"
+                placeholder="Start writing... AI will suggest improvements as you type"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Preview with Highlights */}
+          {suggestions.length > 0 && (
+            <div className="border border-blue-200 bg-blue-50 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-medium text-blue-900">Preview with Suggestions</h3>
+                <span className="text-xs text-blue-600">Hover over highlights for details</span>
+              </div>
+              <div className="bg-white rounded-md p-4 text-gray-800">
+                {renderContentWithHighlights()}
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* Sidebar with Suggestions and Stats */}
         <div className="space-y-4">
-          <div className="bg-blue-50 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-3 flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-              </svg>
-              AI Suggestions
-              {isGenerating && (
-                <div className="ml-2 animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+          {/* Active Suggestions */}
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-medium text-purple-900">AI Suggestions</h3>
+              {isAnalyzing && (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>
               )}
-            </h3>
-            
-            {session.suggestions.length > 0 ? (
+            </div>
+
+            {suggestions.length > 0 ? (
               <div className="space-y-3">
-                {session.suggestions.map((suggestion) => (
-                  <div key={suggestion.id} className="bg-white rounded-lg p-3 border border-blue-200">
+                {suggestions.map((suggestion) => (
+                  <div
+                    key={suggestion.id}
+                    className="bg-white border border-purple-200 rounded-md p-3"
+                  >
                     <div className="flex items-start justify-between mb-2">
-                      <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                        suggestion.type === 'text' 
-                          ? 'bg-green-100 text-green-800' 
-                          : suggestion.type === 'style'
-                          ? 'bg-purple-100 text-purple-800'
-                          : 'bg-orange-100 text-orange-800'
+                      <span className={`text-xs font-medium uppercase px-2 py-1 rounded ${
+                        suggestion.type === 'grammar'
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-blue-100 text-blue-700'
                       }`}>
                         {suggestion.type}
                       </span>
-                      <span className="text-xs text-gray-500">
-                        {Math.round(suggestion.confidence * 100)}% confidence
-                      </span>
                     </div>
-                    <p className="text-sm text-gray-700 mb-3">{suggestion.content}</p>
-                    <button
-                      onClick={() => applySuggestion(suggestion)}
-                      className="w-full py-2 px-3 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                    >
-                      Apply Suggestion
-                    </button>
+                    <div className="text-sm mb-2">
+                      <span className="line-through text-gray-500">{suggestion.original}</span>
+                      <span className="mx-2">→</span>
+                      <span className="font-medium text-green-700">{suggestion.replacement}</span>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-3">{suggestion.reason}</p>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => applySuggestion(suggestion)}
+                        className="flex-1 px-3 py-1.5 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors"
+                      >
+                        Apply
+                      </button>
+                      <button
+                        onClick={() => rejectSuggestion(suggestion.id)}
+                        className="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300 transition-colors"
+                      >
+                        Dismiss
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-blue-700 text-sm">
-                {isGenerating 
-                  ? 'Generating suggestions...' 
-                  : 'Start typing to get AI-powered creative suggestions'
-                }
+              <p className="text-sm text-purple-600 italic">
+                {isAnalyzing ? 'Analyzing...' : 'No suggestions yet. Keep writing!'}
               </p>
             )}
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-3">Session Stats</h3>
+          {/* Continuation Options */}
+          {continuations.length > 0 && content.endsWith('.') && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <h3 className="font-medium text-green-900 mb-3">Continue Writing</h3>
+              <div className="space-y-2">
+                {continuations.map((continuation) => (
+                  <button
+                    key={continuation.id}
+                    onClick={() => applyContinuation(continuation)}
+                    className="w-full text-left p-3 bg-white border border-green-200 rounded-md hover:bg-green-50 transition-colors group"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-green-700 uppercase">
+                        {continuation.tone}
+                      </span>
+                      <svg className="w-4 h-4 text-green-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                    </div>
+                    <p className="text-sm text-gray-700 line-clamp-3">{continuation.text}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Statistics */}
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+            <h3 className="font-medium text-gray-900 mb-3">Session Stats</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Words:</span>
-                <span className="font-medium">{session.content.split(' ').filter(w => w.length > 0).length}</span>
+                <span className="font-medium">{content.split(/\s+/).filter(w => w.length > 0).length}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Characters:</span>
-                <span className="font-medium">{session.content.length}</span>
+                <span className="font-medium">{content.length}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">History:</span>
-                <span className="font-medium">{session.history.length} changes</span>
+                <span className="text-gray-600">Accepted:</span>
+                <span className="font-medium text-green-600">{acceptedCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Rejected:</span>
+                <span className="font-medium text-red-600">{rejectedCount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Active Suggestions:</span>
+                <span className="font-medium text-purple-600">{suggestions.length}</span>
               </div>
             </div>
           </div>
