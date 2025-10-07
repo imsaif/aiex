@@ -273,6 +273,23 @@ export default function ProgressiveDisclosureEmailDemo() {
       "Contextual Assistance",
       "Adaptive Interfaces",
       "Transparent Feedback"
-    ]
+    ],
+    figmaPrompt: {
+      prompt: `Design an interface with progressive disclosure that reveals AI features gradually:
+
+Create 3 states:
+1. **Initial view**: Show essential content only (summary, key action)
+2. **Expanded view**: Reveal more details (AI insights, key points)
+3. **Full view**: Show all options (actions, settings, advanced features)
+
+Include clear expand/collapse triggers (chevrons, "Show more" buttons) and smooth transitions between states.`,
+      tips: [
+        "Limit to 2-3 disclosure layers maximum",
+        "Use chevrons or +/- icons as visual triggers",
+        "Add smooth animations for expand/collapse",
+        "Design all states: collapsed → partial → expanded",
+        "Test that users can easily discover hidden features"
+      ]
+    }
   }
 };

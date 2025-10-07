@@ -37,6 +37,15 @@ export interface CodeExample {
 }
 
 /**
+ * Represents a Figma AI prompt with customization tips for designers
+ */
+export interface FigmaPrompt {
+  prompt: string;           // Complete pattern prompt for Figma Make/AI design tools
+  figmaFileUrl?: string;    // Optional download link for .fig file
+  tips: string[];           // Customization tips based on pattern guidelines
+}
+
+/**
  * Comprehensive pattern content structure supporting both simplified and detailed formats
  */
 export interface PatternContent {
@@ -50,6 +59,7 @@ export interface PatternContent {
   examples: Example[];
   codeExamples: CodeExample[];
   relatedPatterns: string[];
+  figmaPrompt?: FigmaPrompt; // Optional Figma AI prompt for designers
 }
 
 /**

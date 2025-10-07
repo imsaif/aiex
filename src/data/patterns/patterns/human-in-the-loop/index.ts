@@ -50,6 +50,24 @@ export const humanintheloop: Pattern = {
       "Transparent Feedback",
       "Contextual Assistance",
       "Progressive Disclosure"
-    ]
+    ],
+    figmaPrompt: {
+      prompt: `Design an interface where humans can review and approve AI suggestions before they're applied:
+
+Create a review card showing:
+1. **AI Suggestion**: Display the AI-generated content/action with a confidence indicator
+2. **Action Buttons**: Clear Approve/Reject/Modify options
+3. **Context**: Brief explanation of why AI made this suggestion
+4. **Override Option**: Allow users to edit or provide their own input
+
+Show visual distinction between AI suggestions (blue/purple) and human-approved items (green).`,
+      tips: [
+        "Use distinct colors for AI vs human decisions",
+        "Include confidence scores to guide review priority",
+        "Make approve/reject buttons clear and accessible",
+        "Add undo option for quick corrections",
+        "Show what happens when user approves/rejects"
+      ]
+    }
   }
 };

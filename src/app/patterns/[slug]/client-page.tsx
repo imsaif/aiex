@@ -22,6 +22,11 @@ const PatternUsageButton = dynamic(() => import('@/components/ui/PatternUsageBut
   ssr: false
 });
 
+const FigmaPromptCard = dynamic(() => import('@/components/ui/FigmaPromptCard'), {
+  loading: () => <div className="animate-pulse bg-gray-200 h-64 rounded-lg"></div>,
+  ssr: false
+});
+
 interface ClientPageProps {
   pattern: Pattern;
   previousPattern: Pattern | null;
@@ -49,14 +54,48 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
     >
       {/* Breadcrumb Navigation */}
       <motion.nav
-        className="flex items-center space-x-2 text-sm text-gray-500 mb-6"
+        className="flex items-center justify-between text-sm mb-6"
         variants={itemVariants}
       >
-        <Link href="/" className="hover:text-gray-800">Home</Link>
-        <span>/</span>
-        <Link href="/patterns" className="hover:text-gray-800">Patterns</Link>
-        <span>/</span>
-        <span className="text-gray-700">{pattern.title}</span>
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span>Back to All Patterns</span>
+        </Link>
+
+        {nextPattern && (
+          <Link
+            href={`/patterns/${nextPattern.slug}`}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <span>Next: {nextPattern.title}</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </Link>
+        )}
       </motion.nav>
 
       {/* Pattern Header */}
@@ -134,6 +173,17 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
                 />
               ))}
             </div>
+          </motion.section>
+        )}
+
+        {/* Figma AI Prompt */}
+        {pattern.content.figmaPrompt && (
+          <motion.section variants={itemVariants}>
+            <div className="flex items-center mb-6">
+              <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
+              <h2 className="text-2xl font-bold text-gray-900">Design This Pattern</h2>
+            </div>
+            <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </motion.section>
         )}
 
@@ -226,7 +276,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </Link>
           ) : <div />}
 
-          <Link href="/patterns" className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-gray-700 rounded-full hover:from-pink-500/20 hover:to-violet-500/20 transition-colors font-medium border border-gray-200">
+          <Link href="/" className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-gray-700 rounded-full hover:from-pink-500/20 hover:to-violet-500/20 transition-colors font-medium border border-gray-200">
             View All Patterns
           </Link>
 

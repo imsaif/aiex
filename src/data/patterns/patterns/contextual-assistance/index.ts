@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const contextualassistance: Pattern = {
   id: "contextual-assistance",
@@ -23,6 +24,7 @@ export const contextualassistance: Pattern = {
       "Transparent Feedback",
       "Adaptive Interfaces"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };

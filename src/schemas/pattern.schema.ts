@@ -64,6 +64,13 @@ export const CodeExampleSchema = z.object({
   componentId: z.string().optional(),
 })
 
+// Figma prompt schema - matching TypeScript FigmaPrompt interface exactly
+export const FigmaPromptSchema = z.object({
+  prompt: z.string().min(100, 'Prompt must be at least 100 characters').max(800, 'Prompt must be under 800 characters'),
+  figmaFileUrl: z.string().url('Must be a valid URL').optional(),
+  tips: z.array(z.string().min(1, 'Tip cannot be empty')).min(2, 'At least 2 tips are required').max(6, 'Maximum 6 tips allowed'),
+})
+
 // Pattern content schema - matching TypeScript PatternContent interface exactly
 export const PatternContentSchema = z.object({
   problem: z.string().min(10, 'Problem description must be at least 10 characters').max(1000, 'Problem description too long'),
@@ -76,6 +83,7 @@ export const PatternContentSchema = z.object({
   examples: z.array(ExampleSchema).min(1, 'At least one example is required'),
   codeExamples: z.array(CodeExampleSchema).default([]),
   relatedPatterns: z.array(z.string().min(1)).default([]),
+  figmaPrompt: FigmaPromptSchema.optional(),
 })
 
 // Main pattern schema - matching TypeScript Pattern interface exactly  

@@ -35,20 +35,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PatternPage({ params }: { params: Promise<{ slug: string }> }) {
   // Await params before accessing properties (Next.js 15 requirement)
   const { slug } = await params;
-  
+
   // Find the requested pattern
-  const pattern = patterns.find(p => p.slug === slug);
+  const currentIndex = patterns.findIndex(p => p.slug === slug);
+  const pattern = patterns[currentIndex];
 
   if (!pattern) {
     notFound();
   }
 
-  // Previous/next navigation is omitted for now
+  // Calculate previous and next patterns
+  const previousPattern = currentIndex > 0 ? patterns[currentIndex - 1] : null;
+  const nextPattern = currentIndex < patterns.length - 1 ? patterns[currentIndex + 1] : null;
+
   return (
-    <ClientPage 
+    <ClientPage
       pattern={pattern}
-      previousPattern={null}
-      nextPattern={null}
+      previousPattern={previousPattern}
+      nextPattern={nextPattern}
     />
   );
 } 
