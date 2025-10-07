@@ -4,24 +4,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 application showcasing AI design patterns with TypeScript, React 19, and Tailwind CSS. The project implements **all 14 AI design patterns (100% complete)** with interactive demos, comprehensive documentation, and testing infrastructure.
+This is a Next.js 15 application showcasing AI design patterns with TypeScript, React 19, and Tailwind CSS. The project implements **all 24 AI design patterns (100% complete)** across 7 categories with interactive demos, comprehensive documentation, and testing infrastructure.
 
 ### Pattern Implementation Status
-- **Completed (14/14)**: All AI design patterns are now fully implemented:
-  - Contextual Assistance
-  - Progressive Disclosure
-  - Human-in-the-Loop
-  - Explainable AI
-  - Conversational UI
+- **Completed (24/24)**: All AI design patterns are now fully implemented across 7 categories:
+
+#### Adaptive & Intelligent Systems (3 patterns)
   - Adaptive Interfaces
-  - Multimodal Interaction
+  - Predictive Anticipation
+  - Ambient Intelligence
+
+#### Human-AI Collaboration (4 patterns)
+  - Human-in-the-Loop
+  - Collaborative AI
   - Guided Learning
   - Augmented Creation
+
+#### Trustworthy & Reliable AI (5 patterns)
+  - Explainable AI
+  - Confidence Visualization
   - Responsible AI Design
-  - Error Recovery & Graceful Degradation
-  - Collaborative AI
-  - Ambient Intelligence
+  - Error Recovery
   - Safe Exploration
+
+#### Natural Interaction (2 patterns)
+  - Conversational UI
+  - Multimodal Interaction
+
+#### Performance & Efficiency (5 patterns)
+  - Progressive Disclosure
+  - Contextual Assistance
+  - Feedback Loops
+  - Graceful Handoff
+  - Context Switching
+  - Intelligent Caching
+  - Progressive Enhancement
+
+#### Privacy & Control (2 patterns)
+  - Privacy-First Design
+  - Selective Memory
+
+#### Accessibility & Inclusion (1 pattern)
+  - Universal Access Patterns
 
 ## Development Commands
 

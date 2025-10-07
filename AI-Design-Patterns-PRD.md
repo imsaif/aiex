@@ -1,12 +1,12 @@
 <context>
-# Overview  
-AI Design Patterns is a comprehensive educational platform that demonstrates and implements 14 essential AI design patterns with practical examples, interactive demos, and best practices. The platform serves as a learning resource for developers, designers, and product managers working on AI-powered applications, providing both theoretical knowledge and hands-on code implementations.
+# Overview
+AI Design Patterns is a comprehensive educational platform that demonstrates and implements 24 essential AI design patterns across 7 categories with practical examples, interactive demos, and best practices. The platform serves as a learning resource for developers, designers, and product managers working on AI-powered applications, providing both theoretical knowledge and hands-on code implementations.
 
 The project addresses the growing need for standardized approaches to AI user experience design, helping teams avoid common pitfalls and create more intuitive, ethical, and effective AI-powered interfaces. With AI integration becoming ubiquitous across digital products, this platform bridges the gap between AI capabilities and user-centered design principles.
 
 # Core Features  
 ## 1. Interactive Pattern Showcase
-- **What it does**: Displays 14 AI design patterns with live, interactive demonstrations
+- **What it does**: Displays 24 AI design patterns across 7 categories with live, interactive demonstrations
 - **Why it's important**: Allows users to experience patterns firsthand rather than just reading about them
 - **How it works**: Each pattern includes working React components with real-time interactions, code examples, and visual demonstrations
 

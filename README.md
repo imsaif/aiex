@@ -4,11 +4,11 @@ A comprehensive collection of AI design patterns and best practices for creating
 
 ## 🎯 Project Overview
 
-This project provides a complete implementation of **all 14 essential AI design patterns**, featuring interactive demos, comprehensive documentation, code examples, and testing infrastructure for building modern AI-powered applications.
+This project provides a complete implementation of **all 24 essential AI design patterns across 7 categories**, featuring interactive demos, comprehensive documentation, code examples, and testing infrastructure for building modern AI-powered applications.
 
 ### 🚀 Key Features
 
-- **14 fully implemented AI design patterns** with interactive demos
+- **24 fully implemented AI design patterns** across 7 categories with interactive demos
 - **Modern tech stack**: Next.js 15, React 19, TypeScript, Tailwind CSS
 - **481+ comprehensive tests** with 48% code coverage
 - **AI-powered development tools** for pattern generation and testing
@@ -16,29 +16,45 @@ This project provides a complete implementation of **all 14 essential AI design 
 - **Responsive design** with dark mode support
 - **Optimized performance** with image optimization and code splitting
 
-### 📚 Implemented Patterns
+### 📚 Implemented Patterns (24 Total)
 
-#### Core Interaction Patterns
-- **Contextual Assistance** - Proactive help based on user context
-- **Progressive Disclosure** - Gradual revelation of AI features  
-- **Conversational UI** - Natural language interactions
-- **Multimodal Interaction** - Multiple input/output modes
+#### 🧠 Adaptive & Intelligent Systems (3 patterns)
+- **Adaptive Interfaces** - Behavior-driven interface optimization
+- **Predictive Anticipation** - Proactive suggestions and actions
+- **Ambient Intelligence** - Context-aware background processing
 
-#### Trust & Control
+#### 🤝 Human-AI Collaboration (4 patterns)
 - **Human-in-the-Loop** - Balanced automation with human oversight
+- **Collaborative AI** - Human-AI partnership patterns
+- **Guided Learning** - AI capability tutorials and onboarding
+- **Augmented Creation** - AI-assisted content generation
+
+#### 🛡️ Trustworthy & Reliable AI (5 patterns)
 - **Explainable AI** - Transparent AI decision-making
+- **Confidence Visualization** - Displaying AI certainty levels
+- **Responsible AI Design** - Ethics, bias mitigation, and inclusivity
 - **Error Recovery** - Graceful degradation and fallback strategies
 - **Safe Exploration** - Risk-free experimentation environments
 
-#### Intelligence & Adaptation
-- **Adaptive Interfaces** - Behavior-driven interface optimization
-- **Ambient Intelligence** - Context-aware background processing
-- **Collaborative AI** - Human-AI partnership patterns
-- **Guided Learning** - AI capability tutorials and onboarding
+#### 💬 Natural Interaction (2 patterns)
+- **Conversational UI** - Natural language interactions
+- **Multimodal Interaction** - Multiple input/output modes
 
-#### Creation & Enhancement
-- **Augmented Creation** - AI-assisted content generation
-- **Responsible AI Design** - Ethics, bias mitigation, and inclusivity
+#### ⚡ Performance & Efficiency (7 patterns)
+- **Progressive Disclosure** - Gradual revelation of AI features
+- **Contextual Assistance** - Proactive help based on user context
+- **Feedback Loops** - Continuous learning from user interactions
+- **Graceful Handoff** - Seamless transitions between AI and humans
+- **Context Switching** - Managing multiple conversation contexts
+- **Intelligent Caching** - Smart data persistence strategies
+- **Progressive Enhancement** - Layered feature availability
+
+#### 🔒 Privacy & Control (2 patterns)
+- **Privacy-First Design** - Data minimization and user control
+- **Selective Memory** - User-controlled AI memory management
+
+#### ♿ Accessibility & Inclusion (1 pattern)
+- **Universal Access Patterns** - Inclusive design for all users
 
 [View live demo →](https://aiuxdesign.guide)
 
@@ -107,7 +123,7 @@ ai-design-patterns/
 ├── src/
 │   ├── app/                    # Next.js 15 app router
 │   ├── components/             # React components
-│   ├── data/patterns/          # All 14 AI pattern implementations
+│   ├── data/patterns/          # All 24 AI pattern implementations
 │   ├── hooks/                  # Custom React hooks
 │   └── utils/                  # Utility functions
 ├── public/images/              # Optimized images and assets
