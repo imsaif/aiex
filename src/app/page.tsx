@@ -5,12 +5,15 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import ScrollToTop from '../components/ui/ScrollToTop';
+import FilterPills from '../components/ui/FilterPills';
+import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
 import patterns from '../data/patterns';
 import categories from '../data/categories';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
   const filteredPatterns = patterns.filter(pattern => {
     const matchesSearch = pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -25,7 +28,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="py-12 md:py-16">
-        <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
+        <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
             <div className="flex items-center justify-center gap-2 mb-6">
@@ -67,10 +70,18 @@ export default function Home() {
       </section>
 
       {/* Main Content with Sidebar */}
-      <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 pb-24">
+      <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16 pb-24">
+        {/* Mobile Filter Button */}
+        <div className="lg:hidden mb-6">
+          <FilterPills
+            selectedCategory={selectedCategory}
+            onFilterClick={() => setIsFilterSheetOpen(true)}
+          />
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <aside className="lg:w-64 flex-shrink-0">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block lg:w-64 flex-shrink-0">
             <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 dark:border-gray-700 sticky top-4">
               <h3 className="font-semibold text-lg mb-4">All Categories</h3>
               <ul className="space-y-2">
@@ -154,7 +165,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-8 mt-12 border-t border-border-primary">
-        <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 text-center">
+        <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16 text-center">
           <p className="text-sm text-text-secondary">
             Built with ☕ by Imran ·
             <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">Portfolio</a> ·
@@ -166,6 +177,15 @@ export default function Home() {
 
       {/* Scroll to Top Button */}
       <ScrollToTop />
+
+      {/* Mobile Category Filter Sheet */}
+      <CategoryFilterSheet
+        isOpen={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategorySelect={setSelectedCategory}
+      />
     </main>
   );
 }
