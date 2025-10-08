@@ -121,8 +121,8 @@ export default function Home() {
               {filteredPatterns.map((pattern, index) => (
                 <motion.div
                   key={pattern.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 1, y: 0 }}
+                  whileHover={{ y: -4 }}
                   transition={{ delay: index * 0.05 }}
                 >
                   <Link
