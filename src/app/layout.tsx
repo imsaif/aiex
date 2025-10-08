@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { defaultMetadata, siteConfig } from "@/config/seo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,8 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "aiux | AI Design Patterns and Inspiration",
-  description: "Discover AI design inspiration and learn from real use cases",
+  ...defaultMetadata,
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
@@ -20,6 +20,17 @@ export const metadata: Metadata = {
     shortcut: '/favicon.ico',
     apple: '/favicon.svg',
   },
+  metadataBase: new URL(siteConfig.url),
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+  ],
 };
 
 export default function RootLayout({

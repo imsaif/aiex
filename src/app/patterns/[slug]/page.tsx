@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import patterns from '@/data/patterns';
 import { Metadata } from 'next';
 import ClientPage from './client-page';
+import { generatePatternMetadata } from '@/utils/metadata';
 
 // Generate static params for all patterns at build time
 export async function generateStaticParams() {
@@ -18,18 +19,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!pattern) {
     return {
       title: 'Pattern Not Found',
+      description: 'The requested AI design pattern could not be found.',
     };
   }
 
-  return {
-    title: `${pattern.title} | AI Design Patterns`,
+  return generatePatternMetadata({
+    title: pattern.title,
     description: pattern.description,
-    openGraph: {
-      title: pattern.title,
-      description: pattern.description,
-      type: 'article',
-    },
-  };
+    slug: pattern.slug,
+    category: pattern.category,
+    tags: pattern.tags,
+    thumbnail: pattern.thumbnail,
+  });
 }
 
 export default async function PatternPage({ params }: { params: Promise<{ slug: string }> }) {
