@@ -15,20 +15,14 @@ export const guidedlearning: Pattern = {
       {
         title: "Figma Interactive Tutorials",
         description: "Interactive tutorials highlighting UI elements with contextual instructions.",
-        image: "/images/examples/applepencil.gif",
-        altText: "Apple Pencil guided tutorial demonstrating features step by step"
+        image: "/images/examples/figma-interactive-tutorial.gif",
+        altText: "Figma interactive tutorial demonstrating step-by-step guidance for design features"
       },
       {
         title: "GitHub Codespaces Onboarding",
         description: "Guided environment setup with progressive disclosure based on user selections.",
-        image: "/images/examples/gitautocode.gif",
-        altText: "GitHub auto-coding features with guided learning prompts"
-      },
-      {
-        title: "Notion Formula Builder",
-        description: "Step-by-step formula creation with real-time previews and suggestions.",
-        image: "/images/examples/notion-ai.gif",
-        altText: "Notion AI providing guided assistance for content creation"
+        image: "/images/examples/github-codespaces-onboarding.gif",
+        altText: "GitHub Codespaces onboarding with guided learning prompts and progressive disclosure"
       }
     ],
     codeExamples,
