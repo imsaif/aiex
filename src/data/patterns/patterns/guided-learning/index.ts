@@ -57,6 +57,25 @@ export const guidedlearning: Pattern = {
       "Adaptive Interfaces",
       "Human-in-the-Loop",
       "Onboarding Flow"
-    ]
+    ],
+    figmaPrompt: {
+      prompt: `Design a guided learning interface that helps users master complex features step by step:
+
+Create a tutorial flow showing:
+1. **Progress Tracker**: Visual indicator showing current step and total steps (e.g., "Step 2 of 5")
+2. **Highlighted Element**: Spotlight or highlight on the specific UI element being taught
+3. **Instruction Card**: Clear, concise explanation with action to take
+4. **Next/Skip Controls**: Easy navigation with "Next", "Back", and "Skip tutorial" options
+5. **Contextual Help**: Tooltip or hint bubble pointing to relevant interface elements
+
+Show adaptive difficulty with beginner vs. advanced paths. Include a "Try it yourself" interactive moment where users practice the concept.`,
+      tips: [
+        "Use spotlights or overlays to focus attention",
+        "Keep instruction text brief and actionable",
+        "Show progress clearly at all times",
+        "Allow users to skip or exit anytime",
+        "Include interactive practice moments"
+      ]
+    }
   }
 };

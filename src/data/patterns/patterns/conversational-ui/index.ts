@@ -9,8 +9,8 @@ export const conversationalui: Pattern = {
   description: "Design intuitive, engaging, human-like interactions via chat and voice interfaces.",
   thumbnail: "/images/examples/slack-ai.gif",
   content: {
-    problem: "Traditional interfaces are rigid, requiring users to learn specific patterns. Users prefer natural language but struggle with AI lacking context or conversational nuance.",
-    solution: "Create conversational interfaces that understand natural language, maintain context, and respond human-like. Design for text and voice, with appropriate brand-matching personality and tone.",
+    problem: "Traditional interfaces are rigid, requiring users to learn specific patterns. Users prefer natural language but struggle with AI lacking context or nuance.",
+    solution: "Create conversational interfaces that understand natural language, maintain context, and respond naturally. Design for text and voice with appropriate personality and tone.",
     examples: [
       {
         title: "Slack AI Assistant",
@@ -20,13 +20,13 @@ export const conversationalui: Pattern = {
       },
       {
         title: "Microsoft Copilot",
-        description: "Provides intelligent assistance across Microsoft 365, understanding context from documents, emails, and meetings to offer suggestions and automate tasks via natural conversation.",
+        description: "Provides intelligent assistance across Microsoft 365, understanding context from documents, emails, and meetings to offer suggestions and automate tasks.",
         image: "/images/examples/microsoft-copilot.gif",
         altText: "Microsoft Copilot conversational interface"
       },
       {
         title: "Siri",
-        description: "Apple's voice assistant handles natural speech, maintains context, and integrates seamlessly with iOS to perform tasks via voice commands and follow-up questions.",
+        description: "Apple's voice assistant handles natural speech, maintains context, and integrates with iOS to perform tasks via voice commands.",
         image: "/images/examples/siri-conversation.gif",
         altText: "Siri voice assistant conversational interface"
       }
@@ -37,7 +37,7 @@ export const conversationalui: Pattern = {
       "Maintain conversation context and reference previous interactions.",
       "Provide clear conversation starters and example prompts.",
       "Handle misunderstandings gracefully with clarifying questions.",
-      "Use appropriate, brand-matching personality and tone.",
+      "Use appropriate personality and tone matching your brand.",
       "Support both structured commands and free-form natural language.",
       "Provide visual cues for conversation state (typing indicators, read receipts).",
       "Design for both synchronous and asynchronous conversation patterns.",
@@ -61,6 +61,26 @@ export const conversationalui: Pattern = {
       "Human-in-the-Loop",
       "Progressive Disclosure",
       "Multimodal Interaction"
-    ]
+    ],
+    codeExamples,
+    figmaPrompt: {
+      prompt: `Design a conversational AI interface that feels natural and engaging:
+
+Create a chat interface showing:
+1. **Message Area**: Clear distinction between user and AI messages with appropriate spacing
+2. **AI Personality**: Subtle visual elements that reflect brand personality (avatar, colors, tone)
+3. **Context Indicators**: Show when AI is typing, thinking, or has understood the request
+4. **Input Options**: Text input with suggested prompts or quick actions
+5. **Conversation History**: Easy access to previous messages with smooth scrolling
+
+Include visual cues for conversation state (listening, processing, responding). Add example starter prompts to guide users.`,
+      tips: [
+        "Use distinct message bubbles for user vs AI",
+        "Add typing indicators for natural flow",
+        "Include quick action buttons for common tasks",
+        "Show conversation history with search",
+        "Provide suggested prompts to help users start"
+      ]
+    }
   }
 };

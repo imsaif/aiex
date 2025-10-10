@@ -12,8 +12,8 @@ export const augmentedcreation: Pattern = {
   category: "Human-AI Collaboration",
   thumbnail: "/images/examples/github-copilot-highlighting.gif",
   content: {
-    problem: "Content creation is often time-consuming and challenging, especially with creative blocks or the need for efficient, high-quality output.",
-    solution: "Provide AI tools that collaborate with users in the creative process, offering suggestions, improvements, and assistance while maintaining human creative control and authorship.",
+    problem: "Content creation is time-consuming, especially with creative blocks or need for high-quality output.",
+    solution: "Provide AI tools that collaborate with users, offering suggestions and improvements while maintaining human control and authorship.",
     examples,
     guidelines,
     considerations,
@@ -22,6 +22,25 @@ export const augmentedcreation: Pattern = {
       "Progressive Disclosure",
       "Human-in-the-Loop"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt: {
+      prompt: `Design an AI-powered creation interface where AI assists without taking over:
+
+Create a content editor showing:
+1. **Creation Canvas**: Main workspace for user content (text, design, code)
+2. **AI Suggestions Panel**: Side panel with AI-generated alternatives or improvements
+3. **Accept/Modify Controls**: Easy buttons to accept, edit, or dismiss AI suggestions
+4. **Collaboration Indicator**: Visual distinction between human-created and AI-suggested content
+5. **Inspiration Mode**: Toggle for AI to generate multiple creative options
+
+Show the workflow: User creates → AI suggests improvements → User chooses → Final output. Include clear attribution showing what's AI-assisted vs. human-created.`,
+      tips: [
+        "Keep AI suggestions non-intrusive (side panel)",
+        "Provide multiple suggestion options",
+        "Make accept/reject actions one-click",
+        "Show clear attribution for AI contributions",
+        "Allow users to easily iterate on AI suggestions"
+      ]
+    }
   }
 };

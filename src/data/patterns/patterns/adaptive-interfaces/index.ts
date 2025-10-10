@@ -22,6 +22,25 @@ export const adaptiveinterfaces: Pattern = {
       "Progressive Disclosure",
       "Human-in-the-Loop"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt: {
+      prompt: `Design an adaptive interface that learns from user behavior:
+
+Create a dashboard or workspace showing:
+1. **Personalized Layout**: Frequently used features prominently displayed
+2. **Smart Widgets**: Modules that reorder based on usage patterns
+3. **Adaptation Indicator**: Subtle visual cue showing the interface has learned (e.g., "✨ Customized for you")
+4. **Quick Access**: Most-used actions in easy-to-reach locations
+5. **Reset Option**: Clear way to revert to default layout or customize manually
+
+Show before/after states to illustrate how the interface adapts over time. Include a settings panel for users to control adaptation preferences.`,
+      tips: [
+        "Use animations to show layout changes smoothly",
+        "Provide visual feedback when interface adapts",
+        "Include manual override controls",
+        "Show frequency/usage data for transparency",
+        "Allow users to lock certain elements in place"
+      ]
+    }
   }
 };

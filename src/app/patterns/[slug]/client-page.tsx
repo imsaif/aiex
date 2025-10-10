@@ -181,7 +181,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           <motion.section variants={itemVariants}>
             <div className="flex items-center mb-6">
               <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900">Design This Pattern</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Design Resources</h2>
             </div>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </motion.section>

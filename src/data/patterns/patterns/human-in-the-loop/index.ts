@@ -9,18 +9,18 @@ export const humanintheloop: Pattern = {
   description: "Balance automation with human oversight for critical decisions, ensuring AI augments human judgment.",
   thumbnail: "/images/examples/grammarly-suggestions.gif",
   content: {
-    problem: "Fully automated AI systems risk critical errors and lack transparency. Users need review and override capabilities for safety and trust in high-stakes situations.",
-    solution: "Design systems for human intervention, review, or approval of AI outputs, especially for critical decisions. Provide clear handoff points, easy override mechanisms, and transparent explanations for confident AI collaboration.",
+    problem: "Fully automated AI systems risk critical errors and lack transparency. Users need review and override capabilities for safety and trust.",
+    solution: "Design systems for human intervention, review, or approval of AI outputs. Provide clear handoff points, easy override mechanisms, and transparent explanations.",
     examples: [
       {
         title: "Grammarly Writing Assistant",
-        description: "Grammarly suggests grammar, spelling, and style improvements, requiring human approval to maintain user control over the final text.",
+        description: "Grammarly suggests grammar, spelling, and style improvements, requiring human approval to maintain control over final text.",
         image: "/images/examples/grammarly-suggestions.gif",
         altText: "Grammarly human-in-the-loop suggestions"
       },
       {
         title: "Google Photos Face Detection",
-        description: "Google Photos detects faces, but users confirm identities, allowing human verification of AI suggestions.",
+        description: "Google Photos detects faces, but users confirm identities for verification.",
         image: "/images/examples/google-face-detection.gif",
         altText: "Google Photos face detection"
       },

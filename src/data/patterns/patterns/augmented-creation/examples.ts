@@ -9,7 +9,7 @@ export const examples: Example[] = [
   },
   {
     title: "Figma AI",
-    description: "Design assistant generating layouts, suggesting colors, and creating design variations based on user input.",
+    description: "Design assistant generating layouts, suggesting colors, and creating variations based on user input.",
     image: "/images/examples/notion-ai.gif",
     altText: "Notion AI assisting with design and content creation"
   },

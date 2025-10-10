@@ -51,6 +51,25 @@ export const multimodalinteraction: Pattern = {
       "Contextual Assistance",
       "Adaptive Interfaces",
       "Progressive Disclosure"
-    ]
+    ],
+    figmaPrompt: {
+      prompt: `Design a multimodal interface that seamlessly combines voice, touch, and visual interactions:
+
+Create an interaction screen showing:
+1. **Voice Input**: Microphone button with visual feedback (sound waves, listening state)
+2. **Touch Controls**: Interactive elements that respond to taps, swipes, and gestures
+3. **Text Input**: Keyboard option as an alternative to voice
+4. **Visual Output**: Results displayed in scannable format (cards, lists, images)
+5. **Mode Indicators**: Clear visual cues showing which input mode is active
+
+Show how users can combine modes (e.g., "Show me [touch image] similar to this"). Include accessibility alternatives for each interaction mode.`,
+      tips: [
+        "Provide visual feedback for voice input (waveforms, listening indicator)",
+        "Allow seamless switching between input modes",
+        "Show multiple output formats (visual + audio + text)",
+        "Include gesture guides for touch interactions",
+        "Provide keyboard shortcuts as alternatives"
+      ]
+    }
   }
 };
