@@ -46,6 +46,18 @@ export interface FigmaPrompt {
 }
 
 /**
+ * Represents a design resource for implementing a pattern
+ */
+export interface DesignResource {
+  title: string;            // Resource title
+  description: string;      // Brief description of the resource
+  type: 'article' | 'video' | 'tool' | 'library' | 'documentation' | 'case-study' | 'template';
+  url: string;              // Link to the resource
+  author?: string;          // Optional author/creator
+  platform?: string;        // Optional platform (e.g., "Medium", "YouTube", "GitHub")
+}
+
+/**
  * Comprehensive pattern content structure supporting both simplified and detailed formats
  */
 export interface PatternContent {
@@ -60,6 +72,7 @@ export interface PatternContent {
   codeExamples: CodeExample[];
   relatedPatterns: string[];
   figmaPrompt?: FigmaPrompt; // Optional Figma AI prompt for designers
+  designResources?: DesignResource[]; // Optional design resources for implementation
 }
 
 /**

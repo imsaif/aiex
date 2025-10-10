@@ -25,35 +25,9 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 px-6 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-100 dark:bg-purple-900/30 p-2 rounded-lg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-purple-600 dark:text-purple-400"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <path d="M7 7h10"/>
-                <path d="M7 12h10"/>
-                <path d="M7 17h10"/>
-              </svg>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                Design This Pattern
-              </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Copy this prompt to use in Figma Make or other AI design tools
-              </p>
-            </div>
-          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Copy this prompt to use in Figma Make or other AI design tools
+          </p>
           {figmaPrompt.figmaFileUrl && (
             <a
               href={figmaPrompt.figmaFileUrl}

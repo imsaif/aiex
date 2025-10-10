@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const contextswitching: Pattern = {
   id: "context-switching",
@@ -23,6 +24,7 @@ export const contextswitching: Pattern = {
       "Conversational UI",
       "Adaptive Interfaces"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };

@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const errorrecovery: Pattern = {
   id: "error-recovery",
@@ -22,6 +23,7 @@ export const errorrecovery: Pattern = {
       "Progressive Disclosure",
       "Human-in-the-Loop"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };

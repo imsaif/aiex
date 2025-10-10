@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const responsibleaidesign: Pattern = {
   id: "responsible-ai-design",
@@ -22,6 +23,7 @@ export const responsibleaidesign: Pattern = {
       "Progressive Disclosure",
       "Human-in-the-Loop"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };

@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const feedbackloops: Pattern = {
   id: "feedback-loops",
@@ -23,6 +24,7 @@ export const feedbackloops: Pattern = {
       "Human-in-the-Loop",
       "Contextual Assistance"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };

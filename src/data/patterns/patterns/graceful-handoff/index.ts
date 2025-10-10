@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const gracefulhandoff: Pattern = {
   id: "graceful-handoff",
@@ -23,6 +24,7 @@ export const gracefulhandoff: Pattern = {
       "Error Recovery & Graceful Degradation",
       "Contextual Assistance"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };

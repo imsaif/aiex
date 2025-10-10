@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const predictiveanticipation: Pattern = {
   id: "predictive-anticipation",
@@ -23,6 +24,7 @@ export const predictiveanticipation: Pattern = {
       "Adaptive Interfaces",
       "Intelligent Caching"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };
