@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import FilterPills from '../components/ui/FilterPills';
 import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
@@ -163,18 +164,6 @@ export default function HomeClient() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="py-8 mt-12 border-t border-border-primary">
-        <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16 text-center">
-          <p className="text-sm text-text-secondary">
-            Built with ☕ by Imran ·
-            <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">Portfolio</a> ·
-            <a href="https://github.com/imsaif" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">GitHub</a> ·
-            <a href="https://www.linkedin.com/in/imsaif/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">LinkedIn</a>
-          </p>
-        </div>
-      </footer>
-
       {/* Scroll to Top Button */}
       <ScrollToTop />
 
@@ -186,6 +175,9 @@ export default function HomeClient() {
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
       />
+
+      {/* Footer */}
+      <Footer />
     </main>
   );
 }

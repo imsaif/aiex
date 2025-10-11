@@ -241,6 +241,11 @@ All AI design patterns have been implemented following the structured format:
 
 ## Development Best Practices
 
+### Working Directory Rules
+- **Stay in current directory after `/clear` command** - Do not change directories unless explicitly requested by the user
+- Use absolute paths when necessary rather than changing directories
+- Maintain context of the current working directory throughout the session
+
 ### Code Style
 - Use existing component patterns and design system
 - Follow TypeScript strict mode requirements
