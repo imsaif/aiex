@@ -2,21 +2,21 @@ import { Example } from '../../../../types';
 
 export const examples: Example[] = [
   {
-    title: "Google Assistant Fallbacks",
-    description: "When voice recognition fails, the system offers alternative input methods and clarification prompts.",
-    image: "/images/examples/chatgpt-limitations.png",
-    altText: "ChatGPT displaying limitations and error recovery options"
+    title: "ChatGPT Capacity Error Recovery",
+    description: "When servers are overloaded, ChatGPT displays clear 'at capacity' messages with options to retry, explaining the issue without losing user context. Users can wait and retry or upgrade to ChatGPT Plus for priority access during high-demand periods.",
+    image: "/images/examples/chatgpt-capacity-error.png",
+    altText: "ChatGPT displaying service capacity error with clear recovery options"
   },
   {
-    title: "Spotify Recommendation Recovery",
-    description: "When music recommendations miss the mark, users can easily provide feedback and get alternative suggestions.",
-    image: "/images/examples/spotify-adaptive.gif",
-    altText: "Spotify's adaptive interface recovering from poor recommendations"
+    title: "GitHub Copilot Offline Fallback",
+    description: "When network connectivity fails, GitHub Copilot gracefully displays 'temporarily unreachable' status and preserves user work. The IDE continues functioning with local code completion while AI features wait for reconnection, preventing workflow disruption.",
+    image: "/images/examples/github-copilot-offline.jpg",
+    altText: "GitHub Copilot showing offline state and graceful degradation to local features"
   },
   {
-    title: "Tesla Autopilot Handoff",
-    description: "Clear visual and audio cues alert drivers when AI needs human intervention, ensuring safe transitions.",
-    image: "/images/examples/tesladashboard.gif",
-    altText: "Tesla dashboard showing system handoff and error recovery states"
+    title: "Grammarly Error Handling",
+    description: "When AI writing assistance encounters errors, Grammarly shows specific messages like 'Something went wrong' or 'Can't help with this text' with retry options. Basic grammar checking continues to work even when advanced AI features are unavailable.",
+    image: "/images/examples/grammarly-error-recovery.png",
+    altText: "Grammarly displaying error state with fallback to basic functionality"
   }
 ];

@@ -1,3 +1,4 @@
+export const errorRecoveryDemoCode = `
 'use client';
 
 import React, { useState } from 'react';
@@ -32,12 +33,12 @@ export default function ErrorRecoveryDemo() {
 
     // Second attempt shows success
     setStatus('success');
-    setSuggestions(`Here are AI-powered suggestions for your text:
+    setSuggestions(\`Here are AI-powered suggestions for your text:
 
 • Consider adding more specific examples to strengthen your argument
 • The tone could be more engaging - try using active voice
 • Break this into shorter paragraphs for better readability
-• Consider adding a strong concluding statement`);
+• Consider adding a strong concluding statement\`);
     setAttemptCount(0);
   };
 
@@ -59,12 +60,12 @@ export default function ErrorRecoveryDemo() {
 
     // After queue, show success
     setStatus('success');
-    setSuggestions(`Here are AI-powered suggestions for your text:
+    setSuggestions(\`Here are AI-powered suggestions for your text:
 
 • Consider adding more specific examples to strengthen your argument
 • The tone could be more engaging - try using active voice
 • Break this into shorter paragraphs for better readability
-• Consider adding a strong concluding statement`);
+• Consider adding a strong concluding statement\`);
     setAttemptCount(0);
   };
 
@@ -97,11 +98,11 @@ export default function ErrorRecoveryDemo() {
           whileTap={hasText && status !== 'loading' && status !== 'queued' ? { scale: 0.98 } : {}}
           onClick={handleGetSuggestions}
           disabled={!hasText || status === 'loading' || status === 'queued'}
-          className={`w-full px-6 py-4 rounded-lg font-semibold transition-all flex items-center justify-center space-x-2 ${
+          className={\`w-full px-6 py-4 rounded-lg font-semibold transition-all flex items-center justify-center space-x-2 \${
             !hasText || status === 'loading' || status === 'queued'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-black text-white hover:bg-gray-800 shadow-lg'
-          }`}
+              : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700 shadow-lg'
+          }\`}
         >
           {status === 'loading' ? (
             <>
@@ -180,7 +181,7 @@ export default function ErrorRecoveryDemo() {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={handleWaitInQueue}
-                    className="w-full p-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-all flex items-center justify-center space-x-2 font-medium shadow-md"
+                    className="w-full p-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all flex items-center justify-center space-x-2 font-medium shadow-md"
                   >
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -250,3 +251,4 @@ export default function ErrorRecoveryDemo() {
     </div>
   );
 }
+`;

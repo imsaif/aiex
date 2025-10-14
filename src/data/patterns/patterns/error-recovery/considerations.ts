@@ -1,7 +1,8 @@
 export const considerations: string[] = [
-  "Maintain user trust even when AI systems make mistakes.",
-  "Ensure critical functions have reliable non-AI backup options.",
-  "Provide appropriate user education about AI limitations.",
-  "Design recovery flows that don't frustrate or confuse users.",
-  "Consider the safety implications of AI failures in critical applications."
+  "Capacity errors are inevitable during high demand - design for them proactively.",
+  "Transparency builds trust - users are forgiving when they understand what's happening.",
+  "Different errors need different tones: capacity issues vs critical failures.",
+  "Test offline/degraded modes thoroughly - they must actually work when needed.",
+  "Balance retry options with preventing users from overwhelming failing services.",
+  "Ensure error recovery works with accessibility tools and keyboard navigation."
 ];
