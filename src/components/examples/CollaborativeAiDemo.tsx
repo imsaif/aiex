@@ -181,141 +181,120 @@ export default function CollaborativeAiDemo() {
         </button>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3">
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-700">Shared Document</span>
-              <div className="flex items-center space-x-2">
-                <div className="flex -space-x-2">
-                  {session.members
-                    .filter(member => session.activeUsers.includes(member.id))
-                    .map(member => (
-                      <div
-                        key={member.id}
-                        className="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
-                        title={`${member.name} - ${member.status}`}
-                      >
-                        <span className="text-sm">{member.avatar}</span>
-                        <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(member.status)}`}></div>
-                      </div>
-                    ))}
-                </div>
-                <span className="text-xs text-gray-500">
-                  {session.activeUsers.length} active
-                </span>
+      <div className="space-y-6">
+        {/* Shared Document */}
+        <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-700">Shared Document</span>
+            <div className="flex items-center space-x-2">
+              <div className="flex -space-x-2">
+                {session.members
+                  .filter(member => session.activeUsers.includes(member.id))
+                  .map(member => (
+                    <div
+                      key={member.id}
+                      className="relative w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+                      title={`${member.name} - ${member.status}`}
+                    >
+                      <span className="text-sm">{member.avatar}</span>
+                      <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(member.status)}`}></div>
+                    </div>
+                  ))}
               </div>
+              <span className="text-xs text-gray-500">
+                {session.activeUsers.length} active
+              </span>
             </div>
-            <textarea
-              className="w-full p-4 h-96 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Start collaborating... AI will provide suggestions as your team works together. Try typing at least 20 characters to see AI contributions."
-              value={session.document}
-              onChange={(e) => setSession(prev => ({ ...prev, document: e.target.value }))}
-            />
           </div>
-          
-          {isGeneratingContribution && (
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
-              <span className="text-sm text-blue-700">AI is analyzing your content...</span>
-            </div>
-          )}
+          <textarea
+            className="w-full p-4 h-64 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Start collaborating... AI will provide suggestions as your team works together. Try typing at least 20 characters to see AI contributions."
+            value={session.document}
+            onChange={(e) => setSession(prev => ({ ...prev, document: e.target.value }))}
+          />
         </div>
 
-        <div className="space-y-4">
-          {/* Team Members */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-medium text-blue-900 mb-3">Team Members</h3>
-            <div className="space-y-2">
-              {session.members.map(member => (
-                <div key={member.id} className="flex items-center space-x-3">
-                  <div className="relative">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span className="text-sm">{member.avatar}</span>
-                    </div>
-                    <div className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white ${getStatusColor(member.status)}`}></div>
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-medium text-gray-900">{member.name}</div>
-                    <div className="text-xs text-gray-500 capitalize">{member.status}</div>
-                  </div>
-                  {session.activeUsers.includes(member.id) && (
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* AI Insights */}
-          {showAIInsights && (
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h3 className="font-medium text-purple-900 mb-3 flex items-center">
-                <span className="mr-2">🤖</span>
+        {/* AI Contributions Panel - Full Width Below Document */}
+        {showAIInsights && (
+          <div className="bg-purple-50 border-2 border-purple-300 rounded-lg p-6 shadow-md">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-purple-900 flex items-center">
+                <span className="mr-2 text-2xl">🤖</span>
                 AI Contributions
               </h3>
+              {isGeneratingContribution && (
+                <div className="flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600 mr-2"></div>
+                  <span className="text-sm text-purple-700">AI is analyzing...</span>
+                </div>
+              )}
+            </div>
 
-              <div className="space-y-2 max-h-64 overflow-y-auto">
-                {session.aiContributions.length > 0 ? (
-                  session.aiContributions.map(contribution => (
-                    <div
-                      key={contribution.id}
-                      className="bg-white border border-purple-200 rounded-md p-3 cursor-pointer hover:bg-purple-50 transition-colors"
-                      onClick={() => setSelectedContribution(
-                        selectedContribution === contribution.id ? null : contribution.id
-                      )}
-                    >
-                      <div className="flex items-start justify-between mb-1">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm">{getContributionIcon(contribution.type)}</span>
-                          <span className="text-xs font-medium text-purple-700 uppercase">
-                            {getTypeLabel(contribution.type)}
-                          </span>
-                        </div>
-                        <span className="text-xs text-gray-500">
-                          {contribution.confidence}%
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {session.aiContributions.length > 0 ? (
+                session.aiContributions.map(contribution => (
+                  <div
+                    key={contribution.id}
+                    className="bg-white border-2 border-purple-200 rounded-lg p-4 cursor-pointer hover:border-purple-400 hover:shadow-lg transition-all"
+                    onClick={() => setSelectedContribution(
+                      selectedContribution === contribution.id ? null : contribution.id
+                    )}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xl">{getContributionIcon(contribution.type)}</span>
+                        <span className="text-xs font-semibold text-purple-700 uppercase tracking-wide">
+                          {getTypeLabel(contribution.type)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-700">{contribution.content}</p>
-                      
-                      {selectedContribution === contribution.id && (
-                        <div className="mt-2 pt-2 border-t border-purple-200">
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                applyAIContribution(contribution.id);
-                              }}
-                              className="text-xs px-2 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
-                            >
-                              Apply
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                dismissAIContribution(contribution.id);
-                              }}
-                              className="text-xs px-2 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 transition-colors"
-                            >
-                              Dismiss
-                            </button>
-                          </div>
-                        </div>
-                      )}
+                      <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        {contribution.confidence}%
+                      </span>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-purple-600 italic">
+                    <p className="text-sm text-gray-800 mb-3">{contribution.content}</p>
+
+                    {selectedContribution === contribution.id && (
+                      <div className="mt-3 pt-3 border-t border-purple-200">
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              applyAIContribution(contribution.id);
+                            }}
+                            className="flex-1 text-sm px-3 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
+                          >
+                            Apply
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              dismissAIContribution(contribution.id);
+                            }}
+                            className="flex-1 text-sm px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors font-medium"
+                          >
+                            Dismiss
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-8">
+                  <p className="text-purple-600 italic">
                     AI will provide suggestions as you collaborate...
                   </p>
-                )}
-              </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
+        )}
 
+        {/* Stats and Tips - Side by Side Below AI Panel */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Collaboration Stats */}
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h3 className="font-medium text-green-900 mb-2">Collaboration Stats</h3>
+            <h3 className="font-medium text-green-900 mb-3">Collaboration Stats</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-green-700">Active Members:</span>
@@ -340,22 +319,22 @@ export default function CollaborativeAiDemo() {
 
           {/* Collaboration Tips */}
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <h3 className="font-medium text-yellow-900 mb-2">Collaboration Tips</h3>
-            <ul className="text-sm space-y-1">
+            <h3 className="font-medium text-yellow-900 mb-3">Collaboration Tips</h3>
+            <ul className="text-sm space-y-2">
               <li className="flex items-start">
-                <span className="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                <span className="w-1.5 h-1.5 bg-yellow-600 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                 AI provides suggestions based on content length and context
               </li>
               <li className="flex items-start">
-                <span className="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                <span className="w-1.5 h-1.5 bg-yellow-600 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                 Click on AI contributions to see apply/dismiss options
               </li>
               <li className="flex items-start">
-                <span className="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                <span className="w-1.5 h-1.5 bg-yellow-600 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                 Team member activity updates automatically
               </li>
               <li className="flex items-start">
-                <span className="w-1 h-1 bg-yellow-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
+                <span className="w-1.5 h-1.5 bg-yellow-600 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                 Toggle AI insights to focus on writing
               </li>
             </ul>
