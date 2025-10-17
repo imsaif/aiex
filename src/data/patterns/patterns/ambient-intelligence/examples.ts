@@ -9,13 +9,13 @@ export const examples: Example[] = [
   },
   {
     title: "Google Pixel Call Screen",
-    description: "Automatically screens unknown calls, providing context without user intervention, filtering spam while preserving important calls.",
-    image: "/images/examples/google-face-detection.gif",
-    altText: "Google AI detecting and organizing faces in photos"
+    description: "AI automatically screens unknown calls in the background, interacting with callers and providing real-time transcription without requiring user attention, filtering spam while preserving important calls.",
+    image: "/images/examples/pixel-call-screen.gif",
+    altText: "Google Pixel Call Screen automatically handling an incoming call"
   },
   {
-    title: "Nest Learning Thermostat",
-    description: "Learns user preferences and schedules to automatically adjust temperature without manual programming.",
+    title: "Tesla Autopilot Dashboard",
+    description: "Continuously monitors driving conditions, quietly adjusting assistance levels and providing contextual information without disrupting the driver's focus.",
     image: "/images/examples/tesladashboard.gif",
     altText: "Tesla's intelligent dashboard adapting to driving context"
   }
