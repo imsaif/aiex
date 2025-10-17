@@ -20,6 +20,7 @@
     "convert-gifs": "node scripts/convert-gifs.js",
     "optimize-images": "node scripts/optimize-images.js",
     "prepare": "husky",
+    "postinstall": "prisma generate",
     "fix-patterns": "ts-node src/data/patterns/utils/fix-patterns.ts",
     "generate-pattern": "node scripts/ai-pattern-generator.js generate",
     "generate-all-patterns": "node scripts/ai-pattern-generator.js generate-all",
