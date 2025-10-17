@@ -79,7 +79,7 @@ async function sendPatternUpdateEmail(
   unsubscribeToken: string,
   patterns: Array<{ id: string; title: string; description: string; slug: string; category: string }>
 ) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aiux.design';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
   const unsubscribeUrl = `${baseUrl}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
 
   // Generate pattern cards HTML
@@ -109,7 +109,7 @@ async function sendPatternUpdateEmail(
 
   try {
     await resend.emails.send({
-      from: 'AI UX Patterns <noreply@aiux.design>',
+      from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
       to: email,
       subject: `New AI Design Pattern${patterns.length > 1 ? 's' : ''} Added! 🎨`,
       html: `

@@ -202,7 +202,7 @@ model Subscriber {
 
 ## Email Configuration
 
-Emails are sent from: `AI UX Patterns <noreply@aiux.design>`
+Emails are sent from: `AI UX Patterns <noreply@aiuxdesign.guide>`
 
 To customize:
 1. Edit sender in API route files:
@@ -247,7 +247,7 @@ Set in production (Vercel, etc.):
 ```
 RESEND_API_KEY=re_your_production_key
 NEWSLETTER_API_KEY=your_secure_production_key
-NEXT_PUBLIC_SITE_URL=https://aiux.design
+NEXT_PUBLIC_SITE_URL=https://www.aiuxdesign.guide
 DATABASE_URL=postgresql://... (if using PostgreSQL)
 ```
 

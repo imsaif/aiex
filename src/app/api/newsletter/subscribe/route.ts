@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
 async function sendWelcomeEmail(email: string) {
   try {
     await resend.emails.send({
-      from: 'AI UX Patterns <noreply@aiux.design>',
+      from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
       to: email,
       subject: 'Welcome to AI UX Patterns Newsletter! 🎨',
       html: `
@@ -115,11 +115,11 @@ async function sendWelcomeEmail(email: string) {
 
               <p style="font-size: 16px; margin-bottom: 20px;">
                 Explore our current collection of <strong>24 AI design patterns</strong> across 7 categories
-                at <a href="https://aiux.design" style="color: #667eea; text-decoration: none;">aiux.design</a>
+                at <a href="https://www.aiuxdesign.guide" style="color: #667eea; text-decoration: none;">aiuxdesign.guide</a>
               </p>
 
               <div style="text-align: center; margin: 30px 0;">
-                <a href="https://aiux.design"
+                <a href="https://www.aiuxdesign.guide"
                    style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                           color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px;
                           font-weight: 600; font-size: 16px;">

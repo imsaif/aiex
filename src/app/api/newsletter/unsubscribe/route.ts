@@ -134,7 +134,7 @@ export async function GET(request: NextRequest) {
             <h1>✓ Successfully Unsubscribed</h1>
             <p>You have been unsubscribed from the AI UX Patterns newsletter.</p>
             <p>We're sorry to see you go! If you change your mind, you can always subscribe again on our website.</p>
-            <p><a href="https://aiux.design">Return to AI UX Patterns</a></p>
+            <p><a href="https://www.aiuxdesign.guide">Return to AI UX Patterns</a></p>
           </div>
         </body>
       </html>
