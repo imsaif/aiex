@@ -104,4 +104,9 @@ lint_output.txt
 set-env.ps1
 
 # Test configs (if regenerated)
-tsconfig.test.json 
+tsconfig.test.json
+/src/generated/prisma
+
+# Database
+prisma/dev.db
+prisma/dev.db-journal

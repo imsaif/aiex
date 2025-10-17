@@ -125,6 +125,10 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 ### Data Management
 - `npm run fix-patterns` - Fix pattern data structure issues
 
+### Newsletter & Email Management
+- `npm run send-newsletter` - Send pattern update emails to subscribers (interactive mode)
+- See [Newsletter Documentation](docs/NEWSLETTER.md) for complete setup and usage guide
+
 ## My Development Workflow
 
 ### Pattern Update Workflow (Primary)
@@ -184,6 +188,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-10-17 18:49 (MacBook)
+- **Pattern:** General updates
+- **Status:** Work in progress
+- **Files Changed:** 15
+- **Tests Added/Modified:** 0
+0
+
 ### Session 2025-10-17 16:20 (MacBook)
 - **Pattern:** Patterns
 - **Status:** Work in progress
@@ -260,17 +271,30 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - Safe and throwing validation functions available
 - Development helpers for detailed error reporting
 
+#### 6. Newsletter Subscription System
+- **Prisma ORM** with SQLite database for subscriber management
+- **Resend** email service integration for transactional emails
+- **API Routes** for subscribe, unsubscribe, and send-update operations
+- **Email Templates** built-in HTML email templates (welcome & pattern updates)
+- **CLI Tool** for sending pattern update notifications (`npm run send-newsletter`)
+- **Soft Delete** active/inactive subscriber management
+- **Unsubscribe Tokens** for one-click unsubscribe functionality
+- **See** [Newsletter Documentation](docs/NEWSLETTER.md) for complete guide
+
 ### Directory Structure
 
 #### Source Code (`src/`)
 - `app/` - Next.js 15 app router pages and layouts
+  - `api/newsletter/` - Newsletter API routes (subscribe, unsubscribe, send-update)
 - `components/` - React components organized by type
 - `contexts/` - React context providers and hooks
 - `data/` - Pattern data, categories, and utilities
 - `hooks/` - Custom React hooks (favorites, search, pagination)
+- `lib/` - Shared utilities (Prisma client, Resend client)
 - `schemas/` - Zod validation schemas
 - `types/` - TypeScript type definitions
 - `utils/` - Utility functions and helpers
+- `generated/` - Auto-generated code (Prisma client)
 
 #### Pattern Data (`src/data/patterns/`)
 - `patterns/` - Individual pattern implementations
