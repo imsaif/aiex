@@ -1,7 +1,20 @@
 import { Resend } from 'resend';
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY is not defined in environment variables');
+let resendInstance: Resend | null = null;
+
+export function getResend(): Resend {
+  if (!resendInstance) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY is not defined in environment variables');
+    }
+    resendInstance = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendInstance;
 }
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+// For backward compatibility, export a getter
+export const resend = {
+  get emails() {
+    return getResend().emails;
+  },
+};
