@@ -148,6 +148,15 @@ export default function HomeClient() {
                         <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary">
                           {pattern.category}
                         </span>
+                        {pattern.status === 'in-progress' && (
+                          <span
+                            className="px-3 py-1 rounded-full text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 cursor-help"
+                            title="Work in Progress: This pattern is not fully documented yet. Documentation and code examples are being refined."
+                            aria-label="Work in Progress pattern"
+                          >
+                            WIP
+                          </span>
+                        )}
                       </div>
                     </div>
                   </Link>

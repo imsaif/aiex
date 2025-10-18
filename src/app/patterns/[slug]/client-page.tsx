@@ -101,9 +101,20 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
       {/* Pattern Header */}
       <motion.div className="mb-10" variants={itemVariants}>
         <div className="flex items-start justify-between gap-4 mb-3">
-          <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-${categories.find(c => c.title === pattern.category)?.color}-100 text-${categories.find(c => c.title === pattern.category)?.color}-800`}>
-            {pattern.category}
-          </span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-${categories.find(c => c.title === pattern.category)?.color}-100 text-${categories.find(c => c.title === pattern.category)?.color}-800`}>
+              {pattern.category}
+            </span>
+            {pattern.status === 'in-progress' && (
+              <span
+                className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 border border-yellow-200 cursor-help"
+                title="Work in Progress: This pattern is not fully documented yet. Documentation and code examples are being refined."
+                aria-label="Work in Progress pattern"
+              >
+                Work in Progress
+              </span>
+            )}
+          </div>
           <PatternUsageButton patternId={pattern.id} size="md" showCount={true} />
         </div>
         <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>

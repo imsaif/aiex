@@ -9,6 +9,7 @@ export const feedbackloops: Pattern = {
   id: "feedback-loops",
   title: "Feedback Loops",
   slug: "feedback-loops",
+  status: 'in-progress',
   description: "Continuous learning mechanisms where user corrections and preferences improve AI performance, creating experiences that evolve with usage.",
   category: "Human-AI Collaboration",
   tags: ["learning", "personalization", "improvement", "user feedback", "adaptation", "continuous learning"],

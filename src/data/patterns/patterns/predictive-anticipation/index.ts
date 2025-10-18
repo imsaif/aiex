@@ -9,6 +9,7 @@ export const predictiveanticipation: Pattern = {
   id: "predictive-anticipation",
   title: "Predictive Anticipation",
   slug: "predictive-anticipation",
+  status: 'in-progress',
   description: "AI that predicts user needs before they're expressed, pre-loading content and suggesting next actions based on behavioral patterns.",
   category: "Adaptive & Intelligent Systems",
   tags: ["prediction", "pre-loading", "anticipation", "behavioral patterns", "proactive", "smart recommendations"],

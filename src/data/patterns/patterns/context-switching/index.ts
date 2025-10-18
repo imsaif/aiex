@@ -9,6 +9,7 @@ export const contextswitching: Pattern = {
   id: "context-switching",
   title: "Context Switching",
   slug: "context-switching",
+  status: 'in-progress',
   description: "Enable smooth transitions between different tasks, topics, or interaction modes while maintaining conversation continuity and remembering relevant context across sessions.",
   category: "Natural Interaction",
   tags: ["context", "memory", "sessions", "conversation", "continuity", "multi-tasking"],

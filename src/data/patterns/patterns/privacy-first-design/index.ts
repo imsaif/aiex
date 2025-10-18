@@ -8,6 +8,7 @@ export const privacyfirstdesign: Pattern = {
   id: "privacy-first-design",
   title: "Privacy-First Design",
   slug: "privacy-first-design",
+  status: 'in-progress',
   description: "AI systems that minimize data collection, provide transparent data usage policies, and offer granular privacy controls with clear explanations of trade-offs.",
   category: "Privacy & Control",
   tags: ["privacy", "data protection", "transparency", "control", "security", "consent"],

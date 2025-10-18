@@ -9,6 +9,7 @@ export const gracefulhandoff: Pattern = {
   id: "graceful-handoff",
   title: "Graceful Handoff",
   slug: "graceful-handoff",
+  status: 'in-progress',
   description: "Seamless transitions between AI automation and human control, allowing users to take over and resume without losing context.",
   category: "Human-AI Collaboration",
   tags: ["handoff", "automation", "human control", "context preservation", "transitions", "takeover"],

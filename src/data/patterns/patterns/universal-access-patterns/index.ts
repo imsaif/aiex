@@ -8,6 +8,7 @@ export const universalaccesspatterns: Pattern = {
   id: "universal-access-patterns",
   title: "Universal Access Patterns",
   slug: "universal-access-patterns",
+  status: 'in-progress',
   description: "AI interfaces that adapt to different abilities, languages, literacy levels, and assistive technologies, ensuring equitable access through multiple interaction modalities.",
   category: "Accessibility & Inclusion",
   tags: ["accessibility", "inclusion", "multimodal", "assistive technology", "language", "diversity"],
