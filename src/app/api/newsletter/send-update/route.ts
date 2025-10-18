@@ -108,8 +108,8 @@ async function sendPatternUpdateEmail(
     .join('');
 
   try {
-    await resend.emails.send({
-      from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
+    const result = await resend.emails.send({
+      from: 'AI UX Patterns <onboarding@resend.dev>',
       to: email,
       subject: `New AI Design Pattern${patterns.length > 1 ? 's' : ''} Added! 🎨`,
       html: `
@@ -168,6 +168,9 @@ async function sendPatternUpdateEmail(
         </html>
       `,
     });
+
+    console.log(`Pattern update email sent successfully to ${email}:`, result);
+    return result;
   } catch (error) {
     console.error(`Failed to send pattern update email to ${email}:`, error);
     throw error;

@@ -33,10 +33,21 @@ export async function POST(request: NextRequest) {
         });
 
         // Send welcome email
-        await sendWelcomeEmail(email);
+        try {
+          await sendWelcomeEmail(email);
+        } catch (emailError) {
+          console.error('Email send failed but reactivation succeeded:', emailError);
+          return NextResponse.json(
+            {
+              message: 'Welcome back! Your subscription has been reactivated. We\'re having trouble sending the confirmation email right now.',
+              emailWarning: true
+            },
+            { status: 200 }
+          );
+        }
 
         return NextResponse.json(
-          { message: 'Welcome back! Your subscription has been reactivated.' },
+          { message: 'Welcome back! Your subscription has been reactivated. Check your email for confirmation.' },
           { status: 200 }
         );
       }
@@ -48,7 +59,20 @@ export async function POST(request: NextRequest) {
     });
 
     // Send welcome email
-    await sendWelcomeEmail(email);
+    try {
+      await sendWelcomeEmail(email);
+    } catch (emailError) {
+      console.error('Email send failed but subscription created:', emailError);
+      // Return success but note email issue
+      return NextResponse.json(
+        {
+          message: 'Successfully subscribed! We\'re having trouble sending the confirmation email right now. Your subscription is active.',
+          subscriberId: subscriber.id,
+          emailWarning: true
+        },
+        { status: 201 }
+      );
+    }
 
     return NextResponse.json(
       {
@@ -75,8 +99,8 @@ export async function POST(request: NextRequest) {
 
 async function sendWelcomeEmail(email: string) {
   try {
-    await resend.emails.send({
-      from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
+    const result = await resend.emails.send({
+      from: 'AI UX Patterns <onboarding@resend.dev>',
       to: email,
       subject: 'Welcome to AI UX Patterns Newsletter! 🎨',
       html: `
@@ -140,8 +164,12 @@ async function sendWelcomeEmail(email: string) {
         </html>
       `,
     });
+
+    console.log('Welcome email sent successfully:', result);
+    return result;
   } catch (error) {
     console.error('Failed to send welcome email:', error);
-    // Don't throw error - we still want to complete subscription even if email fails
+    // Throw error so we know email failed
+    throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
