@@ -23,6 +23,12 @@ Dependencies are already installed:
 
 ### 2. Database Setup
 
+**For Production (Vercel):**
+- ⚠️ **SQLite doesn't work on Vercel** (read-only filesystem)
+- ✅ **Use PostgreSQL** (free tier available)
+- 📖 **See [Vercel Postgres Setup Guide](./VERCEL_POSTGRES_SETUP.md)** for complete instructions
+
+**For Local Development:**
 The database has been initialized with SQLite. To regenerate or migrate:
 
 ```bash
@@ -241,19 +247,28 @@ This opens a web interface to view/edit subscribers.
 
 ## Production Deployment
 
-### Environment Variables
+### ⚠️ Important: Database for Production
 
-Set in production (Vercel, etc.):
+**Vercel requires PostgreSQL** (SQLite doesn't work in serverless):
+
+1. **Setup Vercel Postgres** (5 minutes)
+   - See complete guide: [Vercel Postgres Setup](./VERCEL_POSTGRES_SETUP.md)
+   - Create database in Vercel dashboard
+   - Run migration: `npx prisma migrate deploy`
+
+2. **Environment Variables**
+
+Set in production (Vercel):
 ```
 RESEND_API_KEY=re_your_production_key
 NEWSLETTER_API_KEY=your_secure_production_key
 NEXT_PUBLIC_SITE_URL=https://www.aiuxdesign.guide
-DATABASE_URL=postgresql://... (if using PostgreSQL)
+DATABASE_URL=<Vercel provides this automatically>
 ```
 
 ### Database Migration
 
-To migrate from SQLite to PostgreSQL:
+Already done! Schema uses PostgreSQL. To apply migration:
 
 1. Update `prisma/schema.prisma`:
 ```prisma
