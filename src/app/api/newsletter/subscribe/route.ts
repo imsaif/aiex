@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 async function sendWelcomeEmail(email: string) {
   try {
     const result = await resend.emails.send({
-      from: 'AI UX Patterns <onboarding@resend.dev>',
+      from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
       to: email,
       subject: 'Welcome to AI UX Patterns Newsletter! 🎨',
       html: `
@@ -111,9 +111,9 @@ async function sendWelcomeEmail(email: string) {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Welcome to AI UX Patterns</title>
           </head>
-          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
-              <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to AI UX Patterns! 🎨</h1>
+          <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: #000000; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Welcome to AI UX Patterns! 🎨</h1>
             </div>
 
             <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
@@ -127,8 +127,8 @@ async function sendWelcomeEmail(email: string) {
                 create better AI-powered experiences.
               </p>
 
-              <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 30px 0;">
-                <h2 style="font-size: 18px; margin: 0 0 10px 0; color: #667eea;">What to expect:</h2>
+              <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #000000;">
+                <h2 style="font-size: 18px; margin: 0 0 10px 0; color: #000000; font-weight: 600;">What to expect:</h2>
                 <ul style="margin: 0; padding-left: 20px;">
                   <li style="margin-bottom: 8px;">New AI design pattern announcements</li>
                   <li style="margin-bottom: 8px;">Code examples and implementation guides</li>
@@ -139,26 +139,18 @@ async function sendWelcomeEmail(email: string) {
 
               <p style="font-size: 16px; margin-bottom: 20px;">
                 Explore our current collection of <strong>24 AI design patterns</strong> across 7 categories
-                at <a href="https://www.aiuxdesign.guide" style="color: #667eea; text-decoration: none;">aiuxdesign.guide</a>
+                at <a href="https://www.aiuxdesign.guide" style="color: #000000; text-decoration: underline;">aiuxdesign.guide</a>
               </p>
 
               <div style="text-align: center; margin: 30px 0;">
                 <a href="https://www.aiuxdesign.guide"
-                   style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                          color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px;
+                   style="display: inline-block; background: #000000;
+                          color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px;
                           font-weight: 600; font-size: 16px;">
                   Explore Patterns
                 </a>
               </div>
 
-              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-
-              <p style="font-size: 14px; color: #6b7280; text-align: center;">
-                Built with ☕ by Imran<br>
-                <a href="https://www.imranaidesign.com/" style="color: #667eea; text-decoration: none;">Portfolio</a> ·
-                <a href="https://github.com/imsaif" style="color: #667eea; text-decoration: none;">GitHub</a> ·
-                <a href="https://www.linkedin.com/in/imsaif/" style="color: #667eea; text-decoration: none;">LinkedIn</a>
-              </p>
             </div>
           </body>
         </html>
