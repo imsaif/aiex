@@ -71,7 +71,7 @@ export default function HomeClient() {
       </section>
 
       {/* Main Content with Sidebar */}
-      <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16 pb-24">
+      <div id="patterns" className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16 pb-24">
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-6">
           <FilterPills
