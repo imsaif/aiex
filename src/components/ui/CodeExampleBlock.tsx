@@ -206,7 +206,20 @@ const SafeExplorationDemo = dynamic(
 // Dynamically import the ExplainableAiDemo component
 const ExplainableAiDemo = dynamic(
   () => import('@/components/examples/ExplainableAiDemo'),
-  { 
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the PredictiveAnticipationDemo component
+const PredictiveAnticipationDemo = dynamic(
+  () => import('@/components/examples/PredictiveAnticipationDemo'),
+  {
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center h-64">
@@ -275,6 +288,8 @@ export default function CodeExampleBlock({
         return <SafeExplorationDemo />;
       case 'explainable-ai-demo':
         return <ExplainableAiDemo />;
+      case 'predictive-anticipation-demo':
+        return <PredictiveAnticipationDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">
@@ -386,7 +401,7 @@ export default function CodeExampleBlock({
               ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo'].includes(componentId)
                 ? 'max-w-6xl'
                 // Components that need large width (max-w-4xl)
-                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo'].includes(componentId)
+                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo'].includes(componentId)
                 ? 'max-w-4xl'
                 // Default to medium width for smaller components
                 : 'max-w-lg'
