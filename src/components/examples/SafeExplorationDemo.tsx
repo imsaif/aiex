@@ -25,6 +25,7 @@ export default function SafeExplorationDemo() {
   const [explorationMode, setExplorationMode] = useState<'sandbox' | 'guided' | 'freeform'>('sandbox');
   const [experimentName, setExperimentName] = useState('');
   const [showSafetyInfo, setShowSafetyInfo] = useState(true);
+  const [expandedGuard, setExpandedGuard] = useState<string | null>(null);
 
   const startExperiment = (name: string, description: string) => {
     const newExperiment: ExperimentSession = {
@@ -215,208 +216,220 @@ export default function SafeExplorationDemo() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <header className="mb-6 flex justify-between items-start">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Safe Exploration Playground</h2>
-          <p className="text-gray-600">Experiment freely without fear of breaking anything</p>
-        </div>
-        <div className="flex items-center space-x-4">
-          <select
-            value={explorationMode}
-            onChange={(e) => {
-              const newMode = e.target.value as 'sandbox' | 'guided' | 'freeform';
-              setExplorationMode(newMode);
-              if (currentSession) {
-                generateSafetyGuards(newMode);
-              }
-            }}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            <option value="sandbox">Sandbox Mode</option>
-            <option value="guided">Guided Mode</option>
-            <option value="freeform">Freeform Mode</option>
-          </select>
-          <button
-            onClick={() => setShowSafetyInfo(!showSafetyInfo)}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-          >
-            Safety Info
-          </button>
-        </div>
-      </header>
+    <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
+      {/* Header Section */}
+      <div className="mb-8">
+        <div className="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-600">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Safe Exploration Playground</h2>
+          <p className="text-gray-600 mb-4">Experiment freely with AI features in a controlled, protected environment</p>
 
-      {showSafetyInfo && (
-        <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 transition-all duration-300">
-          <h3 className="font-semibold text-green-900 mb-3 flex items-center">
-            <span className="mr-2">🛡️</span>
-            Safety Features
-          </h3>
-          <div className="grid md:grid-cols-2 gap-4 text-sm text-green-700">
-            <div className="space-y-2">
-              <div>• <strong>Isolated Environment:</strong> Changes don&apos;t affect your main workspace</div>
-              <div>• <strong>Automatic Backups:</strong> Your data is automatically backed up</div>
-              <div>• <strong>Easy Undo:</strong> Every action can be reversed</div>
+          {/* Mode Selector & Controls */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200">
+            <div className="flex-1 sm:flex-none">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Exploration Mode</label>
+              <select
+                value={explorationMode}
+                onChange={(e) => {
+                  const newMode = e.target.value as 'sandbox' | 'guided' | 'freeform';
+                  setExplorationMode(newMode);
+                  if (currentSession) {
+                    generateSafetyGuards(newMode);
+                  }
+                }}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                <option value="sandbox">🔒 Sandbox Mode</option>
+                <option value="guided">📚 Guided Mode</option>
+                <option value="freeform">🚀 Freeform Mode</option>
+              </select>
             </div>
-            <div className="space-y-2">
-              <div>• <strong>Time Limits:</strong> Experiments auto-expire for safety</div>
-              <div>• <strong>Clear Boundaries:</strong> You&apos;ll always know what&apos;s experimental</div>
-              <div>• <strong>Choose Your Level:</strong> From guided tutorials to free exploration</div>
+            <div className="flex items-end gap-2 sm:ml-auto">
+              <button
+                onClick={() => setShowSafetyInfo(!showSafetyInfo)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium whitespace-nowrap"
+              >
+                {showSafetyInfo ? '✓ Safety Info' : 'Safety Info'}
+              </button>
             </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-green-200">
-            <p className="text-sm text-green-600">
-              <strong>Current Mode:</strong> {explorationMode.charAt(0).toUpperCase() + explorationMode.slice(1)} - {getModeDescription(explorationMode)}
+        </div>
+      </div>
+
+      {/* Safety Overview Banner */}
+      {showSafetyInfo && (
+        <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-6 transition-all duration-300">
+          <div className="flex items-start justify-between mb-4">
+            <h3 className="font-semibold text-green-900 text-lg flex items-center">
+              <span className="mr-3 text-2xl">🛡️</span>
+              Active Safety Protections
+            </h3>
+            <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+              {currentSession ? 'PROTECTED' : 'READY'}
+            </span>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
+            <div className="space-y-1">
+              <div className="text-sm font-medium text-green-900">🔐 Data Isolation</div>
+              <p className="text-sm text-green-700">Changes don&apos;t affect your main workspace</p>
+            </div>
+            <div className="space-y-1">
+              <div className="text-sm font-medium text-green-900">⏮️ Full Reversibility</div>
+              <p className="text-sm text-green-700">Every action can be undone instantly</p>
+            </div>
+            <div className="space-y-1">
+              <div className="text-sm font-medium text-green-900">📋 Auto Backups</div>
+              <p className="text-sm text-green-700">Automatic snapshots before changes</p>
+            </div>
+          </div>
+          <div className="pt-4 border-t border-green-300">
+            <p className="text-sm text-green-800">
+              <strong>Current Mode:</strong> {explorationMode.charAt(0).toUpperCase() + explorationMode.slice(1)} Mode — {getModeDescription(explorationMode)}
             </p>
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content Area */}
         <div className="lg:col-span-2">
           {!currentSession ? (
-            <div className="space-y-6">
-              {/* Custom Experiment Creation */}
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h3 className="font-medium text-gray-900 mb-4">Start New Experiment</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Experiment Name
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                      placeholder="My AI Experiment"
-                      value={experimentName}
-                      onChange={(e) => setExperimentName(e.target.value)}
-                    />
-                  </div>
-                  <button
-                    onClick={() => startExperiment(
-                      experimentName || 'Quick Experiment',
-                      'Custom experiment created by user'
-                    )}
-                    disabled={!experimentName.trim()}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    Start Custom Experiment
-                  </button>
-                </div>
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-50 to-cyan-50 px-6 py-4 border-b border-gray-200">
+                <h3 className="font-semibold text-gray-900 flex items-center">
+                  <span className="mr-2">✨</span>
+                  Start New Experiment
+                </h3>
+                <p className="text-xs text-gray-600 mt-2">Give your experiment a name and begin exploring safely</p>
               </div>
-
-              {/* Predefined Templates */}
-              <div className="bg-white border border-gray-200 rounded-lg">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                  <span className="text-sm font-medium text-gray-700">Quick Start Templates</span>
+              <div className="p-8 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Experiment Name
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
+                    placeholder="e.g., Test new AI suggestions"
+                    value={experimentName}
+                    onChange={(e) => setExperimentName(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && experimentName.trim() && startExperiment(experimentName, 'Custom experiment created by user')}
+                  />
                 </div>
-                <div className="p-4 space-y-3">
-                  {predefinedExperiments.map((experiment, index) => (
-                    <div
-                      key={index}
-                      className="border border-gray-200 rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                      onClick={() => startExperiment(experiment.name, experiment.description)}
-                    >
-                      <h4 className="font-medium text-gray-900">{experiment.name}</h4>
-                      <p className="text-sm text-gray-600 mt-1">{experiment.description}</p>
-                    </div>
-                  ))}
-                </div>
+                <button
+                  onClick={() => startExperiment(
+                    experimentName || 'Quick Experiment',
+                    'Custom experiment created by user'
+                  )}
+                  disabled={!experimentName.trim()}
+                  className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-base"
+                >
+                  🚀 Start Experiment
+                </button>
               </div>
             </div>
           ) : (
             <div className="space-y-4">
               {/* Active Experiment Header */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-blue-900">
-                    🧪 Active Experiment: {currentSession.name}
-                  </h3>
-                  <div className="space-x-2">
-                    <button
-                      onClick={undoLastChange}
-                      disabled={currentSession.changes.length === 0}
-                      className="text-xs px-3 py-1 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Undo Last
-                    </button>
-                    <button
-                      onClick={() => endExperiment(false)}
-                      className="text-xs px-3 py-1 bg-red-200 text-red-600 rounded hover:bg-red-300 transition-colors"
-                    >
-                      Discard
-                    </button>
-                    <button
-                      onClick={() => endExperiment(true)}
-                      className="text-xs px-3 py-1 bg-green-200 text-green-600 rounded hover:bg-green-300 transition-colors"
-                    >
-                      Save & Apply
-                    </button>
+              <div className="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-lg p-6 shadow-sm">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <h3 className="font-bold text-lg text-blue-900 mb-1">
+                      🧪 Active Experiment: {currentSession.name}
+                    </h3>
+                    <p className="text-sm text-blue-700">{currentSession.description}</p>
                   </div>
+                  <span className="px-3 py-1 bg-blue-200 text-blue-900 rounded-full text-xs font-semibold whitespace-nowrap ml-4">
+                    {currentSession.changes.length} changes
+                  </span>
                 </div>
-                <p className="text-sm text-blue-700">{currentSession.description}</p>
-                <div className="mt-2 text-xs text-blue-600">
-                  Mode: {explorationMode} | Changes: {currentSession.changes.length} | Can Undo: {currentSession.canUndo ? 'Yes' : 'No'}
+                <div className="flex gap-2 pt-4 border-t border-blue-200">
+                  <button
+                    onClick={undoLastChange}
+                    disabled={currentSession.changes.length === 0}
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                  >
+                    ⏮️ Undo Last
+                  </button>
+                  <button
+                    onClick={() => endExperiment(false)}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-sm font-medium"
+                  >
+                    ❌ Discard All
+                  </button>
+                  <button
+                    onClick={() => endExperiment(true)}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium ml-auto"
+                  >
+                    ✅ Save & Apply
+                  </button>
                 </div>
               </div>
 
               {/* Experiment Workspace */}
-              <div className="bg-white border border-gray-200 rounded-lg">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                  <span className="text-sm font-medium text-gray-700">Experiment Workspace</span>
+              <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-gradient-to-r from-indigo-50 to-blue-50 px-6 py-4 border-b border-gray-200">
+                  <h3 className="font-semibold text-gray-900 flex items-center">
+                    <span className="mr-2">🔬</span>
+                    Experiment Workspace
+                  </h3>
+                  <p className="text-xs text-gray-600 mt-1">All changes are isolated and reversible</p>
                 </div>
-                <div className="p-4 space-y-4">
+                <div className="p-6 space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
                       Try an experimental change:
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-3">
                       <button
                         onClick={() => makeExperimentalChange('Changed color scheme to dark mode')}
-                        className="px-3 py-2 bg-gray-600 text-white rounded text-sm hover:bg-gray-700 transition-colors"
+                        className="px-4 py-3 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 transition-colors font-medium"
                       >
-                        Dark Mode
+                        🌙 Dark Mode
                       </button>
                       <button
                         onClick={() => makeExperimentalChange('Enabled advanced AI suggestions')}
-                        className="px-3 py-2 bg-purple-600 text-white rounded text-sm hover:bg-purple-700 transition-colors"
+                        className="px-4 py-3 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition-colors font-medium"
                       >
-                        AI Boost
+                        ✨ AI Boost
                       </button>
                       <button
                         onClick={() => makeExperimentalChange('Rearranged interface layout')}
-                        className="px-3 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                        className="px-4 py-3 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 transition-colors font-medium"
                       >
-                        New Layout
+                        🎨 New Layout
                       </button>
                       <button
                         onClick={() => makeExperimentalChange('Added experimental feature')}
-                        className="px-3 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+                        className="px-4 py-3 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition-colors font-medium"
                       >
-                        Beta Feature
+                        🚀 Beta Feature
                       </button>
                       <button
                         onClick={() => makeExperimentalChange('Delete old configuration files')}
-                        className="px-3 py-2 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors"
+                        className="px-4 py-3 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition-colors font-medium"
                       >
-                        Delete Files
+                        🗑️ Delete Files
                       </button>
                       <button
                         onClick={() => makeExperimentalChange('Updated notification settings')}
-                        className="px-3 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 transition-colors"
+                        className="px-4 py-3 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 transition-colors font-medium"
                       >
-                        Notifications
+                        🔔 Notifications
                       </button>
                     </div>
                   </div>
 
                   {currentSession.changes.length > 0 && (
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-700 mb-2">Changes Made:</h4>
-                      <div className="space-y-1 max-h-32 overflow-y-auto">
+                    <div className="pt-4 border-t border-gray-200">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-3 flex items-center">
+                        <span className="mr-2">📝</span>
+                        Tracked Changes ({currentSession.changes.length})
+                      </h4>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
                         {currentSession.changes.map((change, index) => (
-                          <div key={index} className="text-sm text-gray-600 bg-gray-50 rounded px-2 py-1">
-                            {index + 1}. {change}
+                          <div key={index} className="text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 flex items-start">
+                            <span className="font-semibold text-gray-400 mr-3 flex-shrink-0">{index + 1}.</span>
+                            <span>{change}</span>
                           </div>
                         ))}
                       </div>
@@ -424,12 +437,12 @@ export default function SafeExplorationDemo() {
                   )}
 
                   {currentSession.changes.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                        <span className="text-2xl">🧪</span>
+                    <div className="text-center py-12 text-gray-500">
+                      <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
+                        <span className="text-3xl">🧪</span>
                       </div>
-                      <p className="text-sm">No changes made yet</p>
-                      <p className="text-xs mt-1">Click any button above to start experimenting</p>
+                      <p className="text-sm font-medium mb-1">No changes made yet</p>
+                      <p className="text-xs">Click any button above to start experimenting safely</p>
                     </div>
                   )}
                 </div>
@@ -439,103 +452,50 @@ export default function SafeExplorationDemo() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Safety Guards */}
-          {safetyGuards.length > 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h3 className="font-medium text-yellow-900 mb-3">🛡️ Safety Guards</h3>
-              <div className="space-y-2">
-                {safetyGuards.map(guard => (
-                  <div
-                    key={guard.id}
-                    className={`p-2 rounded border ${getSafetyGuardColor(guard.level)}`}
-                  >
-                    <div className="flex items-start space-x-2">
-                      <span className="text-sm">{getSafetyGuardIcon(guard.type)}</span>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium uppercase tracking-wide mb-1">
-                          {guard.type} {guard.level && `- ${guard.level}`}
-                        </p>
-                        <p className="text-sm">{guard.message}</p>
+        <div className="lg:col-span-1 space-y-4">
+          {/* Safety Guards - Primary Panel */}
+          <div className="bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-50 border-2 border-yellow-400 rounded-lg shadow-lg overflow-hidden sticky top-6">
+            <div className="bg-gradient-to-r from-yellow-200 to-amber-200 px-6 py-5 border-b-2 border-yellow-300">
+              <h3 className="font-bold text-yellow-900 text-xl flex items-center">
+                <span className="mr-3 text-3xl">🛡️</span>
+                Safety Guards
+              </h3>
+              <p className="text-sm text-yellow-800 mt-2 font-medium">Your protection is always active</p>
+            </div>
+            <div className="p-6">
+              {safetyGuards.length > 0 ? (
+                <div className="space-y-4">
+                  {safetyGuards.map(guard => (
+                    <div
+                      key={guard.id}
+                      onClick={() => setExpandedGuard(expandedGuard === guard.id ? null : guard.id)}
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${getSafetyGuardColor(guard.level)} hover:shadow-lg hover:-translate-y-0.5`}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-2xl flex-shrink-0 mt-1">{getSafetyGuardIcon(guard.type)}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold uppercase tracking-widest mb-1 opacity-80">
+                            {guard.type}
+                          </p>
+                          <p className="text-sm font-semibold leading-snug">{guard.message}</p>
+                          {expandedGuard === guard.id && (
+                            <div className="mt-3 pt-3 border-t text-xs opacity-80 font-medium">
+                              <p>Protection Level: <span className="font-bold text-gray-700">{guard.level}</span></p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-2">✅</div>
+                  <p className="text-base font-semibold text-yellow-900 mb-1">All Systems Protected</p>
+                  <p className="text-sm text-yellow-800">Destructive actions will trigger guards</p>
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Exploration History */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <h3 className="font-medium text-gray-900 mb-3">Exploration History</h3>
-            {experiments.length > 0 ? (
-              <div className="space-y-2 max-h-48 overflow-y-auto">
-                {experiments.map(experiment => (
-                  <div
-                    key={experiment.id}
-                    className={`p-2 rounded border ${
-                      experiment.isActive && currentSession?.id === experiment.id
-                        ? 'border-blue-300 bg-blue-50'
-                        : 'border-gray-200 bg-white'
-                    }`}
-                  >
-                    <div className="font-medium text-sm">{experiment.name}</div>
-                    <div className="text-xs text-gray-600">
-                      {experiment.changes.length} changes made
-                      {experiment.isActive ? ' (Active)' : ' (Completed)'}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-600 italic">No experiments yet</p>
-            )}
-          </div>
-
-          {/* Mode Status */}
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <h3 className="font-medium text-purple-900 mb-3">Current Mode</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-purple-700">Mode:</span>
-                <span className="font-medium">{explorationMode.charAt(0).toUpperCase() + explorationMode.slice(1)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-purple-700">Active Experiments:</span>
-                <span className="font-medium">{currentSession ? '1' : '0'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-purple-700">Safety Guards:</span>
-                <span className="font-medium">{safetyGuards.length}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Safe Exploration Tips */}
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h3 className="font-medium text-green-900 mb-2">Safe Exploration Tips</h3>
-            <ul className="text-sm text-green-700 space-y-1">
-              <li className="flex items-start">
-                <span className="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                Start with templates if you&apos;re new
-              </li>
-              <li className="flex items-start">
-                <span className="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                All changes are reversible
-              </li>
-              <li className="flex items-start">
-                <span className="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                Experiment freely - nothing can break
-              </li>
-              <li className="flex items-start">
-                <span className="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                Save only changes you want to keep
-              </li>
-              <li className="flex items-start">
-                <span className="w-1 h-1 bg-green-600 rounded-full mt-2 mr-2 flex-shrink-0"></span>
-                Try different modes for various levels of guidance
-              </li>
-            </ul>
           </div>
         </div>
       </div>

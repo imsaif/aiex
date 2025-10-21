@@ -3,20 +3,20 @@ import { Example } from '../../../../types';
 export const examples: Example[] = [
   {
     title: "OpenAI Playground",
-    description: "Safe environment for experimenting with language models, testing prompts, and learning AI capabilities without production consequences.",
-    image: "/images/examples/huggingfacemodels.gif",
-    altText: "HuggingFace model playground for safe AI experimentation"
+    description: "Interactive sandbox for experimenting with language models without affecting production. Users can test different prompts, adjust parameters, and explore model capabilities with full reversibility and isolation from real systems.",
+    image: "/images/examples/openai-playground.gif",
+    altText: "OpenAI Playground interface showing safe prompt experimentation with isolated sandbox environment"
   },
   {
     title: "GitHub Copilot Labs",
-    description: "Experimental features and safe testing environment for new AI coding capabilities before production.",
-    image: "/images/examples/github-copilot-highlighting.gif",
-    altText: "GitHub Copilot providing safe code exploration and suggestions"
+    description: "Experimental beta features in a protected environment where developers can test new AI coding capabilities, learn best practices, and safely explore novel functionality before integration into their workflow.",
+    image: "/images/examples/github-copilot-labs.gif",
+    altText: "GitHub Copilot Labs showing safe AI coding experimentation with preview and rollback capabilities"
   },
   {
     title: "Photoshop AI Beta",
-    description: "Separate workspace for testing AI-powered editing features with easy revert options and non-destructive editing.",
-    image: "/images/examples/ada-health.gif",
-    altText: "Ada Health AI providing safe exploration of health information"
+    description: "Dedicated experimental workspace with non-destructive AI editing tools. Users can try generative features, test new effects, and explore creative possibilities with full undo/revert options and original assets always preserved.",
+    image: "/images/examples/photoshop-ai-beta.gif",
+    altText: "Photoshop AI Beta workspace showing safe generative editing with non-destructive workflows"
   }
 ];
