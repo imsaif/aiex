@@ -9,11 +9,11 @@ export const confidencevisualization: Pattern = {
   id: "confidence-visualization",
   title: "Confidence Visualization",
   slug: "confidence-visualization",
-  status: 'in-progress',
+  status: 'completed',
   description: "Display AI certainty levels through visual indicators, helping users understand prediction reliability and decide when to trust or verify outputs.",
   category: "Trustworthy & Reliable AI",
   tags: ["confidence", "transparency", "certainty", "visual indicators", "trust", "reliability"],
-  thumbnail: "/images/examples/confidence-visualization.gif",
+  thumbnail: "/images/examples/confidence-visualization.png",
   content: {
     problem: "Users don't know how much to trust AI predictions, leading to over-reliance on incorrect outputs or unnecessary verification.",
     solution: "Design visual indicators that communicate AI confidence levels. Use intuitive representations like progress bars, color coding, or percentages to help users gauge reliability.",
