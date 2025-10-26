@@ -14,8 +14,8 @@ export const selectivememory: Pattern = {
   tags: ["memory", "control", "privacy", "context", "personalization", "user control"],
   thumbnail: "/images/examples/selective-memory.gif",
   content: {
-    problem: "AI systems remember and use information without giving users visibility or control over what's stored. Users can't selectively forget sensitive information or temporarily exclude context that's no longer relevant, leading to privacy concerns and potentially inappropriate responses.",
-    solution: "Provide transparent memory management interfaces where users can view all stored information, selectively mark memories as important, temporary, or to be forgotten, and see exactly when and how the AI uses stored context in its responses.",
+    problem: "AI systems remember information without user visibility or control, risking privacy issues and inappropriate responses based on outdated or sensitive context.",
+    solution: "Provide transparent memory controls letting users view, categorize (important/temporary/forget), and understand how stored information influences AI responses.",
     examples,
     guidelines,
     considerations,

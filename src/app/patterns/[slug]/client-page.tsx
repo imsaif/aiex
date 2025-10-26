@@ -17,11 +17,6 @@ const CodeExampleBlock = dynamic(() => import('@/components/ui/CodeExampleBlock'
   ssr: false
 });
 
-const PatternUsageButton = dynamic(() => import('@/components/ui/PatternUsageButton'), {
-  loading: () => <div className="animate-pulse bg-gray-200 h-10 w-32 rounded-lg"></div>,
-  ssr: false
-});
-
 const FigmaPromptCard = dynamic(() => import('@/components/ui/FigmaPromptCard'), {
   loading: () => <div className="animate-pulse bg-gray-200 h-64 rounded-lg"></div>,
   ssr: false
@@ -100,7 +95,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
       {/* Pattern Header */}
       <motion.div className="mb-10" variants={itemVariants}>
-        <div className="flex items-start justify-between gap-4 mb-3">
+        <div className="mb-3">
           <div className="flex items-center gap-2 flex-wrap">
             <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-${categories.find(c => c.title === pattern.category)?.color}-100 text-${categories.find(c => c.title === pattern.category)?.color}-800`}>
               {pattern.category}
@@ -115,7 +110,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               </span>
             )}
           </div>
-          <PatternUsageButton patternId={pattern.id} size="md" showCount={true} />
         </div>
         <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>
         <div className="text-xl text-gray-600 leading-relaxed">

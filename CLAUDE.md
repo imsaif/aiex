@@ -188,6 +188,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-10-26 19:47 (MacBook)
+- **Pattern:** Selective Memory & UI Cleanup
+- **Status:** ✅ Completed
+- **Files Changed:** 11
+- **Tests Added/Modified:** 0
+- **Notes:** Removed "I Use This" pattern tracking feature (saved to removed-features/ for later restoration), updated Selective Memory pattern with animated GIF examples for ChatGPT and Claude memory controls, condensed problem/solution text by 40% while maintaining meaning.
+
 ### Session 2025-10-21 17:03 (MacBook)
 - **Pattern:** Safe Exploration
 - **Status:** ✅ Completed
@@ -252,18 +259,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Completed Predictive Anticipation pattern with minimal, efficient live demo component featuring content pre-loading visualization and real-time behavioral learning system. Updated CodeExampleBlock integration, marked pattern as completed, created comprehensive test suite (15 test cases), updated project status to 13/24 patterns fully updated.
 
 ### Session 2025-10-15 11:19 (MacBook)
-- **Pattern:** Patterns
-- **Status:** Work in progress
-- **Files Changed:** 5
-- **Tests Added/Modified:** 0
-- **Notes:** General updates to pattern system and configuration.
-
-### Session 2025-10-14 13:36 (MacBook)
-- **Pattern:** Enhanced memory management system
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-
 ## Architecture Overview
 
 ### Core Architecture
