@@ -203,9 +203,9 @@ export default function HumanInTheLoopModeration() {
             
             <div className="flex items-center mb-4">
               <span className={\`px-2 py-1 rounded-full text-xs font-medium \${
-                currentItem.aiModeration.decision === 'flagged' 
-                  ? 'bg-red-100 text-red-800' 
-                  : 'bg-green-100 text-green-800'
+                currentItem.aiModeration.decision === 'flagged'
+                  ? 'bg-background-tertiary text-text-primary'
+                  : 'bg-background-secondary text-text-primary'
               }\`}>
                 {currentItem.aiModeration.decision === 'flagged' ? 'AI Flagged' : 'AI Approved'}
               </span>
@@ -222,21 +222,21 @@ export default function HumanInTheLoopModeration() {
             </div>
             
             <div className="flex space-x-3">
-              <button 
+              <button
                 onClick={() => handleModeration('approve')}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                className="px-4 py-2 bg-accent-primary text-white rounded hover:bg-accent-hover transition"
               >
                 Approve
               </button>
-              <button 
+              <button
                 onClick={() => handleModeration('reject')}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                className="px-4 py-2 bg-surface-primary text-text-primary border border-border-primary rounded hover:bg-background-secondary transition"
               >
                 Reject
               </button>
-              <button 
+              <button
                 onClick={() => handleModeration('escalate')}
-                className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 transition"
+                className="px-4 py-2 bg-background-secondary text-text-primary border border-border-primary rounded hover:bg-background-tertiary transition"
               >
                 Escalate
               </button>
@@ -260,7 +260,7 @@ export default function HumanInTheLoopModeration() {
             ></textarea>
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="bg-black text-white py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 hover:bg-gray-800 transition"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Processing...' : 'Submit for Moderation'}
@@ -283,15 +283,15 @@ export default function HumanInTheLoopModeration() {
             </div>
             <div className="flex justify-between">
               <span>Approved:</span>
-              <span className="font-medium text-green-600">{stats.approved}</span>
+              <span className="font-medium text-text-primary">{stats.approved}</span>
             </div>
             <div className="flex justify-between">
               <span>Rejected:</span>
-              <span className="font-medium text-red-600">{stats.rejected}</span>
+              <span className="font-medium text-text-secondary">{stats.rejected}</span>
             </div>
             <div className="flex justify-between">
               <span>Escalated:</span>
-              <span className="font-medium text-yellow-600">{stats.escalated}</span>
+              <span className="font-medium text-text-secondary">{stats.escalated}</span>
             </div>
           </div>
         </div>
@@ -307,10 +307,10 @@ export default function HumanInTheLoopModeration() {
           </ol>
         </div>
         
-        <div className="p-3 bg-blue-50 rounded border border-blue-100">
-          <h3 className="font-medium text-blue-800 mb-1">Key Principle</h3>
-          <p className="text-sm text-blue-700">
-            Human-in-the-loop systems combine AI efficiency with human judgment 
+        <div className="p-3 bg-background-secondary rounded border border-border-primary">
+          <h3 className="font-medium text-text-primary mb-1">Key Principle</h3>
+          <p className="text-sm text-text-secondary">
+            Human-in-the-loop systems combine AI efficiency with human judgment
             to create safer, more reliable content moderation.
           </p>
         </div>

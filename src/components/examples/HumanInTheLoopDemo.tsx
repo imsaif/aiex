@@ -104,35 +104,35 @@ function TextModerationDemo() {
       <div className="flex-1 p-4 flex flex-col justify-between">
         <div>
           <div className="mb-2 text-gray-700">
-            <span className="font-semibold text-blue-700">{post.user}</span>: {post.text}
+            <span className="font-semibold text-gray-900">{post.user}</span>: {post.text}
           </div>
-          <div className="text-xs text-gray-500 mb-1">AI Decision: <span className="font-semibold text-pink-600">{post.aiDecision}</span></div>
+          <div className="text-xs text-gray-500 mb-1">AI Decision: <span className="font-semibold text-gray-900">{post.aiDecision}</span></div>
           <div className="text-xs text-gray-500 mb-1">Reason: {post.reason}</div>
-          <div className="text-xs text-gray-500 mb-2">AI Confidence: <span className="font-semibold text-violet-700">{Math.round(post.confidence * 100)}%</span></div>
+          <div className="text-xs text-gray-500 mb-2">AI Confidence: <span className="font-semibold text-gray-600">{Math.round(post.confidence * 100)}%</span></div>
         </div>
         {!userDecision ? (
           <div className="flex gap-2 mt-2">
             <button
-              className="px-3 py-1 rounded bg-green-100 text-green-800 border border-green-200 hover:bg-green-200 transition"
+              className="px-3 py-1 rounded bg-black text-white border border-black hover:bg-gray-800 transition"
               onClick={() => handleDecision('Approve')}
             >
               Approve
             </button>
             <button
-              className="px-3 py-1 rounded bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition"
+              className="px-3 py-1 rounded bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 transition"
               onClick={() => handleDecision('Reject')}
             >
               Reject
             </button>
             <button
-              className="px-3 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200 transition"
+              className="px-3 py-1 rounded bg-gray-100 text-gray-900 border border-gray-300 hover:bg-gray-200 transition"
               onClick={() => handleDecision('Override – Publish Anyway')}
             >
               Override
             </button>
           </div>
         ) : (
-          <div className="mt-3 text-sm text-blue-700 flex items-center gap-4">
+          <div className="mt-3 text-sm text-gray-900 flex items-center gap-4">
             <span><strong>Action taken:</strong> {userDecision}</span>
             <button
               className="ml-2 px-2 py-1 rounded bg-gray-200 text-gray-800 border border-gray-300 hover:bg-gray-300 text-xs"
@@ -176,35 +176,35 @@ function ImageModerationDemo() {
         <div>
           <div className="mb-2 flex items-center gap-3">
             <Image src={img.imageUrl} alt="User upload" width={80} height={80} className="w-20 h-20 object-cover rounded border border-gray-200" />
-            <span className="font-semibold text-blue-700">{img.user}</span>
+            <span className="font-semibold text-text-primary">{img.user}</span>
           </div>
-          <div className="text-xs text-gray-500 mb-1">AI Decision: <span className="font-semibold text-pink-600">{img.aiDecision}</span></div>
+          <div className="text-xs text-gray-500 mb-1">AI Decision: <span className="font-semibold text-text-primary">{img.aiDecision}</span></div>
           <div className="text-xs text-gray-500 mb-1">Reason: {img.reason}</div>
-          <div className="text-xs text-gray-500 mb-2">AI Confidence: <span className="font-semibold text-violet-700">{Math.round(img.confidence * 100)}%</span></div>
+          <div className="text-xs text-gray-500 mb-2">AI Confidence: <span className="font-semibold text-text-secondary">{Math.round(img.confidence * 100)}%</span></div>
         </div>
         {!userDecision ? (
           <div className="flex gap-2 mt-2">
             <button
-              className="px-3 py-1 rounded bg-green-100 text-green-800 border border-green-200 hover:bg-green-200 transition"
+              className="px-3 py-1 rounded bg-black text-white border border-black hover:bg-gray-800 transition"
               onClick={() => handleDecision('Approve')}
             >
               Approve
             </button>
             <button
-              className="px-3 py-1 rounded bg-red-100 text-red-800 border border-red-200 hover:bg-red-200 transition"
+              className="px-3 py-1 rounded bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 transition"
               onClick={() => handleDecision('Reject')}
             >
               Reject
             </button>
             <button
-              className="px-3 py-1 rounded bg-yellow-100 text-yellow-800 border border-yellow-200 hover:bg-yellow-200 transition"
+              className="px-3 py-1 rounded bg-gray-100 text-gray-900 border border-gray-300 hover:bg-gray-200 transition"
               onClick={() => handleDecision('Override – Publish Anyway')}
             >
               Override
             </button>
           </div>
         ) : (
-          <div className="mt-3 text-sm text-blue-700 flex items-center gap-4">
+          <div className="mt-3 text-sm text-text-primary flex items-center gap-4">
             <span><strong>Action taken:</strong> {userDecision}</span>
             <button
               className="ml-2 px-2 py-1 rounded bg-gray-200 text-gray-800 border border-gray-300 hover:bg-gray-300 text-xs"
