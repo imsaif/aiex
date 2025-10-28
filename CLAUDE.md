@@ -188,6 +188,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-10-28 02:34 (MacBook)
+- **Pattern:** General UI/UX improvements
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed auto-scroll issue in Conversational UI demo (prevented page from scrolling to chat on navigation), redesigned code toggle with iOS-style segmented control and black brand colors, replaced gradient heading lines with minimal gray underlines across all pattern pages, fixed button visibility with darker gray-900 background.
+
 ### Session 2025-10-27 21:57 (MacBook)
 - **Pattern:** Human-in-the-Loop
 - **Status:** ✅ Completed

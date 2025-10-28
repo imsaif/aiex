@@ -111,7 +111,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             )}
           </div>
         </div>
-        <h1 className="text-5xl font-bold mt-3 mb-6 text-gray-900">{pattern.title}</h1>
+        <h1 className="text-5xl font-bold mt-3 text-gray-900">{pattern.title}</h1>
         <div className="text-xl text-gray-600 leading-relaxed">
           {pattern.description}
         </div>
@@ -125,20 +125,14 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           variants={itemVariants}
         >
           <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <div className="flex items-center mb-4">
-              <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900">Problem</h2>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-4 border-b border-gray-300">Problem</h2>
             <div className="prose prose-lg max-w-none text-gray-700">
               <p>{pattern.content.problem}</p>
             </div>
           </section>
 
           <section className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <div className="flex items-center mb-4">
-              <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900">Solution</h2>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-4 border-b border-gray-300">Solution</h2>
             <div className="prose prose-lg max-w-none text-gray-700">
               <p>{pattern.content.solution}</p>
             </div>
@@ -148,10 +142,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Image Carousel for Examples */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
           <motion.section variants={itemVariants}>
-            <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900">Examples in the Wild</h2>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-6 border-b border-gray-300">Examples in the Wild</h2>
             <div className="bg-white rounded-lg p-2 overflow-hidden border border-gray-200 shadow-sm">
               <Carousel examples={pattern.content.examples} />
             </div>
@@ -161,10 +152,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Code Examples */}
         {pattern.content.codeExamples && pattern.content.codeExamples.length > 0 && (
           <motion.section variants={itemVariants}>
-            <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900">Interactive Code Example</h2>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-6 border-b border-gray-300">Interactive Code Example</h2>
 
             <div className="space-y-8">
               {pattern.content.codeExamples.map((example, index) => (
@@ -184,20 +172,14 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Figma AI Prompt */}
         {pattern.content.figmaPrompt && (
           <motion.section variants={itemVariants}>
-            <div className="flex items-center mb-6">
-              <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-              <h2 className="text-2xl font-bold text-gray-900">Design Resources</h2>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-6 border-b border-gray-300">Design Resources</h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </motion.section>
         )}
 
         {/* Implementation Guidelines and Design Considerations */}
         <motion.section variants={itemVariants}>
-          <div className="flex items-center mb-6">
-            <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-            <h2 className="text-2xl font-bold text-gray-900">Implementation & Considerations</h2>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-6 border-b border-gray-300">Implementation & Considerations</h2>
 
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
             <div className="flex flex-col md:flex-row">
@@ -238,10 +220,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
         {/* Related Patterns */}
         <motion.section variants={itemVariants}>
-          <div className="flex items-center mb-6">
-            <div className="bg-gradient-to-b from-pink-500 to-violet-500 w-1 h-8 mr-3 rounded-full"></div>
-            <h2 className="text-2xl font-bold text-gray-900">Related Patterns</h2>
-          </div>
+          <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-6 border-b border-gray-300">Related Patterns</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {pattern.content.relatedPatterns.map((related, i) => (
               <Link

@@ -345,59 +345,40 @@ export default function CodeExampleBlock({
 
       {/* Content area with toggle */}
       <div className="relative">
-        {/* Header with Toggle */}
-        <div className="bg-gray-50 p-4 border-b border-gray-200 flex items-center justify-between">
-          <div className="flex items-center">
-            {showCode ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-                <span className="font-semibold text-blue-600">Code View</span>
-                <span className="text-gray-600 ml-2 text-sm">- Implementation details</span>
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                <span className="font-semibold text-blue-600">Live Preview</span>
-                <span className="text-gray-600 ml-2 text-sm">- Interactive implementation</span>
-              </>
-            )}
+        {/* Segmented Control Header */}
+        <div className="flex justify-center p-4 border-b border-gray-200">
+          <div className="inline-flex rounded-lg border border-gray-300 bg-gray-100 p-1">
+            {/* Preview Button */}
+            <button
+              onClick={() => setShowCode(false)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                !showCode
+                  ? 'bg-gray-900 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-white'
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span>Preview</span>
+            </button>
+
+            {/* Code Button */}
+            <button
+              onClick={() => setShowCode(true)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                showCode
+                  ? 'bg-gray-900 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-white'
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+              <span>Code</span>
+            </button>
           </div>
-          
-          {/* Toggle Switch */}
-          <button
-            onClick={() => setShowCode(!showCode)}
-            className="flex items-center space-x-2 px-3 py-1.5 rounded-md bg-white border border-gray-300 hover:bg-gray-100 transition-colors"
-          >
-            {showCode ? (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                <span className="text-sm font-medium">Show Preview</span>
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-                <span className="text-sm font-medium">Show Code</span>
-              </>
-            )}
-            
-            {/* Toggle Indicator */}
-            <div className="relative w-10 h-5 bg-gray-300 rounded-full transition-colors duration-200 ease-in-out"
-                 style={{ backgroundColor: showCode ? '#3B82F6' : '#D1D5DB' }}>
-              <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                showCode ? 'transform translate-x-5' : ''
-              }`} />
-            </div>
-          </button>
         </div>
 
         {/* Content Area - Either Preview OR Code */}

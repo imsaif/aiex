@@ -71,11 +71,14 @@ export default function ConversationalUiDemo() {
   const [inputValue, setInputValue] = useState('');
   const [isWaitingForResponse, setIsWaitingForResponse] = useState(false);
   const [isTransferringToHuman, setIsTransferringToHuman] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // Auto-scroll to bottom of chat
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom of chat container (not page)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      // Scroll the chat container to the bottom
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -251,9 +254,8 @@ export default function ConversationalUiDemo() {
       </div>
       
       {/* Chat messages */}
-      <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
+      <div ref={messagesContainerRef} className="flex-1 p-4 overflow-y-auto bg-gray-50">
         {messages.map(message => renderMessage(message))}
-        <div ref={messagesEndRef} />
       </div>
       
       {/* Input area */}
