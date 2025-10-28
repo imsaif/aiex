@@ -172,3 +172,81 @@ export interface PatternContextType {
 // Re-export for backward compatibility and convenience
 export type { Pattern as AIPattern, CodeExample as PatternCodeExample, Example as PatternExample };
 
+// ============================================================================
+// Designer Guides Type Definitions
+// ============================================================================
+// Guides for designers to understand how to use AI tools in their workflow
+
+/**
+ * Represents a designer guide for using AI tools
+ */
+export interface Guide {
+  // Core identification
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  excerpt?: string;
+
+  // Categorization and metadata
+  tool: 'Claude Code' | 'Cursor' | 'GitHub' | 'Figma' | 'Other';
+  useCase: string; // e.g., "Prototyping", "Design Systems", "Collaboration"
+  skillLevel: 'Beginner' | 'Intermediate' | 'Advanced';
+  designDomain: string; // e.g., "UX Design", "UI Design", "Product Design"
+
+  // Content metadata
+  readTime: number; // in minutes
+  author?: string;
+  publishedDate: string; // ISO date string
+  lastUpdatedDate?: string; // ISO date string
+
+  // Visual representation
+  thumbnail?: string;
+  tags?: string[];
+
+  // Content
+  content: string; // Markdown content
+
+  // Relations
+  relatedPatterns?: string[]; // Pattern slugs
+  relatedGuides?: string[]; // Guide slugs
+}
+
+/**
+ * Guide category for organizing guides
+ */
+export type GuideTool = 'Claude Code' | 'Cursor' | 'GitHub' | 'Figma' | 'Other';
+export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
+
+/**
+ * Utility type for guide filtering and searching
+ */
+export interface GuideFilter {
+  tool?: GuideTool;
+  skillLevel?: GuideSkillLevel;
+  designDomain?: string;
+  tags?: string[];
+  searchQuery?: string;
+}
+
+/**
+ * Guide loading and data management interfaces
+ */
+export interface GuideData {
+  guides: Guide[];
+  lastUpdated: string;
+}
+
+/**
+ * React context types for guide data management
+ */
+export interface GuideContextType {
+  guides: Guide[];
+  loading: boolean;
+  error: string | null;
+  lastUpdated: Date | null;
+  getGuide: (slug: string) => Guide | null;
+  filterGuides: (filter: GuideFilter) => Guide[];
+  searchGuides: (query: string) => Guide[];
+}
+

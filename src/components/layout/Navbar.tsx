@@ -45,17 +45,16 @@ const Navbar = () => {
               </svg>
               <span className="hidden sm:inline text-sm font-medium">GitHub</span>
             </a>
-            <a
-              href="https://github.com/imsaif/aiex/blob/master/CONTRIBUTING.md"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/guides"
               className="flex items-center gap-2 px-3 py-2 text-text-primary hover:text-accent-primary transition-colors duration-200 rounded-lg hover:bg-accent-subtle"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
               </svg>
-              <span className="hidden sm:inline text-sm font-medium">Contribute</span>
-            </a>
+              <span className="hidden sm:inline text-sm font-medium">Guides</span>
+            </Link>
           </div>
         </div>
       </div>

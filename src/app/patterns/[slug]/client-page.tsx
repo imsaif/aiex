@@ -2,6 +2,7 @@
 
 import categories from '@/data/categories';
 import { Pattern } from '@/types';
+import { getGuidesForPattern } from '@/data/guides';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -249,6 +250,36 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             ))}
           </div>
         </motion.section>
+
+        {/* Related Guides */}
+        {(() => {
+          const relatedGuides = getGuidesForPattern(pattern.title);
+          return relatedGuides.length > 0 ? (
+            <motion.section variants={itemVariants}>
+              <h2 className="text-2xl font-bold text-gray-900 pb-3 mb-6 border-b border-gray-300">Related Guides</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {relatedGuides.map((guide) => (
+                  <Link
+                    key={guide.id}
+                    href={`/guides/${guide.slug}`}
+                    className="bg-white rounded-lg p-6 shadow-sm border border-gray-200 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex flex-col">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
+                          {guide.tool}
+                        </span>
+                        <span className="text-xs text-gray-500">{guide.readTime} min</span>
+                      </div>
+                      <h3 className="font-medium text-gray-900 mb-2">{guide.title}</h3>
+                      <p className="text-sm text-gray-600 line-clamp-2">{guide.description}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </motion.section>
+          ) : null;
+        })()}
 
         {/* Previous/Next Pattern Navigation */}
         <motion.div

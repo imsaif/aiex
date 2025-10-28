@@ -180,6 +180,16 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
+                      href="https://github.com/imsaif/aiex/blob/master/CONTRIBUTING.md"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Contribute
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="#newsletter"
                       className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
                     >
