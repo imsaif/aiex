@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
@@ -8,20 +8,39 @@ import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import FilterPills from '../components/ui/FilterPills';
 import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
+import ProductFilterBar from '../components/ui/ProductFilterBar';
 import patterns from '../data/patterns';
 import categories from '../data/categories';
+import { getAllProducts, filterPatternsByProducts, getProductsForPattern } from '../data/utils/product-utils';
+import { getProductLogoUrl, hasProductLogo } from '../data/product-logos';
 
 export default function HomeClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
-  const filteredPatterns = patterns.filter(pattern => {
-    const matchesSearch = pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         pattern.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All Categories' || pattern.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Get all available products
+  const allProducts = useMemo(() => getAllProducts(patterns), []);
+
+  const filteredPatterns = useMemo(() => {
+    return patterns.filter(pattern => {
+      const matchesSearch = pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           pattern.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'All Categories' || pattern.category === selectedCategory;
+
+      // Filter by selected products
+      let matchesProducts = true;
+      if (selectedProducts.length > 0) {
+        const patternProducts = getProductsForPattern(pattern);
+        matchesProducts = selectedProducts.some(product =>
+          patternProducts.some(pp => pp.toLowerCase() === product.toLowerCase())
+        );
+      }
+
+      return matchesSearch && matchesCategory && matchesProducts;
+    });
+  }, [searchQuery, selectedCategory, selectedProducts]);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -84,7 +103,7 @@ export default function HomeClient() {
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
             <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 dark:border-gray-700 sticky top-4">
-              <h3 className="font-semibold text-lg mb-4">All Categories</h3>
+              <h3 className="font-semibold text-lg mb-4">Categories</h3>
               <ul className="space-y-2">
                 <li>
                   <button
@@ -118,6 +137,14 @@ export default function HomeClient() {
 
           {/* Patterns Grid */}
           <div className="flex-1">
+            {/* Product Filter Bar */}
+            <ProductFilterBar
+              products={allProducts}
+              selectedProducts={selectedProducts}
+              onProductsChange={setSelectedProducts}
+            />
+
+            {/* Patterns Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPatterns.map((pattern, index) => (
                 <motion.div
@@ -143,8 +170,8 @@ export default function HomeClient() {
                         {pattern.description}
                       </p>
 
-                      {/* Chips */}
-                      <div className="flex flex-wrap gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      {/* Category and Status Badges */}
+                      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
                         <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary">
                           {pattern.category}
                         </span>
@@ -158,6 +185,60 @@ export default function HomeClient() {
                           </span>
                         )}
                       </div>
+
+                      {/* Used By Section */}
+                      {getProductsForPattern(pattern).filter(hasProductLogo).length > 0 && (
+                        <div className="flex flex-wrap items-center gap-2 pt-3">
+                          <span className="text-xs font-medium text-text-secondary">Used by:</span>
+                          {getProductsForPattern(pattern).slice(0, 3).map((product) => {
+                            const logoUrl = getProductLogoUrl(product);
+                            const hasLogo = hasProductLogo(product);
+
+                            if (!hasLogo) return null;
+
+                            return (
+                              <div
+                                key={product}
+                                className="relative cursor-pointer peer"
+                                onMouseEnter={(e) => {
+                                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
+                                  const img = e.currentTarget.querySelector('img') as HTMLImageElement;
+                                  if (tooltip) tooltip.style.opacity = '1';
+                                  if (img) img.style.filter = 'grayscale(0%)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
+                                  const img = e.currentTarget.querySelector('img') as HTMLImageElement;
+                                  if (tooltip) tooltip.style.opacity = '0';
+                                  if (img) img.style.filter = 'grayscale(100%)';
+                                }}
+                              >
+                                <img
+                                  src={logoUrl}
+                                  alt={product}
+                                  className="h-5 w-5 transition-all duration-300"
+                                  style={{
+                                    filter: 'grayscale(100%)',
+                                  }}
+                                />
+                                {/* Tooltip */}
+                                <div
+                                  data-tooltip
+                                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap transition-opacity pointer-events-none z-50"
+                                  style={{ opacity: '0' }}
+                                >
+                                  {product}
+                                </div>
+                              </div>
+                            );
+                          })}
+                          {getProductsForPattern(pattern).filter(hasProductLogo).length > 3 && (
+                            <span className="px-2 py-1 rounded text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary">
+                              +{getProductsForPattern(pattern).filter(hasProductLogo).length - 3}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </Link>
                 </motion.div>
@@ -183,6 +264,9 @@ export default function HomeClient() {
         categories={categories}
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
+        products={allProducts}
+        selectedProducts={selectedProducts}
+        onProductsSelect={setSelectedProducts}
       />
 
       {/* Footer */}

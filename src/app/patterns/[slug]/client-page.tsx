@@ -22,6 +22,11 @@ const FigmaPromptCard = dynamic(() => import('@/components/ui/FigmaPromptCard'),
   ssr: false
 });
 
+const ProductsSection = dynamic(() => import('@/components/sections/ProductsSection'), {
+  loading: () => <div className="animate-pulse bg-gray-200 h-32 rounded-lg"></div>,
+  ssr: false
+});
+
 interface ClientPageProps {
   pattern: Pattern;
   previousPattern: Pattern | null;
@@ -111,8 +116,8 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             )}
           </div>
         </div>
-        <h1 className="text-5xl font-bold mt-3 text-gray-900">{pattern.title}</h1>
-        <div className="text-xl text-gray-600 leading-relaxed">
+        <h1 className="text-5xl font-bold mt-6 mb-4 text-gray-900">{pattern.title}</h1>
+        <div className="text-lg text-gray-600 leading-relaxed">
           {pattern.description}
         </div>
       </motion.div>
@@ -137,6 +142,11 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               <p>{pattern.content.solution}</p>
             </div>
           </section>
+        </motion.div>
+
+        {/* Products Using This Pattern */}
+        <motion.div variants={itemVariants}>
+          <ProductsSection pattern={pattern} />
         </motion.div>
 
         {/* Image Carousel for Examples */}

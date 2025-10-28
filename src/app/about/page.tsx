@@ -39,6 +39,63 @@ export default function AboutPage() {
               </p>
             </div>
 
+            {/* Our Methodology */}
+            <div className="mb-12">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 text-text-primary">Our Methodology</h2>
+              <p className="text-text-secondary leading-relaxed mb-8">
+                We document patterns from real AI products already serving millions of users. This is design pattern mining—observing what works and making it actionable.
+              </p>
+
+              {/* 3-Column Card Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {/* Pattern Discovery Card */}
+                <div className="p-6 bg-surface-primary border border-border-primary rounded-xl">
+                  <h3 className="text-lg font-bold mb-3 text-text-primary">Pattern Discovery</h3>
+                  <p className="text-text-secondary leading-relaxed text-sm">
+                    We analyze how leading AI products—ChatGPT, Claude, Midjourney, GitHub Copilot, Notion AI—solve common UX challenges. When a design decision works across multiple products, we dig deeper.
+                  </p>
+                </div>
+
+                {/* What Earns a Spot Card */}
+                <div className="p-6 bg-surface-primary border border-border-primary rounded-xl">
+                  <h3 className="text-lg font-bold mb-4 text-text-primary">What Earns a Spot</h3>
+                  <ul className="space-y-3 text-sm text-text-secondary">
+                    <li className="flex gap-2">
+                      <span className="text-accent-primary font-bold">✓</span>
+                      <span><strong className="text-text-primary">3+ implementations</strong> – Works in multiple real products</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-accent-primary font-bold">✓</span>
+                      <span><strong className="text-text-primary">Real problem</strong> – Fundamental AI UX challenge</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="text-accent-primary font-bold">✓</span>
+                      <span><strong className="text-text-primary">Actionable</strong> – Code + clear guidance included</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Standing on Shoulders Card */}
+                <div className="p-6 bg-surface-primary border border-border-primary rounded-xl">
+                  <h3 className="text-lg font-bold mb-3 text-text-primary">Standing on Shoulders</h3>
+                  <p className="text-text-secondary leading-relaxed text-sm mb-3">
+                    Grounded in established frameworks:
+                  </p>
+                  <ul className="space-y-2 text-sm text-text-secondary">
+                    <li><a href="https://pair.withgoogle.com/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Google's People + AI</a></li>
+                    <li><a href="https://developer.apple.com/design/human-interface-guidelines/machine-learning" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Apple's ML Guidelines</a></li>
+                    <li>HCI & AI research</li>
+                    <li>Community best practices</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Closing statement */}
+              <p className="text-text-secondary leading-relaxed text-sm italic">
+                This is a living collection. Patterns evolve as new products demonstrate better approaches, techniques improve, and the community shares insights.
+              </p>
+            </div>
+
             {/* What We Offer */}
             <div className="mb-12">
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-text-primary">What We Offer</h2>
@@ -56,20 +113,27 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            {/* Technology */}
+            {/* By The Numbers */}
             <div className="mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4 text-text-primary">Built with Modern Technology</h2>
-              <p className="text-text-secondary leading-relaxed mb-4">
-                This project is built with cutting-edge web technologies to provide a fast, accessible, and delightful user experience:
-              </p>
-              <ul className="space-y-2 text-text-secondary">
-                <li><strong className="text-text-primary">Next.js 15</strong> with App Router for modern routing and server-side rendering</li>
-                <li><strong className="text-text-primary">React 19</strong> for a responsive and interactive UI</li>
-                <li><strong className="text-text-primary">TypeScript</strong> for type safety and better developer experience</li>
-                <li><strong className="text-text-primary">Tailwind CSS</strong> with a custom design system for consistent styling</li>
-                <li><strong className="text-text-primary">Prisma ORM</strong> with SQLite for newsletter subscription management</li>
-                <li><strong className="text-text-primary">Resend</strong> for reliable email delivery</li>
-              </ul>
+              <h2 className="text-2xl md:text-3xl font-bold mb-8 text-text-primary">By The Numbers</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                  <div className="text-4xl font-bold text-accent-primary mb-2">50+</div>
+                  <p className="text-text-secondary">AI products analyzed continuously</p>
+                </div>
+                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                  <div className="text-4xl font-bold text-accent-primary mb-2">24</div>
+                  <p className="text-text-secondary">Validated patterns documented</p>
+                </div>
+                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                  <div className="text-4xl font-bold text-accent-primary mb-2">100+</div>
+                  <p className="text-text-secondary">Real-world examples referenced</p>
+                </div>
+                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                  <div className="text-4xl font-bold text-accent-primary mb-2">7</div>
+                  <p className="text-text-secondary">Strategic categories covering all AI UX challenges</p>
+                </div>
+              </div>
             </div>
 
             {/* Open Source */}
