@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getGuideBySlug } from '@/data/guides';
+import { getGuideBySlug, getPreviousGuide, getNextGuide, getGuideProgress } from '@/data/guides';
 import patterns from '@/data/patterns';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -14,7 +14,8 @@ interface GuidePageProps {
 }
 
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
-  const guide = getGuideBySlug(params.slug);
+  const { slug } = await params;
+  const guide = getGuideBySlug(slug);
 
   if (!guide) {
     return {
@@ -33,8 +34,9 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
   };
 }
 
-export default function GuidePage({ params }: GuidePageProps) {
-  const guide = getGuideBySlug(params.slug);
+export default async function GuidePage({ params }: GuidePageProps) {
+  const { slug } = await params;
+  const guide = getGuideBySlug(slug);
 
   if (!guide) {
     notFound();
@@ -44,6 +46,11 @@ export default function GuidePage({ params }: GuidePageProps) {
   const relatedPatterns = guide.relatedPatterns
     ? patterns.filter((p) => guide.relatedPatterns?.includes(p.title))
     : [];
+
+  // Get navigation
+  const previousGuide = getPreviousGuide(slug);
+  const nextGuide = getNextGuide(slug);
+  const progress = getGuideProgress(slug);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -69,6 +76,7 @@ export default function GuidePage({ params }: GuidePageProps) {
             </svg>
             Back to Guides
           </Link>
+
 
           {/* Header */}
           <header className="mb-12">
@@ -152,6 +160,72 @@ export default function GuidePage({ params }: GuidePageProps) {
               </div>
             </section>
           )}
+
+          {/* Previous/Next Guide Navigation */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 border-t border-border-primary pt-8 mt-12">
+            {previousGuide ? (
+              <Link
+                href={`/guides/${previousGuide.slug}`}
+                className="flex items-center gap-3 text-text-primary hover:text-accent-primary group transition-colors flex-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="group-hover:-translate-x-1 transition-transform flex-shrink-0"
+                >
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                <div className="min-w-0">
+                  <p className="text-xs text-text-secondary">Previous Guide</p>
+                  <p className="font-medium truncate">{previousGuide.title}</p>
+                </div>
+              </Link>
+            ) : (
+              <div className="flex-1" />
+            )}
+
+            <Link
+              href="/guides"
+              className="px-6 py-2 rounded-full bg-accent-subtle text-accent-primary font-medium hover:bg-accent-primary hover:text-background-primary transition-colors border border-accent-primary/20 flex-shrink-0"
+            >
+              View All Guides
+            </Link>
+
+            {nextGuide ? (
+              <Link
+                href={`/guides/${nextGuide.slug}`}
+                className="flex items-center gap-3 text-text-primary hover:text-accent-primary group transition-colors justify-end flex-1"
+              >
+                <div className="min-w-0 text-right">
+                  <p className="text-xs text-text-secondary">Next Guide</p>
+                  <p className="font-medium truncate">{nextGuide.title}</p>
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="group-hover:translate-x-1 transition-transform flex-shrink-0"
+                >
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ) : (
+              <div className="flex-1" />
+            )}
+          </div>
         </div>
       </div>
 
