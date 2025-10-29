@@ -88,6 +88,9 @@ export default function GuidesClient() {
               <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
                 {guides.length} AI Tool Learning Paths
               </span>
+              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800">
+                Work in Progress
+              </span>
             </div>
 
             {/* Heading */}
