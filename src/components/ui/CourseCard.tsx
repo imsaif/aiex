@@ -2,30 +2,23 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Guide } from '@/types';
+import { Course } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import StatusBadge from './StatusBadge';
 import ProgressBar from './ProgressBar';
 
-interface GuideCardProps {
-  guide: Guide;
+interface CourseCardProps {
+  course: Course;
   index?: number;
-  allGuides?: Guide[];
 }
 
-export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCardProps) {
-  const { isGuideCompleted, getLessonProgress, getGuideStatus } = useGuideProgress();
-  const isCompleted = isGuideCompleted(guide.id);
+export default function CourseCard({ course, index = 0 }: CourseCardProps) {
+  const { getLessonProgress, getGuideStatus } = useGuideProgress();
 
-  // Calculate lesson progress
-  const totalLessons = guide.lessons?.length || guide.lessonCount || 0;
-  const lessonProgress = totalLessons > 0 ? getLessonProgress(guide.id, totalLessons) : { completed: 0, total: 0, percentage: 0 };
-  const guideStatus = totalLessons > 0 ? getGuideStatus(guide.id, totalLessons) : 'not-started';
-
-  // Determine if this is a step guide (part of learning path)
-  const isStepGuide = guide.slug !== 'claude-code-learning-path-for-designers' && guide.tool === 'Claude Code';
-  const stepNumber = isStepGuide ? allGuides.findIndex((g) => g.slug === guide.slug) : null;
-  const totalSteps = allGuides.length > 1 ? allGuides.length : null;
+  // Calculate course progress based on all lessons
+  const totalLessons = course.lessons?.length || 0;
+  const lessonProgress = totalLessons > 0 ? getLessonProgress(course.id, totalLessons) : { completed: 0, total: 0, percentage: 0 };
+  const courseStatus = totalLessons > 0 ? getGuideStatus(course.id, totalLessons) : 'not-started';
 
   return (
     <motion.div
@@ -33,7 +26,7 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
       whileHover={{ y: -4 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Link href={`/guides/${guide.slug}`} className="block group h-full">
+      <Link href={`/guides/${course.slug}`} className="block group h-full">
         <div
           className="bg-surface-primary rounded-xl border border-border-primary
                     hover:border-border-secondary transition-all duration-300 h-full
@@ -56,54 +49,34 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
             {/* Status Badge */}
             {totalLessons > 0 && (
               <div className="absolute top-2 right-2">
-                <StatusBadge status={guideStatus} size="sm" />
+                <StatusBadge status={courseStatus} size="sm" />
               </div>
             )}
 
-            {/* Legacy Completion Badge (if no lessons) */}
-            {isCompleted && totalLessons === 0 && (
-              <div className="absolute top-2 right-2 bg-green-500 dark:bg-green-600 rounded-full p-1.5 shadow-lg">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="white"
-                  className="w-5 h-5"
-                >
-                  <polyline points="20 6 9 17 4 12" fill="none" stroke="white" strokeWidth="3" />
-                </svg>
-              </div>
-            )}
-
-            {/* Step Badge */}
-            {stepNumber !== null && (
-              <div className="absolute top-2 left-2 bg-blue-500 dark:bg-blue-600 rounded-lg px-2.5 py-1 text-white text-xs font-semibold shadow-lg">
-                Step {stepNumber}/{totalSteps}
-              </div>
-            )}
           </div>
 
           {/* Content Section */}
           <div className="p-5 flex-1 flex flex-col">
             {/* Title */}
             <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors line-clamp-2">
-              {guide.title}
+              {course.title}
             </h3>
 
             {/* Description */}
             <p className="text-sm text-text-secondary line-clamp-2 flex-grow mb-4">
-              {guide.description}
+              {course.description}
             </p>
 
             {/* Metadata Badges */}
             <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border-primary mb-4">
-              {/* Tool Badge */}
-              <span className="px-3 py-1 rounded-full text-xs bg-accent-subtle text-accent-primary font-medium">
-                {guide.tool}
-              </span>
-
               {/* Skill Level Badge */}
               <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
-                {guide.skillLevel}
+                {course.skillLevel}
+              </span>
+
+              {/* Design Domain Badge */}
+              <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
+                {course.designDomain}
               </span>
             </div>
 
@@ -134,9 +107,22 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
-                {guide.readTime} min read
+                {course.totalDuration} min
               </span>
-              <span>{guide.designDomain}</span>
+              <span className="flex items-center gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="w-4 h-4"
+                >
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+                {totalLessons} lessons
+              </span>
             </div>
           </div>
         </div>

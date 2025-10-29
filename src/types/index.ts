@@ -178,7 +178,53 @@ export type { Pattern as AIPattern, CodeExample as PatternCodeExample, Example a
 // Guides for designers to understand how to use AI tools in their workflow
 
 /**
- * Represents a designer guide for using AI tools
+ * Represents a single lesson within a guide
+ */
+export interface GuideLesson {
+  id: string;
+  title: string;
+  content: string; // HTML or Markdown content for the lesson
+  duration: number; // in minutes
+  order: number; // Lesson sequence number
+}
+
+/**
+ * Represents a course with sequential lessons (like Uxcel's course structure)
+ */
+export interface Course {
+  // Core identification
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  excerpt?: string;
+
+  // Categorization and metadata
+  skillLevel: 'Beginner' | 'Intermediate' | 'Advanced';
+  designDomain: string;
+
+  // Content metadata
+  totalDuration: number; // in minutes (sum of all lesson durations)
+  author?: string;
+  publishedDate: string; // ISO date string
+  lastUpdatedDate?: string; // ISO date string
+
+  // Visual representation
+  thumbnail?: string;
+  tags?: string[];
+
+  // Lesson structure - all lessons in one course
+  lessons: GuideLesson[]; // All course lessons
+
+  // Content
+  content: string; // Markdown content with course overview
+
+  // Relations
+  relatedPatterns?: string[]; // Pattern slugs
+}
+
+/**
+ * Represents a designer guide for using AI tools (legacy - kept for backward compatibility)
  */
 export interface Guide {
   // Core identification
@@ -204,6 +250,10 @@ export interface Guide {
   thumbnail?: string;
   tags?: string[];
 
+  // Lesson structure (new gamification feature)
+  lessons?: GuideLesson[]; // Optional lesson breakdown for gamified learning
+  lessonCount?: number; // Cached lesson count for quick access
+
   // Content
   content: string; // Markdown content
 
@@ -215,7 +265,7 @@ export interface Guide {
 /**
  * Guide category for organizing guides
  */
-export type GuideTool = 'Claude Code' | 'Cursor' | 'GitHub' | 'Figma' | 'Other';
+export type GuideTool = 'Claude Code' | 'Cursor' | 'GitHub' | 'GitHub Copilot' | 'Replit AI' | 'V0 by Vercel' | 'Figma' | 'Other';
 export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
 /**
