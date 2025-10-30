@@ -94,16 +94,17 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
               {guide.description}
             </p>
 
-            {/* Metadata Badges */}
+            {/* Skill Level Badge */}
+            <div className="mb-4">
+              <span className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
+                {guide.skillLevel}
+              </span>
+            </div>
+
+            {/* Tool Badge */}
             <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border-primary mb-4">
-              {/* Tool Badge */}
               <span className="px-3 py-1 rounded-full text-xs bg-accent-subtle text-accent-primary font-medium">
                 {guide.tool}
-              </span>
-
-              {/* Skill Level Badge */}
-              <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
-                {guide.skillLevel}
               </span>
             </div>
 
@@ -120,21 +121,6 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
               </div>
             )}
 
-            {/* Footer Info */}
-            <div className="flex items-center gap-1 text-xs text-text-secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="w-4 h-4"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              {guide.readTime} min read
-            </div>
           </div>
         </div>
       </Link>

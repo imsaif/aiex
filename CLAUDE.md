@@ -188,6 +188,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-10-30 19:11 (MacBook)
+- **Pattern:** Guide Cards UI Refinement
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Simplified guide card badges by removing read time indicator in favor of MVP approach. Kept skill level badge to show guide difficulty level. Removed read time maintenance overhead since calculating accurate totals from lesson durations required constant updates.
+
 
 ### Session 2025-10-30 06:38 (MacBook)
 - **Pattern:** Designer Guides UI/Filtering
@@ -253,34 +260,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 0
 
 ### Session 2025-10-17 18:49 (MacBook)
-- **Pattern:** General updates
-- **Status:** Work in progress
-- **Files Changed:** 15
-- **Tests Added/Modified:** 0
-0
-
-### Session 2025-10-17 16:20 (MacBook)
-- **Pattern:** Patterns
-- **Status:** Work in progress
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-0
-
-### Session 2025-10-16 11:24 (MacBook)
-- **Pattern:** General updates
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Installed @vercel/analytics package and integrated Analytics component in root layout for page view tracking and web vitals monitoring
-
-### Session 2025-10-23 13:45 (MacBook)
-- **Pattern:** Predictive Anticipation
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Enhanced Predictive Anticipation demo with expanded 20-item content library (4 categories), 2-3 column grid layout, reset functionality, improved pattern detection (3+ views required), category statistics panel, and prominent "Recommended For You" section that separates pre-loaded items at the top. Fixed infinite loop bug (useEffect dependency array), making the pattern much more visually obvious and user-friendly.
-
-### Session 2025-10-21 17:15 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
