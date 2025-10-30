@@ -5,6 +5,7 @@
  */
 
 export const productLogos: Record<string, string> = {
+  // Major AI & Tech Companies
   Google: 'google',
   GitHub: 'github',
   Notion: 'notion',
@@ -13,16 +14,39 @@ export const productLogos: Record<string, string> = {
   OpenAI: 'openai',
   Photoshop: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/adobephotoshop.svg',
   Microsoft: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg',
-  ChatGPT: 'openai', // ChatGPT is part of OpenAI
+  ChatGPT: 'openai',
   Claude: 'anthropic',
   Figma: 'figma',
   Slack: 'slack',
   Discord: 'discord',
   Gmail: 'gmail',
   Copilot: 'github',
+
+  // Voice Assistants
   'Siri': 'apple',
   'Alexa': 'amazon',
   'Cortana': 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg',
+
+  // AI & Productivity Tools (newly added)
+  Loom: 'loom',
+  Superhuman: '/images/logos/superhuman.svg', // Local SVG
+  Grammarly: 'grammarly',
+  Perplexity: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/perplexity.svg',
+  Midjourney: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Midjourney_Emblem.svg', // Official Wikimedia Commons
+  'Dall-E': 'openai', // Dall-E is made by OpenAI
+  DuckDuckGo: 'duckduckgo',
+  Signal: 'signal',
+  Anthropic: 'anthropic',
+
+  // Consumer & Enterprise Platforms
+  Apple: 'apple',
+  Tesla: 'tesla',
+  IBM: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg', // Official IBM SVG from Wikimedia
+  AWS: 'amazonaws',
+  Duolingo: 'duolingo',
+  'Be': 'https://upload.wikimedia.org/wikipedia/commons/a/af/Logo_BeMyEyes.svg', // Official Be My Eyes SVG from Wikimedia
+  GPTZero: 'https://cdn.simpleicons.org/openai', // GPTZero detection tool
+  Hugging: 'huggingface', // Hugging Face (truncated product name)
 };
 
 /**

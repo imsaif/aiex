@@ -54,27 +54,28 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-6">
-      {/* Dropdown Button */}
-      <div className="relative" ref={dropdownRef}>
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700
-                   bg-white dark:bg-gray-800 text-sm font-medium text-text-primary
-                   hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
-        >
-          {selectedProducts.length > 0 ? `Products (${selectedProducts.length})` : 'All Products'}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+    <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-6">
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Dropdown Button */}
+        <div className="relative" ref={dropdownRef}>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700
+                     bg-white dark:bg-gray-800 text-sm font-medium text-text-primary
+                     hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-          </svg>
-        </button>
+            {selectedProducts.length > 0 ? `Products (${selectedProducts.length})` : 'All Products'}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
+            </svg>
+          </button>
 
         {/* Dropdown Menu */}
         {isOpen && (
@@ -154,16 +155,17 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
         </div>
       ))}
 
-      {/* Clear All Button - Only show when filters are active */}
-      {selectedProducts.length > 0 && (
-        <button
-          onClick={handleClearAll}
-          className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300
-                   hover:underline transition-colors"
-        >
-          Clear all
-        </button>
-      )}
+        {/* Clear All Button - Only show when filters are active */}
+        {selectedProducts.length > 0 && (
+          <button
+            onClick={handleClearAll}
+            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300
+                     hover:underline transition-colors"
+          >
+            Clear all
+          </button>
+        )}
+      </div>
     </div>
   );
 };

@@ -157,27 +157,30 @@ export default function HomeClient() {
                     href={`/patterns/${pattern.slug}`}
                     className="block group"
                   >
-                    <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 dark:border-gray-700
+                    <div className="bg-surface-primary rounded-xl p-8 border border-gray-200 dark:border-gray-700
                                   hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full
                                   flex flex-col">
                       {/* Title */}
-                      <h3 className="text-lg font-semibold text-text-primary mb-3 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-lg font-semibold text-text-primary mb-4 group-hover:text-blue-600 transition-colors">
                         {pattern.title}
                       </h3>
 
                       {/* Description */}
-                      <p className="text-sm text-text-secondary line-clamp-3 flex-grow mb-4">
+                      <p className="text-sm text-text-secondary line-clamp-3 flex-grow mb-8">
                         {pattern.description}
                       </p>
 
-                      {/* Category and Status Badges */}
-                      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary">
+                      {/* Divider */}
+                      <div className="border-t border-gray-200 dark:border-gray-700 mb-6"></div>
+
+                      {/* Top Metadata Row - Category & Status */}
+                      <div className="flex items-center gap-2 mb-6">
+                        <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
                           {pattern.category}
                         </span>
                         {pattern.status === 'in-progress' && (
                           <span
-                            className="px-3 py-1 rounded-full text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 cursor-help"
+                            className="px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 cursor-help"
                             title="Work in Progress: This pattern is not fully documented yet. Documentation and code examples are being refined."
                             aria-label="Work in Progress pattern"
                           >
@@ -186,57 +189,59 @@ export default function HomeClient() {
                         )}
                       </div>
 
-                      {/* Used By Section */}
+                      {/* Used By Logos Section */}
                       {getProductsForPattern(pattern).filter(hasProductLogo).length > 0 && (
-                        <div className="flex flex-wrap items-center gap-2 pt-3">
-                          <span className="text-xs font-medium text-text-secondary">Used by:</span>
-                          {getProductsForPattern(pattern).slice(0, 3).map((product) => {
-                            const logoUrl = getProductLogoUrl(product);
-                            const hasLogo = hasProductLogo(product);
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs text-text-secondary font-medium">Used by:</span>
+                          <div className="flex items-center gap-2">
+                            {getProductsForPattern(pattern).slice(0, 3).map((product) => {
+                              const logoUrl = getProductLogoUrl(product);
+                              const hasLogo = hasProductLogo(product);
 
-                            if (!hasLogo) return null;
+                              if (!hasLogo) return null;
 
-                            return (
-                              <div
-                                key={product}
-                                className="relative cursor-pointer peer"
-                                onMouseEnter={(e) => {
-                                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
-                                  const img = e.currentTarget.querySelector('img') as HTMLImageElement;
-                                  if (tooltip) tooltip.style.opacity = '1';
-                                  if (img) img.style.filter = 'grayscale(0%)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
-                                  const img = e.currentTarget.querySelector('img') as HTMLImageElement;
-                                  if (tooltip) tooltip.style.opacity = '0';
-                                  if (img) img.style.filter = 'grayscale(100%)';
-                                }}
-                              >
-                                <img
-                                  src={logoUrl}
-                                  alt={product}
-                                  className="h-5 w-5 transition-all duration-300"
-                                  style={{
-                                    filter: 'grayscale(100%)',
-                                  }}
-                                />
-                                {/* Tooltip */}
+                              return (
                                 <div
-                                  data-tooltip
-                                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap transition-opacity pointer-events-none z-50"
-                                  style={{ opacity: '0' }}
+                                  key={product}
+                                  className="relative cursor-pointer peer"
+                                  onMouseEnter={(e) => {
+                                    const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
+                                    const img = e.currentTarget.querySelector('img') as HTMLImageElement;
+                                    if (tooltip) tooltip.style.opacity = '1';
+                                    if (img) img.style.filter = 'grayscale(0%)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
+                                    const img = e.currentTarget.querySelector('img') as HTMLImageElement;
+                                    if (tooltip) tooltip.style.opacity = '0';
+                                    if (img) img.style.filter = 'grayscale(100%)';
+                                  }}
                                 >
-                                  {product}
+                                  <img
+                                    src={logoUrl}
+                                    alt={product}
+                                    className="h-4 w-4 transition-all duration-300"
+                                    style={{
+                                      filter: 'grayscale(100%)',
+                                    }}
+                                  />
+                                  {/* Tooltip */}
+                                  <div
+                                    data-tooltip
+                                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap transition-opacity pointer-events-none z-50"
+                                    style={{ opacity: '0' }}
+                                  >
+                                    {product}
+                                  </div>
                                 </div>
-                              </div>
-                            );
-                          })}
-                          {getProductsForPattern(pattern).filter(hasProductLogo).length > 3 && (
-                            <span className="px-2 py-1 rounded text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary">
-                              +{getProductsForPattern(pattern).filter(hasProductLogo).length - 3}
-                            </span>
-                          )}
+                              );
+                            })}
+                            {getProductsForPattern(pattern).filter(hasProductLogo).length > 3 && (
+                              <span className="text-xs text-text-secondary font-medium">
+                                +{getProductsForPattern(pattern).filter(hasProductLogo).length - 3}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
