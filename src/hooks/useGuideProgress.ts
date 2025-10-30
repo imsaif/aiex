@@ -1,11 +1,19 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+interface LessonEngagement {
+  startTime: number; // timestamp when lesson first viewed
+  lastAccessTime: number; // last time user accessed lesson
+  totalTimeSpent: number; // milliseconds spent on lesson
+  viewCount: number; // how many times user opened lesson
+}
 
 interface GuideProgressState {
   completed: boolean;
   completedLessons: string[]; // Track which specific lessons are done
   checklist: Record<string, boolean>;
+  engagement?: Record<string, LessonEngagement>; // Track time & engagement per lesson
 }
 
 interface GuideProgressData {
@@ -188,6 +196,99 @@ export function useGuideProgress() {
     [progress]
   );
 
+  // Track lesson engagement (time spent, views, etc.)
+  const trackLessonEngagement = useCallback(
+    (guideId: string, lessonId: string) => {
+      const newProgress = { ...progress };
+      if (!newProgress[guideId]) {
+        newProgress[guideId] = { completed: false, completedLessons: [], checklist: {} };
+      }
+      if (!newProgress[guideId].engagement) {
+        newProgress[guideId].engagement = {};
+      }
+
+      const now = Date.now();
+      const engagement = newProgress[guideId].engagement![lessonId];
+
+      if (!engagement) {
+        // First time viewing this lesson
+        newProgress[guideId].engagement![lessonId] = {
+          startTime: now,
+          lastAccessTime: now,
+          totalTimeSpent: 0,
+          viewCount: 1,
+        };
+      } else {
+        // Returning to lesson - increment view count and update last access
+        engagement.lastAccessTime = now;
+        engagement.viewCount += 1;
+      }
+
+      saveProgress(newProgress);
+    },
+    [progress, saveProgress]
+  );
+
+  // Update time spent on a lesson (call periodically or on blur)
+  const updateLessonTimeSpent = useCallback(
+    (guideId: string, lessonId: string, additionalTime: number) => {
+      const newProgress = { ...progress };
+      if (!newProgress[guideId]?.engagement?.[lessonId]) {
+        return; // Engagement tracking not started for this lesson
+      }
+
+      newProgress[guideId].engagement![lessonId].totalTimeSpent += additionalTime;
+      newProgress[guideId].engagement![lessonId].lastAccessTime = Date.now();
+      saveProgress(newProgress);
+    },
+    [progress, saveProgress]
+  );
+
+  // Get engagement metrics for a lesson
+  const getLessonEngagement = useCallback(
+    (guideId: string, lessonId: string): LessonEngagement | null => {
+      return progress[guideId]?.engagement?.[lessonId] || null;
+    },
+    [progress]
+  );
+
+  // Get formatted time spent string (e.g., "5 mins", "1 hour 20 mins")
+  const getTimeSpentDisplay = useCallback((milliseconds: number): string => {
+    const seconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (hours > 0) {
+      const remainingMins = minutes % 60;
+      return remainingMins > 0 ? `${hours}h ${remainingMins}m` : `${hours}h`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m`;
+    }
+    return `${seconds}s`;
+  }, []);
+
+  // Get total time spent on a guide
+  const getGuideTotalTimeSpent = useCallback(
+    (guideId: string): number => {
+      const engagement = progress[guideId]?.engagement;
+      if (!engagement) return 0;
+      return Object.values(engagement).reduce((total, lesson) => total + lesson.totalTimeSpent, 0);
+    },
+    [progress]
+  );
+
+  // Get average time per lesson in a guide
+  const getGuideAverageTimePerLesson = useCallback(
+    (guideId: string): number => {
+      const engagement = progress[guideId]?.engagement;
+      if (!engagement || Object.keys(engagement).length === 0) return 0;
+      const totalTime = Object.values(engagement).reduce((total, lesson) => total + lesson.totalTimeSpent, 0);
+      return Math.floor(totalTime / Object.keys(engagement).length);
+    },
+    [progress]
+  );
+
   return {
     // State
     progress,
@@ -205,6 +306,14 @@ export function useGuideProgress() {
     isLessonCompleted,
     getLessonProgress,
     getGuideStatus,
+
+    // Engagement tracking operations
+    trackLessonEngagement,
+    updateLessonTimeSpent,
+    getLessonEngagement,
+    getTimeSpentDisplay,
+    getGuideTotalTimeSpent,
+    getGuideAverageTimePerLesson,
 
     // Checklist operations
     toggleChecklistItem,

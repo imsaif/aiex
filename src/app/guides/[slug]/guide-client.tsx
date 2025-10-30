@@ -24,7 +24,16 @@ export default function GuideClient({
   nextGuide,
   relatedPatterns,
 }: GuideClientProps) {
-  const { isGuideCompleted, markGuideComplete, markGuideIncomplete, getLessonProgress, getGuideStatus } = useGuideProgress();
+  const {
+    isGuideCompleted,
+    markGuideComplete,
+    markGuideIncomplete,
+    getLessonProgress,
+    getGuideStatus,
+    getGuideTotalTimeSpent,
+    getGuideAverageTimePerLesson,
+    getTimeSpentDisplay,
+  } = useGuideProgress();
   const [isCompleted, setIsCompleted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showCompletionNotice, setShowCompletionNotice] = useState(false);
@@ -189,6 +198,26 @@ export default function GuideClient({
                 </svg>
                 <span className="text-sm text-text-secondary">{guide.readTime} min read</span>
               </div>
+
+              {/* Time Spent Tracker */}
+              {hasLessons && (
+                <div className="flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-4 h-4 text-accent-primary"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <span className="text-sm font-medium text-accent-primary">
+                    {getTimeSpentDisplay(getGuideTotalTimeSpent(guide.id))} spent
+                  </span>
+                </div>
+              )}
 
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-text-secondary">Domain:</span>

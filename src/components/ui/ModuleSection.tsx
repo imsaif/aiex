@@ -24,12 +24,22 @@ export default function ModuleSection({
   guideTitle,
 }: ModuleSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { getLessonProgress } = useGuideProgress();
+  const {
+    getLessonProgress,
+    getLessonEngagement,
+    getTimeSpentDisplay,
+  } = useGuideProgress();
 
   const totalLessons = lessons.length;
   const { completed } = getLessonProgress(guideId, totalLessons);
   const totalDuration = lessons.reduce((sum, lesson) => sum + lesson.duration, 0);
   const completionPercentage = totalLessons > 0 ? (completed / totalLessons) * 100 : 0;
+
+  // Calculate total time spent in this module
+  const moduleTotalTimeSpent = lessons.reduce((sum, lesson) => {
+    const engagement = getLessonEngagement(guideId, lesson.id);
+    return sum + (engagement?.totalTimeSpent || 0);
+  }, 0);
 
   return (
     <div className="space-y-4">
@@ -70,12 +80,22 @@ export default function ModuleSection({
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className="w-4 h-4 text-text-secondary"
+                    className={`w-4 h-4 ${
+                      moduleTotalTimeSpent > 0 ? 'text-accent-primary' : 'text-text-secondary'
+                    }`}
                   >
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                   </svg>
-                  <span className="text-xs text-text-secondary">{totalDuration} min</span>
+                  <span className={`text-xs ${
+                    moduleTotalTimeSpent > 0
+                      ? 'text-accent-primary font-medium'
+                      : 'text-text-secondary'
+                  }`}>
+                    {moduleTotalTimeSpent > 0
+                      ? getTimeSpentDisplay(moduleTotalTimeSpent)
+                      : `${totalDuration} min`}
+                  </span>
                 </div>
 
                 {completionPercentage > 0 && (

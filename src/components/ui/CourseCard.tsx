@@ -14,7 +14,12 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course, index = 0 }: CourseCardProps) {
-  const { getLessonProgress, getGuideStatus } = useGuideProgress();
+  const {
+    getLessonProgress,
+    getGuideStatus,
+    getGuideTotalTimeSpent,
+    getTimeSpentDisplay,
+  } = useGuideProgress();
 
   // Calculate course progress based on all lessons
   const totalLessons = course.lessons?.length || 0;
@@ -123,7 +128,9 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
-                {course.totalDuration} min
+                {getGuideTotalTimeSpent(course.id) > 0
+                  ? getTimeSpentDisplay(getGuideTotalTimeSpent(course.id))
+                  : `${course.totalDuration} min`}
               </span>
               <span className="flex items-center gap-1">
                 <svg
