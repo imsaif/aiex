@@ -18,10 +18,7 @@ export default function LessonList({ lessons, guideId, guideName }: LessonListPr
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-text-primary mb-1">Lessons</h2>
-          <p className="text-sm text-text-secondary">
-            {lessons.length} lesson{lessons.length !== 1 ? 's' : ''} • {lessons.reduce((sum, lesson) => sum + lesson.duration, 0)} minutes total
-          </p>
+          <h2 className="text-2xl font-bold text-text-primary">Lessons</h2>
         </div>
       </div>
 

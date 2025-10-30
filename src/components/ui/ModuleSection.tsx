@@ -56,22 +56,6 @@ export default function ModuleSection({
 
               {/* Module Stats */}
               <div className="flex flex-wrap items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-text-secondary"
-                  >
-                    <polyline points="12 1 12 23" />
-                    <path d="M2 12h20" />
-                  </svg>
-                  <span className="text-xs text-text-secondary">
-                    {totalLessons} lesson{totalLessons !== 1 ? 's' : ''}
-                  </span>
-                </div>
 
                 <div className="flex items-center gap-2">
                   <svg

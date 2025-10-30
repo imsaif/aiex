@@ -68,7 +68,7 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
             </div>
 
             {/* Status Badge */}
-            {totalLessons > 0 && (
+            {courseStatus !== 'not-started' && (
               <div className="absolute top-2 right-2">
                 <StatusBadge status={courseStatus} size="sm" />
               </div>
@@ -94,15 +94,10 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
               <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
                 {course.skillLevel}
               </span>
-
-              {/* Design Domain Badge */}
-              <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
-                {course.designDomain}
-              </span>
             </div>
 
             {/* Lesson Progress */}
-            {totalLessons > 0 && (
+            {courseStatus !== 'not-started' && (
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium text-text-secondary">
@@ -131,20 +126,6 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
                 {getGuideTotalTimeSpent(course.id) > 0
                   ? getTimeSpentDisplay(getGuideTotalTimeSpent(course.id))
                   : `${course.totalDuration} min`}
-              </span>
-              <span className="flex items-center gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-4 h-4"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                  <path d="M12 6v6l4 2" />
-                </svg>
-                {totalLessons} lessons
               </span>
             </div>
           </div>

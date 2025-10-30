@@ -44,13 +44,13 @@ export default function LessonItem({
         className="w-full text-left p-4 flex items-center justify-between group"
       >
         <div className="flex items-center gap-4 flex-1">
-          {/* Lesson Number Circle */}
+          {/* Completion Indicator */}
           <div className="flex-shrink-0">
             <div
               className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${
                 isCompleted
                   ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                  : 'bg-accent-subtle text-accent-primary'
+                  : 'bg-accent-subtle'
               }`}
             >
               {isCompleted ? (
@@ -65,7 +65,7 @@ export default function LessonItem({
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               ) : (
-                lessonNumber
+                <div className="w-2 h-2 rounded-full bg-accent-primary"></div>
               )}
             </div>
           </div>

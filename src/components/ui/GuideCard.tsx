@@ -54,7 +54,7 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
             </svg>
 
             {/* Status Badge */}
-            {totalLessons > 0 && (
+            {guideStatus !== 'not-started' && (
               <div className="absolute top-2 right-2">
                 <StatusBadge status={guideStatus} size="sm" />
               </div>
@@ -108,7 +108,7 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
             </div>
 
             {/* Lesson Progress */}
-            {totalLessons > 0 && (
+            {guideStatus !== 'not-started' && (
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-medium text-text-secondary">
@@ -121,22 +121,19 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
             )}
 
             {/* Footer Info */}
-            <div className="flex items-center justify-between text-xs text-text-secondary">
-              <span className="flex items-center gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-4 h-4"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                {guide.readTime} min read
-              </span>
-              <span>{guide.designDomain}</span>
+            <div className="flex items-center gap-1 text-xs text-text-secondary">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="w-4 h-4"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              {guide.readTime} min read
             </div>
           </div>
         </div>

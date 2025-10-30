@@ -87,18 +87,13 @@ export default function ModularLessonCard({
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <h3
-                className={`font-semibold text-base transition-colors ${
-                  isCompleted ? 'text-text-secondary line-through' : 'text-text-primary'
-                } group-hover:text-accent-primary`}
-              >
-                {lesson.title}
-              </h3>
-              <span className="text-xs font-medium text-text-secondary flex-shrink-0 whitespace-nowrap">
-                Lesson {lessonNumber}/{totalLessons}
-              </span>
-            </div>
+            <h3
+              className={`font-semibold text-base transition-colors mb-2 ${
+                isCompleted ? 'text-text-secondary line-through' : 'text-text-primary'
+              } group-hover:text-accent-primary`}
+            >
+              {lesson.title}
+            </h3>
 
             <div className="flex items-center gap-4 flex-wrap">
               {/* Duration / Time Spent */}

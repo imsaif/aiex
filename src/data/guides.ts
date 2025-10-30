@@ -31,10 +31,10 @@ export const guides: Guide[] = [
         duration: 2,
         order: 1,
         module: 'setup',
-        content: `<h2>Lesson 1: Get Your Anthropic API Key</h2>
+        content: `<h2>Get Your Anthropic API Key</h2>
 <p>Claude Code needs an API key to connect to the Claude AI service. This key tells Anthropic that it's really you using the service.</p>
 
-<h3>1.1 Create an Anthropic Account</h3>
+<h3>Create an Anthropic Account</h3>
 <ol>
   <li>Go to <strong>console.anthropic.com</strong> in your web browser</li>
   <li>Click <strong>"Sign up"</strong> in the top right</li>
@@ -42,7 +42,7 @@ export const guides: Guide[] = [
   <li>Check your email for a verification link and click it</li>
 </ol>
 
-<h3>1.2 Generate Your API Key</h3>
+<h3>Generate Your API Key</h3>
 <ol>
   <li>Once logged in, find <strong>"API Keys"</strong> in the left menu</li>
   <li>Click <strong>"Create Key"</strong></li>
@@ -51,7 +51,7 @@ export const guides: Guide[] = [
   <li><strong>Copy your key immediately</strong> and save it somewhere safe (like a password manager)</li>
 </ol>
 
-<h3>1.3 Keep Your Key Secure ⚠️</h3>
+<h3>Keep Your Key Secure ⚠️</h3>
 <p><strong>Important:</strong> Your API key is like a password. Never:</p>
 <ul>
   <li>Share it with anyone</li>
@@ -66,10 +66,10 @@ export const guides: Guide[] = [
         duration: 2,
         order: 2,
         module: 'setup',
-        content: `<h2>Lesson 2: Install Node.js</h2>
+        content: `<h2>Install Node.js</h2>
 <p>Node.js is software that lets you run JavaScript code on your computer. You need it to use Claude Code.</p>
 
-<h3>2.1 Check if You Already Have Node.js</h3>
+<h3>Check if You Already Have Node.js</h3>
 <h4>On Mac:</h4>
 <ol>
   <li>Press <strong>Command + Space</strong>, type "Terminal", and hit Enter</li>
@@ -84,7 +84,7 @@ export const guides: Guide[] = [
   <li>If you see a version number, skip to the next lesson!</li>
 </ol>
 
-<h3>2.2 Install Node.js (If You Need It)</h3>
+<h3>Install Node.js (If You Need It)</h3>
 <ol>
   <li>Go to <strong>nodejs.org</strong></li>
   <li>Download the <strong>"LTS"</strong> version (this is the stable, recommended version)</li>
@@ -98,19 +98,19 @@ export const guides: Guide[] = [
         duration: 2,
         order: 3,
         module: 'setup',
-        content: `<h2>Lesson 3: Install Claude Code</h2>
+        content: `<h2>Install Claude Code</h2>
 <p>Now that you have Node.js, installing Claude Code is one command away.</p>
 
-<h3>3.1 Open Terminal/Command Prompt</h3>
+<h3>Open Terminal/Command Prompt</h3>
 <p><strong>Mac:</strong> Command + Space → "Terminal" → Enter</p>
 <p><strong>Windows:</strong> Windows logo → "Command Prompt" → Enter</p>
 
-<h3>3.2 Install Claude Code</h3>
+<h3>Install Claude Code</h3>
 <p>Copy and paste this command, then press Enter:</p>
 <p><code>npm install -g claude-code</code></p>
 <p>This takes 1-2 minutes. You'll see lots of text—that's normal!</p>
 
-<h3>3.3 Verify Installation</h3>
+<h3>Verify Installation</h3>
 <p>Run this to confirm it worked:</p>
 <p><code>claude --version</code></p>
 <p>You should see a version number. If you do, <strong>you're ready to go!</strong></p>
@@ -130,21 +130,21 @@ export const guides: Guide[] = [
         duration: 2,
         order: 4,
         module: 'prototype',
-        content: `<h2>Lesson 4: Start Your First Claude Code Session</h2>
+        content: `<h2>Start Your First Claude Code Session</h2>
 
-<h3>4.1 Open Terminal</h3>
+<h3>Open Terminal</h3>
 <p><strong>Mac:</strong> Command + Space → "Terminal" → Enter</p>
 <p><strong>Windows:</strong> Windows logo → "Command Prompt" → Enter</p>
 
-<h3>4.2 Launch Claude Code</h3>
+<h3>Launch Claude Code</h3>
 <p>Type this command and press Enter:</p>
 <p><code>claude</code></p>
 
-<h3>4.3 Paste Your API Key</h3>
+<h3>Paste Your API Key</h3>
 <p>Claude Code will ask for your API key. Paste the one you saved in the setup guide.</p>
 <p><strong>Note:</strong> Your key won't appear as you type—that's normal for security!</p>
 
-<h3>4.4 Choose a Model</h3>
+<h3>Choose a Model</h3>
 <p>Claude Code will ask which model you want. Choose <strong>Claude 3.5 Sonnet</strong>—it's the best balance of speed and power for designers.</p>`,
       },
       {
@@ -153,18 +153,18 @@ export const guides: Guide[] = [
         duration: 1,
         order: 5,
         module: 'prototype',
-        content: `<h2>Lesson 5: Create Your Project Folder</h2>
+        content: `<h2>Create Your Project Folder</h2>
 
-<h3>5.1 Exit Claude Code Temporarily</h3>
+<h3>Exit Claude Code Temporarily</h3>
 <p>Type <code>exit</code> and press Enter. You'll return to your regular Terminal.</p>
 
-<h3>5.2 Create a Project Folder</h3>
+<h3>Create a Project Folder</h3>
 <p>Run this command:</p>
 <p><code>mkdir my-first-prototype</code></p>
 <p>Then navigate into it:</p>
 <p><code>cd my-first-prototype</code></p>
 
-<h3>5.3 Start Claude Code in Your Project</h3>
+<h3>Start Claude Code in Your Project</h3>
 <p>Run:</p>
 <p><code>claude</code></p>
 <p>Paste your API key again. Now you're inside Claude Code, with your project as the working folder.</p>`,
@@ -175,17 +175,17 @@ export const guides: Guide[] = [
         duration: 2,
         order: 6,
         module: 'prototype',
-        content: `<h2>Lesson 6: Generate Your First Prototype</h2>
+        content: `<h2>Generate Your First Prototype</h2>
 
-<h3>6.1 Ask Claude Code to Create Something</h3>
+<h3>Ask Claude Code to Create Something</h3>
 <p>Try this simple request:</p>
 <p><code>Create a React button component with a blue background and white text. Add a hover effect that makes the button slightly larger. Use Tailwind CSS for styling.</code></p>
 <p>Press Enter and watch Claude Code generate code!</p>
 
-<h3>6.2 Review What It Created</h3>
+<h3>Review What It Created</h3>
 <p>Claude Code will show you the files it made. Read through them to understand what happened.</p>
 
-<h3>6.3 Ask for Changes (Optional)</h3>
+<h3>Ask for Changes (Optional)</h3>
 <p>If you want to modify something, just ask:</p>
 <p><code>Make the button green instead of blue and add rounded corners.</code></p>
 <p>Claude Code will update the files immediately!</p>`,
@@ -196,22 +196,22 @@ export const guides: Guide[] = [
         duration: 2,
         order: 7,
         module: 'prototype',
-        content: `<h2>Lesson 7: See Your Prototype Live</h2>
+        content: `<h2>See Your Prototype Live</h2>
 
-<h3>7.1 Exit Claude Code</h3>
+<h3>Exit Claude Code</h3>
 <p>Type <code>exit</code> and press Enter to return to Terminal.</p>
 
-<h3>7.2 Initialize a React App (If Needed)</h3>
+<h3>Initialize a React App (If Needed)</h3>
 <p>Run:</p>
 <p><code>npx create-react-app .</code></p>
 <p>This sets up the structure React needs to run.</p>
 
-<h3>7.3 Start Your Development Server</h3>
+<h3>Start Your Development Server</h3>
 <p>Run:</p>
 <p><code>npm start</code></p>
 <p>Your prototype will automatically open in your browser at <strong>localhost:3000</strong>!</p>
 
-<h3>7.4 Watch for Live Updates</h3>
+<h3>Watch for Live Updates</h3>
 <p>When Claude Code makes changes, your browser automatically updates. No manual refresh needed!</p>`,
       },
       {
@@ -220,20 +220,20 @@ export const guides: Guide[] = [
         duration: 1,
         order: 8,
         module: 'prototype',
-        content: `<h2>Lesson 8: Get Back to Editing</h2>
+        content: `<h2>Get Back to Editing</h2>
 
-<h3>8.1 Open Another Terminal Window</h3>
+<h3>Open Another Terminal Window</h3>
 <p>To keep editing with Claude Code while your prototype runs, open a new Terminal window:</p>
 <ul>
   <li><strong>Mac:</strong> Command + T (in Terminal app)</li>
   <li><strong>Windows:</strong> Ctrl + Shift + 2 (in Command Prompt)</li>
 </ul>
 
-<h3>8.2 Navigate to Your Project</h3>
+<h3>Navigate to Your Project</h3>
 <p>In the new Terminal, run:</p>
 <p><code>cd my-first-prototype</code></p>
 
-<h3>8.3 Start Claude Code Again</h3>
+<h3>Start Claude Code Again</h3>
 <p>Run:</p>
 <p><code>claude</code></p>
 <p>Now you have:</p>
@@ -252,7 +252,7 @@ export const guides: Guide[] = [
         title: 'Create a GitHub Account',
         duration: 1,
         order: 9,
-        content: `<h2>Lesson 9: Create a GitHub Account</h2>
+        content: `<h2>Create a GitHub Account</h2>
 
 <h3>Why GitHub?</h3>
 <ul>
@@ -262,7 +262,7 @@ export const guides: Guide[] = [
   <li><strong>Portfolio:</strong> Show your work and design-to-code process</li>
 </ul>
 
-<h3>9.1 Sign Up</h3>
+<h3>Sign Up</h3>
 <ol>
   <li>Go to <strong>github.com</strong></li>
   <li>Click <strong>"Sign up"</strong></li>
@@ -270,7 +270,7 @@ export const guides: Guide[] = [
   <li>Verify your email by clicking the link they send you</li>
 </ol>
 
-<h3>9.2 You're Ready!</h3>
+<h3>You're Ready!</h3>
 <p>GitHub account created. Let's connect your prototype.</p>`,
       },
       {
@@ -278,9 +278,9 @@ export const guides: Guide[] = [
         title: 'Create a Repository on GitHub',
         duration: 1,
         order: 10,
-        content: `<h2>Lesson 10: Create a Repository on GitHub</h2>
+        content: `<h2>Create a Repository on GitHub</h2>
 
-<h3>10.1 Create a New Repo</h3>
+<h3>Create a New Repo</h3>
 <ol>
   <li>Click the <strong>"+"</strong> icon in the top right of GitHub</li>
   <li>Select <strong>"New repository"</strong></li>
@@ -290,7 +290,7 @@ export const guides: Guide[] = [
   <li>Click <strong>"Create repository"</strong></li>
 </ol>
 
-<h3>10.2 Copy the Setup Instructions</h3>
+<h3>Copy the Setup Instructions</h3>
 <p>GitHub will show you commands. Keep this page open—you'll need the commands soon!</p>`,
       },
       {
@@ -298,26 +298,26 @@ export const guides: Guide[] = [
         title: 'Connect Your Local Project to GitHub',
         duration: 2,
         order: 11,
-        content: `<h2>Lesson 11: Connect Your Local Project to GitHub</h2>
+        content: `<h2>Connect Your Local Project to GitHub</h2>
 
-<h3>11.1 Open Terminal (Not Claude Code)</h3>
+<h3>Open Terminal (Not Claude Code)</h3>
 <p>You should be in your project folder. Check with:</p>
 <p><code>pwd</code></p>
 <p>You should see something like <code>.../my-first-prototype</code></p>
 
-<h3>11.2 Initialize Git</h3>
+<h3>Initialize Git</h3>
 <p>Run these commands one by one:</p>
 <p><code>git init</code></p>
 <p><code>git add .</code></p>
 <p><code>git commit -m "Initial prototype created with Claude Code"</code></p>
 
-<h3>11.3 Connect to GitHub</h3>
+<h3>Connect to GitHub</h3>
 <p>Copy the commands from GitHub's instructions. They'll look like:</p>
 <p><code>git branch -M main</code></p>
 <p><code>git remote add origin https://github.com/YOUR-USERNAME/my-first-prototype.git</code></p>
 <p><code>git push -u origin main</code></p>
 
-<h3>11.4 Check GitHub</h3>
+<h3>Check GitHub</h3>
 <p>Refresh your GitHub repo page. Your files should now be there!</p>`,
       },
       {
@@ -325,9 +325,9 @@ export const guides: Guide[] = [
         title: 'Save Your Changes Going Forward',
         duration: 2,
         order: 12,
-        content: `<h2>Lesson 12: Save Your Changes Going Forward</h2>
+        content: `<h2>Save Your Changes Going Forward</h2>
 
-<h3>12.1 Regular Save Workflow</h3>
+<h3>Regular Save Workflow</h3>
 <p>Every time you make changes in Claude Code that you want to keep:</p>
 <ol>
   <li>Exit Claude Code (type <code>exit</code>)</li>
@@ -336,7 +336,7 @@ export const guides: Guide[] = [
   <li>Run: <code>git push</code></li>
 </ol>
 
-<h3>12.2 Write Good Commit Messages</h3>
+<h3>Write Good Commit Messages</h3>
 <p>Instead of "Updated stuff", try:</p>
 <ul>
   <li>"Changed button color from blue to green"</li>
@@ -350,18 +350,18 @@ export const guides: Guide[] = [
         title: 'Share Your Work & Use Claude\'s /save Command',
         duration: 1,
         order: 13,
-        content: `<h2>Lesson 13: Share Your Work & Use Claude's /save Command</h2>
+        content: `<h2>Share Your Work & Use Claude's /save Command</h2>
 
-<h3>13.1 Pro Tip - Automatic Saving</h3>
+<h3>Pro Tip - Automatic Saving</h3>
 <p>Inside Claude Code, you can type:</p>
 <p><code>/save</code></p>
 <p>Claude Code will automatically handle git commands and create meaningful commit messages for you. This saves time!</p>
 
-<h3>13.2 Sharing Your Work</h3>
+<h3>Sharing Your Work</h3>
 <p>Just send them the GitHub link, like:</p>
 <p><code>https://github.com/YOUR-USERNAME/my-first-prototype</code></p>
 
-<h3>13.3 They Can:</h3>
+<h3>They Can:</h3>
 <ul>
   <li>See your code and understand your design decisions</li>
   <li>Clone your project to run locally</li>
@@ -385,7 +385,7 @@ export const guides: Guide[] = [
         duration: 2,
         order: 14,
         module: 'practices',
-        content: `<h2>Lesson 14: How to Describe Your Design to Claude Code</h2>
+        content: `<h2>How to Describe Your Design to Claude Code</h2>
 
 <h3>Be Specific, Not Vague</h3>
 <p><strong>❌ Not this:</strong> "Create a nice button"</p>
@@ -413,7 +413,7 @@ export const guides: Guide[] = [
         duration: 1,
         order: 15,
         module: 'practices',
-        content: `<h2>Lesson 15: Testing Your Prototype</h2>
+        content: `<h2>Testing Your Prototype</h2>
 
 <h3>Test in Different Browsers</h3>
 <ul>
@@ -443,7 +443,7 @@ export const guides: Guide[] = [
         duration: 1,
         order: 16,
         module: 'practices',
-        content: `<h2>Lesson 16: Iterating Based on Feedback</h2>
+        content: `<h2>Iterating Based on Feedback</h2>
 
 <h3>Ask for Small Changes, Not Rewrites</h3>
 <p><strong>❌ Don't:</strong> "I don't like this design, redo it"</p>
@@ -470,7 +470,7 @@ export const guides: Guide[] = [
         duration: 1,
         order: 17,
         module: 'practices',
-        content: `<h2>Lesson 17: Handing Off Work to Developers</h2>
+        content: `<h2>Handing Off Work to Developers</h2>
 
 <h3>Prepare Your Code for Handoff</h3>
 <ul>
@@ -502,7 +502,7 @@ export const guides: Guide[] = [
         duration: 1,
         order: 18,
         module: 'practices',
-        content: `<h2>Lesson 18: Troubleshooting Common Issues</h2>
+        content: `<h2>Troubleshooting Common Issues</h2>
 
 <h3>Claude Code Won't Start</h3>
 <ul>
@@ -550,48 +550,26 @@ export const guides: Guide[] = [
     totalDuration: 27,
     content: `
       <h2>Welcome to Claude Code Learning Path for Designers</h2>
-      <p>Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers—all from your terminal. This comprehensive course takes you from zero to confident Claude Code user.</p>
+      <p>Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Complete this course in 27 minutes and go from zero to confident.</p>
 
-      <h3>What You'll Learn in 18 Lessons</h3>
+      <h3>What You'll Learn</h3>
       <ul>
-        <li>How to set up Claude Code and get your API key (Lessons 1-3)</li>
-        <li>How to create and run your first prototype locally (Lessons 4-8)</li>
-        <li>How to save your work safely using GitHub (Lessons 9-13)</li>
-        <li>Best practices and workflows for designer-developer collaboration (Lessons 14-18)</li>
+        <li><strong>Setup</strong> - Get your API key, install Node.js, and get ready (6 minutes)</li>
+        <li><strong>Your First Prototype</strong> - Launch Claude Code and build something live (8 minutes)</li>
+        <li><strong>GitHub Collaboration</strong> - Save your work and collaborate with teammates (7 minutes)</li>
+        <li><strong>Best Practices</strong> - Master prompting, iteration, and handoffs (6 minutes)</li>
       </ul>
 
-      <h2>Course Structure: 4 Modules, 18 Sequential Lessons</h2>
-      <p>This learning path combines focused content into one comprehensive course. Work through lessons in order:</p>
-
-      <h3>Module 1: Setup (6 minutes)</h3>
-      <p><strong>Lessons 1-3:</strong> Get your API key from Anthropic, install Node.js, and have Claude Code ready to go. Start here if this is your first time.</p>
-
-      <h3>Module 2: Your First Prototype (8 minutes)</h3>
-      <p><strong>Lessons 4-8:</strong> Get hands-on. Launch Claude Code, generate your first prototype, and see it live on your machine. This is where the magic happens.</p>
-
-      <h3>Module 3: GitHub Collaboration (7 minutes)</h3>
-      <p><strong>Lessons 9-13:</strong> Don't lose your work. Learn how to save your prototypes to GitHub, collaborate with teammates, and maintain version history.</p>
-
-      <h3>Module 4: Best Practices (6 minutes)</h3>
-      <p><strong>Lessons 14-18:</strong> Level up. Master the art of describing designs to Claude Code, iterating on feedback, and handing off work to developers.</p>
-
-      <h2>How to Use This Course</h2>
+      <h2>Getting Started</h2>
       <ul>
-        <li><strong>First time using Claude Code?</strong> Start with Lesson 1 and follow through in order. Total time: ~27 minutes.</li>
-        <li><strong>Already have Claude Code installed?</strong> Jump to Lesson 4 (Module 2) to create your first prototype.</li>
-        <li><strong>Need help with a specific topic?</strong> Use lessons as reference. Each module builds on the previous.</li>
-        <li><strong>Learn at your own pace.</strong> Pause between lessons to practice what you learned.</li>
+        <li><strong>New to Claude Code?</strong> Start at the beginning and follow through. Total time: 27 minutes.</li>
+        <li><strong>Already have Claude Code installed?</strong> Jump straight to "Your First Prototype" and get hands-on.</li>
+        <li><strong>Need specific help?</strong> Each module builds on the previous, so use them as reference.</li>
+        <li><strong>Learn at your own pace.</strong> Pause between sections to practice what you learned.</li>
       </ul>
-
-      <h2>Why This Approach?</h2>
-      <p>Instead of separate guides, this course provides a unified learning path. All 18 lessons flow naturally from beginner to advanced topics, giving you a complete education in Claude Code for design work.</p>
 
       <h2>Ready to Get Started?</h2>
-      <p>Jump into Lesson 1 and begin your Claude Code journey!</p>
-
-      <p style="margin-top: 40px; font-size: 14px; color: #666;">
-        <strong>Time estimate:</strong> 27 minutes to complete all lessons + hands-on practice time
-      </p>
+      <p>Jump in and begin your Claude Code journey!</p>
     `,
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
   },
@@ -611,24 +589,24 @@ export const guides: Guide[] = [
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cursor_logo.png',
     tags: ['cursor', 'learning-path', 'getting-started', 'course', 'ai-editor'],
     lessons: [
-      { id: 'lesson-1', title: 'Install and Setup Cursor', duration: 2, order: 1, content: '<h2>Lesson 1: Install and Setup Cursor</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Navigate the Interface', duration: 2, order: 2, content: '<h2>Lesson 2: Navigate the Interface</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-1', title: 'Install and Setup Cursor', duration: 2, order: 1, content: '<h2>Install and Setup Cursor</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-2', title: 'Navigate the Interface', duration: 2, order: 2, content: '<h2>Navigate the Interface</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-3', title: 'Basic Code Editing', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Lesson 3: Basic Code Editing</h2><p>Lesson content coming soon...</p>' },
+        module: 'setup', content: '<h2>Basic Code Editing</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-4', title: 'AI Code Completions', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Lesson 4: AI Code Completions</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>AI Code Completions</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-5', title: 'Cursor AI Chat', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Lesson 5: Cursor AI Chat</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Cursor AI Chat</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-6', title: 'Code Refactoring with AI', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Lesson 6: Code Refactoring with AI</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Code Refactoring with AI</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-7', title: 'Debugging Tools', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Lesson 7: Debugging Tools</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Debugging Tools</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-8', title: 'Extensions and Customization', duration: 2, order: 8,
-        module: 'prototype', content: '<h2>Lesson 8: Extensions and Customization</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'Working with Design Files', duration: 2, order: 9, content: '<h2>Lesson 9: Working with Design Files</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Team Collaboration', duration: 2, order: 10, content: '<h2>Lesson 10: Team Collaboration</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-11', title: 'Advanced AI Features', duration: 2, order: 11, content: '<h2>Lesson 11: Advanced AI Features</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-12', title: 'Best Practices and Tips', duration: 0, order: 12, content: '<h2>Lesson 12: Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Extensions and Customization</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-9', title: 'Working with Design Files', duration: 2, order: 9, content: '<h2>Working with Design Files</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-10', title: 'Team Collaboration', duration: 2, order: 10, content: '<h2>Team Collaboration</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-11', title: 'Advanced AI Features', duration: 2, order: 11, content: '<h2>Advanced AI Features</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-12', title: 'Best Practices and Tips', duration: 0, order: 12, content: '<h2>Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
     ],
     content: '<h2>Cursor Learning Path</h2><p>Master the most powerful AI-assisted code editor built on VSCode. Learn from setup to advanced workflows.</p>',
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
@@ -649,22 +627,22 @@ export const guides: Guide[] = [
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft_365_Copilot_Icon_one-color.svg',
     tags: ['copilot', 'learning-path', 'github', 'course', 'ai-programming'],
     lessons: [
-      { id: 'lesson-1', title: 'Install GitHub Copilot', duration: 2, order: 1, content: '<h2>Lesson 1: Install GitHub Copilot</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Your First Code Suggestion', duration: 2, order: 2, content: '<h2>Lesson 2: Your First Code Suggestion</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-1', title: 'Install GitHub Copilot', duration: 2, order: 1, content: '<h2>Install GitHub Copilot</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-2', title: 'Your First Code Suggestion', duration: 2, order: 2, content: '<h2>Your First Code Suggestion</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-3', title: 'Code Comments to Code', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Lesson 3: Code Comments to Code</h2><p>Lesson content coming soon...</p>' },
+        module: 'setup', content: '<h2>Code Comments to Code</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-4', title: 'GitHub Copilot Chat', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Lesson 4: GitHub Copilot Chat</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>GitHub Copilot Chat</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-5', title: 'Testing with Copilot', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Lesson 5: Testing with Copilot</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Testing with Copilot</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-6', title: 'Documentation Generation', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Lesson 6: Documentation Generation</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Documentation Generation</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-7', title: 'Enterprise Copilot', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Lesson 7: Enterprise Copilot</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Enterprise Copilot</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-8', title: 'Tips and Tricks', duration: 2, order: 8,
-        module: 'prototype', content: '<h2>Lesson 8: Tips and Tricks</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'Ethical AI Development', duration: 1, order: 9, content: '<h2>Lesson 9: Ethical AI Development</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Next Steps and Resources', duration: 1, order: 10, content: '<h2>Lesson 10: Next Steps and Resources</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Tips and Tricks</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-9', title: 'Ethical AI Development', duration: 1, order: 9, content: '<h2>Ethical AI Development</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-10', title: 'Next Steps and Resources', duration: 1, order: 10, content: '<h2>Next Steps and Resources</h2><p>Lesson content coming soon...</p>' },
     ],
     content: '<h2>GitHub Copilot Learning Path</h2><p>Become proficient with GitHub Copilot, your AI pair programmer. Master code suggestions and AI-assisted development.</p>',
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
@@ -685,20 +663,20 @@ export const guides: Guide[] = [
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/New_Replit_Logo.svg',
     tags: ['replit', 'learning-path', 'cloud-coding', 'course', 'collaboration'],
     lessons: [
-      { id: 'lesson-1', title: 'Getting Started with Replit', duration: 2, order: 1, content: '<h2>Lesson 1: Getting Started with Replit</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Create Your First Repl', duration: 2, order: 2, content: '<h2>Lesson 2: Create Your First Repl</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-1', title: 'Getting Started with Replit', duration: 2, order: 1, content: '<h2>Getting Started with Replit</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-2', title: 'Create Your First Repl', duration: 2, order: 2, content: '<h2>Create Your First Repl</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-3', title: 'Replit AI Features', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Lesson 3: Replit AI Features</h2><p>Lesson content coming soon...</p>' },
+        module: 'setup', content: '<h2>Replit AI Features</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-4', title: 'Real-Time Collaboration', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Lesson 4: Real-Time Collaboration</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Real-Time Collaboration</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-5', title: 'Database Integration', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Lesson 5: Database Integration</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Database Integration</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-6', title: 'Deploying Your Project', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Lesson 6: Deploying Your Project</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Deploying Your Project</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-7', title: 'Advanced Workflows', duration: 1, order: 7,
-        module: 'prototype', content: '<h2>Lesson 7: Advanced Workflows</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Advanced Workflows</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-8', title: 'Best Practices and Tips', duration: 0, order: 8,
-        module: 'prototype', content: '<h2>Lesson 8: Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
     ],
     content: '<h2>Replit AI Learning Path</h2><p>Discover the power of Replit AI for collaborative cloud-based development. Master team coding and deployment.</p>',
     relatedPatterns: ['Contextual Assistance', 'Collaborative AI'],
@@ -719,22 +697,22 @@ export const guides: Guide[] = [
     thumbnail: 'https://lobehub.com/icons/v0',
     tags: ['v0', 'learning-path', 'design-to-code', 'course', 'react-components'],
     lessons: [
-      { id: 'lesson-1', title: 'Introduction to V0', duration: 2, order: 1, content: '<h2>Lesson 1: Introduction to V0</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Generate Your First Component', duration: 2, order: 2, content: '<h2>Lesson 2: Generate Your First Component</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-1', title: 'Introduction to V0', duration: 2, order: 1, content: '<h2>Introduction to V0</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-2', title: 'Generate Your First Component', duration: 2, order: 2, content: '<h2>Generate Your First Component</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-3', title: 'Design-to-Code Workflow', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Lesson 3: Design-to-Code Workflow</h2><p>Lesson content coming soon...</p>' },
+        module: 'setup', content: '<h2>Design-to-Code Workflow</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-4', title: 'Editing Generated Components', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Lesson 4: Editing Generated Components</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Editing Generated Components</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-5', title: 'Styling and Customization', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Lesson 5: Styling and Customization</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Styling and Customization</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-6', title: 'Building Complex UIs', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Lesson 6: Building Complex UIs</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Building Complex UIs</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-7', title: 'Integration with Next.js', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Lesson 7: Integration with Next.js</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Integration with Next.js</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-8', title: 'Deployment to Production', duration: 1, order: 8,
-        module: 'prototype', content: '<h2>Lesson 8: Deployment to Production</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'Performance Optimization', duration: 1, order: 9, content: '<h2>Lesson 9: Performance Optimization</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Advanced Techniques', duration: 0, order: 10, content: '<h2>Lesson 10: Advanced Techniques</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Deployment to Production</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-9', title: 'Performance Optimization', duration: 1, order: 9, content: '<h2>Performance Optimization</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-10', title: 'Advanced Techniques', duration: 0, order: 10, content: '<h2>Advanced Techniques</h2><p>Lesson content coming soon...</p>' },
     ],
     content: '<h2>V0 by Vercel Learning Path</h2><p>Master V0 for AI-generated React components. Transform designs into production-ready code with ease.</p>',
     relatedPatterns: ['Augmented Creation', 'Contextual Assistance'],
@@ -755,24 +733,24 @@ export const guides: Guide[] = [
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/GitHub_Invertocat_Logo.svg',
     tags: ['github', 'learning-path', 'version-control', 'course', 'collaboration'],
     lessons: [
-      { id: 'lesson-1', title: 'GitHub Basics and Setup', duration: 2, order: 1, content: '<h2>Lesson 1: GitHub Basics and Setup</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Create Your First Repository', duration: 2, order: 2, content: '<h2>Lesson 2: Create Your First Repository</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-1', title: 'GitHub Basics and Setup', duration: 2, order: 1, content: '<h2>GitHub Basics and Setup</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-2', title: 'Create Your First Repository', duration: 2, order: 2, content: '<h2>Create Your First Repository</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-3', title: 'Understanding Git Basics', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Lesson 3: Understanding Git Basics</h2><p>Lesson content coming soon...</p>' },
+        module: 'setup', content: '<h2>Understanding Git Basics</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-4', title: 'Commits, Pulls, and Pushes', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Lesson 4: Commits, Pulls, and Pushes</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Commits, Pulls, and Pushes</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-5', title: 'Branching Strategies', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Lesson 5: Branching Strategies</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Branching Strategies</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-6', title: 'Pull Requests and Code Review', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Lesson 6: Pull Requests and Code Review</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Pull Requests and Code Review</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-7', title: 'Merging and Conflict Resolution', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Lesson 7: Merging and Conflict Resolution</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Merging and Conflict Resolution</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-8', title: 'Collaboration Best Practices', duration: 2, order: 8,
-        module: 'prototype', content: '<h2>Lesson 8: Collaboration Best Practices</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'GitHub Pages and Documentation', duration: 2, order: 9, content: '<h2>Lesson 9: GitHub Pages and Documentation</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Project Management Tools', duration: 1, order: 10, content: '<h2>Lesson 10: Project Management Tools</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-11', title: 'Automation and CI/CD Basics', duration: 1, order: 11, content: '<h2>Lesson 11: Automation and CI/CD Basics</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-12', title: 'GitHub Workflows for Design Teams', duration: 1, order: 12, content: '<h2>Lesson 12: GitHub Workflows for Design Teams</h2><p>Lesson content coming soon...</p>' },
+        module: 'prototype', content: '<h2>Collaboration Best Practices</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-9', title: 'GitHub Pages and Documentation', duration: 2, order: 9, content: '<h2>GitHub Pages and Documentation</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-10', title: 'Project Management Tools', duration: 1, order: 10, content: '<h2>Project Management Tools</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-11', title: 'Automation and CI/CD Basics', duration: 1, order: 11, content: '<h2>Automation and CI/CD Basics</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-12', title: 'GitHub Workflows for Design Teams', duration: 1, order: 12, content: '<h2>GitHub Workflows for Design Teams</h2><p>Lesson content coming soon...</p>' },
     ],
     content: '<h2>GitHub Learning Path</h2><p>Learn GitHub for design and development collaboration. Master version control, team workflows, and modern development practices.</p>',
     relatedPatterns: ['Collaborative AI', 'Contextual Assistance'],

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Claude, Cursor, Github, Replit, V0, Copilot } from '@lobehub/icons';
 import { Guide } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import CopyButton from '@/components/ui/CopyButton';
@@ -24,6 +26,7 @@ export default function GuideClient({
   nextGuide,
   relatedPatterns,
 }: GuideClientProps) {
+  const router = useRouter();
   const {
     isGuideCompleted,
     markGuideComplete,
@@ -89,6 +92,29 @@ export default function GuideClient({
       })
     : '';
 
+  // Get the appropriate icon for the guide
+  const getIcon = () => {
+    const iconProps = { size: 24 };
+    switch (guide.tool?.toLowerCase()) {
+      case 'claude code':
+        return <div style={{ color: '#D97757' }}><Claude {...iconProps} /></div>;
+      case 'cursor':
+        return <div style={{ color: '#000' }}><Cursor {...iconProps} /></div>;
+      case 'github':
+        return <div style={{ color: '#000' }}><Github {...iconProps} /></div>;
+      case 'github copilot':
+        return <Copilot.Color {...iconProps} />;
+      case 'replit ai':
+      case 'replit':
+        return <div style={{ color: '#FD5402' }}><Replit {...iconProps} /></div>;
+      case 'v0 by vercel':
+      case 'v0':
+        return <div style={{ color: '#000' }}><V0 {...iconProps} /></div>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background-primary text-text-primary">
       {/* Reading Progress Bar */}
@@ -126,9 +152,14 @@ export default function GuideClient({
       <div className="py-12 md:py-16">
         <div className="max-w-[900px] mx-auto px-8 md:px-12 lg:px-16">
           {/* Back Link */}
-          <Link
-            href="/guides"
-            className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-hover mb-6 transition-colors"
+          <button
+            type="button"
+            onClick={() => {
+              console.log('Back button clicked');
+              router.push('/guides');
+            }}
+            className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-hover hover:underline mb-6 transition-colors cursor-pointer bg-transparent border-none p-2 -ml-2 focus:outline-none active:opacity-80 relative z-10 font-medium"
+            tabIndex={0}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -141,15 +172,15 @@ export default function GuideClient({
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             Back to Guides
-          </Link>
+          </button>
 
           {/* Header */}
           <header className="mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">{guide.title}</h1>
             <p className="text-xl text-text-secondary mb-6">{guide.description}</p>
 
-            {/* Lesson Progress (if lessons exist) */}
-            {hasLessons && (
+            {/* Lesson Progress (if lessons exist and guide started) */}
+            {hasLessons && guideStatus !== 'not-started' && (
               <div className="mb-6 p-4 bg-surface-secondary/50 rounded-lg border border-border-primary">
                 <div className="flex items-center justify-between mb-3">
                   <div>
@@ -159,7 +190,6 @@ export default function GuideClient({
                     <p className="text-xs text-text-secondary mt-1">
                       {guideStatus === 'completed' && 'Guide completed!'}
                       {guideStatus === 'in-progress' && 'Continue learning'}
-                      {guideStatus === 'not-started' && 'Start this guide'}
                     </p>
                   </div>
                   <span className="text-lg font-bold text-accent-primary">{lessonProgress.percentage}%</span>
@@ -170,19 +200,16 @@ export default function GuideClient({
 
             {/* Metadata */}
             <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-border-primary">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-text-secondary">Tool:</span>
-                <span className="px-3 py-1 rounded-full text-sm bg-accent-subtle text-accent-primary font-medium">
-                  {guide.tool}
-                </span>
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full text-sm bg-accent-subtle text-accent-primary font-medium group">
+                <div className="grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
+                  {getIcon()}
+                </div>
+                {guide.tool}
               </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-text-secondary">Level:</span>
-                <span className="px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-text-secondary">
-                  {guide.skillLevel}
-                </span>
-              </div>
+              <span className="px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
+                {guide.skillLevel}
+              </span>
 
               <div className="flex items-center gap-2">
                 <svg
@@ -197,31 +224,6 @@ export default function GuideClient({
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
                 <span className="text-sm text-text-secondary">{guide.readTime} min read</span>
-              </div>
-
-              {/* Time Spent Tracker */}
-              {hasLessons && (
-                <div className="flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="w-4 h-4 text-accent-primary"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  <span className="text-sm font-medium text-accent-primary">
-                    {getTimeSpentDisplay(getGuideTotalTimeSpent(guide.id))} spent
-                  </span>
-                </div>
-              )}
-
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-text-secondary">Domain:</span>
-                <span className="text-sm text-text-secondary">{guide.designDomain}</span>
               </div>
             </div>
           </header>
@@ -384,12 +386,17 @@ export default function GuideClient({
               <div className="flex-1" />
             )}
 
-            <Link
-              href="/guides"
-              className="px-6 py-2 rounded-full bg-accent-subtle text-accent-primary font-medium hover:bg-accent-primary hover:text-background-primary transition-colors border border-accent-primary/20 flex-shrink-0"
+            <button
+              type="button"
+              onClick={() => {
+                console.log('View All Guides button clicked');
+                router.push('/guides');
+              }}
+              className="px-6 py-2 rounded-full bg-accent-subtle text-accent-primary font-medium hover:bg-accent-primary hover:text-background-primary transition-colors border border-accent-primary/20 flex-shrink-0 cursor-pointer focus:outline-none active:opacity-80"
+              tabIndex={0}
             >
               View All Guides
-            </Link>
+            </button>
 
             {nextGuide ? (
               <Link
