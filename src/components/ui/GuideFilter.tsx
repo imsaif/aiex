@@ -1,25 +1,22 @@
 'use client';
 
 import { useMemo, useState, useRef, useEffect } from 'react';
-import { Guide, GuideFilter as GuideFilterType } from '@/types';
-import { guides as allGuides, getAllTools, getAllSkillLevels, getAllDesignDomains } from '@/data/guides';
+import { GuideFilter as GuideFilterType } from '@/types';
+import { getAllTools, getAllSkillLevels } from '@/data/guides';
 
 interface GuideFilterProps {
   onFilterChange: (filter: GuideFilterType) => void;
   selectedTool?: string;
   selectedSkillLevel?: string;
-  selectedDomain?: string;
 }
 
 export default function GuideFilter({
   onFilterChange,
   selectedTool,
   selectedSkillLevel,
-  selectedDomain,
 }: GuideFilterProps) {
   const tools = useMemo(() => getAllTools(), []);
   const skillLevels = useMemo(() => getAllSkillLevels(), []);
-  const designDomains = useMemo(() => getAllDesignDomains(), []);
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -40,7 +37,6 @@ export default function GuideFilter({
     onFilterChange({
       tool: tool === 'all' ? undefined : (tool as any),
       skillLevel: selectedSkillLevel as any,
-      designDomain: selectedDomain,
     });
     setOpenDropdown(null);
   };
@@ -49,16 +45,6 @@ export default function GuideFilter({
     onFilterChange({
       tool: selectedTool as any,
       skillLevel: level === 'all' ? undefined : (level as any),
-      designDomain: selectedDomain,
-    });
-    setOpenDropdown(null);
-  };
-
-  const handleDomainChange = (domain: string) => {
-    onFilterChange({
-      tool: selectedTool as any,
-      skillLevel: selectedSkillLevel as any,
-      designDomain: domain === 'all' ? undefined : domain,
     });
     setOpenDropdown(null);
   };
@@ -155,50 +141,6 @@ export default function GuideFilter({
         )}
       </div>
 
-      {/* Design Domain Filter Dropdown */}
-      <div className="relative">
-        <button
-          onClick={() => setOpenDropdown(openDropdown === 'domain' ? null : 'domain')}
-          className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-border-primary
-                   bg-gray-100 dark:bg-gray-800 text-text-primary hover:bg-gray-200 dark:hover:bg-gray-700
-                   transition-colors text-sm font-medium"
-        >
-          <span>{selectedDomain ? `Domain: ${selectedDomain}` : 'All Domains'}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className={`w-4 h-4 transition-transform ${openDropdown === 'domain' ? 'rotate-180' : ''}`}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-          </svg>
-        </button>
-
-        {openDropdown === 'domain' && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-border-primary
-                        rounded-lg shadow-lg z-50">
-            <button
-              onClick={() => handleDomainChange('all')}
-              className={`w-full text-left px-4 py-2 text-sm transition-colors
-                         ${selectedDomain ? 'text-text-secondary hover:bg-accent-subtle' : 'bg-accent-subtle text-accent-primary font-medium'}`}
-            >
-              All Domains
-            </button>
-            {designDomains.map((domain) => (
-              <button
-                key={domain}
-                onClick={() => handleDomainChange(domain)}
-                className={`w-full text-left px-4 py-2 text-sm transition-colors
-                           ${selectedDomain === domain ? 'bg-accent-subtle text-accent-primary font-medium' : 'text-text-secondary hover:bg-accent-subtle'}`}
-              >
-                {domain}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

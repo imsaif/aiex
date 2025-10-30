@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Claude, Cursor, Github, Replit, V0, Copilot } from '@lobehub/icons';
 import { Course } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import StatusBadge from './StatusBadge';
@@ -20,6 +21,29 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
   const lessonProgress = totalLessons > 0 ? getLessonProgress(course.id, totalLessons) : { completed: 0, total: 0, percentage: 0 };
   const courseStatus = totalLessons > 0 ? getGuideStatus(course.id, totalLessons) : 'not-started';
 
+  // Get the appropriate icon for the course
+  const getIcon = () => {
+    const iconProps = { size: 56 };
+    switch (course.tool?.toLowerCase()) {
+      case 'claude code':
+        return <div style={{ color: '#D97757' }}><Claude {...iconProps} /></div>;
+      case 'cursor':
+        return <div style={{ color: '#000' }}><Cursor {...iconProps} /></div>;
+      case 'github':
+        return <div style={{ color: '#000' }}><Github {...iconProps} /></div>;
+      case 'github copilot':
+        return <Copilot.Color {...iconProps} />;
+      case 'replit ai':
+      case 'replit':
+        return <div style={{ color: '#FD5402' }}><Replit {...iconProps} /></div>;
+      case 'v0 by vercel':
+      case 'v0':
+        return <div style={{ color: '#000' }}><V0 {...iconProps} /></div>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 1, y: 0 }}
@@ -33,18 +57,10 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
                     flex flex-col overflow-hidden shadow-sm hover:shadow-md"
         >
           {/* Thumbnail Section */}
-          <div className="relative w-full h-40 bg-gradient-to-br from-accent-primary/10 to-accent-primary/5 overflow-hidden flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-12 h-12 text-accent-primary/40"
-            >
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-            </svg>
+          <div className="relative w-full h-40 bg-gradient-to-br from-accent-primary/10 to-accent-primary/5 overflow-hidden flex items-center justify-center group">
+            <div className="grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
+              {getIcon()}
+            </div>
 
             {/* Status Badge */}
             {totalLessons > 0 && (

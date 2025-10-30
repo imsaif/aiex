@@ -21,7 +21,7 @@ export const guides: Guide[] = [
     readTime: 27,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    thumbnail: '/images/guides/claude-code-ux.jpg',
+    thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Claude_AI_symbol.svg',
     tags: ['claude-code', 'learning-path', 'getting-started', 'course', 'comprehensive'],
     lessons: [
       // Setup Lessons (1-3)
@@ -595,7 +595,7 @@ export const guides: Guide[] = [
     readTime: 20,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    thumbnail: '/images/guides/cursor-ux.jpg',
+    thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cursor_logo.png',
     tags: ['cursor', 'learning-path', 'getting-started', 'course', 'ai-editor'],
     lessons: [
       { id: 'lesson-1', title: 'Install and Setup Cursor', duration: 2, order: 1, content: '<h2>Lesson 1: Install and Setup Cursor</h2><p>Lesson content coming soon...</p>' },
@@ -627,7 +627,7 @@ export const guides: Guide[] = [
     readTime: 18,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    thumbnail: '/images/guides/copilot-ux.jpg',
+    thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft_365_Copilot_Icon_one-color.svg',
     tags: ['copilot', 'learning-path', 'github', 'course', 'ai-programming'],
     lessons: [
       { id: 'lesson-1', title: 'Install GitHub Copilot', duration: 2, order: 1, content: '<h2>Lesson 1: Install GitHub Copilot</h2><p>Lesson content coming soon...</p>' },
@@ -657,7 +657,7 @@ export const guides: Guide[] = [
     readTime: 15,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    thumbnail: '/images/guides/replit-ux.jpg',
+    thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/New_Replit_Logo.svg',
     tags: ['replit', 'learning-path', 'cloud-coding', 'course', 'collaboration'],
     lessons: [
       { id: 'lesson-1', title: 'Getting Started with Replit', duration: 2, order: 1, content: '<h2>Lesson 1: Getting Started with Replit</h2><p>Lesson content coming soon...</p>' },
@@ -685,7 +685,7 @@ export const guides: Guide[] = [
     readTime: 16,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    thumbnail: '/images/guides/v0-ux.jpg',
+    thumbnail: 'https://lobehub.com/icons/v0',
     tags: ['v0', 'learning-path', 'design-to-code', 'course', 'react-components'],
     lessons: [
       { id: 'lesson-1', title: 'Introduction to V0', duration: 2, order: 1, content: '<h2>Lesson 1: Introduction to V0</h2><p>Lesson content coming soon...</p>' },
@@ -715,7 +715,7 @@ export const guides: Guide[] = [
     readTime: 20,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    thumbnail: '/images/guides/github-ux.jpg',
+    thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/GitHub_Invertocat_Logo.svg',
     tags: ['github', 'learning-path', 'version-control', 'course', 'collaboration'],
     lessons: [
       { id: 'lesson-1', title: 'GitHub Basics and Setup', duration: 2, order: 1, content: '<h2>Lesson 1: GitHub Basics and Setup</h2><p>Lesson content coming soon...</p>' },

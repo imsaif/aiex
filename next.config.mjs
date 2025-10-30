@@ -16,7 +16,28 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['framer-motion', 'fuse.js', 'react-syntax-highlighter'],
   },
-  
+
+  // Configure external image domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'commons.wikimedia.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'uxwing.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lobehub.com',
+        pathname: '/**',
+      },
+    ],
+  },
+
   // images: {
   //   // Enable better image formats (WebP, AVIF)
   //   formats: ['image/avif', 'image/webp'],
