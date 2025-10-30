@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 interface CourseMetadataBarProps {
-  totalDuration: number;
   lastUpdated?: string;
   progressPercentage?: number;
   onShare?: () => void;
@@ -13,7 +12,6 @@ interface CourseMetadataBarProps {
 }
 
 export default function CourseMetadataBar({
-  totalDuration,
   lastUpdated,
   progressPercentage = 0,
   onShare,
@@ -42,22 +40,6 @@ export default function CourseMetadataBar({
 
   return (
     <div className="flex flex-wrap items-center gap-4 md:gap-6 py-4 px-6 bg-surface-secondary/50 rounded-lg border border-border-primary mb-8">
-      {/* Duration */}
-      <div className="flex items-center gap-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="w-5 h-5 text-text-secondary"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <polyline points="12 6 12 12 16 14" />
-        </svg>
-        <span className="text-sm font-medium text-text-primary">{totalDuration} min total</span>
-      </div>
-
       {/* Last Updated */}
       {lastUpdated && (
         <div className="flex items-center gap-2">

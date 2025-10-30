@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { BookOpenIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface IntroductionSectionProps {
   title: string;
@@ -31,17 +32,7 @@ export default function IntroductionSection({
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-5 h-5 text-accent-primary flex-shrink-0"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 16v-4M12 8h.01" />
-                </svg>
+                <BookOpenIcon className="w-5 h-5 text-accent-primary flex-shrink-0" />
                 <h3 className="text-lg font-semibold text-text-primary">Course Overview</h3>
               </div>
               <p className="text-sm text-text-secondary line-clamp-2">{preview}</p>
@@ -53,16 +44,7 @@ export default function IntroductionSection({
               transition={{ duration: 0.3 }}
               className="flex-shrink-0 mt-1"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="w-5 h-5 text-text-secondary"
-              >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
+              <ChevronDownIcon className="w-5 h-5 text-text-secondary" />
             </motion.div>
           </div>
         </div>

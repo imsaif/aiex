@@ -26,11 +26,8 @@ export default function ModularLessonCard({
     isLessonCompleted,
     markLessonComplete,
     markLessonIncomplete,
-    getLessonEngagement,
-    getTimeSpentDisplay,
   } = useGuideProgress();
   const isCompleted = isLessonCompleted(guideId, lesson.id);
-  const engagement = getLessonEngagement(guideId, lesson.id);
 
   const handleToggleComplete = () => {
     if (isCompleted) {
@@ -96,28 +93,6 @@ export default function ModularLessonCard({
             </h3>
 
             <div className="flex items-center gap-4 flex-wrap">
-              {/* Duration / Time Spent */}
-              <span className={`text-xs flex items-center gap-1 ${
-                engagement && engagement.totalTimeSpent > 0
-                  ? 'text-accent-primary font-medium'
-                  : 'text-text-secondary'
-              }`}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-3.5 h-3.5"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                {engagement && engagement.totalTimeSpent > 0
-                  ? `${getTimeSpentDisplay(engagement.totalTimeSpent)} spent`
-                  : `${lesson.duration} min`}
-              </span>
-
               {/* Status Badge */}
               <StatusBadge status={isCompleted ? 'completed' : 'not-started'} />
             </div>

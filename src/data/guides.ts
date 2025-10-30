@@ -11,7 +11,7 @@ export const guides: Guide[] = [
     slug: 'claude-code-learning-path',
     title: "Claude Code Guide for Designers",
     description:
-      'Master Claude Code to design and prototype faster, collaborate seamlessly with developers, and ship production-ready web applications with AI-powered assistance.',
+      'Master Claude Code for design and prototyping with AI-powered assistance.',
     excerpt:
       'Your complete Claude Code education: 18 sequential lessons covering setup, prototyping, version control, and professional workflows. Go from zero to confident in one comprehensive course.',
     tool: 'Claude Code',
@@ -31,34 +31,74 @@ export const guides: Guide[] = [
         duration: 2,
         order: 1,
         module: 'setup',
-        content: `<h2>Get Your Anthropic API Key</h2>
-<p>Claude Code needs an API key to connect to the Claude AI service. This key tells Anthropic that it's really you using the service.</p>
+        content: `<!-- Introduction Section -->
+<div style="display: flex; gap: 12px; margin-bottom: 24px;">
+  <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000; margin-top: 2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+    <line x1="8" y1="21" x2="16" y2="21"></line>
+    <line x1="12" y1="17" x2="12" y2="21"></line>
+  </svg>
+  <div>
+    <p style="margin: 0; color: #4b5563; font-size: 16px;">Claude Code needs an API key to connect to the Claude AI service. Your API key is like a secret password that tells Anthropic it's really you.</p>
+  </div>
+</div>
 
-<h3>Create an Anthropic Account</h3>
-<ol>
-  <li>Go to <strong>console.anthropic.com</strong> in your web browser</li>
-  <li>Click <strong>"Sign up"</strong> in the top right</li>
-  <li>Create an account using your email and password</li>
-  <li>Check your email for a verification link and click it</li>
-</ol>
+<!-- Create Account Section -->
+<div style="margin-bottom: 32px;">
+  <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;">
+    <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <h3 style="margin: 0; color: #1f2937; font-size: 18px;">Create an Anthropic Account</h3>
+  </div>
+  <ol style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
+    <li>Go to <strong>console.anthropic.com</strong> in your web browser</li>
+    <li>Click <strong>"Sign up"</strong> in the top right</li>
+    <li>Create an account using your email and password</li>
+    <li>Check your email for a verification link and click it</li>
+  </ol>
+</div>
 
-<h3>Generate Your API Key</h3>
-<ol>
-  <li>Once logged in, find <strong>"API Keys"</strong> in the left menu</li>
-  <li>Click <strong>"Create Key"</strong></li>
-  <li>Name it something like <strong>"Claude Code for Design"</strong></li>
-  <li>Click <strong>"Create"</strong></li>
-  <li><strong>Copy your key immediately</strong> and save it somewhere safe (like a password manager)</li>
-</ol>
+<!-- Generate API Key Section -->
+<div style="margin-bottom: 32px;">
+  <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;">
+    <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline>
+      <line x1="12" y1="15" x2="12" y2="3"></line>
+    </svg>
+    <h3 style="margin: 0; color: #1f2937; font-size: 18px;">Generate Your API Key</h3>
+  </div>
+  <ol style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
+    <li>Once logged in, find <strong>"API Keys"</strong> in the left menu</li>
+    <li>Click <strong>"Create Key"</strong></li>
+    <li>Name it something like <strong>"Claude Code for Design"</strong></li>
+    <li>Click <strong>"Create"</strong></li>
+    <li><strong>Copy your key immediately</strong> and save it somewhere safe (like a password manager)</li>
+  </ol>
+</div>
 
-<h3>Keep Your Key Secure ⚠️</h3>
-<p><strong>Important:</strong> Your API key is like a password. Never:</p>
-<ul>
-  <li>Share it with anyone</li>
-  <li>Post it in Slack, email, or public docs</li>
-  <li>Commit it to GitHub</li>
-  <li>Store it in plain text files in your projects</li>
-</ul>`,
+<!-- Security Warning Section -->
+<div style="margin-bottom: 24px;">
+  <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px;">
+    <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+    <div>
+      <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">Keep Your Key Secure</h3>
+      <p style="margin: 0 0 8px 0; color: #4b5563; font-weight: 500;">Your API key is like a password. Never:</p>
+      <ul style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
+        <li>Share it with anyone</li>
+        <li>Post it in Slack, email, or public docs</li>
+        <li>Commit it to GitHub</li>
+        <li>Store it in plain text files in your projects</li>
+      </ul>
+    </div>
+  </div>
+</div>`,
       },
       {
         id: 'lesson-2',
@@ -118,9 +158,9 @@ export const guides: Guide[] = [
 <h2>Setup Complete!</h2>
 <p>You now have:</p>
 <ul>
-  <li>✓ An Anthropic account with an API key</li>
-  <li>✓ Node.js installed</li>
-  <li>✓ Claude Code installed and verified</li>
+  <li>An Anthropic account with an API key</li>
+  <li>Node.js installed</li>
+  <li>Claude Code installed and verified</li>
 </ul>`,
       },
       // First Prototype Lessons (4-8)
@@ -372,10 +412,10 @@ export const guides: Guide[] = [
 <h2>You're Now a Designer with Git Skills!</h2>
 <p>You can:</p>
 <ul>
-  <li>✓ Save your work safely to the cloud</li>
-  <li>✓ Track every change you make</li>
-  <li>✓ Collaborate with developers</li>
-  <li>✓ Showcase your process on GitHub</li>
+  <li>Save your work safely to the cloud</li>
+  <li>Track every change you make</li>
+  <li>Collaborate with developers</li>
+  <li>Showcase your process on GitHub</li>
 </ul>`,
       },
       // Best Practices Lessons (14-18)
@@ -537,10 +577,10 @@ export const guides: Guide[] = [
 <h2>You're Ready!</h2>
 <p>You now know:</p>
 <ul>
-  <li>✓ How to set up Claude Code</li>
-  <li>✓ How to create prototypes</li>
-  <li>✓ How to save your work on GitHub</li>
-  <li>✓ Best practices for working with Claude Code</li>
+  <li>How to set up Claude Code</li>
+  <li>How to create prototypes</li>
+  <li>How to save your work on GitHub</li>
+  <li>Best practices for working with Claude Code</li>
 </ul>
 
 <p><strong>Congratulations!</strong> Start building! Create a prototype, share it with your team, and iterate. Claude Code is a tool to speed up your ideas—have fun with it!</p>`,
@@ -553,23 +593,83 @@ export const guides: Guide[] = [
       <p>Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Complete this course in 27 minutes and go from zero to confident.</p>
 
       <h3>What You'll Learn</h3>
-      <ul>
-        <li><strong>Setup</strong> - Get your API key, install Node.js, and get ready (6 minutes)</li>
-        <li><strong>Your First Prototype</strong> - Launch Claude Code and build something live (8 minutes)</li>
-        <li><strong>GitHub Collaboration</strong> - Save your work and collaborate with teammates (7 minutes)</li>
-        <li><strong>Best Practices</strong> - Master prompting, iteration, and handoffs (6 minutes)</li>
+      <p>This learning path is structured in 4 sequential modules that build on each other:</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; padding: 12px; background: rgba(139, 92, 246, 0.05); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.1);">
+        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
+          <div style="font-weight: 600; color: #1f2937;">1. Setup</div>
+          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">6 minutes</div>
+        </div>
+        <div style="align-self: center; color: #9ca3af; font-weight: bold;">→</div>
+        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
+          <div style="font-weight: 600; color: #1f2937;">2. Prototype</div>
+          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">8 minutes</div>
+        </div>
+        <div style="align-self: center; color: #9ca3af; font-weight: bold;">→</div>
+        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
+          <div style="font-weight: 600; color: #1f2937;">3. GitHub</div>
+          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">7 minutes</div>
+        </div>
+        <div style="align-self: center; color: #9ca3af; font-weight: bold;">→</div>
+        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
+          <div style="font-weight: 600; color: #1f2937;">4. Best Practices</div>
+          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">6 minutes</div>
+        </div>
+      </div>
+
+      <h3>What's in Each Module?</h3>
+      <div style="display: grid; gap: 16px; margin: 20px 0;">
+        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+          <h4 style="margin: 0 0 8px 0; color: #1f2937;">1. Setup (6 minutes)</h4>
+          <p style="margin: 8px 0; color: #4b5563;">Prepare your environment for success</p>
+          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
+            <li>Create an Anthropic account and get your API key</li>
+            <li>Install Node.js on your computer</li>
+            <li>Install and verify Claude Code</li>
+          </ul>
+        </div>
+
+        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+          <h4 style="margin: 0 0 8px 0; color: #1f2937;">2. Prototype (8 minutes)</h4>
+          <p style="margin: 8px 0; color: #4b5563;">Build your first interactive project</p>
+          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
+            <li>Launch Claude Code and start your first session</li>
+            <li>Create a working prototype from scratch</li>
+            <li>Test and iterate on your design</li>
+          </ul>
+        </div>
+
+        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+          <h4 style="margin: 0 0 8px 0; color: #1f2937;">3. GitHub (7 minutes)</h4>
+          <p style="margin: 8px 0; color: #4b5563;">Save and collaborate on your work</p>
+          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
+            <li>Initialize Git and create a GitHub repository</li>
+            <li>Commit and push your prototype code</li>
+            <li>Learn version control best practices</li>
+          </ul>
+        </div>
+
+        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
+          <h4 style="margin: 0 0 8px 0; color: #1f2937;">4. Best Practices (6 minutes)</h4>
+          <p style="margin: 8px 0; color: #4b5563;">Master professional workflows</p>
+          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
+            <li>Write clear, specific prompts for better results</li>
+            <li>Test across browsers and devices</li>
+            <li>Hand off work to developers professionally</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Getting Started</h3>
+      <p>Choose the path that fits your needs:</p>
+      <ul style="padding-left: 20px; margin: 12px 0;">
+        <li><strong>New to Claude Code?</strong> Start at the beginning and follow through sequentially. Total time: 27 minutes.</li>
+        <li><strong>Already have Claude Code installed?</strong> Jump straight to "Your First Prototype" and get hands-on immediately.</li>
+        <li><strong>Need specific help?</strong> Each module builds on the previous, but you can use them as standalone references.</li>
+        <li><strong>Learn at your own pace</strong> - Pause between sections to practice and experiment with what you learned.</li>
       </ul>
 
-      <h2>Getting Started</h2>
-      <ul>
-        <li><strong>New to Claude Code?</strong> Start at the beginning and follow through. Total time: 27 minutes.</li>
-        <li><strong>Already have Claude Code installed?</strong> Jump straight to "Your First Prototype" and get hands-on.</li>
-        <li><strong>Need specific help?</strong> Each module builds on the previous, so use them as reference.</li>
-        <li><strong>Learn at your own pace.</strong> Pause between sections to practice what you learned.</li>
-      </ul>
-
-      <h2>Ready to Get Started?</h2>
-      <p>Jump in and begin your Claude Code journey!</p>
+      <h3>Ready to Get Started?</h3>
+      <p>Jump in and begin your Claude Code journey! Start with the first module or jump to where you need help.</p>
     `,
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
   },
@@ -577,7 +677,7 @@ export const guides: Guide[] = [
     id: 'cursor-course',
     slug: 'cursor-learning-path',
     title: 'Cursor Guide for Designers',
-    description: 'Master Cursor, the AI-powered code editor built on VSCode. Learn intelligent code editing, AI-assisted development, and productivity features for design tools.',
+    description: 'Master Cursor, the AI-powered code editor for designers.',
     excerpt: 'Your complete Cursor education: 12 sequential lessons covering setup, features, and advanced workflows. Unlock faster development with AI pair programming.',
     tool: 'Cursor',
     useCase: 'Learning Path',
@@ -615,7 +715,7 @@ export const guides: Guide[] = [
     id: 'copilot-course',
     slug: 'github-copilot-learning-path',
     title: 'GitHub Copilot Guide for Designers',
-    description: 'Learn GitHub Copilot, the AI pair programmer powered by OpenAI. Master code suggestions, documentation, and productivity with AI-assisted development.',
+    description: 'Learn GitHub Copilot, the AI pair programmer for developers.',
     excerpt: 'Your complete GitHub Copilot guide: 10 lessons covering installation, code suggestions, chat features, and enterprise workflows.',
     tool: 'GitHub Copilot',
     useCase: 'Learning Path',
@@ -651,7 +751,7 @@ export const guides: Guide[] = [
     id: 'replit-course',
     slug: 'replit-ai-learning-path',
     title: 'Replit AI Guide for Designers',
-    description: 'Master Replit AI for collaborative coding and deployment. Learn intelligent development, real-time collaboration, and cloud deployment with AI assistance.',
+    description: 'Master Replit AI for collaborative coding with AI assistance.',
     excerpt: 'Your complete Replit AI guide: 8 lessons covering platform basics, AI features, collaboration, and deployment.',
     tool: 'Replit AI',
     useCase: 'Learning Path',
@@ -685,7 +785,7 @@ export const guides: Guide[] = [
     id: 'v0-course',
     slug: 'v0-by-vercel-learning-path',
     title: 'V0 by Vercel Guide for Designers',
-    description: 'Learn V0 by Vercel, the AI tool for generating React components. Master design-to-code, component editing, and modern web development with AI.',
+    description: 'Learn V0 by Vercel, the AI tool for generating React components.',
     excerpt: 'Your complete V0 guide: 10 lessons covering component generation, design-to-code, and production workflows.',
     tool: 'V0 by Vercel',
     useCase: 'Learning Path',
@@ -721,7 +821,7 @@ export const guides: Guide[] = [
     id: 'github-course',
     slug: 'github-learning-path',
     title: 'GitHub Guide for Designers',
-    description: 'Master GitHub for collaborative design and development. Learn version control, collaboration workflows, and project management for design teams.',
+    description: 'Master GitHub for version control and collaboration.',
     excerpt: 'Your complete GitHub guide: 12 lessons covering repositories, version control, collaboration, branching, and design workflows.',
     tool: 'GitHub',
     useCase: 'Learning Path',

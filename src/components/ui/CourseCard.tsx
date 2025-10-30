@@ -109,25 +109,6 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
               </div>
             )}
 
-            {/* Footer Info */}
-            <div className="flex items-center justify-between text-xs text-text-secondary">
-              <span className="flex items-center gap-1">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-4 h-4"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                {getGuideTotalTimeSpent(course.id) > 0
-                  ? getTimeSpentDisplay(getGuideTotalTimeSpent(course.id))
-                  : `${course.totalDuration} min`}
-              </span>
-            </div>
           </div>
         </div>
       </Link>

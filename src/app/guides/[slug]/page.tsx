@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getGuideBySlug, getPreviousGuide, getNextGuide } from '@/data/guides';
-import patterns from '@/data/patterns';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -42,11 +41,6 @@ export default async function GuidePage({ params }: GuidePageProps) {
     notFound();
   }
 
-  // Get related patterns
-  const relatedPatterns = guide.relatedPatterns
-    ? patterns.filter((p) => guide.relatedPatterns?.includes(p.title))
-    : [];
-
   // Get navigation
   const previousGuide = getPreviousGuide(slug);
   const nextGuide = getNextGuide(slug);
@@ -58,7 +52,6 @@ export default async function GuidePage({ params }: GuidePageProps) {
         guide={guide}
         previousGuide={previousGuide}
         nextGuide={nextGuide}
-        relatedPatterns={relatedPatterns}
       />
       <Footer />
       <ScrollToTop />

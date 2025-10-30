@@ -26,20 +26,11 @@ export default function ModuleSection({
   const [isExpanded, setIsExpanded] = useState(false);
   const {
     getLessonProgress,
-    getLessonEngagement,
-    getTimeSpentDisplay,
   } = useGuideProgress();
 
   const totalLessons = lessons.length;
   const { completed } = getLessonProgress(guideId, totalLessons);
-  const totalDuration = lessons.reduce((sum, lesson) => sum + lesson.duration, 0);
   const completionPercentage = totalLessons > 0 ? (completed / totalLessons) * 100 : 0;
-
-  // Calculate total time spent in this module
-  const moduleTotalTimeSpent = lessons.reduce((sum, lesson) => {
-    const engagement = getLessonEngagement(guideId, lesson.id);
-    return sum + (engagement?.totalTimeSpent || 0);
-  }, 0);
 
   return (
     <div className="space-y-4">
@@ -56,32 +47,6 @@ export default function ModuleSection({
 
               {/* Module Stats */}
               <div className="flex flex-wrap items-center gap-4">
-
-                <div className="flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className={`w-4 h-4 ${
-                      moduleTotalTimeSpent > 0 ? 'text-accent-primary' : 'text-text-secondary'
-                    }`}
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  <span className={`text-xs ${
-                    moduleTotalTimeSpent > 0
-                      ? 'text-accent-primary font-medium'
-                      : 'text-text-secondary'
-                  }`}>
-                    {moduleTotalTimeSpent > 0
-                      ? getTimeSpentDisplay(moduleTotalTimeSpent)
-                      : `${totalDuration} min`}
-                  </span>
-                </div>
-
                 {completionPercentage > 0 && (
                   <div className="flex items-center gap-2">
                     <svg
