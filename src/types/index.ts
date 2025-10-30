@@ -186,6 +186,8 @@ export interface GuideLesson {
   content: string; // HTML or Markdown content for the lesson
   duration: number; // in minutes
   order: number; // Lesson sequence number
+  module?: string; // Module grouping: "setup" | "prototype" | "github" | "practices"
+  iconType?: string; // Icon identifier for visual representation
 }
 
 /**

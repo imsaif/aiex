@@ -11,7 +11,7 @@ export const guides: Guide[] = [
     slug: 'claude-code-learning-path',
     title: "Claude Code Guide for Designers",
     description:
-      'Complete course for designers learning Claude Code. Master everything from initial setup through advanced best practices with 18 comprehensive lessons.',
+      'Master Claude Code to design and prototype faster, collaborate seamlessly with developers, and ship production-ready web applications with AI-powered assistance.',
     excerpt:
       'Your complete Claude Code education: 18 sequential lessons covering setup, prototyping, version control, and professional workflows. Go from zero to confident in one comprehensive course.',
     tool: 'Claude Code',
@@ -30,6 +30,7 @@ export const guides: Guide[] = [
         title: 'Get Your Anthropic API Key',
         duration: 2,
         order: 1,
+        module: 'setup',
         content: `<h2>Lesson 1: Get Your Anthropic API Key</h2>
 <p>Claude Code needs an API key to connect to the Claude AI service. This key tells Anthropic that it's really you using the service.</p>
 
@@ -64,6 +65,7 @@ export const guides: Guide[] = [
         title: 'Install Node.js',
         duration: 2,
         order: 2,
+        module: 'setup',
         content: `<h2>Lesson 2: Install Node.js</h2>
 <p>Node.js is software that lets you run JavaScript code on your computer. You need it to use Claude Code.</p>
 
@@ -95,6 +97,7 @@ export const guides: Guide[] = [
         title: 'Install Claude Code',
         duration: 2,
         order: 3,
+        module: 'setup',
         content: `<h2>Lesson 3: Install Claude Code</h2>
 <p>Now that you have Node.js, installing Claude Code is one command away.</p>
 
@@ -126,6 +129,7 @@ export const guides: Guide[] = [
         title: 'Start Your First Claude Code Session',
         duration: 2,
         order: 4,
+        module: 'prototype',
         content: `<h2>Lesson 4: Start Your First Claude Code Session</h2>
 
 <h3>4.1 Open Terminal</h3>
@@ -148,6 +152,7 @@ export const guides: Guide[] = [
         title: 'Create Your Project Folder',
         duration: 1,
         order: 5,
+        module: 'prototype',
         content: `<h2>Lesson 5: Create Your Project Folder</h2>
 
 <h3>5.1 Exit Claude Code Temporarily</h3>
@@ -169,6 +174,7 @@ export const guides: Guide[] = [
         title: 'Generate Your First Prototype',
         duration: 2,
         order: 6,
+        module: 'prototype',
         content: `<h2>Lesson 6: Generate Your First Prototype</h2>
 
 <h3>6.1 Ask Claude Code to Create Something</h3>
@@ -189,6 +195,7 @@ export const guides: Guide[] = [
         title: 'See Your Prototype Live',
         duration: 2,
         order: 7,
+        module: 'prototype',
         content: `<h2>Lesson 7: See Your Prototype Live</h2>
 
 <h3>7.1 Exit Claude Code</h3>
@@ -212,6 +219,7 @@ export const guides: Guide[] = [
         title: 'Get Back to Editing',
         duration: 1,
         order: 8,
+        module: 'prototype',
         content: `<h2>Lesson 8: Get Back to Editing</h2>
 
 <h3>8.1 Open Another Terminal Window</h3>
@@ -376,6 +384,7 @@ export const guides: Guide[] = [
         title: 'How to Describe Your Design to Claude Code',
         duration: 2,
         order: 14,
+        module: 'practices',
         content: `<h2>Lesson 14: How to Describe Your Design to Claude Code</h2>
 
 <h3>Be Specific, Not Vague</h3>
@@ -403,6 +412,7 @@ export const guides: Guide[] = [
         title: 'Testing Your Prototype',
         duration: 1,
         order: 15,
+        module: 'practices',
         content: `<h2>Lesson 15: Testing Your Prototype</h2>
 
 <h3>Test in Different Browsers</h3>
@@ -432,6 +442,7 @@ export const guides: Guide[] = [
         title: 'Iterating Based on Feedback',
         duration: 1,
         order: 16,
+        module: 'practices',
         content: `<h2>Lesson 16: Iterating Based on Feedback</h2>
 
 <h3>Ask for Small Changes, Not Rewrites</h3>
@@ -458,6 +469,7 @@ export const guides: Guide[] = [
         title: 'Handing Off Work to Developers',
         duration: 1,
         order: 17,
+        module: 'practices',
         content: `<h2>Lesson 17: Handing Off Work to Developers</h2>
 
 <h3>Prepare Your Code for Handoff</h3>
@@ -489,6 +501,7 @@ export const guides: Guide[] = [
         title: 'Troubleshooting Common Issues',
         duration: 1,
         order: 18,
+        module: 'practices',
         content: `<h2>Lesson 18: Troubleshooting Common Issues</h2>
 
 <h3>Claude Code Won't Start</h3>
@@ -600,12 +613,18 @@ export const guides: Guide[] = [
     lessons: [
       { id: 'lesson-1', title: 'Install and Setup Cursor', duration: 2, order: 1, content: '<h2>Lesson 1: Install and Setup Cursor</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-2', title: 'Navigate the Interface', duration: 2, order: 2, content: '<h2>Lesson 2: Navigate the Interface</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Basic Code Editing', duration: 2, order: 3, content: '<h2>Lesson 3: Basic Code Editing</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'AI Code Completions', duration: 2, order: 4, content: '<h2>Lesson 4: AI Code Completions</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Cursor AI Chat', duration: 2, order: 5, content: '<h2>Lesson 5: Cursor AI Chat</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Code Refactoring with AI', duration: 2, order: 6, content: '<h2>Lesson 6: Code Refactoring with AI</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Debugging Tools', duration: 2, order: 7, content: '<h2>Lesson 7: Debugging Tools</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Extensions and Customization', duration: 2, order: 8, content: '<h2>Lesson 8: Extensions and Customization</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-3', title: 'Basic Code Editing', duration: 2, order: 3,
+        module: 'setup', content: '<h2>Lesson 3: Basic Code Editing</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-4', title: 'AI Code Completions', duration: 2, order: 4,
+        module: 'prototype', content: '<h2>Lesson 4: AI Code Completions</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-5', title: 'Cursor AI Chat', duration: 2, order: 5,
+        module: 'prototype', content: '<h2>Lesson 5: Cursor AI Chat</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-6', title: 'Code Refactoring with AI', duration: 2, order: 6,
+        module: 'prototype', content: '<h2>Lesson 6: Code Refactoring with AI</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-7', title: 'Debugging Tools', duration: 2, order: 7,
+        module: 'prototype', content: '<h2>Lesson 7: Debugging Tools</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-8', title: 'Extensions and Customization', duration: 2, order: 8,
+        module: 'prototype', content: '<h2>Lesson 8: Extensions and Customization</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-9', title: 'Working with Design Files', duration: 2, order: 9, content: '<h2>Lesson 9: Working with Design Files</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-10', title: 'Team Collaboration', duration: 2, order: 10, content: '<h2>Lesson 10: Team Collaboration</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-11', title: 'Advanced AI Features', duration: 2, order: 11, content: '<h2>Lesson 11: Advanced AI Features</h2><p>Lesson content coming soon...</p>' },
@@ -632,12 +651,18 @@ export const guides: Guide[] = [
     lessons: [
       { id: 'lesson-1', title: 'Install GitHub Copilot', duration: 2, order: 1, content: '<h2>Lesson 1: Install GitHub Copilot</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-2', title: 'Your First Code Suggestion', duration: 2, order: 2, content: '<h2>Lesson 2: Your First Code Suggestion</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Code Comments to Code', duration: 2, order: 3, content: '<h2>Lesson 3: Code Comments to Code</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'GitHub Copilot Chat', duration: 2, order: 4, content: '<h2>Lesson 4: GitHub Copilot Chat</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Testing with Copilot', duration: 2, order: 5, content: '<h2>Lesson 5: Testing with Copilot</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Documentation Generation', duration: 2, order: 6, content: '<h2>Lesson 6: Documentation Generation</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Enterprise Copilot', duration: 2, order: 7, content: '<h2>Lesson 7: Enterprise Copilot</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Tips and Tricks', duration: 2, order: 8, content: '<h2>Lesson 8: Tips and Tricks</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-3', title: 'Code Comments to Code', duration: 2, order: 3,
+        module: 'setup', content: '<h2>Lesson 3: Code Comments to Code</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-4', title: 'GitHub Copilot Chat', duration: 2, order: 4,
+        module: 'prototype', content: '<h2>Lesson 4: GitHub Copilot Chat</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-5', title: 'Testing with Copilot', duration: 2, order: 5,
+        module: 'prototype', content: '<h2>Lesson 5: Testing with Copilot</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-6', title: 'Documentation Generation', duration: 2, order: 6,
+        module: 'prototype', content: '<h2>Lesson 6: Documentation Generation</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-7', title: 'Enterprise Copilot', duration: 2, order: 7,
+        module: 'prototype', content: '<h2>Lesson 7: Enterprise Copilot</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-8', title: 'Tips and Tricks', duration: 2, order: 8,
+        module: 'prototype', content: '<h2>Lesson 8: Tips and Tricks</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-9', title: 'Ethical AI Development', duration: 1, order: 9, content: '<h2>Lesson 9: Ethical AI Development</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-10', title: 'Next Steps and Resources', duration: 1, order: 10, content: '<h2>Lesson 10: Next Steps and Resources</h2><p>Lesson content coming soon...</p>' },
     ],
@@ -662,12 +687,18 @@ export const guides: Guide[] = [
     lessons: [
       { id: 'lesson-1', title: 'Getting Started with Replit', duration: 2, order: 1, content: '<h2>Lesson 1: Getting Started with Replit</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-2', title: 'Create Your First Repl', duration: 2, order: 2, content: '<h2>Lesson 2: Create Your First Repl</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Replit AI Features', duration: 2, order: 3, content: '<h2>Lesson 3: Replit AI Features</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'Real-Time Collaboration', duration: 2, order: 4, content: '<h2>Lesson 4: Real-Time Collaboration</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Database Integration', duration: 2, order: 5, content: '<h2>Lesson 5: Database Integration</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Deploying Your Project', duration: 2, order: 6, content: '<h2>Lesson 6: Deploying Your Project</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Advanced Workflows', duration: 1, order: 7, content: '<h2>Lesson 7: Advanced Workflows</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Best Practices and Tips', duration: 0, order: 8, content: '<h2>Lesson 8: Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-3', title: 'Replit AI Features', duration: 2, order: 3,
+        module: 'setup', content: '<h2>Lesson 3: Replit AI Features</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-4', title: 'Real-Time Collaboration', duration: 2, order: 4,
+        module: 'prototype', content: '<h2>Lesson 4: Real-Time Collaboration</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-5', title: 'Database Integration', duration: 2, order: 5,
+        module: 'prototype', content: '<h2>Lesson 5: Database Integration</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-6', title: 'Deploying Your Project', duration: 2, order: 6,
+        module: 'prototype', content: '<h2>Lesson 6: Deploying Your Project</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-7', title: 'Advanced Workflows', duration: 1, order: 7,
+        module: 'prototype', content: '<h2>Lesson 7: Advanced Workflows</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-8', title: 'Best Practices and Tips', duration: 0, order: 8,
+        module: 'prototype', content: '<h2>Lesson 8: Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
     ],
     content: '<h2>Replit AI Learning Path</h2><p>Discover the power of Replit AI for collaborative cloud-based development. Master team coding and deployment.</p>',
     relatedPatterns: ['Contextual Assistance', 'Collaborative AI'],
@@ -690,12 +721,18 @@ export const guides: Guide[] = [
     lessons: [
       { id: 'lesson-1', title: 'Introduction to V0', duration: 2, order: 1, content: '<h2>Lesson 1: Introduction to V0</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-2', title: 'Generate Your First Component', duration: 2, order: 2, content: '<h2>Lesson 2: Generate Your First Component</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Design-to-Code Workflow', duration: 2, order: 3, content: '<h2>Lesson 3: Design-to-Code Workflow</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'Editing Generated Components', duration: 2, order: 4, content: '<h2>Lesson 4: Editing Generated Components</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Styling and Customization', duration: 2, order: 5, content: '<h2>Lesson 5: Styling and Customization</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Building Complex UIs', duration: 2, order: 6, content: '<h2>Lesson 6: Building Complex UIs</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Integration with Next.js', duration: 2, order: 7, content: '<h2>Lesson 7: Integration with Next.js</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Deployment to Production', duration: 1, order: 8, content: '<h2>Lesson 8: Deployment to Production</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-3', title: 'Design-to-Code Workflow', duration: 2, order: 3,
+        module: 'setup', content: '<h2>Lesson 3: Design-to-Code Workflow</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-4', title: 'Editing Generated Components', duration: 2, order: 4,
+        module: 'prototype', content: '<h2>Lesson 4: Editing Generated Components</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-5', title: 'Styling and Customization', duration: 2, order: 5,
+        module: 'prototype', content: '<h2>Lesson 5: Styling and Customization</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-6', title: 'Building Complex UIs', duration: 2, order: 6,
+        module: 'prototype', content: '<h2>Lesson 6: Building Complex UIs</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-7', title: 'Integration with Next.js', duration: 2, order: 7,
+        module: 'prototype', content: '<h2>Lesson 7: Integration with Next.js</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-8', title: 'Deployment to Production', duration: 1, order: 8,
+        module: 'prototype', content: '<h2>Lesson 8: Deployment to Production</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-9', title: 'Performance Optimization', duration: 1, order: 9, content: '<h2>Lesson 9: Performance Optimization</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-10', title: 'Advanced Techniques', duration: 0, order: 10, content: '<h2>Lesson 10: Advanced Techniques</h2><p>Lesson content coming soon...</p>' },
     ],
@@ -720,12 +757,18 @@ export const guides: Guide[] = [
     lessons: [
       { id: 'lesson-1', title: 'GitHub Basics and Setup', duration: 2, order: 1, content: '<h2>Lesson 1: GitHub Basics and Setup</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-2', title: 'Create Your First Repository', duration: 2, order: 2, content: '<h2>Lesson 2: Create Your First Repository</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Understanding Git Basics', duration: 2, order: 3, content: '<h2>Lesson 3: Understanding Git Basics</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'Commits, Pulls, and Pushes', duration: 2, order: 4, content: '<h2>Lesson 4: Commits, Pulls, and Pushes</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Branching Strategies', duration: 2, order: 5, content: '<h2>Lesson 5: Branching Strategies</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Pull Requests and Code Review', duration: 2, order: 6, content: '<h2>Lesson 6: Pull Requests and Code Review</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Merging and Conflict Resolution', duration: 2, order: 7, content: '<h2>Lesson 7: Merging and Conflict Resolution</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Collaboration Best Practices', duration: 2, order: 8, content: '<h2>Lesson 8: Collaboration Best Practices</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-3', title: 'Understanding Git Basics', duration: 2, order: 3,
+        module: 'setup', content: '<h2>Lesson 3: Understanding Git Basics</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-4', title: 'Commits, Pulls, and Pushes', duration: 2, order: 4,
+        module: 'prototype', content: '<h2>Lesson 4: Commits, Pulls, and Pushes</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-5', title: 'Branching Strategies', duration: 2, order: 5,
+        module: 'prototype', content: '<h2>Lesson 5: Branching Strategies</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-6', title: 'Pull Requests and Code Review', duration: 2, order: 6,
+        module: 'prototype', content: '<h2>Lesson 6: Pull Requests and Code Review</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-7', title: 'Merging and Conflict Resolution', duration: 2, order: 7,
+        module: 'prototype', content: '<h2>Lesson 7: Merging and Conflict Resolution</h2><p>Lesson content coming soon...</p>' },
+      { id: 'lesson-8', title: 'Collaboration Best Practices', duration: 2, order: 8,
+        module: 'prototype', content: '<h2>Lesson 8: Collaboration Best Practices</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-9', title: 'GitHub Pages and Documentation', duration: 2, order: 9, content: '<h2>Lesson 9: GitHub Pages and Documentation</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-10', title: 'Project Management Tools', duration: 1, order: 10, content: '<h2>Lesson 10: Project Management Tools</h2><p>Lesson content coming soon...</p>' },
       { id: 'lesson-11', title: 'Automation and CI/CD Basics', duration: 1, order: 11, content: '<h2>Lesson 11: Automation and CI/CD Basics</h2><p>Lesson content coming soon...</p>' },

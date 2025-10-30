@@ -6,7 +6,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Guide } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import CopyButton from '@/components/ui/CopyButton';
-import LessonList from '@/components/ui/LessonList';
+import CourseMetadataBar from '@/components/ui/CourseMetadataBar';
+import IntroductionSection from '@/components/ui/IntroductionSection';
+import ModuleSection from '@/components/ui/ModuleSection';
 import ProgressBar from '@/components/ui/ProgressBar';
 
 interface GuideClientProps {
@@ -195,31 +197,67 @@ export default function GuideClient({
             </div>
           </header>
 
-          {/* Guide Content */}
-          <article className="mb-12">
-            <div
-              className="text-text-primary leading-relaxed space-y-6
-                       prose prose-invert max-w-none
-                       [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4
-                       [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-3
-                       [&_p]:text-base [&_p]:text-text-secondary
-                       [&_ul]:list-disc [&_ul]:list-inside [&_ul]:space-y-2
-                       [&_li]:text-text-secondary
-                       [&_code]:bg-gray-100 [&_code]:dark:bg-gray-800 [&_code]:px-2 [&_code]:py-1 [&_code]:rounded [&_code]:font-mono [&_code]:text-sm
-                       [&_code]:text-gray-900 [&_code]:dark:text-gray-100
-                       [&_a]:text-accent-primary [&_a]:hover:text-accent-hover [&_a]:transition-colors"
-              dangerouslySetInnerHTML={{
-                __html: enhancedContent || '<p>Guide content coming soon...</p>',
-              }}
-            />
-          </article>
+          {/* Guide Introduction */}
+          <IntroductionSection
+            title="Course Overview"
+            description={guide.description}
+            content={enhancedContent || '<p>Guide content coming soon...</p>'}
+          />
 
-          {/* Lessons Section */}
-          {hasLessons && guide.lessons && (
-            <section className="mb-12 pb-12 border-b border-border-primary">
-              <LessonList lessons={guide.lessons} guideId={guide.id} guideName={guide.title} />
-            </section>
-          )}
+          {/* Lessons Section - Modular Structure */}
+          {hasLessons && guide.lessons && (() => {
+            const modules = [
+              {
+                id: 'setup',
+                title: 'Setup',
+                description: 'Get started with Claude Code',
+              },
+              {
+                id: 'prototype',
+                title: 'Prototype',
+                description: 'Build and test your first project',
+              },
+              {
+                id: 'github',
+                title: 'GitHub',
+                description: 'Manage your projects with version control',
+              },
+              {
+                id: 'practices',
+                title: 'Best Practices',
+                description: 'Learn industry standards and patterns',
+              },
+            ];
+
+            let lessonNumber = 1;
+
+            return (
+              <section className="mb-12 pb-12 border-b border-border-primary space-y-6">
+                {modules.map((module) => {
+                  const moduleLessons = guide.lessons!.filter(
+                    (lesson) => lesson.module === module.id
+                  );
+
+                  if (moduleLessons.length === 0) return null;
+
+                  const moduleStartLessonNumber = lessonNumber;
+                  lessonNumber += moduleLessons.length;
+
+                  return (
+                    <ModuleSection
+                      key={module.id}
+                      moduleTitle={module.title}
+                      moduleDescription={module.description}
+                      lessons={moduleLessons}
+                      startLessonNumber={moduleStartLessonNumber}
+                      guideId={guide.id}
+                      guideTitle={guide.title}
+                    />
+                  );
+                })}
+              </section>
+            );
+          })()}
 
           {/* Related Patterns Section */}
           {relatedPatterns.length > 0 && (
