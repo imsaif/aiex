@@ -1297,46 +1297,62 @@ export const guides: Guide[] = [
       </div>
 
       <h3 class="text-2xl font-bold text-gray-900 mt-12 mb-6">What's in Each Module?</h3>
-      <div class="space-y-4 mb-12">
-        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
-          <h4 class="font-bold text-gray-900 mb-2">1. Setup</h4>
-          <p class="text-gray-700 mb-3">Prepare your environment for success</p>
-          <ul class="space-y-1 text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Create an Anthropic account and get your API key</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Install Node.js on your computer</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Install and verify Claude Code</li>
-          </ul>
-        </div>
-
-        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
-          <h4 class="font-bold text-gray-900 mb-2">2. Prototype</h4>
-          <p class="text-gray-700 mb-3">Build your first interactive project</p>
-          <ul class="space-y-1 text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Launch Claude Code and start your first session</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Create a working prototype from scratch</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Test and iterate on your design</li>
-          </ul>
-        </div>
-
-        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
-          <h4 class="font-bold text-gray-900 mb-2">3. GitHub</h4>
-          <p class="text-gray-700 mb-3">Save and collaborate on your work</p>
-          <ul class="space-y-1 text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Initialize Git and create a GitHub repository</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Commit and push your prototype code</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Learn version control best practices</li>
-          </ul>
-        </div>
-
-        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
-          <h4 class="font-bold text-gray-900 mb-2">4. Best Practices</h4>
-          <p class="text-gray-700 mb-3">Master professional workflows</p>
-          <ul class="space-y-1 text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Write clear, specific prompts for better results</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Test across browsers and devices</li>
-            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Hand off work to developers professionally</li>
-          </ul>
-        </div>
+      <div class="overflow-x-auto mb-12">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="border-b-2 border-gray-900">
+              <th class="text-left py-3 px-4 font-bold text-gray-900">Module</th>
+              <th class="text-left py-3 px-4 font-bold text-gray-900">Description</th>
+              <th class="text-left py-3 px-4 font-bold text-gray-900">Key Topics</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">1. Setup</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Prepare your environment for success</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Create an Anthropic account and get your API key</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Install Node.js on your computer</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Install and verify Claude Code</span></li>
+                </ul>
+              </td>
+            </tr>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">2. Prototype</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Build your first interactive project</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Launch Claude Code and start your first session</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Create a working prototype from scratch</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Test and iterate on your design</span></li>
+                </ul>
+              </td>
+            </tr>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">3. GitHub</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Save and collaborate on your work</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Initialize Git and create a GitHub repository</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Commit and push your prototype code</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Learn version control best practices</span></li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">4. Best Practices</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Master professional workflows</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Write clear, specific prompts for better results</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Test across browsers and devices</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Hand off work to developers professionally</span></li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <h3 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Getting Started</h3>

@@ -18,7 +18,7 @@ const CategoriesSection = ({ }: CategoriesSectionProps) => {
 
   return (
     <div className="w-full bg-surface-primary py-8">
-      <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {/* Pattern Themes Column */}
           <div>

@@ -48,7 +48,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
   return (
     <motion.main
-      className="max-w-6xl mx-auto py-8 px-4"
+      className="max-w-7xl mx-auto py-8 px-6"
       initial="hidden"
       animate="visible"
       variants={containerVariants}

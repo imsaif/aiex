@@ -48,7 +48,7 @@ export default function HomeClient() {
 
       {/* Hero Section */}
       <section className="py-12 md:py-16">
-        <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
             <div className="flex items-center justify-center gap-2 mb-6">
@@ -90,7 +90,7 @@ export default function HomeClient() {
       </section>
 
       {/* Main Content with Sidebar */}
-      <div id="patterns" className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16 pb-24">
+      <div id="patterns" className="max-w-7xl mx-auto px-6 pb-24">
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-6">
           <FilterPills

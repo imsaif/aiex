@@ -23,7 +23,7 @@ const PatternFilterSection = ({
 }: PatternFilterSectionProps) => {
   return (
     <div className="w-full bg-surface-primary py-4 border-b border-border-primary">
-      <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between">
           <div className="flex space-x-6 overflow-x-auto whitespace-nowrap">
             {/* Removed primary filters as per user feedback */}

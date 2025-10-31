@@ -60,7 +60,7 @@ export default function CategoryNavigation({
 
   return (
     <div className="w-full bg-surface-primary border-b border-border-primary py-3 sticky top-0 z-20">
-      <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
+      <div className="max-w-7xl mx-auto px-6">
         {/* Top-level category types */}
         <div className="flex space-x-6 mb-4 border-b border-border-secondary pb-3 overflow-x-auto whitespace-nowrap">
           {categoryTypes.map((type) => (

@@ -15,7 +15,7 @@ export default function AboutPage() {
 
       {/* Hero Section */}
       <section className="pt-32 pb-16 md:pt-40 md:pb-20">
-        <div className="max-w-4xl mx-auto px-8 md:px-12 lg:px-16">
+        <div className="max-w-7xl mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             About aiux
           </h1>
@@ -27,7 +27,7 @@ export default function AboutPage() {
 
       {/* Content Section */}
       <section className="pb-20">
-        <div className="max-w-4xl mx-auto px-8 md:px-12 lg:px-16">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="prose prose-lg dark:prose-invert max-w-none">
             {/* Mission */}
             <div className="mb-12">

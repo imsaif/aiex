@@ -53,7 +53,7 @@ export default function Footer() {
     <footer className="bg-background-secondary border-t border-border-primary">
       {/* Newsletter Section */}
       <section id="newsletter" className="py-16 md:py-20">
-        <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3">
               Get Notified on New Patterns
@@ -107,7 +107,7 @@ export default function Footer() {
 
       {/* Multi-Column Footer Section */}
       <div className="border-t border-border-primary">
-        <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12">
             {/* Left Section: Branding */}
             <div className="lg:col-span-4">
@@ -284,7 +284,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-border-primary">
-        <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 py-6">
+        <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Email */}
             <a

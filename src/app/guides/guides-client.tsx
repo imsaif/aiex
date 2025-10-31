@@ -95,7 +95,7 @@ export default function GuidesClient() {
 
       {/* Hero Section */}
       <section className="py-12 md:py-16">
-        <div className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
             <div className="flex items-center justify-center gap-2 mb-6">
@@ -147,7 +147,7 @@ export default function GuidesClient() {
       </section>
 
       {/* Main Content */}
-      <div id="guides" className="max-w-[1400px] mx-auto px-8 md:px-12 lg:px-16 pb-24">
+      <div id="guides" className="max-w-7xl mx-auto px-6 pb-24">
         {/* Top Filter Bar */}
         <div ref={dropdownRef} className="mb-6 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
           {/* Tool Filter Dropdown */}

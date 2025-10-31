@@ -59,7 +59,7 @@ function SearchResultsContent() {
         activeCategoryId=""
       />
 
-      <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 py-12">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         <h1 className="text-4xl font-bold mb-8">Search Results for "{searchQuery}"</h1>
 
         <div className="mb-8">
@@ -94,7 +94,7 @@ function SearchResultsContent() {
       </div>
 
       <footer className="py-8 mt-24 border-t border-border-primary">
-        <div className="max-w-screen-xl mx-auto px-8 md:px-12 lg:px-16 text-center">
+        <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm text-text-secondary">
             Built with ☕ by Imran ·
             <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">Portfolio</a> ·
