@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { FunnelIcon } from '@heroicons/react/24/outline';
 
 interface PatternFilterSectionProps {
   onSelectSecondaryFilter: (filter: string) => void;
@@ -45,9 +46,7 @@ const PatternFilterSection = ({
             ))}
           </div>
           <button className="flex items-center text-text-secondary hover:text-text-primary transition-colors duration-200">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-1">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0M3.75 18H7.5m3-6h9.75m-9.75 0a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 0 0-3 0M3.75 12H7.5" />
-            </svg>
+            <FunnelIcon className="w-5 h-5 mr-1" />
             Filter
           </button>
         </div>

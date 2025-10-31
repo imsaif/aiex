@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { GuideLesson } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import { getLessonIcon } from '@/utils/lessonIcons';
@@ -66,16 +67,7 @@ export default function ModularLessonCard({
           >
             <div className="w-6 h-6 flex items-center justify-center">
               {isCompleted ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  className="w-5 h-5"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
+                <CheckIcon className="w-5 h-5" />
               ) : (
                 icon
               )}
@@ -104,16 +96,7 @@ export default function ModularLessonCard({
             transition={{ duration: 0.3 }}
             className="flex-shrink-0 mt-1"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="w-5 h-5 text-text-secondary group-hover:text-text-primary transition-colors"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
+            <ChevronDownIcon className="w-5 h-5 text-text-secondary group-hover:text-text-primary transition-colors" />
           </motion.div>
         </div>
       </button>

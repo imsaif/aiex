@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useRef, useEffect } from 'react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { GuideFilter as GuideFilterType } from '@/types';
 import { getAllTools, getAllSkillLevels } from '@/data/guides';
 
@@ -60,16 +61,9 @@ export default function GuideFilter({
                    transition-colors text-sm font-medium"
         >
           <span>{selectedTool ? `Tool: ${selectedTool}` : 'All Tools'}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
+          <ChevronDownIcon
             className={`w-4 h-4 transition-transform ${openDropdown === 'tool' ? 'rotate-180' : ''}`}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-          </svg>
+          />
         </button>
 
         {openDropdown === 'tool' && (
@@ -105,16 +99,9 @@ export default function GuideFilter({
                    transition-colors text-sm font-medium"
         >
           <span>{selectedSkillLevel ? `Level: ${selectedSkillLevel}` : 'All Levels'}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
+          <ChevronDownIcon
             className={`w-4 h-4 transition-transform ${openDropdown === 'level' ? 'rotate-180' : ''}`}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-          </svg>
+          />
         </button>
 
         {openDropdown === 'level' && (

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { BookOpenIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { Guide } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import StatusBadge from './StatusBadge';
@@ -41,17 +42,7 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
         >
           {/* Thumbnail Section */}
           <div className="relative w-full h-40 bg-gradient-to-br from-accent-primary/10 to-accent-primary/5 overflow-hidden flex items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-12 h-12 text-accent-primary/40"
-            >
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-            </svg>
+            <BookOpenIcon className="w-12 h-12 text-accent-primary/40" />
 
             {/* Status Badge */}
             {guideStatus !== 'not-started' && (
@@ -63,14 +54,7 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
             {/* Legacy Completion Badge (if no lessons) */}
             {isCompleted && totalLessons === 0 && (
               <div className="absolute top-2 right-2 bg-green-500 dark:bg-green-600 rounded-full p-1.5 shadow-lg">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="white"
-                  className="w-5 h-5"
-                >
-                  <polyline points="20 6 9 17 4 12" fill="none" stroke="white" strokeWidth="3" />
-                </svg>
+                <CheckIcon className="w-5 h-5 text-white" />
               </div>
             )}
 

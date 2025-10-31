@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Product } from '../../data/utils/product-utils';
 
 interface ProductFilterBarProps {
@@ -65,16 +66,9 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
                      hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
           >
             {selectedProducts.length > 0 ? `Products (${selectedProducts.length})` : 'All Products'}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
+            <ChevronDownIcon
               className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-            </svg>
+            />
           </button>
 
         {/* Dropdown Menu */}
@@ -141,16 +135,7 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
                      transition-colors ml-1"
             aria-label={`Remove ${product} filter`}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2.5}
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <XMarkIcon className="w-4 h-4" />
           </button>
         </div>
       ))}

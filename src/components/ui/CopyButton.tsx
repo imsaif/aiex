@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { CheckIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 
 interface CopyButtonProps {
   text: string;
@@ -32,31 +33,12 @@ export default function CopyButton({ text, className = '', showLabel = true }: C
     >
       {copied ? (
         <>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-4 h-4"
-          >
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
+          <CheckIcon className="w-4 h-4" />
           {showLabel && <span>Copied!</span>}
         </>
       ) : (
         <>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-4 h-4"
-          >
-            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-          </svg>
+          <ClipboardDocumentIcon className="w-4 h-4" />
           {showLabel && <span>Copy</span>}
         </>
       )}

@@ -7,7 +7,7 @@ export const codeExamples: CodeExample[] = [
     language: "tsx",
     componentId: "guided-learning-tutorial",
     code: `import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, Check, HelpCircle, Target } from 'lucide-react';
+import { ChevronRightIcon, ChevronLeftIcon, CheckIcon, QuestionMarkCircleIcon, ArrowsPointingInIcon } from '@heroicons/react/24/outline';
 
 interface TutorialStep {
   id: string;
@@ -206,7 +206,7 @@ export default function GuidedLearningTutorial() {
       {!isActive ? (
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-start gap-4">
-            <Target className="w-8 h-8 text-blue-600 mt-1" />
+            <ArrowsPointingInIcon className="w-8 h-8 text-blue-600 mt-1" />
             <div className="flex-1">
               <h2 className="text-xl font-semibold mb-2">{tutorial.title}</h2>
               <p className="text-gray-600 mb-4">{tutorial.description}</p>
@@ -225,7 +225,7 @@ export default function GuidedLearningTutorial() {
               </div>
               {isCompleted ? (
                 <div className="flex items-center text-green-600 mb-4">
-                  <Check className="w-5 h-5 mr-2" />
+                  <CheckIcon className="w-5 h-5 mr-2" />
                   Tutorial completed!
                 </div>
               ) : null}
@@ -234,7 +234,7 @@ export default function GuidedLearningTutorial() {
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-2"
               >
                 {isCompleted ? 'Restart Tutorial' : 'Start Tutorial'}
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRightIcon className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -287,7 +287,7 @@ export default function GuidedLearningTutorial() {
                   disabled={currentStep === 0}
                   className="flex items-center gap-1 px-3 py-1 text-sm border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeftIcon className="w-4 h-4" />
                   Previous
                 </button>
                 {step.hint && (
@@ -295,7 +295,7 @@ export default function GuidedLearningTutorial() {
                     onClick={() => setShowHint(!showHint)}
                     className="flex items-center gap-1 px-3 py-1 text-sm border rounded hover:bg-gray-50"
                   >
-                    <HelpCircle className="w-4 h-4" />
+                    <QuestionMarkCircleIcon className="w-4 h-4" />
                     {showHint ? 'Hide Hint' : 'Show Hint'}
                   </button>
                 )}
@@ -313,7 +313,7 @@ export default function GuidedLearningTutorial() {
                   className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                   {currentStep === tutorial.steps.length - 1 ? 'Complete' : 'Next'}
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRightIcon className="w-4 h-4" />
                 </button>
               </div>
             </div>
