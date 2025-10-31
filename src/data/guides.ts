@@ -31,74 +31,54 @@ export const guides: Guide[] = [
         duration: 2,
         order: 1,
         module: 'setup',
-        content: `<!-- Introduction Section -->
-<div style="display: flex; gap: 12px; margin-bottom: 24px;">
-  <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000; margin-top: 2px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-    <line x1="8" y1="21" x2="16" y2="21"></line>
-    <line x1="12" y1="17" x2="12" y2="21"></line>
-  </svg>
-  <div>
-    <p style="margin: 0; color: #4b5563; font-size: 16px;">Claude Code needs an API key to connect to the Claude AI service. Your API key is like a secret password that tells Anthropic it's really you.</p>
-  </div>
-</div>
-
-<!-- Create Account Section -->
-<div style="margin-bottom: 32px;">
-  <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;">
-    <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-    <h3 style="margin: 0; color: #1f2937; font-size: 18px;">Create an Anthropic Account</h3>
-  </div>
-  <ol style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
-    <li>Go to <strong>console.anthropic.com</strong> in your web browser</li>
-    <li>Click <strong>"Sign up"</strong> in the top right</li>
-    <li>Create an account using your email and password</li>
-    <li>Check your email for a verification link and click it</li>
-  </ol>
-</div>
-
-<!-- Generate API Key Section -->
-<div style="margin-bottom: 32px;">
-  <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;">
-    <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-      <polyline points="7 10 12 15 17 10"></polyline>
-      <line x1="12" y1="15" x2="12" y2="3"></line>
-    </svg>
-    <h3 style="margin: 0; color: #1f2937; font-size: 18px;">Generate Your API Key</h3>
-  </div>
-  <ol style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
-    <li>Once logged in, find <strong>"API Keys"</strong> in the left menu</li>
-    <li>Click <strong>"Create Key"</strong></li>
-    <li>Name it something like <strong>"Claude Code for Design"</strong></li>
-    <li>Click <strong>"Create"</strong></li>
-    <li><strong>Copy your key immediately</strong> and save it somewhere safe (like a password manager)</li>
-  </ol>
-</div>
-
-<!-- Security Warning Section -->
-<div style="margin-bottom: 24px;">
-  <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px;">
-    <svg style="width: 24px; height: 24px; flex-shrink: 0; color: #000;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-      <line x1="12" y1="9" x2="12" y2="13"></line>
-      <line x1="12" y1="17" x2="12.01" y2="17"></line>
-    </svg>
-    <div>
-      <h3 style="margin: 0 0 8px 0; color: #1f2937; font-size: 18px;">Keep Your Key Secure</h3>
-      <p style="margin: 0 0 8px 0; color: #4b5563; font-weight: 500;">Your API key is like a password. Never:</p>
-      <ul style="margin: 0; padding-left: 20px; color: #4b5563; line-height: 1.8;">
-        <li>Share it with anyone</li>
-        <li>Post it in Slack, email, or public docs</li>
-        <li>Commit it to GitHub</li>
-        <li>Store it in plain text files in your projects</li>
-      </ul>
-    </div>
-  </div>
-</div>`,
+        sections: [
+          {
+            type: 'intro',
+            content: 'Claude Code needs an API key to connect to the Claude AI service. Your API key is like a secret password that tells Anthropic it\'s really you.',
+            icon: 'info',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Create an Anthropic Account',
+                content: [
+                  'Go to console.anthropic.com in your web browser',
+                  'Click "Sign up" in the top right',
+                  'Create an account using your email and password',
+                  'Check your email for a verification link and click it',
+                ],
+                icon: 'user',
+              },
+              {
+                number: 2,
+                title: 'Generate Your API Key',
+                content: [
+                  'Once logged in, find "API Keys" in the left menu',
+                  'Click "Create Key"',
+                  'Name it something like "Claude Code for Design"',
+                  'Click "Create"',
+                  'Copy your key immediately and save it somewhere safe (like a password manager)',
+                ],
+                icon: 'key',
+              },
+            ],
+          },
+          {
+            type: 'image',
+            alt: 'Anthropic Console API Key Screenshot',
+            label: 'Anthropic Console showing where to create and copy API keys',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Keep Your Key Secure',
+            content:
+              'Your API key is like a password. Never share it with anyone, post it in Slack/email/public docs, commit it to GitHub, or store it in plain text files in your projects.',
+            icon: 'warning',
+          },
+        ],
       },
       {
         id: 'lesson-2',
@@ -106,31 +86,83 @@ export const guides: Guide[] = [
         duration: 2,
         order: 2,
         module: 'setup',
-        content: `<h2>Install Node.js</h2>
-<p>Node.js is software that lets you run JavaScript code on your computer. You need it to use Claude Code.</p>
-
-<h3>Check if You Already Have Node.js</h3>
-<h4>On Mac:</h4>
-<ol>
-  <li>Press <strong>Command + Space</strong>, type "Terminal", and hit Enter</li>
-  <li>Paste this and press Enter: <code>node --version</code></li>
-  <li>If you see a version number, you're done with this section!</li>
-</ol>
-
-<h4>On Windows:</h4>
-<ol>
-  <li>Click the Windows logo, type "Command Prompt", and hit Enter</li>
-  <li>Paste this and press Enter: <code>node --version</code></li>
-  <li>If you see a version number, skip to the next lesson!</li>
-</ol>
-
-<h3>Install Node.js (If You Need It)</h3>
-<ol>
-  <li>Go to <strong>nodejs.org</strong></li>
-  <li>Download the <strong>"LTS"</strong> version (this is the stable, recommended version)</li>
-  <li>Run the installer and follow the instructions (just click "Next" on everything)</li>
-  <li>Open Terminal/Command Prompt again and run <code>node --version</code> to confirm</li>
-</ol>`,
+        sections: [
+          {
+            type: 'text',
+            content: 'Node.js is software that lets you run JavaScript code on your computer. You need it to use Claude Code.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Check if You Already Have Node.js',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'On Mac',
+                content: [
+                  'Press Command + Space, type "Terminal", and hit Enter',
+                  'Paste this and press Enter: node --version',
+                  'If you see a version number, you\'re done with this section!',
+                ],
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'On Windows',
+                content: [
+                  'Click the Windows logo, type "Command Prompt", and hit Enter',
+                  'Paste this and press Enter: node --version',
+                  'If you see a version number, skip to the next lesson!',
+                ],
+                icon: 'monitor',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Install Node.js (If You Need It)',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Go to nodejs.org',
+                content: 'Visit the official Node.js website',
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Download the "LTS" version',
+                content: 'This is the stable, recommended version for production use',
+                icon: 'download',
+              },
+              {
+                number: 3,
+                title: 'Run the installer and follow the instructions',
+                content: 'Just click "Next" on everything - the defaults are perfect for you',
+                icon: 'cog',
+              },
+              {
+                number: 4,
+                title: 'Verify the installation',
+                content: 'Open Terminal/Command Prompt again and run node --version to confirm it worked',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Ready to Continue',
+            content: 'Once you see a version number, you have Node.js installed and can move on to the next step!',
+            icon: 'success',
+          },
+        ],
       },
       {
         id: 'lesson-3',
@@ -138,30 +170,84 @@ export const guides: Guide[] = [
         duration: 2,
         order: 3,
         module: 'setup',
-        content: `<h2>Install Claude Code</h2>
-<p>Now that you have Node.js, installing Claude Code is one command away.</p>
-
-<h3>Open Terminal/Command Prompt</h3>
-<p><strong>Mac:</strong> Command + Space → "Terminal" → Enter</p>
-<p><strong>Windows:</strong> Windows logo → "Command Prompt" → Enter</p>
-
-<h3>Install Claude Code</h3>
-<p>Copy and paste this command, then press Enter:</p>
-<p><code>npm install -g claude-code</code></p>
-<p>This takes 1-2 minutes. You'll see lots of text—that's normal!</p>
-
-<h3>Verify Installation</h3>
-<p>Run this to confirm it worked:</p>
-<p><code>claude --version</code></p>
-<p>You should see a version number. If you do, <strong>you're ready to go!</strong></p>
-
-<h2>Setup Complete!</h2>
-<p>You now have:</p>
-<ul>
-  <li>An Anthropic account with an API key</li>
-  <li>Node.js installed</li>
-  <li>Claude Code installed and verified</li>
-</ul>`,
+        sections: [
+          {
+            type: 'text',
+            content: 'Now that you have Node.js, installing Claude Code is one command away.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Open Terminal/Command Prompt',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'On Mac',
+                content: 'Press Command + Space, type "Terminal", and hit Enter',
+                icon: 'terminal',
+              },
+              {
+                number: 2,
+                title: 'On Windows',
+                content: 'Click Windows logo, type "Command Prompt", and hit Enter',
+                icon: 'terminal',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Install Claude Code',
+          },
+          {
+            type: 'text',
+            content: 'Copy and paste this command, then press Enter:',
+          },
+          {
+            type: 'code',
+            code: 'npm install -g claude-code',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            content: 'This takes 1-2 minutes. You\'ll see lots of text in the terminal—that\'s completely normal and means it\'s working!',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Verify Installation',
+          },
+          {
+            type: 'text',
+            content: 'Run this command to confirm Claude Code is installed:',
+          },
+          {
+            type: 'code',
+            code: 'claude --version',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'You should see a version number. If you do, you\'re ready to move on!',
+          },
+          {
+            type: 'completion',
+            title: 'Setup Complete!',
+            items: [
+              'An Anthropic account with an API key',
+              'Node.js installed on your computer',
+              'Claude Code installed and verified',
+            ],
+            message: 'You\'re ready to start building! Let\'s move on to creating your first prototype.',
+          },
+        ],
       },
       // First Prototype Lessons (4-8)
       {
@@ -170,22 +256,64 @@ export const guides: Guide[] = [
         duration: 2,
         order: 4,
         module: 'prototype',
-        content: `<h2>Start Your First Claude Code Session</h2>
-
-<h3>Open Terminal</h3>
-<p><strong>Mac:</strong> Command + Space → "Terminal" → Enter</p>
-<p><strong>Windows:</strong> Windows logo → "Command Prompt" → Enter</p>
-
-<h3>Launch Claude Code</h3>
-<p>Type this command and press Enter:</p>
-<p><code>claude</code></p>
-
-<h3>Paste Your API Key</h3>
-<p>Claude Code will ask for your API key. Paste the one you saved in the setup guide.</p>
-<p><strong>Note:</strong> Your key won't appear as you type—that's normal for security!</p>
-
-<h3>Choose a Model</h3>
-<p>Claude Code will ask which model you want. Choose <strong>Claude 3.5 Sonnet</strong>—it's the best balance of speed and power for designers.</p>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Start Your First Claude Code Session',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Open Terminal',
+          },
+          {
+            type: 'list',
+            items: [
+              'Mac: Command + Space → "Terminal" → Enter',
+              'Windows: Windows logo → "Command Prompt" → Enter',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Launch Claude Code',
+          },
+          {
+            type: 'text',
+            content: 'Type this command and press Enter:',
+          },
+          {
+            type: 'code',
+            code: 'claude',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Paste Your API Key',
+          },
+          {
+            type: 'text',
+            content: 'Claude Code will ask for your API key. Paste the one you saved in the setup guide.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            content: 'Your key won\'t appear as you type—that\'s normal for security!',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Choose a Model',
+          },
+          {
+            type: 'text',
+            content: 'Claude Code will ask which model you want. Choose Claude 3.5 Sonnet—it\'s the best balance of speed and power for designers.',
+          },
+        ],
       },
       {
         id: 'lesson-5',
@@ -193,21 +321,66 @@ export const guides: Guide[] = [
         duration: 1,
         order: 5,
         module: 'prototype',
-        content: `<h2>Create Your Project Folder</h2>
-
-<h3>Exit Claude Code Temporarily</h3>
-<p>Type <code>exit</code> and press Enter. You'll return to your regular Terminal.</p>
-
-<h3>Create a Project Folder</h3>
-<p>Run this command:</p>
-<p><code>mkdir my-first-prototype</code></p>
-<p>Then navigate into it:</p>
-<p><code>cd my-first-prototype</code></p>
-
-<h3>Start Claude Code in Your Project</h3>
-<p>Run:</p>
-<p><code>claude</code></p>
-<p>Paste your API key again. Now you're inside Claude Code, with your project as the working folder.</p>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Create Your Project Folder',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Exit Claude Code Temporarily',
+          },
+          {
+            type: 'text',
+            content: 'Type exit and press Enter. You\'ll return to your regular Terminal.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Create a Project Folder',
+          },
+          {
+            type: 'text',
+            content: 'Run this command:',
+          },
+          {
+            type: 'code',
+            code: 'mkdir my-first-prototype',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'Then navigate into it:',
+          },
+          {
+            type: 'code',
+            code: 'cd my-first-prototype',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Start Claude Code in Your Project',
+          },
+          {
+            type: 'text',
+            content: 'Run:',
+          },
+          {
+            type: 'code',
+            code: 'claude',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'Paste your API key again. Now you\'re inside Claude Code, with your project as the working folder.',
+          },
+        ],
       },
       {
         id: 'lesson-6',
@@ -215,20 +388,60 @@ export const guides: Guide[] = [
         duration: 2,
         order: 6,
         module: 'prototype',
-        content: `<h2>Generate Your First Prototype</h2>
-
-<h3>Ask Claude Code to Create Something</h3>
-<p>Try this simple request:</p>
-<p><code>Create a React button component with a blue background and white text. Add a hover effect that makes the button slightly larger. Use Tailwind CSS for styling.</code></p>
-<p>Press Enter and watch Claude Code generate code!</p>
-
-<h3>Review What It Created</h3>
-<p>Claude Code will show you the files it made. Read through them to understand what happened.</p>
-
-<h3>Ask for Changes (Optional)</h3>
-<p>If you want to modify something, just ask:</p>
-<p><code>Make the button green instead of blue and add rounded corners.</code></p>
-<p>Claude Code will update the files immediately!</p>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Generate Your First Prototype',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Ask Claude Code to Create Something',
+          },
+          {
+            type: 'text',
+            content: 'Try this simple request:',
+          },
+          {
+            type: 'code',
+            code: 'Create a React button component with a blue background and white text. Add a hover effect that makes the button slightly larger. Use Tailwind CSS for styling.',
+            language: 'text',
+            label: 'Claude Code',
+          },
+          {
+            type: 'text',
+            content: 'Press Enter and watch Claude Code generate code!',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Review What It Created',
+          },
+          {
+            type: 'text',
+            content: 'Claude Code will show you the files it made. Read through them to understand what happened.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Ask for Changes (Optional)',
+          },
+          {
+            type: 'text',
+            content: 'If you want to modify something, just ask:',
+          },
+          {
+            type: 'code',
+            code: 'Make the button green instead of blue and add rounded corners.',
+            language: 'text',
+            label: 'Claude Code',
+          },
+          {
+            type: 'text',
+            content: 'Claude Code will update the files immediately!',
+          },
+        ],
       },
       {
         id: 'lesson-7',
@@ -236,23 +449,69 @@ export const guides: Guide[] = [
         duration: 2,
         order: 7,
         module: 'prototype',
-        content: `<h2>See Your Prototype Live</h2>
-
-<h3>Exit Claude Code</h3>
-<p>Type <code>exit</code> and press Enter to return to Terminal.</p>
-
-<h3>Initialize a React App (If Needed)</h3>
-<p>Run:</p>
-<p><code>npx create-react-app .</code></p>
-<p>This sets up the structure React needs to run.</p>
-
-<h3>Start Your Development Server</h3>
-<p>Run:</p>
-<p><code>npm start</code></p>
-<p>Your prototype will automatically open in your browser at <strong>localhost:3000</strong>!</p>
-
-<h3>Watch for Live Updates</h3>
-<p>When Claude Code makes changes, your browser automatically updates. No manual refresh needed!</p>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'See Your Prototype Live',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Exit Claude Code',
+          },
+          {
+            type: 'text',
+            content: 'Type exit and press Enter to return to Terminal.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Initialize a React App (If Needed)',
+          },
+          {
+            type: 'text',
+            content: 'Run:',
+          },
+          {
+            type: 'code',
+            code: 'npx create-react-app .',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'This sets up the structure React needs to run.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Start Your Development Server',
+          },
+          {
+            type: 'text',
+            content: 'Run:',
+          },
+          {
+            type: 'code',
+            code: 'npm start',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'Your prototype will automatically open in your browser at localhost:3000!',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Watch for Live Updates',
+          },
+          {
+            type: 'text',
+            content: 'When Claude Code makes changes, your browser automatically updates. No manual refresh needed!',
+          },
+        ],
       },
       {
         id: 'lesson-8',
@@ -260,31 +519,81 @@ export const guides: Guide[] = [
         duration: 1,
         order: 8,
         module: 'prototype',
-        content: `<h2>Get Back to Editing</h2>
-
-<h3>Open Another Terminal Window</h3>
-<p>To keep editing with Claude Code while your prototype runs, open a new Terminal window:</p>
-<ul>
-  <li><strong>Mac:</strong> Command + T (in Terminal app)</li>
-  <li><strong>Windows:</strong> Ctrl + Shift + 2 (in Command Prompt)</li>
-</ul>
-
-<h3>Navigate to Your Project</h3>
-<p>In the new Terminal, run:</p>
-<p><code>cd my-first-prototype</code></p>
-
-<h3>Start Claude Code Again</h3>
-<p>Run:</p>
-<p><code>claude</code></p>
-<p>Now you have:</p>
-<ul>
-  <li><strong>Terminal #1:</strong> Your dev server (showing localhost:3000)</li>
-  <li><strong>Terminal #2:</strong> Claude Code (where you edit)</li>
-  <li><strong>Browser:</strong> Your live prototype updating in real-time</li>
-</ul>
-
-<h2>Congratulations!</h2>
-<p>You've created your first prototype with Claude Code and seen it live on your machine. This is the foundation of everything you can do with Claude Code as a designer.</p>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Get Back to Editing',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Open Another Terminal Window',
+          },
+          {
+            type: 'text',
+            content: 'To keep editing with Claude Code while your prototype runs, open a new Terminal window:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Mac: Command + T (in Terminal app)',
+              'Windows: Ctrl + Shift + 2 (in Command Prompt)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Navigate to Your Project',
+          },
+          {
+            type: 'text',
+            content: 'In the new Terminal, run:',
+          },
+          {
+            type: 'code',
+            code: 'cd my-first-prototype',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Start Claude Code Again',
+          },
+          {
+            type: 'text',
+            content: 'Run:',
+          },
+          {
+            type: 'code',
+            code: 'claude',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'Now you have:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Terminal #1: Your dev server (showing localhost:3000)',
+              'Terminal #2: Claude Code (where you edit)',
+              'Browser: Your live prototype updating in real-time',
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'Congratulations!',
+            items: [
+              'Created your first prototype with Claude Code',
+              'Saw it live on your machine',
+              'Understand the foundation of design workflows with Claude Code',
+            ],
+            message: 'You\'ve created your first prototype with Claude Code and seen it live on your machine. This is the foundation of everything you can do with Claude Code as a designer.',
+          },
+        ],
       },
       // GitHub Lessons (9-13)
       {
@@ -292,131 +601,291 @@ export const guides: Guide[] = [
         title: 'Create a GitHub Account',
         duration: 1,
         order: 9,
-        content: `<h2>Create a GitHub Account</h2>
-
-<h3>Why GitHub?</h3>
-<ul>
-  <li><strong>Backup:</strong> Your code is safe in the cloud, not just on your computer</li>
-  <li><strong>History:</strong> You can see every change you made and go back if needed</li>
-  <li><strong>Collaboration:</strong> Easy to share with developers and teammates</li>
-  <li><strong>Portfolio:</strong> Show your work and design-to-code process</li>
-</ul>
-
-<h3>Sign Up</h3>
-<ol>
-  <li>Go to <strong>github.com</strong></li>
-  <li>Click <strong>"Sign up"</strong></li>
-  <li>Create an account with your email (you can use your work or personal email)</li>
-  <li>Verify your email by clicking the link they send you</li>
-</ol>
-
-<h3>You're Ready!</h3>
-<p>GitHub account created. Let's connect your prototype.</p>`,
+        module: 'github',
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Create a GitHub Account',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Why GitHub?',
+          },
+          {
+            type: 'list',
+            items: [
+              'Backup: Your code is safe in the cloud, not just on your computer',
+              'History: You can see every change you made and go back if needed',
+              'Collaboration: Easy to share with developers and teammates',
+              'Portfolio: Show your work and design-to-code process',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Sign Up',
+          },
+          {
+            type: 'list',
+            items: [
+              'Go to github.com',
+              'Click "Sign up"',
+              'Create an account with your email (you can use your work or personal email)',
+              'Verify your email by clicking the link they send you',
+            ],
+            ordered: true,
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'You\'re Ready!',
+          },
+          {
+            type: 'text',
+            content: 'GitHub account created. Let\'s connect your prototype.',
+          },
+        ],
       },
       {
         id: 'lesson-10',
         title: 'Create a Repository on GitHub',
         duration: 1,
         order: 10,
-        content: `<h2>Create a Repository on GitHub</h2>
-
-<h3>Create a New Repo</h3>
-<ol>
-  <li>Click the <strong>"+"</strong> icon in the top right of GitHub</li>
-  <li>Select <strong>"New repository"</strong></li>
-  <li>Name it <strong>"my-first-prototype"</strong> (same as your local folder)</li>
-  <li>Add a description: <strong>"Design prototype created with Claude Code"</strong></li>
-  <li>Leave other settings as default</li>
-  <li>Click <strong>"Create repository"</strong></li>
-</ol>
-
-<h3>Copy the Setup Instructions</h3>
-<p>GitHub will show you commands. Keep this page open—you'll need the commands soon!</p>`,
+        module: 'github',
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Create a Repository on GitHub',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Create a New Repo',
+          },
+          {
+            type: 'list',
+            items: [
+              'Click the "+" icon in the top right of GitHub',
+              'Select "New repository"',
+              'Name it "my-first-prototype" (same as your local folder)',
+              'Add a description: "Design prototype created with Claude Code"',
+              'Leave other settings as default',
+              'Click "Create repository"',
+            ],
+            ordered: true,
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Copy the Setup Instructions',
+          },
+          {
+            type: 'text',
+            content: 'GitHub will show you commands. Keep this page open—you\'ll need the commands soon!',
+          },
+        ],
       },
       {
         id: 'lesson-11',
         title: 'Connect Your Local Project to GitHub',
         duration: 2,
         order: 11,
-        content: `<h2>Connect Your Local Project to GitHub</h2>
-
-<h3>Open Terminal (Not Claude Code)</h3>
-<p>You should be in your project folder. Check with:</p>
-<p><code>pwd</code></p>
-<p>You should see something like <code>.../my-first-prototype</code></p>
-
-<h3>Initialize Git</h3>
-<p>Run these commands one by one:</p>
-<p><code>git init</code></p>
-<p><code>git add .</code></p>
-<p><code>git commit -m "Initial prototype created with Claude Code"</code></p>
-
-<h3>Connect to GitHub</h3>
-<p>Copy the commands from GitHub's instructions. They'll look like:</p>
-<p><code>git branch -M main</code></p>
-<p><code>git remote add origin https://github.com/YOUR-USERNAME/my-first-prototype.git</code></p>
-<p><code>git push -u origin main</code></p>
-
-<h3>Check GitHub</h3>
-<p>Refresh your GitHub repo page. Your files should now be there!</p>`,
+        module: 'github',
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Connect Your Local Project to GitHub',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Open Terminal (Not Claude Code)',
+          },
+          {
+            type: 'text',
+            content: 'You should be in your project folder. Check with:',
+          },
+          {
+            type: 'code',
+            code: 'pwd',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'You should see something like .../my-first-prototype',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Initialize Git',
+          },
+          {
+            type: 'text',
+            content: 'Run these commands one by one:',
+          },
+          {
+            type: 'code',
+            code: 'git init\ngit add .\ngit commit -m "Initial prototype created with Claude Code"',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Connect to GitHub',
+          },
+          {
+            type: 'text',
+            content: 'Copy the commands from GitHub\'s instructions. They\'ll look like:',
+          },
+          {
+            type: 'code',
+            code: 'git branch -M main\ngit remote add origin https://github.com/YOUR-USERNAME/my-first-prototype.git\ngit push -u origin main',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Check GitHub',
+          },
+          {
+            type: 'text',
+            content: 'Refresh your GitHub repo page. Your files should now be there!',
+          },
+        ],
       },
       {
         id: 'lesson-12',
         title: 'Save Your Changes Going Forward',
         duration: 2,
         order: 12,
-        content: `<h2>Save Your Changes Going Forward</h2>
-
-<h3>Regular Save Workflow</h3>
-<p>Every time you make changes in Claude Code that you want to keep:</p>
-<ol>
-  <li>Exit Claude Code (type <code>exit</code>)</li>
-  <li>Run: <code>git add .</code></li>
-  <li>Run: <code>git commit -m "Description of what you changed"</code></li>
-  <li>Run: <code>git push</code></li>
-</ol>
-
-<h3>Write Good Commit Messages</h3>
-<p>Instead of "Updated stuff", try:</p>
-<ul>
-  <li>"Changed button color from blue to green"</li>
-  <li>"Added hover effect to navigation menu"</li>
-  <li>"Fixed button padding on mobile"</li>
-</ul>
-<p>Good messages help you remember what you did and help teammates understand changes.</p>`,
+        module: 'github',
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Save Your Changes Going Forward',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Regular Save Workflow',
+          },
+          {
+            type: 'text',
+            content: 'Every time you make changes in Claude Code that you want to keep:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Exit Claude Code (type exit)',
+              'Run: git add .',
+              'Run: git commit -m "Description of what you changed"',
+              'Run: git push',
+            ],
+            ordered: true,
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Write Good Commit Messages',
+          },
+          {
+            type: 'text',
+            content: 'Instead of "Updated stuff", try:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Changed button color from blue to green',
+              'Added hover effect to navigation menu',
+              'Fixed button padding on mobile',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'Good messages help you remember what you did and help teammates understand changes.',
+          },
+        ],
       },
       {
         id: 'lesson-13',
         title: 'Share Your Work & Use Claude\'s /save Command',
         duration: 1,
         order: 13,
-        content: `<h2>Share Your Work & Use Claude's /save Command</h2>
-
-<h3>Pro Tip - Automatic Saving</h3>
-<p>Inside Claude Code, you can type:</p>
-<p><code>/save</code></p>
-<p>Claude Code will automatically handle git commands and create meaningful commit messages for you. This saves time!</p>
-
-<h3>Sharing Your Work</h3>
-<p>Just send them the GitHub link, like:</p>
-<p><code>https://github.com/YOUR-USERNAME/my-first-prototype</code></p>
-
-<h3>They Can:</h3>
-<ul>
-  <li>See your code and understand your design decisions</li>
-  <li>Clone your project to run locally</li>
-  <li>Leave comments or suggestions</li>
-  <li>Collaborate on the prototype</li>
-</ul>
-
-<h2>You're Now a Designer with Git Skills!</h2>
-<p>You can:</p>
-<ul>
-  <li>Save your work safely to the cloud</li>
-  <li>Track every change you make</li>
-  <li>Collaborate with developers</li>
-  <li>Showcase your process on GitHub</li>
-</ul>`,
+        module: 'github',
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Share Your Work & Use Claude\'s /save Command',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Pro Tip - Automatic Saving',
+          },
+          {
+            type: 'text',
+            content: 'Inside Claude Code, you can type:',
+          },
+          {
+            type: 'code',
+            code: '/save',
+            language: 'bash',
+            label: 'Claude Code',
+          },
+          {
+            type: 'text',
+            content: 'Claude Code will automatically handle git commands and create meaningful commit messages for you. This saves time!',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Sharing Your Work',
+          },
+          {
+            type: 'text',
+            content: 'Just send them the GitHub link, like:',
+          },
+          {
+            type: 'code',
+            code: 'https://github.com/YOUR-USERNAME/my-first-prototype',
+            language: 'text',
+            label: 'GitHub',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'They Can:',
+          },
+          {
+            type: 'list',
+            items: [
+              'See your code and understand your design decisions',
+              'Clone your project to run locally',
+              'Leave comments or suggestions',
+              'Collaborate on the prototype',
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You\'re Now a Designer with Git Skills!',
+            items: [
+              'Save your work safely to the cloud',
+              'Track every change you make',
+              'Collaborate with developers',
+              'Showcase your process on GitHub',
+            ],
+            message: 'You can save your work safely to the cloud, track every change you make, collaborate with developers, and showcase your process on GitHub.',
+          },
+        ],
       },
       // Best Practices Lessons (14-18)
       {
@@ -425,27 +894,60 @@ export const guides: Guide[] = [
         duration: 2,
         order: 14,
         module: 'practices',
-        content: `<h2>How to Describe Your Design to Claude Code</h2>
-
-<h3>Be Specific, Not Vague</h3>
-<p><strong>❌ Not this:</strong> "Create a nice button"</p>
-<p><strong>✅ Do this:</strong> "Create a button with a #2563EB background, white text, 12px border radius, 16px padding, and a hover effect that makes it 5% larger"</p>
-
-<h3>Include Design Details</h3>
-<ul>
-  <li><strong>Colors:</strong> Use hex codes (#2563EB, not "blue")</li>
-  <li><strong>Sizes:</strong> Specify padding, margins, font sizes (16px, not "normal")</li>
-  <li><strong>Interactions:</strong> Describe what happens on hover, click, etc.</li>
-  <li><strong>Responsiveness:</strong> Mention if it needs to work on mobile/tablet</li>
-  <li><strong>Framework:</strong> Say "Use React and Tailwind CSS"</li>
-</ul>
-
-<h3>Good Prompt Examples</h3>
-<ul>
-  <li>"Create a form with email and password fields. Use #1F2937 text, light gray background, and make it responsive."</li>
-  <li>"Build a product card showing: image on top, title below, price, and a 'Buy Now' button. Make it 300px wide."</li>
-  <li>"Design a navigation bar with a logo on the left and 4 menu items on the right. Make it sticky (stays at top when scrolling)."</li>
-</ul>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'How to Describe Your Design to Claude Code',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Be Specific, Not Vague',
+          },
+          {
+            type: 'callout',
+            calloutType: 'error',
+            title: 'Not this:',
+            content: 'Create a nice button',
+            icon: 'error',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Do this:',
+            content: 'Create a button with a #2563EB background, white text, 12px border radius, 16px padding, and a hover effect that makes it 5% larger',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Include Design Details',
+          },
+          {
+            type: 'list',
+            items: [
+              'Colors: Use hex codes (#2563EB, not "blue")',
+              'Sizes: Specify padding, margins, font sizes (16px, not "normal")',
+              'Interactions: Describe what happens on hover, click, etc.',
+              'Responsiveness: Mention if it needs to work on mobile/tablet',
+              'Framework: Say "Use React and Tailwind CSS"',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Good Prompt Examples',
+          },
+          {
+            type: 'list',
+            items: [
+              'Create a form with email and password fields. Use #1F2937 text, light gray background, and make it responsive.',
+              'Build a product card showing: image on top, title below, price, and a \'Buy Now\' button. Make it 300px wide.',
+              'Design a navigation bar with a logo on the left and 4 menu items on the right. Make it sticky (stays at top when scrolling).',
+            ],
+          },
+        ],
       },
       {
         id: 'lesson-15',
@@ -453,29 +955,56 @@ export const guides: Guide[] = [
         duration: 1,
         order: 15,
         module: 'practices',
-        content: `<h2>Testing Your Prototype</h2>
-
-<h3>Test in Different Browsers</h3>
-<ul>
-  <li>Test in Chrome, Safari, Firefox (not every browser shows things the same)</li>
-  <li>In your browser, press F12 to open "Developer Tools"</li>
-  <li>You can simulate phones and tablets to test responsiveness</li>
-</ul>
-
-<h3>Check Accessibility</h3>
-<p>Ask yourself:</p>
-<ul>
-  <li>Can I use this with just my keyboard? (Tab through elements)</li>
-  <li>Is the text readable? (Good contrast between text and background)</li>
-  <li>Does it work on small screens? (Phone, tablet, desktop)</li>
-</ul>
-
-<h3>Test Interactions</h3>
-<ul>
-  <li>Hover over buttons—does the effect work smoothly?</li>
-  <li>Click buttons—do they do what you expect?</li>
-  <li>Try animations—are they fast enough? Too slow?</li>
-</ul>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Testing Your Prototype',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Test in Different Browsers',
+          },
+          {
+            type: 'list',
+            items: [
+              'Test in Chrome, Safari, Firefox (not every browser shows things the same)',
+              'In your browser, press F12 to open "Developer Tools"',
+              'You can simulate phones and tablets to test responsiveness',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Check Accessibility',
+          },
+          {
+            type: 'text',
+            content: 'Ask yourself:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Can I use this with just my keyboard? (Tab through elements)',
+              'Is the text readable? (Good contrast between text and background)',
+              'Does it work on small screens? (Phone, tablet, desktop)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Test Interactions',
+          },
+          {
+            type: 'list',
+            items: [
+              'Hover over buttons—does the effect work smoothly?',
+              'Click buttons—do they do what you expect?',
+              'Try animations—are they fast enough? Too slow?',
+            ],
+          },
+        ],
       },
       {
         id: 'lesson-16',
@@ -483,26 +1012,62 @@ export const guides: Guide[] = [
         duration: 1,
         order: 16,
         module: 'practices',
-        content: `<h2>Iterating Based on Feedback</h2>
-
-<h3>Ask for Small Changes, Not Rewrites</h3>
-<p><strong>❌ Don't:</strong> "I don't like this design, redo it"</p>
-<p><strong>✅ Do:</strong> "Make the button taller and add more space between the inputs"</p>
-
-<h3>Use Version History</h3>
-<p>If you don't like a change, you can always go back to a previous version on GitHub:</p>
-<ul>
-  <li>View your commit history on GitHub</li>
-  <li>Click on an old version</li>
-  <li>Compare what changed</li>
-</ul>
-
-<h3>Collaborate Effectively</h3>
-<ul>
-  <li>Show your prototype to teammates early (don't wait for perfection)</li>
-  <li>Ask specific questions: "Does this button feel clickable to you?"</li>
-  <li>Document design decisions in code comments</li>
-</ul>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Iterating Based on Feedback',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Ask for Small Changes, Not Rewrites',
+          },
+          {
+            type: 'callout',
+            calloutType: 'error',
+            title: 'Don\'t:',
+            content: 'I don\'t like this design, redo it',
+            icon: 'error',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Do:',
+            content: 'Make the button taller and add more space between the inputs',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Use Version History',
+          },
+          {
+            type: 'text',
+            content: 'If you don\'t like a change, you can always go back to a previous version on GitHub:',
+          },
+          {
+            type: 'list',
+            items: [
+              'View your commit history on GitHub',
+              'Click on an old version',
+              'Compare what changed',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Collaborate Effectively',
+          },
+          {
+            type: 'list',
+            items: [
+              'Show your prototype to teammates early (don\'t wait for perfection)',
+              'Ask specific questions: "Does this button feel clickable to you?"',
+              'Document design decisions in code comments',
+            ],
+          },
+        ],
       },
       {
         id: 'lesson-17',
@@ -510,31 +1075,61 @@ export const guides: Guide[] = [
         duration: 1,
         order: 17,
         module: 'practices',
-        content: `<h2>Handing Off Work to Developers</h2>
-
-<h3>Prepare Your Code for Handoff</h3>
-<ul>
-  <li><strong>Push to GitHub:</strong> Make sure all your latest work is on GitHub</li>
-  <li><strong>Add comments:</strong> Explain why you made certain design choices in the code</li>
-  <li><strong>Create a README:</strong> A simple document explaining what the prototype does and how to run it</li>
-</ul>
-
-<h3>Write a Good README</h3>
-<p>Create a file called <code>README.md</code> with:</p>
-<ul>
-  <li>What the prototype is for</li>
-  <li>How to run it (e.g., "Run npm start to see the prototype")</li>
-  <li>Design notes (e.g., "Button interactions should feel snappy")</li>
-  <li>Links to design files (Figma, etc.)</li>
-</ul>
-
-<h3>Be Available for Questions</h3>
-<p>Developers will have questions about your design. Be ready to:</p>
-<ul>
-  <li>Explain why you made certain choices</li>
-  <li>Show design references or inspiration</li>
-  <li>Discuss trade-offs (e.g., why animation smoothness matters)</li>
-</ul>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Handing Off Work to Developers',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Prepare Your Code for Handoff',
+          },
+          {
+            type: 'list',
+            items: [
+              'Push to GitHub: Make sure all your latest work is on GitHub',
+              'Add comments: Explain why you made certain design choices in the code',
+              'Create a README: A simple document explaining what the prototype does and how to run it',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Write a Good README',
+          },
+          {
+            type: 'text',
+            content: 'Create a file called README.md with:',
+          },
+          {
+            type: 'list',
+            items: [
+              'What the prototype is for',
+              'How to run it (e.g., "Run npm start to see the prototype")',
+              'Design notes (e.g., "Button interactions should feel snappy")',
+              'Links to design files (Figma, etc.)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Be Available for Questions',
+          },
+          {
+            type: 'text',
+            content: 'Developers will have questions about your design. Be ready to:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Explain why you made certain choices',
+              'Show design references or inspiration',
+              'Discuss trade-offs (e.g., why animation smoothness matters)',
+            ],
+          },
+        ],
       },
       {
         id: 'lesson-18',
@@ -542,134 +1137,221 @@ export const guides: Guide[] = [
         duration: 1,
         order: 18,
         module: 'practices',
-        content: `<h2>Troubleshooting Common Issues</h2>
-
-<h3>Claude Code Won't Start</h3>
-<ul>
-  <li>Check your API key (copy it again if needed)</li>
-  <li>Make sure you've updated Node.js: <code>npm install -g npm</code></li>
-  <li>Reinstall Claude Code: <code>npm install -g claude-code@latest</code></li>
-</ul>
-
-<h3>Development Server Won't Start</h3>
-<ul>
-  <li>Press Ctrl + C to stop it</li>
-  <li>Run <code>npm start</code> again</li>
-  <li>Check if port 3000 is already in use by another program</li>
-</ul>
-
-<h3>Git/GitHub Issues</h3>
-<ul>
-  <li><strong>Forgot to initialize git?</strong> Run <code>git init</code></li>
-  <li><strong>Wrong remote?</strong> Check with <code>git remote -v</code></li>
-  <li><strong>Need a fresh start?</strong> Delete the .git folder and start over</li>
-</ul>
-
-<h2>Key Takeaways</h2>
-<ul>
-  <li><strong>Specific is better than vague.</strong> The more detail you give Claude Code, the better the result.</li>
-  <li><strong>Test early and often.</strong> Don't wait until the end to see if something works.</li>
-  <li><strong>Iterate in small steps.</strong> Ask for one thing at a time, not everything at once.</li>
-  <li><strong>Document your decisions.</strong> Help future you and your teammates understand why you made choices.</li>
-  <li><strong>Use git effectively.</strong> Meaningful commit messages are your documentation.</li>
-</ul>
-
-<h2>You're Ready!</h2>
-<p>You now know:</p>
-<ul>
-  <li>How to set up Claude Code</li>
-  <li>How to create prototypes</li>
-  <li>How to save your work on GitHub</li>
-  <li>Best practices for working with Claude Code</li>
-</ul>
-
-<p><strong>Congratulations!</strong> Start building! Create a prototype, share it with your team, and iterate. Claude Code is a tool to speed up your ideas—have fun with it!</p>`,
+        sections: [
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Troubleshooting Common Issues',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Claude Code Won\'t Start',
+          },
+          {
+            type: 'list',
+            items: [
+              'Check your API key (copy it again if needed)',
+              'Make sure you\'ve updated Node.js: npm install -g npm',
+              'Reinstall Claude Code: npm install -g claude-code@latest',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Development Server Won\'t Start',
+          },
+          {
+            type: 'list',
+            items: [
+              'Press Ctrl + C to stop it',
+              'Run npm start again',
+              'Check if port 3000 is already in use by another program',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Git/GitHub Issues',
+          },
+          {
+            type: 'list',
+            items: [
+              'Forgot to initialize git? Run git init',
+              'Wrong remote? Check with git remote -v',
+              'Need a fresh start? Delete the .git folder and start over',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Key Takeaways',
+          },
+          {
+            type: 'list',
+            items: [
+              'Specific is better than vague. The more detail you give Claude Code, the better the result.',
+              'Test early and often. Don\'t wait until the end to see if something works.',
+              'Iterate in small steps. Ask for one thing at a time, not everything at once.',
+              'Document your decisions. Help future you and your teammates understand why you made choices.',
+              'Use git effectively. Meaningful commit messages are your documentation.',
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You\'re Ready!',
+            items: [
+              'How to set up Claude Code',
+              'How to create prototypes',
+              'How to save your work on GitHub',
+              'Best practices for working with Claude Code',
+            ],
+            message: 'Congratulations! Start building! Create a prototype, share it with your team, and iterate. Claude Code is a tool to speed up your ideas—have fun with it!',
+          },
+        ],
       },
     ],
     lessonCount: 18,
     totalDuration: 27,
     content: `
-      <h2>Welcome to Claude Code Learning Path for Designers</h2>
-      <p>Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Complete this course in 27 minutes and go from zero to confident.</p>
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to Claude Code Learning Path for Designers</h2>
+      <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. <strong>Complete this course in 27 minutes and go from zero to confident.</strong></p>
 
-      <h3>What You'll Learn</h3>
-      <p>This learning path is structured in 4 sequential modules that build on each other:</p>
-      <div style="display: flex; gap: 12px; flex-wrap: wrap; margin: 16px 0; padding: 12px; background: rgba(139, 92, 246, 0.05); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.1);">
-        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
-          <div style="font-weight: 600; color: #1f2937;">1. Setup</div>
-          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">6 minutes</div>
+      <h3 class="text-3xl font-bold text-gray-900 mt-12 mb-3">What You'll Learn</h3>
+      <p class="text-lg text-gray-700 mb-8">This learning path is structured in 4 sequential modules that build on each other. Complete all lessons in order for the best learning experience.</p>
+
+      <!-- Enhanced Module Flow with Visual Hierarchy - Black & White Design -->
+      <div class="mb-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Module 1: Setup -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">1</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Setup</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Prepare your environment and get your API key ready</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Foundation</div>
+              </div>
+            </div>
+            <div class="hidden lg:flex absolute -right-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.5rem; height: 1.5rem;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Module 2: Prototype -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">2</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Prototype</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Create your first interactive prototype with AI</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Build</div>
+              </div>
+            </div>
+            <div class="hidden lg:flex absolute -right-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.5rem; height: 1.5rem;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Module 3: GitHub -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">3</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">GitHub</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Save and share your work with version control</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Collaborate</div>
+              </div>
+            </div>
+            <div class="hidden lg:flex absolute -right-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.5rem; height: 1.5rem;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Module 4: Best Practices -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">4</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Best Practices</h4>
+              <p class="text-sm text-gray-700 flex-grow">Learn professional workflows and optimization techniques</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Master</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="align-self: center; color: #9ca3af; font-weight: bold;">→</div>
-        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
-          <div style="font-weight: 600; color: #1f2937;">2. Prototype</div>
-          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">8 minutes</div>
-        </div>
-        <div style="align-self: center; color: #9ca3af; font-weight: bold;">→</div>
-        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
-          <div style="font-weight: 600; color: #1f2937;">3. GitHub</div>
-          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">7 minutes</div>
-        </div>
-        <div style="align-self: center; color: #9ca3af; font-weight: bold;">→</div>
-        <div style="flex: 1; min-width: 120px; padding: 12px; background: white; border-radius: 6px; border: 1px solid #e5e7eb; text-align: center;">
-          <div style="font-weight: 600; color: #1f2937;">4. Best Practices</div>
-          <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">6 minutes</div>
+
+        <!-- Progress Info - Black & White -->
+        <div class="mt-8 p-6 bg-gray-50 rounded-lg border-2 border-gray-900">
+          <div class="flex items-center justify-center flex-wrap gap-12">
+            <div class="text-center">
+              <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Modules</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">4</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Lessons</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">18</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <h3>What's in Each Module?</h3>
-      <div style="display: grid; gap: 16px; margin: 20px 0;">
-        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
-          <h4 style="margin: 0 0 8px 0; color: #1f2937;">1. Setup (6 minutes)</h4>
-          <p style="margin: 8px 0; color: #4b5563;">Prepare your environment for success</p>
-          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
-            <li>Create an Anthropic account and get your API key</li>
-            <li>Install Node.js on your computer</li>
-            <li>Install and verify Claude Code</li>
+      <h3 class="text-2xl font-bold text-gray-900 mt-12 mb-6">What's in Each Module?</h3>
+      <div class="space-y-4 mb-12">
+        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
+          <h4 class="font-bold text-gray-900 mb-2">1. Setup</h4>
+          <p class="text-gray-700 mb-3">Prepare your environment for success</p>
+          <ul class="space-y-1 text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Create an Anthropic account and get your API key</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Install Node.js on your computer</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Install and verify Claude Code</li>
           </ul>
         </div>
 
-        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
-          <h4 style="margin: 0 0 8px 0; color: #1f2937;">2. Prototype (8 minutes)</h4>
-          <p style="margin: 8px 0; color: #4b5563;">Build your first interactive project</p>
-          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
-            <li>Launch Claude Code and start your first session</li>
-            <li>Create a working prototype from scratch</li>
-            <li>Test and iterate on your design</li>
+        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
+          <h4 class="font-bold text-gray-900 mb-2">2. Prototype</h4>
+          <p class="text-gray-700 mb-3">Build your first interactive project</p>
+          <ul class="space-y-1 text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Launch Claude Code and start your first session</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Create a working prototype from scratch</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Test and iterate on your design</li>
           </ul>
         </div>
 
-        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
-          <h4 style="margin: 0 0 8px 0; color: #1f2937;">3. GitHub (7 minutes)</h4>
-          <p style="margin: 8px 0; color: #4b5563;">Save and collaborate on your work</p>
-          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
-            <li>Initialize Git and create a GitHub repository</li>
-            <li>Commit and push your prototype code</li>
-            <li>Learn version control best practices</li>
+        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
+          <h4 class="font-bold text-gray-900 mb-2">3. GitHub</h4>
+          <p class="text-gray-700 mb-3">Save and collaborate on your work</p>
+          <ul class="space-y-1 text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Initialize Git and create a GitHub repository</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Commit and push your prototype code</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Learn version control best practices</li>
           </ul>
         </div>
 
-        <div style="padding: 16px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #8b5cf6;">
-          <h4 style="margin: 0 0 8px 0; color: #1f2937;">4. Best Practices (6 minutes)</h4>
-          <p style="margin: 8px 0; color: #4b5563;">Master professional workflows</p>
-          <ul style="padding-left: 20px; margin: 8px 0; color: #6b7280; font-size: 14px;">
-            <li>Write clear, specific prompts for better results</li>
-            <li>Test across browsers and devices</li>
-            <li>Hand off work to developers professionally</li>
+        <div class="p-5 bg-white border-l-4 border-l-gray-900 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors">
+          <h4 class="font-bold text-gray-900 mb-2">4. Best Practices</h4>
+          <p class="text-gray-700 mb-3">Master professional workflows</p>
+          <ul class="space-y-1 text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Write clear, specific prompts for better results</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Test across browsers and devices</li>
+            <li class="flex items-start gap-2"><span class="text-gray-400 mt-1">•</span> Hand off work to developers professionally</li>
           </ul>
         </div>
       </div>
 
-      <h3>Getting Started</h3>
-      <p>Choose the path that fits your needs:</p>
-      <ul style="padding-left: 20px; margin: 12px 0;">
-        <li><strong>New to Claude Code?</strong> Start at the beginning and follow through sequentially. Total time: 27 minutes.</li>
-        <li><strong>Already have Claude Code installed?</strong> Jump straight to "Your First Prototype" and get hands-on immediately.</li>
-        <li><strong>Need specific help?</strong> Each module builds on the previous, but you can use them as standalone references.</li>
-        <li><strong>Learn at your own pace</strong> - Pause between sections to practice and experiment with what you learned.</li>
+      <h3 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Getting Started</h3>
+      <p class="text-gray-700 mb-4">Choose the path that fits your needs:</p>
+      <ul class="space-y-3 mb-8">
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">New to Claude Code?</strong> Start at the beginning and follow through sequentially to complete all lessons.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Claude Code installed?</strong> Jump straight to "Your First Prototype" and get hands-on immediately.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Need specific help?</strong> Each module builds on the previous, but you can use them as standalone references.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Learn at your own pace</strong> — Pause between sections to practice and experiment with what you learned.</li>
       </ul>
 
-      <h3>Ready to Get Started?</h3>
-      <p>Jump in and begin your Claude Code journey! Start with the first module or jump to where you need help.</p>
+      <div class="p-6 bg-gray-900 text-white rounded-lg">
+        <h3 class="text-xl font-bold mb-2">Ready to Get Started?</h3>
+        <p>Jump in and begin your Claude Code journey! Start with the first module or jump to where you need help.</p>
+      </div>
     `,
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
   },

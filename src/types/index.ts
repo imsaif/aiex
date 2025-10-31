@@ -183,7 +183,8 @@ export type { Pattern as AIPattern, CodeExample as PatternCodeExample, Example a
 export interface GuideLesson {
   id: string;
   title: string;
-  content: string; // HTML or Markdown content for the lesson
+  content?: string; // HTML or Markdown content for the lesson (legacy)
+  sections?: any[]; // Structured lesson sections for new renderer (LessonSection[])
   duration: number; // in minutes
   order: number; // Lesson sequence number
   module?: string; // Module grouping: "setup" | "prototype" | "github" | "practices"

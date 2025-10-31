@@ -1,6 +1,8 @@
 'use client';
 
 import { GuideLesson } from '@/types';
+import LessonRenderer from './LessonRenderer';
+import { LessonSection } from '@/types/lesson';
 
 interface LessonContentProps {
   lesson: GuideLesson;
@@ -17,10 +19,18 @@ export default function LessonContent({
   return (
     <div className="p-6 bg-surface-secondary/50">
       {/* Lesson Content */}
-      <div
-        className="prose prose-sm dark:prose-invert max-w-none mb-6 text-text-primary leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: lesson.content }}
-      />
+      <div className="mb-6 text-text-primary leading-relaxed">
+        {lesson.sections && lesson.sections.length > 0 ? (
+          // New structured format with LessonRenderer
+          <LessonRenderer sections={lesson.sections as LessonSection[]} />
+        ) : (
+          // Legacy HTML string format
+          <div
+            className="prose prose-sm dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: lesson.content || '<p>Content coming soon...</p>' }}
+          />
+        )}
+      </div>
 
       {/* Completion Checkbox */}
       <div className="flex items-center gap-3 pt-6 border-t border-border-primary">

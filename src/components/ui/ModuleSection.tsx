@@ -2,6 +2,12 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Cog6ToothIcon,
+  LightBulbIcon,
+  StarIcon,
+} from '@heroicons/react/24/outline';
+import { Github } from '@lobehub/icons';
 import { GuideLesson } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import ModularLessonCard from './ModularLessonCard';
@@ -14,6 +20,21 @@ interface ModuleSectionProps {
   guideId: string;
   guideTitle: string;
 }
+
+const getModuleIcon = (moduleTitle: string) => {
+  const iconProps = { className: 'w-5 h-5', style: { color: '#3b82f6' } };
+
+  if (moduleTitle.includes('Setup')) {
+    return <Cog6ToothIcon {...iconProps} />;
+  } else if (moduleTitle.includes('Prototype')) {
+    return <LightBulbIcon {...iconProps} />;
+  } else if (moduleTitle.includes('GitHub') || moduleTitle.includes('Git')) {
+    return <Github size={20} style={{ color: '#3b82f6' }} />;
+  } else if (moduleTitle.includes('Best Practices') || moduleTitle.includes('Practices')) {
+    return <StarIcon {...iconProps} />;
+  }
+  return null;
+};
 
 export default function ModuleSection({
   moduleTitle,
@@ -42,7 +63,14 @@ export default function ModuleSection({
         <div className="p-5 bg-surface-secondary/50 rounded-lg border border-border-primary hover:border-border-secondary hover:bg-surface-secondary transition-all">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-text-primary mb-2">{moduleTitle}</h3>
+              <div className="flex items-center gap-2 mb-2">
+                {getModuleIcon(moduleTitle) && (
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    {getModuleIcon(moduleTitle)}
+                  </div>
+                )}
+                <h3 className="text-lg font-semibold text-text-primary">{moduleTitle}</h3>
+              </div>
               <p className="text-sm text-text-secondary mb-4">{moduleDescription}</p>
 
               {/* Module Stats */}
