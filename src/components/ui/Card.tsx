@@ -48,7 +48,7 @@ export default function Card({
     large: 'rounded-xl'
   };
 
-  const baseClasses = `bg-surface-primary border border-border-primary ${paddingClasses[padding]} ${shadowClasses[shadow]} ${roundedClasses[rounded]} ${onClick ? 'cursor-pointer hover:shadow-lg hover:border-border-secondary transition-all duration-200' : ''}`;
+  const baseClasses = `bg-surface-primary border border-gray-200 ${paddingClasses[padding]} ${shadowClasses[shadow]} ${roundedClasses[rounded]} ${onClick ? 'cursor-pointer hover:shadow-lg hover:border-gray-300 transition-all duration-200' : ''}`;
 
   const cardContent = (
     <>

@@ -22,14 +22,14 @@ interface ModuleSectionProps {
 }
 
 const getModuleIcon = (moduleTitle: string) => {
-  const iconProps = { className: 'w-5 h-5', style: { color: '#3b82f6' } };
+  const iconProps = { className: 'w-5 h-5', style: { color: '#525252' } };
 
   if (moduleTitle.includes('Setup')) {
     return <Cog6ToothIcon {...iconProps} />;
   } else if (moduleTitle.includes('Prototype')) {
     return <LightBulbIcon {...iconProps} />;
   } else if (moduleTitle.includes('GitHub') || moduleTitle.includes('Git')) {
-    return <Github size={20} style={{ color: '#3b82f6' }} />;
+    return <Github size={20} style={{ color: '#525252' }} />;
   } else if (moduleTitle.includes('Best Practices') || moduleTitle.includes('Practices')) {
     return <StarIcon {...iconProps} />;
   }
@@ -60,7 +60,7 @@ export default function ModuleSection({
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full text-left transition-all duration-300"
       >
-        <div className="p-5 bg-surface-secondary/50 rounded-lg border border-border-primary hover:border-border-secondary hover:bg-surface-secondary transition-all">
+        <div className="p-5 bg-surface-secondary/50 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-surface-secondary transition-all">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">

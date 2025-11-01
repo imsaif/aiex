@@ -24,7 +24,7 @@ export default function PatternCategories({ categories }: PatternCategoriesProps
           key={category.id}
           className="relative bg-surface-primary rounded-xl shadow-lg overflow-hidden cursor-pointer
                      transform transition-all duration-300 ease-in-out
-                     border border-border-secondary"
+                     border border-secondary"
           onClick={() => handleCategoryClick(category.slug)}
         >
           {/* Category Image */}

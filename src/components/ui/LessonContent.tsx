@@ -33,7 +33,7 @@ export default function LessonContent({
       </div>
 
       {/* Completion Checkbox */}
-      <div className="flex items-center gap-3 pt-6 border-t border-border-primary">
+      <div className="flex items-center gap-3 pt-6 border-t border-gray-300">
         <button
           onClick={onToggleComplete}
           className="flex items-center gap-3 group cursor-pointer"
@@ -42,7 +42,7 @@ export default function LessonContent({
             className={`w-6 h-6 rounded border-2 flex items-center justify-center transition-all ${
               isCompleted
                 ? 'bg-green-500 border-green-500'
-                : 'border-border-primary group-hover:border-accent-primary'
+                : 'border-gray-300 group-hover:border-accent-primary'
             }`}
           >
             {isCompleted && (

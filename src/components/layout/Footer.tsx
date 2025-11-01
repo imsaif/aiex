@@ -50,7 +50,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-background-secondary border-t border-border-primary">
+    <footer className="bg-background-secondary border-t border-primary">
       {/* Newsletter Section */}
       <section id="newsletter" className="py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-6">
@@ -73,7 +73,7 @@ export default function Footer() {
                   required
                   disabled={status === 'loading'}
                   aria-label="Email address"
-                  className="flex-1 px-4 py-3 rounded-full border border-border-primary bg-surface-primary text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-3 rounded-full border border-primary bg-surface-primary text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
                 />
                 <button
                   type="submit"
@@ -106,13 +106,13 @@ export default function Footer() {
       </section>
 
       {/* Multi-Column Footer Section */}
-      <div className="border-t border-border-primary">
+      <div className="border-t border-primary">
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12">
             {/* Left Section: Branding */}
             <div className="lg:col-span-4">
               <div className="flex items-center gap-3 mb-3">
-                <span className="flex items-center justify-center w-10 h-10 bg-accent-subtle border border-border-primary rounded-full">
+                <span className="flex items-center justify-center w-10 h-10 bg-accent-subtle border border-primary rounded-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-text-primary">
                     <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                     <path d="M12 10l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
@@ -283,7 +283,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-border-primary">
+      <div className="border-t border-primary">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Email */}

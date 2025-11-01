@@ -120,7 +120,7 @@ export default function AdvancedSearchBar({
           onKeyDown={handleKeyDown}
           onFocus={() => results.length > 0 && setIsOpen(true)}
           placeholder={placeholder}
-          className="w-full px-4 py-3 pl-12 pr-12 text-gray-700 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200"
+          className="w-full px-4 py-3 pl-12 pr-12 text-text-primary bg-surface-primary border border-gray-200 rounded-xl hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-ring-focus focus:border-transparent shadow-sm transition-all duration-200"
         />
         
         {/* Search Icon */}
@@ -146,7 +146,7 @@ export default function AdvancedSearchBar({
 
       {/* Search Results */}
       {isOpen && results.length > 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-96 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-surface-primary border border-gray-200 rounded-xl shadow-lg max-h-96 overflow-y-auto">
           <div className="p-2">
             <div className="text-xs text-gray-500 mb-2 px-2">
               {results.length} pattern{results.length !== 1 ? 's' : ''} found
@@ -157,9 +157,9 @@ export default function AdvancedSearchBar({
                 href={`/patterns/${result.item.id}`}
                 onClick={() => handlePatternSelect(result.item)}
                 className={`block p-3 rounded-lg transition-colors ${
-                  index === selectedIndex 
-                    ? 'bg-blue-50 border border-blue-200' 
-                    : 'hover:bg-gray-50'
+                  index === selectedIndex
+                    ? 'bg-blue-50 border border-selected'
+                    : 'hover:bg-background-secondary'
                 }`}
               >
                 <div className="flex items-start space-x-3">
@@ -205,7 +205,7 @@ export default function AdvancedSearchBar({
 
       {/* No Results */}
       {isOpen && query.length >= 2 && results.length === 0 && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg p-4">
+        <div className="absolute z-50 w-full mt-2 bg-surface-primary border border-gray-200 rounded-xl shadow-lg p-4">
           <div className="text-center text-gray-500">
             <svg className="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

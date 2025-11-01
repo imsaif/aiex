@@ -127,7 +127,7 @@ export default function SelectiveMemoryDemo() {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'personal': return 'bg-[#262626] text-white';
-      case 'work': return 'bg-[#0d0d0d] text-white';
+      case 'work': return 'bg-gray-900 text-white';
       case 'preferences': return 'bg-[#525252] text-white';
       case 'temporary': return 'bg-[#737373] text-white';
       default: return 'bg-[#737373] text-white';
@@ -159,10 +159,10 @@ export default function SelectiveMemoryDemo() {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-      <div className="mb-6 p-4 bg-white border-2 border-[#0d0d0d] rounded-lg">
+      <div className="mb-6 p-4 bg-white border-2 border-gray-900 rounded-lg">
         <div className="flex justify-between items-start gap-4">
           <div className="flex-1">
-            <p className="text-sm text-[#0d0d0d] font-medium mb-2">
+            <p className="text-sm text-gray-900 font-medium mb-2">
               <strong>How to use:</strong> Click the buttons under each memory to change what the AI remembers.
             </p>
             <div className="text-xs text-gray-700 space-y-1">
@@ -174,7 +174,7 @@ export default function SelectiveMemoryDemo() {
           </div>
           <button
             onClick={resetDemo}
-            className="px-3 py-2 bg-white text-[#0d0d0d] border-2 border-[#0d0d0d] rounded text-sm font-medium hover:bg-[#0d0d0d] hover:text-white active:scale-95 transition-all whitespace-nowrap flex-shrink-0"
+            className="px-3 py-2 bg-white text-gray-900 border-2 border-gray-900 rounded text-sm font-medium hover:bg-gray-900 hover:text-white active:scale-95 transition-all whitespace-nowrap flex-shrink-0"
           >
             ↻ Reset
           </button>
@@ -214,7 +214,7 @@ export default function SelectiveMemoryDemo() {
                 exit={{ opacity: 0, x: -100 }}
                 className={`rounded-lg p-4 border-2 transition-all bg-white ${
                   memory.status === 'active'
-                    ? 'border-[#0d0d0d] shadow-md'
+                    ? 'border-gray-900 shadow-md'
                     : memory.status === 'ignored'
                     ? 'opacity-60 border-dashed border-gray-400'
                     : 'opacity-40 border-dotted border-gray-400 line-through'
@@ -235,13 +235,13 @@ export default function SelectiveMemoryDemo() {
                     <>
                       <button
                         onClick={() => updateMemoryStatus(memory.id, 'ignored')}
-                        className="px-3 py-1.5 text-sm font-medium bg-white text-[#0d0d0d] border-2 border-[#0d0d0d] rounded-lg hover:bg-[#0d0d0d] hover:text-white active:scale-95 transition-all cursor-pointer"
+                        className="px-3 py-1.5 text-sm font-medium bg-white text-gray-900 border-2 border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white active:scale-95 transition-all cursor-pointer"
                       >
                         ⏸ Ignore
                       </button>
                       <button
                         onClick={() => updateMemoryStatus(memory.id, 'forgotten')}
-                        className="px-3 py-1.5 text-sm font-medium bg-[#0d0d0d] text-white border-2 border-[#0d0d0d] rounded-lg hover:bg-[#262626] active:scale-95 transition-all cursor-pointer"
+                        className="px-3 py-1.5 text-sm font-medium bg-gray-900 text-white border-2 border-gray-900 rounded-lg hover:bg-gray-800 active:scale-95 transition-all cursor-pointer"
                       >
                         ✕ Forget
                       </button>
@@ -250,7 +250,7 @@ export default function SelectiveMemoryDemo() {
                   {memory.status === 'ignored' && (
                     <button
                       onClick={() => updateMemoryStatus(memory.id, 'active')}
-                      className="px-3 py-1.5 text-sm font-medium bg-white text-[#0d0d0d] border-2 border-[#0d0d0d] rounded-lg hover:bg-[#0d0d0d] hover:text-white active:scale-95 transition-all cursor-pointer"
+                      className="px-3 py-1.5 text-sm font-medium bg-white text-gray-900 border-2 border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white active:scale-95 transition-all cursor-pointer"
                     >
                       ↻ Restore
                     </button>
@@ -258,7 +258,7 @@ export default function SelectiveMemoryDemo() {
                   {memory.status === 'forgotten' && (
                     <button
                       onClick={() => deleteMemory(memory.id)}
-                      className="px-3 py-1.5 text-sm font-medium bg-[#525252] text-white border-2 border-[#525252] rounded-lg hover:bg-[#737373] active:scale-95 transition-all cursor-pointer"
+                      className="px-3 py-1.5 text-sm font-medium bg-gray-600 text-white border-2 border-gray-600 rounded-lg hover:bg-gray-700 active:scale-95 transition-all cursor-pointer"
                     >
                       🗑 Delete
                     </button>
@@ -268,7 +268,7 @@ export default function SelectiveMemoryDemo() {
             ))}
           </AnimatePresence>
 
-          <div className="bg-white border-2 border-[#0d0d0d] rounded-lg p-3">
+          <div className="bg-white border-2 border-gray-900 rounded-lg p-3">
             <h4 className="text-sm font-semibold mb-2">Add Memory</h4>
             <div className="flex gap-2">
               <input
@@ -277,11 +277,11 @@ export default function SelectiveMemoryDemo() {
                 onChange={(e) => setNewMemory(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && addMemory()}
                 placeholder="What to remember?"
-                className="flex-1 px-2 py-2 border-2 border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#0d0d0d]"
+                className="flex-1 px-2 py-2 border-2 border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
               />
               <button
                 onClick={addMemory}
-                className="px-3 py-2 bg-[#0d0d0d] text-white rounded text-sm hover:bg-[#262626] transition-colors font-medium"
+                className="px-3 py-2 bg-gray-900 text-white rounded text-sm hover:bg-gray-800 transition-colors font-medium"
               >
                 Add
               </button>
@@ -290,7 +290,7 @@ export default function SelectiveMemoryDemo() {
 
           <button
             onClick={exportMemories}
-            className="w-full px-3 py-2 bg-white text-[#0d0d0d] border-2 border-[#0d0d0d] rounded text-sm hover:bg-[#0d0d0d] hover:text-white transition-colors font-medium"
+            className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-900 rounded text-sm hover:bg-gray-900 hover:text-white transition-colors font-medium"
           >
             ↓ Export
           </button>
@@ -299,7 +299,7 @@ export default function SelectiveMemoryDemo() {
         {/* RIGHT COLUMN: AI Response Preview */}
         <div>
           <h3 className="text-lg font-semibold mb-3">AI Response Preview</h3>
-          <div className="bg-gray-100 border-2 border-[#0d0d0d] rounded-lg p-4 min-h-[500px] flex flex-col">
+          <div className="bg-gray-100 border-2 border-gray-900 rounded-lg p-4 min-h-[500px] flex flex-col">
             <div className="bg-white rounded-lg p-4 flex-1 mb-3 shadow-sm border-2 border-gray-200">
               <p className="text-gray-800 leading-relaxed mb-4">
                 {activeMemories.length > 0
@@ -308,15 +308,15 @@ export default function SelectiveMemoryDemo() {
               </p>
 
               {activeMemories.length > 0 && (
-                <div className="bg-white rounded p-3 border-2 border-[#0d0d0d]">
-                  <p className="text-xs text-[#0d0d0d] mb-2 font-semibold">
+                <div className="bg-white rounded p-3 border-2 border-gray-900">
+                  <p className="text-xs text-gray-900 mb-2 font-semibold">
                     Memories I'm using:
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {activeMemories.map(m => (
                       <span
                         key={m.id}
-                        className="inline-block text-xs bg-[#0d0d0d] text-white px-2 py-1 rounded border-2 border-[#0d0d0d]"
+                        className="inline-block text-xs bg-gray-900 text-white px-2 py-1 rounded border-2 border-gray-900"
                       >
                         ✓ {m.content.substring(0, 25)}
                         {m.content.length > 25 ? '...' : ''}
@@ -327,15 +327,15 @@ export default function SelectiveMemoryDemo() {
               )}
             </div>
 
-            <div className="bg-white rounded-lg p-3 border-2 border-[#0d0d0d]">
+            <div className="bg-white rounded-lg p-3 border-2 border-gray-900">
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <p className="text-gray-600 text-xs">Total</p>
-                  <p className="text-2xl font-bold text-[#0d0d0d]">{stats.total}</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
                 </div>
                 <div>
                   <p className="text-gray-600 text-xs">Active</p>
-                  <p className="text-2xl font-bold text-[#0d0d0d]">{stats.active}</p>
+                  <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
                 </div>
                 <div>
                   <p className="text-gray-600 text-xs">Ignored</p>

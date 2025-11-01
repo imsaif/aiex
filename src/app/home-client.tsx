@@ -73,8 +73,8 @@ export default function HomeClient() {
                   placeholder="Search any AI Pattern you need"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-6 py-4 pr-12 rounded-lg bg-surface-primary border border-gray-200 dark:border-gray-700
-                           text-text-primary placeholder-text-secondary focus:outline-none focus:border-blue-500
+                  className="w-full px-6 py-4 pr-12 rounded-lg bg-surface-primary border border-primary hover:border-secondary
+                           text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-ring-focus focus:border-transparent
                            transition-colors"
                 />
                 <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black text-white rounded-md
@@ -102,7 +102,7 @@ export default function HomeClient() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 dark:border-gray-700 sticky top-4">
+            <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 shadow-sm sticky top-4">
               <h3 className="font-semibold text-lg mb-4">Categories</h3>
               <ul className="space-y-2">
                 <li>
@@ -157,8 +157,8 @@ export default function HomeClient() {
                     href={`/patterns/${pattern.slug}`}
                     className="block group"
                   >
-                    <div className="bg-surface-primary rounded-xl p-8 border border-gray-200 dark:border-gray-700
-                                  hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full
+                    <div className="bg-surface-primary rounded-xl p-8 border border-gray-200 shadow-sm
+                                  hover:border-gray-300 transition-all duration-300 h-full
                                   flex flex-col">
                       {/* Title */}
                       <h3 className="text-lg font-semibold text-text-primary mb-4 group-hover:text-blue-600 transition-colors">
@@ -171,7 +171,7 @@ export default function HomeClient() {
                       </p>
 
                       {/* Divider */}
-                      <div className="border-t border-gray-200 dark:border-gray-700 mb-6"></div>
+                      <div className="border-t border-gray-300 mb-6"></div>
 
                       {/* Top Metadata Row - Category & Status */}
                       <div className="flex items-center gap-2 mb-6">

@@ -49,7 +49,7 @@ export default function AboutPage() {
               {/* 3-Column Card Layout */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {/* Pattern Discovery Card */}
-                <div className="p-6 bg-surface-primary border border-border-primary rounded-xl">
+                <div className="p-6 bg-surface-primary border border-primary rounded-xl">
                   <h3 className="text-lg font-bold mb-3 text-text-primary">Pattern Discovery</h3>
                   <p className="text-text-secondary leading-relaxed text-sm">
                     We analyze how leading AI products—ChatGPT, Claude, Midjourney, GitHub Copilot, Notion AI—solve common UX challenges. When a design decision works across multiple products, we dig deeper.
@@ -57,7 +57,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* What Earns a Spot Card */}
-                <div className="p-6 bg-surface-primary border border-border-primary rounded-xl">
+                <div className="p-6 bg-surface-primary border border-primary rounded-xl">
                   <h3 className="text-lg font-bold mb-4 text-text-primary">What Earns a Spot</h3>
                   <ul className="space-y-3 text-sm text-text-secondary">
                     <li className="flex gap-2">
@@ -76,7 +76,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* Standing on Shoulders Card */}
-                <div className="p-6 bg-surface-primary border border-border-primary rounded-xl">
+                <div className="p-6 bg-surface-primary border border-primary rounded-xl">
                   <h3 className="text-lg font-bold mb-3 text-text-primary">Standing on Shoulders</h3>
                   <p className="text-text-secondary leading-relaxed text-sm mb-3">
                     Grounded in established frameworks:
@@ -117,19 +117,19 @@ export default function AboutPage() {
             <div className="mb-12">
               <h2 className="text-2xl md:text-3xl font-bold mb-8 text-text-primary">By The Numbers</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                <div className="p-6 border border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
                   <div className="text-4xl font-bold text-accent-primary mb-2">50+</div>
                   <p className="text-text-secondary">AI products analyzed continuously</p>
                 </div>
-                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                <div className="p-6 border border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
                   <div className="text-4xl font-bold text-accent-primary mb-2">24</div>
                   <p className="text-text-secondary">Validated patterns documented</p>
                 </div>
-                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                <div className="p-6 border border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
                   <div className="text-4xl font-bold text-accent-primary mb-2">100+</div>
                   <p className="text-text-secondary">Real-world examples referenced</p>
                 </div>
-                <div className="p-6 border border-border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
+                <div className="p-6 border border-primary rounded-xl bg-surface-primary hover:shadow-md transition-shadow">
                   <div className="text-4xl font-bold text-accent-primary mb-2">7</div>
                   <p className="text-text-secondary">Strategic categories covering all AI UX challenges</p>
                 </div>
@@ -159,7 +159,7 @@ export default function AboutPage() {
                   href="https://github.com/imsaif/aiex/blob/master/CONTRIBUTING.md"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 border border-border-primary bg-surface-primary text-text-primary rounded-lg font-medium hover:bg-accent-subtle transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-primary bg-surface-primary text-text-primary rounded-lg font-medium hover:bg-accent-subtle transition-colors"
                 >
                   Contribute
                 </a>
@@ -167,7 +167,7 @@ export default function AboutPage() {
             </div>
 
             {/* Creator */}
-            <div className="mb-12 p-8 bg-surface-primary border border-border-primary rounded-xl">
+            <div className="mb-12 p-8 bg-surface-primary border border-primary rounded-xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4 text-text-primary">About the Creator</h2>
               <p className="text-text-secondary leading-relaxed mb-4">
                 aiux is built with ☕ by <strong className="text-text-primary">Imran Mohammed</strong>, a designer and developer

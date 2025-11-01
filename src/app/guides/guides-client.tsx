@@ -123,8 +123,8 @@ export default function GuidesClient() {
                   placeholder="Search courses by tool, use case, or skill level"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-6 py-4 pr-12 rounded-lg bg-surface-primary border border-border-primary
-                           text-text-primary placeholder-text-secondary focus:outline-none focus:border-accent-primary
+                  className="w-full px-6 py-4 pr-12 rounded-lg bg-surface-primary border border-gray-200 shadow-sm
+                           text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500
                            transition-colors"
                 />
                 <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-text-primary text-background-primary rounded-md
@@ -154,7 +154,7 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'tool' ? null : 'tool')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-border-primary
+              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
                        transition-colors text-sm font-medium"
             >
@@ -172,7 +172,7 @@ export default function GuidesClient() {
             </button>
 
             {openDropdown === 'tool' && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-border-primary
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
                             rounded-lg shadow-lg z-50">
                 <button
                   onClick={() => handleToolChange('all')}
@@ -199,7 +199,7 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'level' ? null : 'level')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-border-primary
+              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
                        transition-colors text-sm font-medium"
             >
@@ -217,7 +217,7 @@ export default function GuidesClient() {
             </button>
 
             {openDropdown === 'level' && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-border-primary
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
                             rounded-lg shadow-lg z-50">
                 <button
                   onClick={() => handleSkillLevelChange('all')}
@@ -244,7 +244,7 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48 lg:ml-auto">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'sort' ? null : 'sort')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-border-primary
+              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
                        transition-colors text-sm font-medium"
             >
@@ -262,7 +262,7 @@ export default function GuidesClient() {
             </button>
 
             {openDropdown === 'sort' && (
-              <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-900 border border-border-primary
+              <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
                             rounded-lg shadow-lg z-50 w-56">
                 {[
                   { value: 'newest', label: 'Newest First' },

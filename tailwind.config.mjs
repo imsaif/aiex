@@ -23,11 +23,6 @@ export default {
           tertiary: '#737373',
           disabled: '#a3a3a3',
         },
-        border: {
-          primary: '#e5e5e5',
-          secondary: '#d4d4d4',
-          focus: '#525252',
-        },
         // Minimal accent colors for interactive elements
         accent: {
           primary: '#0d0d0d',
@@ -51,6 +46,35 @@ export default {
           slate: '#64748B',
           neutral: '#6B7280',
         },
+      },
+      borderColor: {
+        // Base structural borders
+        'primary': '#f9f9f9',
+        'secondary': '#f3f3f3',
+        'focus': '#525252',
+
+        // Semantic state borders
+        'success': '#10b981',
+        'error': '#ef4444',
+        'warning': '#f59e0b',
+        'info': '#3b82f6',
+
+        // Interactive states
+        'interactive': '#3b82f6',
+        'interactive-hover': '#2563eb',
+        'selected': '#3b82f6',
+        'disabled': '#d1d5db',
+
+        // Dividers and separators
+        'divider': '#f9f9f9',
+        'divider-subtle': '#fcfcfc',
+      },
+      ringColor: {
+        // Standard focus ring color
+        focus: '#3b82f6',
+        'focus-error': '#ef4444',
+        'focus-success': '#10b981',
+        'focus-warning': '#f59e0b',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui'],

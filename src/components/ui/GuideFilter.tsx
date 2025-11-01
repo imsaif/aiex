@@ -56,7 +56,7 @@ export default function GuideFilter({
       <div className="relative">
         <button
           onClick={() => setOpenDropdown(openDropdown === 'tool' ? null : 'tool')}
-          className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-border-primary
+          className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
                    bg-gray-100 dark:bg-gray-800 text-text-primary hover:bg-gray-200 dark:hover:bg-gray-700
                    transition-colors text-sm font-medium"
         >
@@ -67,7 +67,7 @@ export default function GuideFilter({
         </button>
 
         {openDropdown === 'tool' && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-border-primary
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
                         rounded-lg shadow-lg z-50">
             <button
               onClick={() => handleToolChange('all')}
@@ -94,7 +94,7 @@ export default function GuideFilter({
       <div className="relative">
         <button
           onClick={() => setOpenDropdown(openDropdown === 'level' ? null : 'level')}
-          className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-border-primary
+          className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
                    bg-gray-100 dark:bg-gray-800 text-text-primary hover:bg-gray-200 dark:hover:bg-gray-700
                    transition-colors text-sm font-medium"
         >
@@ -105,7 +105,7 @@ export default function GuideFilter({
         </button>
 
         {openDropdown === 'level' && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-border-primary
+          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
                         rounded-lg shadow-lg z-50">
             <button
               onClick={() => handleSkillLevelChange('all')}

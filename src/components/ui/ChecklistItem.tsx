@@ -29,8 +29,8 @@ export default function ChecklistItem({
           id={id}
           checked={checked}
           onChange={handleChange}
-          className="w-5 h-5 rounded border-2 border-border-primary accent-accent-primary cursor-pointer
-                   group-hover:border-border-secondary transition-colors"
+          className="w-5 h-5 rounded border-2 border-gray-300 accent-accent-primary cursor-pointer
+                   group-hover:border-gray-400 transition-colors"
         />
         <span
           className={`text-sm leading-relaxed transition-all ${

@@ -98,7 +98,7 @@ export default function GuideClient({
 
             {/* Lesson Progress (if lessons exist and guide started) */}
             {hasLessons && guideStatus !== 'not-started' && (
-              <div className="mb-6 p-4 bg-surface-secondary/50 rounded-lg border border-border-primary">
+              <div className="mb-6 p-4 bg-surface-secondary/50 rounded-lg border border-gray-200">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-sm font-medium text-text-primary">
@@ -116,7 +116,7 @@ export default function GuideClient({
             )}
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-border-primary">
+            <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-gray-300">
               <div className="flex items-center gap-2 px-3 py-1 rounded-full text-sm bg-accent-subtle text-accent-primary font-medium group">
                 <div>
                   {getIcon()}
@@ -165,7 +165,7 @@ export default function GuideClient({
             let lessonNumber = 1;
 
             return (
-              <section className="mb-12 pb-12 border-b border-border-primary space-y-6">
+              <section className="mb-12 pb-12 border-b border-gray-300 space-y-6">
                 {modules.map((module) => {
                   const moduleLessons = guide.lessons!.filter(
                     (lesson) => lesson.module === module.id

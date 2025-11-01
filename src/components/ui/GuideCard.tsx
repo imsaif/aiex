@@ -36,8 +36,8 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
     >
       <Link href={`/guides/${guide.slug}`} className="block group h-full">
         <div
-          className="bg-surface-primary rounded-xl border border-border-primary
-                    hover:border-border-secondary transition-all duration-300 h-full
+          className="bg-surface-primary rounded-xl border border-gray-200
+                    hover:border-gray-300 transition-all duration-300 h-full
                     flex flex-col overflow-hidden shadow-sm hover:shadow-md"
         >
           {/* Thumbnail Section */}
@@ -86,7 +86,7 @@ export default function GuideCard({ guide, index = 0, allGuides = [] }: GuideCar
             </div>
 
             {/* Tool Badge */}
-            <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border-primary mb-4">
+            <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-gray-300 mb-4">
               <span className="px-3 py-1 rounded-full text-xs bg-accent-subtle text-accent-primary font-medium">
                 {guide.tool}
               </span>

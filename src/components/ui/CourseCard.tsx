@@ -57,9 +57,9 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
     >
       <Link href={`/guides/${course.slug}`} className="block group h-full">
         <div
-          className="bg-surface-primary rounded-xl border border-border-primary
-                    hover:border-border-secondary transition-all duration-300 h-full
-                    flex flex-col overflow-hidden shadow-sm hover:shadow-md"
+          className="bg-surface-primary rounded-xl border border-gray-200 shadow-sm
+                    hover:border-gray-300 transition-all duration-300 h-full
+                    flex flex-col overflow-hidden hover:shadow-md"
         >
           {/* Thumbnail Section */}
           <div className="relative w-full h-40 bg-gradient-to-br from-accent-primary/10 to-accent-primary/5 overflow-hidden flex items-center justify-center group">
@@ -89,7 +89,7 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
             </p>
 
             {/* Metadata Badges */}
-            <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border-primary mb-4">
+            <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-gray-300 mb-4">
               {/* Skill Level Badge */}
               <span className="px-3 py-1 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
                 {course.skillLevel}

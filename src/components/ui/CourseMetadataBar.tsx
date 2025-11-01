@@ -39,7 +39,7 @@ export default function CourseMetadataBar({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-4 md:gap-6 py-4 px-6 bg-surface-secondary/50 rounded-lg border border-border-primary mb-8">
+    <div className="flex flex-wrap items-center gap-4 md:gap-6 py-4 px-6 bg-surface-secondary/50 rounded-lg border border-gray-200 mb-8">
       {/* Last Updated */}
       {lastUpdated && (
         <div className="flex items-center gap-2">

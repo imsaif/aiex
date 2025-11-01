@@ -78,7 +78,7 @@ function SearchResultsContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {searchResults.map((pattern) => (
               <Link key={pattern.id} href={`/patterns/${pattern.slug}`}>
-                <div className="border border-border-primary rounded-lg p-6 hover:shadow-md hover:border-accent-primary transition-all duration-300 bg-surface-secondary">
+                <div className="border border-primary rounded-lg p-6 hover:shadow-md hover:border-accent-primary transition-all duration-300 bg-surface-secondary">
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-3`}>
                     {pattern.category}
                   </span>
@@ -93,7 +93,7 @@ function SearchResultsContent() {
         )}
       </div>
 
-      <footer className="py-8 mt-24 border-t border-border-primary">
+      <footer className="py-8 mt-24 border-t border-primary">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm text-text-secondary">
             Built with ☕ by Imran ·

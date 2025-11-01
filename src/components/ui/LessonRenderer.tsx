@@ -32,14 +32,14 @@ interface LessonRendererProps {
 }
 
 const getHeadingIcon = (headingText: string) => {
-  const iconProps = { className: 'w-7 h-7', style: { color: '#3b82f6' } };
+  const iconProps = { className: 'w-7 h-7', style: { color: '#525252' } };
 
   if (headingText.includes('Setup')) {
     return <Cog6ToothIcon {...iconProps} />;
   } else if (headingText.includes('Prototype')) {
     return <LightBulbIcon {...iconProps} />;
   } else if (headingText.includes('GitHub') || headingText.includes('Git')) {
-    return <Github size={28} style={{ color: '#3b82f6' }} />;
+    return <Github size={28} style={{ color: '#525252' }} />;
   } else if (headingText.includes('Best Practices') || headingText.includes('Practices')) {
     return <StarIcon {...iconProps} />;
   }
@@ -113,13 +113,13 @@ const renderSection = (section: LessonSection, index: number) => {
             gap: '1rem',
             marginBottom: '1.5rem',
             padding: '1rem',
-            backgroundColor: '#eff6ff',
-            borderLeft: '4px solid #3b82f6',
+            backgroundColor: '#f3f3f3',
+            borderLeft: '4px solid #525252',
             borderRadius: '0.5rem',
           }}
         >
           {section.icon && section.icon !== 'none' && (
-            <div style={{ color: '#3b82f6', flexShrink: 0 }}>{getIcon(section.icon)}</div>
+            <div style={{ color: '#525252', flexShrink: 0 }}>{getIcon(section.icon)}</div>
           )}
           <p style={{ margin: 0, color: '#374151' }}>{section.content}</p>
         </div>

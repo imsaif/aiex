@@ -110,7 +110,7 @@ export default function SmartSearchChat({ className = "", onPatternSelect }: Sma
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="What are you trying to build?"
-            className="w-full px-6 py-4 text-gray-700 bg-white border-2 border-gray-200 rounded-full focus:outline-none focus:border-indigo-500 shadow-lg transition-all duration-200 text-lg"
+            className="w-full px-6 py-4 text-text-primary bg-surface-primary border-2 border-primary rounded-full hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-ring-focus focus:border-transparent shadow-lg transition-all duration-200 text-lg"
           />
           
           {/* Clear Button */}
@@ -129,7 +129,7 @@ export default function SmartSearchChat({ className = "", onPatternSelect }: Sma
           {/* Loading Spinner */}
           {isLoading && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2">
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-indigo-500 border-t-transparent"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-2 border-ring-focus border-t-transparent"></div>
             </div>
           )}
         </div>
@@ -151,8 +151,8 @@ export default function SmartSearchChat({ className = "", onPatternSelect }: Sma
                 onClick={() => handleExampleClick(example, index)}
                 className={`px-4 py-2 text-sm rounded-full border transition-all duration-200 ${
                   selectedExampleIndex === index
-                    ? 'bg-indigo-500 text-white border-indigo-500'
-                    : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300 hover:text-indigo-600'
+                    ? 'bg-blue-500 text-white border-interactive'
+                    : 'bg-surface-primary text-text-secondary border-primary hover:border-gray-300 hover:text-accent-primary'
                 }`}
               >
                 {example}
@@ -169,7 +169,7 @@ export default function SmartSearchChat({ className = "", onPatternSelect }: Sma
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="bg-white border border-gray-200 rounded-2xl shadow-xl p-6 space-y-4"
+            className="bg-surface-primary border border-gray-200 rounded-2xl shadow-xl p-6 space-y-4"
           >
             {/* Response Header */}
             <div className="mb-4">
@@ -191,7 +191,7 @@ export default function SmartSearchChat({ className = "", onPatternSelect }: Sma
                   <motion.button
                     key={pattern.id}
                     onClick={() => handlePatternClick(pattern)}
-                    className="w-full text-left p-4 bg-gray-50 hover:bg-indigo-50 rounded-xl transition-all duration-200 border border-transparent hover:border-indigo-200 group"
+                    className="w-full text-left p-4 bg-background-secondary hover:bg-blue-50 rounded-xl transition-all duration-200 border border-transparent hover:border-gray-300 group"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -250,7 +250,7 @@ export default function SmartSearchChat({ className = "", onPatternSelect }: Sma
 
             {/* Matched Keywords (for debugging - can remove later) */}
             {result.matchedKeywords.length > 0 && (
-              <div className="text-xs text-gray-400 border-t pt-3">
+              <div className="text-xs text-text-tertiary border-t border-gray-200 pt-3">
                 Matched: {result.matchedKeywords.join(', ')}
               </div>
             )}

@@ -241,7 +241,7 @@ export default function TermsPage() {
               <p className="text-text-secondary leading-relaxed mb-4">
                 If you have any questions about these Terms, please contact us:
               </p>
-              <div className="p-6 bg-surface-primary border border-border-primary rounded-lg">
+              <div className="p-6 bg-surface-primary border border-primary rounded-lg">
                 <p className="text-text-secondary mb-2">
                   <strong className="text-text-primary">Email:</strong>{' '}
                   <a href="mailto:imranrizom@gmail.com" className="text-accent-primary hover:text-accent-hover">

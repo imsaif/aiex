@@ -55,15 +55,15 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
   };
 
   return (
-    <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 dark:border-gray-700 mb-6">
+    <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 shadow-sm mb-6">
       <div className="flex flex-wrap items-center gap-2">
         {/* Dropdown Button */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200
                      bg-white dark:bg-gray-800 text-sm font-medium text-text-primary
-                     hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                     hover:border-gray-300 transition-colors"
           >
             {selectedProducts.length > 0 ? `Products (${selectedProducts.length})` : 'All Products'}
             <ChevronDownIcon
@@ -73,19 +73,19 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
 
         {/* Dropdown Menu */}
         {isOpen && (
-          <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700
+          <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
                         rounded-lg shadow-2xl z-50 min-w-[280px]">
             {/* Search Input */}
-            <div className="sticky top-0 p-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-t-lg">
+            <div className="sticky top-0 p-3 border-b border-gray-200 bg-white dark:bg-gray-900 rounded-t-lg">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800
-                         border border-gray-200 dark:border-gray-700 text-sm
+                         border border-gray-200 text-sm
                          text-text-primary placeholder-text-secondary
-                         focus:outline-none focus:border-blue-500 transition-colors"
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 autoFocus
               />
             </div>

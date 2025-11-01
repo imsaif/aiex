@@ -22,12 +22,12 @@ const PatternFilterSection = ({
   activeSecondaryFilter,
 }: PatternFilterSectionProps) => {
   return (
-    <div className="w-full bg-surface-primary py-4 border-b border-border-primary">
+    <div className="w-full bg-surface-primary py-4 border-b border-gray-300">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between">
           <div className="flex space-x-6 overflow-x-auto whitespace-nowrap">
             {/* Removed primary filters as per user feedback */}
-            {/* <div className="border-l border-border-secondary mx-3"></div> Separator - removed as primary filters are gone */}
+            {/* <div className="border-l border-secondary mx-3"></div> Separator - removed as primary filters are gone */}
             {secondaryFilters.map((filter) => (
               <button
                 key={filter.id}
