@@ -9,11 +9,11 @@ export const contextswitching: Pattern = {
   id: "context-switching",
   title: "Context Switching",
   slug: "context-switching",
-  status: 'in-progress',
+  status: 'completed',
   description: "Enable smooth transitions between different tasks, topics, or interaction modes while maintaining conversation continuity and remembering relevant context across sessions.",
   category: "Natural Interaction",
   tags: ["context", "memory", "sessions", "conversation", "continuity", "multi-tasking"],
-  thumbnail: "/images/examples/context-switching.gif",
+  thumbnail: "/images/examples/chatgptcontextswitch.gif",
   content: {
     problem: "Users frequently switch between different tasks, topics, or projects when working with AI systems, but lose context and have to repeat information each time they switch. This creates friction and reduces productivity.",
     solution: "Implement intelligent context management that tracks multiple conversation threads, remembers relevant information for each context, and provides seamless transitions between different topics while maintaining continuity within each context.",
