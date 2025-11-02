@@ -1,12 +1,4 @@
-import { CodeExample } from '../../../../types';
-
-export const codeExamples: CodeExample[] = [
-  {
-    title: "Response Feedback Interface",
-    description: "A simple feedback interface that asks users to rate AI responses with thumbs up/down, showing a confirmation message to reinforce the feedback loop.",
-    language: "tsx",
-    componentId: "feedback-loops-demo",
-    code: `'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -46,21 +38,21 @@ export default function FeedbackLoopsDemo() {
             <div className="flex gap-2">
               <button
                 onClick={() => handleFeedback(response.id, 'helpful')}
-                className={\`flex-1 px-4 py-2 rounded-lg font-medium transition-all \${
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
                   feedback[response.id] === 'helpful'
                     ? 'bg-gray-900 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }\`}
+                }`}
               >
                 👍 Helpful
               </button>
               <button
                 onClick={() => handleFeedback(response.id, 'not-helpful')}
-                className={\`flex-1 px-4 py-2 rounded-lg font-medium transition-all \${
+                className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
                   feedback[response.id] === 'not-helpful'
                     ? 'bg-gray-900 text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }\`}
+                }`}
               >
                 👎 Not Helpful
               </button>
@@ -94,6 +86,4 @@ export default function FeedbackLoopsDemo() {
       )}
     </div>
   );
-}`
-  }
-];
+}

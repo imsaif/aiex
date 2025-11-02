@@ -79,12 +79,16 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
     setIsLoading(false);
   };
 
+  // Check if this is claude-feedback.gif or chatgpt-feedback.gif to apply special styling
+  const isFeedbackExample = src?.includes('claude-feedback.gif') || src?.includes('chatgpt-feedback.gif');
+  const objectFitClass = isFeedbackExample ? 'object-contain' : 'object-cover';
+
   const imageComponent = (
     <Image
       src={src || '/placeholder-image.png'}
       alt={alt}
       {...(fill ? { fill: true, sizes: sizes || '100vw' } : { width, height })}
-      className={`object-cover ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 ${fill ? 'absolute inset-0' : ''}`}
+      className={`${objectFitClass} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 ${fill ? 'absolute inset-0' : ''}`}
       onLoad={handleLoadComplete}
       onError={handleLoadError}
       onClick={onClick}

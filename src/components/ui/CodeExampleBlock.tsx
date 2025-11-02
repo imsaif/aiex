@@ -255,6 +255,19 @@ const SelectiveMemoryDemo = dynamic(
   }
 );
 
+// Dynamically import the FeedbackLoopsDemo component
+const FeedbackLoopsDemo = dynamic(
+  () => import('@/components/examples/FeedbackLoopsDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -320,6 +333,8 @@ export default function CodeExampleBlock({
         return <ConfidenceVisualizationDemo />;
       case 'selective-memory-demo':
         return <SelectiveMemoryDemo />;
+      case 'feedback-loops-demo':
+        return <FeedbackLoopsDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">

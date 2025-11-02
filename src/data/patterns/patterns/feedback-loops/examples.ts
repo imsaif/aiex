@@ -2,9 +2,15 @@ import { Example } from '../../../../types';
 
 export const examples: Example[] = [
   {
-    title: "Spotify Taste Profile",
-    description: "Learns from every skip, like, and playlist addition to refine music recommendations and create increasingly personalized experiences.",
-    image: "/images/examples/spotify-learning.gif",
-    altText: "Spotify learning from user music preferences"
+    title: "Claude Code Feedback",
+    description: "Allows developers to rate and provide feedback on code suggestions and outputs, helping Claude learn user preferences and improve future suggestions.",
+    image: "/images/examples/claude-feedback.gif",
+    altText: "Claude Code collecting and learning from user feedback on code suggestions"
+  },
+  {
+    title: "ChatGPT Response Feedback",
+    description: "Uses thumbs up/down feedback on individual responses to understand what users find helpful, improving response quality and relevance over time.",
+    image: "/images/examples/chatgpt-feedback.gif",
+    altText: "ChatGPT thumbs up/down rating system on responses"
   }
 ];

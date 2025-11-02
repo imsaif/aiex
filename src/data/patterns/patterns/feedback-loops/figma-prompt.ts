@@ -1,14 +1,16 @@
 import { FigmaPrompt } from '../../../../types';
 
 export const figmaPrompt: FigmaPrompt = {
-  prompt: "Design a feedback collection interface similar to Spotify's thumbs up/down or YouTube's recommendation feedback. Show easy ways for users to rate AI suggestions. Include: AI suggestion or output card, quick feedback buttons (thumbs up/down, star rating, or emoji reactions), optional detailed feedback form (expandable), visual confirmation when feedback is submitted ('Thanks! This helps us improve'), feedback impact indicator showing how user feedback improved the system, and settings to view past feedback history. Style: Friendly, encouraging, low-friction. Use cheerful colors, smooth animations on feedback submission, celebratory micro-interactions. Platform: Web/mobile application.",
+  prompt: "Design a feedback collection interface for AI systems that captures user sentiment on responses, suggestions, or code outputs. Draw inspiration from Claude Code Feedback (rating code suggestions) and ChatGPT Response Feedback (rating conversation responses). Include: AI output/response container, prominent feedback question ('How is the AI doing?'), binary feedback buttons (👍 Helpful / 👎 Not Helpful) with selected state styling, smooth animated confirmation message ('✓ Thank you for making our app improve!') that appears and disappears, feedback counter displaying total submissions ('X feedbacks received • We're learning from your responses'), subtle visual hierarchy with gray color palette (gray-900 for selected state, gray-100 for default, gray-50 background). Style: Minimal, professional, non-intrusive. Focus on clarity and quick interaction. Smooth transitions and micro-interactions. Platform: Web/mobile responsive design.",
   figmaFileUrl: undefined,
   tips: [
-    "Make feedback buttons large and easy to tap - place them prominently near AI outputs",
-    "Use a progressive approach: quick feedback (thumbs) first, detailed feedback optional",
-    "Show immediate visual feedback when user rates something (animation, color change)",
-    "Add a 'Tell us more' option that expands only when users want to elaborate",
-    "For mobile: use swipe gestures for quick feedback (swipe right = good, left = bad)",
-    "Periodically show users how their feedback improved the AI to encourage continued engagement"
+    "Position feedback buttons directly below the AI output for clear context and association",
+    "Use binary choice (Helpful/Not Helpful) over complex ratings for higher engagement rates",
+    "Trigger confirmation animation only on first interaction to avoid repetitive animations",
+    "Keep feedback message brief (2-3 seconds duration) to not distract from content",
+    "Use neutral gray colors instead of red/green to maintain professional tone",
+    "Show aggregate feedback count to reinforce community learning and system improvement",
+    "Maintain consistent button size and spacing across web and mobile views",
+    "Test tap target sizes - ensure buttons are at least 44px for mobile accessibility"
   ]
 };
