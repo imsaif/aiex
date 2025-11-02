@@ -268,6 +268,19 @@ const FeedbackLoopsDemo = dynamic(
   }
 );
 
+// Dynamically import the GracefulHandoffDemo component
+const GracefulHandoffDemo = dynamic(
+  () => import('@/components/examples/GracefulHandoffDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -335,6 +348,8 @@ export default function CodeExampleBlock({
         return <SelectiveMemoryDemo />;
       case 'feedback-loops-demo':
         return <FeedbackLoopsDemo />;
+      case 'graceful-handoff-demo':
+        return <GracefulHandoffDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">
