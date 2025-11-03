@@ -5,30 +5,60 @@ description: Guide through updating AI design patterns with comprehensive checkl
 
 # Pattern Development Skill
 
-This skill helps you update one of the 12 AI design patterns that require comprehensive review and updates. It ensures every pattern is fully completed with all components before moving to the next one.
+This skill helps you complete the 24 AI design patterns for the AIUX project. **15 patterns are fully updated**, and **9 patterns require comprehensive review and updates**. Each pattern must have all components completed before considering it done.
 
-## When to Use This Skill
+## Intent Detection - When Claude Should Suggest This Skill
 
-Claude will automatically invoke this skill when:
-- You ask to "work on a pattern"
-- You request "update a design pattern"
-- You mention "complete pattern work"
-- You want to "finish a pattern"
+Claude should **automatically proactively suggest using the pattern generator** when detecting these keywords:
+- "work on [pattern name]" → Suggest: `npm run generate-pattern [slug]`
+- "update pattern" or "update [pattern-name]" → Suggest generator or manual workflow
+- "next pattern" or "which pattern should I work on?" → Run `npm run list-patterns` and recommend
+- "finish remaining patterns" → Suggest `npm run generate-all-patterns`
+- "pattern" + "incomplete" or "need work" → Check status and suggest generator
+- When user reviews CLAUDE.md pattern checklist → Remind them to use the generator
 
-## Available Patterns Requiring Updates (12)
+## Auto-Suggestion Logic
 
-1. **Predictive Anticipation** - Proactive suggestions and actions
-2. **Ambient Intelligence** - Context-aware background processing
-3. **Confidence Visualization** - Displaying AI certainty levels
-4. **Safe Exploration** - Risk-free experimentation environments
-5. **Feedback Loops** - Continuous learning from user interactions
-6. **Graceful Handoff** - Seamless transitions between AI and humans
-7. **Context Switching** - Managing multiple conversation contexts
-8. **Intelligent Caching** - Smart data persistence strategies
-9. **Progressive Enhancement** - Layered feature availability
-10. **Privacy-First Design** - Data minimization and user control
-11. **Selective Memory** - User-controlled AI memory management
-12. **Universal Access Patterns** - Inclusive design for all users
+**When user mentions pattern work, Claude should:**
+
+1. **Check status**: `npm run list-patterns` (in background)
+2. **Detect incomplete patterns**: Identify which of the 9 need work
+3. **Suggest appropriate action**:
+   - For NEW patterns: "Ready to generate? Run: `npm run generate-pattern [slug]`"
+   - For IN-PROGRESS: "Continue with manual updates following the checklist"
+   - For INCOMPLETE: "Let me generate this pattern for you"
+4. **Explain the generator**: "This will create all necessary files and structure automatically"
+5. **Coordinate next steps**: After generation, guide through validation and testing
+
+## Available Patterns: Complete Status (24 Total)
+
+### ✅ Fully Updated (15/24)
+1. Contextual Assistance
+2. Progressive Disclosure
+3. Human-in-the-Loop
+4. Explainable AI
+5. Conversational UI
+6. Adaptive Interfaces
+7. Predictive Anticipation
+8. Multimodal Interaction
+9. Guided Learning
+10. Augmented Creation
+11. Responsible AI
+12. Error Recovery
+13. Collaborative AI
+14. Confidence Visualization
+15. Selective Memory
+
+### 🔄 Need Updates (9/24)
+1. **Ambient Intelligence** - Context-aware background processing
+2. **Safe Exploration** - Risk-free experimentation environments
+3. **Feedback Loops** - Continuous learning from user interactions
+4. **Graceful Handoff** - Seamless transitions between AI and humans
+5. **Context Switching** - Managing multiple conversation contexts
+6. **Intelligent Caching** - Smart data persistence strategies
+7. **Progressive Enhancement** - Layered feature availability
+8. **Privacy-First Design** - Data minimization and user control
+9. **Universal Access Patterns** - Inclusive design for all users
 
 ## Pattern Completion Checklist
 
@@ -125,26 +155,64 @@ Only when ALL 10 checklist items are 100% complete, mark the pattern as done.
 ### Step 5: Move to Next Pattern
 Select the next pattern from the list and repeat.
 
+## Using the AI Pattern Generator
+
+**The pattern generator automates most of the work!** Instead of manually creating all files:
+
+```bash
+# Generate one pattern (interactive)
+npm run generate-pattern
+
+# Or specify pattern slug directly
+npm run generate-pattern --slug="ambient-intelligence"
+
+# Generate ALL missing patterns at once
+npm run generate-all-patterns
+```
+
+**What the generator does automatically:**
+- ✅ Creates all required pattern files (index.ts, code-examples.ts, guidelines.ts, considerations.ts)
+- ✅ Generates detailed code examples with explanations
+- ✅ Creates realistic use case examples
+- ✅ Writes comprehensive guidelines and considerations
+- ✅ Creates interactive React demo component
+- ✅ Validates everything against the schema
+
+**After generation, you may need to:**
+- Add/optimize images (run `npm run optimize-images`)
+- Review and enhance the demo component
+- Add tests for the demo component
+- Browser review at http://localhost:3000
+
 ## Commands Reference
 
 ```bash
-# List all patterns and their status
+# List all patterns and their status (check which need work)
 npm run list-patterns
+
+# Generate one specific pattern
+npm run generate-pattern [slug]
+
+# Generate all 9 missing patterns
+npm run generate-all-patterns
 
 # Validate pattern data structure
 npm run test:patterns
 
-# Generate missing pattern components (if needed)
-npm run generate-pattern
-
-# Start development server
+# Start development server for testing
 npm run dev
 
-# Run tests for specific pattern
+# Run tests for specific pattern component
 npm test -- --testPathPattern="pattern-slug"
 
-# Optimize images
+# Optimize images after adding new ones
 npm run optimize-images
+
+# Check if there are untested components
+npm run list-untested
+
+# Generate tests for a component
+npm run generate-test [component-path]
 ```
 
 ## Important Rules
@@ -186,13 +254,49 @@ A pattern is complete when:
 ✅ All code examples work as expected
 ✅ Images are optimized and load quickly
 
+## Agent Coordination & Workflow Automation
+
+This skill works with other AI agents in the project for coordinated development:
+
+### Related Skills & Agents
+- **guide-gen** (NEW) - Generates Designer Guides learning paths
+- **test-gen** - Generates component tests automatically
+- **demo-gen** - Scaffolds interactive demo components
+- **design** - Analyzes and fixes design consistency
+
+### Coordinated Workflow
+When working on patterns, you can leverage multiple agents:
+
+```bash
+# Pattern workflow: Generate → Test → Validate
+npm run generate-pattern [slug]      # Step 1: Pattern generator creates structure
+npm run generate-test [component]    # Step 2: Test generator creates tests
+npm run test:patterns                # Step 3: Validate everything
+npm run dev                          # Step 4: Browser review
+```
+
+### Future Guide Integration
+The new guide generator (`guide-gen`) is being built alongside pattern development. When both are ready:
+
+```bash
+# Complete AIUX workflow
+npm run generate-pattern              # Generate pattern
+npm run generate-guide                # Generate guide lesson about the pattern
+npm run generate-test                 # Generate tests
+npm run design-analyze                # Analyze design consistency
+npm run progress-report               # Track overall progress
+```
+
 ## Next Steps After Pattern Completion
 
 1. Commit changes with pattern name in message
-2. Move to next pattern from the list
-3. Repeat the workflow
-4. Track progress toward 24/24 patterns complete
+2. Check if corresponding guide lesson exists (future)
+3. Move to next pattern from the list
+4. Track progress in `npm run progress-report`
+5. Repeat until 24/24 patterns complete
 
 ---
 
-**Project Goal**: Complete all 24 AI design patterns with comprehensive implementations, interactive demos, and documentation. Currently: 12/24 complete, 12 require updates.
+**Project Goal**: Complete all 24 AI design patterns with comprehensive implementations, interactive demos, and documentation. Currently: 15/24 complete, 9 need updates.
+
+**Companion Project**: 6 Designer Guide learning paths (Claude Code ✅, Cursor ✅, and 4 tools in progress)

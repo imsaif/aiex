@@ -99,9 +99,19 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 - `npm run generate-pattern` - Generate new AI pattern using AI
 - `npm run generate-all-patterns` - Generate all missing patterns
 - `npm run list-patterns` - List all pattern statuses
+- `npm run generate-guide` - Generate Designer Guide learning paths (NEW!)
+- `npm run list-guides` - List all guides and completion status (NEW!)
+- `npm run validate-guides` - Validate guide structure (NEW!)
 - `npm run generate-test` - Generate tests for components using AI
 - `npm run generate-all-tests` - Generate all missing tests
 - `npm run list-untested` - List components without tests
+
+### Automation & Agent Orchestration (NEW - Nov 3, 2025)
+- `npm run orchestrate:workflow guide-generation` - Run guide generation workflow
+- `npm run orchestrate:workflow aiux-sprint` - Full AIUX feature development sprint
+- **See [.claude/AUTOMATION-SETUP.md](.claude/AUTOMATION-SETUP.md) for complete automation documentation**
+
+**Key Feature**: Claude now **automatically detects** when you mention patterns or guides and proactively suggests the appropriate generator commands. This is powered by enhanced skills in `.claude/skills/pattern-dev/` and `.claude/skills/guide-gen/`.
 
 ### Project Progress & Coordination
 - `npm run progress-report` - Comprehensive progress report with agent activities
@@ -131,8 +141,34 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 
 ## My Development Workflow
 
+### ⚡ Automated Workflow System (NEW - Nov 3, 2025)
+**Claude is now configured with automated pattern and guide generation.**
+
+Instead of manually managing tasks, Claude will:
+1. **Detect intent** - When you mention "pattern", "guide", "generate", etc.
+2. **Auto-suggest** - Proactively recommend the right generator
+3. **Explain what happens** - Show what the command will do
+4. **Coordinate agents** - Work with test-gen, design agents, etc.
+
+**See [.claude/AUTOMATION-SETUP.md](.claude/AUTOMATION-SETUP.md) for full documentation**
+
+**Quick examples of new behavior**:
+- You: "Let's work on Ambient Intelligence"
+- Claude: "Ready to generate? Run: `npm run generate-pattern ambient-intelligence`"
+
+- You: "Create a guide for GitHub Copilot"
+- Claude: "I'll generate a learning path using your existing guides as templates. Run: `npm run generate-guide`"
+
+This automation system includes:
+- ✅ Enhanced pattern-dev skill (`.claude/skills/pattern-dev/SKILL.md`)
+- ✅ New guide-gen skill (`.claude/skills/guide-gen/SKILL.md`)
+- ✅ Guide generator script (`.scripts/ai-guide-generator.js`)
+- ✅ Updated agent orchestrator with guide support
+
 ### Pattern Update Workflow (Primary)
 **I work on ONE pattern at a time until 100% complete.** Do not move to the next pattern until the current one is finished.
+
+**Now with automation**: Instead of manually creating all files, run `npm run generate-pattern [slug]` and then enhance with images and content.
 
 #### Pattern Completion Checklist
 When working on a pattern, ensure ALL of these are completed:
@@ -188,6 +224,14 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+
+### Session 2025-11-03 20:00 (MacBook) - AIUX Automation System
+- **Pattern:** AIUX Automation System Implementation
+- **Status:** ✅ Completed
+- **Files Changed:** 11 (5 modified, 6 created)
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented comprehensive 3-tier automation system for pattern and guide development. Enhanced pattern-dev skill with intent detection to auto-suggest npm run generate-pattern. Created new guide-generator.js (404 lines) with template learning from existing guides. Built guide-gen skill enabling Claude to auto-detect guide work. Updated agent-orchestrator with guide-generator support and new aiux-sprint workflow. Created extensive documentation: AUTOMATION-SETUP.md (comprehensive guide), README.md (.claude/), and DOCUMENTATION-MAP.md (navigation). Updated main CLAUDE.md and README.md with automation references. Claude now proactively suggests pattern/guide generators based on keywords!
+
 ### Session 2025-11-03 19:29 (MacBook)
 - **Pattern:** Cursor Learning Path Guide
 - **Status:** ✅ Completed

@@ -114,7 +114,44 @@ npm start                # Start production server
 # Testing
 npm test                 # Run all tests
 npm run lint             # Run ESLint
+
+# AI-Powered Automation (NEW!)
+npm run generate-pattern  # Generate AI design pattern
+npm run generate-guide    # Generate Designer Guide learning path
+npm run list-patterns     # List all pattern status
+npm run list-guides       # List all guides status
 ```
+
+## ⚡ Automated Development Workflow (NEW!)
+
+This project includes an intelligent automation system that helps you rapidly create patterns and guides:
+
+### Smart Pattern Generation
+- **`npm run generate-pattern`** - Intelligently generates complete pattern implementations
+- Includes code examples, guidelines, considerations, and demo components
+- Learns from existing patterns for consistency
+- Status: **15/24 patterns complete**, 9 ready for generation
+
+### Smart Guide Generation (NEW!)
+- **`npm run generate-guide`** - Generates Designer Guide learning paths
+- Analyzes existing guides (Claude Code, Cursor) as templates
+- Creates 4-module structure with sequential lessons
+- Status: **2/6 guides complete**, 4 placeholders ready for generation
+
+### Automated Agent Coordination
+```bash
+# Run complete AIUX feature development sprint
+npm run orchestrate:workflow aiux-sprint
+# Automatically: Generate pattern → Generate guide → Create tests → Analyze design → Validate
+```
+
+### Claude Code Integration
+Claude has been configured with smart skills that **automatically detect** when you're working on patterns or guides and proactively suggest the appropriate generator commands. See [.claude/AUTOMATION-SETUP.md](.claude/AUTOMATION-SETUP.md) for complete automation documentation.
+
+**Documentation**:
+- [Automation Setup Guide](./.claude/AUTOMATION-SETUP.md) - Complete system overview
+- [Claude Configuration](./.claude/README.md) - Configuration details
+- [Documentation Map](./.claude/DOCUMENTATION-MAP.md) - Quick navigation
 
 ## 📂 Project Structure
 
@@ -126,8 +163,20 @@ ai-design-patterns/
 │   ├── data/patterns/          # All 24 AI pattern implementations
 │   ├── hooks/                  # Custom React hooks
 │   └── utils/                  # Utility functions
+├── .claude/
+│   ├── skills/
+│   │   ├── pattern-dev/       # Pattern development skill
+│   │   └── guide-gen/         # Guide generation skill (NEW!)
+│   ├── AUTOMATION-SETUP.md    # Automation system documentation
+│   ├── README.md              # Claude configuration guide
+│   └── DOCUMENTATION-MAP.md   # Quick navigation guide
+├── scripts/
+│   ├── ai-pattern-generator.js       # Pattern generation automation
+│   ├── ai-guide-generator.js         # Guide generation automation (NEW!)
+│   └── agent-orchestrator.js         # Multi-agent coordination
 ├── public/images/              # Optimized images and assets
-└── tests/                      # Test configuration
+├── CLAUDE.md                   # Claude Code guidance (with automation)
+└── README.md                   # This file
 ```
 
 ## 🧪 Testing
@@ -148,8 +197,16 @@ The project is optimized for Vercel deployment with:
 
 ## 📚 Documentation
 
-- [Contributing Guidelines](./CONTRIBUTING.md)
-- [Pattern Implementation Guide](./docs/patterns-guide.md)
+- [Claude Code Guidance](./CLAUDE.md) - Development workflow and project guidance
+- [Automation Setup Guide](./.claude/AUTOMATION-SETUP.md) - Pattern and guide generation automation
+- [Contributing Guidelines](./CONTRIBUTING.md) - How to contribute to the project
+- [Pattern Implementation Guide](./docs/patterns-guide.md) - Detailed pattern development guide
+
+### Automation & Development
+- [Claude Configuration](./.claude/README.md) - Claude Code setup and skills
+- [Documentation Map](./.claude/DOCUMENTATION-MAP.md) - Quick navigation guide
+- [Pattern Development Skill](./.claude/skills/pattern-dev/SKILL.md) - Pattern automation details
+- [Guide Generation Skill](./.claude/skills/guide-gen/SKILL.md) - Guide automation details
 
 ## 🤝 Contributing
 

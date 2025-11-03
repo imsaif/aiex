@@ -27,6 +27,12 @@ class AgentOrchestrator extends EventEmitter {
         description: 'Generates AI design pattern implementations',
         priority: 'high'
       },
+      'guide-generator': {
+        script: 'ai-guide-generator.js',
+        capabilities: ['generate-guide', 'validate-guide', 'list-guides'],
+        description: 'Generates Designer Guide learning paths',
+        priority: 'high'
+      },
       'testing-agent': {
         script: 'component-testing-agent.js',
         capabilities: ['generate-tests', 'validate-tests', 'coverage-report'],
@@ -58,6 +64,23 @@ class AgentOrchestrator extends EventEmitter {
       'full-pattern-implementation': {
         steps: [
           { agent: 'pattern-generator', action: 'generate', parallel: false },
+          { agent: 'testing-agent', action: 'generate-tests', parallel: true },
+          { agent: 'design-agent', action: 'analyze', parallel: true },
+          { agent: 'typescript-guardian', action: 'validate', parallel: false },
+          { agent: 'progress-agent', action: 'update', parallel: false }
+        ]
+      },
+      'guide-generation': {
+        steps: [
+          { agent: 'guide-generator', action: 'generate', parallel: false },
+          { agent: 'design-agent', action: 'analyze', parallel: true },
+          { agent: 'progress-agent', action: 'update', parallel: false }
+        ]
+      },
+      'aiux-sprint': {
+        steps: [
+          { agent: 'pattern-generator', action: 'generate', parallel: false },
+          { agent: 'guide-generator', action: 'generate', parallel: false },
           { agent: 'testing-agent', action: 'generate-tests', parallel: true },
           { agent: 'design-agent', action: 'analyze', parallel: true },
           { agent: 'typescript-guardian', action: 'validate', parallel: false },
