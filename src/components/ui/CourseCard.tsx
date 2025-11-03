@@ -4,9 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Claude, Cursor, Github, Replit, V0, Copilot } from '@lobehub/icons';
 import { Course } from '@/types';
-import { useGuideProgress } from '@/hooks/useGuideProgress';
 import StatusBadge from './StatusBadge';
-import ProgressBar from './ProgressBar';
 
 interface CourseCardProps {
   course: Course;
@@ -14,17 +12,8 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course, index = 0 }: CourseCardProps) {
-  const {
-    getLessonProgress,
-    getGuideStatus,
-    getGuideTotalTimeSpent,
-    getTimeSpentDisplay,
-  } = useGuideProgress();
-
-  // Calculate course progress based on all lessons
-  const totalLessons = course.lessons?.length || 0;
-  const lessonProgress = totalLessons > 0 ? getLessonProgress(course.id, totalLessons) : { completed: 0, total: 0, percentage: 0 };
-  const courseStatus = totalLessons > 0 ? getGuideStatus(course.id, totalLessons) : 'not-started';
+  // Get the guide's readiness status (not user progress)
+  const guideStatus = (course as any).status as 'ready' | 'work-in-progress' | undefined;
 
   // Get the appropriate icon for the course
   const getIcon = () => {
@@ -67,10 +56,10 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
               {getIcon()}
             </div>
 
-            {/* Status Badge */}
-            {courseStatus !== 'not-started' && (
+            {/* Guide Readiness Badge */}
+            {guideStatus && (
               <div className="absolute top-2 right-2">
-                <StatusBadge status={courseStatus} size="sm" />
+                <StatusBadge status={guideStatus} size="sm" />
               </div>
             )}
 
@@ -95,19 +84,6 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
                 {course.skillLevel}
               </span>
             </div>
-
-            {/* Lesson Progress */}
-            {courseStatus !== 'not-started' && (
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-text-secondary">
-                    {lessonProgress.completed} of {totalLessons} lessons
-                  </span>
-                  <span className="text-xs text-text-secondary">{lessonProgress.percentage}%</span>
-                </div>
-                <ProgressBar percentage={lessonProgress.percentage} size="sm" showPercentage={false} />
-              </div>
-            )}
 
           </div>
         </div>

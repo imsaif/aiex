@@ -21,6 +21,7 @@ export const guides: Guide[] = [
     readTime: 27,
     author: 'Design Team',
     publishedDate: '2025-10-28',
+    status: 'ready',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Claude_AI_symbol.svg',
     tags: ['claude-code', 'learning-path', 'getting-started', 'course', 'comprehensive'],
     lessons: [
@@ -1384,6 +1385,7 @@ export const guides: Guide[] = [
     readTime: 20,
     author: 'Design Team',
     publishedDate: '2025-10-28',
+    status: 'ready',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cursor_logo.png',
     tags: ['cursor', 'learning-path', 'getting-started', 'course', 'ai-editor'],
     lessons: [
@@ -3314,6 +3316,7 @@ export const guides: Guide[] = [
     readTime: 18,
     author: 'Design Team',
     publishedDate: '2025-10-28',
+    status: 'work-in-progress',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft_365_Copilot_Icon_one-color.svg',
     tags: ['copilot', 'learning-path', 'github', 'course', 'ai-programming'],
     lessons: [
@@ -3350,6 +3353,7 @@ export const guides: Guide[] = [
     readTime: 15,
     author: 'Design Team',
     publishedDate: '2025-10-28',
+    status: 'work-in-progress',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/New_Replit_Logo.svg',
     tags: ['replit', 'learning-path', 'cloud-coding', 'course', 'collaboration'],
     lessons: [
@@ -3384,6 +3388,7 @@ export const guides: Guide[] = [
     readTime: 16,
     author: 'Design Team',
     publishedDate: '2025-10-28',
+    status: 'work-in-progress',
     thumbnail: 'https://lobehub.com/icons/v0',
     tags: ['v0', 'learning-path', 'design-to-code', 'course', 'react-components'],
     lessons: [
@@ -3420,6 +3425,7 @@ export const guides: Guide[] = [
     readTime: 20,
     author: 'Design Team',
     publishedDate: '2025-10-28',
+    status: 'work-in-progress',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/GitHub_Invertocat_Logo.svg',
     tags: ['github', 'learning-path', 'version-control', 'course', 'collaboration'],
     lessons: [

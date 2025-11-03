@@ -224,6 +224,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-04 02:11 (MacBook)
+- **Pattern:** Guide Status Badge Implementation
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Moved "Work in Progress" status from hero section to individual guide cards. Added status field to all guides (ready: Claude Code & Cursor; work-in-progress: others). Updated StatusBadge component with ready and work-in-progress status types. Enhanced CourseCard to display guide readiness in top-right corner. Updated hero description to emphasize designing with AI tools rather than development.
+
 ### Session 2025-11-03 20:41 (MacBook)
 - **Pattern:** Intelligent Caching
 - **Status:** ✅ Completed
@@ -291,13 +298,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed auto-scroll issue in Conversational UI demo (prevented page from scrolling to chat on navigation), redesigned code toggle with iOS-style segmented control and black brand colors, replaced gradient heading lines with minimal gray underlines across all pattern pages, fixed button visibility with darker gray-900 background.
 
 ### Session 2025-10-27 21:57 (MacBook)
-- **Pattern:** Human-in-the-Loop
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Updated Human-in-the-Loop demo components with improved code examples, cleaned up icon references, and enhanced content structure in code-examples module. Refactored demo layout and moderation component for better visual clarity and user experience.
-
-### Session 2025-10-26 19:47 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

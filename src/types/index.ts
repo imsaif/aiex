@@ -247,6 +247,7 @@ export interface Guide {
   readTime: number; // in minutes
   author?: string;
   publishedDate: string; // ISO date string
+  status: 'ready' | 'work-in-progress'; // Guide readiness status
   lastUpdatedDate?: string; // ISO date string
 
   // Visual representation
