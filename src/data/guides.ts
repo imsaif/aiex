@@ -1387,26 +1387,1918 @@ export const guides: Guide[] = [
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Cursor_logo.png',
     tags: ['cursor', 'learning-path', 'getting-started', 'course', 'ai-editor'],
     lessons: [
-      { id: 'lesson-1', title: 'Install and Setup Cursor', duration: 2, order: 1, content: '<h2>Install and Setup Cursor</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Navigate the Interface', duration: 2, order: 2, content: '<h2>Navigate the Interface</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Basic Code Editing', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Basic Code Editing</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'AI Code Completions', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>AI Code Completions</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Cursor AI Chat', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Cursor AI Chat</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Code Refactoring with AI', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Code Refactoring with AI</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Debugging Tools', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Debugging Tools</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Extensions and Customization', duration: 2, order: 8,
-        module: 'prototype', content: '<h2>Extensions and Customization</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'Working with Design Files', duration: 2, order: 9, content: '<h2>Working with Design Files</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Team Collaboration', duration: 2, order: 10, content: '<h2>Team Collaboration</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-11', title: 'Advanced AI Features', duration: 2, order: 11, content: '<h2>Advanced AI Features</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-12', title: 'Best Practices and Tips', duration: 0, order: 12, content: '<h2>Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
+      {
+        id: 'lesson-1',
+        title: 'Download and Install Cursor',
+        duration: 2,
+        order: 1,
+        module: 'setup',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Cursor is a modern code editor built on VS Code, with AI superpowers built right in. Getting it installed is quick and easy. By the end of this lesson, you\'ll have Cursor ready to use.',
+            icon: 'download',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'System Requirements',
+          },
+          {
+            type: 'text',
+            content: 'Cursor works on Windows, macOS 10.15+, and Linux. You need at least 4 GB of RAM and 2 GB of free disk space. If you can run VS Code, you can run Cursor.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Step 1: Download Cursor',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Go to cursor.com',
+                content: 'Visit the official Cursor website in your web browser.',
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Choose Your Platform',
+                content: 'Click the button for your operating system: Windows, macOS (ARM64 for Apple Silicon or x64 for Intel), or Linux.',
+                icon: 'monitor',
+              },
+              {
+                number: 3,
+                title: 'Wait for Download',
+                content: 'The installer will download (usually 200-300 MB). This takes 1-5 minutes depending on your internet speed.',
+                icon: 'download',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Step 2: Install Cursor',
+          },
+          {
+            type: 'text',
+            content: 'Once downloaded, the installation process depends on your operating system:',
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'On macOS',
+          },
+          {
+            type: 'list',
+            items: [
+              'Double-click the .dmg file you downloaded',
+              'Drag the Cursor icon to the Applications folder',
+              'Wait for the copy to complete',
+              'Open Applications folder and double-click Cursor to launch',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'On Windows',
+          },
+          {
+            type: 'list',
+            items: [
+              'Double-click the .exe installer file',
+              'Click "Install" when the installer opens',
+              'Choose your installation location (default is fine)',
+              'Wait for the installation to complete',
+              'Click "Launch" to open Cursor',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'On Linux',
+          },
+          {
+            type: 'list',
+            items: [
+              'Make the .AppImage executable: chmod +x cursor-*.AppImage',
+              'Run it: ./cursor-*.AppImage',
+              'Or use your package manager if available for your distro',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Step 3: Set Up Your Account',
+          },
+          {
+            type: 'text',
+            content: 'When Cursor launches for the first time, you\'ll see a welcome screen.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Create or Sign In',
+                content: 'Click "Sign up" to create a free Cursor account, or log in if you already have one.',
+                icon: 'user',
+              },
+              {
+                number: 2,
+                title: 'Verify Your Email',
+                content: 'Check your email inbox and click the verification link.',
+                icon: 'mail',
+              },
+              {
+                number: 3,
+                title: 'Choose Your Plan',
+                content: 'You\'ll automatically get a one-week Pro trial with full features. Explore everything! After the trial, the Free plan stays active.',
+                icon: 'star',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Welcome to Cursor!',
+            content: 'You now have Cursor installed and a one-week free trial of the Pro plan. This gives you access to all features—Tab completions, Chat, Composer, Agent mode, and more. Use this time to explore and see what\'s possible with AI-powered development.',
+            icon: 'success',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Optional: Bring Over Your VS Code Settings',
+          },
+          {
+            type: 'text',
+            content: 'If you use VS Code already, you can import your settings, keybindings, and extensions:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Open Cursor',
+              'Go to Settings (Cmd+, on Mac, Ctrl+, on Windows)',
+              'Search for "Import"',
+              'Follow the prompts to import from VS Code',
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'Installation Complete!',
+            items: [
+              'Cursor is installed on your computer',
+              'Your account is set up and verified',
+              'You have a one-week Pro trial',
+              'All AI features are ready to use',
+            ],
+            message: 'Congratulations! You\'re ready to meet the Cursor interface and start learning AI-powered coding.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-2',
+        title: 'Navigate the Interface',
+        duration: 2,
+        order: 2,
+        module: 'setup',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Cursor looks and feels like VS Code—because it\'s built on it. But it adds AI tools you won\'t find anywhere else. Let\'s explore where everything is.',
+            icon: 'compass',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Main Layout',
+          },
+          {
+            type: 'text',
+            content: 'When you open Cursor, you\'ll see the familiar VS Code layout. The interface has these main areas:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Left Sidebar**: File explorer, search, Git, and extensions',
+              '**Main Editor**: Where your code lives. Open multiple files in tabs.',
+              '**Right Side Panels**: Chat panel (AI assistant) and other tools',
+              '**Bottom Panel**: Terminal, problems, output, and debug info',
+            ],
+          },
+          {
+            type: 'image',
+            alt: 'Cursor interface layout showing sidebar, editor, chat panel, and terminal areas with labeled annotations',
+            label: 'Overview of the main Cursor interface with AI-specific elements highlighted',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'AI-Specific Elements',
+          },
+          {
+            type: 'text',
+            content: 'Cursor adds special UI elements for AI features. Here\'s what\'s unique:',
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'The Chat Panel (Right Side)',
+          },
+          {
+            type: 'text',
+            content: 'This is your AI assistant. Open it with Cmd+L (Mac) or Ctrl+L (Windows). Ask questions, explain errors, or get code suggestions. You can close and reopen it anytime.',
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'The Prompt Bars',
+          },
+          {
+            type: 'text',
+            content: 'Three quick ways to invoke AI:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Cmd+L (Chat)**: Ask AI a question in the Chat panel',
+              '**Cmd+K (Inline Edit)**: Highlight code and press Cmd+K to edit it with natural language',
+              '**Tab (Autocomplete)**: Start typing and the AI suggests the next line(s)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'Composer (Cmd+I)',
+          },
+          {
+            type: 'text',
+            content: 'This is your multi-file AI editor. It can create or modify multiple files at once. Opens as a floating window or full-screen mode. Perfect for generating entire components or features.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Essential Keyboard Shortcuts',
+          },
+          {
+            type: 'text',
+            content: 'Memorizing these will supercharge your workflow:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Cmd+L** (Mac) / **Ctrl+L** (Windows): Open Chat panel',
+              '**Cmd+K** / **Ctrl+K**: Inline edit with AI (highlight code first)',
+              '**Cmd+I** / **Ctrl+I**: Open Composer (floating)',
+              '**Cmd+Shift+I** / **Ctrl+Shift+I**: Open Composer (full-screen)',
+              '**Cmd+Enter** / **Ctrl+Enter**: Give AI your full codebase as context',
+              '**Cmd+P** / **Ctrl+P**: Quick file search and navigation',
+              '**Cmd+/** / **Ctrl+**: Toggle comment on selected code',
+              '**Tab**: Accept autocomplete suggestion',
+              '**Escape**: Reject autocomplete or close panels',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'File Explorer (Left Sidebar)',
+          },
+          {
+            type: 'text',
+            content: 'This works just like VS Code. Browse your project files, create folders and files, and drag to organize. The top button opens a folder or creates a new project.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Terminal (Bottom)',
+          },
+          {
+            type: 'text',
+            content: 'Click the Terminal tab at the bottom to open the command line. You can run commands, start a dev server, or commit to Git. Press Ctrl+K (or Cmd+K) in the terminal to ask AI to generate a command.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Opening a Project',
+          },
+          {
+            type: 'text',
+            content: 'To start working:',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'File menu',
+                content: 'Click File → Open Folder',
+                icon: 'folder',
+              },
+              {
+                number: 2,
+                title: 'Choose your project',
+                content: 'Navigate to where your code lives on your computer',
+                icon: 'search',
+              },
+              {
+                number: 3,
+                title: 'Click Open',
+                content: 'Cursor loads your project and shows all files in the left sidebar',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Pro Tip',
+            content: 'You can also drag a folder onto the Cursor icon in your dock (Mac) or taskbar (Windows) to open it instantly.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Interface Mastery!',
+            items: [
+              'You understand the main layout and panels',
+              'You know where the AI tools are (Chat, Composer, prompts)',
+              'You\'ve learned the essential keyboard shortcuts',
+              'You can open projects and navigate files',
+            ],
+            message: 'You\'re now comfortable navigating Cursor. Next, we\'ll learn how to edit code with AI assistance.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-3',
+        title: 'Edit Code with AI Assistance',
+        duration: 2,
+        order: 3,
+        module: 'setup',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Now that you\'re comfortable in Cursor, let\'s learn the basics of editing code. You\'ll use the same tools as VS Code—but with AI magic behind the scenes.',
+            icon: 'code',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Creating Your First File',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open a project folder',
+                content: 'File → Open Folder, then select a project or create a new folder',
+                icon: 'folder',
+              },
+              {
+                number: 2,
+                title: 'Create a new file',
+                content: 'In the left sidebar, right-click in the file explorer and select "New File"',
+                icon: 'file',
+              },
+              {
+                number: 3,
+                title: 'Name it',
+                content: 'Type a filename like "app.js" or "component.jsx". Cursor recognizes the file type by the extension.',
+                icon: 'edit',
+              },
+              {
+                number: 4,
+                title: 'Start typing',
+                content: 'Start writing code. You\'ll see autocomplete suggestions appear.',
+                icon: 'keyboard',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Basic Editing Features (Just Like VS Code)',
+          },
+          {
+            type: 'text',
+            content: 'Cursor inherits all of VS Code\'s powerful editing features:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Multi-cursor editing**: Hold Alt and click to place multiple cursors, then type once and edit multiple lines at once',
+              '**Find and Replace**: Cmd+F (Mac) or Ctrl+F (Windows) to find text, Cmd+H to find and replace',
+              '**Select code blocks**: Click the icon next to a function/class to expand/collapse it',
+              '**Split view**: Drag a tab to the right edge to see two files side-by-side',
+              '**Multiple tabs**: Open as many files as you want. Click tabs to switch between them',
+              '**Auto-save**: By default, files save automatically (look for the dot on the tab to see unsaved changes)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Git Integration (Version Control)',
+          },
+          {
+            type: 'text',
+            content: 'Cursor includes built-in Git support. Click the Git icon (branch symbol) in the left sidebar:',
+          },
+          {
+            type: 'list',
+            items: [
+              'See which files changed (Source Control panel)',
+              'Stage files by clicking the + button',
+              'Write a commit message',
+              'Click the checkmark to commit',
+              'Push or pull from the command palette (Cmd+P)',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'What\'s Git?',
+            content: 'Git tracks changes to your code over time. Think of it like "save history" for programming. It\'s essential for collaboration and backup.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Extensions (Add-ons)',
+          },
+          {
+            type: 'text',
+            content: 'Cursor uses the same VS Code extensions. Popular ones for designers include:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Prettier**: Auto-formats your code to look clean',
+              '**ESLint**: Catches code mistakes before they cause problems',
+              '**Live Server**: Preview your code in a browser automatically',
+              '**Thunder Client**: Test APIs without leaving the editor',
+              '**Tailwind CSS IntelliSense**: Smart suggestions for Tailwind classes',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'To install extensions, click the Extensions icon (puzzle piece) on the left sidebar and search for what you need.',
+          },
+          {
+            type: 'completion',
+            title: 'Editing Fundamentals Ready!',
+            items: [
+              'You can create and edit files in Cursor',
+              'You understand multi-cursor editing and find/replace',
+              'You know how to use split view to see multiple files',
+              'You\'re aware of Git for version control',
+              'You can install extensions to customize your environment',
+            ],
+            message: 'Great! You now have the foundation to work with code. Next, we\'ll explore the AI features that make Cursor special.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-4',
+        title: 'Use Tab Completions',
+        duration: 2,
+        order: 4,
+        module: 'prototype',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Tab autocomplete is Cursor\'s most powerful feature for speed. As you type, it predicts what comes next—often multiple lines at a time. The AI learns from your code and patterns.',
+            icon: 'zap',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'How Tab Autocomplete Works',
+          },
+          {
+            type: 'text',
+            content: 'Start typing code. After a few characters, a suggestion appears grayed out. This is Cursor\'s AI predicting your next line(s). Press Tab to accept it.',
+          },
+          {
+            type: 'image',
+            alt: 'Cursor Tab completion showing AI suggestion appearing as you type code',
+            label: 'Tab autocomplete in action with multi-line suggestion',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Accepting and Rejecting Suggestions',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Tab**: Accept the entire suggestion',
+              '**Escape**: Reject and dismiss the suggestion',
+              '**Ctrl+→ (or Cmd+→)**: Accept just the next word',
+              '**Delete**: Clear the suggestion and keep typing your own code',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Pro Tips for Better Suggestions',
+          },
+          {
+            type: 'text',
+            content: 'The better context Cursor has, the better its suggestions:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Write clear comments**: If you write "// Create a button with onClick handler", Cursor will suggest the code to match',
+              '**Follow naming patterns**: Consistent names help Cursor predict what you\'re building',
+              '**Keep related code nearby**: Don\'t spread imports and usage far apart',
+              '**Write function signatures first**: Define the function name and parameters, Cursor suggests the body',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example: React Component',
+          },
+          {
+            type: 'text',
+            content: 'Type this and watch Cursor autocomplete the component:',
+          },
+          {
+            type: 'code',
+            code: 'function Button({ label, onClick }) {',
+            language: 'javascript',
+            label: 'Start typing this...',
+          },
+          {
+            type: 'text',
+            content: 'Cursor will suggest the rest: return statement, Tailwind classes, etc.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Free vs Pro: Autocomplete Limits',
+          },
+          {
+            type: 'text',
+            content: 'On the Free plan, you get basic autocomplete. The Pro plan ($20/month) includes unlimited tab completions and longer context windows for smarter suggestions.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Pro Tip',
+            content: 'Tab autocomplete works best on straightforward, predictable code (components, loops, API calls). For complex logic, use Chat (Cmd+L) instead.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'Autocomplete Mastered!',
+            items: [
+              'You understand how Tab autocomplete predicts code',
+              'You can accept, reject, and control suggestions',
+              'You know how to write code that gets better suggestions',
+              'You\'ve seen real examples of autocomplete in action',
+            ],
+            message: 'Excellent! Tab completion is your speed tool. Next, let\'s meet Chat—your conversational AI assistant.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-5',
+        title: 'Chat with AI (Cmd+L)',
+        duration: 2,
+        order: 5,
+        module: 'prototype',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Chat (Cmd+L) is your AI pair programmer. Ask questions, explain errors, request code—it\'s a full conversation. Unlike autocomplete, Chat is perfect for explanations, debugging, and larger tasks.',
+            icon: 'chat',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Opening Chat',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Press Cmd+L (Mac) or Ctrl+L (Windows)',
+                content: 'The Chat panel opens on the right side.',
+                icon: 'keyboard',
+              },
+              {
+                number: 2,
+                title: 'Type your question or request',
+                content: 'Anything from "What does this function do?" to "Create a form component"',
+                icon: 'edit',
+              },
+              {
+                number: 3,
+                title: 'Press Enter',
+                content: 'Cursor AI responds with an answer, explanation, or code.',
+                icon: 'send',
+              },
+            ],
+          },
+          {
+            type: 'image',
+            alt: 'Cursor Chat panel showing conversation with AI assistant',
+            label: 'Complete Chat interaction from question to response',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Adding Code Context to Chat',
+          },
+          {
+            type: 'text',
+            content: 'To ask about specific code, highlight it first, then:',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Highlight code in your editor',
+                content: 'Select the code you want to discuss.',
+                icon: 'select',
+              },
+              {
+                number: 2,
+                title: 'Press Ctrl+L (add to Chat)',
+                content: 'On macOS, this is Cmd+L. That code is added to the Chat input.',
+                icon: 'add',
+              },
+              {
+                number: 3,
+                title: 'Type your question',
+                content: 'Now ask about that code: "Why does this error occur?" or "How can I optimize this?"',
+                icon: 'edit',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Ask Mode vs Edit Mode',
+          },
+          {
+            type: 'text',
+            content: 'Chat has two modes (toggle at the top of the Chat panel):',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Ask Mode**: Get suggestions and answers without changing your code',
+              '**Edit Mode**: Let AI modify your code directly (great for refactoring)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example Questions You Can Ask',
+          },
+          {
+            type: 'list',
+            items: [
+              '"Explain this JavaScript function in simple terms"',
+              '"Why am I getting this error? [paste error message]"',
+              '"How do I create a React component that does [what you want]?"',
+              '"What\'s the best way to style this with Tailwind?"',
+              '"Refactor this code to use async/await"',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Pro Tip',
+            content: 'Be specific! "Create a button" is vague. "Create a React button component with a blue background, white text, and a hover effect that scales up" gives Cursor much better direction.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Chat Fluency Achieved!',
+            items: [
+              'You can open Chat and ask questions',
+              'You can add code context to your questions',
+              'You understand Ask vs Edit mode',
+              'You\'re comfortable with the Chat workflow',
+            ],
+            message: 'Great! Chat is your AI partner for in-depth help. Next, let\'s learn Cmd+K for quick inline edits.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-6',
+        title: 'Make Inline Edits (Cmd+K)',
+        duration: 2,
+        order: 6,
+        module: 'prototype',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Cmd+K is your quick-edit tool. Highlight code and press Cmd+K to refactor, fix, or modify it with natural language instructions. No Chat panel needed.',
+            icon: 'edit',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Cmd+K Workflow',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Highlight code in your editor',
+                content: 'Select the code you want to change.',
+                icon: 'select',
+              },
+              {
+                number: 2,
+                title: 'Press Cmd+K (Mac) or Ctrl+K (Windows)',
+                content: 'A prompt bar appears right above your code.',
+                icon: 'keyboard',
+              },
+              {
+                number: 3,
+                title: 'Type your instruction',
+                content: 'Tell the AI what to do: "Make it faster", "Add error handling", "Use Tailwind instead"',
+                icon: 'edit',
+              },
+              {
+                number: 4,
+                title: 'Press Enter',
+                content: 'Cursor edits the code inline and shows you the result.',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'image',
+            alt: 'Cmd+K prompt bar showing inline code edit transformation',
+            label: 'Cmd+K workflow: select code, prompt, and inline result',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example Edits',
+          },
+          {
+            type: 'text',
+            content: 'Here\'s what Cmd+K can do. Select the code and try:',
+          },
+          {
+            type: 'code',
+            code: 'if (user) { alert("Welcome"); }',
+            language: 'javascript',
+            label: 'Original code',
+          },
+          {
+            type: 'text',
+            content: 'Cmd+K → "Convert to console.log instead of alert"',
+          },
+          {
+            type: 'code',
+            code: 'if (user) { console.log("Welcome"); }',
+            language: 'javascript',
+            label: 'After Cmd+K',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Cmd+K vs Chat (Cmd+L): When to Use Which',
+          },
+          {
+            type: 'text',
+            content: 'Both use AI, but for different situations:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Cmd+K**: Quick changes to existing code (refactor, fix, adjust)',
+              '**Chat (Cmd+L)**: Explanations, debugging, understanding code, creating new code from scratch',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Bonus: Cmd+K in Terminal',
+          },
+          {
+            type: 'text',
+            content: 'You can also use Cmd+K in the Terminal (bottom of Cursor) to generate shell commands from natural language:',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Click in the Terminal',
+                content: 'Focus the terminal at the bottom of the screen.',
+                icon: 'terminal',
+              },
+              {
+                number: 2,
+                title: 'Press Cmd+K (Mac) or Ctrl+K (Windows)',
+                content: 'A prompt appears in the terminal.',
+                icon: 'keyboard',
+              },
+              {
+                number: 3,
+                title: 'Describe what you want',
+                content: '"Remove all node_modules folders" or "Restart the dev server"',
+                icon: 'edit',
+              },
+              {
+                number: 4,
+                title: 'Press Enter',
+                content: 'Cursor generates and runs the command.',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Review Terminal Commands',
+            content: 'Always review terminal commands before pressing Enter. The AI might misunderstand, and bad terminal commands can cause problems.',
+            icon: 'warning',
+          },
+          {
+            type: 'completion',
+            title: 'Inline Editing Mastered!',
+            items: [
+              'You can select code and use Cmd+K to edit it',
+              'You understand the difference between Cmd+K and Chat',
+              'You know how to use Cmd+K in the terminal',
+              'You\'re confident with quick, targeted edits',
+            ],
+            message: 'Perfect! Cmd+K is your speed tool for edits. Next, meet Composer—the power tool for generating entire features.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-7',
+        title: 'Build with Composer',
+        duration: 2,
+        order: 7,
+        module: 'prototype',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Composer is Cursor\'s superpower. While Tab handles single suggestions and Chat handles questions, Composer creates entire features—multiple files at once. This is where you build fast.',
+            icon: 'sparkles',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Opening Composer',
+          },
+          {
+            type: 'text',
+            content: 'Two ways to open Composer:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Cmd+I** (floating window): Smaller, dockable window while you work',
+              '**Cmd+Shift+I** (full screen): Dedicated workspace, better for complex tasks',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Normal vs Agent Mode',
+          },
+          {
+            type: 'text',
+            content: 'Composer has two modes:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Normal Mode**: You guide each step. You see the changes and approve them.',
+              '**Agent Mode**: AI is autonomous. It gathers context, makes decisions, and iterates. Perfect for complex builds.',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'Toggle Agent Mode at the top of the Composer panel.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Adding Context to Composer',
+          },
+          {
+            type: 'text',
+            content: 'Help Composer understand your project by adding context:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**@filename**: Reference specific files (e.g., "@app.jsx" to include that file in context)',
+              '**#filename**: Add entire files to Composer workspace',
+              '**/** menu: Add all open editors, Git changes, PR info, etc.',
+              '**Cmd+Enter**: Add your entire codebase to context (powerful!)',
+            ],
+          },
+          {
+            type: 'image',
+            alt: 'Composer interface showing @-mentions and context references for multi-file generation',
+            label: 'Composer with context added for generating related files',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example: Create a React Component with Composer',
+          },
+          {
+            type: 'text',
+            content: 'Try this prompt in Composer:',
+          },
+          {
+            type: 'code',
+            code: 'Create a React card component with image, title, description, and a clickable button. Use Tailwind CSS for styling. Make it responsive. Save as Card.jsx',
+            language: 'text',
+            label: 'Composer prompt',
+          },
+          {
+            type: 'text',
+            content: 'Composer generates the complete component file, ready to use.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'YOLO Mode: Autonomous Iteration',
+          },
+          {
+            type: 'text',
+            content: 'Advanced feature: Enable YOLO Mode in settings. It lets Agent Mode:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Automatically run tests',
+              'Build your code',
+              'Fix errors and iterate until everything passes',
+              'All without asking you each step',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'Perfect for rapid prototyping where you just want a working feature ASAP.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Pro Tip',
+            content: 'Composer works best when you give it context about your project structure and dependencies. More context = better results.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'Composer Power Unlocked!',
+            items: [
+              'You can open Composer in floating or full-screen mode',
+              'You understand Normal vs Agent mode',
+              'You know how to add context with @-mentions and #-files',
+              'You\'ve created multi-file code with Composer',
+            ],
+            message: 'Excellent! You\'re now an AI developer. Next, we\'ll focus on design-to-code—converting designs into working React components.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-8',
+        title: 'Convert Designs to Components',
+        duration: 2,
+        order: 8,
+        module: 'design-to-code',
+        sections: [
+          {
+            type: 'intro',
+            content: 'This is where designers shine. Take a design from Figma (or any source), upload it to Cursor, and watch it transform into working React code. No manual translation needed.',
+            icon: 'palette',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Design-to-Code Workflow',
+          },
+          {
+            type: 'text',
+            content: 'The process is simple:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Export your design as a screenshot (PNG, JPG)',
+              'Open Chat in Cursor (Cmd+L)',
+              'Upload the image',
+              'Describe what you want (or let Cursor analyze it)',
+              'Get working React code with Tailwind styling',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Step-by-Step: Figma Design to React',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Screenshot your design',
+                content: 'In Figma, select the component/frame you want to convert. Take a clean screenshot without overlays or UI chrome.',
+                icon: 'camera',
+              },
+              {
+                number: 2,
+                title: 'Open Chat (Cmd+L)',
+                content: 'Open the Chat panel on the right side of Cursor.',
+                icon: 'chat',
+              },
+              {
+                number: 3,
+                title: 'Upload image',
+                content: 'Click the attachment icon or drag the screenshot into Chat.',
+                icon: 'paperclip',
+              },
+              {
+                number: 4,
+                title: 'Describe or ask',
+                content: 'Write: "Convert this design to a React component using Tailwind CSS. Make it responsive and match the design exactly."',
+                icon: 'edit',
+              },
+              {
+                number: 5,
+                title: 'Get code',
+                content: 'Cursor generates React code. Copy it or apply it directly to your project.',
+                icon: 'code',
+              },
+            ],
+          },
+          {
+            type: 'image',
+            alt: 'Figma design side-by-side with generated React component in Cursor',
+            label: 'Design-to-code conversion showing Figma design transformed to React',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Iterative Refinement',
+          },
+          {
+            type: 'text',
+            content: 'The first version rarely perfect. Refine it:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Say "Make the button red instead of blue"',
+              'Ask "Can you add an icon to the left of the text?"',
+              'Request "Adjust spacing to match the design more closely"',
+              'Each time, Cursor updates the code',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Pro Tips for Better Conversions',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Clear backgrounds**: Screenshot on a clean background for better AI understanding',
+              '**High resolution**: Use clear, high-quality images',
+              '**One component per screenshot**: Don\'t mix multiple designs in one image',
+              '**Describe your stack**: Tell Cursor what framework/version you\'re using',
+              '**Provide context**: Reference existing design tokens or style files in your project',
+              '**Use Composer for multi-component**: Use Composer (Cmd+I) to generate a whole page with multiple components',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Designer Superpower',
+            content: 'You just converted a design to working code in minutes instead of hours. This is what AI development looks like for designers.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'Design-to-Code Ninja!',
+            items: [
+              'You can convert Figma designs to React components',
+              'You understand the iterative refinement process',
+              'You know how to provide good context and descriptions',
+              'You\'ve experienced the design-to-code workflow',
+            ],
+            message: 'Amazing! You now bridge design and code. Next, let\'s go deeper into frontend development with React and Tailwind.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-9',
+        title: 'Build Frontend with React and Tailwind',
+        duration: 2,
+        order: 9,
+        module: 'design-to-code',
+        sections: [
+          {
+            type: 'intro',
+            content: 'React and Tailwind are your power tools for modern web design. Cursor understands both deeply and can generate production-ready components with responsive design.',
+            icon: 'rocket',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'React Fundamentals (For Designers)',
+          },
+          {
+            type: 'text',
+            content: 'React is JavaScript for building interactive user interfaces. Think of it like components in a design system:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Components**: Reusable pieces (Button, Card, Header, etc.)',
+              '**Props**: Data you pass to components (like component parameters)',
+              '**State**: Data that changes and triggers UI updates',
+              '**Events**: Click, hover, submit—interactive behaviors',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example: Create a React Component with Cursor',
+          },
+          {
+            type: 'text',
+            content: 'Use Chat or Composer to generate:',
+          },
+          {
+            type: 'code',
+            code: 'Create a React button component with label prop, onClick handler, and styling with Tailwind CSS. Make it blue by default, with red variant. Include hover effects.',
+            language: 'text',
+            label: 'Your request to Cursor',
+          },
+          {
+            type: 'text',
+            content: 'Cursor generates working code immediately. No need to memorize React syntax.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Tailwind CSS: Utility-First Styling',
+          },
+          {
+            type: 'text',
+            content: 'Tailwind is CSS made easy for designers. Instead of writing custom CSS, use class names:',
+          },
+          {
+            type: 'code',
+            code: '<button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">\n  Click me\n</button>',
+            language: 'jsx',
+            label: 'Tailwind classes for styling',
+          },
+          {
+            type: 'text',
+            content: 'bg-blue-500 = blue background, text-white = white text, px-4 = horizontal padding, hover:bg-blue-600 = darker on hover.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: '"Vibe Coding": Describe, Don\'t Code',
+          },
+          {
+            type: 'text',
+            content: 'The beauty of AI development: describe what you want, not how to code it.',
+          },
+          {
+            type: 'list',
+            items: [
+              'Bad: "Use flexbox with justify-content center"',
+              'Good: "Center items horizontally"',
+              'Better: "Create a responsive grid of cards that show 3 columns on desktop, 2 on tablet, 1 on mobile"',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'Cursor translates your intent into Tailwind classes automatically.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Responsive Design (Mobile-First)',
+          },
+          {
+            type: 'text',
+            content: 'Build for mobile first, then enhance for bigger screens. Tailwind makes this easy:',
+          },
+          {
+            type: 'code',
+            code: '<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">\n  {/* Cards go here */}\n</div>',
+            language: 'jsx',
+            label: 'Responsive grid: 1 column base, 2 on medium, 3 on large',
+          },
+          {
+            type: 'image',
+            alt: 'Example React component with Tailwind styling showing responsive breakpoints',
+            label: '.cursorrules file with design system tokens and Tailwind preferences',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Accessibility: Important!',
+          },
+          {
+            type: 'text',
+            content: 'Cursor can generate accessible code. Just ask:',
+          },
+          {
+            type: 'list',
+            items: [
+              '"Make sure this component is accessible (WCAG)"',
+              '"Add proper alt text to images"',
+              '"Ensure keyboard navigation works"',
+              'Cursor adds aria labels, semantic HTML, and proper contrast',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Design System in .cursorrules',
+            content: 'Create a .cursorrules file with your design tokens (colors, spacing, fonts). Cursor uses this to generate code that matches your brand automatically.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'React & Tailwind Mastered!',
+            items: [
+              'You understand React components and props',
+              'You know Tailwind utility classes for styling',
+              'You can generate responsive, accessible components',
+              'You\'re comfortable with "vibe coding"',
+            ],
+            message: 'Great! You can now build responsive, production-ready frontends with AI. Next, let\'s customize Cursor for your specific needs.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-10',
+        title: 'Customize Your Workspace',
+        duration: 2,
+        order: 10,
+        module: 'practices',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Cursor is yours to customize. Set it up exactly how you work. Personalization makes you faster and happier.',
+            icon: 'settings',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Editor Settings',
+          },
+          {
+            type: 'text',
+            content: 'Customize the look and feel:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Theme**: Dark, light, or custom (Settings → Theme)',
+              '**Font**: Change font family and size',
+              '**Keybindings**: Remap keys to match your muscle memory',
+              '**Tabs vs Spaces**: Choose your indentation style',
+              '**Auto-save**: Enable/disable automatic saving',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Extensions: Power Up Your Editor',
+          },
+          {
+            type: 'text',
+            content: 'Extensions add capabilities. Click the Extensions icon (puzzle) in the left sidebar:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Prettier**: Auto-format code to be clean and consistent',
+              '**ESLint**: Catch code errors and style issues',
+              '**Tailwind CSS IntelliSense**: Smart Tailwind class suggestions',
+              '**Thunder Client**: Test APIs without leaving Cursor',
+              '**Live Server**: Preview changes in browser in real-time',
+              '**GitHub Copilot** (optional): Add GitHub\'s Copilot alongside Cursor\'s AI',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: '.cursorrules: Train Your AI',
+          },
+          {
+            type: 'text',
+            content: 'Create a .cursorrules file in your project root with instructions for the AI:',
+          },
+          {
+            type: 'code',
+            code: '# Design System\nUse Tailwind CSS for all styling. Primary color: blue-600. Secondary: gray-900.\n\n# Components\nAll components go in /components directory. Use PascalCase for names.\n\n# Testing\nWrite tests for all components using Vitest.\n\n# Best Practices\n- Use functional components with hooks\n- Keep components under 200 lines\n- Add proper error handling\n- Make components responsive\n- Include accessibility (WCAG AA)',
+            language: 'text',
+            label: '.cursorrules example',
+          },
+          {
+            type: 'text',
+            content: 'Cursor reads this file and uses it to guide code generation. Whenever it generates code, it follows your rules.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Rules for AI: Chat Settings',
+          },
+          {
+            type: 'text',
+            content: 'Go to Settings → Features → Chat & Composer → Rules for AI. Add custom instructions:',
+          },
+          {
+            type: 'list',
+            items: [
+              '"Always add comments to complex code"',
+              '"Prefer modern React hooks over class components"',
+              '"Include TypeScript types"',
+              '"Make accessibility a priority"',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Terminal Integration',
+          },
+          {
+            type: 'text',
+            content: 'The terminal at the bottom of Cursor is powerful:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Use Cmd+K to generate shell commands',
+              'Run npm scripts, git commands, builds',
+              'See output in real-time',
+              'Stay in Cursor, no need to switch apps',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Pro Tip',
+            content: 'Import settings from VS Code if you have them. Cursor will preserve your themes, extensions, and keybindings.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'Workspace Customized!',
+            items: [
+              'You\'ve customized the editor to match your style',
+              'You\'ve installed key extensions',
+              'You\'ve created a .cursorrules file for your project',
+              'You understand Rules for AI in settings',
+            ],
+            message: 'Perfect! Cursor is now set up exactly how you work. Next, let\'s explore advanced AI features.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-11',
+        title: 'Master Advanced Features',
+        duration: 2,
+        order: 11,
+        module: 'practices',
+        sections: [
+          {
+            type: 'intro',
+            content: 'You\'ve learned the basics. Now, advanced features that take you to expert level: codebase indexing, multi-model AI, context management, and team collaboration.',
+            icon: 'crown',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Codebase Indexing: AI Knows Your Code',
+          },
+          {
+            type: 'text',
+            content: 'When you open a project, Cursor automatically indexes it. The AI scans every file and creates a semantic understanding of your codebase. This is why it can suggest relevant code from anywhere in your project.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: '@-Mentions: Direct Context',
+          },
+          {
+            type: 'text',
+            content: 'In Chat or Composer, use @-mentions to reference specific files or symbols:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**@filename.jsx**: Reference a specific file',
+              '**@functionName**: Reference a specific function',
+              '**@className**: Reference a class',
+              'Type @ and see all available options',
+            ],
+          },
+          {
+            type: 'image',
+            alt: '@-mentions context menu showing available files and symbols in codebase',
+            label: '@-mentions in Chat showing codebase references',
+          },
+          {
+            type: 'text',
+            content: 'This tells the AI exactly what to consider when generating code.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Multi-Model AI: Choose Your Brain',
+          },
+          {
+            type: 'text',
+            content: 'Cursor supports multiple AI models. Switch between them in the Chat panel:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Claude 3.5 Sonnet** (Anthropic): Best for analysis and refactoring',
+              '**GPT-4o** (OpenAI): Great for creative code generation',
+              '**Gemini** (Google): Good for general tasks',
+              '**xAI models**: Latest experimental models',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'Different models excel at different tasks. Feel free to try different ones for different work.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Privacy Mode: Your Code Stays Private',
+          },
+          {
+            type: 'text',
+            content: 'Pro feature ($20/month): Enable Privacy Mode in Settings. Your code is never:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Sent to AI providers for training',
+              'Logged or stored on servers',
+              'Used to improve AI models',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Context Management: Work Smarter',
+          },
+          {
+            type: 'text',
+            content: 'AI works better with relevant context. Strategies:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Close tabs**: Only open files you\'re actively using',
+              '**Use @-mentions**: Reference specific files instead of context-dumping',
+              '**Provide .cursorrules**: Let your project guidelines guide the AI',
+              '**Use Cmd+Enter for full context**: When you truly need codebase-wide understanding',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Bugbot: AI Code Review',
+          },
+          {
+            type: 'text',
+            content: 'Advanced feature: Bugbot automatically reviews your GitHub PRs and suggests improvements:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Detects bugs and logic errors',
+              'Suggests security fixes',
+              'Recommends performance improvements',
+              '​One-click "Fix in Cursor" to apply suggestions',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Team Features (Cursor Teams/Enterprise)',
+          },
+          {
+            type: 'text',
+            content: 'For teams ($40/user/month):',
+          },
+          {
+            type: 'list',
+            items: [
+              'Shared .cursorrules across team',
+              'Centralized billing and usage tracking',
+              'SSO authentication',
+              'Team-wide privacy settings',
+              'Collaboration features',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Pro Tip',
+            content: 'Always review AI-generated code before using it. AI is fast, but human judgment catches edge cases and security issues.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Advanced Features Unlocked!',
+            items: [
+              'You understand codebase indexing and how AI knows your code',
+              'You can use @-mentions for precise context',
+              'You know how to switch between multiple AI models',
+              'You\'re aware of privacy features and team collaboration',
+            ],
+            message: 'Excellent! You\'re now using Cursor like an expert. The final lesson covers best practices and team workflows.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-12',
+        title: 'Best Practices and Team Workflows',
+        duration: 2,
+        order: 12,
+        module: 'practices',
+        sections: [
+          {
+            type: 'intro',
+            content: 'You\'ve learned the tools. Now, the philosophy: how to work WITH AI, not just use it. This is about sustainable, high-quality development.',
+            icon: 'lightbulb',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Write Effective Prompts',
+          },
+          {
+            type: 'text',
+            content: 'Good prompts = better code. Structure:',
+          },
+          {
+            type: 'list',
+            items: [
+              '**What**: What do you want? Be specific.',
+              '**Context**: What technology/framework? Any constraints?',
+              '**Details**: Colors, layout, behavior—the specifics matter.',
+              '**Format**: Where should the code go? (component file, inline, etc.)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'Example of a Great Prompt',
+          },
+          {
+            type: 'code',
+            code: 'Create a React modal component that:\n- Shows a title and description\n- Has a Close button and a primary action button\n- Uses Tailwind CSS with blue primary button\n- Includes fade-in animation (use framer-motion if available)\n- Is accessible (keyboard support, aria-labels)\n- Saves as Modal.jsx in /components directory',
+            language: 'text',
+            label: 'Specific, detailed prompt',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Review AI Code Always',
+          },
+          {
+            type: 'text',
+            content: 'Never blindly accept AI-generated code:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Read the code. Understand what it does.',
+              'Test it. Does it work as expected?',
+              'Check for security: no hardcoded secrets, no SQL injection risks',
+              'Performance: Is it efficient? Will it scale?',
+              'Accessibility: Can keyboard users navigate? Do images have alt text?',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Test-Driven Development (TDD)',
+          },
+          {
+            type: 'text',
+            content: 'Write tests first, let AI implement:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Write test cases (what your code should do)',
+              'Ask Cursor: "Write code that passes these tests"',
+              'AI generates implementation',
+              'Tests pass? You\'re done. Tests fail? Iterate.',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'This forces clarity and prevents AI mistakes.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Version Control: Git for Safety',
+          },
+          {
+            type: 'text',
+            content: 'Use Git to track changes:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Commit after each feature, not continuous',
+              'Write clear commit messages ("Add Modal component" not "stuff")',
+              'Push to GitHub regularly (backup and team visibility)',
+              'Use branches for new features (don\'t work on main)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Treat AI as a Pair Programmer',
+          },
+          {
+            type: 'text',
+            content: 'Best workflow: iterative dialogue',
+          },
+          {
+            type: 'list',
+            items: [
+              'You: "Create a form with name and email fields"',
+              'AI: Generates form',
+              'You: "Add validation for email format"',
+              'AI: Updates code',
+              'You: "Make it mobile-responsive"',
+              'AI: Refines the code',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'You\'re the driver. AI is the assistant. Never let AI make decisions without your direction.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Team Workflows',
+          },
+          {
+            type: 'text',
+            content: 'For teams using Cursor:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Share .cursorrules file (design system, code standards)',
+              'PR reviews: Have humans and Bugbot review PRs',
+              'Code pairing: Use Cursor together for better decisions',
+              'Documentation: Let AI generate docs, humans refine them',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'When NOT to Use AI',
+          },
+          {
+            type: 'text',
+            content: 'AI isn\'t always the right tool:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Complex algorithms: AI struggles with novel logic. Think first.',
+              'Security-critical code: Always hand-review before deployment',
+              'Novel patterns: If you\'re pioneering something, guide AI more carefully',
+              'Learning: Sometimes, you should code manually to learn',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Continuous Learning',
+          },
+          {
+            type: 'text',
+            content: 'Stay updated:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Check Cursor changelog (cursor.com/changelog)',
+              'Try new features when released',
+              'Experiment with different models and prompts',
+              'Share learnings with your team',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'You\'re Ready!',
+            content: 'You\'ve mastered Cursor. You understand the tools, the workflows, and the mindset. Now go build something amazing.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'Cursor Mastery Complete!',
+            items: [
+              'You write effective, specific prompts',
+              'You review and test all AI-generated code',
+              'You use TDD and Git for quality and safety',
+              'You treat AI as a partner, not a replacement',
+              'You understand team workflows and best practices',
+            ],
+            message: 'Congratulations! You\'ve completed the Cursor Learning Path. You\'re now equipped to be a productive, responsible AI developer. Keep experimenting, stay curious, and build amazing things.',
+          },
+        ],
+      },
     ],
-    content: '<h2>Cursor Learning Path</h2><p>Master the most powerful AI-assisted code editor built on VSCode. Learn from setup to advanced workflows.</p>',
+    content: `
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to Cursor Learning Path for Designers</h2>
+      <p class="text-lg text-gray-700 mb-8">Cursor is the AI-powered code editor that lets you prototype, code, and collaborate with AI as your pair programmer. <strong>Complete this guide in 24 minutes and go from zero to confident building with AI.</strong></p>
+
+      <h3 class="text-3xl font-bold text-gray-900 mt-12 mb-3">What You'll Learn</h3>
+      <p class="text-lg text-gray-700 mb-8">This learning path is structured in 4 sequential modules that build on each other. Complete all lessons in order for the best learning experience.</p>
+
+      <!-- Enhanced Module Flow with Visual Hierarchy - Black & White Design -->
+      <div class="mb-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Module 1: Setup -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">1</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Setup</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Download, install, and explore Cursor</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Foundation</div>
+              </div>
+            </div>
+            <div class="hidden lg:flex absolute -right-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.5rem; height: 1.5rem;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Module 2: Prototype -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">2</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">AI Features</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Master Tab, Chat, Cmd+K, and Composer</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Build</div>
+              </div>
+            </div>
+            <div class="hidden lg:flex absolute -right-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.5rem; height: 1.5rem;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Module 3: Design-to-Code -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">3</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Design-to-Code</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Convert designs to React with Tailwind</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Create</div>
+              </div>
+            </div>
+            <div class="hidden lg:flex absolute -right-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.5rem; height: 1.5rem;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Module 4: Advanced -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">4</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Advanced</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Master customization and best practices</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Master</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Info - Black & White -->
+        <div class="mt-8 p-6 bg-gray-50 rounded-lg border-2 border-gray-900">
+          <div class="flex items-center justify-center flex-wrap gap-12">
+            <div class="text-center">
+              <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Modules</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">4</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Lessons</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">12</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Duration</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">24 min</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="text-2xl font-bold text-gray-900 mt-12 mb-6">What's in Each Module?</h3>
+      <div class="overflow-x-auto mb-12">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="border-b-2 border-gray-900">
+              <th class="text-left py-3 px-4 font-bold text-gray-900">Module</th>
+              <th class="text-left py-3 px-4 font-bold text-gray-900">Description</th>
+              <th class="text-left py-3 px-4 font-bold text-gray-900">Key Topics</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">1. Setup</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Get Cursor installed and explore the interface</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Download and install Cursor for your OS</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Navigate the VS Code-based interface</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Learn basic code editing and Git</span></li>
+                </ul>
+              </td>
+            </tr>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">2. AI Features</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Master Cursor's four core AI tools</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Tab completions for instant code suggestions</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Chat (Cmd+L) for conversational help</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Cmd+K for inline editing and Composer for multi-file generation</span></li>
+                </ul>
+              </td>
+            </tr>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">3. Design-to-Code</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Convert designs to working code</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Transform Figma designs to React components</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Build responsive frontends with React and Tailwind</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Rapid prototyping and design iteration</span></li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">4. Advanced</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Leverage advanced Cursor capabilities</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Customize with extensions and .cursorrules</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Codebase indexing and @-mentions for smart context</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Best practices for sustainable AI development</span></li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="text-2xl font-bold text-gray-900 mt-12 mb-4">Getting Started</h3>
+      <p class="text-gray-700 mb-4">Choose the path that fits your needs:</p>
+      <ul class="space-y-3 mb-8">
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">New to Cursor?</strong> Start from the beginning and follow sequentially. You'll be building with AI in less than 30 minutes.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Cursor installed?</strong> Jump to Module 2 (AI Features) and start using Tab, Chat, and Composer right away.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Want to design-to-code?</strong> Skip to Module 3 (Design-to-Code) to convert Figma designs to React components immediately.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Build at your own pace</strong> — Each lesson takes 2 minutes. Pause between modules to practice and experiment.</li>
+      </ul>
+
+      <div class="p-6 bg-gray-900 text-white rounded-lg">
+        <h3 class="text-xl font-bold mb-2">Ready to Get Started?</h3>
+        <p>Jump in and begin your Cursor journey! Download Cursor, open the first lesson, and start building with AI.</p>
+      </div>
+    `,
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
   },
   {

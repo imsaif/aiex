@@ -143,7 +143,7 @@ export default function GuideClient({
               {
                 id: 'setup',
                 title: 'Setup',
-                description: 'Get started with Claude Code',
+                description: 'Get started and set up your environment',
               },
               {
                 id: 'prototype',
