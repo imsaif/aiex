@@ -6,6 +6,11 @@ import {
   Cog6ToothIcon,
   LightBulbIcon,
   StarIcon,
+  CodeBracketIcon,
+  ComputerDesktopIcon,
+  ArrowDownTrayIcon,
+  UserGroupIcon,
+  CheckIcon,
 } from '@heroicons/react/24/outline';
 import { Github } from '@lobehub/icons';
 import { GuideLesson } from '@/types';
@@ -19,11 +24,35 @@ interface ModuleSectionProps {
   startLessonNumber: number;
   guideId: string;
   guideTitle: string;
+  moduleIcon?: string;
 }
 
-const getModuleIcon = (moduleTitle: string) => {
+const getModuleIcon = (moduleTitle: string, iconType?: string) => {
   const iconProps = { className: 'w-5 h-5', style: { color: '#525252' } };
 
+  // Use provided iconType if available
+  if (iconType) {
+    switch (iconType) {
+      case 'cog':
+        return <Cog6ToothIcon {...iconProps} />;
+      case 'code':
+        return <CodeBracketIcon {...iconProps} />;
+      case 'monitor':
+        return <ComputerDesktopIcon {...iconProps} />;
+      case 'download':
+        return <ArrowDownTrayIcon {...iconProps} />;
+      case 'user':
+        return <UserGroupIcon {...iconProps} />;
+      case 'github':
+        return <Github size={20} style={{ color: '#525252' }} />;
+      case 'check':
+        return <CheckIcon {...iconProps} />;
+      default:
+        break;
+    }
+  }
+
+  // Fallback to title-based detection
   if (moduleTitle.includes('Setup')) {
     return <Cog6ToothIcon {...iconProps} />;
   } else if (moduleTitle.includes('Prototype')) {
@@ -43,6 +72,7 @@ export default function ModuleSection({
   startLessonNumber,
   guideId,
   guideTitle,
+  moduleIcon,
 }: ModuleSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const {
@@ -64,9 +94,9 @@ export default function ModuleSection({
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                {getModuleIcon(moduleTitle) && (
+                {getModuleIcon(moduleTitle, moduleIcon) && (
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {getModuleIcon(moduleTitle)}
+                    {getModuleIcon(moduleTitle, moduleIcon)}
                   </div>
                 )}
                 <h3 className="text-lg font-semibold text-text-primary">{moduleTitle}</h3>

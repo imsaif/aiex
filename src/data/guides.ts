@@ -3307,8 +3307,8 @@ export const guides: Guide[] = [
     id: 'copilot-course',
     slug: 'github-copilot-learning-path',
     title: 'GitHub Copilot Guide for Designers',
-    description: 'Learn GitHub Copilot, the AI pair programmer for developers.',
-    excerpt: 'Your complete GitHub Copilot guide: 10 lessons covering installation, code suggestions, chat features, and enterprise workflows.',
+    description: 'Master GitHub Copilot as a designer—learn to code faster, prototype interactively, and collaborate with developers.',
+    excerpt: 'Your complete GitHub Copilot guide for designers: 10 lessons across 4 modules covering setup, code suggestions, prototyping workflows, and developer collaboration.',
     tool: 'GitHub Copilot',
     useCase: 'Learning Path',
     skillLevel: 'Beginner',
@@ -3316,29 +3316,369 @@ export const guides: Guide[] = [
     readTime: 18,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    status: 'work-in-progress',
+    status: 'ready',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft_365_Copilot_Icon_one-color.svg',
-    tags: ['copilot', 'learning-path', 'github', 'course', 'ai-programming'],
+    tags: ['copilot', 'learning-path', 'github', 'ai-coding', 'design-to-code', 'prototyping'],
     lessons: [
-      { id: 'lesson-1', title: 'Install GitHub Copilot', duration: 2, order: 1, content: '<h2>Install GitHub Copilot</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Your First Code Suggestion', duration: 2, order: 2, content: '<h2>Your First Code Suggestion</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Code Comments to Code', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Code Comments to Code</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'GitHub Copilot Chat', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>GitHub Copilot Chat</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Testing with Copilot', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Testing with Copilot</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Documentation Generation', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Documentation Generation</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Enterprise Copilot', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Enterprise Copilot</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Tips and Tricks', duration: 2, order: 8,
-        module: 'prototype', content: '<h2>Tips and Tricks</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'Ethical AI Development', duration: 1, order: 9, content: '<h2>Ethical AI Development</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Next Steps and Resources', duration: 1, order: 10, content: '<h2>Next Steps and Resources</h2><p>Lesson content coming soon...</p>' },
+      {
+        id: 'lesson-1',
+        title: 'Install GitHub Copilot',
+        duration: 2,
+        order: 1,
+        module: 'setup',
+        sections: [
+          { type: 'intro', content: 'Get GitHub Copilot running in minutes. Learn how to install the extension in VS Code and set up your account.', icon: 'download' },
+          { type: 'text', content: 'GitHub Copilot is an AI pair programmer that helps you write code faster. As a designer, it\'s a powerful tool for turning your design ideas into interactive prototypes. Let\'s get it installed!' },
+          { type: 'heading', level: 'h3', content: 'What You\'ll Need' },
+          { type: 'list', items: ['VS Code (free download from code.visualstudio.com)', 'A GitHub account (free at github.com)', 'About 5 minutes'] },
+          { type: 'heading', level: 'h3', content: 'Installation Steps' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Open VS Code Extensions', content: 'Click the Extensions icon in the left sidebar (looks like four squares), or press Ctrl+Shift+X (Windows) / Cmd+Shift+X (Mac)' },
+            { number: 2, title: 'Search for GitHub Copilot', content: 'Type "GitHub Copilot" in the search box and click the first result from GitHub' },
+            { number: 3, title: 'Click Install', content: 'Click the green "Install" button. VS Code will download and install the extension.' },
+            { number: 4, title: 'Sign in with GitHub', content: 'After installation, you\'ll be prompted to sign in. Click "Sign in with GitHub" and authorize Copilot to use your account.' },
+            { number: 5, title: 'You\'re Ready!', content: 'Once signed in, you\'ll see a small Copilot icon in VS Code. You\'re now ready to use AI-powered code suggestions!' }
+          ] },
+          { type: 'image', alt: 'GitHub Copilot extension in VS Code marketplace with Install button visible' },
+          { type: 'callout', calloutType: 'info', title: 'About Copilot+', content: 'GitHub Copilot offers a free trial (60 minutes per month). After the trial, it\'s $10/month or $100/year. Individual plans are available—check github.com/copilot/plans for current pricing.' }
+        ]
+      },
+      {
+        id: 'lesson-2',
+        title: 'Your First Code Suggestion',
+        duration: 2,
+        order: 2,
+        module: 'setup',
+        sections: [
+          { type: 'intro', content: 'Experience the magic of AI-powered code completions. Get your first suggestion in just a few seconds.', icon: 'code' },
+          { type: 'text', content: 'GitHub Copilot learns from what you\'re typing and suggests complete code in real-time. It works best when you give it context—add a comment describing what you want to do.' },
+          { type: 'heading', level: 'h3', content: 'Your First AI Suggestion' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Create a New File', content: 'In VS Code, click File > New File, or press Ctrl+N (Windows) / Cmd+N (Mac)' },
+            { number: 2, title: 'Save as HTML', content: 'Save the file as "index.html" (press Ctrl+S / Cmd+S, type the name, and hit Enter)' },
+            { number: 3, title: 'Start with a Comment', content: 'Type this comment: // basic HTML page for a design portfolio' },
+            { number: 4, title: 'Press Enter and Wait', content: 'Move to the next line. Copilot will automatically suggest HTML code. You should see gray suggestion text appear.' },
+            { number: 5, title: 'Accept the Suggestion', content: 'Press Tab to accept the suggestion, or press Escape to reject it. Try a few suggestions to see what Copilot offers!' }
+          ] },
+          { type: 'image', alt: 'VS Code editor showing Copilot suggestion for HTML page structure in gray text' },
+          { type: 'callout', calloutType: 'tip', title: 'Pro Tip: Better Comments = Better Suggestions', content: 'Copilot works best with clear, descriptive comments. Instead of "make a button," try "create a blue call-to-action button with hover effect." The more detail you provide, the better Copilot\'s suggestions.' }
+        ]
+      },
+      {
+        id: 'lesson-3',
+        title: 'Workspace Setup for Designers',
+        duration: 2,
+        order: 3,
+        module: 'setup',
+        sections: [
+          { type: 'intro', content: 'Configure Copilot for your design workflow. Learn settings and shortcuts that make coding faster.', icon: 'cog' },
+          { type: 'text', content: 'Every designer codes differently. Let\'s customize VS Code and Copilot to match how you work. We\'ll enable keyboard shortcuts and adjust settings for comfort.' },
+          { type: 'heading', level: 'h3', content: 'Essential Settings' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Open Settings', content: 'Click File > Preferences > Settings (or Ctrl+, / Cmd+,)' },
+            { number: 2, title: 'Search for Copilot', content: 'Type "copilot" in the settings search box' },
+            { number: 3, title: 'Enable Inline Suggestions', content: 'Make sure "Copilot: Inline Suggest: Enabled" is checked. This shows gray suggestions as you type.' },
+            { number: 4, title: 'Customize Auto-suggestions', content: 'Look for "Copilot: Auto Suggest" and set it to your preference (on, off, or only on demand)' },
+            { number: 5, title: 'Save and Restart', content: 'Settings save automatically. Restart VS Code for all changes to take effect.' }
+          ] },
+          { type: 'code', language: 'json', label: 'Recommended VS Code Settings', code: '{\n  "github.copilot.enable": {\n    "*": true,\n    "plaintext": false,\n    "markdown": false\n  },\n  "editor.inlineSuggest.enabled": true,\n  "editor.inlineSuggest.suppressSuggestions": false,\n  "editor.tabCompletion": "on"\n}' },
+          { type: 'heading', level: 'h3', content: 'Key Keyboard Shortcuts' },
+          { type: 'list', items: ['Tab = Accept suggestion', 'Escape = Reject suggestion', 'Alt+[ = See previous suggestion', 'Alt+] = See next suggestion', 'Ctrl+Enter / Cmd+Enter = Open Copilot Chat (quick explanations)'] },
+          { type: 'callout', calloutType: 'warning', title: 'Privacy Tip', content: 'GitHub Copilot uses your code to improve suggestions. If you work on sensitive projects, you can disable Copilot for those files by adding them to .copilotignore in your project folder.' }
+        ]
+      },
+      {
+        id: 'lesson-4',
+        title: 'Autocomplete & Code Completions',
+        duration: 2,
+        order: 4,
+        module: 'features',
+        sections: [
+          { type: 'intro', content: 'Master inline code completions. Let Copilot finish your code while you keep typing.', icon: 'code' },
+          { type: 'text', content: 'Autocomplete is Copilot\'s superpower. As you type HTML, CSS, or JavaScript, Copilot predicts what comes next and suggests it in gray. You can accept it (Tab), skip it (Escape), or keep typing to see other suggestions.' },
+          { type: 'heading', level: 'h3', content: 'How Autocomplete Works' },
+          { type: 'text', content: 'Copilot watches for patterns and context clues: your file type, existing code, comments, and even variable names. The more context you give it, the smarter its suggestions.' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Write Clear Comments', content: 'Start with a comment describing what you want to build, like "// responsive navigation bar with hover effects"' },
+            { number: 2, title: 'Start the Code', content: 'Type the opening tag or function name: <nav class="navbar">' },
+            { number: 3, title: 'Let Copilot Complete It', content: 'Wait a moment. Copilot will suggest the full structure. Use Tab to accept or cycle through suggestions with Alt+]' },
+            { number: 4, title: 'Refine If Needed', content: 'If a suggestion isn\'t perfect, edit it. Copilot learns from your edits and improves next time.' }
+          ] },
+          { type: 'code', language: 'html', label: 'Example: Copilot Completing a Hero Section', code: '<!-- hero section with background image and centered text -->\n<section class="hero">\n  <div class="hero-content">\n    <h1>Welcome to My Design Portfolio</h1>\n    <p>Explore my latest projects and design work</p>\n    <button class="cta-button">View My Work</button>\n  </div>\n</section>' },
+          { type: 'image', alt: 'VS Code showing autocomplete suggestion for CSS grid layout styling' },
+          { type: 'callout', calloutType: 'success', title: 'Designer Win', content: 'This is huge for prototyping. You describe your design in comments, and Copilot builds the HTML/CSS. From design sketch to code in minutes!' }
+        ]
+      },
+      {
+        id: 'lesson-5',
+        title: 'Chat for Design Questions',
+        duration: 2,
+        order: 5,
+        module: 'features',
+        sections: [
+          { type: 'intro', content: 'Ask Copilot questions about code and design. Get instant explanations and suggestions.', icon: 'info' },
+          { type: 'text', content: 'Copilot Chat is like having a developer in your editor. When you see code you don\'t understand, or need advice on implementation, open Chat and ask. Copilot will explain code, answer questions, and help you learn.' },
+          { type: 'heading', level: 'h3', content: 'Opening Copilot Chat' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Open the Chat Panel', content: 'Press Ctrl+Alt+I (Windows) or Cmd+Alt+I (Mac), or click the Copilot icon in the top-right corner of the editor' },
+            { number: 2, title: 'Ask Your Question', content: 'Type your question in the chat box at the bottom. Examples: "Explain this CSS Grid code" or "How do I make this button accessible?"' },
+            { number: 3, title: 'Get Instant Help', content: 'Copilot responds with an explanation, code snippet, or suggestion. You can ask follow-up questions in the same chat.' }
+          ] },
+          { type: 'heading', level: 'h3', content: 'Great Questions to Ask as a Designer' },
+          { type: 'list', items: [
+            'What does this JavaScript code do?',
+            'How do I create a responsive layout with Flexbox?',
+            'Explain this CSS animation',
+            'What\'s the difference between CSS Grid and Flexbox?',
+            'How can I make this more accessible to screen readers?',
+            'Generate a form with proper validation'
+          ] },
+          { type: 'image', alt: 'GitHub Copilot Chat interface showing question about flexbox responsive design' },
+          { type: 'callout', calloutType: 'tip', title: 'Chat Tips for Designers', content: 'Copilot Chat is perfect for learning. You can ask "why" questions, request code explanations, or ask how to implement specific design patterns. It\'s like having a patient developer to teach you!' }
+        ]
+      },
+      {
+        id: 'lesson-6',
+        title: 'Inline Code Explanations',
+        duration: 2,
+        order: 6,
+        module: 'features',
+        sections: [
+          { type: 'intro', content: 'Understand developer code instantly. Ask Copilot to explain what code does.', icon: 'monitor' },
+          { type: 'text', content: 'When reviewing code from developers or looking at examples, sometimes the code is confusing. Copilot can break it down into simple terms, perfect for designers who need to understand what developers are building.' },
+          { type: 'heading', level: 'h3', content: 'How to Get Explanations' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Highlight the Code', content: 'Select (highlight) the code you don\'t understand' },
+            { number: 2, title: 'Right-Click and Explain', content: 'Right-click on the selection and look for "Copilot: Explain This" option' },
+            { number: 3, title: 'Read the Explanation', content: 'Copilot will break down what the code does in simple language, line by line' },
+            { number: 4, title: 'Ask Follow-ups', content: 'If you still have questions, ask them in Copilot Chat (Ctrl+Alt+I / Cmd+Alt+I)' }
+          ] },
+          { type: 'code', language: 'javascript', label: 'Example Code That Needs Explanation', code: 'const handleFormSubmit = (e) => {\n  e.preventDefault();\n  const formData = new FormData(e.target);\n  const data = Object.fromEntries(formData);\n  fetch(\'/api/submit\', {\n    method: \'POST\',\n    headers: { \'Content-Type\': \'application/json\' },\n    body: JSON.stringify(data)\n  });\n};' },
+          { type: 'image', alt: 'VS Code showing Copilot explanation of JavaScript function alongside the code' },
+          { type: 'heading', level: 'h3', content: 'Why This Matters for Designer-Developer Collaboration' },
+          { type: 'text', content: 'Understanding what code does helps you make better design decisions. You\'ll know what\'s possible to build, what might take longer, and how to communicate with developers about implementation.' },
+          { type: 'callout', calloutType: 'success', title: 'Skill Building', content: 'Every time you ask Copilot to explain code, you\'re learning. Over time, you\'ll understand more code patterns and be able to collaborate more effectively with developers.' }
+        ]
+      },
+      {
+        id: 'lesson-7',
+        title: 'From Design to Interactive Prototype',
+        duration: 2,
+        order: 7,
+        module: 'prototyping',
+        sections: [
+          { type: 'intro', content: 'Turn your Figma designs into clickable HTML/CSS prototypes. Learn the design-to-code workflow.', icon: 'download' },
+          { type: 'text', content: 'This is the magic moment: you can now build interactive prototypes in minutes instead of hours. Using Copilot, you\'ll describe your design in code comments, and Copilot will generate the HTML/CSS to match.' },
+          { type: 'heading', level: 'h3', content: 'The Designer-Friendly Workflow' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Create Your Design Brief', content: 'In VS Code, create a new HTML file. Add a detailed comment describing your design, including layout, colors, typography, and interactive elements.' },
+            { number: 2, title: 'Let Copilot Generate HTML', content: 'Copilot will suggest semantic HTML. Review and refine it if needed. Accept with Tab and keep iterating.' },
+            { number: 3, title: 'Add Your Styles', content: 'In a <style> tag or CSS file, add comments describing your design aesthetics: colors, spacing, fonts. Let Copilot generate CSS.' },
+            { number: 4, title: 'Create Interactions', content: 'Use Copilot Chat to generate JavaScript for buttons, forms, animations, and hover effects.' },
+            { number: 5, title: 'Test in Browser', content: 'Open your HTML file in a browser and test the prototype. Make adjustments to match your design.' }
+          ] },
+          { type: 'code', language: 'html', label: 'Design Brief as a Comment', code: '<!--\n  Hero section design:\n  - Full-width background with gradient (purple to blue)\n  - Centered headline and tagline\n  - Two buttons: primary (solid blue) and secondary (outline)\n  - Mobile: single column, buttons stack vertically\n  - Desktop: side-by-side buttons\n-->\n\n<section class="hero">\n  <!-- Copilot will complete this based on the brief -->\n</section>' },
+          { type: 'image', alt: 'Split-screen showing Figma design on left and VS Code prototype on right matching the design' },
+          { type: 'callout', calloutType: 'success', title: 'Game Changer for Design', content: 'You\'re no longer waiting for developers to build your prototypes. You can iterate faster, test interactions yourself, and come to developers with working code that matches your vision.' }
+        ]
+      },
+      {
+        id: 'lesson-8',
+        title: 'Building Responsive & Interactive Layouts',
+        duration: 2,
+        order: 8,
+        module: 'prototyping',
+        sections: [
+          { type: 'intro', content: 'Create responsive designs that work on phones, tablets, and desktops. Add animations and interactions.', icon: 'monitor' },
+          { type: 'text', content: 'Great designs work everywhere. Copilot can help you build responsive layouts with Flexbox and CSS Grid, plus smooth animations that impress stakeholders.' },
+          { type: 'heading', level: 'h3', content: 'Responsive Design with Copilot' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Start with Mobile First', content: 'Design the mobile layout first. Use comments: "Mobile layout: single column, stacked cards, full width"' },
+            { number: 2, title: 'Add Media Queries', content: 'In your CSS, add comments for each breakpoint: "Tablet (768px): two-column layout" and "Desktop (1024px): three-column grid"' },
+            { number: 3, title: 'Use Flexbox or Grid', content: 'Copilot will suggest modern CSS layouts. Don\'t worry about browser compatibility—modern browsers support both!' },
+            { number: 4, title: 'Add Animations', content: 'Use Copilot Chat: ask for CSS animations (fade in, slide up, bounce) or JavaScript for interactive effects.' }
+          ] },
+          { type: 'code', language: 'css', label: 'Responsive Layout with Copilot Help', code: '/* Mobile: single column */\n.card-grid {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n}\n\n/* Tablet: 2 columns */\n@media (min-width: 768px) {\n  .card-grid {\n    grid-template-columns: repeat(2, 1fr);\n  }\n}\n\n/* Desktop: 3 columns */\n@media (min-width: 1024px) {\n  .card-grid {\n    grid-template-columns: repeat(3, 1fr);\n  }\n}' },
+          { type: 'image', alt: 'Three browser windows showing the same design responsive on mobile, tablet, and desktop' },
+          { type: 'heading', level: 'h3', content: 'Popular Interactions to Try' },
+          { type: 'list', items: [
+            'Hover effects: color change, shadow, scale transform',
+            'Smooth scroll behavior',
+            'CSS animations: fade in, slide from left, bounce',
+            'JavaScript: dropdown menus, modal dialogs, tabs',
+            'Form validation with real-time feedback'
+          ] },
+          { type: 'callout', calloutType: 'tip', title: 'Testing Your Prototype', content: 'Use a free tool like Vercel, Netlify, or GitHub Pages to share your prototype online. Get feedback from stakeholders and team members before handing off to developers!' }
+        ]
+      },
+      {
+        id: 'lesson-9',
+        title: 'Reviewing Developer Code',
+        duration: 2,
+        order: 9,
+        module: 'collaboration',
+        sections: [
+          { type: 'intro', content: 'Understand what developers built. Review pull requests and code with confidence.', icon: 'github' },
+          { type: 'text', content: 'When developers implement your designs, they might add features, fix bugs, or optimize code. Copilot helps you understand their changes and provide thoughtful feedback.' },
+          { type: 'heading', level: 'h3', content: 'How to Review Code' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Read the PR Description', content: 'Developers will explain what changed. Read this first to understand the "why."' },
+            { number: 2, title: 'Look at the Changes', content: 'GitHub shows green (added) and red (removed) lines. Scan for anything that looks off.' },
+            { number: 3, title: 'Use Copilot to Understand', content: 'Highlight confusing code and right-click to "Explain This." Copilot breaks it down in simple language.' },
+            { number: 4, title: 'Ask Smart Questions', content: 'Use Copilot Chat to generate thoughtful questions: "Will this animation work on older phones?" or "How does this form validation work?"' },
+            { number: 5, title: 'Leave Feedback', content: 'Comment on the PR with specific feedback. Developers appreciate designers who understand the code!' }
+          ] },
+          { type: 'heading', level: 'h3', content: 'Questions to Ask During Code Review' },
+          { type: 'list', items: [
+            'Does this match the design I provided?',
+            'Will this animation work on slow networks?',
+            'How does this handle mobile screens?',
+            'Is this accessible to screen readers?',
+            'What happens if a user clicks this quickly twice?'
+          ] },
+          { type: 'image', alt: 'GitHub pull request review screen showing code changes with Copilot Chat open' },
+          { type: 'callout', calloutType: 'success', title: 'Level Up Your Collaboration', content: 'Developers will respect you more when you understand their code. You\'ll spot bugs earlier, prevent rework, and build trust as a collaborative partner.' }
+        ]
+      },
+      {
+        id: 'lesson-10',
+        title: 'Communicating with Your Dev Team',
+        duration: 2,
+        order: 10,
+        module: 'collaboration',
+        sections: [
+          { type: 'intro', content: 'Speak the developer\'s language. Share ideas, specs, and feedback clearly using code.', icon: 'user' },
+          { type: 'text', content: 'The best designer-developer partnerships have clear communication. Copilot helps you write specs, generate code examples, and explain what you want built—in their language.' },
+          { type: 'heading', level: 'h3', content: 'Using Code in Your Specs' },
+          { type: 'steps', steps: [
+            { number: 1, title: 'Write Clear Requirements', content: 'Instead of "make it look better," write: "Add 1rem padding inside the button and change the background color to #0066FF"' },
+            { number: 2, title: 'Include Code Snippets', content: 'Use Copilot Chat to generate example code of what you want. Example: "Generate a loading spinner with a pulsing animation"' },
+            { number: 3, title: 'Show Before & After', content: 'Create quick prototypes in CodePen or Figma that show the current state and desired state' },
+            { number: 4, title: 'Document Edge Cases', content: 'Think through mobile, loading states, errors, and accessibility. Share these with developers upfront.' }
+          ] },
+          { type: 'code', language: 'markdown', label: 'Design Spec with Code Examples', code: '# Button Component Specification\n\n## States\n- **Default**: Blue background, white text, 1rem padding\n- **Hover**: Darker blue background, slight shadow\n- **Active**: Even darker, scale down slightly (0.98)\n- **Disabled**: Gray background, 50% opacity\n\n## Accessibility\n- Focus state: 2px outline with 2px offset\n- Minimum touch target: 44x44px\n- Color contrast: 4.5:1 or higher\n\n## Code Example\n```css\n.button {\n  background: #0066FF;\n  color: white;\n  padding: 1rem 1.5rem;\n  border-radius: 0.5rem;\n  transition: all 0.2s ease;\n}\n```' },
+          { type: 'image', alt: 'Slack message from designer sharing design spec with code examples and screenshots' },
+          { type: 'heading', level: 'h3', content: 'After Building: What You\'ve Accomplished' },
+          { type: 'completion', title: 'Congratulations!', items: [
+            'You can install and configure GitHub Copilot',
+            'You understand how AI code suggestions work',
+            'You can write comments that generate good code',
+            'You can ask Copilot questions and learn from answers',
+            'You can build interactive prototypes independently',
+            'You can review developer code with confidence',
+            'You can communicate clearly with your dev team',
+            'You\'re ready to speed up your design-to-code workflow!'
+          ], message: 'You\'ve completed the GitHub Copilot guide for designers! You now have the skills to code prototypes, understand developer work, and collaborate more effectively with your team. Keep practicing and you\'ll be amazed at how much faster you can work.' }
+        ]
+      }
     ],
-    content: '<h2>GitHub Copilot Learning Path</h2><p>Become proficient with GitHub Copilot, your AI pair programmer. Master code suggestions and AI-assisted development.</p>',
-    relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
+    content: `
+      <div class="space-y-12">
+        <!-- Hero Section -->
+        <section class="mb-12">
+          <h2 class="text-3xl font-bold mb-4">Master GitHub Copilot for Design & Prototyping</h2>
+          <p class="text-xl text-gray-600 mb-6">
+            Learn to code prototypes, understand developer code, and collaborate with your team like never before.
+            Whether you're a designer who codes or learning to code for the first time, Copilot makes it possible.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h3 class="font-bold text-lg mb-2">✨ 10 Lessons</h3>
+              <p>From setup to collaboration, all in about 18 minutes</p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h3 class="font-bold text-lg mb-2">🎯 Beginner-Friendly</h3>
+              <p>No coding experience needed. Learn at your own pace</p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h3 class="font-bold text-lg mb-2">🚀 Practical Skills</h3>
+              <p>Build prototypes, review code, and work better with devs</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Module Breakdown -->
+        <section class="mb-12">
+          <h3 class="text-2xl font-bold mb-8">What You'll Learn</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Module 1 -->
+            <div class="border-l-4 border-blue-500 pl-6 py-4">
+              <h4 class="text-xl font-bold mb-3">📦 Module 1: Setup & Installation (6 min)</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 1: Install GitHub Copilot</span></li>
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 2: Your First Code Suggestion</span></li>
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 3: Workspace Setup for Designers</span></li>
+              </ul>
+            </div>
+
+            <!-- Module 2 -->
+            <div class="border-l-4 border-green-500 pl-6 py-4">
+              <h4 class="text-xl font-bold mb-3">⚙️ Module 2: Core Features (6 min)</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 4: Autocomplete & Code Completions</span></li>
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 5: Chat for Design Questions</span></li>
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 6: Inline Code Explanations</span></li>
+              </ul>
+            </div>
+
+            <!-- Module 3 -->
+            <div class="border-l-4 border-purple-500 pl-6 py-4">
+              <h4 class="text-xl font-bold mb-3">🎨 Module 3: Prototyping Workflows (4 min)</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 7: From Design to Interactive Prototype</span></li>
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 8: Building Responsive & Interactive Layouts</span></li>
+              </ul>
+            </div>
+
+            <!-- Module 4 -->
+            <div class="border-l-4 border-orange-500 pl-6 py-4">
+              <h4 class="text-xl font-bold mb-3">🤝 Module 4: Developer Collaboration (2 min)</h4>
+              <ul class="space-y-2 text-gray-700">
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 9: Reviewing Developer Code</span></li>
+                <li class="flex items-start"><span class="mr-3">→</span> <span>Lesson 10: Communicating with Your Dev Team</span></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Why Designers Need This -->
+        <section class="mb-12 bg-gray-50 p-8 rounded-lg">
+          <h3 class="text-2xl font-bold mb-6">Why This Matters for Designers</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 class="font-bold text-lg mb-2">🚀 Build Prototypes in Minutes</h4>
+              <p class="text-gray-700">Stop waiting for developers. Create clickable, interactive prototypes yourself. Test ideas faster and iterate based on real feedback.</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg mb-2">💬 Speak the Developer Language</h4>
+              <p class="text-gray-700">Understand what developers build. Review code, ask smart questions, and collaborate as true partners—not just handoff specialists.</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg mb-2">✨ Better Design Decisions</h4>
+              <p class="text-gray-700">Know what's possible to build, what takes effort, and how to design for implementation. Make smarter choices upfront.</p>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg mb-2">🎯 Stand Out in Your Role</h4>
+              <p class="text-gray-700">Design + coding skills make you invaluable. From UX design to technical design, these skills open doors to career growth.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Getting Started -->
+        <section class="mb-12">
+          <h3 class="text-2xl font-bold mb-6">Ready to Get Started?</h3>
+          <p class="text-lg text-gray-700 mb-6">
+            You'll need VS Code installed (free at code.visualstudio.com). GitHub Copilot offers a free trial with 60 minutes per month of AI assistance.
+            That's enough to get started and see the value before deciding to upgrade.
+          </p>
+          <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded">
+            <p class="font-bold mb-2">💡 Pro Tip</p>
+            <p class="text-gray-700">Start with Lesson 1. You'll have Copilot installed and working within 5 minutes. Then jump into Lesson 2 to see your first AI suggestion in action!</p>
+          </div>
+        </section>
+      </div>
+    `,
+    relatedPatterns: ['Contextual Assistance', 'Augmented Creation', 'Guided Learning'],
   },
   {
     id: 'replit-course',

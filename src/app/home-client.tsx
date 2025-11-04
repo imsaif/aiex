@@ -190,11 +190,11 @@ export default function HomeClient() {
                       </div>
 
                       {/* Used By Logos Section */}
-                      {getProductsForPattern(pattern).filter(hasProductLogo).length > 0 && (
+                      {getProductsForPattern(pattern).filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 0 && (
                         <div className="flex items-center gap-3">
                           <span className="text-xs text-text-secondary font-medium">Used by:</span>
                           <div className="flex items-center gap-2">
-                            {getProductsForPattern(pattern).slice(0, 3).map((product) => {
+                            {getProductsForPattern(pattern).filter(p => p !== 'Superhuman').slice(0, 3).map((product) => {
                               const logoUrl = getProductLogoUrl(product);
                               const hasLogo = hasProductLogo(product);
 
@@ -236,9 +236,9 @@ export default function HomeClient() {
                                 </div>
                               );
                             })}
-                            {getProductsForPattern(pattern).filter(hasProductLogo).length > 3 && (
+                            {getProductsForPattern(pattern).filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 3 && (
                               <span className="text-xs text-text-secondary font-medium">
-                                +{getProductsForPattern(pattern).filter(hasProductLogo).length - 3}
+                                +{getProductsForPattern(pattern).filter(p => p !== 'Superhuman' && hasProductLogo(p)).length - 3}
                               </span>
                             )}
                           </div>

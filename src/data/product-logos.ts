@@ -31,7 +31,7 @@ export const productLogos: Record<string, string> = {
 
   // AI & Productivity Tools (newly added)
   Loom: 'loom',
-  Superhuman: '/images/logos/superhuman.svg', // Local SVG
+  Superhuman: '/images/logos/superhumanlogo.png', // Local PNG
   Grammarly: 'grammarly',
   Perplexity: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/perplexity.svg',
   Midjourney: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Midjourney_Emblem.svg', // Official Wikimedia Commons

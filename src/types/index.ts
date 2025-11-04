@@ -227,6 +227,12 @@ export interface Course {
 }
 
 /**
+ * Guide tool types for organizing guides
+ */
+export type GuideTool = 'Claude Code' | 'Cursor' | 'GitHub' | 'GitHub Copilot' | 'Replit AI' | 'V0 by Vercel' | 'Figma' | 'Other';
+export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
+
+/**
  * Represents a designer guide for using AI tools (legacy - kept for backward compatibility)
  */
 export interface Guide {
@@ -238,7 +244,7 @@ export interface Guide {
   excerpt?: string;
 
   // Categorization and metadata
-  tool: 'Claude Code' | 'Cursor' | 'GitHub' | 'Figma' | 'Other';
+  tool: GuideTool;
   useCase: string; // e.g., "Prototyping", "Design Systems", "Collaboration"
   skillLevel: 'Beginner' | 'Intermediate' | 'Advanced';
   designDomain: string; // e.g., "UX Design", "UI Design", "Product Design"
@@ -265,12 +271,6 @@ export interface Guide {
   relatedPatterns?: string[]; // Pattern slugs
   relatedGuides?: string[]; // Guide slugs
 }
-
-/**
- * Guide category for organizing guides
- */
-export type GuideTool = 'Claude Code' | 'Cursor' | 'GitHub' | 'GitHub Copilot' | 'Replit AI' | 'V0 by Vercel' | 'Figma' | 'Other';
-export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
 /**
  * Utility type for guide filtering and searching

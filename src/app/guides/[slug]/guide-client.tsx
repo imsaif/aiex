@@ -139,48 +139,78 @@ export default function GuideClient({
 
           {/* Lessons Section - Modular Structure */}
           {hasLessons && guide.lessons && (() => {
-            const modules = [
-              {
-                id: 'setup',
+            // Map module IDs to their display titles, descriptions, and icons
+            const moduleConfig: Record<string, { title: string; description: string; icon: string }> = {
+              setup: {
                 title: 'Setup',
                 description: 'Get started and set up your environment',
+                icon: 'cog',
               },
-              {
-                id: 'prototype',
+              features: {
+                title: 'Core Features',
+                description: 'Master the main features and capabilities',
+                icon: 'code',
+              },
+              prototype: {
                 title: 'Prototype',
                 description: 'Build and test your first project',
+                icon: 'monitor',
               },
-              {
-                id: 'github',
+              prototyping: {
+                title: 'Prototyping Workflows',
+                description: 'Create interactive prototypes and designs',
+                icon: 'download',
+              },
+              collaboration: {
+                title: 'Developer Collaboration',
+                description: 'Work effectively with your development team',
+                icon: 'user',
+              },
+              github: {
                 title: 'GitHub',
                 description: 'Manage your projects with version control',
+                icon: 'github',
               },
-              {
-                id: 'practices',
+              practices: {
                 title: 'Best Practices',
                 description: 'Learn industry standards and patterns',
+                icon: 'check',
               },
-            ];
+            };
+
+            // Extract unique module IDs from lessons in order of appearance
+            const moduleIds = Array.from(
+              new Map(
+                guide.lessons!.map((lesson) => [lesson.module || 'uncategorized', lesson.module || 'uncategorized'])
+              ).values()
+            );
 
             let lessonNumber = 1;
 
             return (
               <section className="mb-12 pb-12 border-b border-gray-300 space-y-6">
-                {modules.map((module) => {
+                {moduleIds.map((moduleId) => {
                   const moduleLessons = guide.lessons!.filter(
-                    (lesson) => lesson.module === module.id
+                    (lesson) => lesson.module === moduleId
                   );
 
                   if (moduleLessons.length === 0) return null;
+
+                  const config = moduleConfig[moduleId] || {
+                    title: moduleId.charAt(0).toUpperCase() + moduleId.slice(1),
+                    description: 'Learn more about this module',
+                    icon: 'code',
+                  };
 
                   const moduleStartLessonNumber = lessonNumber;
                   lessonNumber += moduleLessons.length;
 
                   return (
                     <ModuleSection
-                      key={module.id}
-                      moduleTitle={module.title}
-                      moduleDescription={module.description}
+                      key={moduleId}
+                      moduleTitle={config.title}
+                      moduleDescription={config.description}
+                      moduleIcon={config.icon}
                       lessons={moduleLessons}
                       startLessonNumber={moduleStartLessonNumber}
                       guideId={guide.id}
