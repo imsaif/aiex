@@ -47,7 +47,7 @@ export default function HomeClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="py-12 md:py-16">
+      <section className="pt-20 md:pt-24 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}

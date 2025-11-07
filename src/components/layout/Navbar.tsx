@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Squares2X2Icon, BookOpenIcon } from '@heroicons/react/24/outline';
+import { Squares2X2Icon, BookOpenIcon, PlayIcon } from '@heroicons/react/24/outline';
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -48,6 +48,13 @@ const Navbar = () => {
             >
               <BookOpenIcon className="w-5 h-5" />
               <span className="hidden sm:inline text-sm font-medium">Guides</span>
+            </Link>
+            <Link
+              href="/simulator"
+              className="flex items-center gap-2 px-3 py-2 text-text-primary hover:text-accent-primary transition-colors duration-200 rounded-lg hover:bg-accent-subtle"
+            >
+              <PlayIcon className="w-5 h-5" />
+              <span className="hidden sm:inline text-sm font-medium">Simulator</span>
             </Link>
           </div>
         </div>

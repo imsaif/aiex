@@ -94,7 +94,7 @@ export default function GuidesClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="py-12 md:py-16">
+      <section className="pt-20 md:pt-24 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
@@ -106,10 +106,10 @@ export default function GuidesClient() {
 
             {/* Heading */}
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Learn to Design with AI Tools
+              Master AI Design Tools
             </h1>
             <p className="text-lg md:text-xl text-text-secondary mb-8">
-              Master AI-powered design tools with practical, comprehensive learning paths. Discover how to leverage AI to enhance your design workflow and create better products.
+              Practical tutorials. Complete learning paths.
             </p>
 
             {/* Search Bar */}
