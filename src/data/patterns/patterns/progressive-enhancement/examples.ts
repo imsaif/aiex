@@ -4,14 +4,14 @@ export const examples: Example[] = [
   {
     title: "Claude Streaming Responses",
     description: "Starts displaying AI responses immediately as they're generated, progressively building complete answers while users can read early content without waiting.",
-    image: "/images/examples/claude-streaming.gif",
+    image: "/images/examples/claudeprogressiveenhancement.gif",
     altText: "Claude progressively streaming responses"
   },
   {
-    title: "Google Bard Quick Answers",
-    description: "Provides instant basic answers first, then progressively enhances with detailed explanations, sources, and related information as computation completes.",
-    image: "/images/examples/bard-progressive.gif",
-    altText: "Google Bard showing progressive enhancement"
+    title: "Perplexity Progressive Attribution",
+    description: "Shows instant search results first, then progressively loads citations and sources, giving users quick answers while detailed information continues to enhance the response.",
+    image: "/images/examples/perplexity-attribution.gif",
+    altText: "Perplexity progressively loading sources and attribution"
   },
   {
     title: "Dall-E Progressive Rendering",

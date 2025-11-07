@@ -320,6 +320,19 @@ const PrivacyFirstDesignDemo = dynamic(
   }
 );
 
+// Dynamically import the ProgressiveEnhancementDemo component
+const ProgressiveEnhancementDemo = dynamic(
+  () => import('@/components/examples/ProgressiveEnhancementDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -395,6 +408,8 @@ export default function CodeExampleBlock({
         return <IntelligentCachingDemo />;
       case 'privacy-first-design-demo':
         return <PrivacyFirstDesignDemo />;
+      case 'progressive-enhancement-demo':
+        return <ProgressiveEnhancementDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">
@@ -487,7 +502,7 @@ export default function CodeExampleBlock({
               ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo'].includes(componentId)
                 ? 'max-w-6xl'
                 // Components that need large width (max-w-4xl)
-                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo'].includes(componentId)
+                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo'].includes(componentId)
                 ? 'max-w-4xl'
                 // Default to medium width for smaller components
                 : 'max-w-lg'
