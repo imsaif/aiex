@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { codeExamples } from './code-examples';
+import { figmaPrompt } from './figma-prompt';
 
 export const privacyfirstdesign: Pattern = {
   id: "privacy-first-design",
@@ -24,6 +25,7 @@ export const privacyfirstdesign: Pattern = {
       "Explainable AI",
       "Responsible AI Design"
     ],
-    codeExamples
+    codeExamples,
+    figmaPrompt
   }
 };
