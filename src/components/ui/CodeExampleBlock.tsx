@@ -333,6 +333,19 @@ const ProgressiveEnhancementDemo = dynamic(
   }
 );
 
+// Dynamically import the UniversalAccessDemo component
+const UniversalAccessDemo = dynamic(
+  () => import('@/components/examples/UniversalAccessDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -410,6 +423,8 @@ export default function CodeExampleBlock({
         return <PrivacyFirstDesignDemo />;
       case 'progressive-enhancement-demo':
         return <ProgressiveEnhancementDemo />;
+      case 'universal-access-patterns-demo':
+        return <UniversalAccessDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">

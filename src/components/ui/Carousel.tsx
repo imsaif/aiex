@@ -23,11 +23,11 @@ export default function Carousel({ examples }: { examples: Example[] }) {
         {/* Left side: Image with navigation (takes 7/10 width on desktop) */}
         <div className="md:col-span-7 relative">
           {example.image && (
-            <div className={example.image.includes('claude-feedback.gif') || example.image.includes('chatgpt-feedback.gif') ? "w-full min-h-64 md:min-h-[30rem] bg-gray-50 p-2" : "w-full h-64 md:h-[30rem] bg-gray-50 p-2"}>
+            <div className={example.image.includes('claude-feedback.gif') || example.image.includes('chatgpt-feedback.gif') || example.image.includes('bemyeyes') ? "w-full min-h-64 md:min-h-[30rem] bg-gray-50 p-2" : "w-full h-64 md:h-[30rem] bg-gray-50 p-2"}>
               <OptimizedMedia
                 src={example.image}
                 alt={example.title}
-                className={example.image.includes('claude-feedback.gif') || example.image.includes('chatgpt-feedback.gif') ? "w-full" : "w-full h-full"}
+                className={example.image.includes('claude-feedback.gif') || example.image.includes('chatgpt-feedback.gif') || example.image.includes('bemyeyes') ? "w-full" : "w-full h-full"}
                 width={800}
                 height={600}
                 priority={current === 0} // Only prioritize the first image

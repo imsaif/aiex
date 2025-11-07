@@ -1,12 +1,4 @@
-import { CodeExample } from '../../../../types';
-
-export const codeExamples: CodeExample[] = [
-  {
-    title: "Universal Access AI Interface",
-    description: "A minimal AI assistant that adapts its interface based on user accessibility needs. Switch between interaction modes and languages to see how the UI adapts for universal access.",
-    language: "tsx",
-    componentId: "universal-access-patterns-demo",
-    code: `'use client';
+'use client';
 
 import React, { useState } from 'react';
 
@@ -67,11 +59,11 @@ export default function UniversalAccessDemo() {
         </div>
 
         {/* Message Display */}
-        <div className={\`p-4 rounded-lg \${
+        <div className={`p-4 rounded-lg ${
           mode === 'text' ? 'bg-gray-100 text-base' :
           mode === 'voice' ? 'bg-blue-100 text-sm' :
           'bg-green-100 text-lg font-semibold'
-        }\`}>
+        }`}>
           {mode === 'voice' ? '🔊 ' : ''}{t.prompt}
         </div>
 
@@ -124,6 +116,4 @@ export default function UniversalAccessDemo() {
       </div>
     </div>
   );
-}\``
-  }
-];
+}

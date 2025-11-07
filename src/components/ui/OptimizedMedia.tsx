@@ -79,8 +79,8 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
     setIsLoading(false);
   };
 
-  // Check if this is claude-feedback.gif or chatgpt-feedback.gif to apply special styling
-  const isFeedbackExample = src?.includes('claude-feedback.gif') || src?.includes('chatgpt-feedback.gif');
+  // Check if this is claude-feedback.gif, chatgpt-feedback.gif, or bemyeyes to apply object-contain
+  const isFeedbackExample = src?.includes('claude-feedback.gif') || src?.includes('chatgpt-feedback.gif') || src?.includes('bemyeyes');
   const objectFitClass = isFeedbackExample ? 'object-contain' : 'object-cover';
 
   const imageComponent = (
