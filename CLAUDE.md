@@ -224,6 +224,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-07 21:31 (MacBook)
+- **Pattern:** Guide Content Updates
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Updated guide images and styling. Removed grayscale hover effect from guide card icons in CourseCard to display tool icons in original colors at all times. Added two real guide images: Claude Code API key GIF (lesson-1) and Cursor interface layout PNG (lesson-2), with proper image references in guides.ts. Both guides now display images in their setup sections.
+
 ### Session 2025-11-07 19:59 (MacBook)
 - **Pattern:** Universal Access Patterns
 - **Status:** ✅ Completed
@@ -290,13 +297,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 
 ### Session 2025-11-02 (MacBook)
-- **Pattern:** Border Standardization & Color Migration
-- **Status:** ✅ Completed
-- **Files Changed:** 35
-- **Tests Added/Modified:** 0
-- **Notes:** Completed comprehensive border standardization across entire application. Migrated 20 hardcoded border-blue-500 instances in CodeExampleBlock.tsx to border-accent-primary. Updated 14+ hex color borders in SelectiveMemoryDemo.tsx to Tailwind utilities (gray-900/gray-800). Added custom ESLint rule to prevent future hardcoded border colors. All structural borders now use gray-200/gray-300 design system values consistently across home page, guides page, and detail pages.
-
-### Session 2025-10-30 19:11 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

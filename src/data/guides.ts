@@ -68,6 +68,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
+            src: '/images/guides/claude-code-learning-path/lesson-1/claudeapikey.gif',
             alt: 'Anthropic Console API Key Screenshot',
             label: 'Anthropic Console showing where to create and copy API keys',
           },
@@ -1591,6 +1592,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-2/cursor-interface-layout.png',
             alt: 'Cursor interface layout showing sidebar, editor, chat panel, and terminal areas with labeled annotations',
             label: 'Overview of the main Cursor interface with AI-specific elements highlighted',
           },

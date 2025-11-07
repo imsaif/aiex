@@ -52,7 +52,7 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
         >
           {/* Thumbnail Section */}
           <div className="relative w-full h-40 bg-gradient-to-br from-accent-primary/10 to-accent-primary/5 overflow-hidden flex items-center justify-center group">
-            <div className="grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
+            <div className="transition-transform duration-300">
               {getIcon()}
             </div>
 
