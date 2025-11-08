@@ -21,14 +21,14 @@ function MetricBar({ label, value, max, color }: MetricBarProps) {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-medium text-gray-700">{label}</span>
-        <span className="text-sm font-bold text-gray-900">{Math.round(value)}%</span>
+        <span className="text-xs font-medium text-gray-700">{label}</span>
+        <span className="text-xs font-bold text-gray-900">{Math.round(value)}%</span>
       </div>
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div className="w-full bg-gray-200 rounded-full h-1.5">
         <div
-          className={`h-2 rounded-full ${colorClasses[color]}`}
+          className={`h-1.5 rounded-full ${colorClasses[color]}`}
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -45,10 +45,10 @@ export function ImpactMetrics({ patterns }: ImpactMetricsProps) {
   const insights = getInsights(metrics)
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-      <h3 className="text-lg font-semibold mb-6 text-gray-900">Impact Analysis</h3>
+    <div>
+      <h3 className="text-sm font-semibold mb-4 text-gray-900">Impact Metrics</h3>
 
-      <div className="space-y-6">
+      <div className="space-y-3">
         <MetricBar label="User Trust" value={metrics.trustScore} max={100} color="blue" />
         <MetricBar label="Task Speed" value={100 - metrics.completionTime + 100} max={100} color="green" />
         <MetricBar label="Error Prevention" value={100 - metrics.errorRate} max={100} color="purple" />
@@ -56,11 +56,14 @@ export function ImpactMetrics({ patterns }: ImpactMetricsProps) {
       </div>
 
       {insights.length > 0 && (
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <div className="text-sm font-semibold text-gray-900 mb-3">Key Insights:</div>
-          <ul className="text-sm space-y-2 text-gray-700">
-            {insights.map((insight, i) => (
-              <li key={i}>{insight}</li>
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="text-xs font-semibold text-gray-900 mb-2">Insights:</div>
+          <ul className="text-xs space-y-1 text-gray-600">
+            {insights.slice(0, 2).map((insight, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <span className="text-blue-500 mt-0.5">•</span>
+                <span>{insight}</span>
+              </li>
             ))}
           </ul>
         </div>

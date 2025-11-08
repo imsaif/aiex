@@ -66,7 +66,7 @@ export function SimulatorContainer({
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white text-text-primary">
+    <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
       <div className="pt-20 md:pt-24 pb-12 px-4 sm:px-6 lg:px-8">
@@ -81,10 +81,10 @@ export function SimulatorContainer({
               </div>
             )}
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Explore AI Pattern Impact
+              Test AI Patterns in Real Scenarios
             </h1>
             <p className="text-lg text-gray-600 mx-auto max-w-2xl">
-              See how patterns affect UX. Real-time metrics and insights.
+              Compare patterns side-by-side with live metrics and performance data.
             </p>
           </div>
 
