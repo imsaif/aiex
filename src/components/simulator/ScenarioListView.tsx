@@ -39,11 +39,11 @@ export function ScenarioListView() {
           <div className="mb-12 text-center">
             <div className="mb-4 flex justify-center">
               <span className="inline-block px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
-                {filteredScenarios.length} AI Scenarios
+                {filteredScenarios.length} AI Use Cases
               </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Test AI Patterns in Real Scenarios
+              Test AI Patterns in Real Use Cases
             </h1>
             <p className="text-lg text-gray-600 mx-auto max-w-2xl">
               Compare patterns side-by-side with live metrics and performance data.
@@ -80,7 +80,7 @@ export function ScenarioListView() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-600 mb-4">No scenarios found matching "{searchQuery}"</p>
+              <p className="text-gray-600 mb-4">No use cases found matching "{searchQuery}"</p>
               <button
                 onClick={() => setSearchQuery('')}
                 className="px-6 py-2 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 transition-colors"

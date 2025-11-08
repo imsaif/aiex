@@ -28,15 +28,6 @@ export function PatternControls({
   if (horizontal) {
     return (
       <div className="pr-8">
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-sm font-semibold text-gray-900">Active Patterns</h3>
-          {activeCount > 0 && (
-            <span className="inline-flex items-center justify-center bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
-              {activeCount}
-            </span>
-          )}
-        </div>
-
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {availablePatterns.map((key) => {
             const info = patternInfo[key]
