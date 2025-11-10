@@ -44,7 +44,7 @@ export const productLogos: Record<string, string> = {
   Apple: 'apple',
   Tesla: 'tesla',
   IBM: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg', // Official IBM SVG from Wikimedia
-  AWS: 'amazonaws',
+  AWS: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg', // Official AWS SVG from Wikimedia
   Duolingo: 'duolingo',
   'Be': 'https://upload.wikimedia.org/wikipedia/commons/a/af/Logo_BeMyEyes.svg', // Official Be My Eyes SVG from Wikimedia
   GPTZero: 'https://cdn.simpleicons.org/openai', // GPTZero detection tool
@@ -58,8 +58,8 @@ export function getProductLogoUrl(productName: string): string {
   const slug = productLogos[productName];
   if (!slug) return '';
 
-  // If slug is already a full URL, return it directly
-  if (slug.startsWith('http')) {
+  // If slug is already a full URL or local path, return it directly
+  if (slug.startsWith('http') || slug.startsWith('/')) {
     return slug;
   }
 

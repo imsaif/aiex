@@ -4,6 +4,8 @@
  * Designed for designers who visualize, not read
  */
 
+import { getProductLogoUrl } from '../data/product-logos';
+
 export interface HandbookSection {
   title: string;
   subtitle?: string;
@@ -43,7 +45,13 @@ The best AI help is invisible until needed. Watch for signals. A pause, a mistak
 
 This respects user autonomy and keeps them in flow. Detect the signal, make the suggestion, respect the choice.
 
-**When to Use**
+**Products Doing It Right**
+Gmail Smart Compose • Suggests text when you pause writing
+GitHub Copilot • Suggests code when you pause typing
+Notion AI • Offers help in relevant moments
+
+<div class="when-to-use-section">
+<strong>When to Use</strong>
 <div class="decision-tree simple">
   <div class="tree-check">
     <div class="check-icon">✓</div>
@@ -59,11 +67,7 @@ This respects user autonomy and keeps them in flow. Detect the signal, make the 
   </div>
   <div class="tree-result success">Use this pattern</div>
 </div>
-
-**Products Doing It Right**
-Gmail Smart Compose • Suggests text when you pause writing
-GitHub Copilot • Suggests code when you pause typing
-Notion AI • Offers help in relevant moments
+</div>
 
 **DO ✓ | DON'T ✗**
 Detect signals: pauses, mistakes, searches | "Ask AI" button everywhere
@@ -82,7 +86,12 @@ AI can be wrong. Users forgive wrong answers if they see them coming. Show how s
 
 Users can then decide: Trust it, verify it, or skip it. Different domains need different thresholds. 87% for medical diagnosis? Risky. For detection tasks? Good. Let users see the number and decide.
 
-**When to Use**
+**Products Doing It Right**
+GPTZero • Shows confidence levels with visual gauges for AI detection
+AWS Rekognition • Displays confidence percentages for detected objects and faces
+
+<div class="when-to-use-section">
+<strong>When to Use</strong>
 <div class="decision-tree simple">
   <div class="tree-check">
     <div class="check-icon">✓</div>
@@ -98,10 +107,7 @@ Users can then decide: Trust it, verify it, or skip it. Different domains need d
   </div>
   <div class="tree-result success">Use this pattern</div>
 </div>
-
-**Products Doing It Right**
-GPTZero • Shows confidence levels with visual gauges for AI detection
-AWS Rekognition • Displays confidence percentages for detected objects and faces
+</div>
 
 **DO ✓ | DON'T ✗**
 Show confidence as %, labels, or visuals | Hide uncertainty
@@ -120,7 +126,13 @@ AI will fail. The question is how you handle it. Be honest about what failed. "S
 
 Failures with clear recovery paths actually build trust. ChatGPT's "at capacity" message tells users the system is honest about limits. Silent failures make it seem broken. Show what failed, explain why, and let users choose the next step.
 
-**When to Use**
+**Products Doing It Right**
+ChatGPT • "At capacity" with clear retry options
+Grammarly • Shows explanations + dismissal options
+Google • "Did you mean?" (ask, don't assume)
+
+<div class="when-to-use-section">
+<strong>When to Use</strong>
 <div class="decision-tree simple">
   <div class="tree-check">
     <div class="check-icon">✓</div>
@@ -136,11 +148,7 @@ Failures with clear recovery paths actually build trust. ChatGPT's "at capacity"
   </div>
   <div class="tree-result success">Use this pattern</div>
 </div>
-
-**Products Doing It Right**
-ChatGPT • "At capacity" with clear retry options
-Grammarly • Shows explanations + dismissal options
-Google • "Did you mean?" (ask, don't assume)
+</div>
 
 **DO ✓ | DON'T ✗**
 Be honest about failure | Silent failures
@@ -160,7 +168,13 @@ Users don't hate AI. They hate surprise. Be transparent by default. "We collect 
 
 Apple works because users know data stays on-device. DuckDuckGo works because users know they're not tracked. Transparency builds trust and gives you competitive advantage.
 
-**When to Use**
+**Products Doing It Right**
+Apple • AI runs on-device, not on servers
+DuckDuckGo • Anonymous AI chat (no logs, no profiles)
+Signal • End-to-end encrypted AI features
+
+<div class="when-to-use-section">
+<strong>When to Use</strong>
 <div class="decision-tree simple">
   <div class="tree-check">
     <div class="check-icon">✓</div>
@@ -176,11 +190,7 @@ Apple works because users know data stays on-device. DuckDuckGo works because us
   </div>
   <div class="tree-result success">Use this pattern</div>
 </div>
-
-**Products Doing It Right**
-Apple • AI runs on-device, not on servers
-DuckDuckGo • Anonymous AI chat (no logs, no profiles)
-Signal • End-to-end encrypted AI features
+</div>
 
 **DO ✓ | DON'T ✗**
 Explain what data you collect and why | Vague language ("improve experience")
@@ -201,7 +211,13 @@ Black boxes are untrustworthy. Show users why you made a decision or recommendat
 
 Explainability isn't about showing all 47 factors. It's about highlighting the 2-3 most important ones and showing where information came from. Users trust AI more when they understand it, even if they sometimes disagree.
 
-**When to Use**
+**Products Doing It Right**
+Claude • Shows step-by-step thinking and reasoning for each conclusion
+Perplexity AI • Shows exact sources for verification of information
+Hugging Face • Provides detailed model documentation and capabilities
+
+<div class="when-to-use-section">
+<strong>When to Use</strong>
 <div class="decision-tree simple">
   <div class="tree-check">
     <div class="check-icon">✓</div>
@@ -217,11 +233,7 @@ Explainability isn't about showing all 47 factors. It's about highlighting the 2
   </div>
   <div class="tree-result success">Use this pattern</div>
 </div>
-
-**Products Doing It Right**
-Claude • Shows step-by-step thinking and reasoning for each conclusion
-Perplexity AI • Shows exact sources for verification of information
-Hugging Face • Provides detailed model documentation and capabilities
+</div>
 
 **DO ✓ | DON'T ✗**
 Explain in plain language (not technical jargon) | Black box output (no explanation)
@@ -241,7 +253,13 @@ Beginners and power users have different needs. Don't show all options at once. 
 
 Make the simple path obvious. Let power users find their tools. Same feature. Different complexity curves for different expertise levels.
 
-**When to Use**
+**Products Doing It Right**
+Loom AI • Basic video editing first, advanced AI features on demand
+Google Docs AI • Progressively reveals features like Smart Compose as you engage
+Superhuman AI Email • Shows essential actions, reveals AI features as you explore
+
+<div class="when-to-use-section">
+<strong>When to Use</strong>
 <div class="decision-tree simple">
   <div class="tree-check">
     <div class="check-icon">✓</div>
@@ -257,11 +275,7 @@ Make the simple path obvious. Let power users find their tools. Same feature. Di
   </div>
   <div class="tree-result success">Use this pattern</div>
 </div>
-
-**Products Doing It Right**
-Loom AI • Basic video editing first, advanced AI features on demand
-Google Docs AI • Progressively reveals features like Smart Compose as you engage
-Superhuman AI Email • Shows essential actions, reveals AI features as you explore
+</div>
 
 **DO ✓ | DON'T ✗**
 Start with core task (one button, clear purpose) | Show all options at once
@@ -332,13 +346,14 @@ This handbook covers the 6 most critical patterns. Your site includes 24 total p
 • Study your users—different industries need different patterns
 • Test constantly—user research beats assumptions every time
 
-**Join the Community:**
-Connect with other designers thinking about these problems. Share what you learn. Ask questions. Push back on the "add AI everywhere" trend.
+**Go Deeper with All 24 Patterns:**
+These 6 are just the start. <a href="https://www.aiuxdesign.guide/" style="color: #0d0d0d; text-decoration: underline; font-weight: 600;">Explore all 24 AI design patterns</a> on our platform to build comprehensive understanding across adaptive systems, human-AI collaboration, trustworthy AI, natural interaction, performance optimization, privacy, and accessibility. Each pattern includes real-world examples, interactive code samples, and design guidance.
+
+**Try the Interactive Simulator:**
+Move beyond theory. <a href="https://www.aiuxdesign.guide/simulator" style="color: #0d0d0d; text-decoration: underline; font-weight: 600;">Use our AI design simulator</a> to experiment with these patterns in real scenarios. See how users interact with different approaches. Test your hypotheses. Learn what works by doing, not just reading.
 
 **Final Truth:**
-The best AI experiences feel like they're not there—until you need them. At that point, they're exactly what you wanted. That's the north star.
-
-Build toward that. 🎯`,
+The best AI experiences feel like they're not there—until you need them. At that point, they're exactly what you wanted. That's the north star. Build toward that. 🎯`,
     },
   },
 };
@@ -364,7 +379,7 @@ function generateLogoGrid(productLines: string[]): string {
   let html = '<div class="logo-grid">';
 
   products.forEach(product => {
-    const logoUrl = getProductLogoUrl(product.name);
+    const logoUrl = getHandbookProductLogoUrl(product.name);
     html += `
       <div class="product-card">
         <div class="product-card-logo">
@@ -383,9 +398,11 @@ function generateLogoGrid(productLines: string[]): string {
 }
 
 /**
- * Get product logo URL from product-logos mapping
+ * Get product logo URL for handbook
+ * Maps display names (e.g., "Gmail Smart Compose") to product names (e.g., "Gmail")
+ * then retrieves logo from the shared product-logos mapping
  */
-function getProductLogoUrl(productName: string): string {
+function getHandbookProductLogoUrl(displayName: string): string {
   // Map display names to logo database names
   const productNameMap: Record<string, string> = {
     'Gmail Smart Compose': 'Gmail',
@@ -406,39 +423,30 @@ function getProductLogoUrl(productName: string): string {
     'Superhuman AI Email': 'Superhuman',
   };
 
-  const logoDbName = productNameMap[productName];
-  if (!logoDbName) return '';
+  // Check if display name is in the mapping
+  let productName = productNameMap[displayName];
 
-  // Reference to product logos from the main app
-  const productLogos: Record<string, string> = {
-    Google: 'google',
-    GitHub: 'github',
-    Notion: 'notion',
-    ChatGPT: 'openai',
-    Claude: 'anthropic',
-    Figma: 'figma',
-    Slack: 'slack',
-    Gmail: 'gmail',
-    Copilot: 'github',
-    Loom: 'loom',
-    Superhuman: '/images/logos/superhumanlogo.png',
-    Grammarly: 'grammarly',
-    Perplexity: 'https://cdn.simpleicons.org/perplexity',
-    Hugging: 'huggingface',
-    GPTZero: 'https://cdn.simpleicons.org/openai',
-    AWS: 'amazonaws',
-  };
-
-  const slug = productLogos[logoDbName];
-  if (!slug) return '';
-
-  // If slug is already a full URL, return it directly
-  if (slug.startsWith('http') || slug.startsWith('/')) {
-    return slug;
+  // If not found in map, try using the display name directly
+  // (some products like "Apple", "DuckDuckGo", "Signal" are already correct)
+  if (!productName) {
+    productName = displayName;
   }
 
-  // Otherwise build the Simple Icons CDN URL
-  return `https://cdn.simpleicons.org/${slug}`;
+  // Use the shared product-logos mapping
+  return getProductLogoUrl(productName);
+}
+
+/**
+ * Style paragraphs: convert markdown bold and handle special characters
+ */
+function styleParagraph(p: string): string {
+  // Skip if it's already styled HTML
+  if (p.includes('<div') || p.includes('<table')) {
+    return p;
+  }
+
+  // Convert markdown bold, special characters, and wrap in paragraph
+  return `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/❌/g, '<span class="cross">✗</span>').replace(/✓/g, '<span class="check">✓</span>').replace(/☐/g, '<input type="checkbox" disabled>').replace(/\n/g, '<br>')}</p>`;
 }
 
 /**
@@ -446,7 +454,7 @@ function getProductLogoUrl(productName: string): string {
  */
 function processPatternContent(content: string): string {
   const ideaSectionRegex = /\*\*The Idea\*\*([\s\S]*?)(?=\n\n\*\*)/;
-  const productsSectionRegex = /\*\*Products Doing It Right\*\*([\s\S]*?)(?=\n\n\*\*|$)/;
+  const productsSectionRegex = /\*\*Products Doing It Right\*\*([\s\S]*?)(?=\n\n|<div class="when-to-use-section">|$)/;
 
   const ideaMatch = content.match(ideaSectionRegex);
   const productsMatch = content.match(productsSectionRegex);
@@ -478,7 +486,7 @@ function processPatternContent(content: string): string {
 
   // Replace both sections with the two-column layout
   let result = content.replace(/\*\*The Idea\*\*([\s\S]*?)(?=\n\n\*\*)/, twoColumnLayout);
-  result = result.replace(/\*\*Products Doing It Right\*\*([\s\S]*?)(?=\n\n\*\*|$)/, '');
+  result = result.replace(/\*\*Products Doing It Right\*\*([\s\S]*?)(?=\n\n|<div class="when-to-use-section">|$)/, '');
 
   return result;
 }
@@ -597,6 +605,7 @@ export function generateHandbookHTML(): string {
           margin: 0 auto;
           padding: 60px 40px;
           page-break-after: always;
+          border: 2px solid #0d0d0d;
         }
 
         /* Table Styling */
@@ -671,6 +680,7 @@ export function generateHandbookHTML(): string {
           margin-bottom: 10px;
         }
 
+
         .pattern-column-left p {
           font-size: 15px;
           color: #1f2937;
@@ -707,6 +717,21 @@ export function generateHandbookHTML(): string {
             padding-left: 0;
             padding-top: 20px;
           }
+        }
+
+        /* When to Use Section */
+        .when-to-use-section {
+          margin: 25px 0;
+          padding: 0;
+          background: transparent;
+          border-radius: 4px;
+        }
+
+        .when-to-use-section > strong {
+          display: block;
+          margin-bottom: 15px;
+          font-size: 14px;
+          font-weight: 700;
         }
 
         /* Product Card Grid Styling */
@@ -844,8 +869,8 @@ export function generateHandbookHTML(): string {
 
         .tree-result {
           padding: 12px 16px;
-          background: #f0fdf4;
-          border: 2px solid #10b981;
+          background: transparent;
+          border: none;
           border-radius: 6px;
           font-size: 14px;
           color: #166534;
@@ -853,9 +878,15 @@ export function generateHandbookHTML(): string {
           text-align: center;
         }
 
+        .tree-result::before {
+          content: '✓ ';
+          color: #10b981;
+          font-weight: 700;
+        }
+
         .tree-result.success {
-          background: #f0fdf4;
-          border-color: #10b981;
+          background: transparent;
+          border: none;
           color: #166534;
         }
 
@@ -1087,7 +1118,7 @@ export function generateHandbookHTML(): string {
         ${(() => {
           let content = processPatternContent(sections.pattern1.content);
           content = markdownTableToHTML(content);
-          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/❌/g, '<span class="cross">✗</span>').replace(/✓/g, '<span class="check">✓</span>').replace(/☐/g, '<input type="checkbox" disabled>').replace(/\n/g, '<br>')}</p>`).join('');
+          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : styleParagraph(p)).join('');
         })()}
         <div class="images-container">
           <div class="pattern-image">
@@ -1109,7 +1140,7 @@ export function generateHandbookHTML(): string {
         ${(() => {
           let content = processPatternContent(sections.pattern2.content);
           content = markdownTableToHTML(content);
-          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/❌/g, '<span class="cross">✗</span>').replace(/✓/g, '<span class="check">✓</span>').replace(/☐/g, '<input type="checkbox" disabled>').replace(/\n/g, '<br>')}</p>`).join('');
+          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : styleParagraph(p)).join('');
         })()}
         <div class="images-container">
           <div class="pattern-image">
@@ -1131,7 +1162,7 @@ export function generateHandbookHTML(): string {
         ${(() => {
           let content = processPatternContent(sections.pattern3.content);
           content = markdownTableToHTML(content);
-          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/❌/g, '<span class="cross">✗</span>').replace(/✓/g, '<span class="check">✓</span>').replace(/☐/g, '<input type="checkbox" disabled>').replace(/\n/g, '<br>')}</p>`).join('');
+          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : styleParagraph(p)).join('');
         })()}
         <div class="images-container">
           <div class="pattern-image">
@@ -1153,7 +1184,7 @@ export function generateHandbookHTML(): string {
         ${(() => {
           let content = processPatternContent(sections.pattern4.content);
           content = markdownTableToHTML(content);
-          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/❌/g, '<span class="cross">✗</span>').replace(/✓/g, '<span class="check">✓</span>').replace(/☐/g, '<input type="checkbox" disabled>').replace(/\n/g, '<br>')}</p>`).join('');
+          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : styleParagraph(p)).join('');
         })()}
         <div class="images-container">
           <div class="pattern-image">
@@ -1175,7 +1206,7 @@ export function generateHandbookHTML(): string {
         ${(() => {
           let content = processPatternContent(sections.pattern5.content);
           content = markdownTableToHTML(content);
-          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/❌/g, '<span class="cross">✗</span>').replace(/✓/g, '<span class="check">✓</span>').replace(/☐/g, '<input type="checkbox" disabled>').replace(/\n/g, '<br>')}</p>`).join('');
+          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : styleParagraph(p)).join('');
         })()}
         <div class="images-container">
           <div class="pattern-image">
@@ -1197,7 +1228,7 @@ export function generateHandbookHTML(): string {
         ${(() => {
           let content = processPatternContent(sections.pattern6.content);
           content = markdownTableToHTML(content);
-          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : `<p>${p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/❌/g, '<span class="cross">✗</span>').replace(/✓/g, '<span class="check">✓</span>').replace(/☐/g, '<input type="checkbox" disabled>').replace(/\n/g, '<br>')}</p>`).join('');
+          return content.split('\n\n').map(p => p.includes('<table') || p.includes('<div class="logo-grid') || p.includes('<div class="pattern-two-column') || p.includes('<div class="decision-tree') ? p : styleParagraph(p)).join('');
         })()}
         <div class="images-container">
           <div class="pattern-image">
