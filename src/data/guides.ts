@@ -1885,8 +1885,9 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
-            alt: 'Cursor Tab completion showing AI suggestion appearing as you type code',
-            label: 'Tab autocomplete in action with multi-line suggestion',
+            src: '/images/guides/cursor-learning-path/lesson-4/tab-completion.png',
+            alt: 'Cursor editor showing multi-line gray text suggestion as you type, demonstrating Tab autocomplete feature',
+            label: 'Real Cursor Tab autocomplete with multi-line gray suggestions',
           },
           {
             type: 'heading',
@@ -2010,8 +2011,9 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
-            alt: 'Cursor Chat panel showing conversation with AI assistant',
-            label: 'Complete Chat interaction from question to response',
+            src: '/images/guides/cursor-learning-path/lesson-5/chat-panel.png',
+            alt: 'Real Cursor Chat panel interface showing AI conversation with code context and apply feature',
+            label: 'Cursor Chat (Cmd+L) interface with conversation and code suggestions',
           },
           {
             type: 'heading',
@@ -2144,8 +2146,9 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
-            alt: 'Cmd+K prompt bar showing inline code edit transformation',
-            label: 'Cmd+K workflow: select code, prompt, and inline result',
+            src: '/images/guides/cursor-learning-path/lesson-6/cmdk-inline-edit.png',
+            alt: 'Cursor editor showing smart rewrite feature with inline code transformation',
+            label: 'Cmd+K inline editing: Smart rewrite transforming selected code',
           },
           {
             type: 'heading',
@@ -2314,6 +2317,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-7/composer-interface.png',
             alt: 'Composer interface showing @-mentions and context references for multi-file generation',
             label: 'Composer with context added for generating related files',
           },
@@ -2451,8 +2455,9 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
-            alt: 'Figma design side-by-side with generated React component in Cursor',
-            label: 'Design-to-code conversion showing Figma design transformed to React',
+            src: '/images/guides/cursor-learning-path/lesson-8/figma-to-react-new.png',
+            alt: 'Cursor Chat showing code suggestions with apply button to accept generated React code from design',
+            label: 'Cursor accepting and applying generated code from design input',
           },
           {
             type: 'heading',
@@ -2613,9 +2618,16 @@ export const guides: Guide[] = [
             label: 'Responsive grid: 1 column base, 2 on medium, 3 on large',
           },
           {
+            type: 'code',
+            code: 'export default function ProductCard({ image, title, price }) {\n  return (\n    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">\n      <img src={image} alt={title} className="w-full h-48 object-cover" />\n      <div className="p-4">\n        <h3 className="text-lg font-bold text-gray-900">{title}</h3>\n        <p className="text-2xl text-blue-600 font-semibold mt-2">${price}</p>\n        <button className="w-full mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors">\n          Add to Cart\n        </button>\n      </div>\n    </div>\n  );\n}',
+            language: 'jsx',
+            label: 'Complete product card component with Tailwind styling',
+          },
+          {
             type: 'image',
-            alt: 'Example React component with Tailwind styling showing responsive breakpoints',
-            label: '.cursorrules file with design system tokens and Tailwind preferences',
+            src: '/images/guides/cursor-learning-path/lesson-9/react-tailwind.png',
+            alt: 'Cursor editor showing generated React code example with syntax highlighting and component structure',
+            label: 'Cursor generating React component code with Tailwind styling',
           },
           {
             type: 'heading',
@@ -2822,8 +2834,9 @@ export const guides: Guide[] = [
           },
           {
             type: 'image',
-            alt: '@-mentions context menu showing available files and symbols in codebase',
-            label: '@-mentions in Chat showing codebase references',
+            src: '/images/guides/cursor-learning-path/lesson-11/at-mentions.png',
+            alt: 'Cursor Chat showing @-mentions context menu with available files and symbols for reference',
+            label: 'Real @-mentions context menu in Cursor Chat for adding codebase context',
           },
           {
             type: 'text',
@@ -2850,6 +2863,12 @@ export const guides: Guide[] = [
           {
             type: 'text',
             content: 'Different models excel at different tasks. Feel free to try different ones for different work.',
+          },
+          {
+            type: 'code',
+            code: '# .cursorrules - Tell Cursor about your project\n\nYou are an expert React developer working on a design system.\n\n## Code Style\n- Use TypeScript with strict mode\n- Use Tailwind CSS for styling (never write raw CSS)\n- Follow functional components with hooks\n- Component exports should be default exports\n\n## Design System\n- Primary color: #0066FF (blue-600)\n- Spacing: Use Tailwind spacing scale (gap-4, p-2, etc.)\n- Fonts: Use system fonts (font-sans) or Inter\n\n## Naming Conventions\n- Components: PascalCase (Button, Card, Header)\n- Variables: camelCase (buttonText, cardContent)\n- Files: kebab-case (button.jsx, card.jsx)\n\n## Testing\n- Always add JSDoc comments\n- Make components responsive mobile-first',
+            language: 'markdown',
+            label: 'Example .cursorrules file for a design system project',
           },
           {
             type: 'heading',
@@ -3341,7 +3360,7 @@ export const guides: Guide[] = [
             { number: 4, title: 'Sign in with GitHub', content: 'After installation, you\'ll be prompted to sign in. Click "Sign in with GitHub" and authorize Copilot to use your account.' },
             { number: 5, title: 'You\'re Ready!', content: 'Once signed in, you\'ll see a small Copilot icon in VS Code. You\'re now ready to use AI-powered code suggestions!' }
           ] },
-          { type: 'image', alt: 'GitHub Copilot extension in VS Code marketplace with Install button visible' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-1/marketplace.png', alt: 'GitHub Copilot extension in VS Code marketplace with Install button visible', label: 'VS Code Extensions marketplace showing GitHub Copilot extension' },
           { type: 'callout', calloutType: 'info', title: 'About Copilot+', content: 'GitHub Copilot offers a free trial (60 minutes per month). After the trial, it\'s $10/month or $100/year. Individual plans are available—check github.com/copilot/plans for current pricing.' }
         ]
       },
@@ -3362,7 +3381,7 @@ export const guides: Guide[] = [
             { number: 4, title: 'Press Enter and Wait', content: 'Move to the next line. Copilot will automatically suggest HTML code. You should see gray suggestion text appear.' },
             { number: 5, title: 'Accept the Suggestion', content: 'Press Tab to accept the suggestion, or press Escape to reject it. Try a few suggestions to see what Copilot offers!' }
           ] },
-          { type: 'image', alt: 'VS Code editor showing Copilot suggestion for HTML page structure in gray text' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-2/suggestion.png', alt: 'VS Code editor showing Copilot suggestion for HTML page structure in gray text', label: 'Copilot suggesting HTML structure as you type' },
           { type: 'callout', calloutType: 'tip', title: 'Pro Tip: Better Comments = Better Suggestions', content: 'Copilot works best with clear, descriptive comments. Instead of "make a button," try "create a blue call-to-action button with hover effect." The more detail you provide, the better Copilot\'s suggestions.' }
         ]
       },
@@ -3406,8 +3425,8 @@ export const guides: Guide[] = [
             { number: 3, title: 'Let Copilot Complete It', content: 'Wait a moment. Copilot will suggest the full structure. Use Tab to accept or cycle through suggestions with Alt+]' },
             { number: 4, title: 'Refine If Needed', content: 'If a suggestion isn\'t perfect, edit it. Copilot learns from your edits and improves next time.' }
           ] },
-          { type: 'code', language: 'html', label: 'Example: Copilot Completing a Hero Section', code: '<!-- hero section with background image and centered text -->\n<section class="hero">\n  <div class="hero-content">\n    <h1>Welcome to My Design Portfolio</h1>\n    <p>Explore my latest projects and design work</p>\n    <button class="cta-button">View My Work</button>\n  </div>\n</section>' },
-          { type: 'image', alt: 'VS Code showing autocomplete suggestion for CSS grid layout styling' },
+          { type: 'code', language: 'html', label: 'Example: Copilot Completing a Hero Section', code: '<!-- hero section with background image and centered text -->\n<section class="hero">\n  <div class="hero-content">\n    <h1>Welcome to My Design Portfolio</h1>\n    <p>Explore my latest projects and design work</p>\n    <button class="cta-button">View My Work</button>\n  </div>\n</section>\n\n<style>\n  .hero {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    min-height: 400px;\n    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n  }\n</style>' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-4/autocomplete.png', alt: 'VS Code showing autocomplete suggestion for CSS grid layout styling', label: 'Copilot autocomplete for CSS Grid patterns' },
           { type: 'callout', calloutType: 'success', title: 'Designer Win', content: 'This is huge for prototyping. You describe your design in comments, and Copilot builds the HTML/CSS. From design sketch to code in minutes!' }
         ]
       },
@@ -3435,7 +3454,7 @@ export const guides: Guide[] = [
             'How can I make this more accessible to screen readers?',
             'Generate a form with proper validation'
           ] },
-          { type: 'image', alt: 'GitHub Copilot Chat interface showing question about flexbox responsive design' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-5/chat-view.png', alt: 'GitHub Copilot Chat interface showing question about flexbox responsive design', label: 'Copilot Chat helping you understand design patterns' },
           { type: 'callout', calloutType: 'tip', title: 'Chat Tips for Designers', content: 'Copilot Chat is perfect for learning. You can ask "why" questions, request code explanations, or ask how to implement specific design patterns. It\'s like having a patient developer to teach you!' }
         ]
       },
@@ -3455,8 +3474,8 @@ export const guides: Guide[] = [
             { number: 3, title: 'Read the Explanation', content: 'Copilot will break down what the code does in simple language, line by line' },
             { number: 4, title: 'Ask Follow-ups', content: 'If you still have questions, ask them in Copilot Chat (Ctrl+Alt+I / Cmd+Alt+I)' }
           ] },
-          { type: 'code', language: 'javascript', label: 'Example Code That Needs Explanation', code: 'const handleFormSubmit = (e) => {\n  e.preventDefault();\n  const formData = new FormData(e.target);\n  const data = Object.fromEntries(formData);\n  fetch(\'/api/submit\', {\n    method: \'POST\',\n    headers: { \'Content-Type\': \'application/json\' },\n    body: JSON.stringify(data)\n  });\n};' },
-          { type: 'image', alt: 'VS Code showing Copilot explanation of JavaScript function alongside the code' },
+          { type: 'code', language: 'javascript', label: 'Example Code That Needs Explanation', code: 'const handleFormSubmit = (e) => {\n  e.preventDefault();\n  const formData = new FormData(e.target);\n  const data = Object.fromEntries(formData);\n  fetch(\'/api/submit\', {\n    method: \'POST\',\n    headers: { \'Content-Type\': \'application/json\' },\n    body: JSON.stringify(data)\n  });\n};\n\n// Step by step:\n// 1. e.preventDefault() stops the form from refreshing the page\n// 2. FormData captures all the input values\n// 3. fetch sends the data to the server\n// 4. The server responds with confirmation' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-6/explanation.png', alt: 'VS Code showing Copilot explanation of JavaScript function alongside the code', label: 'Copilot explaining complex code in simple terms' },
           { type: 'heading', level: 'h3', content: 'Why This Matters for Designer-Developer Collaboration' },
           { type: 'text', content: 'Understanding what code does helps you make better design decisions. You\'ll know what\'s possible to build, what might take longer, and how to communicate with developers about implementation.' },
           { type: 'callout', calloutType: 'success', title: 'Skill Building', content: 'Every time you ask Copilot to explain code, you\'re learning. Over time, you\'ll understand more code patterns and be able to collaborate more effectively with developers.' }
@@ -3480,7 +3499,7 @@ export const guides: Guide[] = [
             { number: 5, title: 'Test in Browser', content: 'Open your HTML file in a browser and test the prototype. Make adjustments to match your design.' }
           ] },
           { type: 'code', language: 'html', label: 'Design Brief as a Comment', code: '<!--\n  Hero section design:\n  - Full-width background with gradient (purple to blue)\n  - Centered headline and tagline\n  - Two buttons: primary (solid blue) and secondary (outline)\n  - Mobile: single column, buttons stack vertically\n  - Desktop: side-by-side buttons\n-->\n\n<section class="hero">\n  <!-- Copilot will complete this based on the brief -->\n</section>' },
-          { type: 'image', alt: 'Split-screen showing Figma design on left and VS Code prototype on right matching the design' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-7/design-to-code.png', alt: 'Split-screen showing Figma design on left and VS Code prototype on right matching the design', label: 'From design concept to working code prototype' },
           { type: 'callout', calloutType: 'success', title: 'Game Changer for Design', content: 'You\'re no longer waiting for developers to build your prototypes. You can iterate faster, test interactions yourself, and come to developers with working code that matches your vision.' }
         ]
       },
@@ -3501,7 +3520,9 @@ export const guides: Guide[] = [
             { number: 4, title: 'Add Animations', content: 'Use Copilot Chat: ask for CSS animations (fade in, slide up, bounce) or JavaScript for interactive effects.' }
           ] },
           { type: 'code', language: 'css', label: 'Responsive Layout with Copilot Help', code: '/* Mobile: single column */\n.card-grid {\n  display: flex;\n  flex-direction: column;\n  gap: 1rem;\n}\n\n/* Tablet: 2 columns */\n@media (min-width: 768px) {\n  .card-grid {\n    grid-template-columns: repeat(2, 1fr);\n  }\n}\n\n/* Desktop: 3 columns */\n@media (min-width: 1024px) {\n  .card-grid {\n    grid-template-columns: repeat(3, 1fr);\n  }\n}' },
-          { type: 'image', alt: 'Three browser windows showing the same design responsive on mobile, tablet, and desktop' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-8/responsive.png', alt: 'Three browser windows showing the same design responsive on mobile, tablet, and desktop', label: 'Responsive design working across all device sizes' },
+          { type: 'heading', level: 'h3', content: 'Adding Animations & Interactions' },
+          { type: 'code', language: 'css', label: 'CSS Animations That Impress Stakeholders', code: '/* Smooth fade-in on page load */\n@keyframes fadeIn {\n  from {\n    opacity: 0;\n  }\n  to {\n    opacity: 1;\n  }\n}\n\n.card {\n  animation: fadeIn 0.6s ease-in-out;\n}\n\n/* Hover effect with smooth transition */\n.button {\n  transition: all 0.3s ease;\n}\n\n.button:hover {\n  background-color: #0052cc;\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n  transform: translateY(-2px);\n}' },
           { type: 'heading', level: 'h3', content: 'Popular Interactions to Try' },
           { type: 'list', items: [
             'Hover effects: color change, shadow, scale transform',
@@ -3538,7 +3559,7 @@ export const guides: Guide[] = [
             'Is this accessible to screen readers?',
             'What happens if a user clicks this quickly twice?'
           ] },
-          { type: 'image', alt: 'GitHub pull request review screen showing code changes with Copilot Chat open' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-9/pr-review.png', alt: 'GitHub pull request review screen showing code changes with Copilot Chat open', label: 'Using Copilot Chat to understand code changes in PRs' },
           { type: 'callout', calloutType: 'success', title: 'Level Up Your Collaboration', content: 'Developers will respect you more when you understand their code. You\'ll spot bugs earlier, prevent rework, and build trust as a collaborative partner.' }
         ]
       },
@@ -3559,7 +3580,7 @@ export const guides: Guide[] = [
             { number: 4, title: 'Document Edge Cases', content: 'Think through mobile, loading states, errors, and accessibility. Share these with developers upfront.' }
           ] },
           { type: 'code', language: 'markdown', label: 'Design Spec with Code Examples', code: '# Button Component Specification\n\n## States\n- **Default**: Blue background, white text, 1rem padding\n- **Hover**: Darker blue background, slight shadow\n- **Active**: Even darker, scale down slightly (0.98)\n- **Disabled**: Gray background, 50% opacity\n\n## Accessibility\n- Focus state: 2px outline with 2px offset\n- Minimum touch target: 44x44px\n- Color contrast: 4.5:1 or higher\n\n## Code Example\n```css\n.button {\n  background: #0066FF;\n  color: white;\n  padding: 1rem 1.5rem;\n  border-radius: 0.5rem;\n  transition: all 0.2s ease;\n}\n```' },
-          { type: 'image', alt: 'Slack message from designer sharing design spec with code examples and screenshots' },
+          { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-10/slack-spec.png', alt: 'Slack message from designer sharing design spec with code examples and screenshots', label: 'Sharing clear design specs with developers' },
           { type: 'heading', level: 'h3', content: 'After Building: What You\'ve Accomplished' },
           { type: 'completion', title: 'Congratulations!', items: [
             'You can install and configure GitHub Copilot',
