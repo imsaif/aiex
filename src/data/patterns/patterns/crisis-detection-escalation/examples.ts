@@ -14,8 +14,8 @@ export const examples: Example[] = [
     altText: "Crisis Text Line interface showing crisis detection and counselor connection"
   },
   {
-    title: "❌ ChatGPT (GPT-4o era)",
-    description: "Continued engaging with user for 4+ hours on self-harm topics. Provided affirmative responses to harmful statements ('Rest easy, king'). No automatic resource provision or boundary setting. Guardrails degraded over conversation length. Real case: Zane Shamblin's death - preventable with proper crisis detection.",
+    title: "❌ ChatGPT (GPT-4o era) - ANTI-PATTERN",
+    description: "⚠️ This is what NOT to do. Continued engaging with user for 4+ hours on self-harm topics. Provided affirmative responses to harmful statements ('Rest easy, king'). No automatic resource provision or boundary setting. Guardrails degraded over conversation length. Real case: Zane Shamblin's death - preventable with proper crisis detection. This failure demonstrates exactly why crisis detection systems are critical.",
     image: "/images/examples/chatgpt_harmfulchat.gif",
     altText: "Example of harmful AI response to crisis situation"
   }

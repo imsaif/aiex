@@ -359,6 +359,19 @@ const CrisisDetectionDemo = dynamic(
   }
 );
 
+// Dynamically import the SessionDegradationDemo component
+const SessionDegradationDemo = dynamic(
+  () => import('@/components/examples/SessionDegradationDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -441,6 +454,8 @@ export default function CodeExampleBlock({
       case 'crisis-detection-escalation-demo':
       case 'multi-layer-crisis-detection':
         return <CrisisDetectionDemo />;
+      case 'session-degradation-prevention-example-0':
+        return <SessionDegradationDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">
@@ -527,7 +542,7 @@ export default function CodeExampleBlock({
           </>
         ) : (
           /* Live Preview */
-          <div className="p-6 flex justify-center bg-gray-50 min-h-[400px]">
+          <div className="p-6 flex justify-center min-h-[400px]">
             <div className={`w-full ${
               // Components that need full width (max-w-6xl)
               ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection'].includes(componentId)
@@ -535,6 +550,9 @@ export default function CodeExampleBlock({
                 // Components that need large width (max-w-4xl)
                 : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo'].includes(componentId)
                 ? 'max-w-4xl'
+                // Components that need medium width (max-w-2xl)
+                : ['session-degradation-prevention-example-0'].includes(componentId)
+                ? 'max-w-2xl'
                 // Default to medium width for smaller components
                 : 'max-w-lg'
             }`}>
@@ -548,7 +566,7 @@ export default function CodeExampleBlock({
         )}
 
         {/* Footer Note */}
-        <div className="bg-gray-50 p-4 border-t border-gray-200 text-xs text-gray-600">
+        <div className="p-4 border-t border-gray-200 text-xs text-gray-600">
           <p>{showCode ? 'Toggle to preview mode to see the interactive demo.' : 'Toggle to code view to see the implementation details.'}</p>
         </div>
       </div>

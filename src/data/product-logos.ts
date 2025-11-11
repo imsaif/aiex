@@ -49,6 +49,11 @@ export const productLogos: Record<string, string> = {
   'Be': 'https://upload.wikimedia.org/wikipedia/commons/a/af/Logo_BeMyEyes.svg', // Official Be My Eyes SVG from Wikimedia
   GPTZero: 'https://cdn.simpleicons.org/openai', // GPTZero detection tool
   Hugging: 'huggingface', // Hugging Face (truncated product name)
+
+  // Mental Health & Wellness AI
+  'Woebot': '/images/logos/woebot_health_logo.png', // Mental health chatbot (local)
+  'Crisis': '/images/logos/Crisis_Text_Line_logo.png', // Crisis Text Line (local)
+  'Wysa': '/images/logos/wysa_logo.png', // Mental wellness AI (local)
 };
 
 /**

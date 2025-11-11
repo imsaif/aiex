@@ -10,11 +10,14 @@ export interface Product {
 
 /**
  * Extract the product name from an example title
- * Examples: "Google Smart Compose" -> "Google", "GitHub Copilot" -> "GitHub", etc.
+ * Examples: "✅ Google Smart Compose" -> "Google", "❌ GitHub Copilot" -> "GitHub", etc.
  */
 function extractProductName(title: string): string {
+  // Remove emoji/checkmark prefixes (✅, ❌, etc.)
+  let cleanedTitle = title.replace(/^[\s✅❌⚠️🚫]/g, '').trim();
+
   // Take the first word/brand name as the product
-  const words = title.split(' ');
+  const words = cleanedTitle.split(' ');
   return words[0];
 }
 
