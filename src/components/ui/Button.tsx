@@ -2,42 +2,58 @@ import { ReactNode, ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'gradient';
+  variant?: 'primary' | 'secondary' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
+/**
+ * Standardized Button Component
+ *
+ * Uses brand design tokens exclusively:
+ * - Primary: Filled with brand black (accent-primary)
+ * - Secondary: Black border with transparent background
+ * - Outline: Border only, no fill
+ */
 export default function Button({
   children,
   variant = 'primary',
   size = 'md',
   fullWidth = false,
+  disabled = false,
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'relative inline-flex items-center justify-center rounded-full font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer transition-colors duration-200';
-  
+  const baseClasses = 'relative inline-flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-ring-focus focus:ring-offset-2 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+
   const variantClasses = {
-    primary: 'bg-accent-primary text-background-primary hover:bg-accent-hover focus:ring-border-focus',
-    secondary: 'bg-surface-secondary text-text-primary hover:bg-background-tertiary focus:ring-border-focus border border-gray-200',
-    outline: 'border border-gray-200 bg-surface-primary text-text-primary hover:bg-accent-subtle focus:ring-border-focus',
-    gradient: 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500',
+    // Primary: Filled with brand black
+    primary: 'bg-accent-primary text-background-primary hover:bg-accent-hover active:opacity-90',
+
+    // Secondary: Black border, light background
+    secondary: 'border-2 border-accent-primary bg-surface-primary text-accent-primary hover:bg-accent-subtle active:opacity-90',
+
+    // Outline: Border only
+    outline: 'border border-border-primary bg-surface-primary text-text-primary hover:bg-background-secondary active:opacity-90',
   };
-  
+
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-sm',
-    lg: 'px-8 py-3 text-base',
+    sm: 'px-4 py-2 text-sm rounded-lg',
+    md: 'px-6 py-3 text-base rounded-lg',
+    lg: 'px-8 py-4 text-lg rounded-lg',
   };
-  
+
   const widthClass = fullWidth ? 'w-full' : '';
-  
+  const disabledClass = disabled ? 'disabled' : '';
+
   const buttonClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${widthClass} ${className}`;
-  
+
   return (
-    <button 
-      className={buttonClasses} 
+    <button
+      className={buttonClasses}
+      disabled={disabled}
       {...props}
     >
       {children}

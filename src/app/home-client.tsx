@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/ui/ScrollToTop';
+import UnifiedSearchBar from '../components/ui/UnifiedSearchBar';
 import FilterPills from '../components/ui/FilterPills';
 import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
 import ProductFilterBar from '../components/ui/ProductFilterBar';
@@ -69,23 +70,12 @@ export default function HomeClient() {
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mb-8">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search any AI Pattern you need"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-6 py-4 pr-12 rounded-lg bg-surface-primary border border-primary hover:border-secondary
-                           text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-ring-focus focus:border-transparent
-                           transition-colors"
-                />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black text-white rounded-md
-                                 hover:bg-gray-800 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
-                </button>
-              </div>
+              <UnifiedSearchBar
+                placeholder="Search any AI Pattern you need"
+                value={searchQuery}
+                onChange={setSearchQuery}
+                size="md"
+              />
             </div>
 
             {/* CTA Button */}

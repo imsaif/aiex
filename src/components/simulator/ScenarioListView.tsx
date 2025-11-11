@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ScrollToTop from '@/components/ui/ScrollToTop'
+import UnifiedSearchBar from '@/components/ui/UnifiedSearchBar'
 import { ScenarioCard } from './ScenarioCard'
 import { scenarios } from '@/lib/simulator/patterns'
 
@@ -51,19 +52,13 @@ export function ScenarioListView() {
           </div>
 
           {/* Search Bar - Moved to Hero Section */}
-          <div className="relative mx-auto max-w-2xl mb-12">
-            <input
-              type="text"
+          <div className="mx-auto max-w-2xl mb-12">
+            <UnifiedSearchBar
               placeholder="Search by use case or AI pattern..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-6 py-4 pr-12 rounded-lg bg-white border border-gray-200 shadow-sm text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              onChange={setSearchQuery}
+              size="md"
             />
-            <button className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 transition-colors">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </button>
           </div>
 
           {/* Scenarios Grid */}

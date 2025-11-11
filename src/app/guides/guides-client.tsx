@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import UnifiedSearchBar from '@/components/ui/UnifiedSearchBar';
 import CourseCard from '@/components/ui/CourseCard';
 import GuideFilter from '@/components/ui/GuideFilter';
 import { guides, getAllTools, getAllSkillLevels, searchGuides } from '@/data/guides';
@@ -114,30 +115,12 @@ export default function GuidesClient() {
 
             {/* Search Bar */}
             <div className="max-w-2xl mx-auto mb-8">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search courses by tool, use case, or skill level"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-6 py-4 pr-12 rounded-lg bg-surface-primary border border-gray-200 shadow-sm
-                           text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500
-                           transition-colors"
-                />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-text-primary text-background-primary rounded-md
-                                 hover:bg-text-secondary transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
-                </button>
-              </div>
+              <UnifiedSearchBar
+                placeholder="Search courses by tool, use case, or skill level"
+                value={searchQuery}
+                onChange={setSearchQuery}
+                size="md"
+              />
             </div>
           </div>
         </div>

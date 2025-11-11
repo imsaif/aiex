@@ -67,7 +67,10 @@
     "usage:blocks": "ccusage blocks",
     "usage:json": "ccusage daily --json",
     "error-status": "echo '=== TypeScript Errors ===' && (npx tsc --noEmit | grep -c 'error TS' || echo '0') && echo '=== ESLint Errors ===' && (npm run lint | grep -c 'Error:' || echo '0') && echo '=== Test Status ===' && npm test -- --passWithNoTests --silent",
-    "fix-all": "npm run ts-fix && npm run lint -- --fix && npm test -- --passWithNoTests"
+    "brand:check": "node scripts/brand-validator.js --staged --verbose",
+    "brand:check:all": "node scripts/brand-validator.js --verbose",
+    "brand:fix": "node scripts/brand-validator.js --staged --fix",
+    "fix-all": "npm run ts-fix && npm run lint -- --fix && npm test -- --passWithNoTests && npm run brand:fix"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
