@@ -112,39 +112,11 @@ export function HandbookHero() {
         throw new Error(data.error || 'Failed to subscribe');
       }
 
-      // Show success message immediately after email is confirmed
+      // Show success message immediately
       setIsEmailSent(true);
       setIsLoading(false);
-
-      // Generate and download PDF in the background
-      const handbookResponse = await fetch('/api/handbook/generate-pdf');
-      const handbookHTML = await handbookResponse.text();
-
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.onload = () => {
-        const element = document.createElement('div');
-        element.innerHTML = handbookHTML;
-
-        const opt = {
-          margin: 0,
-          filename: 'AI-Design-Patterns.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { orientation: 'portrait', unit: 'in', format: 'letter' },
-        };
-
-        // @ts-ignore
-        window.html2pdf().set(opt).from(element).save();
-        setIsDownloaded(true);
-        setEmail('');
-      };
-
-      script.onerror = () => {
-        setError('Failed to generate PDF. Please try again.');
-      };
-
-      document.head.appendChild(script);
+      setEmail('');
+      setIsDownloaded(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
       setError(errorMessage);
@@ -286,8 +258,9 @@ export function HandbookHero() {
             </form>
           ) : (
             <div className="p-4 bg-green-950 border border-green-800 rounded-lg mb-10">
-              <p className="text-green-400 font-semibold mb-1">Check your inbox!</p>
-              <p className="text-green-500 text-sm">Your handbook link is on the way</p>
+              <p className="text-green-400 font-semibold mb-1">✓ Check your inbox!</p>
+              <p className="text-green-500 text-sm mb-2">We've sent you a welcome email with a link to download the handbook.</p>
+              <p className="text-green-400 text-xs">You can also download it anytime from your email.</p>
             </div>
           )}
 

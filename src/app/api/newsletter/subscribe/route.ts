@@ -138,16 +138,34 @@ async function sendWelcomeEmail(email: string) {
               </div>
 
               <p style="font-size: 16px; margin-bottom: 20px;">
-                Explore our current collection of <strong>24 AI design patterns</strong> across 7 categories
+                <strong>🎁 Your AI Design Patterns Handbook is ready!</strong>
+              </p>
+
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                Download your free handbook with 6 essential AI design patterns, complete with code examples,
+                real-world applications, and design guidance.
+              </p>
+
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://www.aiuxdesign.guide/handbook"
+                   style="display: inline-block; background: #000000;
+                          color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px;
+                          font-weight: 600; font-size: 16px; margin-bottom: 15px;">
+                  Download Handbook
+                </a>
+              </div>
+
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                Or explore our complete collection of <strong>24 AI design patterns</strong> across 7 categories
                 at <a href="https://www.aiuxdesign.guide" style="color: #000000; text-decoration: underline;">aiuxdesign.guide</a>
               </p>
 
               <div style="text-align: center; margin: 30px 0;">
                 <a href="https://www.aiuxdesign.guide"
-                   style="display: inline-block; background: #000000;
-                          color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px;
+                   style="display: inline-block; background: #ffffff; border: 2px solid #000000;
+                          color: #000000; padding: 12px 30px; text-decoration: none; border-radius: 8px;
                           font-weight: 600; font-size: 16px;">
-                  Explore Patterns
+                  Explore All Patterns
                 </a>
               </div>
 
