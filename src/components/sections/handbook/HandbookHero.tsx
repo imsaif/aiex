@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const patterns = [
   {
@@ -127,7 +128,7 @@ export function HandbookHero() {
   return (
     <section className="min-h-screen flex flex-col lg:flex-row">
       {/* LEFT SIDE - White Background */}
-      <div className="flex-1 bg-white px-6 sm:px-8 lg:px-16 py-16 lg:py-24 flex flex-col justify-start">
+      <div className="flex-1 bg-white px-6 sm:px-8 lg:px-16 py-16 lg:py-24 flex flex-col justify-between">
         <div className="max-w-2xl">
           {/* Badge */}
           <div className="mb-10">
@@ -176,6 +177,11 @@ export function HandbookHero() {
             </motion.div>
           </div>
         </div>
+
+        {/* Back Link at Bottom */}
+        <Link href="/" className="inline-block text-sm text-gray-600 hover:text-black transition mt-12">
+          ← Back to Home
+        </Link>
       </div>
 
       {/* RIGHT SIDE - Black Background */}

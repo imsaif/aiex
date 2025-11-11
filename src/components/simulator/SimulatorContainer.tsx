@@ -84,7 +84,7 @@ export function SimulatorContainer({
               Test AI Patterns in Real Scenarios
             </h1>
             <p className="text-lg text-gray-600 mx-auto max-w-2xl">
-              Compare patterns side-by-side with live metrics and performance data.
+              Compare patterns side-by-side and explore their potential impact.
             </p>
           </div>
 
