@@ -1,13 +1,11 @@
 -- CreateTable
 CREATE TABLE "Subscriber" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "email" TEXT NOT NULL,
-    "subscribedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "subscribedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "active" BOOLEAN NOT NULL DEFAULT true,
     "unsubscribeToken" TEXT NOT NULL,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Subscriber_pkey" PRIMARY KEY ("id")
+    "updatedAt" DATETIME NOT NULL
 );
 
 -- CreateIndex
