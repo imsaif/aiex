@@ -154,6 +154,7 @@ export default function UnifiedSearchBar({
           className={`
             w-full
             ${sizeClasses[size]}
+            pl-12
             pr-12
             text-text-primary
             bg-surface-primary

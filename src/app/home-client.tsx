@@ -7,12 +7,14 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/ui/ScrollToTop';
 import UnifiedSearchBar from '../components/ui/UnifiedSearchBar';
+import CompanyLogoCarousel from '../components/ui/CompanyLogoCarousel';
 import FilterPills from '../components/ui/FilterPills';
 import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
 import ProductFilterBar from '../components/ui/ProductFilterBar';
 import { HandbookModal } from '../components/lead-magnet/HandbookModal';
 import patterns from '../data/patterns';
 import categories from '../data/categories';
+import { companyLogos } from '../data/company-logos';
 import { getAllProducts, filterPatternsByProducts, getProductsForPattern } from '../data/utils/product-utils';
 import { getProductLogoUrl, hasProductLogo } from '../data/product-logos';
 
@@ -76,6 +78,14 @@ export default function HomeClient() {
                 onChange={setSearchQuery}
                 size="md"
               />
+            </div>
+
+            {/* Company Logo Carousel - Social Proof */}
+            <div className="mb-12">
+              <p className="text-[10px] font-bold text-text-secondary uppercase tracking-tight mb-3">
+                Patterns used by leading companies
+              </p>
+              <CompanyLogoCarousel companies={companyLogos} duration={30} size="sm" gap="lg" />
             </div>
 
             {/* CTA Button */}

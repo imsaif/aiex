@@ -115,7 +115,9 @@ const criticalValidators = [
 
       let fixed = line;
       for (const [arbitrary, token] of Object.entries(spacingMap)) {
-        const pattern = new RegExp(`-\\[${arbitrary}\\]`, 'g');
+        // Escape special regex characters in arbitrary values
+        const escapedArbitrary = arbitrary.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = new RegExp(`-\\[${escapedArbitrary}\\]`, 'g');
         fixed = fixed.replace(pattern, `-${token}`);
       }
       return fixed !== line ? fixed : null;

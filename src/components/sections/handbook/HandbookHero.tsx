@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { companyLogos } from '@/data/company-logos';
 
 const patterns = [
   {
@@ -65,21 +66,6 @@ const patterns = [
       </svg>
     ),
   },
-];
-
-const companies = [
-  { name: 'Apple', logo: 'https://cdn.simpleicons.org/apple/000000' },
-  { name: 'Google', logo: 'https://cdn.simpleicons.org/google/000000' },
-  { name: 'GitHub', logo: 'https://cdn.simpleicons.org/github/000000' },
-  { name: 'Figma', logo: 'https://cdn.simpleicons.org/figma/000000' },
-  { name: 'OpenAI', logo: 'https://cdn.simpleicons.org/openai/000000' },
-  { name: 'Anthropic', logo: 'https://cdn.simpleicons.org/anthropic/000000' },
-  { name: 'Microsoft', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg' },
-  { name: 'Slack', logo: 'https://cdn.simpleicons.org/slack/000000' },
-  { name: 'Notion', logo: 'https://cdn.simpleicons.org/notion/000000' },
-  { name: 'Adobe', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/adobe.svg' },
-  { name: 'Tesla', logo: 'https://cdn.simpleicons.org/tesla/000000' },
-  { name: 'Netflix', logo: 'https://cdn.simpleicons.org/netflix/000000' },
 ];
 
 export function HandbookHero() {
@@ -162,7 +148,7 @@ export function HandbookHero() {
                 ease: 'linear',
               }}
             >
-              {[...companies, ...companies].map((company, index) => (
+              {[...companyLogos, ...companyLogos].map((company, index) => (
                 <div
                   key={`${company.name}-${index}`}
                   className="flex-shrink-0 h-10 flex items-center justify-center min-w-max"
