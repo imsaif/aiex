@@ -1,6 +1,3 @@
 {
-  "buildCommand": "next build",
-  "env": {
-    "DATABASE_URL": "@database_url"
-  }
+  "buildCommand": "next build"
 }
