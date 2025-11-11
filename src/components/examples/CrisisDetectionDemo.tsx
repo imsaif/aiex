@@ -17,6 +17,7 @@ interface CrisisAlert {
 
 export default function CrisisDetectionDemo() {
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const [userMessage, setUserMessage] = useState('');
   const [history, setHistory] = useState<Array<{ message: string; role: 'user' | 'system' }>>([]);
@@ -24,9 +25,11 @@ export default function CrisisDetectionDemo() {
   const [crisisAlert, setCrisisAlert] = useState<CrisisAlert | null>(null);
   const [showResources, setShowResources] = useState(false);
 
-  // Auto-scroll to bottom when messages are added
+  // Auto-scroll within chat container only when content overflows
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current && history.length > 3) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [history, crisisAlert]);
 
   const directKeywords = [
@@ -188,7 +191,7 @@ export default function CrisisDetectionDemo() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-background dark:bg-background-dark min-h-screen">
+    <div className="max-w-6xl mx-auto p-6 bg-white dark:bg-surface-dark min-h-screen">
       {/* Header */}
       <div className="mb-8 bg-surface dark:bg-surface-dark rounded-lg shadow-sm p-6 border-l-4 border-error">
         <h2 className="text-3xl font-bold text-foreground dark:text-foreground-dark mb-2">Crisis Detection System</h2>
@@ -209,7 +212,7 @@ export default function CrisisDetectionDemo() {
               </h3>
             </div>
 
-            <div className="h-96 overflow-y-auto p-6 space-y-4 bg-background dark:bg-background-dark">
+            <div ref={chatContainerRef} className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-background-dark">
               {history.length === 0 && !crisisAlert ? (
                 <div className="flex items-center justify-center h-full text-muted dark:text-muted-dark">
                   <div className="text-center">
@@ -226,12 +229,12 @@ export default function CrisisDetectionDemo() {
                       className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                       <div
-                        className={`max-w-xs px-4 py-3 rounded-lg ${
+                        className={`max-w-xs px-4 py-3 rounded-lg shadow-sm ${
                           msg.role === 'user'
-                            ? 'bg-primary dark:bg-primary-dark text-surface dark:text-surface-dark rounded-br-none'
+                            ? 'bg-blue-600 text-white rounded-br-none'
                             : msg.message.includes('Crisis detected')
-                            ? 'bg-error-light dark:bg-error-dark text-error-dark dark:text-error-light rounded-bl-none border-2 border-error'
-                            : 'bg-surface-variant dark:bg-surface-variant-dark text-foreground dark:text-foreground-dark rounded-bl-none'
+                            ? 'bg-red-100 text-red-900 rounded-bl-none border-2 border-red-400'
+                            : 'bg-white text-gray-900 rounded-bl-none border border-gray-200'
                         }`}
                       >
                         <p className="text-sm">{msg.message}</p>
@@ -285,7 +288,7 @@ export default function CrisisDetectionDemo() {
                 <button
                   onClick={handleSendMessage}
                   disabled={!userMessage.trim()}
-                  className="px-6 py-3 bg-primary dark:bg-primary-dark text-white rounded-lg hover:bg-primary-dark dark:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                 >
                   Send
                 </button>

@@ -221,6 +221,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-11 19:22 (MacBook)
+- **Pattern:** Crisis Detection & Escalation - Chat UI Refinements
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Refined Crisis Detection demo UX with proper chat styling. Fixed page scroll issue by changing from scrollIntoView() to container-only scrolling (scrollTop assignment). Added white filled message boxes for system messages with gray borders (realistic chat UI). Changed scroll behavior to only trigger when conversation exceeds 3 messages. Updated send button to use Tailwind blue-600 for visibility. Demo now provides proper chat-like experience with visual clarity and smooth interactions without page jumps.
+
 ### Session 2025-11-11 19:13 (MacBook)
 - **Pattern:** Safety & Harm Prevention (Crisis Detection & Escalation + 3 related patterns)
 - **Status:** ✅ Completed
@@ -287,13 +294,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Completed Universal Access Patterns with minimal UI demo, image updates, and code preview registration. Created UniversalAccessDemo component (130 lines) demonstrating mode switching (text/voice/simplified) and multilingual support (4 languages). Updated examples to use Microsoft Copilot + Be My Eyes (removed Google), with proper image path fixes (copilotaccessibility.gif, bemyeyesaccessibility.gif). Registered demo in CodeExampleBlock with dynamic import. Fixed Carousel and OptimizedMedia to use object-contain for Be My Eyes image (fits inside container instead of filling). Changed pattern status from 'in-progress' to 'implemented' to remove WIP chip. Pattern is now fully functional with interactive code preview and properly scaled example images.
 
 ### Session 2025-11-07 18:02 (MacBook)
-- **Pattern:** Progressive Enhancement
-- **Status:** ✅ Completed
-- **Files Changed:** 6
-- **Tests Added/Modified:** 0
-- **Notes:** Completed progressive-enhancement pattern with interactive demo extraction, example image updates, and reset functionality. Extracted ProgressiveEnhancementDemo component with three-level progressive response enhancement (basic → detailed → comprehensive), smooth animations, and stop enhancement capability. Replaced outdated Google Bard reference with Perplexity AI example (attribution-based progressive enhancement). Updated examples.ts to use existing images (claudeprogressiveenhancement.gif, perplexity-attribution.gif, dalle-progressive.gif). Added "Try Another Query" reset button with smooth animations for improved UX. Registered demo in CodeExampleBlock with max-w-4xl width. Pattern now has working interactive preview showing realistic progressive enhancement workflow.
-
-### Session 2025-11-07 12:01 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
