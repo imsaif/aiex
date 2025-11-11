@@ -39,13 +39,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In a real scenario, you might want to:
-    // 1. Log the PDF generation request
-    // 2. Send a download link via email
-    // 3. Store analytics
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
 
-    // For now, return success with the handbook HTML
+    // Subscribe user to newsletter
+    const subscribeResponse = await fetch(
+      new URL('/api/newsletter/subscribe', request.url),
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      }
+    );
+
+    if (!subscribeResponse.ok) {
+      const subscribeData = await subscribeResponse.json();
+      console.error('Newsletter subscription failed:', subscribeData);
+      // Continue even if subscription fails - still generate the PDF
+    } else {
+      console.log(`Handbook PDF requested by: ${email}`);
+    }
+
+    // Generate handbook HTML
     const html = generateHandbookHTML();
+
     return NextResponse.json({
       success: true,
       message: 'Handbook ready for download',

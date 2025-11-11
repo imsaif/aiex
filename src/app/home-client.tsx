@@ -9,7 +9,6 @@ import ScrollToTop from '../components/ui/ScrollToTop';
 import FilterPills from '../components/ui/FilterPills';
 import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
 import ProductFilterBar from '../components/ui/ProductFilterBar';
-import { HandbookModal } from '../components/lead-magnet/HandbookModal';
 import patterns from '../data/patterns';
 import categories from '../data/categories';
 import { getAllProducts, filterPatternsByProducts, getProductsForPattern } from '../data/utils/product-utils';
@@ -20,7 +19,6 @@ export default function HomeClient() {
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [isHandbookModalOpen, setIsHandbookModalOpen] = useState(false);
 
   // Get all available products
   const allProducts = useMemo(() => getAllProducts(patterns), []);
@@ -89,21 +87,22 @@ export default function HomeClient() {
             </div>
 
             {/* CTA Button */}
-            <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setIsHandbookModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-accent-primary text-background-primary font-semibold rounded-lg hover:bg-accent-hover transition-all shadow-lg hover:shadow-xl cursor-pointer"
-            >
-              <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                <path d="M15.645 26.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C8.688 21.36 6.25 18.174 6.25 14.25 6.25 11.322 8.714 9 11.688 9A5.5 5.5 0 0116 11.052 5.5 5.5 0 0120.313 9c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" fill="currentColor" />
-                <path d="M16 16l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
-              </svg>
-              Get 6 Essential AI Design Patterns
-            </motion.button>
+            <Link href="/handbook">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-accent-primary text-background-primary font-semibold rounded-lg hover:bg-accent-hover transition-all shadow-lg hover:shadow-xl cursor-pointer"
+              >
+                <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                  <path d="M15.645 26.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C8.688 21.36 6.25 18.174 6.25 14.25 6.25 11.322 8.714 9 11.688 9A5.5 5.5 0 0116 11.052 5.5 5.5 0 0120.313 9c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" fill="currentColor" />
+                  <path d="M16 16l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
+                </svg>
+                Get 6 Essential AI Design Patterns
+              </motion.div>
+            </Link>
           </div>
         </div>
       </section>
@@ -295,12 +294,6 @@ export default function HomeClient() {
 
       {/* Footer */}
       <Footer />
-
-      {/* Handbook Lead Magnet Modal */}
-      <HandbookModal
-        isOpen={isHandbookModalOpen}
-        onClose={() => setIsHandbookModalOpen(false)}
-      />
     </main>
   );
 }

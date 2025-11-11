@@ -29,21 +29,20 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
         return;
       }
 
-      // Subscribe to newsletter
-      const subscribeResponse = await fetch('/api/newsletter/subscribe', {
+      // Send email to PDF generation endpoint
+      // This will subscribe them to the newsletter AND generate the handbook
+      const handbookResponse = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
-      if (!subscribeResponse.ok) {
-        const data = await subscribeResponse.json();
-        throw new Error(data.error || 'Failed to subscribe');
+      if (!handbookResponse.ok) {
+        const data = await handbookResponse.json();
+        throw new Error(data.error || 'Failed to generate handbook');
       }
 
-      // Get handbook HTML
-      const handbookResponse = await fetch('/api/handbook/generate-pdf');
-      const handbookHTML = await handbookResponse.text();
+      const { html: handbookHTML } = await handbookResponse.json();
 
       // Generate PDF using html2pdf
       const script = document.createElement('script');
@@ -122,7 +121,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-gray-300 text-sm"
+                className="text-background-primary text-sm"
               >
                 6 essential AI design patterns you need to know
               </motion.p>
@@ -156,12 +155,6 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       <span className="text-sm text-gray-700">Best practices from Apple, Google, Figma</span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span className="text-sm text-gray-700">Weekly design insights in your inbox</span>
                     </div>
                   </motion.div>
 
@@ -224,7 +217,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                     </motion.button>
 
                     <p className="text-xs text-gray-500 text-center">
-                      We'll also send you weekly AI design insights. Unsubscribe anytime.
+                      Unsubscribe anytime.
                     </p>
                   </form>
                 </>
@@ -247,7 +240,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                     </motion.div>
                     <h3 className="text-lg font-semibold text-gray-900">All Set!</h3>
                     <p className="text-gray-600">
-                      Your handbook is downloading. Check your email for the welcome message and weekly AI design tips.
+                      Your handbook is downloading. Check your email for the welcome message.
                     </p>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
