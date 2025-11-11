@@ -257,10 +257,20 @@ export function HandbookHero() {
               )}
             </form>
           ) : (
-            <div className="p-4 bg-green-950 border border-green-800 rounded-lg mb-10">
-              <p className="text-green-400 font-semibold mb-1">✓ Check your inbox!</p>
-              <p className="text-green-500 text-sm mb-2">We've sent you a welcome email with a link to download the handbook.</p>
-              <p className="text-green-400 text-xs">You can also download it anytime from your email.</p>
+            <div className="space-y-4 mb-10">
+              <div className="p-4 bg-green-950 border border-green-800 rounded-lg">
+                <p className="text-green-400 font-semibold mb-1">✓ Thank you for subscribing!</p>
+                <p className="text-green-500 text-sm mb-3">We've sent a confirmation email to your inbox.</p>
+              </div>
+              <a
+                href="/handbook"
+                className="w-full block text-center px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition cursor-pointer"
+              >
+                📖 View Handbook Now
+              </a>
+              <p className="text-center text-green-400 text-xs">
+                You can also download it anytime from the link in your email.
+              </p>
             </div>
           )}
 
