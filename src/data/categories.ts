@@ -63,6 +63,15 @@ const categories: Category[] = [
     color: "indigo",
     image: "/images/categories/accessibility-inclusion.gif",
     icon: "Heart"
+  },
+  {
+    id: "safety-harm-prevention",
+    title: "Safety & Harm Prevention",
+    description: "Patterns that prevent AI systems from causing psychological, emotional, or physical harm to users, with special focus on vulnerable populations and crisis situations",
+    slug: "safety-patterns-nextjs-implementation",
+    color: "rose",
+    image: "/images/categories/privacy-control.gif",
+    icon: "ShieldAlert"
   }
 ];
 

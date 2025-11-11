@@ -2,20 +2,14 @@ import { z } from 'zod'
 
 // Pattern category enum schema - matching TypeScript PatternCategory
 const PatternCategorySchema = z.enum([
-  'Contextual Assistance',
-  'Progressive Disclosure',
-  'Human-in-the-Loop',
-  'Conversational UI',
-  'Explainable AI',
-  'Guided Learning',
-  'Adaptive Interfaces',
-  'Multimodal Interaction',
-  'Augmented Creation',
-  'Responsible AI Design',
-  'Error Recovery',
-  'Collaborative AI',
-  'Ambient Intelligence',
-  'Safe Exploration'
+  'Adaptive & Intelligent Systems',
+  'Human-AI Collaboration',
+  'Trustworthy & Reliable AI',
+  'Natural Interaction',
+  'Performance & Efficiency',
+  'Privacy & Control',
+  'Accessibility & Inclusion',
+  'Safety & Harm Prevention'
 ])
 
 // Pattern status enum schema

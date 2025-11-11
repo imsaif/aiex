@@ -221,6 +221,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-11 19:13 (MacBook)
+- **Pattern:** Safety & Harm Prevention (Crisis Detection & Escalation + 3 related patterns)
+- **Status:** ✅ Completed
+- **Files Changed:** 33 (28 new pattern files, 3 new images, 1 demo component, 5 modified files)
+- **Tests Added/Modified:** 0
+- **Notes:** Completed Crisis Detection & Escalation pattern with multi-layer detection system (4 independent layers: keywords, context, behavior, manipulation). Created interactive CrisisDetectionDemo component with real-time detection, auto-scrolling chat interface, and in-chat crisis alert display. Consolidated 3 redundant code examples into 1 comprehensive example covering all layers + React integration. Updated Figma prompt to explain pattern implementation rather than design specs. Integrated real-world example images (Woebot, Crisis Text Line, harmful ChatGPT conversation). Also scaffolded 3 additional Safety & Harm Prevention patterns (Session Degradation Prevention, Anti-Manipulation Safeguards, Vulnerable User Protection) with complete content structure. Pattern validation shows Crisis Detection now has all required images and is fully integrated.
+
 ### Session 2025-11-11 13:27 (MacBook)
 - **Pattern:** Handbook Navigation & Simulator Copy Updates
 - **Status:** ✅ Completed
@@ -287,13 +294,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Completed progressive-enhancement pattern with interactive demo extraction, example image updates, and reset functionality. Extracted ProgressiveEnhancementDemo component with three-level progressive response enhancement (basic → detailed → comprehensive), smooth animations, and stop enhancement capability. Replaced outdated Google Bard reference with Perplexity AI example (attribution-based progressive enhancement). Updated examples.ts to use existing images (claudeprogressiveenhancement.gif, perplexity-attribution.gif, dalle-progressive.gif). Added "Try Another Query" reset button with smooth animations for improved UX. Registered demo in CodeExampleBlock with max-w-4xl width. Pattern now has working interactive preview showing realistic progressive enhancement workflow.
 
 ### Session 2025-11-07 12:01 (MacBook)
-- **Pattern:** Privacy-First Design
-- **Status:** ✅ Completed
-- **Files Changed:** 8
-- **Tests Added/Modified:** 0
-- **Notes:** Completed privacy-first-design pattern with Figma prompt creation, interactive demo component extraction, and example image integration. Created comprehensive 600+ word Figma design prompt with 8 customization tips for Apple/Signal/DuckDuckGo-inspired privacy interfaces. Extracted 277-line privacy settings panel component to PrivacyFirstDesignDemo.tsx with granular controls, data flow visualization, and transparent trade-offs. Registered demo in CodeExampleBlock.tsx for working preview. Added three example images (Apple on-device intelligence, DuckDuckGo AI Chat, Signal privacy-preserving AI) with WebP/GIF optimization. Increased preview width to max-w-4xl for app-like display. Pattern now fully functional with right examples and interactive code preview.
-
-### Session 2025-11-04 14:57 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

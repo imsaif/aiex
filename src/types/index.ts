@@ -123,7 +123,11 @@ export type PatternCategory =
   | 'Adaptive & Intelligent Systems'
   | 'Human-AI Collaboration'
   | 'Trustworthy & Reliable AI'
-  | 'Natural Interaction';
+  | 'Natural Interaction'
+  | 'Performance & Efficiency'
+  | 'Privacy & Control'
+  | 'Accessibility & Inclusion'
+  | 'Safety & Harm Prevention';
 
 /**
  * Pattern status enumeration for project tracking

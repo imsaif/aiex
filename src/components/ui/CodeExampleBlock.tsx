@@ -346,6 +346,19 @@ const UniversalAccessDemo = dynamic(
   }
 );
 
+// Dynamically import the CrisisDetectionDemo component
+const CrisisDetectionDemo = dynamic(
+  () => import('@/components/examples/CrisisDetectionDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -425,6 +438,9 @@ export default function CodeExampleBlock({
         return <ProgressiveEnhancementDemo />;
       case 'universal-access-patterns-demo':
         return <UniversalAccessDemo />;
+      case 'crisis-detection-escalation-demo':
+      case 'multi-layer-crisis-detection':
+        return <CrisisDetectionDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-gray-500">
@@ -514,7 +530,7 @@ export default function CodeExampleBlock({
           <div className="p-6 flex justify-center bg-gray-50 min-h-[400px]">
             <div className={`w-full ${
               // Components that need full width (max-w-6xl)
-              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo'].includes(componentId)
+              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection'].includes(componentId)
                 ? 'max-w-6xl'
                 // Components that need large width (max-w-4xl)
                 : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo'].includes(componentId)

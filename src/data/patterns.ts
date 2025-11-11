@@ -23,6 +23,10 @@ import { progressiveenhancement } from './patterns/patterns/progressive-enhancem
 import { privacyfirstdesign } from './patterns/patterns/privacy-first-design';
 import { selectivememory } from './patterns/patterns/selective-memory';
 import { universalaccesspatterns } from './patterns/patterns/universal-access-patterns';
+import { crisisdetectionescalation } from './patterns/patterns/crisis-detection-escalation';
+import { sessiondegradationprevention } from './patterns/patterns/session-degradation-prevention';
+import { antimanipulationsafeguards } from './patterns/patterns/anti-manipulation-safeguards';
+import { vulnerableuserprotection } from './patterns/patterns/vulnerable-user-protection';
 
 export const patterns: Pattern[] = [
   contextualassistance,
@@ -48,7 +52,11 @@ export const patterns: Pattern[] = [
   progressiveenhancement,
   privacyfirstdesign,
   selectivememory,
-  universalaccesspatterns
+  universalaccesspatterns,
+  crisisdetectionescalation,
+  sessiondegradationprevention,
+  antimanipulationsafeguards,
+  vulnerableuserprotection
 ];
 
 export default patterns;
