@@ -158,9 +158,9 @@ export default function UnifiedSearchBar({
             pr-12
             text-text-primary
             bg-surface-primary
-            border border-border-primary
+            border border-gray-200 dark:border-gray-700
             rounded-lg
-            hover:border-border-secondary
+            hover:border-gray-300 dark:hover:border-gray-600
             focus:outline-none
             focus:ring-2
             focus:ring-ring-focus

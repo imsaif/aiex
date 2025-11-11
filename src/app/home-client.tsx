@@ -70,19 +70,9 @@ export default function HomeClient() {
               Real examples. Best practices.
             </p>
 
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-8">
-              <UnifiedSearchBar
-                placeholder="Search any AI Pattern you need"
-                value={searchQuery}
-                onChange={setSearchQuery}
-                size="md"
-              />
-            </div>
-
             {/* Company Logo Carousel - Social Proof */}
             <div className="mb-12">
-              <p className="text-[10px] font-bold text-text-secondary uppercase tracking-tight mb-3">
+              <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-tight mb-3">
                 Patterns used by leading companies
               </p>
               <CompanyLogoCarousel companies={companyLogos} duration={30} size="sm" gap="lg" />
@@ -110,14 +100,6 @@ export default function HomeClient() {
 
       {/* Main Content with Sidebar */}
       <div id="patterns" className="max-w-7xl mx-auto px-6 pb-24">
-        {/* Mobile Filter Button */}
-        <div className="lg:hidden mb-6">
-          <FilterPills
-            selectedCategory={selectedCategory}
-            onFilterClick={() => setIsFilterSheetOpen(true)}
-          />
-        </div>
-
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
@@ -156,12 +138,32 @@ export default function HomeClient() {
 
           {/* Patterns Grid */}
           <div className="flex-1">
+            {/* Search Bar - Above filters with card styling */}
+            <div className="mb-6 bg-surface-primary rounded-xl p-4 border border-gray-200 shadow-sm">
+              <UnifiedSearchBar
+                placeholder="Search any AI Pattern you need"
+                value={searchQuery}
+                onChange={setSearchQuery}
+                size="sm"
+              />
+            </div>
+
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden mb-6">
+              <FilterPills
+                selectedCategory={selectedCategory}
+                onFilterClick={() => setIsFilterSheetOpen(true)}
+              />
+            </div>
+
             {/* Product Filter Bar */}
-            <ProductFilterBar
-              products={allProducts}
-              selectedProducts={selectedProducts}
-              onProductsChange={setSelectedProducts}
-            />
+            <div className="mb-6">
+              <ProductFilterBar
+                products={allProducts}
+                selectedProducts={selectedProducts}
+                onProductsChange={setSelectedProducts}
+              />
+            </div>
 
             {/* Patterns Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -5,14 +5,12 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import UnifiedSearchBar from '@/components/ui/UnifiedSearchBar';
 import CourseCard from '@/components/ui/CourseCard';
 import GuideFilter from '@/components/ui/GuideFilter';
 import { guides, getAllTools, getAllSkillLevels, searchGuides } from '@/data/guides';
 import { GuideFilter as GuideFilterType } from '@/types';
 
 export default function GuidesClient() {
-  const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState<GuideFilterType>({});
   const [sortBy, setSortBy] = useState<'newest' | 'alphabetical' | 'progress' | 'readtime'>('newest');
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -35,11 +33,6 @@ export default function GuidesClient() {
 
   const filteredGuides = useMemo(() => {
     let result = guides;
-
-    // Apply search
-    if (searchQuery) {
-      result = searchGuides(searchQuery);
-    }
 
     // Apply filters
     if (Object.values(filter).some((v) => v !== undefined)) {
@@ -74,7 +67,7 @@ export default function GuidesClient() {
     }
 
     return sortedResult;
-  }, [searchQuery, filter, sortBy]);
+  }, [filter, sortBy]);
 
   const handleToolChange = (tool: string) => {
     setFilter({
@@ -112,16 +105,6 @@ export default function GuidesClient() {
             <p className="text-lg md:text-xl text-text-secondary mb-8">
               Practical tutorials. Complete learning paths.
             </p>
-
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-8">
-              <UnifiedSearchBar
-                placeholder="Search courses by tool, use case, or skill level"
-                value={searchQuery}
-                onChange={setSearchQuery}
-                size="md"
-              />
-            </div>
           </div>
         </div>
       </section>
@@ -268,7 +251,7 @@ export default function GuidesClient() {
         </div>
 
         {/* Active Filters Display and Clear */}
-        {(Object.values(filter).some((v) => v !== undefined) || searchQuery || sortBy !== 'newest') && (
+        {(Object.values(filter).some((v) => v !== undefined) || sortBy !== 'newest') && (
           <div className="mb-6 flex flex-wrap items-center gap-3">
             {/* Selected Filter Chips */}
             {filter.tool && (
@@ -344,7 +327,6 @@ export default function GuidesClient() {
             <button
               onClick={() => {
                 setFilter({});
-                setSearchQuery('');
                 setSortBy('newest');
               }}
               className="text-sm text-accent-primary hover:text-accent-hover hover:underline transition-colors font-medium"
@@ -364,10 +346,9 @@ export default function GuidesClient() {
         {/* No Results */}
         {filteredGuides.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-text-secondary mb-4">No courses found matching your search.</p>
+            <p className="text-text-secondary mb-4">No courses found matching your filters.</p>
             <button
               onClick={() => {
-                setSearchQuery('');
                 setFilter({});
               }}
               className="px-6 py-2 rounded-lg bg-accent-primary text-background-primary
