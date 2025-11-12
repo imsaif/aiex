@@ -487,10 +487,10 @@ export default function CodeExampleBlock({
             {/* Preview Button */}
             <button
               onClick={() => setShowCode(false)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                 !showCode
-                  ? 'bg-accent-primary text-background-primary shadow-sm hover:bg-accent-hover'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-accent-subtle'
+                  ? 'bg-black text-white shadow-sm hover:bg-gray-800'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -503,10 +503,10 @@ export default function CodeExampleBlock({
             {/* Code Button */}
             <button
               onClick={() => setShowCode(true)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                 showCode
-                  ? 'bg-accent-primary text-background-primary shadow-sm hover:bg-accent-hover'
-                  : 'text-text-secondary hover:text-text-primary hover:bg-accent-subtle'
+                  ? 'bg-black text-white shadow-sm hover:bg-gray-800'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

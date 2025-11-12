@@ -30,13 +30,13 @@ export default function Button({
 
   const variantClasses = {
     // Primary: Filled with brand black
-    primary: 'bg-accent-primary text-background-primary hover:bg-accent-hover active:opacity-90',
+    primary: 'bg-black text-white hover:bg-gray-800 active:opacity-90',
 
     // Secondary: Black border, light background
-    secondary: 'border-2 border-accent-primary bg-surface-primary text-accent-primary hover:bg-accent-subtle active:opacity-90',
+    secondary: 'border-2 border-black bg-white text-black hover:bg-gray-100 active:opacity-90',
 
     // Outline: Border only
-    outline: 'border border-border-primary bg-surface-primary text-text-primary hover:bg-background-secondary active:opacity-90',
+    outline: 'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 active:opacity-90',
   };
 
   const sizeClasses = {

@@ -69,6 +69,12 @@ export default {
         'divider': '#f9f9f9',
         'divider-subtle': '#fcfcfc',
       },
+      textColor: {
+        // Make background colors available as text colors
+        'background-primary': '#ffffff',
+        'background-secondary': '#fafafa',
+        'background-tertiary': '#f5f5f5',
+      },
       ringColor: {
         // Standard focus ring color
         focus: '#3b82f6',

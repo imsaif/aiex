@@ -31,7 +31,7 @@ function EmailSummarizerDemo() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-gray-900 rounded-full border border-gray-200 font-medium hover:from-pink-500/20 hover:to-violet-500/20 transition-colors"
+            className="px-5 py-2 bg-accent-primary text-background-primary rounded-full font-medium hover:bg-accent-hover transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             onClick={() => setShowSummary(true)}
           >
             Show AI Summary
@@ -49,7 +49,7 @@ function EmailSummarizerDemo() {
               {aiSummary}
             </div>
             <button
-              className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-gray-900 rounded-full border border-gray-200 font-medium hover:from-pink-500/20 hover:to-violet-500/20 transition-colors"
+              className="px-5 py-2 bg-accent-primary text-background-primary rounded-full font-medium hover:bg-accent-hover transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               onClick={() => setShowDetails(true)}
             >
               Show More
@@ -68,7 +68,7 @@ function EmailSummarizerDemo() {
               {aiDetails}
             </div>
             <button
-              className="px-5 py-2 bg-gray-100 rounded-full border border-gray-200 text-gray-700 font-medium hover:bg-gray-200 transition-colors"
+              className="px-5 py-2 bg-surface-primary border border-accent-primary text-accent-primary rounded-full font-medium hover:bg-accent-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               onClick={() => {
                 setShowSummary(false);
                 setShowDetails(false);
@@ -120,7 +120,7 @@ function ChatbotDemo() {
               <strong>AI:</strong> The Q2 milestones include feature X and Y, with a planning meeting scheduled for next week.
             </div>
             <button
-              className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-gray-900 rounded-full border border-gray-200 font-medium hover:from-pink-500/20 hover:to-violet-500/20 transition-colors"
+              className="px-5 py-2 bg-accent-primary text-background-primary rounded-full font-medium hover:bg-accent-hover transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               onClick={() => setShowMore(true)}
             >
               More Options
@@ -152,7 +152,7 @@ function ChatbotDemo() {
               </div>
             </div>
             <button
-              className="px-5 py-2 bg-gray-100 rounded-full border border-gray-200 text-gray-700 font-medium hover:bg-gray-200 transition-colors"
+              className="px-5 py-2 bg-surface-primary border border-accent-primary text-accent-primary rounded-full font-medium hover:bg-accent-subtle transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               onClick={() => {
                 setShowAnswer(false);
                 setShowMore(false);
@@ -166,7 +166,7 @@ function ChatbotDemo() {
       </AnimatePresence>
       {!showAnswer && (
         <button
-          className="mt-2 px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-gray-900 rounded-full border border-gray-200 font-medium hover:from-pink-500/20 hover:to-violet-500/20 transition-colors"
+          className="mt-2 px-5 py-2 bg-accent-primary text-background-primary rounded-full font-medium hover:bg-accent-hover transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={!userQuestion.trim()}
           onClick={() => setShowAnswer(true)}
         >

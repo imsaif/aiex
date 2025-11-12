@@ -37,6 +37,7 @@
     "design-style-guide": "node scripts/design-consistency-agent.js style-guide",
     "design-fix": "node scripts/design-consistency-agent.js fix",
     "design-fix-all": "node scripts/design-consistency-agent.js fix-all",
+    "design-audit": "node .scripts/design-audit.js",
     "ts-guardian": "node scripts/typescript-guardian-agent.js",
     "ts-analyze": "node scripts/typescript-guardian-agent.js analyze",
     "ts-fix": "node scripts/typescript-guardian-agent.js fix-all",

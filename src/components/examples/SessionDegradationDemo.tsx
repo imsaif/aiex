@@ -140,13 +140,13 @@ export default function SessionDegradationDemo() {
             <div
               className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
                 msg.role === 'system'
-                  ? 'bg-category-rose text-white w-full'
+                  ? 'bg-red-600 text-white w-full'
                   : msg.role === 'user'
-                  ? 'bg-accent-primary text-background-primary rounded-br-none'
+                  ? 'bg-black text-white rounded-br-none'
                   : msg.safetyLevel === 'critical'
-                  ? 'bg-category-rose text-white'
+                  ? 'bg-red-600 text-white'
                   : msg.safetyLevel === 'warning'
-                  ? 'bg-category-amber text-text-primary'
+                  ? 'bg-yellow-300 text-gray-900'
                   : 'bg-surface-primary border-2 border-border-primary text-text-primary'
               }`}
             >
@@ -163,7 +163,7 @@ export default function SessionDegradationDemo() {
         ))}
 
         {sessionEnded && messages.length > 0 && (
-          <div className="bg-category-rose p-4 rounded-lg text-white text-center">
+          <div className="bg-red-600 p-4 rounded-lg text-white text-center">
             <div className="font-semibold mb-2">⛔ Session Limit Reached</div>
             <div className="text-sm">For your wellbeing, this session has ended.</div>
             <div className="text-sm mt-2">If you need support, please contact:</div>

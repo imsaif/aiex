@@ -119,11 +119,13 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 - `npm run progress-sync` - Synchronize all status files with current state
 
 ### Design Consistency Tools
+- `npm run design-audit` - Scan for hardcoded colors and design token violations (runs on every commit)
 - `npm run design-analyze` - Analyze design consistency
 - `npm run design-report` - Generate design consistency report
 - `npm run design-style-guide` - Generate style guide
 - `npm run design-fix` - Fix single design issue
 - `npm run design-fix-all` - Fix all design issues
+- **See** [Design System Enforcement](docs/DESIGN_SYSTEM_ENFORCEMENT.md) for automatic pre-commit validation
 
 ### Image & Asset Management
 - `npm run optimize-images` - Optimize all images (WebP, AVIF, compression)
