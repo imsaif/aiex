@@ -15,7 +15,7 @@ const ContextualAssistanceDemo = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-category-blue"></div>
       </div>
     )
   }
@@ -458,9 +458,9 @@ export default function CodeExampleBlock({
         return <SessionDegradationDemo />;
       default:
         return (
-          <div className="flex items-center justify-center h-64 text-gray-500">
+          <div className="flex items-center justify-center h-64 text-text-tertiary">
             <div className="text-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-4 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
               <p>Preview not available for this example: {componentId}</p>
@@ -472,25 +472,25 @@ export default function CodeExampleBlock({
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-surface-primary border border-primary rounded-lg shadow-sm overflow-hidden">
       {/* Example header */}
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
-        <p className="text-gray-600">{description}</p>
+      <div className="p-6 border-b border-primary">
+        <h3 className="text-xl font-semibold text-text-primary mb-2">{title}</h3>
+        <p className="text-text-secondary">{description}</p>
       </div>
 
       {/* Content area with toggle */}
       <div className="relative">
         {/* Segmented Control Header */}
-        <div className="flex justify-center p-4 border-b border-gray-200">
-          <div className="inline-flex rounded-lg border border-gray-300 bg-gray-100 p-1">
+        <div className="flex justify-center p-4 border-b border-primary">
+          <div className="inline-flex rounded-lg border border-primary bg-background-secondary p-1">
             {/* Preview Button */}
             <button
               onClick={() => setShowCode(false)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 !showCode
-                  ? 'bg-gray-900 text-white shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-white'
+                  ? 'bg-accent-primary text-background-primary shadow-sm hover:bg-accent-hover'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-accent-subtle'
               }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -505,8 +505,8 @@ export default function CodeExampleBlock({
               onClick={() => setShowCode(true)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 showCode
-                  ? 'bg-gray-900 text-white shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-white'
+                  ? 'bg-accent-primary text-background-primary shadow-sm hover:bg-accent-hover'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-accent-subtle'
               }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -521,13 +521,13 @@ export default function CodeExampleBlock({
         {showCode ? (
           /* Code View */
           <>
-            <div className="flex items-center justify-between bg-gray-800 text-gray-300 text-xs px-4 py-2">
+            <div className="flex items-center justify-between bg-text-primary text-white text-xs px-4 py-2">
               <span className="font-mono">{language}</span>
-              <CopyCodeButton 
+              <CopyCodeButton
                 code={code}
                 variant="standalone"
                 size="sm"
-                className="text-gray-300 hover:text-white bg-transparent border-none hover:bg-gray-700"
+                className="text-white hover:text-background-primary bg-transparent border-none hover:bg-text-secondary"
               />
             </div>
             <SyntaxHighlighter
@@ -566,7 +566,7 @@ export default function CodeExampleBlock({
         )}
 
         {/* Footer Note */}
-        <div className="p-4 border-t border-gray-200 text-xs text-gray-600">
+        <div className="p-4 border-t border-primary text-xs text-text-secondary">
           <p>{showCode ? 'Toggle to preview mode to see the interactive demo.' : 'Toggle to code view to see the implementation details.'}</p>
         </div>
       </div>

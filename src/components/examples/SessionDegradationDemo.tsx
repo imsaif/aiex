@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Button from '@/components/ui/Button';
 
 interface ChatMessage {
   id: number;
@@ -108,7 +109,7 @@ export default function SessionDegradationDemo() {
   };
 
   return (
-    <div className="p-4 bg-surface-primary rounded-lg flex flex-col">
+    <div className="p-4 bg-surface-primary rounded-lg flex flex-col border-2 border-border-primary">
       {/* Header with Status */}
       <div className="flex justify-between items-center border-b border-primary p-3 flex-shrink-0">
         <div>
@@ -126,7 +127,7 @@ export default function SessionDegradationDemo() {
       {/* Chat Messages */}
       <div
         ref={chatContainerRef}
-        className="overflow-y-auto space-y-3 bg-surface-primary p-4 rounded my-3 h-64"
+        className="overflow-y-auto space-y-3 bg-surface-primary p-4 rounded my-3 h-96 border-2 border-border-primary"
       >
         {messages.length === 0 && !isRunning && (
           <div className="text-center text-text-primary py-8">
@@ -141,12 +142,12 @@ export default function SessionDegradationDemo() {
                 msg.role === 'system'
                   ? 'bg-category-rose text-white w-full'
                   : msg.role === 'user'
-                  ? 'bg-category-blue text-white rounded-br-none'
+                  ? 'bg-accent-primary text-background-primary rounded-br-none'
                   : msg.safetyLevel === 'critical'
                   ? 'bg-category-rose text-white'
                   : msg.safetyLevel === 'warning'
-                  ? 'bg-category-amber text-white'
-                  : 'bg-background-secondary border border-primary text-text-primary'
+                  ? 'bg-category-amber text-text-primary'
+                  : 'bg-surface-primary border-2 border-border-primary text-text-primary'
               }`}
             >
               <div>{msg.content}</div>
@@ -172,7 +173,7 @@ export default function SessionDegradationDemo() {
       </div>
 
       {/* Key Pattern Insight */}
-      <div className="bg-surface-primary border-2 border-category-blue p-3 rounded text-sm mb-3">
+      <div className="bg-background-tertiary border-2 border-category-blue p-3 rounded text-sm mb-3">
         <div className="font-semibold text-text-primary mb-1">🔑 Pattern in Action:</div>
         <div className="text-text-primary text-xs">
           As session extends: Safety checks strengthen (🟢 Normal → 🟡 Monitoring → 🔴 Critical)
@@ -182,23 +183,22 @@ export default function SessionDegradationDemo() {
 
       {/* Controls */}
       <div className="flex gap-3 mt-4">
-        <button
+        <Button
           onClick={() => setIsRunning(!isRunning)}
           disabled={sessionEnded}
-          className={`flex-1 py-4 px-8 rounded-lg font-black text-lg transition-colors ${
-            sessionEnded
-              ? 'bg-text-tertiary text-white cursor-not-allowed opacity-50'
-              : 'bg-text-primary hover:bg-accent-primary text-white'
-          }`}
+          variant="primary"
+          size="lg"
+          fullWidth
         >
           {isRunning ? 'Pause' : 'Start Demo'}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={reset}
-          className="px-8 py-4 bg-text-primary hover:bg-accent-primary text-white rounded-lg font-black text-lg transition-colors"
+          variant="secondary"
+          size="lg"
         >
           Reset
-        </button>
+        </Button>
       </div>
     </div>
   );

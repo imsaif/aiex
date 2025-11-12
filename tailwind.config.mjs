@@ -25,7 +25,7 @@ export default {
         },
         // Minimal accent colors for interactive elements
         accent: {
-          primary: '#0d0d0d',
+          primary: '#000000',
           hover: '#262626',
           subtle: '#f5f5f5',
         },
