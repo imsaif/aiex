@@ -82,7 +82,7 @@ Return JSON with this exact structure (no markdown formatting, just raw JSON):
 }`
 
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022', // Using Sonnet for cost efficiency
+      model: 'claude-3-5-sonnet-20240620', // Using Sonnet for cost efficiency
       max_tokens: 1024,
       messages: [
         {
