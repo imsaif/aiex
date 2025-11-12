@@ -26,28 +26,93 @@ export function ScenarioListView() {
     router.push(`/simulator/${scenarioId}`)
   }
 
+  const getMockAnalysis = (): AnalysisResult => {
+    // Generate different mock results for variety
+    const mockScenarios: AnalysisResult[] = [
+      {
+        detected_patterns: {
+          explainableAI: true,
+          confidenceIndicators: true,
+          humanInTheLoop: true,
+          progressiveDisclosure: false,
+          undoRedo: true,
+          gracefulDegradation: false,
+          contextualAssistance: true,
+        },
+        pattern_count: 5,
+        summary: 'This design demonstrates strong AI transparency with clear explanations, confidence indicators, and human oversight controls.',
+      },
+      {
+        detected_patterns: {
+          explainableAI: false,
+          confidenceIndicators: true,
+          humanInTheLoop: false,
+          progressiveDisclosure: true,
+          undoRedo: false,
+          gracefulDegradation: true,
+          contextualAssistance: true,
+        },
+        pattern_count: 4,
+        summary: 'This interface shows moderate AI integration with smart information disclosure and contextual help, but lacks transparency features.',
+      },
+      {
+        detected_patterns: {
+          explainableAI: true,
+          confidenceIndicators: false,
+          humanInTheLoop: true,
+          progressiveDisclosure: true,
+          undoRedo: true,
+          gracefulDegradation: false,
+          contextualAssistance: false,
+        },
+        pattern_count: 4,
+        summary: 'Strong human control and reversibility features present, with progressive disclosure of AI capabilities.',
+      },
+    ]
+
+    // Randomly select a mock scenario for variety
+    return mockScenarios[Math.floor(Math.random() * mockScenarios.length)]
+  }
+
   const analyzeImage = async (imageBase64: string) => {
     console.log('Starting pattern analysis...')
     setIsAnalyzing(true)
     setError(null)
 
+    // Check if mock mode is enabled
+    const isMockMode = process.env.NEXT_PUBLIC_MOCK_ANALYSIS === 'true'
+
     try {
-      const response = await fetch('/api/analyze-patterns', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageBase64 }),
-      })
+      if (isMockMode) {
+        // Mock mode: Simulate API delay and return mock data
+        console.log('🎭 Running in MOCK MODE (no API call)')
+        await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate 2s delay
 
-      const result = await response.json()
-
-      if (result.success) {
-        console.log('✅ Analysis complete:', result.analysis)
-        console.log('📊 Detected patterns:', result.analysis.detected_patterns)
-        console.log('🔢 Pattern count:', result.analysis.pattern_count)
-        console.log('📝 Summary:', result.analysis.summary)
-        setAnalysisResults(result.analysis)
+        const mockResult = getMockAnalysis()
+        console.log('✅ Mock Analysis complete:', mockResult)
+        console.log('📊 Detected patterns:', mockResult.detected_patterns)
+        console.log('🔢 Pattern count:', mockResult.pattern_count)
+        console.log('📝 Summary:', mockResult.summary)
+        setAnalysisResults(mockResult)
       } else {
-        throw new Error(result.error || 'Analysis failed')
+        // Real mode: Call actual API
+        const response = await fetch('/api/analyze-patterns', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageBase64 }),
+        })
+
+        const result = await response.json()
+
+        if (result.success) {
+          console.log('✅ Analysis complete:', result.analysis)
+          console.log('📊 Detected patterns:', result.analysis.detected_patterns)
+          console.log('🔢 Pattern count:', result.analysis.pattern_count)
+          console.log('📝 Summary:', result.analysis.summary)
+          setAnalysisResults(result.analysis)
+        } else {
+          throw new Error(result.error || 'Analysis failed')
+        }
       }
     } catch (err) {
       console.error('❌ Analysis failed:', err)
@@ -100,6 +165,8 @@ export function ScenarioListView() {
     return formatted
   }
 
+  const isMockMode = process.env.NEXT_PUBLIC_MOCK_ANALYSIS === 'true'
+
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
@@ -125,8 +192,19 @@ export function ScenarioListView() {
           <div className="mb-12">
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-6">
-                <h2 className="text-2xl font-semibold mb-2">Analyze Your Design</h2>
-                <p className="text-text-secondary">Upload a screenshot to detect AI UX patterns</p>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <h2 className="text-2xl font-semibold">Analyze Your Design</h2>
+                  {isMockMode && (
+                    <span className="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 rounded-full">
+                      DEMO MODE
+                    </span>
+                  )}
+                </div>
+                <p className="text-text-secondary">
+                  {isMockMode
+                    ? 'Upload any image to see a demo analysis (no API required)'
+                    : 'Upload a screenshot to detect AI UX patterns'}
+                </p>
               </div>
 
               {/* Upload Button */}
@@ -202,7 +280,9 @@ export function ScenarioListView() {
                   </div>
 
                   <div className="text-center text-xs text-gray-500 dark:text-gray-400 italic">
-                    Phase 1: Check browser console for detailed results
+                    {isMockMode
+                      ? '🎭 Demo Mode: These are simulated results. Add ANTHROPIC_API_KEY to .env.local for real analysis.'
+                      : 'Phase 1: Check browser console for detailed results'}
                   </div>
                 </div>
               )}
