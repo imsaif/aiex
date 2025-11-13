@@ -2,11 +2,13 @@
 
 import { useState, FormEvent } from 'react';
 import { ArrowPathIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import DOMPurify from 'dompurify';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'already-subscribed'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ export default function Footer() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source: 'footer' }),
       });
 
       const data = await response.json();
@@ -38,6 +40,10 @@ export default function Footer() {
         setEmail('');
         // Reset status after 5 seconds
         setTimeout(() => setStatus('idle'), 5000);
+      } else if (response.status === 400 && data.error?.includes('already subscribed')) {
+        // User is already subscribed - offer handbook download instead
+        setStatus('already-subscribed');
+        setErrorMessage('');
       } else {
         setStatus('error');
         setErrorMessage(data.error || 'Failed to subscribe. Please try again.');
@@ -46,6 +52,67 @@ export default function Footer() {
       console.error('Newsletter subscription error:', error);
       setStatus('error');
       setErrorMessage('An unexpected error occurred. Please try again later.');
+    }
+  };
+
+  const handleHandbookDownload = async () => {
+    setIsGeneratingPDF(true);
+
+    try {
+      const handbookResponse = await fetch('/api/handbook/generate-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!handbookResponse.ok) {
+        const data = await handbookResponse.json();
+        throw new Error(data.error || 'Failed to generate handbook');
+      }
+
+      const { html: handbookHTML } = await handbookResponse.json();
+
+      // Generate PDF using html2pdf
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      script.onload = () => {
+        const element = document.createElement('div');
+        const sanitizedHTML = DOMPurify.sanitize(handbookHTML, {
+          ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'strong', 'em', 'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'img', 'a', 'span', 'br'],
+          ALLOWED_ATTR: ['class', 'style', 'src', 'alt', 'href', 'id']
+        });
+        element.innerHTML = sanitizedHTML;
+
+        const opt = {
+          margin: 0,
+          filename: 'AI-Design-Patterns.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { orientation: 'portrait', unit: 'in', format: 'letter' },
+        };
+
+        // @ts-ignore - html2pdf is loaded dynamically
+        window.html2pdf().set(opt).from(element).save();
+
+        setStatus('success');
+        setEmail('');
+        setIsGeneratingPDF(false);
+        // Reset status after 5 seconds
+        setTimeout(() => setStatus('idle'), 5000);
+      };
+
+      script.onerror = () => {
+        setErrorMessage('Failed to generate PDF. Please try again.');
+        setIsGeneratingPDF(false);
+        setStatus('error');
+      };
+
+      document.head.appendChild(script);
+    } catch (error) {
+      console.error('Handbook download error:', error);
+      setErrorMessage('An unexpected error occurred. Please try again later.');
+      setIsGeneratingPDF(false);
+      setStatus('error');
     }
   };
 
@@ -91,14 +158,44 @@ export default function Footer() {
 
               {/* Status Messages */}
               {status === 'success' && (
-                <p className="mt-3 text-sm text-green-600 dark:text-green-400">
+                <p className="mt-3 text-sm text-accent-primary">
                   ✓ Thanks for subscribing! Check your email for confirmation.
                 </p>
               )}
               {status === 'error' && (
-                <p className="mt-3 text-sm text-red-600 dark:text-red-400">
+                <p className="mt-3 text-sm text-red-500 dark:text-red-400">
                   {errorMessage}
                 </p>
+              )}
+              {status === 'already-subscribed' && (
+                <div className="mt-4 space-y-3">
+                  <p className="text-sm text-accent-primary font-medium">
+                    ✓ You're already subscribed to our newsletter!
+                  </p>
+                  <p className="text-sm text-text-secondary">
+                    Want to download the free AI Design Patterns Handbook?
+                  </p>
+                  <button
+                    onClick={handleHandbookDownload}
+                    disabled={isGeneratingPDF}
+                    className="w-full px-4 py-2 bg-accent-primary text-background-primary rounded-full font-medium hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  >
+                    {isGeneratingPDF ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <ArrowPathIcon className="w-4 h-4 animate-spin" />
+                        Preparing handbook...
+                      </span>
+                    ) : (
+                      '📖 Download Handbook'
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setStatus('idle')}
+                    className="w-full px-4 py-2 text-text-secondary hover:text-text-primary transition text-sm"
+                  >
+                    No thanks, I'm all set
+                  </button>
+                </div>
               )}
             </form>
           </div>

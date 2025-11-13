@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import DOMPurify from 'dompurify';
 import { companyLogos } from '@/data/company-logos';
 
 const patterns = [
@@ -74,6 +75,7 @@ export function HandbookHero() {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [error, setError] = useState('');
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,22 +90,54 @@ export function HandbookHero() {
         return;
       }
 
-      const subscribeResponse = await fetch('/api/newsletter/subscribe', {
+      // Call handbook PDF generation endpoint (which handles subscription + PDF generation)
+      const handbookResponse = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
-      if (!subscribeResponse.ok) {
-        const data = await subscribeResponse.json();
-        throw new Error(data.error || 'Failed to subscribe');
+      if (!handbookResponse.ok) {
+        const data = await handbookResponse.json();
+        throw new Error(data.error || 'Failed to generate handbook');
       }
 
-      // Show success message immediately
-      setIsEmailSent(true);
-      setIsLoading(false);
-      setEmail('');
-      setIsDownloaded(true);
+      const { html: handbookHTML } = await handbookResponse.json();
+
+      // Generate PDF using html2pdf
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      script.onload = () => {
+        const element = document.createElement('div');
+        const sanitizedHTML = DOMPurify.sanitize(handbookHTML, {
+          ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'strong', 'em', 'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'img', 'a', 'span', 'br'],
+          ALLOWED_ATTR: ['class', 'style', 'src', 'alt', 'href', 'id']
+        });
+        element.innerHTML = sanitizedHTML;
+
+        const opt = {
+          margin: 0,
+          filename: 'AI-Design-Patterns.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { orientation: 'portrait', unit: 'in', format: 'letter' },
+        };
+
+        // @ts-ignore - html2pdf is loaded dynamically
+        window.html2pdf().set(opt).from(element).save();
+
+        setIsDownloaded(true);
+        setEmail('');
+        setIsEmailSent(true);
+        setIsLoading(false);
+      };
+
+      script.onerror = () => {
+        setError('Failed to generate PDF. Please try again.');
+        setIsLoading(false);
+      };
+
+      document.head.appendChild(script);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
       setError(errorMessage);
@@ -124,18 +158,18 @@ export function HandbookHero() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl lg:text-5xl font-bold text-black mb-8 leading-loose">
+          <h1 className="text-4xl lg:text-5xl font-bold text-text-primary mb-8 leading-loose">
             Get 6 Essential AI Design Patterns
           </h1>
 
           {/* Subheading */}
-          <p className="text-lg text-gray-600 mb-12 leading-loose">
+          <p className="text-lg text-text-secondary mb-12 leading-loose">
             Master AI design with proven patterns from leading companies
           </p>
 
           {/* Logos Carousel */}
           <div className="overflow-hidden mb-12">
-            <p className="text-xs text-gray-600 font-semibold uppercase tracking-wide mb-6 leading-relaxed">
+            <p className="text-xs text-text-secondary font-semibold uppercase tracking-wide mb-6 leading-relaxed">
               Patterns used by leading companies
             </p>
             <motion.div
@@ -165,7 +199,7 @@ export function HandbookHero() {
         </div>
 
         {/* Back Link at Bottom */}
-        <Link href="/" className="inline-block text-sm text-gray-600 hover:text-black transition mt-12">
+        <Link href="/" className="inline-block text-sm text-text-secondary hover:text-text-primary transition mt-12">
           ← Back to Home
         </Link>
       </div>
@@ -175,7 +209,7 @@ export function HandbookHero() {
         <div className="max-w-lg mx-auto w-full">
           {/* What's Inside - Pattern Cards Grid */}
           <div className="mb-12">
-            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-4">
+            <p className="text-xs text-text-tertiary font-semibold uppercase tracking-wide mb-4">
               What's Inside
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -185,7 +219,7 @@ export function HandbookHero() {
                   className="bg-gray-900 border border-gray-800 rounded-lg p-3 hover:border-gray-700 transition"
                 >
                   {/* Icon */}
-                  <div className="w-8 h-8 rounded bg-gray-800 text-white flex items-center justify-center mb-2 text-gray-400">
+                  <div className="w-8 h-8 rounded bg-gray-800 text-white flex items-center justify-center mb-2 text-text-tertiary">
                     {pattern.icon}
                   </div>
 
@@ -195,7 +229,7 @@ export function HandbookHero() {
                   </h3>
 
                   {/* Description */}
-                  <p className="text-xs text-gray-400 leading-tight">
+                  <p className="text-xs text-text-tertiary leading-tight">
                     {pattern.description}
                   </p>
                 </div>
@@ -215,7 +249,7 @@ export function HandbookHero() {
                   setError('');
                 }}
                 disabled={isLoading}
-                className="w-full px-5 py-4 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition text-base placeholder-gray-400"
+                className="w-full px-5 py-4 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition text-base placeholder:text-text-tertiary"
                 required
               />
               <button
@@ -229,7 +263,7 @@ export function HandbookHero() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Getting...
+                    Preparing your handbook...
                   </>
                 ) : (
                   <>
@@ -237,13 +271,13 @@ export function HandbookHero() {
                       <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                       <path d="M12 10l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
                     </svg>
-                    Download
+                    Download Handbook
                   </>
                 )}
               </button>
 
               {error && (
-                <div className="text-sm text-red-400 bg-red-950 px-4 py-3 rounded-lg border border-red-800">
+                <div className="text-sm text-red-500 bg-red-950 px-4 py-3 rounded-lg border border-red-800">
                   {error}
                 </div>
               )}
@@ -251,17 +285,22 @@ export function HandbookHero() {
           ) : (
             <div className="space-y-4 mb-10">
               <div className="p-4 bg-green-950 border border-green-800 rounded-lg">
-                <p className="text-green-400 font-semibold mb-1">✓ Thank you for subscribing!</p>
-                <p className="text-green-500 text-sm mb-3">We've sent a confirmation email to your inbox.</p>
+                <p className="text-accent-primary font-semibold mb-1">✓ All Set!</p>
+                <p className="text-accent-primary text-sm mb-3">Your handbook is downloading. Check your email for the welcome message.</p>
               </div>
-              <a
-                href="/handbook"
-                className="w-full block text-center px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition cursor-pointer"
+              <button
+                onClick={() => {
+                  setIsEmailSent(false);
+                  setIsDownloaded(false);
+                  setEmail('');
+                  setError('');
+                }}
+                className="w-full px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition cursor-pointer"
               >
-                📖 View Handbook Now
-              </a>
-              <p className="text-center text-green-400 text-xs">
-                You can also download it anytime from the link in your email.
+                Download Another Copy
+              </button>
+              <p className="text-center text-accent-primary text-xs">
+                You can also access it anytime from the link in your email.
               </p>
             </div>
           )}
@@ -272,19 +311,19 @@ export function HandbookHero() {
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span className="text-xs text-gray-300">15-min read</span>
+              <span className="text-xs text-text-tertiary">15-min read</span>
             </div>
             <div className="flex flex-col items-center">
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
               </svg>
-              <span className="text-xs text-gray-300">100% free</span>
+              <span className="text-xs text-text-tertiary">100% free</span>
             </div>
             <div className="flex flex-col items-center">
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
-              <span className="text-xs text-gray-300">No spam ever</span>
+              <span className="text-xs text-text-tertiary">No spam ever</span>
             </div>
           </div>
         </div>

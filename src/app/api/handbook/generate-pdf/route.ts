@@ -47,13 +47,13 @@ export async function POST(request: NextRequest) {
 
     const { email } = validation.data;
 
-    // Subscribe user to newsletter
+    // Subscribe user to newsletter (with handbook source)
     const subscribeResponse = await fetch(
       new URL('/api/newsletter/subscribe', request.url),
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source: 'handbook' }),
       }
     );
 
