@@ -7,9 +7,9 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import GuideClient from './guide-client';
 
 interface GuidePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {

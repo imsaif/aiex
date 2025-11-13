@@ -9,7 +9,7 @@ export const progressiveenhancement: Pattern = {
   id: "progressive-enhancement",
   title: "Progressive Enhancement",
   slug: "progressive-enhancement",
-  status: 'completed',
+  status: 'implemented',
   description: "Start with fast, basic AI responses and progressively add detail, accuracy, or sophistication as time allows, ensuring immediate feedback while computing better results.",
   category: "Performance & Efficiency",
   tags: ["performance", "streaming", "incremental", "responsive", "speed", "enhancement"],

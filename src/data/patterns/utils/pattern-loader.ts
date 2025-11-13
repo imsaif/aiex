@@ -224,7 +224,7 @@ export const loadPatternWithFallback = async (
       title: fallbackPattern.title || 'Pattern Loading...',
       slug: patternId,
       description: fallbackPattern.description || 'Pattern information is being loaded.',
-      category: fallbackPattern.category || 'Contextual Assistance',
+      category: fallbackPattern.category || 'Performance & Efficiency',
       thumbnail: fallbackPattern.thumbnail || '/images/placeholders/pattern.png',
       content: {
         problem: fallbackPattern.content?.problem || 'Loading...',

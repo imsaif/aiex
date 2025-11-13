@@ -11,9 +11,10 @@ export async function GET() {
   const patternImageEntries = patterns
     .filter((pattern) => pattern.thumbnail)
     .map((pattern) => {
-      const imageUrl = pattern.thumbnail.startsWith('http')
-        ? pattern.thumbnail
-        : `${baseUrl}${pattern.thumbnail}`;
+      const thumbnail = pattern.thumbnail!; // Safe because we filtered for truthiness above
+      const imageUrl = thumbnail.startsWith('http')
+        ? thumbnail
+        : `${baseUrl}${thumbnail}`;
 
       return `
   <url>
@@ -30,9 +31,10 @@ export async function GET() {
   const guideImageEntries = guides
     .filter((guide) => guide.thumbnail)
     .map((guide) => {
-      const imageUrl = guide.thumbnail.startsWith('http')
-        ? guide.thumbnail
-        : `${baseUrl}${guide.thumbnail}`;
+      const thumbnail = guide.thumbnail!; // Safe because we filtered for truthiness above
+      const imageUrl = thumbnail.startsWith('http')
+        ? thumbnail
+        : `${baseUrl}${thumbnail}`;
 
       return `
   <url>

@@ -64,7 +64,7 @@ export default function PredictiveAnticipationDemo() {
   useEffect(() => {
     // Require 3+ views before detecting pattern
     if (viewedIds.length < 3) {
-      setDetectedPattern('');
+      setDetectedPattern(null);
       return;
     }
 

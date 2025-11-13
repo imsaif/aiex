@@ -162,10 +162,10 @@ async function sendPatternUpdateEmail(
       `,
     });
 
-    console.log(`Pattern update email sent successfully to ${email}:`, result);
+    console.log('Pattern update email sent successfully:', { id: result.data?.id, timestamp: new Date().toISOString() });
     return result;
   } catch (error) {
-    console.error(`Failed to send pattern update email to ${email}:`, error);
+    console.error('Failed to send pattern update email:', { error: error instanceof Error ? error.message : 'Unknown error', timestamp: new Date().toISOString() });
     throw error;
   }
 }

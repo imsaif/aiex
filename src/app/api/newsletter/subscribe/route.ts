@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
         try {
           await sendWelcomeEmail(email);
         } catch (emailError) {
-          console.error('Email send failed but reactivation succeeded:', emailError);
+          console.error('Email send failed but reactivation succeeded:', { error: emailError instanceof Error ? emailError.message : 'Unknown error', timestamp: new Date().toISOString() });
           return NextResponse.json(
             {
               message: 'Welcome back! Your subscription has been reactivated. We\'re having trouble sending the confirmation email right now.',
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     try {
       await sendWelcomeEmail(email);
     } catch (emailError) {
-      console.error('Email send failed but subscription created:', emailError);
+      console.error('Email send failed but subscription created:', { subscriberId: subscriber.id, error: emailError instanceof Error ? emailError.message : 'Unknown error', timestamp: new Date().toISOString() });
       // Return success but note email issue
       return NextResponse.json(
         {
@@ -175,10 +175,10 @@ async function sendWelcomeEmail(email: string) {
       `,
     });
 
-    console.log('Welcome email sent successfully:', result);
+    console.log('Welcome email sent successfully:', { id: result.data?.id, timestamp: new Date().toISOString() });
     return result;
   } catch (error) {
-    console.error('Failed to send welcome email:', error);
+    console.error('Failed to send welcome email:', { error: error instanceof Error ? error.message : 'Unknown error', timestamp: new Date().toISOString() });
     // Throw error so we know email failed
     throw new Error(`Email delivery failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }

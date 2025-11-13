@@ -166,11 +166,23 @@ export function getRelatedPatterns(currentPattern: Pattern, limit: number = 3): 
 }
 
 /**
+ * Escape HTML special characters to prevent XSS
+ */
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/**
  * Highlight search matches in text
  */
 export function highlightMatches(text: string, matches: Array<{ key: string; indices: [number, number][]; value: string }>, key: string): string {
   const match = matches.find(m => m.key === key);
-  if (!match || !match.indices) return text;
+  if (!match || !match.indices) return escapeHtml(text);
 
   let highlightedText = text;
   const indices = [...match.indices].reverse(); // Reverse to avoid index shifting
@@ -179,8 +191,8 @@ export function highlightMatches(text: string, matches: Array<{ key: string; ind
     const before = highlightedText.slice(0, start);
     const matched = highlightedText.slice(start, end + 1);
     const after = highlightedText.slice(end + 1);
-    
-    highlightedText = before + `<mark class="bg-yellow-200 text-yellow-900 rounded px-1">${matched}</mark>` + after;
+
+    highlightedText = escapeHtml(before) + `<mark class="bg-yellow-200 text-yellow-900 rounded px-1">${escapeHtml(matched)}</mark>` + escapeHtml(after);
   });
 
   return highlightedText;

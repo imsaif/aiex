@@ -9,7 +9,7 @@ export const safeexploration: Pattern = {
   id: "safe-exploration",
   title: "Safe Exploration",
   slug: "safe-exploration",
-  status: 'completed',
+  status: 'implemented',
   description: "Design controlled environments for experimenting with AI capabilities without risk.",
   category: "Trustworthy & Reliable AI",
   thumbnail: "/images/examples/huggingfacemodels.gif",

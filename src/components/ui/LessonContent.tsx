@@ -3,6 +3,7 @@
 import { GuideLesson } from '@/types';
 import LessonRenderer from './LessonRenderer';
 import { LessonSection } from '@/types/lesson';
+import DOMPurify from 'dompurify';
 
 interface LessonContentProps {
   lesson: GuideLesson;
@@ -27,7 +28,12 @@ export default function LessonContent({
           // Legacy HTML string format
           <div
             className="prose prose-sm dark:prose-invert max-w-none"
-            dangerouslySetInnerHTML={{ __html: lesson.content || '<p>Content coming soon...</p>' }}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(lesson.content || '<p>Content coming soon...</p>', {
+                ALLOWED_TAGS: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'ul', 'ol', 'li', 'code', 'pre', 'a', 'img', 'br', 'hr', 'blockquote', 'span'],
+                ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'id', 'target', 'rel']
+              })
+            }}
           />
         )}
       </div>

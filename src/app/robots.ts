@@ -26,8 +26,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         // Block low-value utility pages from indexing
         userAgent: '*',
-        disallow: '/search',
-        disallow: '/favorites',
+        disallow: ['/search', '/favorites'],
       },
     ],
     // Primary sitemap reference

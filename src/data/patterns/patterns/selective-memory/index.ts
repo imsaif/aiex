@@ -8,7 +8,7 @@ export const selectivememory: Pattern = {
   id: "selective-memory",
   title: "Selective Memory",
   slug: "selective-memory",
-  status: 'completed',
+  status: 'implemented',
   description: "Allow users to control what AI remembers, forgets, or temporarily ignores, with clear mechanisms for viewing, editing, or deleting stored context and preferences.",
   category: "Privacy & Control",
   tags: ["memory", "control", "privacy", "context", "personalization", "user control"],

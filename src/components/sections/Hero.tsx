@@ -135,8 +135,8 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           >
-            <Button 
-              variant="gradient" 
+            <Button
+              variant="primary"
               size="lg"
               className="text-base px-8 py-4"
               onClick={scrollToDiscover}

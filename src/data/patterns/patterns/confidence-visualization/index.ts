@@ -9,7 +9,7 @@ export const confidencevisualization: Pattern = {
   id: "confidence-visualization",
   title: "Confidence Visualization",
   slug: "confidence-visualization",
-  status: 'completed',
+  status: 'implemented',
   description: "Display AI certainty levels through visual indicators, helping users understand prediction reliability and decide when to trust or verify outputs.",
   category: "Trustworthy & Reliable AI",
   tags: ["confidence", "transparency", "certainty", "visual indicators", "trust", "reliability"],

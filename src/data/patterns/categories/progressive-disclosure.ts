@@ -5,7 +5,7 @@ export const progressiveDisclosurePattern: Pattern = {
   title: 'Progressive Disclosure',
   slug: 'progressive-disclosure',
   description: 'Gradually reveal features and information to users based on their needs and expertise level',
-  category: 'Progressive Disclosure',
+  category: 'Performance & Efficiency',
   content: {
     problem: 'Complex applications often overwhelm users with too many features and options at once, leading to cognitive overload and reduced usability.',
     solution: 'Implement a system that gradually reveals features, options, and information to users based on their current needs, expertise level, and context. Start with essential features and progressively introduce more advanced functionality.',

@@ -115,7 +115,7 @@ export default function AugmentedCreationDemo() {
     }
 
     let lastIndex = 0;
-    const parts: JSX.Element[] = [];
+    const parts: React.ReactElement[] = [];
 
     // Sort suggestions by position
     const sortedSuggestions = [...suggestions].sort((a, b) => a.position - b.position);

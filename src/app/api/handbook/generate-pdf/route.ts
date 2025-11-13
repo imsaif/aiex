@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateHandbookHTML } from '@/lib/handbook-content';
+import { z } from 'zod';
 
 /**
  * Generate Designer's AI Handbook PDF
@@ -27,26 +28,24 @@ export async function GET(request: NextRequest) {
   }
 }
 
+const emailSchema = z.object({
+  email: z.string().email('Invalid email format'),
+});
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email } = body;
 
-    if (!email) {
+    // Validate email using Zod
+    const validation = emailSchema.safeParse(body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Email is required' },
+        { error: validation.error.errors[0].message },
         { status: 400 }
       );
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+    const { email } = validation.data;
 
     // Subscribe user to newsletter
     const subscribeResponse = await fetch(
@@ -63,7 +62,8 @@ export async function POST(request: NextRequest) {
       console.error('Newsletter subscription failed:', subscribeData);
       // Continue even if subscription fails - still generate the PDF
     } else {
-      console.log(`Handbook PDF requested by: ${email}`);
+      const redactedEmail = email.replace(/^(.{2}).*(@.*)$/, '$1***$2');
+      console.log(`Handbook PDF requested by: ${redactedEmail}`);
     }
 
     // Generate handbook HTML

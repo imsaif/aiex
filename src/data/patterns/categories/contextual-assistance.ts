@@ -5,7 +5,7 @@ export const contextualAssistancePattern: Pattern = {
   title: 'Contextual Assistance',
   slug: 'contextual-assistance',
   description: 'Provide AI assistance that is relevant to the current context and user needs',
-  category: 'Contextual Assistance',
+  category: 'Performance & Efficiency',
   content: {
     problem: 'Users often need help but may not know what to ask for or when to ask. Traditional help systems require users to interrupt their workflow to search for assistance.',
     solution: 'Create intelligent assistance that proactively offers relevant help, suggestions, or information based on the user\'s current context, behavior patterns, and needs. The system should anticipate user requirements rather than waiting for explicit requests.',

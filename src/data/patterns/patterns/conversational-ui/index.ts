@@ -62,7 +62,6 @@ export const conversationalui: Pattern = {
       "Progressive Disclosure",
       "Multimodal Interaction"
     ],
-    codeExamples,
     figmaPrompt: {
       prompt: `Design a conversational AI interface that feels natural and engaging:
 

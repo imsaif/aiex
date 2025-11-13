@@ -1214,7 +1214,6 @@ export const guides: Guide[] = [
       },
     ],
     lessonCount: 18,
-    totalDuration: 27,
     content: `
       <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to Claude Code Learning Path for Designers</h2>
       <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. <strong>Complete this course in 27 minutes and go from zero to confident.</strong></p>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import DOMPurify from 'dompurify';
 
 export function HandbookFinalCTA() {
   const [email, setEmail] = useState('');
@@ -44,7 +45,11 @@ export function HandbookFinalCTA() {
       script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
       script.onload = () => {
         const element = document.createElement('div');
-        element.innerHTML = handbookHTML;
+        const sanitizedHTML = DOMPurify.sanitize(handbookHTML, {
+          ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'strong', 'em', 'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'img', 'a', 'span', 'br'],
+          ALLOWED_ATTR: ['class', 'style', 'src', 'alt', 'href', 'id']
+        });
+        element.innerHTML = sanitizedHTML;
 
         const opt = {
           margin: 0,

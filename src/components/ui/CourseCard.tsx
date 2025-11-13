@@ -18,7 +18,8 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
   // Get the appropriate icon for the course
   const getIcon = () => {
     const iconProps = { size: 56 };
-    switch (course.tool?.toLowerCase()) {
+    const tool = (course as any).tool as string | undefined;
+    switch (tool?.toLowerCase()) {
       case 'claude code':
         return <div style={{ color: '#D97757' }}><Claude {...iconProps} /></div>;
       case 'cursor':

@@ -75,8 +75,6 @@ const getIcon = (iconType: IconType) => {
       return <CodeBracketIcon {...iconProps} />;
     case 'github':
       return <DocumentIcon {...iconProps} />;
-    case 'image':
-      return <DocumentIcon {...iconProps} />;
     case 'cog':
       return <Cog6ToothIcon {...iconProps} />;
     default:
@@ -155,23 +153,25 @@ const renderSection = (section: LessonSection, index: number) => {
           marginBottom: '1rem',
         },
       };
-      const HeadingTag = section.level as keyof JSX.IntrinsicElements;
+      const HeadingTag = section.level as 'h2' | 'h3' | 'h4';
 
       // For h2, add icon on the right
       if (section.level === 'h2') {
         const icon = getHeadingIcon(section.content);
-        return (
-          <HeadingTag key={index} style={headingStyles[section.level] as React.CSSProperties}>
+        return React.createElement(
+          HeadingTag,
+          { key: index, style: headingStyles[section.level] as React.CSSProperties },
+          <>
             <span>{section.content}</span>
             {icon && <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>{icon}</div>}
-          </HeadingTag>
+          </>
         );
       }
 
-      return (
-        <HeadingTag key={index} style={headingStyles[section.level] as React.CSSProperties}>
-          {section.content}
-        </HeadingTag>
+      return React.createElement(
+        HeadingTag,
+        { key: index, style: headingStyles[section.level] as React.CSSProperties },
+        section.content
       );
 
     case 'text':
@@ -395,7 +395,7 @@ const renderSection = (section: LessonSection, index: number) => {
                 textAlign: 'center',
               }}
             >
-              <div style={{ color: '#9ca3af', marginBottom: '0.5rem' }}>{getIcon('image')}</div>
+              <div style={{ color: '#9ca3af', marginBottom: '0.5rem' }}>{getIcon('github')}</div>
               <p style={{ margin: '0 0 0.5rem 0', color: '#4b5563', fontWeight: 600 }}>
                 {section.label || 'Image coming soon'}
               </p>

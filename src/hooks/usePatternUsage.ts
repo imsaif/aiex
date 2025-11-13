@@ -51,7 +51,7 @@ export function usePatternUsage() {
       }));
 
       // Track analytics
-      trackEvent('pattern_usage', {
+      trackEvent('pattern_view', {
         patternId,
         action: result.isUsing ? 'use' : 'unuse'
       });
