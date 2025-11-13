@@ -259,6 +259,13 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed handbook PDF generation flow by streamlining the modal to send email directly to the API endpoint. Updated HandbookModal component to use single POST call instead of separate newsletter subscribe and PDF generation calls. Enhanced API endpoint to handle email validation, newsletter subscription, and logging in one unified request. Build verified successfully.
 
 
+### Session 2025-11-13 10:15 (MacBook)
+- **Pattern:** Email Signup & Handbook Download System
+- **Status:** ✅ Completed
+- **Files Changed:** 6 (4 modified, 2 new)
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented comprehensive email signup flow audit and system overhaul. Discovered and fixed critical issue where footer and handbook signup flows sent identical misleading emails. Created source-based email differentiation (footer/handbook/direct) with separate email templates: Newsletter Welcome for footer (newsletter-only) vs Handbook Welcome (with 30-day download link). Built HMAC-based token system for 30-day valid PDF download links in emails (no JWT deps needed). Added smart already-subscribed detection in footer with contextual handbook offer instead of error. Enhanced handbook page to match modal experience with full PDF generation. Implemented /api/handbook/download endpoint with token validation. Created 10+ signup scenarios with proper attribution and fallback logic. Updated email button styling for better email client compatibility.
+
 ### Session 2025-11-10 20:45 (MacBook)
 - **Pattern:** Lead Magnet Handbook Refinement - 6 Essential AI Design Patterns
 - **Status:** ✅ Completed
