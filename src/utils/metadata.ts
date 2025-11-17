@@ -68,6 +68,16 @@ export function generateMetadata({
 }
 
 /**
+ * Custom SEO metadata for specific patterns
+ */
+const customPatternMetadata: Record<string, { title: string; description: string }> = {
+  'conversational-ui': {
+    title: 'Conversational UI: Chat & Voice Interface Design Pattern (ChatGPT, Siri Examples)',
+    description: 'Learn conversational UI design with real examples from ChatGPT, Siri, and Slack. Interactive demos, implementation guidelines, and best practices for chat and voice interfaces.',
+  },
+};
+
+/**
  * Generate metadata for pattern pages
  */
 export function generatePatternMetadata({
@@ -85,11 +95,15 @@ export function generatePatternMetadata({
   tags?: string[];
   thumbnail?: string;
 }): Metadata {
-  // Truncate description to 155-160 characters for optimal SEO
-  const truncatedDescription =
-    description.length > 160
-      ? `${description.substring(0, 157)}...`
-      : description;
+  // Check if this pattern has custom SEO metadata
+  const customMetadata = customPatternMetadata[slug];
+
+  // Use custom title or default format
+  const pageTitle = customMetadata?.title || `${title} | AI Design Patterns`;
+
+  // Use custom description or truncate default
+  const pageDescription = customMetadata?.description ||
+    (description.length > 160 ? `${description.substring(0, 157)}...` : description);
 
   // Use pattern thumbnail as OG image if available, otherwise use default
   const ogImage = thumbnail && thumbnail.startsWith('/images/')
@@ -106,8 +120,8 @@ export function generatePatternMetadata({
   ];
 
   return generateMetadata({
-    title: `${title} | AI Design Patterns`,
-    description: truncatedDescription,
+    title: pageTitle,
+    description: pageDescription,
     image: ogImage,
     url: `/patterns/${slug}`,
     type: 'article',
