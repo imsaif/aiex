@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateHandbookHTML } from '@/lib/handbook-content';
 import { validateHandbookToken } from '@/lib/handbook-token';
 import { prisma } from '@/lib/prisma';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 /**
  * Download handbook PDF using a valid token
@@ -49,14 +50,16 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Generate handbook HTML
-    const html = generateHandbookHTML();
+    // Read the PDF file from public folder
+    const pdfPath = join(process.cwd(), 'public', 'handbook.pdf');
+    const pdfBuffer = readFileSync(pdfPath);
 
-    // Return as HTML that the browser can convert to PDF or display
-    return new NextResponse(html, {
+    // Return PDF file
+    return new NextResponse(pdfBuffer, {
       headers: {
-        'Content-Type': 'text/html; charset=utf-8',
-        'Content-Disposition': `attachment; filename="AI-Design-Patterns.html"`,
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="AI-Design-Patterns-Handbook.pdf"`,
+        'Content-Length': pdfBuffer.length.toString(),
       },
     });
   } catch (error) {

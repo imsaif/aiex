@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import DOMPurify from 'dompurify';
 import { companyLogos } from '@/data/company-logos';
 
 const patterns = [
@@ -75,7 +74,6 @@ export function HandbookHero() {
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [error, setError] = useState('');
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +88,8 @@ export function HandbookHero() {
         return;
       }
 
-      // Call handbook PDF generation endpoint (which handles subscription + PDF generation)
+      // Call handbook PDF generation endpoint
+      // This will subscribe them to the newsletter AND generate a download token
       const handbookResponse = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,48 +98,20 @@ export function HandbookHero() {
 
       if (!handbookResponse.ok) {
         const data = await handbookResponse.json();
-        throw new Error(data.error || 'Failed to generate handbook');
+        throw new Error(data.error || 'Failed to prepare handbook download');
       }
 
-      const { html: handbookHTML } = await handbookResponse.json();
+      const { token, email: responseEmail } = await handbookResponse.json();
 
-      // Generate PDF using html2pdf
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.onload = () => {
-        const element = document.createElement('div');
-        const sanitizedHTML = DOMPurify.sanitize(handbookHTML, {
-          ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'strong', 'em', 'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'img', 'a', 'span', 'br'],
-          ALLOWED_ATTR: ['class', 'style', 'src', 'alt', 'href', 'id']
-        });
-        element.innerHTML = sanitizedHTML;
+      // Open PDF in new tab
+      window.open('/handbook.pdf', '_blank');
 
-        const opt = {
-          margin: 0,
-          filename: 'AI-Design-Patterns.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { orientation: 'portrait', unit: 'in', format: 'letter' },
-        };
-
-        // @ts-ignore - html2pdf is loaded dynamically
-        window.html2pdf().set(opt).from(element).save();
-
-        setIsDownloaded(true);
-        setEmail('');
-        setIsEmailSent(true);
-        setIsLoading(false);
-      };
-
-      script.onerror = () => {
-        setError('Failed to generate PDF. Please try again.');
-        setIsLoading(false);
-      };
-
-      document.head.appendChild(script);
+      // Show success state
+      setIsEmailSent(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
       setError(errorMessage);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -284,9 +255,9 @@ export function HandbookHero() {
             </form>
           ) : (
             <div className="space-y-4 mb-10">
-              <div className="p-4 bg-green-950 border border-green-800 rounded-lg">
-                <p className="text-accent-primary font-semibold mb-1">✓ All Set!</p>
-                <p className="text-accent-primary text-sm mb-3">Your handbook is downloading. Check your email for the welcome message.</p>
+              <div className="p-4 bg-green-900 border border-green-600 rounded-lg">
+                <p className="text-white font-semibold mb-1">✓ All Set!</p>
+                <p className="text-white text-sm mb-3">Your handbook is downloading. Check your email for the welcome message.</p>
               </div>
               <button
                 onClick={() => {
@@ -311,19 +282,19 @@ export function HandbookHero() {
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span className="text-xs text-text-tertiary">15-min read</span>
+              <span className="text-xs text-gray-300">15-min read</span>
             </div>
             <div className="flex flex-col items-center">
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
               </svg>
-              <span className="text-xs text-text-tertiary">100% free</span>
+              <span className="text-xs text-gray-300">100% free</span>
             </div>
             <div className="flex flex-col items-center">
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
-              <span className="text-xs text-text-tertiary">No spam ever</span>
+              <span className="text-xs text-gray-300">No spam ever</span>
             </div>
           </div>
         </div>

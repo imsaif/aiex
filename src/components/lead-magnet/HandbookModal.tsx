@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import DOMPurify from 'dompurify';
 
 interface HandbookModalProps {
   isOpen: boolean;
@@ -14,7 +13,6 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [error, setError] = useState('');
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +28,8 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
         return;
       }
 
-      // Send email to PDF generation endpoint
-      // This will subscribe them to the newsletter AND generate the handbook
+      // Send email to generate-pdf endpoint
+      // This will subscribe them to the newsletter AND generate a download token
       const handbookResponse = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -40,42 +38,16 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
 
       if (!handbookResponse.ok) {
         const data = await handbookResponse.json();
-        throw new Error(data.error || 'Failed to generate handbook');
+        throw new Error(data.error || 'Failed to prepare handbook download');
       }
 
-      const { html: handbookHTML } = await handbookResponse.json();
+      const { token, email: responseEmail } = await handbookResponse.json();
 
-      // Generate PDF using html2pdf
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-      script.onload = () => {
-        const element = document.createElement('div');
-        const sanitizedHTML = DOMPurify.sanitize(handbookHTML, {
-          ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'strong', 'em', 'ul', 'ol', 'li', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'img', 'a', 'span', 'br'],
-          ALLOWED_ATTR: ['class', 'style', 'src', 'alt', 'href', 'id']
-        });
-        element.innerHTML = sanitizedHTML;
+      // Open PDF in new tab
+      window.open('/handbook.pdf', '_blank');
 
-        const opt = {
-          margin: 0,
-          filename: 'AI-Design-Patterns.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { orientation: 'portrait', unit: 'in', format: 'letter' },
-        };
-
-        // @ts-ignore - html2pdf is loaded dynamically
-        window.html2pdf().set(opt).from(element).save();
-
-        setIsDownloaded(true);
-        setEmail('');
-      };
-
-      script.onerror = () => {
-        setError('Failed to generate PDF. Please try again.');
-      };
-
-      document.head.appendChild(script);
+      // Show success state
+      setIsDownloaded(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
       setError(errorMessage);
