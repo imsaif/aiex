@@ -4,67 +4,67 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 application showcasing AI design patterns with TypeScript, React 19, and Tailwind CSS. The project has **all 24 AI design patterns fully completed** across 7 categories, with complete implementations including code examples, interactive demos, real-world examples, and design guidance.
+This is a Next.js 15 application showcasing AI design patterns with TypeScript, React 19, and Tailwind CSS. The project has **all 28 AI design patterns fully completed** across 8 categories, with complete implementations including code examples, interactive demos, real-world examples, and design guidance.
 
 ### Pattern Status Summary
-- **✅ All Patterns Complete (24/24)**: Every pattern has complete implementations with code examples, interactive demos, real-world examples, guidelines, considerations, and Figma design prompts
+- **✅ All Patterns Complete (28/28)**: Every pattern has complete implementations with code examples, interactive demos, real-world examples, guidelines, considerations, and Figma design prompts
 
-### All Patterns - Complete (24/24)
+### All Patterns - Complete (28/28)
 1. ✅ Adaptive Interfaces
 2. ✅ Ambient Intelligence (Oct 17)
-3. ✅ Augmented Creation
-4. ✅ Collaborative AI
-5. ✅ Confidence Visualization
-6. ✅ Context Switching (Nov 2)
-7. ✅ Contextual Assistance
-8. ✅ Conversational UI
-9. ✅ Error Recovery
-10. ✅ Explainable AI
-11. ✅ Feedback Loops (Nov 2)
-12. ✅ Graceful Handoff (Nov 2)
-13. ✅ Guided Learning
-14. ✅ Human-in-the-Loop
-15. ✅ Intelligent Caching (Nov 3)
-16. ✅ Multimodal Interaction
-17. ✅ Predictive Anticipation
-18. ✅ Privacy-First Design (Nov 7)
-19. ✅ Progressive Disclosure
-20. ✅ Progressive Enhancement (Nov 7)
-21. ✅ Responsible AI Design
-22. ✅ Safe Exploration (Oct 21)
-23. ✅ Selective Memory
-24. ✅ Universal Access Patterns (Nov 7)
+3. ✅ Anti-Manipulation Safeguards (Nov 11)
+4. ✅ Augmented Creation
+5. ✅ Collaborative AI
+6. ✅ Confidence Visualization
+7. ✅ Context Switching (Nov 2)
+8. ✅ Contextual Assistance
+9. ✅ Conversational UI
+10. ✅ Crisis Detection & Escalation (Nov 11)
+11. ✅ Error Recovery
+12. ✅ Explainable AI
+13. ✅ Feedback Loops (Nov 2)
+14. ✅ Graceful Handoff (Nov 2)
+15. ✅ Guided Learning
+16. ✅ Human-in-the-Loop
+17. ✅ Intelligent Caching (Nov 3)
+18. ✅ Multimodal Interaction
+19. ✅ Predictive Anticipation
+20. ✅ Privacy-First Design (Nov 7)
+21. ✅ Progressive Disclosure
+22. ✅ Progressive Enhancement (Nov 7)
+23. ✅ Responsible AI Design
+24. ✅ Safe Exploration (Oct 21)
+25. ✅ Selective Memory
+26. ✅ Session Degradation Prevention (Nov 11)
+27. ✅ Universal Access Patterns (Nov 7)
+28. ✅ Vulnerable User Protection (Nov 11)
 
-### Pattern Categories (7 Total)
+### Pattern Categories (8 Total)
 
-#### Adaptive & Intelligent Systems (3 patterns)
+#### Accessibility & Inclusion (1 pattern)
+  - Universal Access Patterns
+
+#### Adaptive & Intelligent Systems (4 patterns)
   - Adaptive Interfaces
-  - Predictive Anticipation
   - Ambient Intelligence
-
-#### Human-AI Collaboration (4 patterns)
-  - Human-in-the-Loop
-  - Collaborative AI
   - Guided Learning
+  - Predictive Anticipation
+
+#### Human-AI Collaboration (6 patterns)
   - Augmented Creation
-
-#### Trustworthy & Reliable AI (5 patterns)
-  - Explainable AI
-  - Confidence Visualization
-  - Responsible AI Design
-  - Error Recovery
-  - Safe Exploration
-
-#### Natural Interaction (2 patterns)
-  - Conversational UI
-  - Multimodal Interaction
-
-#### Performance & Efficiency (5 patterns)
-  - Progressive Disclosure
+  - Collaborative AI
   - Contextual Assistance
   - Feedback Loops
   - Graceful Handoff
+  - Human-in-the-Loop
+
+#### Natural Interaction (4 patterns)
   - Context Switching
+  - Conversational UI
+  - Multimodal Interaction
+  - Progressive Disclosure
+
+#### Performance & Efficiency (2 patterns)
   - Intelligent Caching
   - Progressive Enhancement
 
@@ -72,8 +72,18 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
   - Privacy-First Design
   - Selective Memory
 
-#### Accessibility & Inclusion (1 pattern)
-  - Universal Access Patterns
+#### Safety & Harm Prevention (4 patterns)
+  - Anti-Manipulation Safeguards
+  - Crisis Detection & Escalation
+  - Session Degradation Prevention
+  - Vulnerable User Protection
+
+#### Trustworthy & Reliable AI (5 patterns)
+  - Confidence Visualization
+  - Error Recovery
+  - Explainable AI
+  - Responsible AI Design
+  - Safe Exploration
 
 ## Development Commands
 

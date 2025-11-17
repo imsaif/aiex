@@ -13,20 +13,20 @@ export const conversationalui: Pattern = {
     solution: "Create conversational interfaces that understand natural language, maintain context, and respond naturally. Design for text and voice with appropriate personality and tone.",
     examples: [
       {
-        title: "Slack AI Assistant",
-        description: "Integrates naturally into team conversations, understanding context and providing relevant assistance without disrupting workflow.",
+        title: "Slack",
+        description: "Integrates naturally into team conversations, understanding context and providing relevant assistance without disrupting workflow. **Why it works:** Understands workspace context (channels, people, files) and offers both conversational and command-style input.",
         image: "/images/examples/slack-ai.gif",
         altText: "Slack AI conversational interface"
       },
       {
         title: "Microsoft Copilot",
-        description: "Provides intelligent assistance across Microsoft 365, understanding context from documents, emails, and meetings to offer suggestions and automate tasks.",
+        description: "Provides intelligent assistance across Microsoft 365, understanding context from documents, emails, and meetings to offer suggestions and automate tasks. **Why it works:** Integrates conversational AI across multiple apps, maintaining context and adapting tone based on workspace.",
         image: "/images/examples/microsoft-copilot.gif",
         altText: "Microsoft Copilot conversational interface"
       },
       {
         title: "Siri",
-        description: "Apple's voice assistant handles natural speech, maintains context, and integrates with iOS to perform tasks via voice commands.",
+        description: "Apple's voice assistant handles natural speech, maintains context, and integrates with iOS to perform tasks via voice commands. **Why it works:** Seamlessly switches between voice and visual responses, integrates with device context, and handles interruptions naturally.",
         image: "/images/examples/siri-conversation.gif",
         altText: "Siri voice assistant conversational interface"
       }
