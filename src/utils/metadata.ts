@@ -72,8 +72,8 @@ export function generateMetadata({
  */
 const customPatternMetadata: Record<string, { title: string; description: string }> = {
   'conversational-ui': {
-    title: 'Conversational UI: Chat & Voice Interface Design Pattern (ChatGPT, Siri Examples)',
-    description: 'Learn conversational UI design with real examples from ChatGPT, Siri, and Slack. Interactive demos, implementation guidelines, and best practices for chat and voice interfaces.',
+    title: 'Conversational UI: Chat & Voice Interface Design Pattern (Slack, Copilot, Siri Examples)',
+    description: 'Learn conversational UI design with real examples from Slack, Microsoft Copilot, and Siri. Interactive demos, implementation guidelines, and best practices for chat and voice interfaces.',
   },
 };
 
