@@ -19,8 +19,8 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ pattern }) => {
   }
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+    <div className="bg-surface-primary rounded-lg border border-primary p-6">
+      <div className="flex items-center gap-4 text-sm text-text-secondary">
         <span className="font-medium whitespace-nowrap">Used by:</span>
 
         {/* Logo Row */}
@@ -52,7 +52,7 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
   if (hasError) {
     return (
       <span
-        className="text-xs text-gray-400"
+        className="text-xs text-text-tertiary"
       >
         {productName}
       </span>
@@ -77,7 +77,7 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         style={{
-          filter: showTooltip ? 'grayscale(0%)' : baseFilter,
+          filter: baseFilter,
         }}
         onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}
@@ -85,7 +85,7 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
 
       {/* Tooltip */}
       {showTooltip && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap transition-opacity pointer-events-none z-50">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap pointer-events-none z-50">
           {productName}
         </div>
       )}

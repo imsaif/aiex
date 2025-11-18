@@ -21,11 +21,11 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-surface-primary rounded-lg border border-primary shadow-sm overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 px-6 py-4 border-b border-gray-200">
+      <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 px-6 py-4 border-b border-secondary">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
             Copy this prompt to use in Figma Make or other AI design tools
           </p>
           {figmaPrompt.figmaFileUrl && (
@@ -49,8 +49,8 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
       {/* Prompt Content */}
       <div className="p-6">
         <div className="relative">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 pr-12 border border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 pr-12 border border-secondary">
+            <p className="text-sm text-gray-900 dark:text-gray-200 leading-relaxed">
               {figmaPrompt.prompt}
             </p>
           </div>
@@ -96,7 +96,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
 
         {/* Customization Tips */}
         <div className="mt-6">
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
+          <h4 className="text-sm font-semibold text-text-primary mb-3 flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -116,7 +116,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
           </h4>
           <ul className="space-y-2">
             {figmaPrompt.tips.map((tip, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <li key={index} className="flex items-start gap-2 text-sm text-text-secondary">
                 <span className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0">•</span>
                 <span>{tip}</span>
               </li>
@@ -125,9 +125,9 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
         </div>
 
         {/* Usage Instructions */}
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-6 pt-6 border-t border-secondary">
           <details className="group">
-            <summary className="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 flex items-center gap-2">
+            <summary className="cursor-pointer text-sm font-medium text-text-secondary hover:text-text-primary flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -144,7 +144,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
               </svg>
               How to use this prompt
             </summary>
-            <div className="mt-3 pl-6 text-sm text-gray-600 dark:text-gray-400 space-y-2">
+            <div className="mt-3 pl-6 text-sm text-text-secondary space-y-2">
               <p><strong>In Figma Make:</strong></p>
               <ol className="list-decimal list-inside space-y-1 ml-2">
                 <li>Open Figma and click the "Make" button in the toolbar</li>

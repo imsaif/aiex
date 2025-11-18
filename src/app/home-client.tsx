@@ -287,15 +287,11 @@ export default function HomeClient() {
                                   className="relative cursor-pointer peer"
                                   onMouseEnter={(e) => {
                                     const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
-                                    const img = e.currentTarget.querySelector('img') as HTMLImageElement;
                                     if (tooltip) tooltip.style.opacity = '1';
-                                    if (img) img.style.filter = 'grayscale(0%)';
                                   }}
                                   onMouseLeave={(e) => {
                                     const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
-                                    const img = e.currentTarget.querySelector('img') as HTMLImageElement;
                                     if (tooltip) tooltip.style.opacity = '0';
-                                    if (img) img.style.filter = logoFilter;
                                   }}
                                 >
                                   <img

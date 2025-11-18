@@ -3,6 +3,9 @@ import patterns from '@/data/patterns';
 import { Metadata } from 'next';
 import ClientPage from './client-page';
 import { generatePatternMetadata } from '@/utils/metadata';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 
 // Generate static params for all patterns at build time
 export async function generateStaticParams() {
@@ -50,10 +53,15 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
   const nextPattern = currentIndex < patterns.length - 1 ? patterns[currentIndex + 1] : null;
 
   return (
-    <ClientPage
-      pattern={pattern}
-      previousPattern={previousPattern}
-      nextPattern={nextPattern}
-    />
+    <main className="min-h-screen bg-background-primary text-text-primary">
+      <Navbar />
+      <ClientPage
+        pattern={pattern}
+        previousPattern={previousPattern}
+        nextPattern={nextPattern}
+      />
+      <Footer />
+      <ScrollToTop />
+    </main>
   );
 } 

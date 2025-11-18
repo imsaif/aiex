@@ -170,7 +170,7 @@ export default function ContextualAssistanceDemo() {
         <div className="p-4">
           <textarea
             ref={textAreaRef}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 bg-white"
             placeholder="Start typing... (Try phrases like 'I want to' or 'Can you')"
             value={text}
             onChange={handleTextChange}

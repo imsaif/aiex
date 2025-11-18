@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-18 18:20 (MacBook)
+- **Pattern:** Dark Mode & Theme Toggle Enhancements
+- **Status:** ✅ Completed
+- **Files Changed:** 9
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed comprehensive dark mode styling across pattern detail pages (65+ color changes), implemented symmetric theme toggle hover animations, fixed logo CDN URLs from cdn.simpleicons.org to cdn.jsdelivr.net for company and product logos, added Navbar with theme toggle to pattern detail pages, and improved navigation text accessibility with white colors in dark mode
+
 ### Session 2025-11-18 16:18 (MacBook)
 - **Pattern:** Dark Mode Accessibility Improvements
 - **Status:** ✅ Completed
@@ -299,13 +306,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 
 ### Session 2025-11-10 (MacBook)
-- **Pattern:** AI Design Patterns Handbook & Lead Magnet System
-- **Status:** ✅ Completed
-- **Files Changed:** 10 (9 created, 1 modified)
-- **Tests Added/Modified:** 0
-- **Notes:** Completed comprehensive "6 Essential AI Design Patterns" handbook as lead magnet. Created two-column layout with "The Idea" and "Products Doing It Right" sections, added "When to Use" decision trees for each pattern, integrated product images/logos from centralized mapping, and corrected product examples for patterns 2, 5, and 6. Built HandbookModal component with email subscription, PDF generation via html2pdf, and integrated handbook content system. Created brand-colors and content-audit skills for design/quality monitoring. API route generates PDF HTML dynamically. All 6 patterns now have verified products with proper logos and descriptions.
-
-### Session 2025-11-07 22:00 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

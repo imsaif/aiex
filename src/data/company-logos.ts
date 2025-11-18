@@ -19,27 +19,27 @@ export interface CompanyLogo {
 export const companyLogos: CompanyLogo[] = [
   {
     name: 'Apple',
-    logo: 'https://cdn.simpleicons.org/apple/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/apple.svg',
   },
   {
     name: 'Google',
-    logo: 'https://cdn.simpleicons.org/google/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/google.svg',
   },
   {
     name: 'GitHub',
-    logo: 'https://cdn.simpleicons.org/github/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/github.svg',
   },
   {
     name: 'Figma',
-    logo: 'https://cdn.simpleicons.org/figma/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/figma.svg',
   },
   {
     name: 'OpenAI',
-    logo: 'https://cdn.simpleicons.org/openai/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/openai.svg',
   },
   {
     name: 'Anthropic',
-    logo: 'https://cdn.simpleicons.org/anthropic/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/anthropic.svg',
   },
   {
     name: 'Microsoft',
@@ -47,11 +47,11 @@ export const companyLogos: CompanyLogo[] = [
   },
   {
     name: 'Slack',
-    logo: 'https://cdn.simpleicons.org/slack/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/slack.svg',
   },
   {
     name: 'Notion',
-    logo: 'https://cdn.simpleicons.org/notion/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/notion.svg',
   },
   {
     name: 'Adobe',
@@ -59,23 +59,23 @@ export const companyLogos: CompanyLogo[] = [
   },
   {
     name: 'Tesla',
-    logo: 'https://cdn.simpleicons.org/tesla/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/tesla.svg',
   },
   {
     name: 'Netflix',
-    logo: 'https://cdn.simpleicons.org/netflix/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/netflix.svg',
   },
   {
     name: 'Duolingo',
-    logo: 'https://cdn.simpleicons.org/duolingo/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/duolingo.svg',
   },
   {
     name: 'Grammarly',
-    logo: 'https://cdn.simpleicons.org/grammarly/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/grammarly.svg',
   },
   {
     name: 'Midjourney',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Midjourney_Emblem.svg',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/midjourney.svg',
   },
   {
     name: 'Perplexity',
@@ -83,6 +83,6 @@ export const companyLogos: CompanyLogo[] = [
   },
   {
     name: 'Spotify',
-    logo: 'https://cdn.simpleicons.org/spotify/000000',
+    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/spotify.svg',
   },
 ];

@@ -69,8 +69,8 @@ export function getProductLogoUrl(productName: string): string {
     return slug;
   }
 
-  // Otherwise build the Simple Icons CDN URL
-  return `https://cdn.simpleicons.org/${slug}`;
+  // Otherwise build the jsdelivr CDN URL for Simple Icons
+  return `https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/${slug}.svg`;
 }
 
 /**
