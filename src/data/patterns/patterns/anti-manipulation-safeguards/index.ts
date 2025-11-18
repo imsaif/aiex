@@ -11,7 +11,7 @@ export const antimanipulationsafeguards: Pattern = {
   slug: "anti-manipulation-safeguards",
   category: "Safety & Harm Prevention",
   description: "Detect actual harmful intent beyond surface framing regardless of how it's disguised",
-  thumbnail: "/images/examples/privacy-control.gif",
+  thumbnail: "/images/examples/chatgpt_harmfulchat.gif",
   status: "implemented",
   priority: "high",
   complexity: 9,
@@ -30,6 +30,13 @@ export const antimanipulationsafeguards: Pattern = {
       "Catches gradual escalation patterns",
       "Consistent safety regardless of framing",
       "Reduces liability from harmful content"
+    ],
+    usedBy: [
+      "Claude",
+      "Bing Chat",
+      "OpenAI (GPT-4 with guardrails)",
+      "Google Bard",
+      "Any AI system with safety boundaries"
     ],
     guidelines,
     considerations,

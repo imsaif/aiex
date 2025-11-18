@@ -372,6 +372,19 @@ const SessionDegradationDemo = dynamic(
   }
 );
 
+// Dynamically import the AntiManipulationSafeguardsDemo component
+const AntiManipulationSafeguardsDemo = dynamic(
+  () => import('@/components/examples/AntiManipulationSafeguardsDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -456,6 +469,8 @@ export default function CodeExampleBlock({
         return <CrisisDetectionDemo />;
       case 'session-degradation-prevention-example-0':
         return <SessionDegradationDemo />;
+      case 'anti-manipulation-safeguards-demo':
+        return <AntiManipulationSafeguardsDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-text-tertiary">
@@ -551,7 +566,7 @@ export default function CodeExampleBlock({
                 : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo'].includes(componentId)
                 ? 'max-w-4xl'
                 // Components that need medium width (max-w-2xl)
-                : ['session-degradation-prevention-example-0'].includes(componentId)
+                : ['session-degradation-prevention-example-0', 'anti-manipulation-safeguards-demo'].includes(componentId)
                 ? 'max-w-2xl'
                 // Default to medium width for smaller components
                 : 'max-w-lg'

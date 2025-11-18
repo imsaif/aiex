@@ -66,6 +66,7 @@ export interface PatternContent {
   overview?: string;        // Additional context from patterns/types.ts
   whenToUse?: string[];     // Use case guidance
   benefits?: string[];      // Value proposition
+  usedBy?: string[];        // Systems/products using this pattern
   guidelines: string[];
   considerations: string[];
   examples: Example[];

@@ -18,6 +18,7 @@ export const productLogos: Record<string, string> = {
   Microsoft: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg',
   ChatGPT: 'openai',
   Claude: 'anthropic',
+  Bing: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Bing_Fluent_Logo_Text.svg',
   Figma: 'figma',
   Slack: 'slack',
   Discord: 'discord',

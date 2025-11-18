@@ -15,6 +15,7 @@ const patterns = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
+    companies: ['Google', 'GitHub', 'Notion'],
   },
   {
     number: 2,
@@ -25,6 +26,7 @@ const patterns = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
       </svg>
     ),
+    companies: ['ChatGPT', 'Claude', 'Perplexity'],
   },
   {
     number: 3,
@@ -35,6 +37,7 @@ const patterns = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
+    companies: ['Slack', 'Discord', 'Vercel'],
   },
   {
     number: 4,
@@ -45,6 +48,7 @@ const patterns = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
       </svg>
     ),
+    companies: ['Apple', 'DuckDuckGo', 'Signal'],
   },
   {
     number: 5,
@@ -55,6 +59,7 @@ const patterns = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
       </svg>
     ),
+    companies: ['Figma', 'Stripe', 'IBM'],
   },
   {
     number: 6,
@@ -65,6 +70,7 @@ const patterns = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-3" />
       </svg>
     ),
+    companies: ['Canva', 'Webflow', 'Linear'],
   },
 ];
 
@@ -179,14 +185,17 @@ export function HandbookHero() {
       <div className="flex-1 bg-black px-6 sm:px-8 lg:px-12 py-12 lg:py-16 flex flex-col justify-center overflow-y-auto">
         <div className="max-w-lg mx-auto w-full">
           {/* What's Inside - Pattern Cards Grid */}
-          <div className="mb-12">
+          <div className="mb-10">
             <p className="text-xs text-text-tertiary font-semibold uppercase tracking-wide mb-4">
               What's Inside
             </p>
             <div className="grid grid-cols-2 gap-3">
               {patterns.map((pattern) => (
-                <div
+                <motion.div
                   key={pattern.number}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: pattern.number * 0.05 }}
                   className="bg-gray-900 border border-gray-800 rounded-lg p-3 hover:border-gray-700 transition"
                 >
                   {/* Icon */}
@@ -203,10 +212,43 @@ export function HandbookHero() {
                   <p className="text-xs text-text-tertiary leading-tight">
                     {pattern.description}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
+
+          {/* Featured Pattern Preview */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="mb-10"
+          >
+            <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-lg p-4">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-3">
+                Example: Pattern #1
+              </p>
+              <h3 className="text-base font-bold text-white mb-2">Contextual Assistance</h3>
+              <p className="text-xs text-gray-300 leading-relaxed mb-3">
+                Help users when they're stuck. Used by Gmail Smart Compose, GitHub Copilot, and Notion AI.
+              </p>
+              <div className="space-y-1 text-xs text-gray-300">
+                <div className="flex items-center gap-2">
+                  <svg className="w-3 h-3 flex-shrink-0 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Implementation guidelines</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-3 h-3 flex-shrink-0 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Code examples & design prompts</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
           {/* Email Form or Success Message */}
           {!isEmailSent ? (
