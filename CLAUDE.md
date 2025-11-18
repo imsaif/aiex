@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-18 16:18 (MacBook)
+- **Pattern:** Dark Mode Accessibility Improvements
+- **Status:** ✅ Completed
+- **Files Changed:** 13
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed critical dark mode visibility issues on home page. Implemented theme toggle with sun/moon icons in navbar with smooth animations. Created useTheme hook with MutationObserver to bypass CSS specificity issues for logo filters. Fixed categories sidebar to show pure white text in dark mode with black-on-white hover states using reactive isDarkMode state. Updated product filter dropdown with proper dark mode colors. Fixed category chips on pattern cards to have proper contrast (gray-700 background with gray-200 text in dark mode). Connected Tailwind colors to CSS variables for proper theme switching.
+
 ### Session 2025-11-13 09:24 (MacBook)
 - **Pattern:** Code Quality & Security Improvements
 - **Status:** ✅ Completed
@@ -299,20 +306,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Completed comprehensive "6 Essential AI Design Patterns" handbook as lead magnet. Created two-column layout with "The Idea" and "Products Doing It Right" sections, added "When to Use" decision trees for each pattern, integrated product images/logos from centralized mapping, and corrected product examples for patterns 2, 5, and 6. Built HandbookModal component with email subscription, PDF generation via html2pdf, and integrated handbook content system. Created brand-colors and content-audit skills for design/quality monitoring. API route generates PDF HTML dynamically. All 6 patterns now have verified products with proper logos and descriptions.
 
 ### Session 2025-11-07 22:00 (MacBook)
-- **Pattern:** Project Completion - All 24 Patterns Done
-- **Status:** ✅ Completed
-- **Files Changed:** 1 (CLAUDE.md)
-- **Tests Added/Modified:** 0
-- **Notes:** Updated CLAUDE.md to reflect that all 24 AI design patterns are now fully completed. Removed "Patterns Requiring Update" section and consolidated status to show 100% completion across all patterns with implementations, interactive demos, real-world examples, and design guidance. Added completion dates for the 9 most recently completed patterns (Ambient Intelligence Oct 17, Safe Exploration Oct 21, Context Switching/Feedback Loops/Graceful Handoff Nov 2, Intelligent Caching Nov 3, Privacy-First Design/Progressive Enhancement/Universal Access Nov 7).
-
-### Session 2025-11-07 21:31 (MacBook)
-- **Pattern:** Guide Content Updates
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Updated guide images and styling. Removed grayscale hover effect from guide card icons in CourseCard to display tool icons in original colors at all times. Added two real guide images: Claude Code API key GIF (lesson-1) and Cursor interface layout PNG (lesson-2), with proper image references in guides.ts. Both guides now display images in their setup sections.
-
-### Session 2025-11-07 19:59 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

@@ -55,36 +55,36 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
   };
 
   return (
-    <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 shadow-sm mb-6">
+    <div className="bg-surface-primary dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
       <div className="flex flex-wrap items-center gap-2">
         {/* Dropdown Button */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200
-                     bg-white dark:bg-gray-800 text-sm font-medium text-text-primary
-                     hover:border-gray-300 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600
+                     bg-white dark:bg-gray-700 text-sm font-medium text-gray-900 dark:text-gray-100
+                     hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
           >
             {selectedProducts.length > 0 ? `Products (${selectedProducts.length})` : 'All Products'}
             <ChevronDownIcon
-              className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 text-gray-900 dark:text-gray-100 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             />
           </button>
 
         {/* Dropdown Menu */}
         {isOpen && (
-          <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
+          <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700
                         rounded-lg shadow-2xl z-50 min-w-[280px]">
             {/* Search Input */}
-            <div className="sticky top-0 p-3 border-b border-gray-200 bg-white dark:bg-gray-900 rounded-t-lg">
+            <div className="sticky top-0 p-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-t-lg">
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800
-                         border border-gray-200 text-sm
-                         text-text-primary placeholder-text-secondary
+                         border border-gray-200 dark:border-gray-700 text-sm
+                         text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400
                          focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 autoFocus
               />
@@ -105,14 +105,14 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
                       onChange={() => handleProductToggle(product.name)}
                       className="w-4 h-4 rounded border-gray-300 text-blue-600 cursor-pointer"
                     />
-                    <span className="flex-grow text-sm text-text-primary">{product.name}</span>
-                    <span className="text-xs text-text-secondary bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                    <span className="flex-grow text-sm text-gray-900 dark:text-gray-100">{product.name}</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
                       {product.count}
                     </span>
                   </label>
                 ))
               ) : (
-                <div className="px-4 py-6 text-center text-sm text-text-secondary">
+                <div className="px-4 py-6 text-center text-sm text-gray-600 dark:text-gray-400">
                   No products found
                 </div>
               )}

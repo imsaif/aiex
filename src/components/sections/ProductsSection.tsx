@@ -4,6 +4,7 @@ import { Pattern } from '@/types';
 import { getProductsForPattern } from '@/data/utils/product-utils';
 import { getProductLogoUrl, hasProductLogo } from '@/data/product-logos';
 import { useState } from 'react';
+import { useThemeFilter } from '@/hooks/useTheme';
 
 interface ProductsSectionProps {
   pattern: Pattern;
@@ -46,6 +47,7 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
+  const baseFilter = useThemeFilter('grayscale(100%)');
 
   if (hasError) {
     return (
@@ -75,7 +77,7 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
         style={{
-          filter: showTooltip ? 'grayscale(0%)' : 'grayscale(100%)',
+          filter: showTooltip ? 'grayscale(0%)' : baseFilter,
         }}
         onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}

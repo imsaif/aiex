@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Squares2X2Icon, BookOpenIcon, PlayIcon } from '@heroicons/react/24/outline';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -56,6 +57,11 @@ const Navbar = () => {
               <PlayIcon className="w-5 h-5" />
               <span className="hidden sm:inline text-sm font-medium">Simulator</span>
             </Link>
+
+            {/* Theme Toggle */}
+            <div className="relative">
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </div>

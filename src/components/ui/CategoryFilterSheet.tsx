@@ -139,8 +139,8 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
               <button
                 onClick={() => handleCategoryClick('All Categories')}
                 className={`w-full text-left px-4 py-4 flex items-center justify-between
-                         transition-colors hover:bg-gray-50 dark:hover:bg-gray-800
-                         ${selectedCategory === 'All Categories' ? 'bg-gray-50 dark:bg-gray-800' : ''}`}
+                         transition-colors hover:bg-gray-50 dark:hover:bg-gray-700
+                         ${selectedCategory === 'All Categories' ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600' : ''}`}
               >
                 <span className="text-base font-medium text-text-primary">
                   All Categories
@@ -167,9 +167,9 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
                   key={category.id}
                   onClick={() => handleCategoryClick(category.title)}
                   className={`w-full text-left px-4 py-4 flex items-center justify-between
-                           transition-colors hover:bg-gray-50 dark:hover:bg-gray-800
+                           transition-colors hover:bg-gray-50 dark:hover:bg-gray-700
                            border-t border-gray-100 dark:border-gray-800
-                           ${selectedCategory === category.title ? 'bg-gray-50 dark:bg-gray-800' : ''}`}
+                           ${selectedCategory === category.title ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600' : ''}`}
                 >
                   <span className="text-base text-text-primary">
                     {category.title}

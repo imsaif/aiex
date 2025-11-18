@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
@@ -12,6 +12,7 @@ import FilterPills from '../components/ui/FilterPills';
 import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
 import ProductFilterBar from '../components/ui/ProductFilterBar';
 import { HandbookModal } from '../components/lead-magnet/HandbookModal';
+import { useThemeFilter } from '../hooks/useTheme';
 import patterns from '../data/patterns';
 import categories from '../data/categories';
 import { companyLogos } from '../data/company-logos';
@@ -24,6 +25,30 @@ export default function HomeClient() {
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [isHandbookModalOpen, setIsHandbookModalOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Track dark mode state
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = document.documentElement.getAttribute('data-theme');
+      setIsDarkMode(theme === 'dark');
+    };
+
+    // Check initial theme
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Get theme-aware filter for product logos
+  const logoFilter = useThemeFilter('grayscale(100%)');
 
   // Get all available products
   const allProducts = useMemo(() => getAllProducts(patterns), []);
@@ -103,17 +128,37 @@ export default function HomeClient() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 shadow-sm sticky top-4">
-              <h3 className="font-semibold text-lg mb-4">Categories</h3>
+            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm sticky top-4">
+              <h3
+                className="font-semibold text-lg mb-4"
+                style={{ color: isDarkMode ? '#ffffff' : '#111827' }}
+              >
+                Categories
+              </h3>
               <ul className="space-y-2">
                 <li>
                   <button
                     onClick={() => setSelectedCategory('All Categories')}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
                       selectedCategory === 'All Categories'
-                        ? 'bg-black text-white'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-white font-semibold shadow-sm'
+                        : 'hover:bg-white'
                     }`}
+                    style={{
+                      color: selectedCategory === 'All Categories'
+                        ? '#000000'
+                        : isDarkMode ? '#ffffff' : '#374151'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (selectedCategory !== 'All Categories') {
+                        e.currentTarget.style.color = '#000000';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selectedCategory !== 'All Categories') {
+                        e.currentTarget.style.color = isDarkMode ? '#ffffff' : '#374151';
+                      }
+                    }}
                   >
                     All Patterns
                   </button>
@@ -122,11 +167,26 @@ export default function HomeClient() {
                   <li key={cat.id}>
                     <button
                       onClick={() => setSelectedCategory(cat.title)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                      className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
                         selectedCategory === cat.title
-                          ? 'bg-black text-white'
-                          : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                          ? 'bg-white font-semibold shadow-sm'
+                          : 'hover:bg-white'
                       }`}
+                      style={{
+                        color: selectedCategory === cat.title
+                          ? '#000000'
+                          : isDarkMode ? '#ffffff' : '#374151'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (selectedCategory !== cat.title) {
+                          e.currentTarget.style.color = '#000000';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedCategory !== cat.title) {
+                          e.currentTarget.style.color = isDarkMode ? '#ffffff' : '#374151';
+                        }
+                      }}
                     >
                       {cat.title}
                     </button>
@@ -139,7 +199,7 @@ export default function HomeClient() {
           {/* Patterns Grid */}
           <div className="flex-1">
             {/* Search Bar - Above filters with card styling */}
-            <div className="mb-6 bg-surface-primary rounded-xl p-4 border border-gray-200 shadow-sm">
+            <div className="mb-6 bg-surface-primary dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
               <UnifiedSearchBar
                 placeholder="Search any AI Pattern you need"
                 value={searchQuery}
@@ -196,7 +256,7 @@ export default function HomeClient() {
 
                       {/* Top Metadata Row - Category & Status */}
                       <div className="flex items-center gap-2 mb-6">
-                        <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
+                        <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                           {pattern.category}
                         </span>
                         {pattern.status === 'in-progress' && (
@@ -235,7 +295,7 @@ export default function HomeClient() {
                                     const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
                                     const img = e.currentTarget.querySelector('img') as HTMLImageElement;
                                     if (tooltip) tooltip.style.opacity = '0';
-                                    if (img) img.style.filter = 'grayscale(100%)';
+                                    if (img) img.style.filter = logoFilter;
                                   }}
                                 >
                                   <img
@@ -243,7 +303,7 @@ export default function HomeClient() {
                                     alt={product}
                                     className="h-4 w-4 transition-all duration-300"
                                     style={{
-                                      filter: 'grayscale(100%)',
+                                      filter: logoFilter,
                                     }}
                                   />
                                   {/* Tooltip */}

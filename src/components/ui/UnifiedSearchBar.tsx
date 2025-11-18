@@ -157,7 +157,7 @@ export default function UnifiedSearchBar({
             pl-12
             pr-12
             text-text-primary
-            bg-surface-primary
+            bg-surface-primary dark:bg-gray-800
             border border-gray-200 dark:border-gray-700
             rounded-lg
             hover:border-gray-300 dark:hover:border-gray-600

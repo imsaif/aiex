@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CompanyLogo } from '@/data/company-logos';
+import { useThemeFilter } from '@/hooks/useTheme';
 
 interface CompanyLogoCarouselProps {
   /**
@@ -60,6 +61,9 @@ export default function CompanyLogoCarousel({
   showLabel = false,
   className = '',
 }: CompanyLogoCarouselProps) {
+  // Get theme-aware filter for logos
+  const logoFilter = useThemeFilter('grayscale(100%)');
+
   // Duplicate the companies array for seamless looping
   const doubledCompanies = [...companies, ...companies];
 
@@ -123,7 +127,8 @@ export default function CompanyLogoCarousel({
             <img
               src={company.logo}
               alt={company.name}
-              className={`${sizeClasses[size]} w-auto object-contain grayscale opacity-60 transition-opacity duration-300 hover:opacity-100`}
+              className={`${sizeClasses[size]} w-auto object-contain opacity-60 transition-all duration-300 hover:opacity-100`}
+              style={{ filter: logoFilter }}
             />
 
             {/* Optional Label */}

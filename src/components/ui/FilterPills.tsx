@@ -17,9 +17,9 @@ const FilterPills: React.FC<FilterPillsProps> = ({
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={onFilterClick}
-          className="px-4 py-2.5 rounded-full border-2 border-gray-200 dark:border-gray-700
-                   bg-white dark:bg-gray-900 text-text-primary font-medium text-sm
-                   hover:border-gray-300 dark:hover:border-gray-600
+          className="px-4 py-2.5 rounded-full border-2 border-gray-200 dark:border-gray-600
+                   bg-white dark:bg-gray-800 text-text-primary font-medium text-sm
+                   hover:border-gray-300 dark:hover:border-gray-500
                    transition-colors flex items-center gap-2 whitespace-nowrap
                    min-h-[44px] touch-manipulation"
         >

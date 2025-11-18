@@ -6,28 +6,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Accessible grey and white system inspired by Mobbin
+        // Accessible grey and white system using CSS variables for dark mode support
         background: {
-          primary: '#ffffff',
-          secondary: '#fafafa',
-          tertiary: '#f5f5f5',
+          primary: 'var(--background-primary)',
+          secondary: 'var(--background-secondary)',
+          tertiary: 'var(--background-tertiary)',
         },
         surface: {
-          primary: '#ffffff',
-          secondary: '#f9f9f9',
-          elevated: '#ffffff',
+          primary: 'var(--surface-primary)',
+          secondary: 'var(--surface-secondary)',
+          elevated: 'var(--surface-elevated)',
         },
         text: {
-          primary: '#0d0d0d',
-          secondary: '#525252',
-          tertiary: '#737373',
-          disabled: '#a3a3a3',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          tertiary: 'var(--text-tertiary)',
+          disabled: 'var(--text-disabled)',
         },
         // Minimal accent colors for interactive elements
         accent: {
-          primary: '#000000',
-          hover: '#262626',
-          subtle: '#f5f5f5',
+          primary: 'var(--accent-primary)',
+          hover: 'var(--accent-hover)',
+          subtle: 'var(--accent-subtle)',
         },
         // Muted category colors for icons
         category: {
@@ -48,39 +48,39 @@ export default {
         },
       },
       borderColor: {
-        // Base structural borders
-        'primary': '#f9f9f9',
-        'secondary': '#f3f3f3',
-        'focus': '#525252',
+        // Base structural borders using CSS variables for dark mode support
+        'primary': 'var(--border-primary)',
+        'secondary': 'var(--border-secondary)',
+        'focus': 'var(--border-focus)',
 
         // Semantic state borders
-        'success': '#10b981',
-        'error': '#ef4444',
-        'warning': '#f59e0b',
-        'info': '#3b82f6',
+        'success': 'var(--border-success)',
+        'error': 'var(--border-error)',
+        'warning': 'var(--border-warning)',
+        'info': 'var(--border-info)',
 
         // Interactive states
-        'interactive': '#3b82f6',
-        'interactive-hover': '#2563eb',
-        'selected': '#3b82f6',
-        'disabled': '#d1d5db',
+        'interactive': 'var(--border-interactive)',
+        'interactive-hover': 'var(--border-interactive-hover)',
+        'selected': 'var(--border-selected)',
+        'disabled': 'var(--border-disabled)',
 
         // Dividers and separators
-        'divider': '#f9f9f9',
-        'divider-subtle': '#fcfcfc',
+        'divider': 'var(--border-divider)',
+        'divider-subtle': 'var(--border-divider-subtle)',
       },
       textColor: {
-        // Make background colors available as text colors
-        'background-primary': '#ffffff',
-        'background-secondary': '#fafafa',
-        'background-tertiary': '#f5f5f5',
+        // Make background colors available as text colors using CSS variables
+        'background-primary': 'var(--background-primary)',
+        'background-secondary': 'var(--background-secondary)',
+        'background-tertiary': 'var(--background-tertiary)',
       },
       ringColor: {
-        // Standard focus ring color
-        focus: '#3b82f6',
-        'focus-error': '#ef4444',
-        'focus-success': '#10b981',
-        'focus-warning': '#f59e0b',
+        // Standard focus ring color using CSS variables
+        focus: 'var(--ring-focus)',
+        'focus-error': 'var(--ring-focus-error)',
+        'focus-success': 'var(--ring-focus-success)',
+        'focus-warning': 'var(--ring-focus-warning)',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui'],
