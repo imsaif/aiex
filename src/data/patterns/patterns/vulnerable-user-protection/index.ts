@@ -11,7 +11,7 @@ export const vulnerableuserprotection: Pattern = {
   slug: "vulnerable-user-protection",
   category: "Safety & Harm Prevention",
   description: "Detect vulnerable users and apply graduated protections for age, crisis, and dependency risks",
-  thumbnail: "/images/examples/privacy-control.gif",
+  thumbnail: "/images/examples/AI-Woebot-Health.png",
   status: "implemented",
   priority: "high",
   complexity: 9,
