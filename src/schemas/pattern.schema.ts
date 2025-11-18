@@ -80,7 +80,7 @@ export const PatternContentSchema = z.object({
   figmaPrompt: FigmaPromptSchema.optional(),
 })
 
-// Main pattern schema - matching TypeScript Pattern interface exactly  
+// Main pattern schema - matching TypeScript Pattern interface exactly
 export const PatternSchema = z.object({
   id: z.string().min(1, 'ID is required').regex(/^[a-z0-9-]+$/, 'ID must be lowercase with hyphens only'),
   title: z.string().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
@@ -90,8 +90,11 @@ export const PatternSchema = z.object({
   tags: z.array(z.string().min(1)).optional(),
   thumbnail: validatedImageSchema.optional(),
   status: PatternStatusSchema.optional(),
-  priority: PatternPrioritySchema.optional(), 
+  priority: PatternPrioritySchema.optional(),
   complexity: z.number().min(1).max(10).optional(),
+  introduction: z.string().min(150, 'Introduction must be at least 150 characters for SEO').max(500, 'Introduction must be under 500 characters').optional(),
+  datePublished: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in ISO format (YYYY-MM-DD)').optional(),
+  dateModified: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in ISO format (YYYY-MM-DD)').optional(),
   content: PatternContentSchema,
 }).refine(
   (pattern) => pattern.id === pattern.slug,

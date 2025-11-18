@@ -8,6 +8,9 @@ export const conversationalui: Pattern = {
   category: "Natural Interaction",
   description: "Design intuitive, engaging, human-like interactions via chat and voice interfaces.",
   thumbnail: "/images/examples/slack-ai.gif",
+  introduction: "Conversational UI is an AI design pattern where users interact with systems through natural language, either via text or voice, just like talking to another person. Instead of learning complex menus and buttons, you simply type or speak what you need and the AI understands your intent. It's perfect for customer support chatbots, voice assistants in cars or smart homes, or any application where natural language is faster than clicking. Examples include Siri understanding your voice commands, Slack AI responding in team conversations, or ChatGPT engaging in back-and-forth dialogue to solve complex problems.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "Traditional interfaces are rigid, requiring users to learn specific patterns. Users prefer natural language but struggle with AI lacking context or nuance.",
     solution: "Create conversational interfaces that understand natural language, maintain context, and respond naturally. Design for text and voice with appropriate personality and tone.",

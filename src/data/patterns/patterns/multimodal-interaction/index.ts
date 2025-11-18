@@ -6,8 +6,11 @@ export const multimodalinteraction: Pattern = {
   title: "Multimodal Interaction",
   slug: "multimodal-interaction",
   category: "Natural Interaction",
-  description: "Combine multiple input/output modes (voice, touch, gesture, text, visual) for natural, accessible, and efficient user experiences.",
+  description: "Combine voice, touch, gesture, text, and visual input for natural interaction.",
   thumbnail: "/images/examples/geminivoicemode.gif",
+  introduction: "Multimodal Interaction lets users communicate through voice, touch, gestures, text, and visual input, switching seamlessly by context. Instead of one input method, the system adapts to how users naturally interact. It's essential for accessibility, mobile devices, or environments where certain inputs aren't practical. Examples include Google Assistant combining voice and touch, iPad Pro blending Pencil and voice, or Tesla mixing voice, touch, and automatic responses.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "Single-mode interfaces limit user expression and accessibility. Users need flexible interaction methods that adapt to context and abilities.",
     solution: "Integrate multiple interaction modes (voice, touch, text, gestures), allowing users to switch or combine them based on preferences and situation.",

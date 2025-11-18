@@ -11,6 +11,9 @@ export const adaptiveinterfaces: Pattern = {
   category: "Adaptive & Intelligent Systems",
   description: "Interfaces that learn user behavior and automatically adjust layout and functionality to match individual usage patterns.",
   thumbnail: "/images/examples/netflix-adaptive.gif",
+  introduction: "Adaptive Interfaces are AI-powered interfaces that learn from your behavior and automatically rearrange themselves to match how you actually work. Instead of forcing everyone into the same layout, these interfaces observe which features you use most and bring them to the forefront while hiding rarely-used options. It's ideal for complex tools with many features, power users who develop specific workflows, or apps where different users need different things front and center. Think of how Netflix reorganizes its homepage based on what you watch, or how your phone keyboard learns your typing patterns and suggests words you use frequently.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "Static interfaces treat all users identically, leading to inefficient workflows and feature discovery issues.",
     solution: "Design systems that observe user behavior to automatically adapt layout and feature visibility, remaining transparent and user-controllable.",

@@ -87,6 +87,8 @@ export function generatePatternMetadata({
   category,
   tags,
   thumbnail,
+  datePublished,
+  dateModified,
 }: {
   title: string;
   description: string;
@@ -94,6 +96,8 @@ export function generatePatternMetadata({
   category: string;
   tags?: string[];
   thumbnail?: string;
+  datePublished?: string;
+  dateModified?: string;
 }): Metadata {
   // Check if this pattern has custom SEO metadata
   const customMetadata = customPatternMetadata[slug];
@@ -119,6 +123,9 @@ export function generatePatternMetadata({
     'machine learning interface',
   ];
 
+  // Use dateModified if available, otherwise use datePublished
+  const publishedTime = dateModified || datePublished;
+
   return generateMetadata({
     title: pageTitle,
     description: pageDescription,
@@ -126,6 +133,7 @@ export function generatePatternMetadata({
     url: `/patterns/${slug}`,
     type: 'article',
     keywords,
+    publishedTime,
   });
 }
 

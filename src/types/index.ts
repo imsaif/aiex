@@ -100,6 +100,11 @@ export interface Pattern {
   priority?: 'high' | 'medium' | 'low';
   complexity?: number;        // 1-10 scale
 
+  // SEO and content enhancements (added for search optimization)
+  introduction?: string;      // "What is..." introductory paragraph (150-250 words)
+  datePublished?: string;     // ISO 8601 date string (e.g., "2024-01-15")
+  dateModified?: string;      // ISO 8601 date string for last update
+
   // Content structure (enhanced organization beyond flat PRD structure)
   content: PatternContent;
 }

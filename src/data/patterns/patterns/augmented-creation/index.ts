@@ -11,6 +11,9 @@ export const augmentedcreation: Pattern = {
   description: "Empower users to create content with AI as a collaborative partner.",
   category: "Human-AI Collaboration",
   thumbnail: "/images/examples/github-copilot-highlighting.gif",
+  introduction: "Augmented Creation is an AI design pattern where AI acts as a collaborative partner during content creation, offering suggestions and improvements while you maintain full control and authorship. Instead of AI generating everything from scratch, it enhances your creative process by suggesting alternatives, completing patterns, and refining ideas as you work. It's ideal for writers facing creative blocks, designers exploring variations, developers writing code, or any creator who wants AI assistance without losing their unique voice. Examples include GitHub Copilot suggesting code completions, Midjourney helping iterate on art concepts, or writing tools like Jasper offering alternative phrasings while you craft the narrative.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "Content creation is time-consuming, especially with creative blocks or need for high-quality output.",
     solution: "Provide AI tools that collaborate with users, offering suggestions and improvements while maintaining human control and authorship.",

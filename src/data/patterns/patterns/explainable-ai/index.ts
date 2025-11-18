@@ -8,6 +8,9 @@ export const explainableai: Pattern = {
   category: "Trustworthy & Reliable AI",
   description: "Make AI decisions understandable via visualizations, explanations, and transparent reasoning.",
   thumbnail: "/images/examples/claudethinking.gif",
+  introduction: "Explainable AI (XAI) is a design pattern that makes AI decisions understandable by showing how and why the system reached its conclusions. Instead of treating AI as a mysterious black box, this pattern uses visualizations, natural language explanations, and transparent reasoning to build trust and enable verification. It's essential for high-stakes decisions like medical diagnosis or loan approvals, debugging AI systems, or any application where users need to understand the logic behind recommendations. Real examples include Claude showing step-by-step thinking, Perplexity citing sources for every claim, or credit scoring systems explaining which factors influenced your score.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "AI systems often act as 'black boxes,' hindering understanding of decisions. This reduces trust, complicates debugging, and allows biased or incorrect decisions to go unnoticed.",
     solution: "Explain AI conclusions using visualizations, natural language, and interactive elements. Help users understand reasoning, data sources, and confidence levels.",

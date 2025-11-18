@@ -3,6 +3,7 @@ import patterns from '@/data/patterns';
 import { Metadata } from 'next';
 import ClientPage from './client-page';
 import { generatePatternMetadata } from '@/utils/metadata';
+import { generatePatternStructuredData } from '@/utils/structuredData';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -33,6 +34,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     category: pattern.category,
     tags: pattern.tags,
     thumbnail: pattern.thumbnail,
+    datePublished: pattern.datePublished,
+    dateModified: pattern.dateModified,
   });
 }
 
@@ -52,16 +55,30 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
   const previousPattern = currentIndex > 0 ? patterns[currentIndex - 1] : null;
   const nextPattern = currentIndex < patterns.length - 1 ? patterns[currentIndex + 1] : null;
 
+  // Generate structured data for SEO
+  const structuredData = generatePatternStructuredData(pattern);
+
   return (
-    <main className="min-h-screen bg-background-primary text-text-primary">
-      <Navbar />
-      <ClientPage
-        pattern={pattern}
-        previousPattern={previousPattern}
-        nextPattern={nextPattern}
-      />
-      <Footer />
-      <ScrollToTop />
-    </main>
+    <>
+      {/* Structured Data (JSON-LD) for SEO */}
+      {structuredData.map((schema, index) => (
+        <script
+          key={`structured-data-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+
+      <main className="min-h-screen bg-background-primary text-text-primary">
+        <Navbar />
+        <ClientPage
+          pattern={pattern}
+          previousPattern={previousPattern}
+          nextPattern={nextPattern}
+        />
+        <Footer />
+        <ScrollToTop />
+      </main>
+    </>
   );
 } 

@@ -8,6 +8,9 @@ export const humanintheloop: Pattern = {
   category: "Human-AI Collaboration",
   description: "Balance automation with human oversight for critical decisions, ensuring AI augments human judgment.",
   thumbnail: "/images/examples/grammarly-suggestions.gif",
+  introduction: "Human-in-the-Loop is an AI design pattern where humans review and approve critical AI decisions before they're finalized. Instead of full automation, this pattern keeps humans as active participants who validate outputs and maintain control. It's essential for high-stakes decisions, situations requiring ethical judgment, or when building trust in new AI systems. Examples include Grammarly suggesting edits that you approve, content moderation tools that flag issues for human review, and medical AI that provides recommendations for doctors to confirm.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "Fully automated AI systems risk critical errors and lack transparency. Users need review and override capabilities for safety and trust.",
     solution: "Design systems for human intervention, review, or approval of AI outputs. Provide clear handoff points, easy override mechanisms, and transparent explanations.",

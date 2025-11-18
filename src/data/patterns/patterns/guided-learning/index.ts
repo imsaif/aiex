@@ -8,6 +8,9 @@ export const guidedlearning: Pattern = {
   category: "Adaptive & Intelligent Systems",
   description: "Break complex tasks into guided steps, adapting to user knowledge levels.",
   thumbnail: "/images/examples/duolingo-adaptive.gif",
+  introduction: "Guided Learning is an AI design pattern that breaks complex tasks into manageable step-by-step experiences, adapting to each user's knowledge level and pace. Instead of overwhelming users with all features at once, the system progressively introduces concepts with contextual hints and adjusts difficulty based on performance. It's perfect for onboarding new users to complex tools, educational platforms, or any application with a steep learning curve. Examples include Duolingo adapting language lessons to your skill level, Figma's interactive tutorials highlighting relevant UI elements, or GitHub Codespaces guiding environment setup based on your selections.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "Complex AI systems overwhelm users with too many options, causing confusion and poor adoption.",
     solution: "Create step-by-step learning experiences with contextual hints and adaptive difficulty to progressively guide users.",

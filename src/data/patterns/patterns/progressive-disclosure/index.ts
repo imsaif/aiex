@@ -8,6 +8,9 @@ export const progressivedisclosure: Pattern = {
   description: "Gradually reveal information, options, or AI features to reduce cognitive load and simplify complex tasks.",
   tags: ["step by step", "gradual reveal", "complexity management", "UX layers", "feature discovery", "simplification", "cognitive load"],
   thumbnail: "/images/examples/loom-ai.gif",
+  introduction: "Progressive Disclosure is an AI design pattern that reveals complexity gradually. It shows simple features first, then unveils advanced capabilities as needed. Instead of overwhelming users with every AI setting and option upfront, this pattern starts with essentials and expands on demand. It's ideal for powerful AI tools with many features, onboarding new users, or preventing decision paralysis. Think of how Loom shows basic video tools first, then reveals AI transcription when you click 'more options,' or how ChatGPT starts simple but offers advanced settings in a menu.",
+  datePublished: "2024-01-15",
+  dateModified: "2025-11-18",
   content: {
     problem: "Complex AI features shown all at once can overwhelm users, causing abandonment or difficulty finding advanced options.",
     solution: "Progressively reveal information and AI features. Start with essentials, then offer advanced features as users interact or request more.",

@@ -139,6 +139,21 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         </div>
       </motion.div>
 
+      {/* Introduction Section - SEO Enhanced */}
+      {pattern.introduction && (
+        <motion.div
+          className="mb-10"
+          variants={itemVariants}
+        >
+          <h2 className="text-xl font-semibold text-text-primary mb-4">
+            What is {pattern.title}?
+          </h2>
+          <p className="text-lg text-text-secondary leading-relaxed">
+            {pattern.introduction}
+          </p>
+        </motion.div>
+      )}
+
       {/* Main Content - Full Width */}
       <div className="space-y-12">
         {/* Problem and Solution Side by Side */}
@@ -169,7 +184,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Image Carousel for Examples */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Examples in the Wild</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Real-World Examples</h2>
             <div className="bg-surface-primary rounded-lg p-2 overflow-hidden border border-primary shadow-sm">
               <Carousel examples={pattern.content.examples} />
             </div>
@@ -179,7 +194,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Code Examples */}
         {pattern.content.codeExamples && pattern.content.codeExamples.length > 0 && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Interactive Code Example</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Implementation</h2>
 
             <div className="space-y-8">
               {pattern.content.codeExamples.map((example, index) => (
@@ -199,14 +214,14 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Figma AI Prompt */}
         {pattern.content.figmaPrompt && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Design Resources</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Figma AI Prompt</h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </motion.section>
         )}
 
         {/* Implementation Guidelines and Design Considerations */}
         <motion.section variants={itemVariants}>
-          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Implementation & Considerations</h2>
+          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Guidelines & Considerations</h2>
 
           <div className="bg-surface-primary border border-primary rounded-lg shadow-sm overflow-hidden">
             <div className="flex flex-col md:flex-row">
