@@ -161,15 +161,15 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
           variants={itemVariants}
         >
-          <section className="bg-surface-primary p-6 rounded-lg border border-primary shadow-sm">
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-secondary">Problem</h2>
+          <section className="bg-surface-primary p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-gray-300 dark:border-gray-600">Problem</h2>
             <div className="prose prose-lg max-w-none text-text-secondary">
               <p>{pattern.content.problem}</p>
             </div>
           </section>
 
-          <section className="bg-surface-primary p-6 rounded-lg border border-primary shadow-sm">
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-secondary">Solution</h2>
+          <section className="bg-surface-primary p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-gray-300 dark:border-gray-600">Solution</h2>
             <div className="prose prose-lg max-w-none text-text-secondary">
               <p>{pattern.content.solution}</p>
             </div>
@@ -184,8 +184,8 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Image Carousel for Examples */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Real-World Examples</h2>
-            <div className="bg-surface-primary rounded-lg p-2 overflow-hidden border border-primary shadow-sm">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Real-World Examples</h2>
+            <div className="bg-surface-primary rounded-lg p-2 overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
               <Carousel examples={pattern.content.examples} />
             </div>
           </motion.section>
@@ -194,7 +194,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Code Examples */}
         {pattern.content.codeExamples && pattern.content.codeExamples.length > 0 && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Implementation</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Implementation</h2>
 
             <div className="space-y-8">
               {pattern.content.codeExamples.map((example, index) => (
@@ -214,25 +214,25 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Figma AI Prompt */}
         {pattern.content.figmaPrompt && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Figma AI Prompt</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Figma AI Prompt</h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </motion.section>
         )}
 
         {/* Implementation Guidelines and Design Considerations */}
         <motion.section variants={itemVariants}>
-          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Guidelines & Considerations</h2>
+          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Guidelines & Considerations</h2>
 
-          <div className="bg-surface-primary border border-primary rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
             <div className="flex flex-col md:flex-row">
-              <div className="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-primary">
-                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-secondary">
+              <div className="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700">
+                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-gray-300 dark:border-gray-600">
                   Implementation Guidelines
                 </h3>
                 <div className="space-y-4">
                   {pattern.content.guidelines.map((guideline, i) => (
                     <div key={i} className="flex items-start">
-                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-secondary rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
+                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
                         {i + 1}
                       </div>
                       <p className="text-text-secondary">{guideline}</p>
@@ -242,13 +242,13 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               </div>
 
               <div className="flex-1 p-6 md:p-8 bg-background-secondary">
-                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-secondary">
+                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-gray-300 dark:border-gray-600">
                   Design Considerations
                 </h3>
                 <div className="space-y-4">
                   {pattern.content.considerations.map((consideration, i) => (
                     <div key={i} className="flex items-start">
-                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-secondary rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
+                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
                         {i + 1}
                       </div>
                       <p className="text-text-secondary">{consideration}</p>
@@ -262,13 +262,13 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
         {/* Related Patterns */}
         <motion.section variants={itemVariants}>
-          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Related Patterns</h2>
+          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Patterns</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {pattern.content.relatedPatterns.map((related, i) => (
               <Link
                 key={i}
                 href={`/patterns/${related.toLowerCase().replace(/\s+/g, '-')}`}
-                className="bg-surface-primary rounded-lg p-6 shadow-sm border border-primary hover:bg-background-secondary transition-colors"
+                className="bg-surface-primary rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-background-secondary transition-colors"
               >
                 <div className="flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-tertiary mr-3">
@@ -287,13 +287,13 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           const relatedGuides = getGuidesForPattern(pattern.title);
           return relatedGuides.length > 0 ? (
             <motion.section variants={itemVariants}>
-              <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-secondary">Related Guides</h2>
+              <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Guides</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {relatedGuides.map((guide) => (
                   <Link
                     key={guide.id}
                     href={`/guides/${guide.slug}`}
-                    className="bg-surface-primary rounded-lg p-6 shadow-sm border border-primary hover:bg-background-secondary transition-colors"
+                    className="bg-surface-primary rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-background-secondary transition-colors"
                   >
                     <div className="flex flex-col">
                       <div className="flex items-center justify-between mb-3">
@@ -314,7 +314,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
         {/* Previous/Next Pattern Navigation */}
         <motion.div
-          className="flex flex-col sm:flex-row justify-between items-center border-t border-primary pt-8 mt-12"
+          className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-8 mt-12"
           variants={itemVariants}
         >
           {previousPattern ? (
@@ -332,7 +332,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </Link>
           ) : <div />}
 
-          <Link href="/" className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-text-secondary rounded-full hover:from-pink-500/20 hover:to-violet-500/20 transition-colors font-medium border border-primary">
+          <Link href="/" className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-text-secondary rounded-full hover:from-pink-500/20 hover:to-violet-500/20 transition-colors font-medium border border-gray-200 dark:border-gray-700">
             View All Patterns
           </Link>
 

@@ -502,9 +502,9 @@ export default function CodeExampleBlock({
   };
 
   return (
-    <div className="bg-surface-primary border border-primary rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
       {/* Example header */}
-      <div className="p-6 border-b border-primary">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         <h3 className="text-xl font-semibold text-text-primary mb-2">{title}</h3>
         <p className="text-text-secondary">{description}</p>
       </div>
@@ -512,8 +512,8 @@ export default function CodeExampleBlock({
       {/* Content area with toggle */}
       <div className="relative">
         {/* Segmented Control Header */}
-        <div className="flex justify-center p-4 border-b border-primary">
-          <div className="inline-flex rounded-lg border border-primary bg-background-secondary p-1">
+        <div className="flex justify-center p-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-background-secondary p-1">
             {/* Preview Button */}
             <button
               onClick={() => setShowCode(false)}
@@ -599,7 +599,7 @@ export default function CodeExampleBlock({
         )}
 
         {/* Footer Note */}
-        <div className="p-4 border-t border-primary text-xs text-text-secondary">
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
           <p>{showCode ? 'Toggle to preview mode to see the interactive demo.' : 'Toggle to code view to see the implementation details.'}</p>
         </div>
       </div>

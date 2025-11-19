@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-19 11:59 (MacBook)
+- **Pattern:** Dark Mode Enhancements & Border Consistency
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented comprehensive dark mode support across the entire site. Fixed Tailwind dark mode configuration by adding `darkMode: ['selector', '[data-theme="dark"]']` to enable all `dark:` utility classes. Updated pattern detail page borders to match home page cards (border-gray-200/gray-700 instead of border-primary/secondary). Enhanced "Get 6 Essential AI Design Patterns" button with proper dark mode styling (black→white, white→black). Completely refactored HandbookModal component with full dark mode support including header, body text, input fields, buttons, icons, and success state. Updated FigmaPromptCard, CodeExampleBlock, and ProductsSection components with consistent gray borders for both light and dark modes. All components now follow minimal black/white brand aesthetic with proper contrast in both modes.
+
 ### Session 2025-11-18 21:11 (MacBook)
 - **Pattern:** SEO Optimization - Pattern Introductions
 - **Status:** ✅ Completed
@@ -298,13 +305,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Implemented comprehensive email signup flow audit and system overhaul. Discovered and fixed critical issue where footer and handbook signup flows sent identical misleading emails. Created source-based email differentiation (footer/handbook/direct) with separate email templates: Newsletter Welcome for footer (newsletter-only) vs Handbook Welcome (with 30-day download link). Built HMAC-based token system for 30-day valid PDF download links in emails (no JWT deps needed). Added smart already-subscribed detection in footer with contextual handbook offer instead of error. Enhanced handbook page to match modal experience with full PDF generation. Implemented /api/handbook/download endpoint with token validation. Created 10+ signup scenarios with proper attribution and fallback logic. Updated email button styling for better email client compatibility.
 
 ### Session 2025-11-10 20:45 (MacBook)
-- **Pattern:** Lead Magnet Handbook Refinement - 6 Essential AI Design Patterns
-- **Status:** ✅ Completed
-- **Files Changed:** 2 (2 modified)
-- **Tests Added/Modified:** 0
-- **Notes:** Refined the lead magnet PDF handbook with comprehensive improvements. Applied consistent "When to Use" section formatting (with proper div wrapper and styling) to all 6 patterns, removed gray backgrounds and borders for clean aesthetic, added 2px solid borders to all pages for professional presentation. Replaced "Join the Community" section with dual CTAs: "Go Deeper with All 24 Patterns" (links to aiuxdesign.guide) and "Try the Interactive Simulator" (links to simulator page). Integrated "Build toward that" into Final Truth paragraph for stronger closing statement.
-
-### Session 2025-11-10 19:56 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

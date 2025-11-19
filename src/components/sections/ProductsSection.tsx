@@ -19,7 +19,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({ pattern }) => {
   }
 
   return (
-    <div className="bg-surface-primary rounded-lg border border-primary p-6">
+    <div className="bg-surface-primary rounded-lg border border-gray-200 dark:border-gray-700 p-6">
       <div className="flex items-center gap-4 text-sm text-text-secondary">
         <span className="font-medium whitespace-nowrap">Used by:</span>
 

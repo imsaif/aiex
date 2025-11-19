@@ -71,13 +71,13 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ type: 'spring', duration: 0.3 }}
-            className="relative w-full max-w-lg bg-white rounded-xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-lg bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 text-gray-400 hover:text-gray-600 transition"
+              className="absolute top-4 right-4 z-10 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -85,12 +85,12 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
             </button>
 
             {/* Header */}
-            <div className="bg-accent-primary px-6 py-8 text-background-primary">
+            <div className="bg-black dark:bg-white px-6 py-8">
               <motion.h2
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="text-2xl font-bold mb-2"
+                className="text-2xl font-bold mb-2 text-white dark:text-black"
               >
                 Get 6 Essential AI Design Patterns
               </motion.h2>
@@ -98,7 +98,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-background-primary text-sm"
+                className="text-white dark:text-black text-sm"
               >
                 6 essential AI design patterns you need to know
               </motion.p>
@@ -116,22 +116,22 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                     className="mb-6 space-y-3"
                   >
                     <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-black dark:text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-sm text-gray-700">6 essential AI design patterns</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300">6 essential AI design patterns</span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-black dark:text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-sm text-gray-700">Implementation guides for each pattern</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300">Implementation guides for each pattern</span>
                     </div>
                     <div className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-5 h-5 text-black dark:text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-sm text-gray-700">Best practices from Apple, Google, Figma</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300">Best practices from Apple, Google, Figma</span>
                     </div>
                   </motion.div>
 
@@ -150,7 +150,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                           setEmail(e.target.value);
                           setError('');
                         }}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent transition"
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent transition"
                         required
                       />
                     </motion.div>
@@ -171,7 +171,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       transition={{ delay: 0.5 }}
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-black text-white font-semibold py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full bg-black dark:bg-white text-white dark:text-black font-semibold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                     >
                       {isLoading ? (
                         <>
@@ -185,7 +185,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                         <>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                             <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                            <path d="M12 10l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
+                            <path d="M12 10l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" className="fill-white dark:fill-black" />
                           </svg>
                           Download Handbook
                         </>
@@ -197,7 +197,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.55 }}
                       href="/handbook"
-                      className="w-full text-accent-primary font-semibold py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full text-black dark:text-white font-semibold py-3 rounded-lg cursor-pointer flex items-center justify-center gap-2 hover:underline"
                     >
                       Preview handbook
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +205,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       </svg>
                     </motion.a>
 
-                    <p className="text-xs text-gray-500 text-center">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                       Unsubscribe anytime.
                     </p>
                   </form>
@@ -227,15 +227,15 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                     </motion.div>
-                    <h3 className="text-lg font-semibold text-gray-900">All Set!</h3>
-                    <p className="text-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">All Set!</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
                       Your handbook is downloading. Check your email for the welcome message.
                     </p>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={onClose}
-                      className="w-full bg-accent-primary text-background-primary font-semibold py-3 rounded-lg hover:bg-accent-hover transition"
+                      className="w-full bg-black dark:bg-white text-white dark:text-black font-semibold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition"
                     >
                       Got It
                     </motion.button>
