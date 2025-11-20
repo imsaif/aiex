@@ -37,10 +37,10 @@ export interface CodeExample {
 }
 
 /**
- * Represents a Figma AI prompt with customization tips for designers
+ * Represents a Figma Make prompt with customization tips for designers
  */
 export interface FigmaPrompt {
-  prompt: string;           // Complete pattern prompt for Figma Make/AI design tools
+  prompt: string;           // Complete pattern prompt for Figma Make design tool
   figmaFileUrl?: string;    // Optional download link for .fig file
   tips: string[];           // Customization tips based on pattern guidelines
 }

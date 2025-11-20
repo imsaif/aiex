@@ -38,6 +38,22 @@ const nextConfig = {
     ],
   },
 
+  // Redirects
+  async redirects() {
+    return [
+      {
+        source: '/simulator',
+        destination: '/prompts',
+        permanent: true,
+      },
+      {
+        source: '/simulator/:path*',
+        destination: '/prompts',
+        permanent: true,
+      },
+    ];
+  },
+
   // images: {
   //   // Enable better image formats (WebP, AVIF)
   //   formats: ['image/avif', 'image/webp'],

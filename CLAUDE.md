@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-20 11:18 (MacBook)
+- **Pattern:** Figma Make Prompts Page Implementation
+- **Status:** ✅ Completed
+- **Files Changed:** 30
+- **Tests Added/Modified:** 0
+- **Notes:** Replaced simulator with comprehensive Figma Make prompts page. Created `/prompts` listing page with 18 prompts, category filtering, search functionality, and responsive grid layout (desktop sidebar + mobile sheet). Built prompt detail pages with example screenshots above Figma prompts for visual context. Archived simulator feature to `/archive/simulator/` for future restoration. Updated Navbar with "Prompts" link using SparklesIcon. Added 301 redirects from `/simulator` to `/prompts`. Implemented PromptCard component with quick copy functionality and dark mode support. Fixed dark mode visibility issues with explicit text colors (gray-700/gray-300), semi-transparent backgrounds, and blue accent for "View Full" links. Added "Figma Make" naming throughout (changed from "Figma AI") to match correct product name. Created utility functions for prompt filtering, searching, and category grouping in `prompt-utils.ts`.
+
 ### Session 2025-11-19 11:59 (MacBook)
 - **Pattern:** Dark Mode Enhancements & Border Consistency
 - **Status:** ✅ Completed
@@ -298,13 +305,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 
 ### Session 2025-11-13 10:15 (MacBook)
-- **Pattern:** Email Signup & Handbook Download System
-- **Status:** ✅ Completed
-- **Files Changed:** 6 (4 modified, 2 new)
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented comprehensive email signup flow audit and system overhaul. Discovered and fixed critical issue where footer and handbook signup flows sent identical misleading emails. Created source-based email differentiation (footer/handbook/direct) with separate email templates: Newsletter Welcome for footer (newsletter-only) vs Handbook Welcome (with 30-day download link). Built HMAC-based token system for 30-day valid PDF download links in emails (no JWT deps needed). Added smart already-subscribed detection in footer with contextual handbook offer instead of error. Enhanced handbook page to match modal experience with full PDF generation. Implemented /api/handbook/download endpoint with token validation. Created 10+ signup scenarios with proper attribution and fallback logic. Updated email button styling for better email client compatibility.
-
-### Session 2025-11-10 20:45 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
