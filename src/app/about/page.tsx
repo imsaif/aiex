@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About | aiux - AI Design Patterns',
-  description: 'Learn about aiux, a curated collection of 24 AI design patterns for building better AI-powered user experiences.',
+  title: 'About aiux | 28 Curated AI UX Patterns from Leading Products',
+  description: 'Learn about aiux, a curated collection of 28 AI design patterns mined from ChatGPT, Claude, Midjourney, GitHub Copilot, and more. Build better AI-powered experiences.',
 };
 
 export default function AboutPage() {

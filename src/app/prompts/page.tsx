@@ -2,11 +2,11 @@ import { Metadata } from 'next';
 import PromptsClient from './prompts-client';
 
 export const metadata: Metadata = {
-  title: 'Figma Make Prompts | AI Design Patterns',
-  description: 'Copy-paste ready Figma Make prompts for implementing AI design patterns. 18 prompts with customization tips for building AI interfaces.',
+  title: '18 Figma Make Prompts for AI Patterns | Copy-Paste Ready',
+  description: 'Copy-paste ready Figma Make prompts for 18 AI design patterns. Generate ChatGPT interfaces, feedback loops, error states, and more with one click.',
   openGraph: {
-    title: 'Figma Make Prompts for AI Patterns',
-    description: '18 ready-to-use prompts with customization tips',
+    title: '18 Figma Make Prompts for AI Patterns | Copy-Paste Ready',
+    description: 'Copy-paste ready Figma Make prompts for 18 AI design patterns. Generate ChatGPT interfaces, feedback loops, error states, and more.',
     type: 'website',
   },
 };

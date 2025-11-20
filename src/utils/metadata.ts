@@ -142,9 +142,9 @@ export function generatePatternMetadata({
  */
 export function generateHomeMetadata(): Metadata {
   return generateMetadata({
-    title: 'AI Design Patterns - Discover AI UX Patterns & Best Practices',
+    title: '28 AI Design Patterns | Real Examples & Code',
     description:
-      'Explore comprehensive AI design patterns with real examples, code samples, and guidelines. Learn best practices for designing AI-powered experiences.',
+      'Explore 28 comprehensive AI design patterns with real examples from ChatGPT, Claude, Midjourney. Complete code samples and implementation guidelines.',
     url: '/',
     keywords: [
       'AI design patterns',

@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-20 11:35 (MacBook)
+- **Pattern:** SEO Page Title Optimization
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Optimized SEO page titles across 4 key pages for better search visibility and CTR. Updated home page title from "AI Design Patterns - Discover AI UX Patterns & Best Practices" (67 chars) to "28 AI Design Patterns | Real Examples & Code" (47 chars) - includes specific number and under 60 chars for optimal Google display. Enhanced About page to "About aiux | 28 Curated AI UX Patterns from Leading Products" with product mentions (ChatGPT, Claude, Midjourney, GitHub Copilot). Improved Guides page to "AI Design Tool Guides | Claude Code, Cursor & GitHub for Designers" with specific tool names for better discoverability. Updated Prompts page to "18 Figma Make Prompts for AI Patterns | Copy-Paste Ready" with clear value proposition. All titles now include specific numbers, real product examples, and optimized length. Metadata-only changes - no UI/heading changes. Description fields also enhanced with product mentions and specific benefits.
+
 ### Session 2025-11-20 11:18 (MacBook)
 - **Pattern:** Figma Make Prompts Page Implementation
 - **Status:** ✅ Completed
@@ -297,14 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Repositioned back-to-home link in handbook page from top to bottom of left panel to reduce visual importance and maintain focus on email signup form. Changed left panel layout from justify-start to justify-between for proper spacing. Updated simulator page subheading from misleading "Compare patterns side-by-side with live metrics and performance data" to "Compare patterns side-by-side and explore their potential impact" to accurately reflect educational nature. Both handbook and simulator text changes verified in browser.
 
 ### Session 2025-11-11 09:24 (MacBook)
-- **Pattern:** Lead Magnet Handbook - PDF Generation Flow
-- **Status:** ✅ Completed
-- **Files Changed:** 3 (3 modified)
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed handbook PDF generation flow by streamlining the modal to send email directly to the API endpoint. Updated HandbookModal component to use single POST call instead of separate newsletter subscribe and PDF generation calls. Enhanced API endpoint to handle email validation, newsletter subscription, and logging in one unified request. Build verified successfully.
-
-
-### Session 2025-11-13 10:15 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
