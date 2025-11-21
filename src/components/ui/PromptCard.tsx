@@ -30,23 +30,7 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
     }
   };
 
-  // Get category badge classes
-  const getCategoryClasses = (color: string = 'blue') => {
-    const colorMap: Record<string, string> = {
-      'blue': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-      'green': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-      'purple': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-      'orange': 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-      'pink': 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
-      'red': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-      'yellow': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-      'indigo': 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
-      'teal': 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
-    };
-    return colorMap[color] || colorMap['blue'];
-  };
-
-  const category = categories.find(c => c.title === pattern.category);
+  // No longer using colored chips on listing page
 
   return (
     <motion.div
@@ -67,7 +51,7 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
                        dark:hover:text-blue-400 transition-colors">
             {pattern.title}
           </h3>
-          <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getCategoryClasses(category?.color)}`}>
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 inline-block">
             {pattern.category}
           </span>
         </div>

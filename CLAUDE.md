@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-21 10:11 (MacBook)
+- **Pattern:** Prompt Builder - Designer-Focused UX Improvements
+- **Status:** ✅ Completed
+- **Files Changed:** 16 (11 new files, 5 modified)
+- **Tests Added/Modified:** 0
+- **Notes:** Built complete prompt builder feature for designers with intentional generation flow. Created progressive summary card that fills in as users make selections (AI tool logo, use case icon, design context, specific task). Implemented "Start Over" button always visible across all states. Removed all default selections to make choices intentional. Added brand logos (Claude, Cursor) and contextual icons (wrench for New Project, cube for Component, lightbulb for Get Help, paintbrush for design context). Built typewriter effect (20ms/char) with inline cursor for generated prompts. Complete page includes: AIToolSelector (6 tools with logos), PromptBuilderForm (4 cards: tool, purpose, context, task), PromptPreview (3 states: empty with placeholders, generating with shimmer, generated with typewriter), PromptTemplates (8 quick-start templates), and prompt generation utilities supporting multiple file formats (.cursorrules, .clinerules, CLAUDE.md, .txt).
+
 ### Session 2025-11-20 11:35 (MacBook)
 - **Pattern:** SEO Page Title Optimization
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Completed Crisis Detection & Escalation pattern with multi-layer detection system (4 independent layers: keywords, context, behavior, manipulation). Created interactive CrisisDetectionDemo component with real-time detection, auto-scrolling chat interface, and in-chat crisis alert display. Consolidated 3 redundant code examples into 1 comprehensive example covering all layers + React integration. Updated Figma prompt to explain pattern implementation rather than design specs. Integrated real-world example images (Woebot, Crisis Text Line, harmful ChatGPT conversation). Also scaffolded 3 additional Safety & Harm Prevention patterns (Session Degradation Prevention, Anti-Manipulation Safeguards, Vulnerable User Protection) with complete content structure. Pattern validation shows Crisis Detection now has all required images and is fully integrated.
 
 ### Session 2025-11-11 13:27 (MacBook)
-- **Pattern:** Handbook Navigation & Simulator Copy Updates
-- **Status:** ✅ Completed
-- **Files Changed:** 4 (4 modified)
-- **Tests Added/Modified:** 0
-- **Notes:** Repositioned back-to-home link in handbook page from top to bottom of left panel to reduce visual importance and maintain focus on email signup form. Changed left panel layout from justify-start to justify-between for proper spacing. Updated simulator page subheading from misleading "Compare patterns side-by-side with live metrics and performance data" to "Compare patterns side-by-side and explore their potential impact" to accurately reflect educational nature. Both handbook and simulator text changes verified in browser.
-
-### Session 2025-11-11 09:24 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
