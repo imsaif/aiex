@@ -55,12 +55,7 @@ export default function PromptsClient() {
       {/* Hero Section */}
       <section className="pt-20 md:pt-24 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-center max-w-4xl mx-auto"
-          >
+          <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-6">
               <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
                 {allPrompts.length} Figma Make Prompts
@@ -75,7 +70,7 @@ export default function PromptsClient() {
             <p className="text-lg md:text-xl text-text-secondary mb-8">
               Copy-paste ready prompts. Customization tips included.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
 

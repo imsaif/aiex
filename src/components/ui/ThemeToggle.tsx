@@ -36,7 +36,11 @@ export function ThemeToggle() {
     applyTheme(newIsDark);
   };
 
-  if (!mounted) return null;
+  // Return placeholder with same dimensions to prevent layout shift during hydration
+  // Button = p-2 (8px padding) + w-6 h-6 icon (24px) = 40px = w-10 h-10
+  if (!mounted) {
+    return <div className="w-10 h-10" aria-hidden="true" />;
+  }
 
   return (
     <button

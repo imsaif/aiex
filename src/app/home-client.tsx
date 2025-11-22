@@ -17,12 +17,15 @@ import patterns from '../data/patterns';
 import categories from '../data/categories';
 import { companyLogos } from '../data/company-logos';
 import { getAllProducts, filterPatternsByProducts, getProductsForPattern } from '../data/utils/product-utils';
+import { getAllIndustries, getIndustriesForPattern } from '../data/utils/industry-utils';
 import { getProductLogoUrl, hasProductLogo } from '../data/product-logos';
+import IndustryFilterBar from '../components/ui/IndustryFilterBar';
 
 export default function HomeClient() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [isHandbookModalOpen, setIsHandbookModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -53,6 +56,9 @@ export default function HomeClient() {
   // Get all available products
   const allProducts = useMemo(() => getAllProducts(patterns), []);
 
+  // Get all available industries
+  const allIndustries = useMemo(() => getAllIndustries(patterns), []);
+
   const filteredPatterns = useMemo(() => {
     return patterns.filter(pattern => {
       const matchesSearch = pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -68,9 +74,18 @@ export default function HomeClient() {
         );
       }
 
-      return matchesSearch && matchesCategory && matchesProducts;
+      // Filter by selected industries
+      let matchesIndustries = true;
+      if (selectedIndustries.length > 0) {
+        const patternIndustries = getIndustriesForPattern(pattern);
+        matchesIndustries = selectedIndustries.some(industry =>
+          patternIndustries.some(pi => pi.toLowerCase() === industry.toLowerCase())
+        );
+      }
+
+      return matchesSearch && matchesCategory && matchesProducts && matchesIndustries;
     });
-  }, [searchQuery, selectedCategory, selectedProducts]);
+  }, [searchQuery, selectedCategory, selectedProducts, selectedIndustries]);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -216,13 +231,20 @@ export default function HomeClient() {
               />
             </div>
 
-            {/* Product Filter Bar */}
-            <div className="mb-6">
-              <ProductFilterBar
-                products={allProducts}
-                selectedProducts={selectedProducts}
-                onProductsChange={setSelectedProducts}
-              />
+            {/* Filter Bars */}
+            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
+              <div className="flex flex-wrap items-start gap-3">
+                <ProductFilterBar
+                  products={allProducts}
+                  selectedProducts={selectedProducts}
+                  onProductsChange={setSelectedProducts}
+                />
+                <IndustryFilterBar
+                  industries={allIndustries}
+                  selectedIndustries={selectedIndustries}
+                  onIndustriesChange={setSelectedIndustries}
+                />
+              </div>
             </div>
 
             {/* Patterns Grid */}
@@ -349,6 +371,9 @@ export default function HomeClient() {
         products={allProducts}
         selectedProducts={selectedProducts}
         onProductsSelect={setSelectedProducts}
+        industries={allIndustries}
+        selectedIndustries={selectedIndustries}
+        onIndustriesSelect={setSelectedIndustries}
       />
 
       {/* Footer */}

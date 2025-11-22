@@ -8,7 +8,25 @@ import { ThemeToggle } from '../ui/ThemeToggle';
 
 const Navbar = () => {
   const pathname = usePathname();
-  
+
+  // Check if a route is active
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/' || pathname.startsWith('/patterns');
+    }
+    return pathname.startsWith(href);
+  };
+
+  // Get link classes based on active state
+  const getLinkClasses = (href: string) => {
+    const active = isActive(href);
+    return `flex items-center gap-2 px-3 py-2 transition-colors duration-200 rounded-lg ${
+      active
+        ? 'bg-accent-subtle text-accent-primary font-semibold'
+        : 'text-text-primary hover:text-accent-primary hover:bg-accent-subtle'
+    }`;
+  };
+
   const scrollToDiscover = (e: React.MouseEvent) => {
     // Only handle scroll on homepage
     if (pathname === '/') {
@@ -36,33 +54,21 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-3 py-2 text-text-primary hover:text-accent-primary transition-colors duration-200 rounded-lg hover:bg-accent-subtle"
-            >
+            <Link href="/" className={getLinkClasses('/')}>
               <Squares2X2Icon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm font-medium">Patterns</span>
+              <span className="hidden sm:inline text-sm">Patterns</span>
             </Link>
-            <Link
-              href="/prompts"
-              className="flex items-center gap-2 px-3 py-2 text-text-primary hover:text-accent-primary transition-colors duration-200 rounded-lg hover:bg-accent-subtle"
-            >
+            <Link href="/prompts" className={getLinkClasses('/prompts')}>
               <SparklesIcon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm font-medium">Prompts</span>
+              <span className="hidden sm:inline text-sm">Prompts</span>
             </Link>
-            <Link
-              href="/prompt-builder"
-              className="flex items-center gap-2 px-3 py-2 text-text-primary hover:text-accent-primary transition-colors duration-200 rounded-lg hover:bg-accent-subtle"
-            >
+            <Link href="/prompt-builder" className={getLinkClasses('/prompt-builder')}>
               <BeakerIcon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm font-medium">Builder</span>
+              <span className="hidden sm:inline text-sm">Builder</span>
             </Link>
-            <Link
-              href="/guides"
-              className="flex items-center gap-2 px-3 py-2 text-text-primary hover:text-accent-primary transition-colors duration-200 rounded-lg hover:bg-accent-subtle"
-            >
+            <Link href="/guides" className={getLinkClasses('/guides')}>
               <BookOpenIcon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm font-medium">Guides</span>
+              <span className="hidden sm:inline text-sm">Guides</span>
             </Link>
 
             {/* Theme Toggle */}

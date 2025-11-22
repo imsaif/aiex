@@ -4,6 +4,8 @@ html {
   scroll-behavior: smooth;
   /* Smooth scrolling for Safari */
   -webkit-overflow-scrolling: touch;
+  /* Prevent navbar jump when scrollbar appears/disappears */
+  scrollbar-gutter: stable;
 }
 
 html,

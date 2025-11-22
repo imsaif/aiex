@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-22 13:37 (MacBook)
+- **Pattern:** Navbar & Industry Filter UX
+- **Status:** ✅ Completed
+- **Files Changed:** 9
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed navbar layout shift on page navigation by adding scrollbar-gutter: stable to CSS and fixing ThemeToggle hydration placeholder size (36px→40px). Added active/selected state to navbar links with background highlight and bold text. Removed framer-motion y-offset animation on Prompts page that caused perceived "jump". Added industry filtering feature: created industry-utils.ts with product-to-industry mapping (AI/ML, Developer Tools, Technology, Productivity, Entertainment, Design, Healthcare, Education, Automotive), IndustryFilterBar component with green theme, updated home page with industry state and filtering logic, and added Industries tab to mobile CategoryFilterSheet.
+
 ### Session 2025-11-22 10:47 (MacBook)
 - **Pattern:** Prompt Builder - Dark/Light Mode & Tech Stack UX
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Comprehensive code quality overhaul: Fixed all 37 TypeScript errors (robots.ts duplicates, React 19 JSX compatibility, Jest mock typing, Next.js 15 params), resolved 10 security vulnerabilities (installed DOMPurify, added XSS sanitization in 5 components, redacted PII from logs in 4 API routes, upgraded email validation to Zod). Created test infrastructure with 64 API endpoint tests across 4 suites. All dependencies updated to secure versions. Generated CODE_QUALITY_IMPROVEMENTS.md documentation. Rotated exposed API keys (Resend and Newsletter). Code rating improved from 5.5/10 → 7.0/10 with zero TypeScript errors, zero security vulnerabilities, and security rating 9/10.
 
 ### Session 2025-11-11 19:22 (MacBook)
-- **Pattern:** Crisis Detection & Escalation - Chat UI Refinements
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Refined Crisis Detection demo UX with proper chat styling. Fixed page scroll issue by changing from scrollIntoView() to container-only scrolling (scrollTop assignment). Added white filled message boxes for system messages with gray borders (realistic chat UI). Changed scroll behavior to only trigger when conversation exceeds 3 messages. Updated send button to use Tailwind blue-600 for visibility. Demo now provides proper chat-like experience with visual clarity and smooth interactions without page jumps.
-
-### Session 2025-11-11 19:13 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

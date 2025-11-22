@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import BottomSheet from './BottomSheet';
 import { Product } from '../../data/utils/product-utils';
+import { Industry } from '../../data/utils/industry-utils';
 
 interface CategoryFilterSheetProps {
   isOpen: boolean;
@@ -13,6 +14,9 @@ interface CategoryFilterSheetProps {
   products?: Product[];
   selectedProducts?: string[];
   onProductsSelect?: (products: string[]) => void;
+  industries?: Industry[];
+  selectedIndustries?: string[];
+  onIndustriesSelect?: (industries: string[]) => void;
 }
 
 const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
@@ -24,9 +28,12 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
   products = [],
   selectedProducts = [],
   onProductsSelect,
+  industries = [],
+  selectedIndustries = [],
+  onIndustriesSelect,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'categories' | 'products'>('categories');
+  const [activeTab, setActiveTab] = useState<'categories' | 'products' | 'industries'>('categories');
 
   // Filter categories based on search
   const filteredCategories = useMemo(() => {
@@ -46,6 +53,15 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
     );
   }, [products, searchQuery]);
 
+  // Filter industries based on search
+  const filteredIndustries = useMemo(() => {
+    if (!searchQuery) return industries;
+
+    return industries.filter(industry =>
+      industry.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [industries, searchQuery]);
+
   const handleCategoryClick = (category: string) => {
     onCategorySelect(category);
     onClose();
@@ -62,10 +78,23 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
     }
   };
 
+  const handleIndustryToggle = (industryName: string) => {
+    if (!onIndustriesSelect) return;
+
+    if (selectedIndustries.includes(industryName)) {
+      onIndustriesSelect(selectedIndustries.filter(i => i !== industryName));
+    } else {
+      onIndustriesSelect([...selectedIndustries, industryName]);
+    }
+  };
+
   const handleReset = () => {
     onCategorySelect('All Categories');
     if (onProductsSelect) {
       onProductsSelect([]);
+    }
+    if (onIndustriesSelect) {
+      onIndustriesSelect([]);
     }
     onClose();
     setSearchQuery('');
@@ -75,11 +104,11 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
     <BottomSheet isOpen={isOpen} onClose={onClose} height="75vh">
       <div className="flex flex-col h-full">
         {/* Tabs */}
-        {products.length > 0 && (
+        {(products.length > 0 || industries.length > 0) && (
           <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex">
             <button
               onClick={() => setActiveTab('categories')}
-              className={`flex-1 py-3 text-center font-medium transition-colors ${
+              className={`flex-1 py-3 text-center font-medium transition-colors text-sm ${
                 activeTab === 'categories'
                   ? 'text-blue-600 border-b-2 border-blue-600'
                   : 'text-text-secondary hover:text-text-primary'
@@ -87,16 +116,30 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
             >
               Categories
             </button>
-            <button
-              onClick={() => setActiveTab('products')}
-              className={`flex-1 py-3 text-center font-medium transition-colors ${
-                activeTab === 'products'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
-            >
-              Products
-            </button>
+            {products.length > 0 && (
+              <button
+                onClick={() => setActiveTab('products')}
+                className={`flex-1 py-3 text-center font-medium transition-colors text-sm ${
+                  activeTab === 'products'
+                    ? 'text-blue-600 border-b-2 border-blue-600'
+                    : 'text-text-secondary hover:text-text-primary'
+                }`}
+              >
+                Products
+              </button>
+            )}
+            {industries.length > 0 && (
+              <button
+                onClick={() => setActiveTab('industries')}
+                className={`flex-1 py-3 text-center font-medium transition-colors text-sm ${
+                  activeTab === 'industries'
+                    ? 'text-green-600 border-b-2 border-green-600'
+                    : 'text-text-secondary hover:text-text-primary'
+                }`}
+              >
+                Industries
+              </button>
+            )}
           </div>
         )}
 
@@ -105,7 +148,13 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
           <div className="relative">
             <input
               type="text"
-              placeholder={activeTab === 'categories' ? 'Search categories...' : 'Search products...'}
+              placeholder={
+                activeTab === 'categories'
+                  ? 'Search categories...'
+                  : activeTab === 'products'
+                  ? 'Search products...'
+                  : 'Search industries...'
+              }
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-3 pl-10 rounded-lg bg-gray-100 dark:bg-gray-800
@@ -133,7 +182,7 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto">
-          {activeTab === 'categories' ? (
+          {activeTab === 'categories' && (
             <>
               {/* All Categories Option */}
               <button
@@ -198,7 +247,9 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
                 </div>
               )}
             </>
-          ) : (
+          )}
+
+          {activeTab === 'products' && (
             <>
               {/* Product Options */}
               {filteredProducts.map((product) => (
@@ -229,6 +280,42 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
               {filteredProducts.length === 0 && (
                 <div className="px-4 py-8 text-center text-text-secondary">
                   No products found
+                </div>
+              )}
+            </>
+          )}
+
+          {activeTab === 'industries' && (
+            <>
+              {/* Industry Options */}
+              {filteredIndustries.map((industry) => (
+                <label
+                  key={industry.name}
+                  className="w-full text-left px-4 py-4 flex items-center gap-3
+                           transition-colors hover:bg-gray-50 dark:hover:bg-gray-800
+                           border-t border-gray-100 dark:border-gray-800 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedIndustries.includes(industry.name)}
+                    onChange={() => handleIndustryToggle(industry.name)}
+                    className="w-5 h-5 rounded border-gray-300 text-green-600"
+                  />
+                  <div className="flex-grow">
+                    <span className="text-base text-text-primary">
+                      {industry.name}
+                    </span>
+                  </div>
+                  <span className="text-xs text-text-secondary bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                    {industry.count}
+                  </span>
+                </label>
+              ))}
+
+              {/* No Results */}
+              {filteredIndustries.length === 0 && (
+                <div className="px-4 py-8 text-center text-text-secondary">
+                  No industries found
                 </div>
               )}
             </>
