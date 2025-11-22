@@ -24,6 +24,30 @@ function formatDesignSystem(designSystem: DesignSystem): string {
 }
 
 /**
+ * Format tech stack for inclusion in prompts
+ */
+function formatTechStack(techStack: string[]): string {
+  if (!techStack || techStack.length === 0) {
+    return '';
+  }
+
+  const techLabels: Record<string, string> = {
+    'react': 'React',
+    'nextjs': 'Next.js',
+    'vue': 'Vue',
+    'react-native': 'React Native',
+    'tailwind': 'Tailwind CSS',
+    'shadcn': 'Shadcn UI',
+    'material-ui': 'Material UI',
+    'chakra': 'Chakra UI',
+    'figma': 'Figma',
+  };
+
+  const labels = techStack.map(t => techLabels[t] || t);
+  return labels.join(', ');
+}
+
+/**
  * Generate AI tool-specific formatting and instructions
  */
 function getToolSpecificInstructions(aiTool: string): string {
@@ -77,13 +101,17 @@ export function generatePrompt(formData: PromptFormData): string {
  * Generate project setup / config file prompt
  */
 function generateProjectSetupPrompt(formData: PromptFormData): string {
+  const techStackSection = formData.techStack?.length > 0
+    ? `\n\n## Tech Stack\n${formatTechStack(formData.techStack)}`
+    : '';
+
   return `# Project Context and Guidelines
 
 ## Design System
 ${formatDesignSystem(formData.designSystem)}
 
 ## Project Overview
-${formData.projectContext || 'Not specified'}
+${formData.projectContext || 'Not specified'}${techStackSection}
 
 ## Development Guidelines
 
@@ -123,13 +151,17 @@ Remember these guidelines when helping me build features.${getToolSpecificInstru
  * Generate component-specific prompt
  */
 function generateComponentPrompt(formData: PromptFormData): string {
+  const techStackLine = formData.techStack?.length > 0
+    ? `\n\n**Tech Stack:** ${formatTechStack(formData.techStack)}`
+    : '';
+
   return `I need help building a UI component.
 
 **Design System:**
 ${formatDesignSystem(formData.designSystem)}
 
 **Project Context:**
-${formData.projectContext || 'Not specified'}
+${formData.projectContext || 'Not specified'}${techStackLine}
 
 **Component Requirements:**
 ${formData.specificTask || 'Not specified'}
@@ -155,10 +187,14 @@ ${formData.specificTask || 'Not specified'}
  * Generate code help prompt
  */
 function generateCodeHelpPrompt(formData: PromptFormData): string {
+  const techStackLine = formData.techStack?.length > 0
+    ? `\n\n**Tech Stack:** ${formatTechStack(formData.techStack)}`
+    : '';
+
   return `I need help with my code.
 
 **Project Context:**
-${formData.projectContext || 'Not specified'}
+${formData.projectContext || 'Not specified'}${techStackLine}
 
 **What I need help with:**
 ${formData.specificTask || 'Not specified'}
@@ -183,6 +219,10 @@ function generateCustomPrompt(formData: PromptFormData): string {
 
   if (formData.projectContext) {
     parts.push(`**Project Context:**\n${formData.projectContext}`);
+  }
+
+  if (formData.techStack?.length > 0) {
+    parts.push(`**Tech Stack:** ${formatTechStack(formData.techStack)}`);
   }
 
   if (formData.specificTask) {

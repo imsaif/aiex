@@ -30,6 +30,16 @@ export default {
           hover: 'var(--accent-hover)',
           subtle: 'var(--accent-subtle)',
         },
+        // Border colors (also available for all color utilities)
+        border: {
+          primary: 'var(--border-primary)',
+          secondary: 'var(--border-secondary)',
+          focus: 'var(--border-focus)',
+          success: 'var(--border-success)',
+          error: 'var(--border-error)',
+          warning: 'var(--border-warning)',
+          info: 'var(--border-info)',
+        },
         // Muted category colors for icons
         category: {
           blue: '#3B82F6',

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GeneratedPrompt, FileType, PromptFormData, AITool, UseCase } from '@/types/promptBuilder';
 import { ClipboardDocumentIcon, CheckIcon, ArrowDownTrayIcon, SparklesIcon, CpuChipIcon, ArrowPathIcon, WrenchScrewdriverIcon, CubeIcon, LightBulbIcon, PaintBrushIcon, ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
@@ -86,9 +86,9 @@ function EmptyState({ formData }: { formData?: PromptFormData }) {
     >
       <div className="w-full max-w-md">
         {/* Summary Card - Always visible */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700 p-6 mb-6">
-          <div className="border-b-2 border-dashed border-gray-200 dark:border-gray-700 pb-3 mb-4">
-            <h3 className="text-sm font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 text-center">
+        <div className="bg-surface-primary rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
+          <div className="border-b-2 border-dashed border-gray-300 dark:border-gray-600 pb-3 mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wide text-text-tertiary text-center">
               Building Prompt For
             </h3>
           </div>
@@ -104,12 +104,12 @@ function EmptyState({ formData }: { formData?: PromptFormData }) {
                   style={{ filter: logoFilter }}
                 />
               ) : (
-                <SparklesIcon className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <SparklesIcon className="w-5 h-5 text-text-tertiary flex-shrink-0" />
               )}
               {hasAITool ? (
-                <span className="font-semibold text-gray-900 dark:text-white">{getToolName()}</span>
+                <span className="font-semibold text-text-primary">{getToolName()}</span>
               ) : (
-                <span className="text-gray-400 dark:text-gray-500 italic">Select an AI tool...</span>
+                <span className="text-text-tertiary italic">Select an AI tool...</span>
               )}
             </div>
 
@@ -117,40 +117,58 @@ function EmptyState({ formData }: { formData?: PromptFormData }) {
             <div className="flex items-center gap-3 text-sm">
               {(() => {
                 const UseCaseIconComponent = getUseCaseIcon();
-                return <UseCaseIconComponent className="w-5 h-5 text-gray-400 flex-shrink-0" />;
+                return <UseCaseIconComponent className="w-5 h-5 text-text-tertiary flex-shrink-0" />;
               })()}
               {formData?.useCase && formData.useCase !== '' ? (
-                <span className="text-gray-700 dark:text-gray-300">{getUseCaseName()}</span>
+                <span className="text-text-secondary">{getUseCaseName()}</span>
               ) : (
-                <span className="text-gray-400 dark:text-gray-500 italic">What do you need?</span>
+                <span className="text-text-tertiary italic">What do you need?</span>
               )}
             </div>
 
-            {/* Design Context - Shows placeholder if empty */}
+            {/* Project Description - Shows placeholder if empty */}
             <div className="flex items-start gap-3 text-sm">
-              <PaintBrushIcon className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+              <PaintBrushIcon className="w-5 h-5 text-text-tertiary flex-shrink-0 mt-0.5" />
               {hasContext ? (
-                <span className="text-gray-600 dark:text-gray-400 italic line-clamp-2">
+                <span className="text-text-secondary italic line-clamp-2">
                   "{formData.projectContext.substring(0, 60)}{formData.projectContext.length > 60 ? '...' : ''}"
                 </span>
               ) : (
-                <span className="text-gray-400 dark:text-gray-500 italic">Describe your design project...</span>
+                <span className="text-text-tertiary italic">Describe your project...</span>
               )}
             </div>
+
+            {/* Tech Stack - Shows when filled */}
+            {formData?.techStack && formData.techStack.length > 0 && (
+              <div className="flex items-start gap-3 text-sm">
+                <CpuChipIcon className="w-5 h-5 text-text-tertiary flex-shrink-0 mt-0.5" />
+                <span className="text-text-secondary">
+                  {formData.techStack.map(t => {
+                    const labels: Record<string, string> = {
+                      'react': 'React', 'nextjs': 'Next.js', 'vue': 'Vue',
+                      'react-native': 'React Native', 'tailwind': 'Tailwind CSS',
+                      'shadcn': 'Shadcn UI', 'material-ui': 'Material UI',
+                      'chakra': 'Chakra UI', 'figma': 'Figma'
+                    };
+                    return labels[t] || t;
+                  }).join(', ')}
+                </span>
+              </div>
+            )}
 
             {/* Specific Task - Shows when filled */}
             {formData?.specificTask && formData.specificTask.trim() !== '' && (
               <div className="flex items-start gap-3 text-sm">
-                <ClipboardDocumentListIcon className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-600 dark:text-gray-400 italic line-clamp-2">
+                <ClipboardDocumentListIcon className="w-5 h-5 text-text-tertiary flex-shrink-0 mt-0.5" />
+                <span className="text-text-secondary italic line-clamp-2">
                   {formData.specificTask.substring(0, 60)}{formData.specificTask.length > 60 ? '...' : ''}
                 </span>
               </div>
             )}
           </div>
 
-          <div className="border-t-2 border-dashed border-gray-200 dark:border-gray-700 pt-3 mt-4">
-            <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+          <div className="border-t-2 border-dashed border-gray-300 dark:border-gray-600 pt-3 mt-4">
+            <p className="text-xs text-center text-text-tertiary">
               {isReadyToGenerate ? 'Ready when you are!' : 'Fill in the details to get started'}
             </p>
           </div>
@@ -169,7 +187,7 @@ function GeneratingState() {
           animate={{ rotate: 360 }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
         >
-          <SparklesIcon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          <SparklesIcon className="w-8 h-8 text-text-secondary" />
         </motion.div>
         <div>
           <p className="font-semibold text-lg text-text-primary">Generating your prompt...</p>
@@ -188,7 +206,7 @@ function GeneratingState() {
               opacity: { duration: 1.5, repeat: Infinity, delay: i * 0.1 },
               x: { duration: 0.3, delay: i * 0.05 }
             }}
-            className="h-4 bg-gray-200 dark:bg-gray-700 rounded"
+            className="h-4 bg-background-secondary rounded"
             style={{ width: `${50 + Math.random() * 50}%` }}
           />
         ))}
@@ -201,13 +219,13 @@ function GeneratingState() {
 function GeneratedPromptContent({ text, isTyping }: { text: string; isTyping: boolean }) {
   return (
     <div className="leading-relaxed">
-      <pre className="text-sm text-gray-900 dark:text-gray-100 whitespace-pre-wrap font-mono">
+      <pre className="text-sm text-text-primary whitespace-pre-wrap font-mono">
         {text}
         {isTyping && (
           <motion.span
             animate={{ opacity: [1, 0, 1] }}
             transition={{ duration: 0.8, repeat: Infinity }}
-            className="inline-block w-1 h-4 bg-blue-600 dark:bg-blue-400 ml-1 align-middle"
+            className="inline-block w-1 h-4 bg-text-secondary ml-1 align-middle"
           />
         )}
       </pre>
@@ -218,13 +236,56 @@ function GeneratedPromptContent({ text, isTyping }: { text: string; isTyping: bo
 export default function PromptPreview({ prompt, onDownload, onGenerate, onReset, isGenerating = false, hasGenerated = false, formChanged = false, formData }: PromptPreviewProps) {
   const [copied, setCopied] = useState(false);
   const [showFileTypes, setShowFileTypes] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+  const contentRef = useRef<HTMLDivElement>(null);
   const isEmpty = !prompt.content || prompt.content.length === 0;
+
+  // Detect theme for JS-controlled button styles
+  useEffect(() => {
+    const checkTheme = () => {
+      const html = document.documentElement;
+      const theme = html.getAttribute('data-theme');
+      const hasClass = html.classList.contains('dark');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDark(theme === 'dark' || hasClass || (theme === null && prefersDark));
+    };
+
+    checkTheme();
+
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'class']
+    });
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', checkTheme);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', checkTheme);
+    };
+  }, []);
+
+  // JS-controlled primary button styles
+  const getPrimaryButtonClasses = () => {
+    return isDark
+      ? 'bg-white text-black hover:bg-gray-100'
+      : 'bg-black text-white hover:bg-gray-900';
+  };
 
   // Typewriter effect - only enable after generation
   const { displayedText, isTyping } = useTypewriter(prompt.content, {
     speed: 20, // Comfortable pace for designers to read and follow
     enabled: hasGenerated && !isGenerating,
   });
+
+  // Auto-scroll content area as typewriter types
+  useEffect(() => {
+    if (isTyping && contentRef.current) {
+      contentRef.current.scrollTop = contentRef.current.scrollHeight;
+    }
+  }, [displayedText, isTyping]);
 
   const [lastUpdated, setLastUpdated] = useState<string>('');
 
@@ -259,7 +320,7 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
   const showGenerateButton = !hasGenerated || formChanged;
 
   return (
-    <div className="h-full flex flex-col bg-gray-50 dark:bg-gray-900 rounded-2xl border-2 border-gray-200 dark:border-gray-700 shadow-lg">
+    <div className="h-full flex flex-col bg-background-secondary rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
       <AnimatePresence mode="wait">
         {!hasGenerated && !isGenerating && (
           <motion.div
@@ -270,11 +331,11 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
             className="flex flex-col h-full"
           >
             {/* Header with Start Over button */}
-            <div className="flex items-center justify-end p-6 border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className="flex items-center justify-end p-6 border-b border-gray-200 dark:border-gray-700 bg-surface-primary">
               {onReset && (
                 <button
                   onClick={onReset}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-gray-600"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-background-secondary transition-colors border border-gray-200 dark:border-gray-700"
                 >
                   <ArrowPathIcon className="w-4 h-4" />
                   <span>Start Over</span>
@@ -287,14 +348,14 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
             </div>
 
             {/* Generate Button - Shows in empty state */}
-            <div className="p-6 border-t-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-surface-primary">
               <button
                 onClick={onGenerate}
                 disabled={!canGenerate}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg
-                         bg-black dark:bg-white text-white dark:text-black text-sm font-semibold
-                         hover:bg-gray-800 dark:hover:bg-gray-100 hover:scale-105
-                         disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+                className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg
+                         text-sm font-semibold hover:scale-105 cursor-pointer
+                         disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md
+                         ${getPrimaryButtonClasses()}`}
               >
                 <SparklesIcon className="w-5 h-5" />
                 <span>Generate Prompt</span>
@@ -312,11 +373,11 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
             className="flex flex-col h-full"
           >
             {/* Header with Start Over button */}
-            <div className="flex items-center justify-end p-6 border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className="flex items-center justify-end p-6 border-b border-gray-200 dark:border-gray-700 bg-surface-primary">
               {onReset && (
                 <button
                   onClick={onReset}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-gray-600"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-background-secondary transition-colors border border-gray-200 dark:border-gray-700"
                 >
                   <ArrowPathIcon className="w-4 h-4" />
                   <span>Start Over</span>
@@ -339,15 +400,15 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
             className="flex flex-col h-full"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-surface-primary">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                  <SparklesIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                <div className="w-10 h-10 bg-background-secondary rounded-full flex items-center justify-center">
+                  <SparklesIcon className="w-5 h-5 text-text-secondary" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-text-primary">Your AI Prompt</h3>
                   <p className="text-xs text-text-tertiary flex items-center gap-2 mt-0.5">
-                    <span className="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span className="inline-block w-2 h-2 bg-border-success rounded-full"></span>
                     Updated {lastUpdated}
                   </p>
                 </div>
@@ -368,7 +429,7 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
                 {onReset && (
                   <button
                     onClick={onReset}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-300 dark:border-gray-600"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-background-secondary transition-colors border border-gray-200 dark:border-gray-700"
                   >
                     <ArrowPathIcon className="w-4 h-4" />
                     <span>Start Over</span>
@@ -378,21 +439,21 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-auto p-6 bg-white dark:bg-gray-800">
+            <div ref={contentRef} className="flex-1 overflow-auto p-6 bg-surface-primary">
               <GeneratedPromptContent text={displayedText} isTyping={isTyping} />
             </div>
 
             {/* Actions */}
-            <div className="p-6 border-t-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-surface-primary">
               {showGenerateButton ? (
                 /* Generate Button */
                 <button
                   onClick={onGenerate}
                   disabled={!canGenerate}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg
-                           bg-black dark:bg-white text-white dark:text-black text-sm font-semibold
-                           hover:bg-gray-800 dark:hover:bg-gray-100 hover:scale-105
-                           disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg
+                           text-sm font-semibold hover:scale-105 cursor-pointer
+                           disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md
+                           ${getPrimaryButtonClasses()}`}
                 >
                   <SparklesIcon className="w-5 h-5" />
                   <span>{formChanged ? 'Regenerate Prompt' : 'Generate Prompt'}</span>
@@ -404,14 +465,14 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
                     onClick={handleCopy}
                     disabled={isTyping}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg
-                             bg-gray-100 dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600
-                             text-sm font-semibold text-gray-900 dark:text-white
-                             hover:bg-gray-200 dark:hover:bg-gray-600 hover:border-gray-300 dark:hover:border-gray-500
+                             bg-background-secondary border border-gray-200 dark:border-gray-700
+                             text-sm font-semibold text-text-primary
+                             hover:bg-background-tertiary hover:border-gray-300 dark:hover:border-gray-600
                              disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
                     {copied ? (
                       <>
-                        <CheckIcon className="w-5 h-5 text-green-600 dark:text-green-400" />
+                        <CheckIcon className="w-5 h-5 text-border-success" />
                         <span>Copied!</span>
                       </>
                     ) : (
@@ -427,10 +488,10 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
                     <button
                       onClick={() => setShowFileTypes(!showFileTypes)}
                       disabled={isTyping}
-                      className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg
-                               bg-black dark:bg-white text-white dark:text-black text-sm font-semibold
-                               hover:bg-gray-800 dark:hover:bg-gray-100 hover:scale-105
-                               disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
+                      className={`flex items-center justify-center gap-2 px-4 py-3 rounded-lg
+                               text-sm font-semibold hover:scale-105 cursor-pointer
+                               disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md
+                               ${getPrimaryButtonClasses()}`}
                     >
                       <ArrowDownTrayIcon className="w-5 h-5" />
                       <span>Download</span>
@@ -444,12 +505,12 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
                           animate={{ opacity: 1, y: 0, scale: 1 }}
                           exit={{ opacity: 0, y: -10, scale: 0.95 }}
                           transition={{ duration: 0.15 }}
-                          className="absolute right-0 bottom-full mb-2 w-56 bg-white dark:bg-gray-800
-                                   border-2 border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl
+                          className="absolute right-0 bottom-full mb-2 w-56 bg-surface-primary
+                                   border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl
                                    overflow-hidden z-10"
                         >
                           <div className="p-2">
-                            <p className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                            <p className="px-3 py-2 text-xs font-semibold text-text-tertiary uppercase tracking-wide">
                               Download as
                             </p>
                             {[
@@ -462,11 +523,11 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
                                 key={option.type}
                                 onClick={() => handleDownload(option.type)}
                                 className="w-full px-3 py-2.5 text-left rounded-lg text-sm font-medium
-                                         text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700
+                                         text-text-primary hover:bg-background-secondary
                                          transition-colors flex items-center justify-between group"
                               >
                                 <span>{option.label}</span>
-                                <span className="text-xs text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300">
+                                <span className="text-xs text-text-tertiary group-hover:text-text-secondary">
                                   {option.desc}
                                 </span>
                               </button>

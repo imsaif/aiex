@@ -17,6 +17,7 @@ export interface PromptFormData {
   designSystem: DesignSystem;
   projectContext: string;
   specificTask: string;
+  techStack: string[];
   template?: string;
 }
 

@@ -22,7 +22,7 @@ export default function PromptBuilderClient() {
           >
             {/* Badge */}
             <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-text-primary border border-gray-200 dark:border-gray-700">
                 Prompt Builder
               </span>
             </div>
@@ -40,19 +40,19 @@ export default function PromptBuilderClient() {
             {/* Features List */}
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-text-tertiary">
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>8 Pre-built Templates</span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Copy & Download</span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Config File Export</span>

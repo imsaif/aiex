@@ -48,14 +48,14 @@ export default function PromptTemplates({ onSelectTemplate }: PromptTemplatesPro
               type="button"
               onClick={() => onSelectTemplate(template)}
               className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-700
-                       bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600
-                       hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all text-left group"
+                       bg-surface-primary hover:border-gray-300 dark:hover:border-gray-600
+                       hover:bg-background-secondary transition-all text-left group"
             >
-              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
-                {IconComponent && <IconComponent className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-background-secondary flex items-center justify-center">
+                {IconComponent && <IconComponent className="w-5 h-5 text-text-secondary" />}
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-medium text-text-primary group-hover:text-black dark:group-hover:text-white">
+                <h4 className="text-sm font-medium text-text-primary group-hover:text-accent-primary">
                   {template.name}
                 </h4>
                 <p className="text-xs text-text-tertiary mt-1 line-clamp-2">

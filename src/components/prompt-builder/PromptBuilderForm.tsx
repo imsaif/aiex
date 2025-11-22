@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { PromptFormData, AITool, UseCase, PromptTemplate, FileType } from '@/types/promptBuilder';
 import { generateCompletePrompt } from '@/utils/promptGenerator';
@@ -23,6 +23,7 @@ export default function PromptBuilderForm() {
     designSystem: {},
     projectContext: '',
     specificTask: '',
+    techStack: [],
   });
 
   const [generatedPrompt, setGeneratedPrompt] = useState(
@@ -32,13 +33,54 @@ export default function PromptBuilderForm() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasGenerated, setHasGenerated] = useState(false);
   const [formChanged, setFormChanged] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+
+  // Detect theme for JS-controlled selected styles
+  useEffect(() => {
+    const checkTheme = () => {
+      const html = document.documentElement;
+      const theme = html.getAttribute('data-theme');
+      const hasClass = html.classList.contains('dark');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setIsDark(theme === 'dark' || hasClass || (theme === null && prefersDark));
+    };
+
+    checkTheme();
+
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'class']
+    });
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener('change', checkTheme);
+
+    return () => {
+      observer.disconnect();
+      mediaQuery.removeEventListener('change', checkTheme);
+    };
+  }, []);
 
   // Track when form changes after generation
+  // Only trigger on formData changes, not on hasGenerated changes
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (hasGenerated) {
       setFormChanged(true);
     }
-  }, [formData, hasGenerated]);
+  }, [formData]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // JS-controlled selected chip styles
+  const getSelectedChipClasses = () => {
+    return isDark
+      ? 'border-white bg-white text-black shadow-md'
+      : 'border-black bg-black text-white shadow-md';
+  };
 
   const handleAIToolChange = (tool: AITool) => {
     setFormData((prev) => ({ ...prev, aiTool: tool }));
@@ -85,9 +127,19 @@ export default function PromptBuilderForm() {
       designSystem: {},
       projectContext: '',
       specificTask: '',
+      techStack: [],
     });
     setHasGenerated(false);
     setFormChanged(false);
+  };
+
+  const handleTechStackToggle = (tech: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      techStack: prev.techStack.includes(tech)
+        ? prev.techStack.filter((t) => t !== tech)
+        : [...prev.techStack, tech],
+    }));
   };
 
   return (
@@ -101,7 +153,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
           >
             <AIToolSelector selected={formData.aiTool} onChange={handleAIToolChange} />
           </motion.div>
@@ -111,9 +163,9 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
           >
-            <h3 className="text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-4">
+            <h3 className="text-xs font-bold uppercase tracking-wide text-text-tertiary mb-4">
               What do you need?
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -129,10 +181,10 @@ export default function PromptBuilderForm() {
                     key={useCase.id}
                     type="button"
                     onClick={() => handleUseCaseChange(useCase.id as UseCase)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full border-2 transition-all text-sm font-semibold cursor-pointer ${
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all text-sm font-semibold cursor-pointer ${
                       formData.useCase === useCase.id
-                        ? 'border-black dark:border-white bg-black dark:bg-white text-white dark:text-black shadow-md'
-                        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        ? getSelectedChipClasses()
+                        : 'border-gray-200 dark:border-gray-700 bg-surface-primary text-text-primary hover:border-gray-300 dark:hover:border-gray-600 hover:bg-background-secondary'
                     }`}
                   >
                     <IconComponent className="w-4 h-4" />
@@ -148,10 +200,10 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
           >
-            <label htmlFor="projectContext" className="block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-4">
-              About Your Design Project
+            <label htmlFor="projectContext" className="block text-xs font-bold uppercase tracking-wide text-text-tertiary mb-4">
+              Describe Your Project
             </label>
             <textarea
               id="projectContext"
@@ -160,19 +212,63 @@ export default function PromptBuilderForm() {
                 setFormData((prev) => ({ ...prev, projectContext: e.target.value }))
               }
               rows={5}
-              placeholder="What are you designing? Include your design system, component library, brand colors, typography..."
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800
-                       text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-                       rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              placeholder="e.g., A finance app for young professionals. Clean, modern design with blue as the primary color. Needs to feel trustworthy but approachable."
+              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 bg-background-secondary
+                       text-text-primary placeholder-text-tertiary
+                       rounded-xl focus:outline-none focus:ring-2 focus:ring-border-focus focus:border-transparent
                        transition resize-none text-sm leading-relaxed"
             />
             <div className="flex justify-between items-center mt-3">
-              <span className="text-xs text-gray-400 dark:text-gray-500">
-                💡 Tip: Include design system details for better results
+              <span className="text-xs text-text-tertiary">
+                💡 What kind of product? Who's it for? What should it feel like?
               </span>
-              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+              <span className="text-xs font-medium text-text-tertiary">
                 {formData.projectContext.length} / 2000
               </span>
+            </div>
+          </motion.div>
+
+          {/* Tech Stack Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.22 }}
+            className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <h3 className="text-xs font-bold uppercase tracking-wide text-text-tertiary mb-3">
+              Tech Stack <span className="font-normal">(Optional)</span>
+            </h3>
+            <p className="text-xs text-text-tertiary mb-4">
+              Select any that apply — helps AI give better code suggestions
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: 'react', label: 'React' },
+                { id: 'nextjs', label: 'Next.js' },
+                { id: 'vue', label: 'Vue' },
+                { id: 'react-native', label: 'React Native' },
+                { id: 'tailwind', label: 'Tailwind CSS' },
+                { id: 'shadcn', label: 'Shadcn UI' },
+                { id: 'material-ui', label: 'Material UI' },
+                { id: 'chakra', label: 'Chakra UI' },
+                { id: 'figma', label: 'Figma' },
+              ].map((tech) => {
+                const isSelected = formData.techStack.includes(tech.id);
+                return (
+                  <button
+                    key={tech.id}
+                    type="button"
+                    onClick={() => handleTechStackToggle(tech.id)}
+                    className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all cursor-pointer ${
+                      isSelected
+                        ? getSelectedChipClasses()
+                        : 'border-gray-200 dark:border-gray-700 bg-surface-primary text-text-primary hover:border-gray-300 dark:hover:border-gray-600 hover:bg-background-secondary'
+                    }`}
+                  >
+                    {tech.label}
+                  </button>
+                );
+              })}
             </div>
           </motion.div>
 
@@ -181,10 +277,10 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
+            className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow"
           >
-            <label htmlFor="specificTask" className="block text-xs font-bold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-4">
-              What You're Designing <span className="text-gray-400">(Optional)</span>
+            <label htmlFor="specificTask" className="block text-xs font-bold uppercase tracking-wide text-text-tertiary mb-4">
+              What You're Designing <span className="text-text-tertiary">(Optional)</span>
             </label>
             <textarea
               id="specificTask"
@@ -194,9 +290,9 @@ export default function PromptBuilderForm() {
               }
               rows={3}
               placeholder="Describe what you're working on right now... e.g., a dashboard, landing page, mobile app interface..."
-              className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800
-                       text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-                       rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              className="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 bg-background-secondary
+                       text-text-primary placeholder-text-tertiary
+                       rounded-xl focus:outline-none focus:ring-2 focus:ring-border-focus focus:border-transparent
                        transition resize-none text-sm leading-relaxed"
             />
           </motion.div>
@@ -206,14 +302,14 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl border-2 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group"
+            className="bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group"
           >
-            <summary className="p-6 cursor-pointer font-semibold text-sm text-text-primary hover:text-black dark:hover:text-white transition-colors list-none flex items-center justify-between">
+            <summary className="p-6 cursor-pointer font-semibold text-sm text-text-primary hover:text-accent-primary transition-colors list-none flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <PaintBrushIcon className="w-5 h-5" />
                 <span>Add design system details</span>
               </span>
-              <span className="text-gray-400 group-open:rotate-90 transition-transform">▶</span>
+              <span className="text-text-tertiary group-open:rotate-90 transition-transform">▶</span>
             </summary>
             <div className="px-6 pb-6 space-y-3">
               <input
@@ -226,9 +322,9 @@ export default function PromptBuilderForm() {
                   }))
                 }
                 placeholder="Primary Color (e.g., #3B82F6)"
-                className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800
-                         text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-                         rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 bg-background-secondary
+                         text-text-primary placeholder-text-tertiary
+                         rounded-lg focus:outline-none focus:ring-2 focus:ring-border-focus focus:border-transparent
                          transition text-sm"
               />
               <input
@@ -241,9 +337,9 @@ export default function PromptBuilderForm() {
                   }))
                 }
                 placeholder="Font Family (e.g., Inter, Roboto)"
-                className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800
-                         text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-                         rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 bg-background-secondary
+                         text-text-primary placeholder-text-tertiary
+                         rounded-lg focus:outline-none focus:ring-2 focus:ring-border-focus focus:border-transparent
                          transition text-sm"
               />
               <input
@@ -256,9 +352,9 @@ export default function PromptBuilderForm() {
                   }))
                 }
                 placeholder="Component Library (e.g., Tailwind CSS, Material-UI)"
-                className="w-full px-4 py-2.5 border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800
-                         text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
-                         rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                className="w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 bg-background-secondary
+                         text-text-primary placeholder-text-tertiary
+                         rounded-lg focus:outline-none focus:ring-2 focus:ring-border-focus focus:border-transparent
                          transition text-sm"
               />
             </div>
@@ -269,14 +365,14 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="bg-white dark:bg-gray-900 rounded-2xl border-2 border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group"
+            className="bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group"
           >
-            <summary className="p-6 cursor-pointer font-semibold text-sm text-text-primary hover:text-black dark:hover:text-white transition-colors list-none flex items-center justify-between">
+            <summary className="p-6 cursor-pointer font-semibold text-sm text-text-primary hover:text-accent-primary transition-colors list-none flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <RectangleStackIcon className="w-5 h-5" />
                 <span>Browse 8 quick-start templates</span>
               </span>
-              <span className="text-gray-400 group-open:rotate-90 transition-transform">▶</span>
+              <span className="text-text-tertiary group-open:rotate-90 transition-transform">▶</span>
             </summary>
             <div className="px-6 pb-6">
               <PromptTemplates onSelectTemplate={handleTemplateSelect} />

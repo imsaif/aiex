@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-22 10:47 (MacBook)
+- **Pattern:** Prompt Builder - Dark/Light Mode & Tech Stack UX
+- **Status:** ✅ Completed
+- **Files Changed:** 9
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed dark/light mode styling for AI tool selector and "What do you need?" chips using JS-controlled styles instead of unreliable Tailwind dark: variants. Selected items now show white bg/black text in dark mode, black bg/white text in light mode. Fixed logo visibility by inverting black SVGs in dark mode. Added clickable tech stack chips (React, Next.js, Tailwind, Shadcn, etc.) to help designers communicate technical context without typing jargon. Updated prompt generator to include tech stack in generated prompts. Fixed Copy/Download buttons appearing after generation by fixing useEffect dependency bug. Added auto-scroll to prompt content during typewriter effect. Simplified "Describe Your Project" field to be designer-friendly with guiding tip.
+
 ### Session 2025-11-21 10:11 (MacBook)
 - **Pattern:** Prompt Builder - Designer-Focused UX Improvements
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Refined Crisis Detection demo UX with proper chat styling. Fixed page scroll issue by changing from scrollIntoView() to container-only scrolling (scrollTop assignment). Added white filled message boxes for system messages with gray borders (realistic chat UI). Changed scroll behavior to only trigger when conversation exceeds 3 messages. Updated send button to use Tailwind blue-600 for visibility. Demo now provides proper chat-like experience with visual clarity and smooth interactions without page jumps.
 
 ### Session 2025-11-11 19:13 (MacBook)
-- **Pattern:** Safety & Harm Prevention (Crisis Detection & Escalation + 3 related patterns)
-- **Status:** ✅ Completed
-- **Files Changed:** 33 (28 new pattern files, 3 new images, 1 demo component, 5 modified files)
-- **Tests Added/Modified:** 0
-- **Notes:** Completed Crisis Detection & Escalation pattern with multi-layer detection system (4 independent layers: keywords, context, behavior, manipulation). Created interactive CrisisDetectionDemo component with real-time detection, auto-scrolling chat interface, and in-chat crisis alert display. Consolidated 3 redundant code examples into 1 comprehensive example covering all layers + React integration. Updated Figma prompt to explain pattern implementation rather than design specs. Integrated real-world example images (Woebot, Crisis Text Line, harmful ChatGPT conversation). Also scaffolded 3 additional Safety & Harm Prevention patterns (Session Degradation Prevention, Anti-Manipulation Safeguards, Vulnerable User Protection) with complete content structure. Pattern validation shows Crisis Detection now has all required images and is fully integrated.
-
-### Session 2025-11-11 13:27 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
