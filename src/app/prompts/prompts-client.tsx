@@ -53,7 +53,7 @@ export default function PromptsClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-20 md:pt-24 pb-12 md:pb-16">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-6">
@@ -62,7 +62,7 @@ export default function PromptsClient() {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-text-primary">
               Figma Make Prompts for
               <br />
               AI Design Patterns
@@ -79,7 +79,7 @@ export default function PromptsClient() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm sticky top-4">
+            <div className="bg-surface-primary rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-card sticky top-24">
               <h3 className="font-semibold text-lg mb-4 text-text-primary">Categories</h3>
               <ul className="space-y-2">
                 <li>
@@ -120,7 +120,7 @@ export default function PromptsClient() {
           {/* Prompts Grid */}
           <div className="flex-1">
             {/* Search */}
-            <div className="mb-6 bg-surface-primary rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="mb-6 bg-surface-primary rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-card">
               <UnifiedSearchBar
                 placeholder="Search prompts..."
                 value={searchQuery}

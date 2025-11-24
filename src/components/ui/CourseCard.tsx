@@ -47,9 +47,9 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
     >
       <Link href={`/guides/${course.slug}`} className="block group h-full">
         <div
-          className="bg-surface-primary rounded-xl border border-gray-200 shadow-sm
-                    hover:border-gray-300 transition-all duration-300 h-full
-                    flex flex-col overflow-hidden hover:shadow-md"
+          className="bg-surface-primary rounded-2xl border border-gray-100 shadow-card
+                    hover:border-gray-200 transition-all duration-300 h-full
+                    flex flex-col overflow-hidden hover:shadow-card-hover"
         >
           {/* Thumbnail Section */}
           <div className="relative w-full h-40 bg-gradient-to-br from-accent-primary/10 to-accent-primary/5 overflow-hidden flex items-center justify-center group">
@@ -67,7 +67,7 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
           </div>
 
           {/* Content Section */}
-          <div className="p-5 flex-1 flex flex-col">
+          <div className="p-8 flex-1 flex flex-col">
             {/* Title */}
             <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors line-clamp-2">
               {course.title}

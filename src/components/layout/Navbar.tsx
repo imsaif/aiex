@@ -17,13 +17,13 @@ const Navbar = () => {
     return pathname.startsWith(href);
   };
 
-  // Get link classes based on active state
+  // Get link classes based on active state - refined pill style
   const getLinkClasses = (href: string) => {
     const active = isActive(href);
-    return `flex items-center gap-2 px-3 py-2 transition-colors duration-200 rounded-lg ${
+    return `flex items-center gap-2 px-4 py-2 transition-all duration-200 ease-out rounded-full text-sm ${
       active
-        ? 'bg-accent-subtle text-accent-primary font-semibold'
-        : 'text-text-primary hover:text-accent-primary hover:bg-accent-subtle'
+        ? 'bg-black text-white font-medium'
+        : 'text-text-secondary hover:text-text-primary hover:bg-gray-100'
     }`;
   };
 
@@ -39,7 +39,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full bg-transparent py-6 absolute top-0 left-0 right-0 z-10">
+    <nav className="w-full py-5 fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-text-primary">

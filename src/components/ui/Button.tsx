@@ -26,23 +26,23 @@ export default function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseClasses = 'relative inline-flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-ring-focus focus:ring-offset-2 cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'relative inline-flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-ring-focus focus:ring-offset-2 cursor-pointer transition-all duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed';
 
   const variantClasses = {
-    // Primary: Filled with brand black
-    primary: 'bg-black text-white hover:bg-gray-800 active:opacity-90',
+    // Primary: Filled with brand black - pill shape with scale hover
+    primary: 'bg-black text-white hover:bg-gray-900 hover:scale-[1.02] active:scale-[0.98]',
 
     // Secondary: Black border, light background
-    secondary: 'border-2 border-black bg-white text-black hover:bg-gray-100 active:opacity-90',
+    secondary: 'border border-black bg-white text-black hover:bg-gray-50 hover:scale-[1.02] active:scale-[0.98]',
 
-    // Outline: Border only
-    outline: 'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50 active:opacity-90',
+    // Outline: Subtle border - pill shape
+    outline: 'border border-gray-200 bg-white text-gray-900 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98]',
   };
 
   const sizeClasses = {
-    sm: 'px-4 py-2 text-sm rounded-lg',
-    md: 'px-6 py-3 text-base rounded-lg',
-    lg: 'px-8 py-4 text-lg rounded-lg',
+    sm: 'px-5 py-2.5 text-sm rounded-full',
+    md: 'px-6 py-3 text-base rounded-full',
+    lg: 'px-8 py-4 text-base rounded-full',
   };
 
   const widthClass = fullWidth ? 'w-full' : '';

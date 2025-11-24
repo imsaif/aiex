@@ -12,7 +12,7 @@ export default function PromptBuilderClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-20 md:pt-24 pb-12 md:pb-16">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -28,7 +28,7 @@ export default function PromptBuilderClient() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-text-primary">
               Build Design Prompts for Any AI Tool
             </h1>
 

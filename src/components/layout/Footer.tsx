@@ -119,13 +119,13 @@ export default function Footer() {
   return (
     <footer className="bg-background-secondary border-t border-primary">
       {/* Newsletter Section */}
-      <section id="newsletter" className="py-16 md:py-20">
+      <section id="newsletter" className="py-24 md:py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-3">
+          <div className="max-w-xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-4">
               Get Notified on New Patterns
             </h2>
-            <p className="text-text-secondary mb-8">
+            <p className="text-text-secondary text-lg mb-10">
               Subscribe to receive updates when new AI design patterns are added
             </p>
 
@@ -215,7 +215,7 @@ export default function Footer() {
                     <path d="M12 10l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
                   </svg>
                 </span>
-                <h3 className="text-2xl font-bold text-text-primary">aiux</h3>
+                <h3 className="text-2xl font-semibold text-text-primary">aiux</h3>
               </div>
               <p className="text-text-secondary text-sm leading-relaxed">
                 Discover, Compare, and Leverage the Best AI Design Patterns
@@ -226,7 +226,7 @@ export default function Footer() {
             <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* RESOURCES Column */}
               <div>
-                <h4 className="text-sm font-semibold text-text-primary mb-4 uppercase tracking-wider">
+                <h4 className="text-sm font-semibold text-text-primary mb-5">
                   Resources
                 </h4>
                 <ul className="space-y-3">
@@ -287,7 +287,7 @@ export default function Footer() {
 
               {/* COMPANY Column */}
               <div>
-                <h4 className="text-sm font-semibold text-text-primary mb-4 uppercase tracking-wider">
+                <h4 className="text-sm font-semibold text-text-primary mb-5">
                   Company
                 </h4>
                 <ul className="space-y-3">
@@ -328,7 +328,7 @@ export default function Footer() {
 
               {/* LINKS Column */}
               <div>
-                <h4 className="text-sm font-semibold text-text-primary mb-4 uppercase tracking-wider">
+                <h4 className="text-sm font-semibold text-text-primary mb-5">
                   Links
                 </h4>
                 <ul className="space-y-3">

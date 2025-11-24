@@ -21,7 +21,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
   };
 
   return (
-    <div className="bg-surface-primary rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+    <div className="bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700 shadow-card overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 px-6 py-4 border-b border-gray-300 dark:border-gray-600">
         <div className="flex items-center justify-between flex-wrap gap-3">
@@ -33,7 +33,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
               href={figmaPrompt.figmaFileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-black hover:bg-gray-900 text-white text-sm font-medium rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -47,7 +47,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
       </div>
 
       {/* Prompt Content */}
-      <div className="p-6">
+      <div className="p-8">
         <div className="relative">
           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 pr-12 border border-gray-300 dark:border-gray-600">
             <p className="text-sm text-gray-900 dark:text-gray-200 leading-relaxed">

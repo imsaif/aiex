@@ -41,14 +41,14 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
     >
       <Link
         href={`/prompts/${pattern.slug}`}
-        className="block bg-surface-primary rounded-xl border border-gray-200 dark:border-gray-700
-                   shadow-sm hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md
+        className="block bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700
+                   shadow-card hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-card-hover
                    transition-all h-full flex flex-col"
       >
         {/* Header */}
-        <div className="p-6 pb-4">
-          <h3 className="text-lg font-semibold text-text-primary mb-3 hover:text-blue-600
-                       dark:hover:text-blue-400 transition-colors">
+        <div className="p-8 pb-4">
+          <h3 className="text-lg font-semibold text-text-primary mb-3 hover:text-accent-primary
+                       transition-colors">
             {pattern.title}
           </h3>
           <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 inline-block">
@@ -57,7 +57,7 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
         </div>
 
         {/* Prompt Preview */}
-        <div className="px-6 pb-4 flex-grow">
+        <div className="px-8 pb-4 flex-grow">
           <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-300 dark:border-gray-600">
             <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
               {pattern.content.figmaPrompt?.prompt}
@@ -66,12 +66,12 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
         </div>
 
         {/* Actions */}
-        <div className="p-6 pt-4 border-t border-gray-300 dark:border-gray-600 flex items-center justify-between">
+        <div className="p-8 pt-4 border-t border-gray-300 dark:border-gray-600 flex items-center justify-between">
           <button
             onClick={handleQuickCopy}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700/50
-                     hover:bg-gray-200 dark:hover:bg-gray-600/50 transition-colors text-sm font-medium
-                     text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-700/50
+                     hover:bg-gray-200 dark:hover:bg-gray-600/50 hover:scale-[1.02] active:scale-[0.98]
+                     transition-all text-sm font-medium text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600"
           >
             {copied ? (
               <>
@@ -86,7 +86,7 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
             )}
           </button>
 
-          <span className="flex items-center gap-1 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">
+          <span className="flex items-center gap-1 text-sm font-medium text-accent-primary hover:text-accent-hover transition-colors">
             View Full
             <ArrowRightIcon className="w-4 h-4" />
           </span>

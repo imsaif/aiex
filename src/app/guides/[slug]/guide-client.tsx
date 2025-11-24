@@ -75,7 +75,7 @@ export default function GuideClient({
   return (
     <div className="min-h-screen bg-background-primary text-text-primary">
       {/* Main Content */}
-      <div className="py-12 md:py-16">
+      <div className="pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="max-w-5xl mx-auto px-6">
           {/* Back Link */}
           <button
@@ -93,12 +93,12 @@ export default function GuideClient({
 
           {/* Header */}
           <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-8">{guide.title}</h1>
+            <h1 className="text-4xl md:text-5xl font-semibold mb-8">{guide.title}</h1>
             <p className="text-lg text-text-secondary mb-6">{guide.description}</p>
 
             {/* Lesson Progress (if lessons exist and guide started) */}
             {hasLessons && guideStatus !== 'not-started' && (
-              <div className="mb-6 p-4 bg-surface-secondary/50 rounded-lg border border-gray-200">
+              <div className="mb-6 p-6 bg-surface-secondary/50 rounded-2xl border border-gray-100 shadow-card">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-sm font-medium text-text-primary">
@@ -245,7 +245,7 @@ export default function GuideClient({
                 console.log('View All Guides button clicked');
                 router.push('/guides');
               }}
-              className="px-6 py-2 rounded-full bg-accent-subtle text-accent-primary font-medium hover:bg-accent-primary hover:text-background-primary transition-colors border border-accent-primary/20 flex-shrink-0 cursor-pointer focus:outline-none active:opacity-80"
+              className="px-6 py-2 rounded-full bg-black text-white font-medium hover:bg-gray-900 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 cursor-pointer focus:outline-none"
               tabIndex={0}
             >
               View All Guides

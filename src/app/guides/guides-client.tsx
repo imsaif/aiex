@@ -88,7 +88,7 @@ export default function GuidesClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-20 md:pt-24 pb-12 md:pb-16">
+      <section className="pt-32 md:pt-40 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
@@ -99,7 +99,7 @@ export default function GuidesClient() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
               Master AI Design Tools
             </h1>
             <p className="text-lg md:text-xl text-text-secondary mb-8">
@@ -117,9 +117,9 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'tool' ? null : 'tool')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
+              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-100
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
-                       transition-colors text-sm font-medium"
+                       transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
             >
               <span>{filter.tool ? `Tool: ${filter.tool}` : 'All Tools'}</span>
               <svg
@@ -162,9 +162,9 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'level' ? null : 'level')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
+              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-100
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
-                       transition-colors text-sm font-medium"
+                       transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
             >
               <span>{filter.skillLevel ? `Level: ${filter.skillLevel}` : 'All Levels'}</span>
               <svg
@@ -207,9 +207,9 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48 lg:ml-auto">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'sort' ? null : 'sort')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-lg border border-gray-200
+              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-100
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
-                       transition-colors text-sm font-medium"
+                       transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
             >
               <span>Sort: {sortBy === 'newest' ? 'Newest' : sortBy === 'alphabetical' ? 'A-Z' : sortBy === 'progress' ? 'Progress' : 'Duration'}</span>
               <svg
@@ -351,8 +351,8 @@ export default function GuidesClient() {
               onClick={() => {
                 setFilter({});
               }}
-              className="px-6 py-2 rounded-lg bg-accent-primary text-background-primary
-                       font-medium hover:opacity-90 transition-opacity"
+              className="px-6 py-2 rounded-full bg-black text-white
+                       font-medium hover:bg-gray-900 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               Clear Filters
             </button>

@@ -1,16 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { defaultMetadata, siteConfig } from "@/config/seo";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: "--font-inter",
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   ...defaultMetadata,
@@ -39,7 +31,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
+    <html lang="en">
+      <head>
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="bg-background-primary text-text-primary antialiased font-sans min-h-screen">
         {children}
         <Analytics />

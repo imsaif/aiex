@@ -92,21 +92,21 @@ export default function HomeClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-20 md:pt-24 pb-12 md:pb-16">
+      <section className="pt-32 md:pt-40 pb-16 md:pb-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+            <div className="flex items-center justify-center gap-2 mb-8">
+              <span className="px-4 py-2 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
                 {patterns.length} AI Patterns
               </span>
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
               Discover AI Design<br />Inspiration & Patterns
             </h1>
-            <p className="text-lg md:text-xl text-text-secondary mb-8">
+            <p className="text-lg md:text-xl text-text-secondary mb-10">
               Real examples. Best practices.
             </p>
 
@@ -124,9 +124,9 @@ export default function HomeClient() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-black dark:bg-white text-white dark:text-black font-semibold rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-2 px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-medium rounded-full hover:bg-gray-900 dark:hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
             >
               <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
                 <path d="M15.645 26.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C8.688 21.36 6.25 18.174 6.25 14.25 6.25 11.322 8.714 9 11.688 9A5.5 5.5 0 0116 11.052 5.5 5.5 0 0120.313 9c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" fill="currentColor" />
@@ -143,7 +143,7 @@ export default function HomeClient() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm sticky top-4">
+            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-card sticky top-24">
               <h3
                 className="font-semibold text-lg mb-4"
                 style={{ color: isDarkMode ? '#ffffff' : '#111827' }}
@@ -214,7 +214,7 @@ export default function HomeClient() {
           {/* Patterns Grid */}
           <div className="flex-1">
             {/* Search Bar - Above filters with card styling */}
-            <div className="mb-6 bg-surface-primary dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <div className="mb-6 bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-card">
               <UnifiedSearchBar
                 placeholder="Search any AI Pattern you need"
                 value={searchQuery}
@@ -232,7 +232,7 @@ export default function HomeClient() {
             </div>
 
             {/* Filter Bars */}
-            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
+            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-card mb-8">
               <div className="flex flex-wrap items-start gap-3">
                 <ProductFilterBar
                   products={allProducts}
@@ -253,23 +253,23 @@ export default function HomeClient() {
                 <motion.div
                   key={pattern.id}
                   initial={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -4 }}
-                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
                 >
                   <Link
                     href={`/patterns/${pattern.slug}`}
                     className="block group"
                   >
-                    <div className="bg-surface-primary rounded-xl p-8 border border-gray-200 shadow-sm
-                                  hover:border-gray-300 transition-all duration-300 h-full
+                    <div className="bg-surface-primary rounded-2xl p-8 border border-gray-100 shadow-card
+                                  hover:shadow-card-hover hover:border-gray-200 transition-all duration-300 h-full
                                   flex flex-col">
                       {/* Title */}
-                      <h3 className="text-lg font-semibold text-text-primary mb-4 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-xl font-medium text-text-primary mb-4 group-hover:text-gray-600 transition-colors">
                         {pattern.title}
                       </h3>
 
                       {/* Description */}
-                      <p className="text-sm text-text-secondary line-clamp-3 flex-grow mb-8">
+                      <p className="text-base text-text-secondary leading-relaxed line-clamp-3 flex-grow mb-8">
                         {pattern.description}
                       </p>
 

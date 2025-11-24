@@ -55,7 +55,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
   return (
     <motion.main
-      className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6"
+      className="max-w-7xl mx-auto pt-32 md:pt-40 pb-8 px-6"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
@@ -115,7 +115,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             {pattern.category}
           </span>
         </div>
-        <h1 className="text-5xl font-bold mt-6 mb-4 text-text-primary">{pattern.title}</h1>
+        <h1 className="text-4xl md:text-5xl font-semibold mt-6 mb-4 text-text-primary">{pattern.title}</h1>
         <div className="text-lg text-text-secondary leading-relaxed">
           {pattern.description}
         </div>
@@ -138,10 +138,10 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Example Screenshot */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+            <h2 className="text-2xl font-semibold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
               Example: {pattern.content.examples[0].title}
             </h2>
-            <div className="bg-surface-primary rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+            <div className="bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700 shadow-card overflow-hidden">
               <div className="relative w-full aspect-video bg-gray-100 dark:bg-gray-800">
                 <Image
                   src={pattern.content.examples[0].image || pattern.content.examples[0].imagePath || ''}
@@ -163,7 +163,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Figma Make Prompt */}
         {pattern.content.figmaPrompt && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+            <h2 className="text-2xl font-semibold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
               Figma Make Prompt
             </h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
@@ -172,7 +172,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
         {/* Link to Full Pattern */}
         <motion.section variants={itemVariants}>
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+          <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 rounded-2xl p-8">
             <h3 className="text-lg font-semibold text-text-primary mb-2">
               Want to learn more about this pattern?
             </h3>
@@ -181,7 +181,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </p>
             <Link
               href={`/patterns/${pattern.slug}`}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-black hover:bg-gray-900 text-white rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all font-medium"
             >
               View Full Pattern
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -194,7 +194,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         {/* Related Prompts */}
         {relatedPrompts.length > 0 && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+            <h2 className="text-2xl font-semibold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
               Related Prompts from {pattern.category}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
