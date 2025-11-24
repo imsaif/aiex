@@ -217,7 +217,7 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
                   onClick={() => handleCategoryClick(category.title)}
                   className={`w-full text-left px-4 py-4 flex items-center justify-between
                            transition-colors hover:bg-gray-50 dark:hover:bg-gray-700
-                           border-t border-gray-100 dark:border-gray-800
+                           border-t border-gray-200 dark:border-gray-800
                            ${selectedCategory === category.title ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600' : ''}`}
                 >
                   <span className="text-base text-text-primary">
@@ -257,7 +257,7 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
                   key={product.name}
                   className="w-full text-left px-4 py-4 flex items-center gap-3
                            transition-colors hover:bg-gray-50 dark:hover:bg-gray-800
-                           border-t border-gray-100 dark:border-gray-800 cursor-pointer"
+                           border-t border-gray-200 dark:border-gray-800 cursor-pointer"
                 >
                   <input
                     type="checkbox"
@@ -293,7 +293,7 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
                   key={industry.name}
                   className="w-full text-left px-4 py-4 flex items-center gap-3
                            transition-colors hover:bg-gray-50 dark:hover:bg-gray-800
-                           border-t border-gray-100 dark:border-gray-800 cursor-pointer"
+                           border-t border-gray-200 dark:border-gray-800 cursor-pointer"
                 >
                   <input
                     type="checkbox"

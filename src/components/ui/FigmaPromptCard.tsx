@@ -21,77 +21,133 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
   };
 
   return (
-    <div className="bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700 shadow-card overflow-hidden">
+    <div className="bg-surface-primary rounded-2xl border-2 border-gray-900 dark:border-gray-100 shadow-card overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 px-6 py-4 border-b border-gray-300 dark:border-gray-600">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            Copy this prompt to use in Figma Make or other AI design tools
-          </p>
-          {figmaPrompt.figmaFileUrl && (
-            <a
-              href={figmaPrompt.figmaFileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-black hover:bg-gray-900 text-white text-sm font-medium rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
+      <div className="bg-gray-900 dark:bg-gray-100 px-6 py-4">
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-400 dark:text-gray-500 font-medium">Works with:</span>
+            {/* Tool Logos with Tooltips */}
+            <div className="flex items-center gap-3">
+              {/* Figma */}
+              <div className="group relative">
+                <img
+                  src="/images/logos/figma.svg"
+                  alt="Figma"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  Figma
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-white"></div>
+                </div>
+              </div>
+              {/* Uizard */}
+              <div className="group relative">
+                <img
+                  src="/images/logos/uizard.jpeg"
+                  alt="Uizard"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity rounded cursor-pointer"
+                />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  Uizard
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-white"></div>
+                </div>
+              </div>
+              {/* Cursor */}
+              <div className="group relative">
+                <img
+                  src="/images/logos/cursor.svg"
+                  alt="Cursor"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  Cursor
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-white"></div>
+                </div>
+              </div>
+              {/* Claude */}
+              <div className="group relative">
+                <img
+                  src="/images/logos/claude.svg"
+                  alt="Claude"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  Claude
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-white"></div>
+                </div>
+              </div>
+              {/* Gemini */}
+              <div className="group relative">
+                <img
+                  src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlegemini.svg"
+                  alt="Gemini"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                />
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  Gemini
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-white"></div>
+                </div>
+              </div>
+              {/* Galileo AI */}
+              <div className="group relative">
+                <div className="w-5 h-5 rounded opacity-80 group-hover:opacity-100 transition-opacity bg-[#6366F1] flex items-center justify-center cursor-pointer">
+                  <span className="text-[10px] font-bold text-white">G</span>
+                </div>
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+                  Galileo AI
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-white"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleCopy}
+              className="px-4 py-2 bg-white hover:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-800 text-gray-900 dark:text-white text-sm font-medium rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Download .fig
-            </a>
-          )}
+              {copied ? (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-600">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                  </svg>
+                  Copy Prompt
+                </>
+              )}
+            </button>
+            {figmaPrompt.figmaFileUrl && (
+              <a
+                href={figmaPrompt.figmaFileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-white hover:bg-gray-100 dark:bg-gray-900 dark:hover:bg-gray-800 text-gray-900 dark:text-white text-sm font-medium rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download .fig
+              </a>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Prompt Content */}
       <div className="p-8">
-        <div className="relative">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 pr-12 border border-gray-300 dark:border-gray-600">
-            <p className="text-sm text-gray-900 dark:text-gray-200 leading-relaxed">
-              {figmaPrompt.prompt}
-            </p>
-          </div>
-          <button
-            onClick={handleCopy}
-            className="absolute top-2 right-2 p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors group"
-            title="Copy to clipboard"
-          >
-            {copied ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-green-600"
-              >
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-gray-500 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200"
-              >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-              </svg>
-            )}
-          </button>
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700">
+          <p className="text-sm text-gray-900 dark:text-gray-200 leading-relaxed font-mono">
+            {figmaPrompt.prompt}
+          </p>
         </div>
 
         {/* Customization Tips */}
@@ -107,7 +163,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-blue-600 dark:text-blue-400"
+              className="text-gray-900 dark:text-gray-100"
             >
               <path d="M12 20h9"/>
               <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
@@ -117,7 +173,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
           <ul className="space-y-2">
             {figmaPrompt.tips.map((tip, index) => (
               <li key={index} className="flex items-start gap-2 text-sm text-text-secondary">
-                <span className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0">•</span>
+                <span className="text-gray-900 dark:text-gray-100 mt-0.5 flex-shrink-0">•</span>
                 <span>{tip}</span>
               </li>
             ))}
@@ -125,7 +181,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
         </div>
 
         {/* Usage Instructions */}
-        <div className="mt-6 pt-6 border-t border-gray-300 dark:border-gray-600">
+        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
           <details className="group">
             <summary className="cursor-pointer text-sm font-medium text-text-secondary hover:text-text-primary flex items-center gap-2">
               <svg
@@ -156,6 +212,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
             </div>
           </details>
         </div>
+
       </div>
     </div>
   );

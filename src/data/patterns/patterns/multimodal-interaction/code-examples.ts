@@ -184,14 +184,14 @@ export default function MultimodalSearch() {
       {/* Search Results */}
       {results.length > 0 && (
         <div className="border border-gray-200 rounded-lg bg-white shadow-sm">
-          <div className="p-2 border-b border-gray-100">
+          <div className="p-2 border-b border-gray-200">
             <span className="text-xs text-gray-500 font-medium">Results (tap to select)</span>
           </div>
           {results.map((result, index) => (
             <button
               key={index}
               onClick={() => handleResultClick(result)}
-              className="w-full text-left p-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 focus:outline-none focus:bg-blue-50"
+              className="w-full text-left p-3 hover:bg-gray-50 transition-colors border-b border-gray-200 last:border-b-0 focus:outline-none focus:bg-blue-50"
             >
               <span className="text-gray-800">{result}</span>
             </button>

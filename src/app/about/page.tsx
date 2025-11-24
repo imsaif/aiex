@@ -49,7 +49,7 @@ export default function AboutPage() {
               {/* 3-Column Card Layout */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {/* Pattern Discovery Card */}
-                <div className="p-8 bg-surface-primary border border-gray-100 rounded-2xl shadow-card">
+                <div className="p-8 bg-surface-primary border border-gray-200 rounded-2xl shadow-card">
                   <h3 className="text-lg font-medium mb-4 text-text-primary">Pattern Discovery</h3>
                   <p className="text-text-secondary leading-relaxed text-sm">
                     We analyze how leading AI products—ChatGPT, Claude, Midjourney, GitHub Copilot, Notion AI—solve common UX challenges. When a design decision works across multiple products, we dig deeper.
@@ -57,7 +57,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* What Earns a Spot Card */}
-                <div className="p-8 bg-surface-primary border border-gray-100 rounded-2xl shadow-card">
+                <div className="p-8 bg-surface-primary border border-gray-200 rounded-2xl shadow-card">
                   <h3 className="text-lg font-medium mb-4 text-text-primary">What Earns a Spot</h3>
                   <ul className="space-y-3 text-sm text-text-secondary">
                     <li className="flex gap-2">
@@ -76,7 +76,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* Standing on Shoulders Card */}
-                <div className="p-8 bg-surface-primary border border-gray-100 rounded-2xl shadow-card">
+                <div className="p-8 bg-surface-primary border border-gray-200 rounded-2xl shadow-card">
                   <h3 className="text-lg font-medium mb-4 text-text-primary">Standing on Shoulders</h3>
                   <p className="text-text-secondary leading-relaxed text-sm mb-4">
                     Grounded in established frameworks:
@@ -118,19 +118,19 @@ export default function AboutPage() {
             <div className="mb-16">
               <h2 className="text-2xl md:text-3xl font-semibold mb-8 text-text-primary">By The Numbers</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="p-8 border border-gray-100 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="p-8 border border-gray-200 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
                   <div className="text-4xl font-semibold text-accent-primary mb-2">50+</div>
                   <p className="text-text-secondary">AI products analyzed continuously</p>
                 </div>
-                <div className="p-8 border border-gray-100 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="p-8 border border-gray-200 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
                   <div className="text-4xl font-semibold text-accent-primary mb-2">28</div>
                   <p className="text-text-secondary">Validated patterns documented</p>
                 </div>
-                <div className="p-8 border border-gray-100 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="p-8 border border-gray-200 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
                   <div className="text-4xl font-semibold text-accent-primary mb-2">100+</div>
                   <p className="text-text-secondary">Real-world examples referenced</p>
                 </div>
-                <div className="p-8 border border-gray-100 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="p-8 border border-gray-200 rounded-2xl bg-surface-primary shadow-card hover:shadow-card-hover transition-shadow">
                   <div className="text-4xl font-semibold text-accent-primary mb-2">8</div>
                   <p className="text-text-secondary">Strategic categories covering all AI UX challenges</p>
                 </div>
@@ -146,7 +146,7 @@ export default function AboutPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Figma Prompts Card */}
-                <div className="p-8 bg-surface-primary border border-gray-100 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="p-8 bg-surface-primary border border-gray-200 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-accent-subtle rounded-xl flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent-primary">
@@ -171,7 +171,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* Prompt Builder Card */}
-                <div className="p-8 bg-surface-primary border border-gray-100 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="p-8 bg-surface-primary border border-gray-200 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-accent-subtle rounded-xl flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent-primary">
@@ -195,7 +195,7 @@ export default function AboutPage() {
                 </div>
 
                 {/* Guides Card */}
-                <div className="p-8 bg-surface-primary border border-gray-100 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="p-8 bg-surface-primary border border-gray-200 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-accent-subtle rounded-xl flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-accent-primary">
@@ -252,7 +252,7 @@ export default function AboutPage() {
             </div>
 
             {/* Creator */}
-            <div className="mb-16 p-8 bg-surface-primary border border-gray-100 rounded-2xl shadow-card">
+            <div className="mb-16 p-8 bg-surface-primary border border-gray-200 rounded-2xl shadow-card">
               <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-text-primary">About the Creator</h2>
               <p className="text-text-secondary leading-relaxed mb-4">
                 aiux is built with ☕ by <strong className="text-text-primary">Imran Mohammed</strong>, a designer and developer

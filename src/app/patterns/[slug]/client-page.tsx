@@ -211,10 +211,10 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           </motion.section>
         )}
 
-        {/* Figma Make Prompt */}
+        {/* AI Design Prompt */}
         {pattern.content.figmaPrompt && (
           <motion.section variants={itemVariants}>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Figma Make Prompt</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">AI Design Prompt</h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </motion.section>
         )}

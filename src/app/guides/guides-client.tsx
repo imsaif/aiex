@@ -117,7 +117,7 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'tool' ? null : 'tool')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-100
+              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-200
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
                        transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
             >
@@ -162,7 +162,7 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'level' ? null : 'level')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-100
+              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-200
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
                        transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
             >
@@ -207,7 +207,7 @@ export default function GuidesClient() {
           <div className="relative flex-1 lg:flex-none lg:w-48 lg:ml-auto">
             <button
               onClick={() => setOpenDropdown(openDropdown === 'sort' ? null : 'sort')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-100
+              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-200
                        bg-surface-primary text-text-primary hover:bg-surface-secondary
                        transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
             >

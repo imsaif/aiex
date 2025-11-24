@@ -98,7 +98,7 @@ export default function GuideClient({
 
             {/* Lesson Progress (if lessons exist and guide started) */}
             {hasLessons && guideStatus !== 'not-started' && (
-              <div className="mb-6 p-6 bg-surface-secondary/50 rounded-2xl border border-gray-100 shadow-card">
+              <div className="mb-6 p-6 bg-surface-secondary/50 rounded-2xl border border-gray-200 shadow-card">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-sm font-medium text-text-primary">

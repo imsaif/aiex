@@ -153,7 +153,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-surface-primary rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
+            className="bg-surface-primary rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
           >
             <AIToolSelector selected={formData.aiTool} onChange={handleAIToolChange} />
           </motion.div>
@@ -163,7 +163,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="bg-surface-primary rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
+            className="bg-surface-primary rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
           >
             <h3 className="text-xs font-bold uppercase tracking-wide text-text-tertiary mb-4">
               What do you need?
@@ -200,7 +200,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-surface-primary rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
+            className="bg-surface-primary rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
           >
             <label htmlFor="projectContext" className="block text-xs font-bold uppercase tracking-wide text-text-tertiary mb-4">
               Describe Your Project
@@ -233,7 +233,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.22 }}
-            className="bg-surface-primary rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
+            className="bg-surface-primary rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
           >
             <h3 className="text-xs font-bold uppercase tracking-wide text-text-tertiary mb-3">
               Tech Stack <span className="font-normal">(Optional)</span>
@@ -277,7 +277,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="bg-surface-primary rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
+            className="bg-surface-primary rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow"
           >
             <label htmlFor="specificTask" className="block text-xs font-bold uppercase tracking-wide text-text-tertiary mb-4">
               What You're Designing <span className="text-text-tertiary">(Optional)</span>
@@ -302,7 +302,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow group"
+            className="bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow group"
           >
             <summary className="p-6 cursor-pointer font-semibold text-sm text-text-primary hover:text-accent-primary transition-colors list-none flex items-center justify-between">
               <span className="flex items-center gap-2">
@@ -365,7 +365,7 @@ export default function PromptBuilderForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35 }}
-            className="bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow group"
+            className="bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover transition-shadow group"
           >
             <summary className="p-6 cursor-pointer font-semibold text-sm text-text-primary hover:text-accent-primary transition-colors list-none flex items-center justify-between">
               <span className="flex items-center gap-2">

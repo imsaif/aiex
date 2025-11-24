@@ -41,7 +41,7 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
     >
       <Link
         href={`/prompts/${pattern.slug}`}
-        className="block bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700
+        className="block bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700
                    shadow-card hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-card-hover
                    transition-all h-full flex flex-col"
       >

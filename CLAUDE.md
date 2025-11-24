@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-24 19:01 (MacBook)
+- **Pattern:** Design System & AI Prompt Section Updates
+- **Status:** ✅ Completed
+- **Files Changed:** 20
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed Tailwind v4 dark mode by adding @config directive to globals.css. Updated all border-gray-100 to border-gray-200 across 16 files for better visibility (inspired by Vercel). Redesigned FigmaPromptCard to "AI Design Prompt" with multi-tool support showing logos for Figma, Uizard, Cursor, Claude, Gemini, and Galileo AI. Added polished custom tooltips for tool logos. Removed card hover text lightening effect. Used black/white brand colors for prompt section header.
+
 ### Session 2025-11-24 09:07 (MacBook)
 - **Pattern:** Design System Audit & Consistency
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed comprehensive dark mode styling across pattern detail pages (65+ color changes), implemented symmetric theme toggle hover animations, fixed logo CDN URLs from cdn.simpleicons.org to cdn.jsdelivr.net for company and product logos, added Navbar with theme toggle to pattern detail pages, and improved navigation text accessibility with white colors in dark mode
 
 ### Session 2025-11-18 16:18 (MacBook)
-- **Pattern:** Dark Mode Accessibility Improvements
-- **Status:** ✅ Completed
-- **Files Changed:** 13
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed critical dark mode visibility issues on home page. Implemented theme toggle with sun/moon icons in navbar with smooth animations. Created useTheme hook with MutationObserver to bypass CSS specificity issues for logo filters. Fixed categories sidebar to show pure white text in dark mode with black-on-white hover states using reactive isDarkMode state. Updated product filter dropdown with proper dark mode colors. Fixed category chips on pattern cards to have proper contrast (gray-700 background with gray-200 text in dark mode). Connected Tailwind colors to CSS variables for proper theme switching.
-
-### Session 2025-11-13 09:24 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

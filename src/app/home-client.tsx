@@ -143,7 +143,7 @@ export default function HomeClient() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-card sticky top-24">
+            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
               <h3
                 className="font-semibold text-lg mb-4"
                 style={{ color: isDarkMode ? '#ffffff' : '#111827' }}
@@ -214,7 +214,7 @@ export default function HomeClient() {
           {/* Patterns Grid */}
           <div className="flex-1">
             {/* Search Bar - Above filters with card styling */}
-            <div className="mb-6 bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-card">
+            <div className="mb-6 bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card">
               <UnifiedSearchBar
                 placeholder="Search any AI Pattern you need"
                 value={searchQuery}
@@ -232,7 +232,7 @@ export default function HomeClient() {
             </div>
 
             {/* Filter Bars */}
-            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-card mb-8">
+            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card mb-8">
               <div className="flex flex-wrap items-start gap-3">
                 <ProductFilterBar
                   products={allProducts}
@@ -260,11 +260,11 @@ export default function HomeClient() {
                     href={`/patterns/${pattern.slug}`}
                     className="block group"
                   >
-                    <div className="bg-surface-primary rounded-2xl p-8 border border-gray-100 shadow-card
+                    <div className="bg-surface-primary rounded-2xl p-8 border border-gray-200 shadow-card
                                   hover:shadow-card-hover hover:border-gray-200 transition-all duration-300 h-full
                                   flex flex-col">
                       {/* Title */}
-                      <h3 className="text-xl font-medium text-text-primary mb-4 group-hover:text-gray-600 transition-colors">
+                      <h3 className="text-xl font-medium text-text-primary mb-4 transition-colors">
                         {pattern.title}
                       </h3>
 

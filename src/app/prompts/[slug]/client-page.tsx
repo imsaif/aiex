@@ -141,7 +141,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             <h2 className="text-2xl font-semibold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
               Example: {pattern.content.examples[0].title}
             </h2>
-            <div className="bg-surface-primary rounded-2xl border border-gray-100 dark:border-gray-700 shadow-card overflow-hidden">
+            <div className="bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 shadow-card overflow-hidden">
               <div className="relative w-full aspect-video bg-gray-100 dark:bg-gray-800">
                 <Image
                   src={pattern.content.examples[0].image || pattern.content.examples[0].imagePath || ''}
@@ -160,11 +160,11 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           </motion.section>
         )}
 
-        {/* Figma Make Prompt */}
+        {/* AI Design Prompt */}
         {pattern.content.figmaPrompt && (
           <motion.section variants={itemVariants}>
             <h2 className="text-2xl font-semibold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
-              Figma Make Prompt
+              AI Design Prompt
             </h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </motion.section>
@@ -172,7 +172,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
         {/* Link to Full Pattern */}
         <motion.section variants={itemVariants}>
-          <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 rounded-2xl p-8">
+          <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-2xl p-8">
             <h3 className="text-lg font-semibold text-text-primary mb-2">
               Want to learn more about this pattern?
             </h3>

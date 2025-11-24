@@ -79,7 +79,7 @@ export default function PromptsClient() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-card sticky top-24">
+            <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
               <h3 className="font-semibold text-lg mb-4 text-text-primary">Categories</h3>
               <ul className="space-y-2">
                 <li>
@@ -120,7 +120,7 @@ export default function PromptsClient() {
           {/* Prompts Grid */}
           <div className="flex-1">
             {/* Search */}
-            <div className="mb-6 bg-surface-primary rounded-2xl p-5 border border-gray-100 dark:border-gray-700 shadow-card">
+            <div className="mb-6 bg-surface-primary rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card">
               <UnifiedSearchBar
                 placeholder="Search prompts..."
                 value={searchQuery}

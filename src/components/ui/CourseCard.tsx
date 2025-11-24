@@ -47,7 +47,7 @@ export default function CourseCard({ course, index = 0 }: CourseCardProps) {
     >
       <Link href={`/guides/${course.slug}`} className="block group h-full">
         <div
-          className="bg-surface-primary rounded-2xl border border-gray-100 shadow-card
+          className="bg-surface-primary rounded-2xl border border-gray-200 shadow-card
                     hover:border-gray-200 transition-all duration-300 h-full
                     flex flex-col overflow-hidden hover:shadow-card-hover"
         >

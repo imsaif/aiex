@@ -96,7 +96,7 @@ const ProductFilterBar: React.FC<ProductFilterBarProps> = ({
                   <label
                     key={product.name}
                     className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800
-                             cursor-pointer transition-colors border-b border-gray-100 dark:border-gray-800 last:border-b-0"
+                             cursor-pointer transition-colors border-b border-gray-200 dark:border-gray-800 last:border-b-0"
                   >
                     <input
                       type="checkbox"
