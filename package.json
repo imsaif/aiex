@@ -74,6 +74,7 @@
     "fix-all": "npm run ts-fix && npm run lint -- --fix && npm test -- --passWithNoTests && npm run brand:fix"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.0",
     "@heroicons/react": "^2.2.0",
     "@lobehub/icons": "^2.43.1",
     "@prisma/client": "^6.17.1",
@@ -97,6 +98,7 @@
     "puppeteer": "^24.30.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
     "react-pdf": "^10.2.0",
     "react-syntax-highlighter": "^16.1.0",
     "resend": "^6.1.3",

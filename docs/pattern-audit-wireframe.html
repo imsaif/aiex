@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI UX Pattern Audit - Wireframe</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+            color: #1a1a1a;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .screen {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .screen-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .navbar {
+            background: #1a1a1a;
+            color: white;
+            padding: 16px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            opacity: 0.7;
+            cursor: pointer;
+        }
+        
+        .nav-links li.active {
+            opacity: 1;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 2px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        /* Upload Screen Styles */
+        .upload-hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .upload-hero h1 {
+            font-size: 48px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .upload-hero p {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 12px;
+            padding: 60px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            background: #fafafa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .upload-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .upload-subtext {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .example-designs {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .example-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            width: 160px;
+        }
+        
+        .example-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .example-preview {
+            width: 100%;
+            height: 100px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        
+        .example-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .example-type {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* Analyzing Screen */
+        .analyzing-container {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .analyzing-text {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .analyzing-steps {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+        
+        .step.complete {
+            background: #f0fff4;
+        }
+        
+        .step.active {
+            background: #f0f4ff;
+        }
+        
+        .step-icon {
+            margin-right: 12px;
+            font-size: 20px;
+        }
+        
+        /* Results Screen */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .results-summary {
+            flex: 1;
+        }
+        
+        .score-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .score-number {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .score-label {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .results-title {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .results-subtitle {
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        
+        .results-sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .filter-option {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+        
+        .filter-option:hover {
+            background: white;
+        }
+        
+        .filter-option.active {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .filter-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .filter-count {
+            margin-left: auto;
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .patterns-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .pattern-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .pattern-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .pattern-card.detected {
+            border-left: 4px solid #10b981;
+        }
+        
+        .pattern-card.weak {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .pattern-card.missing {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .pattern-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+        
+        .pattern-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .pattern-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-detected {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-weak {
+            background: #fed7aa;
+            color: #92400e;
+        }
+        
+        .status-missing {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .pattern-description {
+            color: #666;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .pattern-preview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .preview-box {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px;
+            background: #fafafa;
+        }
+        
+        .preview-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .preview-content {
+            height: 100px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .pattern-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: white;
+            border: 2px solid #e0e0e0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        /* Implementation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .modal-subtitle {
+            color: #666;
+        }
+        
+        .modal-content {
+            padding: 24px;
+        }
+        
+        .implementation-section {
+            margin-bottom: 30px;
+        }
+        
+        .implementation-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .implementation-icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        
+        .code-block {
+            background: #1a1a1a;
+            color: #f0f0f0;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        
+        .copy-btn {
+            float: right;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        .example-item {
+            text-align: center;
+        }
+        
+        .example-image {
+            width: 100%;
+            height: 120px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        
+        .example-label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Export Section */
+        .export-section {
+            background: #f8f9fa;
+            padding: 24px;
+            border-radius: 8px;
+            margin-top: 40px;
+        }
+        
+        .export-title {
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        
+        .export-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .export-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .export-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .export-label {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .export-format {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Screen 1: Landing Page -->
+        <div class="screen">
+            <div class="screen-header">Screen 1: Landing Page (Entry Point)</div>
+            <div class="navbar">
+                <div class="logo">🎯 aiuxdesign.guide</div>
+                <ul class="nav-links">
+                    <li>Patterns</li>
+                    <li class="active">Pattern Audit ✨</li>
+                    <li>Simulator</li>
+                    <li>Resources</li>
+                </ul>
+            </div>
+            <div class="content">
+                <div style="text-align: center; padding: 60px 20px;">
+                    <!-- Hero Section -->
+                    <h1 style="font-size: 56px; margin-bottom: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        AI UX Pattern Audit
+                    </h1>
+                    <p style="font-size: 24px; color: #666; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        Discover which essential AI patterns your interface is missing in 60 seconds
+                    </p>
+
+                    <!-- Value Props -->
+                    <div style="display: flex; gap: 40px; justify-content: center; margin-bottom: 50px;">
+                        <div>
+                            <div style="font-size: 36px; margin-bottom: 8px;">🔍</div>
+                            <div style="font-weight: 600;">Detect Patterns</div>
+                            <div style="font-size: 14px; color: #999;">24 AI patterns analyzed</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 36px; margin-bottom: 8px;">🎯</div>
+                            <div style="font-weight: 600;">Get Priorities</div>
+                            <div style="font-size: 14px; color: #999;">Know what to fix first</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 36px; margin-bottom: 8px;">🚀</div>
+                            <div style="font-weight: 600;">Implementation</div>
+                            <div style="font-size: 14px; color: #999;">Ready-to-use solutions</div>
+                        </div>
+                    </div>
+
+                    <!-- Main CTA -->
+                    <button class="btn btn-primary" style="font-size: 20px; padding: 16px 40px; margin-bottom: 20px;">
+                        Start Free Audit →
+                    </button>
+                    <div style="font-size: 14px; color: #999;">No signup required • 60 seconds • Instant results</div>
+
+                    <!-- How It Works -->
+                    <div style="margin-top: 80px; padding: 40px; background: #f8f9fa; border-radius: 12px;">
+                        <h2 style="font-size: 28px; margin-bottom: 30px;">How It Works</h2>
+                        <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                            <div style="text-align: center;">
+                                <div style="width: 60px; height: 60px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 12px;">1</div>
+                                <div style="font-weight: 600;">Answer 3 Questions</div>
+                                <div style="font-size: 14px; color: #666;">About your AI product</div>
+                            </div>
+                            <div style="color: #ddd; font-size: 24px;">→</div>
+                            <div style="text-align: center;">
+                                <div style="width: 60px; height: 60px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 12px;">2</div>
+                                <div style="font-weight: 600;">Upload Design</div>
+                                <div style="font-size: 14px; color: #666;">Screenshot or Figma</div>
+                            </div>
+                            <div style="color: #ddd; font-size: 24px;">→</div>
+                            <div style="text-align: center;">
+                                <div style="width: 60px; height: 60px; background: #667eea; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; margin: 0 auto 12px;">3</div>
+                                <div style="font-weight: 600;">Get Report</div>
+                                <div style="font-size: 14px; color: #666;">Personalized insights</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Proof -->
+                    <div style="margin-top: 60px;">
+                        <div style="font-size: 14px; color: #999; margin-bottom: 16px;">Trusted by designers at</div>
+                        <div style="display: flex; gap: 40px; justify-content: center; opacity: 0.6;">
+                            <div style="font-size: 18px; font-weight: 600;">Stripe</div>
+                            <div style="font-size: 18px; font-weight: 600;">Linear</div>
+                            <div style="font-size: 18px; font-weight: 600;">Vercel</div>
+                            <div style="font-size: 18px; font-weight: 600;">Notion</div>
+                        </div>
+                    </div>
+
+                    <!-- Example Results -->
+                    <div style="margin-top: 60px; padding: 30px; background: white; border: 2px solid #e0e0e0; border-radius: 12px;">
+                        <h3 style="margin-bottom: 20px;">Example Audit Results</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left;">
+                            <div style="padding: 16px; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ef4444;">
+                                <div style="font-weight: 600; color: #991b1b;">❌ Missing: Confidence Indicators</div>
+                                <div style="font-size: 14px; color: #666; margin-top: 4px;">Users can't judge AI reliability</div>
+                            </div>
+                            <div style="padding: 16px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                <div style="font-weight: 600; color: #92400e;">⚠️ Weak: Error Recovery</div>
+                                <div style="font-size: 14px; color: #666; margin-top: 4px;">No fallback when AI fails</div>
+                            </div>
+                            <div style="padding: 16px; background: #d1fae5; border-radius: 8px; border-left: 4px solid #10b981;">
+                                <div style="font-weight: 600; color: #065f46;">✅ Good: Conversational UI</div>
+                                <div style="font-size: 14px; color: #666; margin-top: 4px;">Natural chat interface</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Context Collection -->
+        <div class="screen">
+            <div class="screen-header">Screen 2: Context Questions (NEW)</div>
+            <div class="navbar">
+                <div class="logo">🎯 aiuxdesign.guide</div>
+                <ul class="nav-links">
+                    <li>Patterns</li>
+                    <li class="active">Pattern Audit ✨</li>
+                    <li>Simulator</li>
+                    <li>Resources</li>
+                </ul>
+            </div>
+            <div class="content">
+                <div style="max-width: 600px; margin: 0 auto; padding: 40px 0;">
+                    <!-- Progress Bar -->
+                    <div style="display: flex; align-items: center; margin-bottom: 40px;">
+                        <div style="flex: 1; height: 4px; background: #667eea; border-radius: 2px;"></div>
+                        <div style="margin: 0 12px; font-size: 12px; color: #667eea; font-weight: 600;">STEP 1</div>
+                        <div style="flex: 1; height: 4px; background: #e0e0e0; border-radius: 2px;"></div>
+                        <div style="margin: 0 12px; font-size: 12px; color: #999;">STEP 2</div>
+                        <div style="flex: 1; height: 4px; background: #e0e0e0; border-radius: 2px;"></div>
+                    </div>
+
+                    <h2 style="font-size: 32px; margin-bottom: 12px;">Help us understand your AI product</h2>
+                    <p style="color: #666; margin-bottom: 40px; font-size: 18px;">Better recommendations in 30 seconds</p>
+
+                    <!-- Question 1 -->
+                    <div style="margin-bottom: 32px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; font-size: 16px;">
+                            1. What type of AI interface is this? <span style="color: #ef4444;">*</span>
+                        </label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <label style="display: flex; align-items: center; padding: 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="type" style="margin-right: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">💬 Chatbot/Conversational</div>
+                                    <div style="font-size: 12px; color: #999;">ChatGPT, Claude-like</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 16px; border: 2px solid #667eea; border-radius: 8px; cursor: pointer; background: #f0f4ff;">
+                                <input type="radio" name="type" checked style="margin-right: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">✨ Content Generator</div>
+                                    <div style="font-size: 12px; color: #999;">Jasper, Copy.ai-like</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="type" style="margin-right: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">👨‍💻 Code Assistant</div>
+                                    <div style="font-size: 12px; color: #999;">Copilot, Codeium-like</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="type" style="margin-right: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">🎨 Image/Creative AI</div>
+                                    <div style="font-size: 12px; color: #999;">Midjourney, DALL-E-like</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="type" style="margin-right: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">📊 Analytics/Insights</div>
+                                    <div style="font-size: 12px; color: #999;">Tableau, PowerBI-like</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s;">
+                                <input type="radio" name="type" style="margin-right: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">🎯 Other</div>
+                                    <div style="font-size: 12px; color: #999;">Something different</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div style="margin-bottom: 32px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; font-size: 16px;">
+                            2. What's the primary user goal? <span style="color: #ef4444;">*</span>
+                        </label>
+                        <select style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; background: white;">
+                            <option>Creating content or assets quickly</option>
+                            <option>Getting answers to questions</option>
+                            <option>Making informed decisions with AI help</option>
+                            <option>Automating repetitive workflows</option>
+                            <option>Exploring and discovering options</option>
+                            <option>Analyzing patterns in data</option>
+                        </select>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div style="margin-bottom: 32px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 12px; font-size: 16px;">
+                            3. What's your biggest concern right now? <span style="color: #ef4444;">*</span>
+                        </label>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <label style="display: flex; align-items: center; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;">
+                                <input type="radio" name="concern" style="margin-right: 12px;">
+                                <span>🤔 Users don't trust the AI output</span>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 12px 16px; border: 2px solid #667eea; border-radius: 8px; cursor: pointer; background: #f0f4ff;">
+                                <input type="radio" name="concern" checked style="margin-right: 12px;">
+                                <span>⚠️ AI makes errors users don't catch</span>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;">
+                                <input type="radio" name="concern" style="margin-right: 12px;">
+                                <span>😕 Users don't understand how to use it</span>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;">
+                                <input type="radio" name="concern" style="margin-right: 12px;">
+                                <span>📦 AI feels like a black box</span>
+                            </label>
+                            <label style="display: flex; align-items: center; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer;">
+                                <input type="radio" name="concern" style="margin-right: 12px;">
+                                <span>🎲 Results are unpredictable/inconsistent</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Optional Industry -->
+                    <details style="margin-bottom: 32px;">
+                        <summary style="cursor: pointer; font-weight: 600; margin-bottom: 12px; color: #667eea;">
+                            ▼ Optional: Industry-specific requirements
+                        </summary>
+                        <div style="margin-top: 16px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 12px;">
+                                Industry/Domain
+                            </label>
+                            <select style="width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; background: white; margin-bottom: 16px;">
+                                <option>Not specified</option>
+                                <option>🏥 Healthcare/Medical</option>
+                                <option>💰 Finance/Banking</option>
+                                <option>📚 Education</option>
+                                <option>🛍️ E-commerce/Retail</option>
+                                <option>⚙️ Developer Tools</option>
+                                <option>🎨 Creative/Design</option>
+                                <option>⚖️ Legal</option>
+                                <option>🏢 Enterprise/B2B</option>
+                            </select>
+
+                            <label style="display: block; font-weight: 600; margin-bottom: 12px;">
+                                Product Stage
+                            </label>
+                            <div style="display: flex; gap: 12px;">
+                                <label style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; text-align: center;">
+                                    <input type="radio" name="stage" style="margin-bottom: 8px;"><br>
+                                    <span>💡 Concept</span>
+                                </label>
+                                <label style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; text-align: center;">
+                                    <input type="radio" name="stage" style="margin-bottom: 8px;"><br>
+                                    <span>🔬 Beta</span>
+                                </label>
+                                <label style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; text-align: center;">
+                                    <input type="radio" name="stage" style="margin-bottom: 8px;"><br>
+                                    <span>🚀 Production</span>
+                                </label>
+                                <label style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; text-align: center;">
+                                    <input type="radio" name="stage" style="margin-bottom: 8px;"><br>
+                                    <span>📈 Scaling</span>
+                                </label>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 16px;">
+                        <button class="btn btn-secondary" style="flex: 1;">← Back</button>
+                        <button class="btn btn-primary" style="flex: 2;">Continue to Upload →</button>
+                    </div>
+
+                    <!-- Skip Option -->
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="#" style="color: #999; text-decoration: none; font-size: 14px;">Skip questions (less accurate results)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 3: Upload with Context -->
+        <div class="screen">
+            <div class="screen-header">Screen 3: Upload Interface (After Context)</div>
+            <div class="navbar">
+                <div class="logo">🎯 aiuxdesign.guide</div>
+                <ul class="nav-links">
+                    <li>Patterns</li>
+                    <li class="active">Pattern Audit ✨</li>
+                    <li>Simulator</li>
+                    <li>Resources</li>
+                </ul>
+            </div>
+            <div class="content">
+                <!-- Progress Bar -->
+                <div style="max-width: 600px; margin: 0 auto 40px;">
+                    <div style="display: flex; align-items: center;">
+                        <div style="flex: 1; height: 4px; background: #10b981; border-radius: 2px;"></div>
+                        <div style="margin: 0 12px; font-size: 12px; color: #10b981;">✓ Context</div>
+                        <div style="flex: 1; height: 4px; background: #667eea; border-radius: 2px;"></div>
+                        <div style="margin: 0 12px; font-size: 12px; color: #667eea; font-weight: 600;">STEP 2</div>
+                        <div style="flex: 1; height: 4px; background: #e0e0e0; border-radius: 2px;"></div>
+                    </div>
+                </div>
+
+                <!-- Context Summary -->
+                <div style="max-width: 600px; margin: 0 auto 30px; padding: 16px; background: #f0f4ff; border-radius: 8px; border: 1px solid #667eea;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">🎯 Analyzing for: Content Generator</div>
+                    <div style="font-size: 14px; color: #666;">
+                        Focus: Error prevention in content creation • Specific patterns for AI transparency
+                    </div>
+                    <a href="#" style="font-size: 12px; color: #667eea; text-decoration: none;">Edit context</a>
+                </div>
+
+                <div class="upload-hero">
+                    <h1>Now, upload your design</h1>
+                    <p>We'll check for patterns specific to content generation AI</p>
+                    
+                    <div class="upload-area">
+                        <div class="upload-icon">📤</div>
+                        <div class="upload-text">Drop your design here</div>
+                        <div class="upload-subtext">or click to browse • PNG, JPG, or Figma URL</div>
+                    </div>
+                    
+                    <div style="text-align: center; color: #999; margin-bottom: 30px;">
+                        — or try an example content generator —
+                    </div>
+                    
+                    <div class="example-designs">
+                        <div class="example-card">
+                            <div class="example-preview">✍️</div>
+                            <div class="example-name">Jasper Clone</div>
+                            <div class="example-type">AI Writer</div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-preview">📝</div>
+                            <div class="example-name">Copy.ai Style</div>
+                            <div class="example-type">Marketing Copy</div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-preview">📧</div>
+                            <div class="example-name">Email Generator</div>
+                            <div class="example-type">Outreach AI</div>
+                        </div>
+                        <div class="example-card">
+                            <div class="example-preview">📚</div>
+                            <div class="example-name">Blog Writer</div>
+                            <div class="example-type">Long-form AI</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 4: Analyzing -->
+        <div class="screen">
+            <div class="screen-header">Screen 4: Analysis in Progress</div>
+            <div class="navbar">
+                <div class="logo">🎯 aiuxdesign.guide</div>
+                <ul class="nav-links">
+                    <li>Patterns</li>
+                    <li class="active">Pattern Audit ✨</li>
+                    <li>Simulator</li>
+                    <li>Resources</li>
+                </ul>
+            </div>
+            <div class="content">
+                <div class="analyzing-container">
+                    <div class="spinner"></div>
+                    <div class="analyzing-text">Analyzing your content generator interface...</div>
+                    <p style="color: #999; margin-bottom: 40px;">Checking patterns critical for error prevention</p>
+                    
+                    <div class="analyzing-steps">
+                        <div class="step complete">
+                            <div class="step-icon">✅</div>
+                            <div>Detecting content generation components</div>
+                        </div>
+                        <div class="step complete">
+                            <div class="step-icon">✅</div>
+                            <div>Checking for error prevention patterns</div>
+                        </div>
+                        <div class="step active">
+                            <div class="step-icon">⚡</div>
+                            <div>Evaluating transparency features</div>
+                        </div>
+                        <div class="step">
+                            <div class="step-icon">⏳</div>
+                            <div>Generating content-AI specific recommendations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 5: Contextual Results -->
+        <div class="screen">
+            <div class="screen-header">Screen 5: Context-Aware Results</div>
+            <div class="navbar">
+                <div class="logo">🎯 aiuxdesign.guide</div>
+                <ul class="nav-links">
+                    <li>Patterns</li>
+                    <li class="active">Pattern Audit ✨</li>
+                    <li>Simulator</li>
+                    <li>Resources</li>
+                </ul>
+            </div>
+            <div class="content">
+                <!-- Context-Aware Insight Banner -->
+                <div style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 18px; margin-bottom: 4px;">
+                                ⚠️ Critical Finding for Content Generators
+                            </div>
+                            <div style="opacity: 0.95;">
+                                Your interface lacks 3 essential error prevention patterns. Content generators without these patterns have 47% higher user-reported error rates.
+                            </div>
+                        </div>
+                        <button class="btn" style="background: white; color: #f59e0b;">Fix Now →</button>
+                    </div>
+                </div>
+
+                <div class="results-header">
+                    <div class="results-summary">
+                        <h1 class="results-title">Content Generator AI Pattern Audit</h1>
+                        <p class="results-subtitle">Analyzed: Your AI Writing Tool • Focus: Error Prevention & Trust</p>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-number">14/24</div>
+                        <div class="score-label">Patterns Detected</div>
+                        <div style="font-size: 12px; margin-top: 8px; opacity: 0.9;">
+                            3 Critical Missing
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Priority Section Based on Context -->
+                <div style="background: #fef3c7; border: 2px solid #fbbf24; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 12px;">🎯 Priority Fixes for Error Prevention (Your Main Concern)</h3>
+                    <p style="color: #92400e; margin-bottom: 16px;">Based on your concern about "AI makes errors users don't catch", fix these patterns first:</p>
+                    <ol style="margin-left: 20px; color: #92400e;">
+                        <li style="margin-bottom: 8px;"><strong>Human-in-the-Loop:</strong> Let users review before publishing</li>
+                        <li style="margin-bottom: 8px;"><strong>Confidence Indicators:</strong> Show AI certainty levels</li>
+                        <li style="margin-bottom: 8px;"><strong>Source Attribution:</strong> Display where AI got information</li>
+                    </ol>
+                </div>
+
+                <div class="results-grid">
+                    <div class="results-sidebar">
+                        <div class="filter-section">
+                            <div class="filter-title">Filter by Status</div>
+                            <div class="filter-option active">
+                                <span class="filter-icon">📊</span>
+                                <span>All Patterns</span>
+                                <span class="filter-count">24</span>
+                            </div>
+                            <div class="filter-option">
+                                <span class="filter-icon">✅</span>
+                                <span>Well Implemented</span>
+                                <span class="filter-count">8</span>
+                            </div>
+                            <div class="filter-option">
+                                <span class="filter-icon">⚠️</span>
+                                <span>Needs Work</span>
+                                <span class="filter-count">6</span>
+                            </div>
+                            <div class="filter-option">
+                                <span class="filter-icon">❌</span>
+                                <span>Missing</span>
+                                <span class="filter-count">10</span>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <div class="filter-title">Categories</div>
+                            <div class="filter-option">
+                                <span class="filter-icon">🤝</span>
+                                <span>Human-AI Collaboration</span>
+                            </div>
+                            <div class="filter-option">
+                                <span class="filter-icon">💬</span>
+                                <span>Natural Interaction</span>
+                            </div>
+                            <div class="filter-option">
+                                <span class="filter-icon">🔒</span>
+                                <span>Trust & Reliability</span>
+                            </div>
+                            <div class="filter-option">
+                                <span class="filter-icon">⚙️</span>
+                                <span>Adaptive Systems</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="patterns-list">
+                        <!-- Context-Specific Critical Pattern -->
+                        <div class="pattern-card missing" style="border: 3px solid #ef4444; background: #fef2f2;">
+                            <div class="pattern-header">
+                                <h3 class="pattern-name">👤 Human-in-the-Loop</h3>
+                                <span class="pattern-status status-missing">CRITICAL for Content AI</span>
+                            </div>
+                            <p class="pattern-description">
+                                <strong>Why this matters for content generators:</strong> Without review steps, users publish AI-generated content with factual errors, brand misalignment, or inappropriate tone. Content tools like Jasper always include approval steps.
+                            </p>
+                            <div class="pattern-preview">
+                                <div class="preview-box">
+                                    <div class="preview-label">Your Current Design</div>
+                                    <div class="preview-content">Direct publish</div>
+                                </div>
+                                <div class="preview-box">
+                                    <div class="preview-label">With Pattern Applied</div>
+                                    <div class="preview-content">Review → Edit → Approve</div>
+                                </div>
+                            </div>
+                            <div style="background: #fef3c7; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+                                <strong>Quick Fix:</strong> Add a "Review before publishing" step with edit capabilities
+                            </div>
+                            <div class="pattern-actions">
+                                <button class="btn btn-primary">Implement Error Prevention</button>
+                                <button class="btn btn-secondary">See Jasper Example</button>
+                            </div>
+                        </div>
+
+                        <!-- Pattern specific to content generation -->
+                        <div class="pattern-card missing">
+                            <div class="pattern-header">
+                                <h3 class="pattern-name">📍 Source Attribution</h3>
+                                <span class="pattern-status status-missing">Missing</span>
+                            </div>
+                            <p class="pattern-description">
+                                <strong>Content-specific issue:</strong> Your AI doesn't show where information comes from. For content generators, this is crucial for fact-checking and avoiding plagiarism. Users can't verify claims without sources.
+                            </p>
+                            <div class="pattern-preview">
+                                <div class="preview-box">
+                                    <div class="preview-label">Your Current Design</div>
+                                    <div class="preview-content">No sources shown</div>
+                                </div>
+                                <div class="preview-box">
+                                    <div class="preview-label">With Pattern Applied</div>
+                                    <div class="preview-content">[1] [2] inline citations</div>
+                                </div>
+                            </div>
+                            <div class="pattern-actions">
+                                <button class="btn btn-primary">Add Source Display</button>
+                                <button class="btn btn-secondary">Learn Why</button>
+                            </div>
+                        </div>
+
+                        <!-- Weak Implementation with content context -->
+                        <div class="pattern-card missing">
+                            <div class="pattern-header">
+                                <h3 class="pattern-name">🎯 Confidence Indicators</h3>
+                                <span class="pattern-status status-missing">Missing</span>
+                            </div>
+                            <p class="pattern-description">
+                                Your AI responses don't show confidence levels. Users can't distinguish between certain and uncertain AI outputs, potentially leading to over-trust in incorrect information.
+                            </p>
+                            <div class="pattern-preview">
+                                <div class="preview-box">
+                                    <div class="preview-label">Your Current Design</div>
+                                    <div class="preview-content">No confidence shown</div>
+                                </div>
+                                <div class="preview-box">
+                                    <div class="preview-label">With Pattern Applied</div>
+                                    <div class="preview-content">85% confidence badge</div>
+                                </div>
+                            </div>
+                            <div class="pattern-actions">
+                                <button class="btn btn-primary">See Implementation Guide</button>
+                                <button class="btn btn-secondary">Learn About Pattern</button>
+                            </div>
+                        </div>
+
+                        <!-- Weak Implementation Example -->
+                        <div class="pattern-card weak">
+                            <div class="pattern-header">
+                                <h3 class="pattern-name">♻️ Error Recovery</h3>
+                                <span class="pattern-status status-weak">Needs Improvement</span>
+                            </div>
+                            <p class="pattern-description">
+                                You have basic error messages but no recovery options. Users get stuck when AI fails without clear next steps or alternatives.
+                            </p>
+                            <div class="pattern-preview">
+                                <div class="preview-box">
+                                    <div class="preview-label">Your Current Design</div>
+                                    <div class="preview-content">Generic error message</div>
+                                </div>
+                                <div class="preview-box">
+                                    <div class="preview-label">Improved Version</div>
+                                    <div class="preview-content">Retry + alternatives</div>
+                                </div>
+                            </div>
+                            <div class="pattern-actions">
+                                <button class="btn btn-primary">How to Improve</button>
+                                <button class="btn btn-secondary">View Examples</button>
+                            </div>
+                        </div>
+
+                        <!-- Well Implemented Example -->
+                        <div class="pattern-card detected">
+                            <div class="pattern-header">
+                                <h3 class="pattern-name">💭 Conversational UI</h3>
+                                <span class="pattern-status status-detected">Well Implemented ✓</span>
+                            </div>
+                            <p class="pattern-description">
+                                Great job! Your chat interface follows conversational UI best practices with clear message threading, typing indicators, and natural language processing.
+                            </p>
+                            <div class="pattern-actions">
+                                <button class="btn btn-secondary">View Details</button>
+                            </div>
+                        </div>
+
+                        <!-- High Priority Missing Pattern -->
+                        <div class="pattern-card missing">
+                            <div class="pattern-header">
+                                <h3 class="pattern-name">👤 Human-in-the-Loop</h3>
+                                <span class="pattern-status status-missing">Missing - High Priority</span>
+                            </div>
+                            <p class="pattern-description">
+                                No option for users to review or approve AI actions before execution. This is critical for building trust and preventing AI errors from causing harm.
+                            </p>
+                            <div class="pattern-preview">
+                                <div class="preview-box">
+                                    <div class="preview-label">Your Current Design</div>
+                                    <div class="preview-content">Auto-executes</div>
+                                </div>
+                                <div class="preview-box">
+                                    <div class="preview-label">With Pattern Applied</div>
+                                    <div class="preview-content">Review → Approve</div>
+                                </div>
+                            </div>
+                            <div class="pattern-actions">
+                                <button class="btn btn-primary">Implement Now</button>
+                                <button class="btn btn-secondary">Why This Matters</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Section -->
+                <div class="export-section">
+                    <h2 class="export-title">Share & Export Your Audit</h2>
+                    <div class="export-options">
+                        <div class="export-option">
+                            <div class="export-icon">📄</div>
+                            <div class="export-label">Report</div>
+                            <div class="export-format">PDF</div>
+                        </div>
+                        <div class="export-option">
+                            <div class="export-icon">🎨</div>
+                            <div class="export-label">Figma</div>
+                            <div class="export-format">Components</div>
+                        </div>
+                        <div class="export-option">
+                            <div class="export-icon">🔗</div>
+                            <div class="export-label">Share Link</div>
+                            <div class="export-format">Public URL</div>
+                        </div>
+                        <div class="export-option">
+                            <div class="export-icon">💾</div>
+                            <div class="export-label">JSON</div>
+                            <div class="export-format">Raw Data</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Guide Modal (Content-Specific) -->
+        <div class="screen">
+            <div class="screen-header">Screen 6: Context-Aware Implementation Guide</div>
+            <div class="modal" style="display: block; position: static; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                <div class="modal-header">
+                    <h2 class="modal-title">👤 Implementing Human-in-the-Loop for Content Generators</h2>
+                    <p class="modal-subtitle">Prevent errors before content goes live</p>
+                </div>
+                <div class="modal-content">
+                    <!-- Industry Alert -->
+                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; margin-bottom: 24px; border-radius: 4px;">
+                        <div style="font-weight: 600; margin-bottom: 4px;">⚠️ Critical for Content AI</div>
+                        <div style="font-size: 14px;">Studies show 73% of AI content errors could be caught with a simple review step. Content leaders like Jasper and Copy.ai always include human approval.</div>
+                    </div>
+
+                    <div class="implementation-section">
+                        <h3 class="implementation-title">
+                            <span class="implementation-icon">⚡</span>
+                            Quick Implementation for Content Tools
+                        </h3>
+                        <div class="code-block">
+                            <button class="copy-btn">Copy</button>
+                            <pre>// Add review step before publish
+const ContentReview = ({ aiContent, onPublish }) => (
+  &lt;div className="review-container"&gt;
+    &lt;div className="ai-draft"&gt;
+      {aiContent}
+      &lt;div className="ai-warnings"&gt;
+        ⚠️ Please review for accuracy
+        ⚠️ Check brand voice alignment
+        ⚠️ Verify any statistics/claims
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;button onClick={editContent}&gt;Edit&lt;/button&gt;
+    &lt;button onClick={onPublish}&gt;Approve & Publish&lt;/button&gt;
+  &lt;/div&gt;
+);</pre>
+                        </div>
+                    </div>
+
+                    <div class="implementation-section">
+                        <h3 class="implementation-title">
+                            <span class="implementation-icon">🎨</span>
+                            Content Generator Specific Components
+                        </h3>
+                        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <button class="btn btn-primary">Download Review Modal</button>
+                                <button class="btn btn-primary">Download Edit Interface</button>
+                            </div>
+                            <p style="margin-top: 12px; color: #666; font-size: 14px; text-align: center;">
+                                Components designed for content generation workflows
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="implementation-section">
+                        <h3 class="implementation-title">
+                            <span class="implementation-icon">💡</span>
+                            How Other Content Tools Do It
+                        </h3>
+                        <div class="examples-grid">
+                            <div class="example-item">
+                                <div class="example-image">✍️</div>
+                                <div class="example-label">Jasper</div>
+                                <div style="font-size: 11px; color: #666;">3-step review</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-image">📝</div>
+                                <div class="example-label">Copy.ai</div>
+                                <div style="font-size: 11px; color: #666;">Edit before use</div>
+                            </div>
+                            <div class="example-item">
+                                <div class="example-image">🚀</div>
+                                <div class="example-label">WriteSonic</div>
+                                <div style="font-size: 11px; color: #666;">Approval queue</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="implementation-section">
+                        <h3 class="implementation-title">
+                            <span class="implementation-icon">📝</span>
+                            Content-Specific Prompt Template
+                        </h3>
+                        <div class="code-block">
+                            <button class="copy-btn">Copy</button>
+                            <pre>System: You are generating content that will be reviewed
+by humans before publication. 
+
+For each generation:
+1. Flag any uncertain facts with [VERIFY]
+2. Mark tone changes with [TONE CHECK]  
+3. Highlight statistics with [SOURCE NEEDED]
+4. Add confidence score: "Factual confidence: 85%"
+
+This helps reviewers catch potential issues.</pre>
+                        </div>
+                    </div>
+
+                    <div style="background: #f0fff4; padding: 16px; border-radius: 8px; margin-top: 24px;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">✅ Expected Impact</div>
+                        <div style="font-size: 14px;">After implementing Human-in-the-Loop: 70% reduction in published errors, 90% increase in user trust, 2x faster content approval</div>
+                    </div>
+
+                    <div class="pattern-actions" style="margin-top: 30px;">
+                        <button class="btn btn-primary">Apply to My Content Tool</button>
+                        <button class="btn btn-secondary">Back to Results</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

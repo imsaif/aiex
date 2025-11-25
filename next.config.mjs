@@ -51,6 +51,16 @@ const nextConfig = {
         destination: '/prompts',
         permanent: true,
       },
+      {
+        source: '/prompt-builder',
+        destination: '/audit',
+        permanent: true,
+      },
+      {
+        source: '/prompt-builder/:path*',
+        destination: '/audit',
+        permanent: true,
+      },
     ];
   },
 

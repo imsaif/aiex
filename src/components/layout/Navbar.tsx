@@ -39,7 +39,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full py-5 fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 transition-all duration-300">
+    <nav className="w-full py-5 fixed top-0 left-0 right-0 z-50 bg-surface-primary/80 backdrop-blur-lg border-b border-border-primary transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-text-primary">
@@ -62,9 +62,9 @@ const Navbar = () => {
               <SparklesIcon className="w-5 h-5" />
               <span className="hidden sm:inline text-sm">Prompts</span>
             </Link>
-            <Link href="/prompt-builder" className={getLinkClasses('/prompt-builder')}>
+            <Link href="/audit" className={getLinkClasses('/audit')}>
               <BeakerIcon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm">Builder</span>
+              <span className="hidden sm:inline text-sm">Audit</span>
             </Link>
             <Link href="/guides" className={getLinkClasses('/guides')}>
               <BookOpenIcon className="w-5 h-5" />
