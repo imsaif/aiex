@@ -17,6 +17,9 @@ export default function AuditLandingPage() {
       {/* Hero Section */}
       <section className="pt-32 md:pt-40 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
+          <div className="inline-block px-4 py-1 mb-4 bg-accent-subtle border-2 border-border-primary rounded-full text-sm font-semibold text-text-primary">
+            🚧 Work in Progress
+          </div>
           <h1 className="text-5xl md:text-6xl font-semibold mb-6 text-text-primary tracking-tight">
             AI UX Pattern Audit
           </h1>
