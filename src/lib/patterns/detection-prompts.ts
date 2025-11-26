@@ -57,14 +57,18 @@ const concernPriorities: Record<MainConcern, string[]> = {
 
 export function buildContextAwarePrompt(context: ContextData): string {
   const priorities = contextPriorities[context.interfaceType] || [];
-  const concernPriorities = concernPriorities[context.mainConcern] || [];
+  const selectedConcernPriorities = concernPriorities[context.mainConcern] || [];
 
-  return `You are analyzing an AI interface screenshot. Your task is to detect which of 28 AI UX design patterns are present and evaluate their implementation quality.
+  return `You are analyzing an AI interface screenshot. Your task is to:
+1. **Auto-detect the interface type** from the image (chatbot, content generator, code assistant, image/creative AI, analytics, or other)
+2. Detect which of 28 AI UX design patterns are present and evaluate their implementation quality.
 
-**Context:**
-- Interface Type: ${context.interfaceType}
-- User's Main Concern: ${context.mainConcern}
-- Primary Goal: ${context.userGoal}
+**Analysis Instructions:**
+First, examine the screenshot and identify what type of AI interface this is based on visual elements, UI patterns, and content.
+
+**Context (for reference):**
+- Interface Type: ${context.interfaceType === 'other' ? 'Auto-detect from screenshot' : context.interfaceType}
+- Focus: ${context.mainConcern}
 ${context.industry ? `- Industry: ${context.industry}` : ''}
 ${context.stage ? `- Stage: ${context.stage}` : ''}
 
@@ -88,7 +92,7 @@ For ${context.interfaceType} interfaces, these patterns are CRITICAL:
 ${priorities.map(p => `- ${patterns.find(pt => pt.id === p)?.name}`).join('\n')}
 
 Given the user's concern about "${context.mainConcern}", prioritize:
-${concernPriorities.map(p => `- ${patterns.find(pt => pt.id === p)?.name}`).join('\n')}
+${selectedConcernPriorities.map(p => `- ${patterns.find(pt => pt.id === p)?.name}`).join('\n')}
 
 **Output Format:**
 Return a valid JSON object with this exact structure:

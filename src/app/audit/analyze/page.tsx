@@ -18,15 +18,19 @@ export default function AnalyzePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const contextStr = sessionStorage.getItem('auditContext');
     const imageStr = sessionStorage.getItem('auditImage');
 
-    if (!contextStr || !imageStr) {
-      router.push('/audit/context');
+    if (!imageStr) {
+      router.push('/audit');
       return;
     }
 
-    const context: ContextData = JSON.parse(contextStr);
+    // Create default context - AI will auto-detect interface type
+    const context: ContextData = {
+      interfaceType: 'other',
+      mainConcern: 'usability',
+      userGoal: 'General UX audit',
+    };
 
     const stepInterval = setInterval(() => {
       setCurrentStep((prev) => {
@@ -78,7 +82,7 @@ export default function AnalyzePage() {
           <h2 className="text-2xl font-semibold mb-4 text-text-primary">Analysis Failed</h2>
           <p className="text-text-secondary mb-6">{error}</p>
           <button
-            onClick={() => router.push('/audit/upload')}
+            onClick={() => router.push('/audit')}
             className="px-6 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
           >
             Try Again
