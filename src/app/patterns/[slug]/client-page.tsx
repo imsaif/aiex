@@ -2,10 +2,10 @@
 
 import categories from '@/data/categories';
 import { Pattern } from '@/types';
-import { getGuidesForPattern } from '@/data/guides';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 
 // Lazy load heavy components to reduce initial bundle size
 const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
@@ -260,6 +260,17 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           </div>
         </motion.section>
 
+        {/* Newsletter Signup */}
+        <motion.section variants={itemVariants}>
+          <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 shadow-card">
+            <InlineNewsletterSignup
+              variant="pattern-detail"
+              customHeading="Want More Patterns Like This?"
+              customSubheading="Get 6 essential AI design patterns delivered instantly"
+            />
+          </div>
+        </motion.section>
+
         {/* Related Patterns */}
         <motion.section variants={itemVariants}>
           <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Patterns</h2>
@@ -281,36 +292,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             ))}
           </div>
         </motion.section>
-
-        {/* Related Guides */}
-        {(() => {
-          const relatedGuides = getGuidesForPattern(pattern.title);
-          return relatedGuides.length > 0 ? (
-            <motion.section variants={itemVariants}>
-              <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Guides</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {relatedGuides.map((guide) => (
-                  <Link
-                    key={guide.id}
-                    href={`/guides/${guide.slug}`}
-                    className="bg-surface-primary rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-background-secondary transition-colors"
-                  >
-                    <div className="flex flex-col">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-700">
-                          {guide.tool}
-                        </span>
-                        <span className="text-xs text-text-tertiary">{guide.readTime} min</span>
-                      </div>
-                      <h3 className="font-medium text-text-primary mb-2">{guide.title}</h3>
-                      <p className="text-sm text-text-secondary line-clamp-2">{guide.description}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </motion.section>
-          ) : null;
-        })()}
 
         {/* Previous/Next Pattern Navigation */}
         <motion.div

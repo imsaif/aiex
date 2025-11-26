@@ -1,17 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface InlineNewsletterSignupProps {
-  variant?: 'hero' | 'footer';
+  variant?: 'hero' | 'footer' | 'pattern-detail';
   className?: string;
+  customHeading?: string;
+  customSubheading?: string;
 }
 
-export function InlineNewsletterSignup({ variant = 'hero', className = '' }: InlineNewsletterSignupProps) {
+export function InlineNewsletterSignup({
+  variant = 'hero',
+  className = '',
+  customHeading,
+  customSubheading
+}: InlineNewsletterSignupProps) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isHidden, setIsHidden] = useState(false);
+
+  // Check localStorage on mount to hide if already subscribed
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasSubscribed = localStorage.getItem('newsletter_subscribed') === 'true';
+      setIsHidden(hasSubscribed);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +56,10 @@ export function InlineNewsletterSignup({ variant = 'hero', className = '' }: Inl
       if (response.ok) {
         setStatus('success');
         setEmail('');
+        // Set localStorage to hide component on future page loads
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('newsletter_subscribed', 'true');
+        }
         // Reset to idle after 5 seconds
         setTimeout(() => setStatus('idle'), 5000);
       } else {
@@ -53,6 +73,12 @@ export function InlineNewsletterSignup({ variant = 'hero', className = '' }: Inl
   };
 
   const isHero = variant === 'hero';
+  const isPatternDetail = variant === 'pattern-detail';
+
+  // Hide component if user has already subscribed
+  if (isHidden) {
+    return null;
+  }
 
   return (
     <div className={className}>
@@ -83,15 +109,22 @@ export function InlineNewsletterSignup({ variant = 'hero', className = '' }: Inl
             onSubmit={handleSubmit}
             className="w-full"
           >
-            {/* Value Proposition */}
-            {isHero && (
+            {/* Custom Heading for Pattern Detail */}
+            {isPatternDetail && customHeading && (
+              <h3 className="text-2xl font-semibold text-text-primary mb-2 text-center">
+                {customHeading}
+              </h3>
+            )}
+
+            {/* Value Proposition / Subheading */}
+            {(isHero || (isPatternDetail && customSubheading)) && (
               <p className="text-base text-text-secondary mb-4 text-center font-medium">
-                Get 6 essential AI design patterns
+                {isPatternDetail && customSubheading ? customSubheading : 'Get 6 essential AI design patterns'}
               </p>
             )}
 
             {/* Input Group */}
-            <div className={`flex flex-col sm:flex-row gap-3 ${isHero ? 'max-w-lg mx-auto' : ''}`}>
+            <div className={`flex flex-col sm:flex-row gap-3 ${isHero || isPatternDetail ? 'max-w-lg mx-auto' : ''}`}>
               <input
                 type="email"
                 value={email}
@@ -106,7 +139,7 @@ export function InlineNewsletterSignup({ variant = 'hero', className = '' }: Inl
                   focus:outline-none focus:border-black dark:focus:border-white
                   disabled:opacity-50 disabled:cursor-not-allowed
                   transition-colors
-                  ${isHero ? 'text-lg' : 'text-sm'}
+                  ${isHero ? 'text-lg' : isPatternDetail ? 'text-base' : 'text-sm'}
                 `}
                 required
               />
@@ -122,7 +155,7 @@ export function InlineNewsletterSignup({ variant = 'hero', className = '' }: Inl
                   transition-all duration-200
                   hover:scale-[1.02] active:scale-[0.98]
                   whitespace-nowrap shadow-lg
-                  ${isHero ? 'text-lg' : 'text-sm'}
+                  ${isHero ? 'text-lg' : isPatternDetail ? 'text-base' : 'text-sm'}
                 `}
               >
                 {status === 'loading' ? (
@@ -151,7 +184,7 @@ export function InlineNewsletterSignup({ variant = 'hero', className = '' }: Inl
             )}
 
             {/* Trust Badge */}
-            {isHero && (
+            {(isHero || isPatternDetail) && (
               <p className="text-xs text-text-tertiary/60 mt-4 text-center">
                 Free • No spam • Unsubscribe anytime
               </p>

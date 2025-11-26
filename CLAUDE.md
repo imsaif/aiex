@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-26 14:56 (MacBook)
+- **Pattern:** Pattern Detail Page Newsletter Integration
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Added email collection to pattern detail pages with contextual "Want More Patterns Like This?" messaging. Enhanced InlineNewsletterSignup component with pattern-detail variant, localStorage-based hiding after subscription, and custom heading/subheading props. Placed newsletter section after Guidelines & Considerations for optimal conversion timing. Removed Related Guides section to reduce clutter. All newsletter CTAs (hero, pattern detail, footer) now use same API with 'handbook' source sending PDF + newsletter signup, and hide across all pages once user subscribes via localStorage check.
+
 ### Session 2025-11-26 14:20 (MacBook)
 - **Pattern:** Homepage Newsletter & Logo Carousel Improvements
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Optimized SEO page titles across 4 key pages for better search visibility and CTR. Updated home page title from "AI Design Patterns - Discover AI UX Patterns & Best Practices" (67 chars) to "28 AI Design Patterns | Real Examples & Code" (47 chars) - includes specific number and under 60 chars for optimal Google display. Enhanced About page to "About aiux | 28 Curated AI UX Patterns from Leading Products" with product mentions (ChatGPT, Claude, Midjourney, GitHub Copilot). Improved Guides page to "AI Design Tool Guides | Claude Code, Cursor & GitHub for Designers" with specific tool names for better discoverability. Updated Prompts page to "18 Figma Make Prompts for AI Patterns | Copy-Paste Ready" with clear value proposition. All titles now include specific numbers, real product examples, and optimized length. Metadata-only changes - no UI/heading changes. Description fields also enhanced with product mentions and specific benefits.
 
 ### Session 2025-11-20 11:18 (MacBook)
-- **Pattern:** Figma Make Prompts Page Implementation
-- **Status:** ✅ Completed
-- **Files Changed:** 30
-- **Tests Added/Modified:** 0
-- **Notes:** Replaced simulator with comprehensive Figma Make prompts page. Created `/prompts` listing page with 18 prompts, category filtering, search functionality, and responsive grid layout (desktop sidebar + mobile sheet). Built prompt detail pages with example screenshots above Figma prompts for visual context. Archived simulator feature to `/archive/simulator/` for future restoration. Updated Navbar with "Prompts" link using SparklesIcon. Added 301 redirects from `/simulator` to `/prompts`. Implemented PromptCard component with quick copy functionality and dark mode support. Fixed dark mode visibility issues with explicit text colors (gray-700/gray-300), semi-transparent backgrounds, and blue accent for "View Full" links. Added "Figma Make" naming throughout (changed from "Figma AI") to match correct product name. Created utility functions for prompt filtering, searching, and category grouping in `prompt-utils.ts`.
-
-### Session 2025-11-19 11:59 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
