@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { CompanyLogo } from '@/data/company-logos';
 import { useThemeFilter } from '@/hooks/useTheme';
 
@@ -55,7 +56,7 @@ interface CompanyLogoCarouselProps {
  */
 export default function CompanyLogoCarousel({
   companies,
-  duration = 30,
+  duration = 100, // Very slow, ambient animation
   size = 'md',
   gap = 'default' as const,
   showLabel = false,
@@ -93,41 +94,27 @@ export default function CompanyLogoCarousel({
 
   return (
     <div className={`relative w-full overflow-hidden py-8 min-h-16 ${className}`}>
-      {/* Gradient fade effect on sides */}
-      <div className="absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-background-primary to-transparent" />
-      <div className="absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background-primary to-transparent" />
-
-      {/* Scrolling container */}
-      <style>{`
-        @keyframes scroll-left-to-right {
-          0% {
-            transform: translateX(-50%);
-          }
-          100% {
-            transform: translateX(0);
-          }
-        }
-
-        .logo-carousel {
-          animation: scroll-left-to-right ${duration}s linear infinite;
-        }
-
-        .logo-carousel:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-
-      <div className={`flex logo-carousel ${containerGap}`}>
+      {/* Scrolling container using Framer Motion - matches handbook behavior */}
+      <motion.div
+        className={`flex ${containerGap}`}
+        animate={{ x: [-2000, 0] }}
+        transition={{
+          duration: duration,
+          repeat: Infinity,
+          repeatType: 'loop',
+          ease: 'linear',
+        }}
+      >
         {doubledCompanies.map((company, index) => (
           <div
             key={`${company.name}-${index}`}
             className="flex-shrink-0 flex flex-col items-center justify-center"
           >
-            {/* Logo Image */}
+            {/* Logo Image - grayscale with color on hover */}
             <img
               src={company.logo}
               alt={company.name}
-              className={`${sizeClasses[size]} w-auto object-contain opacity-60 transition-all duration-300 hover:opacity-100`}
+              className={`${sizeClasses[size]} w-auto object-contain opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300`}
               style={{ filter: logoFilter }}
             />
 
@@ -139,7 +126,7 @@ export default function CompanyLogoCarousel({
             )}
           </div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

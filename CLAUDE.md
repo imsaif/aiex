@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-11-26 14:20 (MacBook)
+- **Pattern:** Homepage Newsletter & Logo Carousel Improvements
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Created inline newsletter signup component to replace modal-only approach, improving conversion from 0.23% toward 5-10% target. Simplified hero section by removing "28 AI Patterns" chip, "or download handbook" link, and increasing spacing (mb-6→mb-9, mb-10→mb-16) for minimal aesthetic. Moved company logo carousel below email form as social proof. Fixed logo carousel by switching from CSS animation to Framer Motion with right-to-left scroll (animate={{ x: [-2000, 0] }}), ensuring all 17 logos display continuously. Added Midjourney logo to local assets. Slowed carousel duration from 30s to 100s for very slow, ambient animation. Newsletter form now sends handbook PDF immediately upon signup using 'handbook' source.
+
 ### Session 2025-11-25 10:53 (MacBook)
 - **Pattern:** Pattern Audit Tool - WIP Chip
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Replaced simulator with comprehensive Figma Make prompts page. Created `/prompts` listing page with 18 prompts, category filtering, search functionality, and responsive grid layout (desktop sidebar + mobile sheet). Built prompt detail pages with example screenshots above Figma prompts for visual context. Archived simulator feature to `/archive/simulator/` for future restoration. Updated Navbar with "Prompts" link using SparklesIcon. Added 301 redirects from `/simulator` to `/prompts`. Implemented PromptCard component with quick copy functionality and dark mode support. Fixed dark mode visibility issues with explicit text colors (gray-700/gray-300), semi-transparent backgrounds, and blue accent for "View Full" links. Added "Figma Make" naming throughout (changed from "Figma AI") to match correct product name. Created utility functions for prompt filtering, searching, and category grouping in `prompt-utils.ts`.
 
 ### Session 2025-11-19 11:59 (MacBook)
-- **Pattern:** Dark Mode Enhancements & Border Consistency
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented comprehensive dark mode support across the entire site. Fixed Tailwind dark mode configuration by adding `darkMode: ['selector', '[data-theme="dark"]']` to enable all `dark:` utility classes. Updated pattern detail page borders to match home page cards (border-gray-200/gray-700 instead of border-primary/secondary). Enhanced "Get 6 Essential AI Design Patterns" button with proper dark mode styling (black→white, white→black). Completely refactored HandbookModal component with full dark mode support including header, body text, input fields, buttons, icons, and success state. Updated FigmaPromptCard, CodeExampleBlock, and ProductsSection components with consistent gray borders for both light and dark modes. All components now follow minimal black/white brand aesthetic with proper contrast in both modes.
-
-### Session 2025-11-18 21:11 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

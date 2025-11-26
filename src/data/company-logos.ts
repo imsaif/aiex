@@ -75,7 +75,7 @@ export const companyLogos: CompanyLogo[] = [
   },
   {
     name: 'Midjourney',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/midjourney.svg',
+    logo: '/images/logos/Midjourney_Emblem.svg',
   },
   {
     name: 'Perplexity',

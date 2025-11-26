@@ -12,6 +12,7 @@ import FilterPills from '../components/ui/FilterPills';
 import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
 import ProductFilterBar from '../components/ui/ProductFilterBar';
 import { HandbookModal } from '../components/lead-magnet/HandbookModal';
+import { InlineNewsletterSignup } from '../components/newsletter/InlineNewsletterSignup';
 import { useThemeFilter } from '../hooks/useTheme';
 import patterns from '../data/patterns';
 import categories from '../data/categories';
@@ -91,49 +92,37 @@ export default function HomeClient() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="pt-32 md:pt-40 pb-16 md:pb-24">
+      {/* Hero Section - Minimal & Spacious */}
+      <section className="pt-32 md:pt-40 pb-8 md:pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
-            {/* Info Chip */}
-            <div className="flex items-center justify-center gap-2 mb-8">
-              <span className="px-4 py-2 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
-                {patterns.length} AI Patterns
-              </span>
-            </div>
-
-            {/* Heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
+            {/* Heading - Larger & More Prominent */}
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold mb-9">
               Discover AI Design<br />Inspiration & Patterns
             </h1>
-            <p className="text-lg md:text-xl text-text-secondary mb-10">
+
+            {/* Subheading - More Space */}
+            <p className="text-xl md:text-2xl text-text-secondary mb-16">
               Real examples. Best practices.
             </p>
 
-            {/* Company Logo Carousel - Social Proof */}
-            <div className="mb-12">
-              <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-tight mb-3">
-                Patterns used by leading companies
-              </p>
-              <CompanyLogoCarousel companies={companyLogos} duration={30} size="sm" gap="lg" />
-            </div>
-
-            {/* CTA Button */}
-            <motion.button
-              onClick={() => setIsHandbookModalOpen(true)}
+            {/* Inline Newsletter Signup - High Converting */}
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-black dark:bg-white text-white dark:text-black font-medium rounded-full hover:bg-gray-900 dark:hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl cursor-pointer"
+              className="mb-16"
             >
-              <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-                <path d="M15.645 26.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C8.688 21.36 6.25 18.174 6.25 14.25 6.25 11.322 8.714 9 11.688 9A5.5 5.5 0 0116 11.052 5.5 5.5 0 0120.313 9c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" fill="currentColor" />
-                <path d="M16 16l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" className="fill-white dark:fill-black" />
-              </svg>
-              Get 6 Essential AI Design Patterns
-            </motion.button>
+              <InlineNewsletterSignup variant="hero" />
+            </motion.div>
+
+            {/* Company Logo Carousel - Social Proof After CTA */}
+            <div className="mt-12">
+              <p className="text-[9px] font-bold text-text-tertiary/70 uppercase tracking-tight mb-4">
+                Patterns used by leading companies
+              </p>
+              <CompanyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
+            </div>
           </div>
         </div>
       </section>
