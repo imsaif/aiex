@@ -79,7 +79,7 @@ export default function AnalyzePage() {
           <p className="text-text-secondary mb-6">{error}</p>
           <button
             onClick={() => router.push('/audit/upload')}
-            className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
+            className="px-6 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
           >
             Try Again
           </button>
@@ -113,7 +113,7 @@ export default function AnalyzePage() {
                   index < currentStep
                     ? 'bg-green-50 dark:bg-green-950/20 border-2 border-green-500'
                     : index === currentStep
-                    ? 'bg-accent-subtle border-2 border-black dark:border-white'
+                    ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
                     : 'bg-transparent border-2 border-transparent'
                 }`}
               >

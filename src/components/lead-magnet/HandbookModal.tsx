@@ -85,7 +85,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
             </button>
 
             {/* Header */}
-            <div className="bg-black dark:bg-white px-6 py-8">
+            <div className="bg-accent-primary dark:bg-white px-6 py-8">
               <motion.h2
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -171,7 +171,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       transition={{ delay: 0.5 }}
                       type="submit"
                       disabled={isLoading}
-                      className="w-full bg-black dark:bg-white text-white dark:text-black font-semibold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full bg-accent-primary dark:bg-white text-white dark:text-black font-semibold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                     >
                       {isLoading ? (
                         <>
@@ -235,7 +235,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={onClose}
-                      className="w-full bg-black dark:bg-white text-white dark:text-black font-semibold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition"
+                      className="w-full bg-accent-primary dark:bg-white text-white dark:text-black font-semibold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition"
                     >
                       Got It
                     </motion.button>

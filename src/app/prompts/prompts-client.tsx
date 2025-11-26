@@ -53,7 +53,7 @@ export default function PromptsClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 md:pt-40 pb-12 md:pb-16">
+      <section className="pt-12 md:pt-16 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-6">

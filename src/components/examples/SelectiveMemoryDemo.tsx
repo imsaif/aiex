@@ -174,7 +174,7 @@ export default function SelectiveMemoryDemo() {
           </div>
           <button
             onClick={resetDemo}
-            className="px-3 py-2 bg-white text-gray-900 border-2 border-gray-900 rounded text-sm font-medium hover:bg-gray-900 hover:text-white active:scale-95 transition-all whitespace-nowrap flex-shrink-0"
+            className="px-3 py-2 bg-white text-gray-900 border-2 border-gray-900 rounded text-sm font-medium hover:bg-accent-hover hover:text-white active:scale-95 transition-all whitespace-nowrap flex-shrink-0"
           >
             ↻ Reset
           </button>
@@ -235,7 +235,7 @@ export default function SelectiveMemoryDemo() {
                     <>
                       <button
                         onClick={() => updateMemoryStatus(memory.id, 'ignored')}
-                        className="px-3 py-1.5 text-sm font-medium bg-white text-gray-900 border-2 border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white active:scale-95 transition-all cursor-pointer"
+                        className="px-3 py-1.5 text-sm font-medium bg-white text-gray-900 border-2 border-gray-900 rounded-lg hover:bg-accent-hover hover:text-white active:scale-95 transition-all cursor-pointer"
                       >
                         ⏸ Ignore
                       </button>
@@ -250,7 +250,7 @@ export default function SelectiveMemoryDemo() {
                   {memory.status === 'ignored' && (
                     <button
                       onClick={() => updateMemoryStatus(memory.id, 'active')}
-                      className="px-3 py-1.5 text-sm font-medium bg-white text-gray-900 border-2 border-gray-900 rounded-lg hover:bg-gray-900 hover:text-white active:scale-95 transition-all cursor-pointer"
+                      className="px-3 py-1.5 text-sm font-medium bg-white text-gray-900 border-2 border-gray-900 rounded-lg hover:bg-accent-hover hover:text-white active:scale-95 transition-all cursor-pointer"
                     >
                       ↻ Restore
                     </button>
@@ -290,7 +290,7 @@ export default function SelectiveMemoryDemo() {
 
           <button
             onClick={exportMemories}
-            className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-900 rounded text-sm hover:bg-gray-900 hover:text-white transition-colors font-medium"
+            className="w-full px-3 py-2 bg-white text-gray-900 border-2 border-gray-900 rounded text-sm hover:bg-accent-hover hover:text-white transition-colors font-medium"
           >
             ↓ Export
           </button>

@@ -88,7 +88,7 @@ export default function GuidesClient() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="pt-32 md:pt-40 pb-12 md:pb-16">
+      <section className="pt-12 md:pt-16 pb-12 md:pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
@@ -351,8 +351,8 @@ export default function GuidesClient() {
               onClick={() => {
                 setFilter({});
               }}
-              className="px-6 py-2 rounded-full bg-black text-white
-                       font-medium hover:bg-gray-900 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="px-6 py-2 rounded-full bg-accent-primary text-white
+                       font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               Clear Filters
             </button>

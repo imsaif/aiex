@@ -182,7 +182,7 @@ export function HandbookHero() {
       </div>
 
       {/* RIGHT SIDE - Black Background */}
-      <div className="flex-1 bg-black px-6 sm:px-8 lg:px-12 py-12 lg:py-16 flex flex-col justify-center overflow-y-auto">
+      <div className="flex-1 bg-accent-primary px-6 sm:px-8 lg:px-12 py-12 lg:py-16 flex flex-col justify-center overflow-y-auto">
         <div className="max-w-lg mx-auto w-full">
           {/* What's Inside - Pattern Cards Grid */}
           <div className="mb-10">

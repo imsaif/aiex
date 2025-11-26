@@ -519,7 +519,7 @@ export default function CodeExampleBlock({
               onClick={() => setShowCode(false)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                 !showCode
-                  ? 'bg-black text-white shadow-sm hover:bg-gray-800'
+                  ? 'bg-accent-primary text-white shadow-sm hover:bg-gray-800'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
@@ -535,7 +535,7 @@ export default function CodeExampleBlock({
               onClick={() => setShowCode(true)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                 showCode
-                  ? 'bg-black text-white shadow-sm hover:bg-gray-800'
+                  ? 'bg-accent-primary text-white shadow-sm hover:bg-gray-800'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >

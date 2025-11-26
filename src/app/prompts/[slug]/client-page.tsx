@@ -55,7 +55,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
 
   return (
     <motion.main
-      className="max-w-7xl mx-auto pt-32 md:pt-40 pb-8 px-6"
+      className="max-w-7xl mx-auto pt-12 md:pt-16 pb-8 px-6"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
@@ -181,7 +181,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </p>
             <Link
               href={`/patterns/${pattern.slug}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-black hover:bg-gray-900 text-white rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all font-medium"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent-primary hover:bg-accent-hover text-white rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all font-medium"
             >
               View Full Pattern
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

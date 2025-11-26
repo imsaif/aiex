@@ -15,7 +15,7 @@ export default function AuditLandingPage() {
       <Navbar />
       <div className="min-h-screen bg-background-primary">
       {/* Hero Section */}
-      <section className="pt-32 md:pt-40 pb-20 px-6">
+      <section className="pt-12 md:pt-16 pb-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-block px-4 py-1 mb-4 bg-accent-subtle border-2 border-border-primary rounded-full text-sm font-semibold text-text-primary">
             🚧 Work in Progress
@@ -55,7 +55,7 @@ export default function AuditLandingPage() {
           {/* Main CTA */}
           <Link
             href="/audit/context"
-            className="inline-block bg-black dark:bg-white text-white dark:text-black font-semibold text-xl px-12 py-4 rounded-full hover:scale-[1.02] transition-transform shadow-card"
+            className="inline-block bg-accent-primary dark:bg-white text-white dark:text-black font-semibold text-xl px-12 py-4 rounded-full hover:scale-[1.02] transition-transform shadow-card"
           >
             Start Free Audit →
           </Link>
@@ -72,7 +72,7 @@ export default function AuditLandingPage() {
           <div className="flex flex-col md:flex-row items-center justify-center gap-8">
             {/* Step 1 */}
             <div className="flex flex-col items-center text-center max-w-xs">
-              <div className="w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
+              <div className="w-16 h-16 bg-accent-primary dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
                 1
               </div>
               <div className="font-semibold text-lg mb-2 text-text-primary">Answer 3 Questions</div>
@@ -83,7 +83,7 @@ export default function AuditLandingPage() {
 
             {/* Step 2 */}
             <div className="flex flex-col items-center text-center max-w-xs">
-              <div className="w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
+              <div className="w-16 h-16 bg-accent-primary dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
                 2
               </div>
               <div className="font-semibold text-lg mb-2 text-text-primary">Upload Design</div>
@@ -94,7 +94,7 @@ export default function AuditLandingPage() {
 
             {/* Step 3 */}
             <div className="flex flex-col items-center text-center max-w-xs">
-              <div className="w-16 h-16 bg-black dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
+              <div className="w-16 h-16 bg-accent-primary dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
                 3
               </div>
               <div className="font-semibold text-lg mb-2 text-text-primary">Get Report</div>
@@ -159,7 +159,7 @@ export default function AuditLandingPage() {
           <div className="text-center mt-12">
             <Link
               href="/audit/context"
-              className="inline-block bg-black dark:bg-white text-white dark:text-black font-semibold text-lg px-10 py-3 rounded-full hover:scale-[1.02] transition-transform shadow-card"
+              className="inline-block bg-accent-primary dark:bg-white text-white dark:text-black font-semibold text-lg px-10 py-3 rounded-full hover:scale-[1.02] transition-transform shadow-card"
             >
               Start Your Free Audit →
             </Link>

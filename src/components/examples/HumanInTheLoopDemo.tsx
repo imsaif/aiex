@@ -113,7 +113,7 @@ function TextModerationDemo() {
         {!userDecision ? (
           <div className="flex gap-2 mt-2">
             <button
-              className="px-3 py-1 rounded bg-black text-white border border-black hover:bg-gray-800 transition"
+              className="px-3 py-1 rounded bg-accent-primary text-white border border-accent-primary hover:bg-gray-800 transition"
               onClick={() => handleDecision('Approve')}
             >
               Approve
@@ -185,7 +185,7 @@ function ImageModerationDemo() {
         {!userDecision ? (
           <div className="flex gap-2 mt-2">
             <button
-              className="px-3 py-1 rounded bg-black text-white border border-black hover:bg-gray-800 transition"
+              className="px-3 py-1 rounded bg-accent-primary text-white border border-accent-primary hover:bg-gray-800 transition"
               onClick={() => handleDecision('Approve')}
             >
               Approve

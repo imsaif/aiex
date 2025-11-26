@@ -228,7 +228,7 @@ export default function GracefulHandoffDemo() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleReset}
-              className="w-full px-6 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-900 transition-all shadow-lg"
+              className="w-full px-6 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-accent-hover transition-all shadow-lg"
             >
               <span>↻ Try Again</span>
             </motion.button>

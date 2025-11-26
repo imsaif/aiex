@@ -142,7 +142,7 @@ export default function SessionDegradationDemo() {
                 msg.role === 'system'
                   ? 'bg-red-600 text-white w-full'
                   : msg.role === 'user'
-                  ? 'bg-black text-white rounded-br-none'
+                  ? 'bg-accent-primary text-white rounded-br-none'
                   : msg.safetyLevel === 'critical'
                   ? 'bg-red-600 text-white'
                   : msg.safetyLevel === 'warning'

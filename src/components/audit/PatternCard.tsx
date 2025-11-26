@@ -101,7 +101,7 @@ export function PatternCard({ pattern, context, onImplementationClick }: Pattern
               {pattern.status === 'missing' ? 'Not implemented' : 'Weak implementation'}
             </div>
           </div>
-          <div className="border-2 border-black dark:border-white rounded-xl p-3 bg-accent-subtle">
+          <div className="border-2 border-accent-primary dark:border-white rounded-xl p-3 bg-accent-subtle">
             <div className="text-xs uppercase text-text-primary mb-2 font-semibold">
               With Pattern
             </div>
@@ -117,7 +117,7 @@ export function PatternCard({ pattern, context, onImplementationClick }: Pattern
         {pattern.status !== 'well-implemented' && (
           <button
             onClick={onImplementationClick}
-            className="flex-1 px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:scale-[1.02] transition-transform text-sm shadow-card"
+            className="flex-1 px-4 py-2 bg-accent-primary dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:scale-[1.02] transition-transform text-sm shadow-card"
           >
             See Implementation Guide
           </button>

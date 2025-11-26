@@ -93,7 +93,7 @@ export default function ResultsPage() {
               </div>
               <button
                 onClick={() => setFilter('missing')}
-                className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:scale-[1.02] transition-transform whitespace-nowrap shadow-card"
+                className="px-6 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:scale-[1.02] transition-transform whitespace-nowrap shadow-card"
               >
                 Show Missing →
               </button>
@@ -114,7 +114,7 @@ export default function ResultsPage() {
           </div>
 
           {/* Score Card */}
-          <div className="bg-black dark:bg-white text-white dark:text-black px-8 py-6 rounded-2xl text-center min-w-[200px] shadow-card">
+          <div className="bg-accent-primary dark:bg-white text-white dark:text-black px-8 py-6 rounded-2xl text-center min-w-[200px] shadow-card">
             <div className="text-5xl font-semibold mb-2">{results.score}/28</div>
             <div className="text-sm opacity-90 mb-2">Patterns Detected</div>
             {results.criticalMissing.length > 0 && (
@@ -143,7 +143,7 @@ export default function ResultsPage() {
                   onClick={() => setFilter('all')}
                   className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
                     filter === 'all'
-                      ? 'bg-accent-subtle border-2 border-black dark:border-white'
+                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
                       : 'hover:bg-accent-subtle border-2 border-transparent'
                   }`}
                 >
@@ -160,7 +160,7 @@ export default function ResultsPage() {
                   onClick={() => setFilter('well-implemented')}
                   className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
                     filter === 'well-implemented'
-                      ? 'bg-accent-subtle border-2 border-black dark:border-white'
+                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
                       : 'hover:bg-accent-subtle border-2 border-transparent'
                   }`}
                 >
@@ -177,7 +177,7 @@ export default function ResultsPage() {
                   onClick={() => setFilter('weak')}
                   className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
                     filter === 'weak'
-                      ? 'bg-accent-subtle border-2 border-black dark:border-white'
+                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
                       : 'hover:bg-accent-subtle border-2 border-transparent'
                   }`}
                 >
@@ -194,7 +194,7 @@ export default function ResultsPage() {
                   onClick={() => setFilter('missing')}
                   className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
                     filter === 'missing'
-                      ? 'bg-accent-subtle border-2 border-black dark:border-white'
+                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
                       : 'hover:bg-accent-subtle border-2 border-transparent'
                   }`}
                 >
@@ -267,7 +267,7 @@ export default function ResultsPage() {
           </Link>
           <Link
             href="/"
-            className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
+            className="px-6 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
           >
             Explore All 28 Patterns →
           </Link>

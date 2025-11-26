@@ -79,7 +79,7 @@ export default function PromptBuilderForm() {
   const getSelectedChipClasses = () => {
     return isDark
       ? 'border-white bg-white text-black shadow-md'
-      : 'border-black bg-black text-white shadow-md';
+      : 'border-accent-primary bg-accent-primary text-white shadow-md';
   };
 
   const handleAIToolChange = (tool: AITool) => {

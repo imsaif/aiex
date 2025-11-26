@@ -116,8 +116,8 @@ export default function ProgressiveDisclosureEmailDemo() {
           onClick={toggleSummary}
           className={`text-sm px-3 py-1 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer font-medium ${
             showSummary || showDetailed
-              ? 'bg-black text-white hover:bg-gray-800 focus:ring-blue-500'
-              : 'bg-white border border-black text-black hover:bg-gray-100 focus:ring-blue-500'
+              ? 'bg-accent-primary text-white hover:bg-gray-800 focus:ring-blue-500'
+              : 'bg-white border border-accent-primary text-black hover:bg-gray-100 focus:ring-blue-500'
           }`}
         >
           {showDetailed ? "Hide AI Summary" : showSummary ? "Show More" : "Show AI Summary"}

@@ -75,7 +75,7 @@ export default function GuideClient({
   return (
     <div className="min-h-screen bg-background-primary text-text-primary">
       {/* Main Content */}
-      <div className="pt-32 md:pt-40 pb-12 md:pb-16">
+      <div className="pt-12 md:pt-16 pb-12 md:pb-16">
         <div className="max-w-5xl mx-auto px-6">
           {/* Back Link */}
           <button
@@ -245,7 +245,7 @@ export default function GuideClient({
                 console.log('View All Guides button clicked');
                 router.push('/guides');
               }}
-              className="px-6 py-2 rounded-full bg-black text-white font-medium hover:bg-gray-900 hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 cursor-pointer focus:outline-none"
+              className="px-6 py-2 rounded-full bg-accent-primary text-white font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 cursor-pointer focus:outline-none"
               tabIndex={0}
             >
               View All Guides

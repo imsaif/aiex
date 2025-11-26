@@ -47,7 +47,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
-      className="relative p-2 rounded-lg bg-transparent hover:bg-background-secondary transition-all duration-300"
+      className="relative p-2 rounded-lg bg-transparent hover:bg-background-secondary transition-all duration-300 cursor-pointer"
       aria-label="Toggle dark mode"
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >

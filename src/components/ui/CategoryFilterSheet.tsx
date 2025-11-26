@@ -326,7 +326,7 @@ const CategoryFilterSheet: React.FC<CategoryFilterSheetProps> = ({
         <div className="sticky bottom-0 bg-white dark:bg-gray-900 pt-4 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={handleReset}
-            className="w-full py-4 bg-black dark:bg-white text-white dark:text-black
+            className="w-full py-4 bg-accent-primary dark:bg-white text-white dark:text-black
                      font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100
                      transition-colors"
           >

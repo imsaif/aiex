@@ -85,7 +85,7 @@ export default function UploadPage() {
         <div className="flex items-center mb-12">
           <div className="flex-1 h-1 bg-text-primary rounded-full" />
           <div className="mx-3 text-xs text-text-primary">✓ Context</div>
-          <div className="flex-1 h-1 bg-black dark:bg-white rounded-full" />
+          <div className="flex-1 h-1 bg-accent-primary dark:bg-white rounded-full" />
           <div className="mx-3 text-xs font-semibold text-text-primary">STEP 2</div>
           <div className="flex-1 h-1 bg-border-primary rounded-full" />
         </div>
@@ -117,7 +117,7 @@ export default function UploadPage() {
           {...getRootProps()}
           className={`border-3 border-dashed rounded-2xl p-16 mb-8 text-center cursor-pointer transition-all ${
             isDragActive
-              ? 'border-black dark:border-white bg-accent-subtle'
+              ? 'border-accent-primary dark:border-white bg-accent-subtle'
               : 'border-border-primary bg-background-secondary hover:border-border-secondary hover:bg-accent-subtle'
           }`}
         >

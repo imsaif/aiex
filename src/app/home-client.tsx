@@ -93,11 +93,11 @@ export default function HomeClient() {
       <Navbar />
 
       {/* Hero Section - Minimal & Spacious */}
-      <section className="pt-32 md:pt-40 pb-8 md:pb-12">
+      <section className="pt-16 md:pt-20 pb-8 md:pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Heading - Larger & More Prominent */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold mb-9">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9" style={{ color: 'var(--text-hero)' }}>
               Discover AI Design<br />Inspiration & Patterns
             </h1>
 
@@ -135,7 +135,7 @@ export default function HomeClient() {
             <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
               <h3
                 className="font-semibold text-lg mb-4"
-                style={{ color: isDarkMode ? '#ffffff' : '#111827' }}
+                style={{ color: isDarkMode ? '#ffffff' : '#1e293b' }}
               >
                 Categories
               </h3>

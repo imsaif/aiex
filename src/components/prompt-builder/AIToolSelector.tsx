@@ -99,7 +99,7 @@ export default function AIToolSelector({ selected, onChange }: AIToolSelectorPro
   const getSelectedClasses = () => {
     return isDark
       ? 'border-white bg-white text-black shadow-lg'
-      : 'border-black bg-black text-white shadow-lg';
+      : 'border-accent-primary bg-accent-primary text-white shadow-lg';
   };
 
   return (

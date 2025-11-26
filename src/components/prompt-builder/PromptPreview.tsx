@@ -271,7 +271,7 @@ export default function PromptPreview({ prompt, onDownload, onGenerate, onReset,
   const getPrimaryButtonClasses = () => {
     return isDark
       ? 'bg-white text-black hover:bg-gray-100'
-      : 'bg-black text-white hover:bg-gray-900';
+      : 'bg-accent-primary text-white hover:bg-accent-hover';
   };
 
   // Typewriter effect - only enable after generation

@@ -69,7 +69,7 @@ export default function ContextFormPage() {
       <div className="max-w-2xl mx-auto">
         {/* Progress Bar */}
         <div className="flex items-center mb-12">
-          <div className="flex-1 h-1 bg-black dark:bg-white rounded-full" />
+          <div className="flex-1 h-1 bg-accent-primary dark:bg-white rounded-full" />
           <div className="mx-3 text-xs font-semibold text-text-primary">STEP 1</div>
           <div className="flex-1 h-1 bg-border-primary rounded-full" />
           <div className="mx-3 text-xs text-text-tertiary">STEP 2</div>
@@ -95,7 +95,7 @@ export default function ContextFormPage() {
                   key={type.value}
                   className={`flex items-center p-4 border-2 rounded-2xl cursor-pointer transition-all ${
                     formData.interfaceType === type.value
-                      ? 'border-black dark:border-white bg-accent-subtle'
+                      ? 'border-accent-primary dark:border-white bg-accent-subtle'
                       : 'border-border-primary hover:border-border-secondary'
                   }`}
                 >
@@ -127,7 +127,7 @@ export default function ContextFormPage() {
               id="userGoal"
               value={formData.userGoal || ''}
               onChange={(e) => setFormData({ ...formData, userGoal: e.target.value as UserGoal })}
-              className="w-full p-3 border-2 border-border-primary rounded-2xl bg-surface-primary text-text-primary focus:border-black dark:focus:border-white focus:outline-none"
+              className="w-full p-3 border-2 border-border-primary rounded-2xl bg-surface-primary text-text-primary focus:border-accent-primary dark:focus:border-white focus:outline-none"
             >
               <option value="">Select a goal...</option>
               {userGoals.map((goal) => (
@@ -149,7 +149,7 @@ export default function ContextFormPage() {
                   key={concern.value}
                   className={`flex items-center p-3 border-2 rounded-2xl cursor-pointer transition-all ${
                     formData.mainConcern === concern.value
-                      ? 'border-black dark:border-white bg-accent-subtle'
+                      ? 'border-accent-primary dark:border-white bg-accent-subtle'
                       : 'border-border-primary hover:border-border-secondary'
                   }`}
                 >
@@ -183,7 +183,7 @@ export default function ContextFormPage() {
                   id="industry"
                   value={formData.industry || 'not-specified'}
                   onChange={(e) => setFormData({ ...formData, industry: e.target.value as Industry })}
-                  className="w-full p-3 border-2 border-border-primary rounded-2xl bg-surface-primary text-text-primary focus:border-black dark:focus:border-white focus:outline-none"
+                  className="w-full p-3 border-2 border-border-primary rounded-2xl bg-surface-primary text-text-primary focus:border-accent-primary dark:focus:border-white focus:outline-none"
                 >
                   <option value="not-specified">Not specified</option>
                   <option value="healthcare">🏥 Healthcare/Medical</option>
@@ -205,7 +205,7 @@ export default function ContextFormPage() {
                       key={stage}
                       className={`p-3 border-2 rounded-2xl cursor-pointer text-center transition-all ${
                         formData.stage === stage
-                          ? 'border-black dark:border-white bg-accent-subtle'
+                          ? 'border-accent-primary dark:border-white bg-accent-subtle'
                           : 'border-border-primary hover:border-border-secondary'
                       }`}
                     >
@@ -235,7 +235,7 @@ export default function ContextFormPage() {
             </Link>
             <button
               type="submit"
-              className="flex-[2] px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
+              className="flex-[2] px-6 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
             >
               Continue to Upload →
             </button>

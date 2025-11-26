@@ -217,7 +217,7 @@ export default function HumanInTheLoopModeration() {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => handleModeration('approve')}
-                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
+                className="px-4 py-2 bg-accent-primary text-white rounded hover:bg-gray-800 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
                 Approve
               </button>
@@ -255,7 +255,7 @@ export default function HumanInTheLoopModeration() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
+                className="px-4 py-2 bg-accent-primary text-white rounded hover:bg-gray-800 transition disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
                 {isSubmitting ? 'Processing...' : 'Submit for Moderation'}
               </button>
