@@ -8,6 +8,17 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
+// Detect image media type from base64 data
+function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif' {
+  // Check magic bytes in base64
+  if (base64.startsWith('/9j/')) return 'image/jpeg';
+  if (base64.startsWith('iVBORw')) return 'image/png';
+  if (base64.startsWith('UklGR')) return 'image/webp';
+  if (base64.startsWith('R0lGOD')) return 'image/gif';
+  // Default to JPEG as it's most common
+  return 'image/jpeg';
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -33,11 +44,13 @@ export async function POST(request: NextRequest) {
     // Build the context-aware prompt
     const prompt = buildContextAwarePrompt(context);
 
-    console.log('[Pattern Audit] Analyzing with context:', context.interfaceType);
+    // Detect the image media type
+    const mediaType = detectMediaType(imageBase64);
+    console.log('[Pattern Audit] Analyzing with context:', context.interfaceType, 'Media type:', mediaType);
 
     // Call Claude Vision API
     const response = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229', // Claude 3 Opus with vision support (working model for this API key)
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
       messages: [
         {
@@ -47,7 +60,7 @@ export async function POST(request: NextRequest) {
               type: 'image',
               source: {
                 type: 'base64',
-                media_type: 'image/png',
+                media_type: mediaType,
                 data: imageBase64,
               },
             },
@@ -83,11 +96,14 @@ export async function POST(request: NextRequest) {
     // Generate a unique ID for this analysis
     const id = `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    // Create the analysis results
+    // Create the analysis results with new context-aware fields
     const results: AnalysisResults = {
       id,
       context,
       score: analysisData.score || 0,
+      maxScore: analysisData.maxScore || analysisData.applicablePatternCount || 28,
+      detectedComponent: analysisData.detectedComponent || 'unknown',
+      componentDescription: analysisData.componentDescription || '',
       patterns: analysisData.patterns || {},
       summary: analysisData.summary || '',
       criticalMissing: analysisData.criticalMissing || [],

@@ -27,9 +27,9 @@ export type Industry =
 
 export type ProductStage = 'concept' | 'beta' | 'production' | 'scaling';
 
-export type PatternStatus = 'well-implemented' | 'weak' | 'missing';
+export type PatternStatus = 'well-implemented' | 'weak' | 'missing' | 'not-applicable';
 
-export type Priority = 'high' | 'medium' | 'low';
+export type Priority = 'high' | 'medium' | 'low' | 'none';
 
 export interface ContextData {
   interfaceType: InterfaceType;
@@ -52,7 +52,10 @@ export interface PatternResult {
 export interface AnalysisResults {
   id: string;
   context: ContextData;
-  score: number; // X out of 28
+  score: number;
+  maxScore: number; // Dynamic based on detected UI component
+  detectedComponent: string; // What type of UI was detected
+  componentDescription: string; // Brief description
   patterns: Record<string, PatternResult>;
   summary: string;
   criticalMissing: string[];

@@ -1,23 +1,22 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { LeftSidebar } from '@/components/audit/LeftSidebar';
 import { RightWizard } from '@/components/audit/RightWizard';
+import { ResultsPanel } from '@/components/audit/ResultsPanel';
 import { CenterUpload } from '@/components/audit/CenterUpload';
+import { SocialProof } from '@/components/audit/SocialProof';
 import type { AnalysisResults } from '@/types/audit';
 
 export default function AuditPage() {
-  const router = useRouter();
-
   // State
   const [selectedProductType, setSelectedProductType] = useState<string | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isCapturing, setIsCapturing] = useState(false);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
 
   // Can continue when both product type is selected AND image is uploaded
   const canContinue = !!selectedProductType && !!uploadedImage;
@@ -26,42 +25,15 @@ export default function AuditPage() {
   const handleImageUpload = useCallback((base64: string, fileName: string) => {
     setUploadedImage(base64);
     setUploadedFileName(fileName);
-    sessionStorage.setItem('auditImage', base64);
   }, []);
 
-  // Handle URL capture
-  const handleUrlCapture = useCallback(async (url: string) => {
-    setIsCapturing(true);
-
-    try {
-      // Ensure URL has protocol
-      let fullUrl = url;
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        fullUrl = `https://${url}`;
-      }
-
-      const response = await fetch('/api/capture-screenshot', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: fullUrl }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Screenshot capture failed');
-      }
-
-      const { imageBase64 } = await response.json();
-      const base64WithPrefix = `data:image/png;base64,${imageBase64}`;
-
-      setUploadedImage(base64WithPrefix);
-      setUploadedFileName(url);
-      sessionStorage.setItem('auditImage', base64WithPrefix);
-    } catch (error) {
-      console.error('Screenshot capture error:', error);
-      alert('Failed to capture screenshot. Please try uploading an image instead.');
-    } finally {
-      setIsCapturing(false);
-    }
+  // Handle clear/reset
+  const handleClear = useCallback(() => {
+    setUploadedImage(null);
+    setUploadedFileName('');
+    setAnalysisResults(null);
+    setSelectedProductType(null);
+    setIsAnalyzing(false);
   }, []);
 
   // Handle continue/analyze
@@ -84,11 +56,8 @@ export default function AuditPage() {
       const context = {
         interfaceType: interfaceTypeMap[selectedProductType || 'other'] as 'chatbot' | 'content' | 'code' | 'image' | 'analytics' | 'other',
         mainConcern: 'usability' as const,
-        userGoal: 'General UX audit',
+        userGoal: 'exploring-options' as const,
       };
-
-      // Save context to session storage
-      sessionStorage.setItem('auditContext', JSON.stringify(context));
 
       const response = await fetch('/api/analyze-pattern', {
         method: 'POST',
@@ -105,46 +74,70 @@ export default function AuditPage() {
 
       const results: AnalysisResults = await response.json();
 
-      // Save results and redirect
-      sessionStorage.setItem('auditResults', JSON.stringify(results));
-      router.push(`/audit/results/${results.id}`);
+      // Set results in state (no navigation)
+      setAnalysisResults(results);
+      setIsAnalyzing(false);
     } catch (error) {
       console.error('Analysis error:', error);
       alert('Analysis failed. Please try again.');
       setIsAnalyzing(false);
     }
-  }, [canContinue, uploadedImage, selectedProductType, router]);
+  }, [canContinue, uploadedImage, selectedProductType]);
 
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-background-primary">
-        {/* 3-Column Layout */}
-        <div className="flex h-[calc(100vh-64px)]">
-          {/* Left Sidebar - Hidden on mobile */}
-          <div className="hidden lg:block">
+      <div className="min-h-screen">
+        {/* Full-Page Canvas with Floating Sidebars */}
+        <div className="relative min-h-[600px] lg:h-[calc(100vh-64px)] flex">
+          {/* Dark Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
+
+          {/* Left Sidebar */}
+          <div className="hidden lg:flex relative z-20 p-6">
             <LeftSidebar />
           </div>
 
-          {/* Center Upload Area */}
-          <CenterUpload
-            onImageUpload={handleImageUpload}
-            onUrlCapture={handleUrlCapture}
-            isCapturing={isCapturing}
-            uploadedFileName={uploadedFileName}
-          />
+          {/* White Canvas Area - Center */}
+          <div className="flex-1 relative z-10 py-6">
+            <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative">
+              {/* Grid Pattern on Canvas */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
 
-          {/* Right Wizard - Hidden on mobile */}
-          <div className="hidden lg:block">
-            <RightWizard
-              selectedProductType={selectedProductType}
-              onProductTypeChange={setSelectedProductType}
-              onContinue={handleContinue}
-              canContinue={canContinue}
-              isAnalyzing={isAnalyzing}
-            />
+              {/* Dot Pattern */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
+
+              {/* Center Upload Area / Image Display */}
+              <CenterUpload
+                onImageUpload={handleImageUpload}
+                onClear={handleClear}
+                uploadedImage={uploadedImage}
+                uploadedFileName={uploadedFileName}
+              />
+            </div>
+          </div>
+
+          {/* Right Sidebar - Wizard or Results */}
+          <div className="hidden lg:flex relative z-20 p-6">
+            {analysisResults ? (
+              <ResultsPanel
+                results={analysisResults}
+                onNewAudit={handleClear}
+              />
+            ) : (
+              <RightWizard
+                selectedProductType={selectedProductType}
+                onProductTypeChange={setSelectedProductType}
+                onContinue={handleContinue}
+                canContinue={canContinue}
+                isAnalyzing={isAnalyzing}
+              />
+            )}
           </div>
         </div>
+
+        {/* Social Proof & Promotions */}
+        <SocialProof />
       </div>
       <Footer />
     </>
