@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { CompanyLogo } from '@/data/company-logos';
 import { useThemeFilter } from '@/hooks/useTheme';
 
@@ -21,7 +20,7 @@ interface CompanyLogoCarouselProps {
    * Size variant for logos
    * @default 'md'
    */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 
   /**
    * Gap between logos
@@ -70,6 +69,7 @@ export default function CompanyLogoCarousel({
 
   // Size configurations
   const sizeClasses = {
+    xs: 'h-5',
     sm: 'h-8',
     md: 'h-12',
     lg: 'h-16',
@@ -79,7 +79,8 @@ export default function CompanyLogoCarousel({
   let containerGap = 'gap-12';
 
   if (gap === 'default') {
-    if (size === 'sm') containerGap = 'gap-8';
+    if (size === 'xs') containerGap = 'gap-6';
+    else if (size === 'sm') containerGap = 'gap-8';
     else if (size === 'lg') containerGap = 'gap-16';
     else containerGap = 'gap-12';
   } else if (gap === 'sm') {
@@ -93,16 +94,13 @@ export default function CompanyLogoCarousel({
   }
 
   return (
-    <div className={`relative w-full overflow-hidden py-8 min-h-16 ${className}`}>
-      {/* Scrolling container using Framer Motion - matches handbook behavior */}
-      <motion.div
-        className={`flex ${containerGap}`}
-        animate={{ x: [-2000, 0] }}
-        transition={{
-          duration: duration,
-          repeat: Infinity,
-          repeatType: 'loop',
-          ease: 'linear',
+    <div className={`relative w-full overflow-hidden ${className}`}>
+      {/* Scrolling container using CSS animation for seamless loop */}
+      <div
+        className={`flex ${containerGap} animate-scroll`}
+        style={{
+          animationDuration: `${duration}s`,
+          width: 'max-content',
         }}
       >
         {doubledCompanies.map((company, index) => (
@@ -114,7 +112,7 @@ export default function CompanyLogoCarousel({
             <img
               src={company.logo}
               alt={company.name}
-              className={`${sizeClasses[size]} w-auto object-contain opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300`}
+              className={`${sizeClasses[size]} w-auto object-contain opacity-50 hover:opacity-80 transition-all duration-300`}
               style={{ filter: logoFilter }}
             />
 
@@ -126,7 +124,22 @@ export default function CompanyLogoCarousel({
             )}
           </div>
         ))}
-      </motion.div>
+      </div>
+
+      {/* CSS for seamless scrolling - left to right */}
+      <style jsx>{`
+        @keyframes scroll {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+        .animate-scroll {
+          animation: scroll linear infinite;
+        }
+      `}</style>
     </div>
   );
 }

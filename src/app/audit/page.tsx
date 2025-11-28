@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { LeftSidebar } from '@/components/audit/LeftSidebar';
+import { WelcomeModal } from '@/components/audit/WelcomeModal';
 import { RightWizard } from '@/components/audit/RightWizard';
 import { ResultsPanel } from '@/components/audit/ResultsPanel';
 import { CenterUpload } from '@/components/audit/CenterUpload';
@@ -12,6 +12,7 @@ import type { AnalysisResults } from '@/types/audit';
 
 export default function AuditPage() {
   // State
+  const [auditStarted, setAuditStarted] = useState(false);
   const [selectedProductType, setSelectedProductType] = useState<string | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
@@ -87,19 +88,20 @@ export default function AuditPage() {
   return (
     <>
       <Navbar />
+
       <div className="min-h-screen">
-        {/* Full-Page Canvas with Floating Sidebars */}
+        {/* Full-Page Canvas with Right Sidebar */}
         <div className="relative min-h-[600px] lg:h-[calc(100vh-64px)] flex">
           {/* Dark Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
 
-          {/* Left Sidebar */}
-          <div className="hidden lg:flex relative z-20 p-6">
-            <LeftSidebar />
-          </div>
+          {/* Welcome Modal - overlays above the fold only */}
+          {!auditStarted && (
+            <WelcomeModal onStartAudit={() => setAuditStarted(true)} />
+          )}
 
-          {/* White Canvas Area - Center */}
-          <div className="flex-1 relative z-10 py-6">
+          {/* White Canvas Area - Now full width on left */}
+          <div className="flex-1 relative z-10 py-6 pl-6">
             <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative">
               {/* Grid Pattern on Canvas */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
@@ -117,23 +119,25 @@ export default function AuditPage() {
             </div>
           </div>
 
-          {/* Right Sidebar - Wizard or Results */}
-          <div className="hidden lg:flex relative z-20 p-6">
-            {analysisResults ? (
-              <ResultsPanel
-                results={analysisResults}
-                onNewAudit={handleClear}
-              />
-            ) : (
-              <RightWizard
-                selectedProductType={selectedProductType}
-                onProductTypeChange={setSelectedProductType}
-                onContinue={handleContinue}
-                canContinue={canContinue}
-                isAnalyzing={isAnalyzing}
-              />
-            )}
-          </div>
+          {/* Right Sidebar - Only show when image uploaded or results available */}
+          {(uploadedImage || analysisResults) && (
+            <div className="hidden lg:flex relative z-20 p-6">
+              {analysisResults ? (
+                <ResultsPanel
+                  results={analysisResults}
+                  onNewAudit={handleClear}
+                />
+              ) : (
+                <RightWizard
+                  selectedProductType={selectedProductType}
+                  onProductTypeChange={setSelectedProductType}
+                  onContinue={handleContinue}
+                  canContinue={canContinue}
+                  isAnalyzing={isAnalyzing}
+                />
+              )}
+            </div>
+          )}
         </div>
 
         {/* Social Proof & Promotions */}
