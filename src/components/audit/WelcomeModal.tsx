@@ -25,9 +25,9 @@ export function WelcomeModal({ onStartAudit }: WelcomeModalProps) {
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <BeakerIcon className="w-7 h-7 text-accent-primary" />
-            <h2 className="text-3xl font-bold text-text-primary">AI UX Design Audit</h2>
+            <h2 className="text-3xl font-extrabold" style={{ color: 'var(--text-hero)' }}>AI UX Design Audit</h2>
           </div>
-          <p className="text-lg text-text-secondary leading-relaxed max-w-xl mx-auto">
+          <p className="text-base text-text-secondary leading-relaxed max-w-xl mx-auto">
             We analyze your design against 28 research-backed AI/UX patterns derived from the world&apos;s best products.
           </p>
         </div>

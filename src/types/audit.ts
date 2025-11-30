@@ -27,6 +27,8 @@ export type Industry =
 
 export type ProductStage = 'concept' | 'beta' | 'production' | 'scaling';
 
+export type DeviceType = 'mobile' | 'desktop';
+
 export type PatternStatus = 'well-implemented' | 'weak' | 'missing' | 'not-applicable';
 
 export type Priority = 'high' | 'medium' | 'low' | 'none';
@@ -37,6 +39,7 @@ export interface ContextData {
   mainConcern: MainConcern;
   industry?: Industry;
   stage?: ProductStage;
+  deviceType?: DeviceType;
 }
 
 export interface PatternResult {

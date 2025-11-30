@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { buildContextAwarePrompt } from '@/lib/patterns/detection-prompts';
-import type { ContextData, AnalysisResults } from '@/types/audit';
+import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
+import type { ContextData, AnalysisResults, DeviceType } from '@/types/audit';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -21,10 +22,40 @@ function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/we
 
 export async function POST(request: NextRequest) {
   try {
+    // Get client IP for rate limiting
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const ip = forwardedFor?.split(',')[0]?.trim() ||
+               request.headers.get('x-real-ip') ||
+               'unknown';
+
+    // Check rate limit
+    const rateLimit = checkAnalysisRateLimit(ip);
+    if (!rateLimit.allowed) {
+      const timeUntilReset = formatTimeUntilReset(rateLimit.resetAt);
+      return NextResponse.json(
+        {
+          error: 'Rate limit exceeded',
+          message: `You've used all ${rateLimit.limit} free analyses for today. Come back in ${timeUntilReset}!`,
+          resetAt: rateLimit.resetAt,
+          remaining: 0,
+          limit: rateLimit.limit,
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': rateLimit.limit.toString(),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimit.resetAt.toString(),
+          }
+        }
+      );
+    }
+
     const body = await request.json();
-    const { context, imageBase64 } = body as {
+    const { context, imageBase64, deviceType } = body as {
       context: ContextData;
       imageBase64: string;
+      deviceType?: DeviceType;
     };
 
     if (!context || !imageBase64) {
@@ -41,12 +72,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build the context-aware prompt
-    const prompt = buildContextAwarePrompt(context);
+    // Build the context-aware prompt with device type context
+    const basePrompt = buildContextAwarePrompt(context);
+    const deviceContext = deviceType === 'mobile'
+      ? '\n\nIMPORTANT: This is a MOBILE interface screenshot. Consider mobile-specific patterns like touch targets, thumb zones, mobile navigation patterns, and responsive design. Mobile interfaces have different UX considerations than desktop.'
+      : '\n\nIMPORTANT: This is a DESKTOP interface screenshot. Consider desktop-specific patterns like hover states, keyboard navigation, larger information density, and multi-panel layouts.';
+    const prompt = basePrompt + deviceContext;
 
     // Detect the image media type
     const mediaType = detectMediaType(imageBase64);
-    console.log('[Pattern Audit] Analyzing with context:', context.interfaceType, 'Media type:', mediaType);
+    console.log('[Pattern Audit] Analyzing with context:', context.interfaceType, 'Device:', deviceType || 'unknown', 'Media type:', mediaType);
 
     // Call Claude Vision API
     const response = await anthropic.messages.create({
@@ -112,7 +147,13 @@ export async function POST(request: NextRequest) {
 
     console.log('[Pattern Audit] Analysis complete. Score:', results.score);
 
-    return NextResponse.json(results);
+    return NextResponse.json(results, {
+      headers: {
+        'X-RateLimit-Limit': rateLimit.limit.toString(),
+        'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+        'X-RateLimit-Reset': rateLimit.resetAt.toString(),
+      }
+    });
 
   } catch (error) {
     console.error('[Pattern Audit] Error:', error);

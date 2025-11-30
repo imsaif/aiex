@@ -1,22 +1,31 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import Image from 'next/image';
 import {
   ArrowUpTrayIcon,
   SparklesIcon,
   PhotoIcon,
   ArrowPathIcon,
 } from '@heroicons/react/24/outline';
+import { DeviceFrame } from './DeviceFrame';
+import { detectDeviceType, type DeviceType } from '@/utils/imageDetection';
 
 type TabType = 'upload' | 'demo';
 
+interface UsageInfo {
+  used: number;
+  remaining: number;
+  limit: number;
+}
+
 interface CenterUploadProps {
-  onImageUpload: (base64: string, fileName: string) => void;
+  onImageUpload: (base64: string, fileName: string, deviceType: DeviceType) => void;
   onClear?: () => void;
   uploadedImage?: string | null;
   uploadedFileName?: string;
+  detectedDeviceType?: DeviceType;
+  isAnalyzing?: boolean;
 }
 
 export function CenterUpload({
@@ -24,18 +33,36 @@ export function CenterUpload({
   onClear,
   uploadedImage,
   uploadedFileName = '',
+  detectedDeviceType = 'desktop',
+  isAnalyzing = false,
 }: CenterUploadProps) {
   const [activeTab, setActiveTab] = useState<TabType>('upload');
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [usage, setUsage] = useState<UsageInfo | null>(null);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  // Fetch usage on mount
+  useEffect(() => {
+    fetch('/api/audit/usage')
+      .then(res => res.json())
+      .then(data => setUsage(data))
+      .catch(() => setUsage(null));
+  }, []);
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
 
     const file = acceptedFiles[0];
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload = async () => {
       const base64 = reader.result as string;
-      onImageUpload(base64, file.name);
+      setIsDetecting(true);
+      try {
+        const result = await detectDeviceType(base64);
+        onImageUpload(base64, file.name, result.deviceType);
+      } finally {
+        setIsDetecting(false);
+      }
     };
 
     reader.readAsDataURL(file);
@@ -53,56 +80,85 @@ export function CenterUpload({
     noClick: true,
   });
 
-  // If image is uploaded, show it on the canvas
+  // If image is uploaded, show it on the canvas with device frame
   if (uploadedImage) {
     return (
       <div className="absolute inset-0 flex items-center justify-center p-4" {...getRootProps()}>
         <input {...getInputProps()} />
 
-        {/* Image container */}
-        <div className="relative w-full h-full flex items-center justify-center">
-          <Image
-            src={uploadedImage}
-            alt={uploadedFileName || 'Uploaded screenshot'}
-            fill
-            className="object-contain rounded-lg"
-            unoptimized
-          />
+        {/* Device frame container */}
+        <div className="relative flex flex-col items-center justify-center max-h-full overflow-hidden">
+          {/* Device frame - slightly blurred during analysis */}
+          <div className={`relative transition-all duration-500 ${isAnalyzing ? 'blur-[2px] opacity-80' : ''}`}>
+            <DeviceFrame
+              deviceType={detectedDeviceType}
+              imageSrc={uploadedImage}
+              imageAlt={uploadedFileName || 'Uploaded screenshot'}
+            />
+          </div>
 
-          {/* Overlay controls */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                open();
-              }}
-              className="flex items-center gap-2 px-4 py-2 bg-background-primary/90 backdrop-blur-sm rounded-full shadow-lg text-sm font-medium text-text-primary hover:bg-background-primary transition-colors"
-            >
-              <ArrowPathIcon className="w-4 h-4" />
-              Replace
-            </button>
-            {onClear && (
+          {/* Device type indicator - hide during analysis */}
+          {!isAnalyzing && (
+            <div className="mt-4 px-3 py-1 bg-background-secondary rounded-full text-xs text-text-secondary">
+              Detected: {detectedDeviceType === 'mobile' ? 'Mobile' : 'Desktop'}
+            </div>
+          )}
+
+          {/* Analyzing indicator below device */}
+          {isAnalyzing && (
+            <div className="mt-4 px-4 py-2 bg-accent-subtle rounded-full text-sm text-accent-primary font-medium animate-pulse">
+              Analyzing your design...
+            </div>
+          )}
+
+          {/* Overlay controls - hide during analysis */}
+          {!isAnalyzing && (
+            <div className="mt-6 flex items-center gap-3">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onClear();
+                  open();
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-background-primary/90 backdrop-blur-sm rounded-full shadow-lg text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 bg-accent-primary text-white rounded-full shadow-lg text-sm font-semibold hover:bg-accent-hover hover:scale-105 transition-all"
               >
-                Clear
+                <ArrowPathIcon className="w-4 h-4" />
+                Replace Image
               </button>
-            )}
-          </div>
+              {onClear && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClear();
+                  }}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-background-primary border-2 border-border-primary rounded-full shadow-lg text-sm font-semibold text-text-primary hover:border-accent-primary/50 hover:scale-105 transition-all"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Drag overlay */}
-        {isDragActive && (
+        {isDragActive && !isAnalyzing && (
           <div className="absolute inset-0 bg-accent-primary/10 backdrop-blur-sm flex items-center justify-center rounded-lg border-2 border-dashed border-accent-primary">
             <p className="text-lg font-medium text-accent-primary">Drop to replace</p>
           </div>
         )}
+      </div>
+    );
+  }
+
+  // Show loading state during detection
+  if (isDetecting) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-text-secondary">Detecting device type...</p>
+        </div>
       </div>
     );
   }
@@ -193,6 +249,22 @@ export function CenterUpload({
             </div>
           )}
         </div>
+
+        {/* Usage indicator */}
+        {usage && (
+          <div className="mt-4 text-center">
+            <p className="text-xs text-text-tertiary">
+              {usage.remaining > 0 ? (
+                <>
+                  <span className="font-medium text-text-secondary">{usage.remaining}</span>
+                  {' '}of {usage.limit} free analyses left today
+                </>
+              ) : (
+                <span className="text-status-warning">Daily limit reached</span>
+              )}
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

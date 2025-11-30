@@ -4,60 +4,39 @@ import { useState, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { WelcomeModal } from '@/components/audit/WelcomeModal';
-import { RightWizard } from '@/components/audit/RightWizard';
 import { ResultsPanel } from '@/components/audit/ResultsPanel';
 import { CenterUpload } from '@/components/audit/CenterUpload';
 import { SocialProof } from '@/components/audit/SocialProof';
-import type { AnalysisResults } from '@/types/audit';
+import { ResizablePanels } from '@/components/audit/ResizablePanels';
+import { AnalysisPreviewPanel } from '@/components/audit/AnalysisPreviewPanel';
+import { UsageLimitModal } from '@/components/audit/UsageLimitModal';
+import type { AnalysisResults, DeviceType } from '@/types/audit';
 
 export default function AuditPage() {
   // State
   const [auditStarted, setAuditStarted] = useState(false);
-  const [selectedProductType, setSelectedProductType] = useState<string | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
+  const [detectedDeviceType, setDetectedDeviceType] = useState<DeviceType>('desktop');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
+  const [rateLimitError, setRateLimitError] = useState<string | null>(null);
 
-  // Can continue when both product type is selected AND image is uploaded
-  const canContinue = !!selectedProductType && !!uploadedImage;
-
-  // Handle image upload
-  const handleImageUpload = useCallback((base64: string, fileName: string) => {
+  // Handle image upload - immediately start analysis
+  const handleImageUpload = useCallback(async (base64: string, fileName: string, deviceType: DeviceType) => {
     setUploadedImage(base64);
     setUploadedFileName(fileName);
-  }, []);
-
-  // Handle clear/reset
-  const handleClear = useCallback(() => {
-    setUploadedImage(null);
-    setUploadedFileName('');
-    setAnalysisResults(null);
-    setSelectedProductType(null);
-    setIsAnalyzing(false);
-  }, []);
-
-  // Handle continue/analyze
-  const handleContinue = useCallback(async () => {
-    if (!canContinue || !uploadedImage) return;
-
+    setDetectedDeviceType(deviceType);
     setIsAnalyzing(true);
+    setRateLimitError(null); // Clear any previous rate limit error
 
     try {
-      // Map product type to interface type
-      const interfaceTypeMap: Record<string, string> = {
-        'web-app': 'other',
-        'mobile-app': 'other',
-        'desktop': 'other',
-        'website': 'other',
-        'extension': 'other',
-        'other': 'other',
-      };
-
+      // Use defaults - AI will detect interface type, chat can clarify later
       const context = {
-        interfaceType: interfaceTypeMap[selectedProductType || 'other'] as 'chatbot' | 'content' | 'code' | 'image' | 'analytics' | 'other',
+        interfaceType: 'other' as const,
         mainConcern: 'usability' as const,
         userGoal: 'exploring-options' as const,
+        deviceType: deviceType,
       };
 
       const response = await fetch('/api/analyze-pattern', {
@@ -65,25 +44,41 @@ export default function AuditPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           context,
-          imageBase64: uploadedImage.split(',')[1], // Remove data:image prefix
+          imageBase64: base64.split(',')[1], // Remove data:image prefix
+          deviceType: deviceType,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Analysis failed');
+      const data = await response.json();
+
+      // Handle rate limit error
+      if (response.status === 429) {
+        setRateLimitError(data.message || "You've used all your free analyses for today. Come back tomorrow!");
+        setUploadedImage(null); // Clear the image since we can't analyze it
+        return;
       }
 
-      const results: AnalysisResults = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Analysis failed');
+      }
 
-      // Set results in state (no navigation)
-      setAnalysisResults(results);
-      setIsAnalyzing(false);
+      setAnalysisResults(data as AnalysisResults);
     } catch (error) {
       console.error('Analysis error:', error);
-      alert('Analysis failed. Please try again.');
+      // Don't alert - let chat handle errors gracefully
+    } finally {
       setIsAnalyzing(false);
     }
-  }, [canContinue, uploadedImage, selectedProductType]);
+  }, []);
+
+  // Handle clear/reset
+  const handleClear = useCallback(() => {
+    setUploadedImage(null);
+    setUploadedFileName('');
+    setDetectedDeviceType('desktop');
+    setAnalysisResults(null);
+    setIsAnalyzing(false);
+  }, []);
 
   return (
     <>
@@ -100,44 +95,53 @@ export default function AuditPage() {
             <WelcomeModal onStartAudit={() => setAuditStarted(true)} />
           )}
 
-          {/* White Canvas Area - Now full width on left */}
-          <div className="flex-1 relative z-10 py-6 pl-6">
-            <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative">
-              {/* Grid Pattern on Canvas */}
-              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
-
-              {/* Dot Pattern */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
-
-              {/* Center Upload Area / Image Display */}
-              <CenterUpload
-                onImageUpload={handleImageUpload}
-                onClear={handleClear}
-                uploadedImage={uploadedImage}
-                uploadedFileName={uploadedFileName}
-              />
-            </div>
-          </div>
-
-          {/* Right Sidebar - Only show when image uploaded or results available */}
-          {(uploadedImage || analysisResults) && (
-            <div className="hidden lg:flex relative z-20 p-6">
-              {analysisResults ? (
-                <ResultsPanel
-                  results={analysisResults}
-                  onNewAudit={handleClear}
-                />
-              ) : (
-                <RightWizard
-                  selectedProductType={selectedProductType}
-                  onProductTypeChange={setSelectedProductType}
-                  onContinue={handleContinue}
-                  canContinue={canContinue}
-                  isAnalyzing={isAnalyzing}
-                />
-              )}
-            </div>
+          {/* Rate Limit Modal */}
+          {rateLimitError && (
+            <UsageLimitModal
+              message={rateLimitError}
+              onClose={() => setRateLimitError(null)}
+            />
           )}
+
+          {/* Resizable Layout - Canvas and Results/Preview Panel */}
+          <div className="flex-1 relative z-10 p-6 hidden lg:block">
+            <ResizablePanels
+              leftPanel={
+                <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative">
+                  {/* Grid Pattern on Canvas */}
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
+
+                  {/* Dot Pattern */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
+
+                  {/* Center Upload Area / Image Display */}
+                  <CenterUpload
+                    onImageUpload={handleImageUpload}
+                    onClear={handleClear}
+                    uploadedImage={uploadedImage}
+                    uploadedFileName={uploadedFileName}
+                    detectedDeviceType={detectedDeviceType}
+                    isAnalyzing={isAnalyzing}
+                  />
+                </div>
+              }
+              rightPanel={
+                (isAnalyzing || analysisResults) ? (
+                  <ResultsPanel
+                    results={analysisResults}
+                    onNewAudit={handleClear}
+                    isAnalyzing={isAnalyzing}
+                  />
+                ) : (
+                  <AnalysisPreviewPanel />
+                )
+              }
+              defaultRightWidth={550}
+              minRightWidth={400}
+              maxRightWidthPercent={0.7}
+              preferWiderPanel={detectedDeviceType === 'mobile'}
+            />
+          </div>
         </div>
 
         {/* Social Proof & Promotions */}

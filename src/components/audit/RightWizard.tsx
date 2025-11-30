@@ -34,7 +34,7 @@ export function RightWizard({
   const progress = hasProductType ? 17 : 0;
 
   return (
-    <aside className="w-[360px] h-full flex-shrink-0 p-6 bg-background-primary/95 backdrop-blur-sm rounded-2xl shadow-lg border border-border-primary/50 flex flex-col overflow-y-auto">
+    <aside className="w-[420px] h-full flex-shrink-0 p-6 bg-background-primary/95 backdrop-blur-sm rounded-2xl shadow-lg border border-border-primary/50 flex flex-col overflow-y-auto">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">

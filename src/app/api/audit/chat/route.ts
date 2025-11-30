@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { checkChatRateLimit } from '@/lib/rate-limit';
 import type { PatternResult } from '@/types/audit';
 
 // Initialize Anthropic client
@@ -97,16 +98,38 @@ Now respond to the user's question using this format.`;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { message, messages, analysisContext } = body as {
+    const { message, messages, analysisContext, sessionId } = body as {
       message: string;
       messages: ChatMessage[];
       analysisContext: AnalysisContext;
+      sessionId?: string;
     };
 
     if (!message || !analysisContext) {
       return NextResponse.json(
         { error: 'Missing required fields: message and analysisContext' },
         { status: 400 }
+      );
+    }
+
+    // Check chat rate limit (per session)
+    const chatSessionId = sessionId || 'default';
+    const rateLimit = checkChatRateLimit(chatSessionId);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: 'Chat limit exceeded',
+          message: `You've used all ${rateLimit.limit} chat messages for this session. Start a new analysis to continue chatting.`,
+          remaining: 0,
+          limit: rateLimit.limit,
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': rateLimit.limit.toString(),
+            'X-RateLimit-Remaining': '0',
+          }
+        }
       );
     }
 
@@ -140,7 +163,19 @@ export async function POST(request: NextRequest) {
       throw new Error('No text response from Claude');
     }
 
-    return NextResponse.json({ response: textContent.text });
+    return NextResponse.json(
+      {
+        response: textContent.text,
+        remaining: rateLimit.remaining,
+        limit: rateLimit.limit,
+      },
+      {
+        headers: {
+          'X-RateLimit-Limit': rateLimit.limit.toString(),
+          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+        }
+      }
+    );
 
   } catch (error) {
     console.error('[Audit Chat] Error:', error);
