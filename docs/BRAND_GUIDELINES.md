@@ -1,6 +1,6 @@
 # Brand Design System Guidelines
 
-**Last Updated:** November 11, 2025
+**Last Updated:** December 2, 2025
 **Status:** Active - Enforced on all commits via pre-commit hooks
 
 ---
@@ -26,10 +26,11 @@ This document defines the brand design system for **AIUX Design Guide** – a Ne
 
 | Token | Light Mode | Dark Mode | Usage |
 |-------|-----------|-----------|--------|
-| `text-primary` | #0d0d0d | #fafafa | Body text, primary content |
-| `text-secondary` | #525252 | #a3a3a3 | Secondary content, descriptions |
-| `text-tertiary` | #737373 | #737373 | Tertiary content, metadata |
-| `text-disabled` | #a3a3a3 | #525252 | Disabled states, placeholder text |
+| `text-primary` | #162036 | #fafafa | Headings, primary content (rich navy) |
+| `text-secondary` | #20294C | #a3a3a3 | Body text, descriptions (navy-slate, Fold.money style) |
+| `text-tertiary` | #64748b | #737373 | Meta content, captions (slate-500) |
+| `text-disabled` | #94a3b8 | #525252 | Disabled states, placeholder text |
+| `text-hero` | #162036 | #ffffff | Hero headings (matches text-primary in light, white in dark) |
 
 #### Background Colors
 
@@ -38,6 +39,14 @@ This document defines the brand design system for **AIUX Design Guide** – a Ne
 | `background-primary` | #ffffff | #0f0f0f | Page background |
 | `background-secondary` | #fafafa | #171717 | Secondary sections |
 | `background-tertiary` | #f5f5f5 | #1f1f1f | Tertiary backgrounds, hover states |
+
+#### Hero/Section Background
+
+| Value | Light Mode | Dark Mode | Usage |
+|-------|-----------|-----------|--------|
+| Hero background | `#F0F1F5` | `#162036` | Hero sections, newsletter sections (cool gray / brand navy with grain texture) |
+
+**Usage:** Apply with `bg-[#F0F1F5] dark:bg-[#162036] bg-grain` for hero sections with subtle noise texture overlay.
 
 #### Surface Colors
 
@@ -110,9 +119,9 @@ For states and feedback:
 
 ### Font Family
 
-- **Primary Font:** Inter (via CSS variable `--font-inter`)
+- **Primary Font:** Satoshi (via Fontshare CDN)
 - **Fallback:** `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto`
-- **Implementation:** Font loaded via Next.js `next/font`
+- **Implementation:** Font loaded via CDN link in `layout.tsx`
 
 ### Typography Scale
 
@@ -121,13 +130,14 @@ Use Tailwind's default font size scale. No custom font sizes outside of this sys
 | Scale | Size | Usage |
 |-------|------|--------|
 | `text-xs` | 0.75rem | Labels, captions, metadata |
-| `text-sm` | 0.875rem | Secondary text, helper text |
+| `text-sm` | 0.875rem | Secondary text, helper text, category badges |
 | `text-base` | 1rem | Body text, default |
-| `text-lg` | 1.125rem | Large body text, card titles |
+| `text-lg` | 1.125rem | Large body text, card titles, card descriptions |
 | `text-xl` | 1.25rem | Section headings |
-| `text-2xl` | 1.5rem | Page headings |
-| `text-3xl` | 1.875rem | Major headings |
+| `text-2xl` | 1.5rem | Page headings, subheadings |
+| `text-3xl` | 1.875rem | Major headings, hero subheadings |
 | `text-4xl` | 2.25rem | Hero/page titles |
+| `text-5xl`+ | 3rem+ | Large hero headings |
 
 ### Font Weights
 
@@ -224,16 +234,37 @@ import Button from '@/components/ui/Button'
 
 ### Cards
 
-**Standard Pattern:**
+**Standard Pattern Card:**
 ```tsx
-className="rounded-xl p-5 bg-surface-primary border border-border-primary shadow-sm hover:shadow-md transition-shadow"
+className="bg-surface-primary rounded-2xl p-8 border border-gray-200 shadow-card hover:shadow-card-hover transition-all duration-300 h-full flex flex-col"
 ```
 
-- **Rounded:** Always `rounded-xl` (16px)
-- **Padding:** `p-5` (1.25rem) standard
-- **Border:** `border border-border-primary`
-- **Shadow:** `shadow-sm` default, `shadow-md` on hover
+- **Rounded:** `rounded-2xl` (1rem)
+- **Padding:** `p-8` for content cards
+- **Border:** `border border-gray-200`
+- **Shadow:** `shadow-card` default, `shadow-card-hover` on hover
 - **Background:** `bg-surface-primary`
+
+**Card Title:**
+```tsx
+<h3 className="text-lg font-semibold text-text-primary mb-4">
+  Card Title
+</h3>
+```
+
+**Card Description:**
+```tsx
+<p className="text-lg text-text-secondary leading-relaxed line-clamp-3">
+  Card description text...
+</p>
+```
+
+**Category Badge:**
+```tsx
+<span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+  Category Name
+</span>
+```
 
 ### Search Bars
 
@@ -273,15 +304,75 @@ import UnifiedSearchBar from '@/components/ui/UnifiedSearchBar'
 ### Typography Components
 
 **Headings:**
-- H1: `text-4xl font-bold text-text-primary`
+- H1: `text-4xl font-bold text-text-primary` or `text-5xl md:text-6xl lg:text-7xl font-extrabold` (hero)
 - H2: `text-3xl font-bold text-text-primary`
 - H3: `text-2xl font-semibold text-text-primary`
 - H4: `text-xl font-semibold text-text-primary`
 
 **Body Text:**
 - Default: `text-base text-text-primary`
+- Large: `text-lg text-text-secondary leading-relaxed`
 - Secondary: `text-sm text-text-secondary`
 - Tertiary: `text-xs text-text-tertiary`
+
+### Navigation (Navbar)
+
+**Preventing Layout Shift on Active States:**
+
+When using `font-semibold` on active nav links, prevent layout shift by:
+
+1. Always render border (transparent when inactive):
+```tsx
+className={`border-b-2 ${active ? 'border-text-primary font-semibold' : 'border-transparent'}`}
+```
+
+2. Reserve space for bold text with invisible element:
+```tsx
+<span className="relative">
+  Link Text
+  <span className="invisible font-semibold block h-0" aria-hidden="true">Link Text</span>
+</span>
+```
+
+### Hero Sections
+
+**Standard Hero Pattern:**
+```tsx
+<section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+  <div className="max-w-7xl mx-auto px-6">
+    <div className="text-center max-w-4xl mx-auto">
+      <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9" style={{ color: 'var(--text-hero)' }}>
+        Hero Title
+      </h1>
+      <p className="text-2xl md:text-3xl text-text-secondary mb-12">
+        Subheading text
+      </p>
+    </div>
+  </div>
+</section>
+```
+
+**Content Spacing After Hero:**
+```tsx
+<div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
+  {/* Content starts here with proper spacing from hero */}
+</div>
+```
+
+### Company Logo Carousel
+
+**Navy Tint Filter for Logos:**
+```css
+.logo-navy {
+  filter: brightness(0) saturate(100%) invert(10%) sepia(50%) saturate(2000%) hue-rotate(200deg) brightness(85%) contrast(95%);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+.logo-navy:hover {
+  filter: none;
+  opacity: 1;
+}
+```
 
 ---
 
@@ -560,5 +651,5 @@ To update brand guidelines:
 
 ---
 
-**Last Updated by:** Claude Code (Brand System Implementation)
+**Last Updated by:** Claude Code (Typography & Layout Refinements - December 2, 2025)
 **Next Review:** Monthly (every 30 days)

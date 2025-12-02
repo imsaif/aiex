@@ -51,7 +51,7 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
                        transition-colors">
             {pattern.title}
           </h3>
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 inline-block">
+          <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 inline-block">
             {pattern.category}
           </span>
         </div>

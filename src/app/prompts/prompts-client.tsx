@@ -52,8 +52,8 @@ export default function PromptsClient() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="pt-12 md:pt-16 pb-12 md:pb-16">
+      {/* Hero Section - with background + grain */}
+      <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-6">
@@ -75,7 +75,7 @@ export default function PromptsClient() {
       </section>
 
       {/* Main Content with Sidebar */}
-      <div className="max-w-7xl mx-auto px-6 pb-24">
+      <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">

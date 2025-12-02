@@ -233,6 +233,34 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-02 16:49 (MacBook)
+- **Pattern:** Audit Results - Product Examples & Chat Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Added product examples to pattern audit analysis results. Each detected pattern now shows up to 2 real-world product examples (ChatGPT, Notion, etc.) with images from the pattern database. Fixed chat panel auto-scroll issue where the entire page was scrolling when messages arrived; now only the messages container scrolls using scrollTop instead of scrollIntoView.
+
+### Session 2025-12-02 16:07 (MacBook)
+- **Pattern:** Dark Mode Fixes - Pattern Demo Components
+- **Status:** ✅ Completed
+- **Files Changed:** 13
+- **Tests Added/Modified:** 0
+- **Notes:** Comprehensive dark mode fixes across pattern demo components. Fixed 5 interactive demos (Progressive Disclosure, Human-in-the-Loop, Multimodal Search, Ambient Intelligence, Predictive Anticipation) with proper dark mode classes for backgrounds, text, borders, and gradients. Fixed hero section backgrounds to use brand navy (#162036) in dark mode. Added dark mode support to logo carousel with white filter. Fixed CodeExampleBlock Preview/Code toggle with inverted color scheme (dark button on light, white button on dark) for proper visibility in both modes.
+
+### Session 2025-12-02 15:14 (MacBook)
+- **Pattern:** Design System Refinements - Navbar & Guides Page
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Increased navbar text size from text-sm to text-base for better readability on MacBook screens. Added proper spacing (pt-12 md:pt-16) between guides page hero section and filter content to match prompts/patterns pages. Updated BRAND_GUIDELINES.md with comprehensive documentation including text colors, hero backgrounds, Satoshi font, card patterns, navigation anti-shift techniques, and logo carousel CSS.
+
+### Session 2025-12-02 12:05 (MacBook)
+- **Pattern:** Design System Typography & Layout Refinements
+- **Status:** ✅ Completed
+- **Files Changed:** 11
+- **Tests Added/Modified:** 0
+- **Notes:** Refined text colors inspired by Fold.money with navy headings (#162036) and readable slate body text (#20294C). Updated company logo carousel to use navy tint filter with hover-to-reveal original colors. Fixed navbar layout shift by adding invisible bold text spacer and always-present transparent border. Aligned prompt/pattern page structures for consistent navbar positioning. Standardized card typography (text-lg font-semibold titles, text-sm py-1.5 category badges). Added proper spacing between hero sections and content areas across prompts and guides pages.
+
 ### Session 2025-11-26 18:03 (MacBook)
 - **Pattern:** Design System Color Refresh - Navy Aesthetic
 - **Status:** ✅ Completed
@@ -276,34 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed Tailwind v4 dark mode by adding @config directive to globals.css. Updated all border-gray-100 to border-gray-200 across 16 files for better visibility (inspired by Vercel). Redesigned FigmaPromptCard to "AI Design Prompt" with multi-tool support showing logos for Figma, Uizard, Cursor, Claude, Gemini, and Galileo AI. Added polished custom tooltips for tool logos. Removed card hover text lightening effect. Used black/white brand colors for prompt section header.
 
 ### Session 2025-11-24 09:07 (MacBook)
-- **Pattern:** Design System Audit & Consistency
-- **Status:** ✅ Completed
-- **Files Changed:** 19
-- **Tests Added/Modified:** 0
-- **Notes:** Comprehensive design system audit inspired by fold.money. Changed default font from Inter to Satoshi via Fontshare CDN. Updated typography to use font-semibold for headings (replacing font-bold). Standardized all cards to rounded-2xl with shadow-card design token and border-gray-100. Changed all buttons to pill shape (rounded-full) with hover:scale-[1.02] animations. Updated hero sections across all pages to pt-32 md:pt-40 for consistent spacing. Updated 8 core files: PromptCard, FigmaPromptCard, CourseCard, and 5 page files (prompts, prompt detail, builder, guides, guide detail). Also updated About page with new content reflecting 28 patterns, 8 categories, and Tools & Resources section.
-
-### Session 2025-11-22 13:37 (MacBook)
-- **Pattern:** Navbar & Industry Filter UX
-- **Status:** ✅ Completed
-- **Files Changed:** 9
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed navbar layout shift on page navigation by adding scrollbar-gutter: stable to CSS and fixing ThemeToggle hydration placeholder size (36px→40px). Added active/selected state to navbar links with background highlight and bold text. Removed framer-motion y-offset animation on Prompts page that caused perceived "jump". Added industry filtering feature: created industry-utils.ts with product-to-industry mapping (AI/ML, Developer Tools, Technology, Productivity, Entertainment, Design, Healthcare, Education, Automotive), IndustryFilterBar component with green theme, updated home page with industry state and filtering logic, and added Industries tab to mobile CategoryFilterSheet.
-
-### Session 2025-11-22 10:47 (MacBook)
-- **Pattern:** Prompt Builder - Dark/Light Mode & Tech Stack UX
-- **Status:** ✅ Completed
-- **Files Changed:** 9
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed dark/light mode styling for AI tool selector and "What do you need?" chips using JS-controlled styles instead of unreliable Tailwind dark: variants. Selected items now show white bg/black text in dark mode, black bg/white text in light mode. Fixed logo visibility by inverting black SVGs in dark mode. Added clickable tech stack chips (React, Next.js, Tailwind, Shadcn, etc.) to help designers communicate technical context without typing jargon. Updated prompt generator to include tech stack in generated prompts. Fixed Copy/Download buttons appearing after generation by fixing useEffect dependency bug. Added auto-scroll to prompt content during typewriter effect. Simplified "Describe Your Project" field to be designer-friendly with guiding tip.
-
-### Session 2025-11-21 10:11 (MacBook)
-- **Pattern:** Prompt Builder - Designer-Focused UX Improvements
-- **Status:** ✅ Completed
-- **Files Changed:** 16 (11 new files, 5 modified)
-- **Tests Added/Modified:** 0
-- **Notes:** Built complete prompt builder feature for designers with intentional generation flow. Created progressive summary card that fills in as users make selections (AI tool logo, use case icon, design context, specific task). Implemented "Start Over" button always visible across all states. Removed all default selections to make choices intentional. Added brand logos (Claude, Cursor) and contextual icons (wrench for New Project, cube for Component, lightbulb for Get Help, paintbrush for design context). Built typewriter effect (20ms/char) with inline cursor for generated prompts. Complete page includes: AIToolSelector (6 tools with logos), PromptBuilderForm (4 cards: tool, purpose, context, task), PromptPreview (3 states: empty with placeholders, generating with shimmer, generated with typewriter), PromptTemplates (8 quick-start templates), and prompt generation utilities supporting multiple file formats (.cursorrules, .clinerules, CLAUDE.md, .txt).
-
-### Session 2025-11-20 11:35 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

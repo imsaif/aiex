@@ -7,8 +7,6 @@ import dynamic from 'next/dynamic';
 import { Pattern } from '@/types';
 import categories from '@/data/categories';
 import { getRelatedPrompts } from '@/data/utils/prompt-utils';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import PromptCard from '@/components/ui/PromptCard';
 
 // Lazy load FigmaPromptCard
@@ -54,13 +52,12 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
   const relatedPrompts = getRelatedPrompts(pattern);
 
   return (
-    <motion.main
-      className="max-w-7xl mx-auto pt-12 md:pt-16 pb-8 px-6"
+    <motion.div
+      className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      <Navbar />
 
       {/* Breadcrumb Navigation */}
       <motion.nav
@@ -246,7 +243,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         </motion.div>
       </div>
 
-      <Footer />
-    </motion.main>
+    </motion.div>
   );
 }

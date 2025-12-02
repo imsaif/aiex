@@ -1,173 +1,182 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { MagnifyingGlassIcon, CheckCircleIcon, RocketLaunchIcon } from '@heroicons/react/24/outline';
+'use client';
+
+import { useState, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { WelcomeModal } from '@/components/audit/WelcomeModal';
+import { ResultsPanel } from '@/components/audit/ResultsPanel';
+import { CenterUpload } from '@/components/audit/CenterUpload';
+import { SocialProof } from '@/components/audit/SocialProof';
+import { ResizablePanels } from '@/components/audit/ResizablePanels';
+import { AnalysisPreviewPanel } from '@/components/audit/AnalysisPreviewPanel';
+import { UsageLimitModal } from '@/components/audit/UsageLimitModal';
+import type { AnalysisResults, DeviceType } from '@/types/audit';
 
-export const metadata: Metadata = {
-  title: 'AI UX Pattern Audit | Free Design Analysis Tool',
-  description: 'Discover which essential AI patterns your interface is missing in 60 seconds. Free analysis tool with instant results and implementation guides.',
-};
+export default function AuditPage() {
+  // State
+  const [auditStarted, setAuditStarted] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string>('');
+  const [detectedDeviceType, setDetectedDeviceType] = useState<DeviceType>('desktop');
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
+  const [rateLimitError, setRateLimitError] = useState<string | null>(null);
 
-export default function AuditLandingPage() {
+  // Handle image upload - immediately start analysis
+  const handleImageUpload = useCallback(async (base64: string, fileName: string, deviceType: DeviceType) => {
+    setUploadedImage(base64);
+    setUploadedFileName(fileName);
+    setDetectedDeviceType(deviceType);
+    setIsAnalyzing(true);
+    setRateLimitError(null); // Clear any previous rate limit error
+
+    try {
+      // Use defaults - AI will detect interface type, chat can clarify later
+      const context = {
+        interfaceType: 'other' as const,
+        mainConcern: 'usability' as const,
+        userGoal: 'exploring-options' as const,
+        deviceType: deviceType,
+      };
+
+      const response = await fetch('/api/analyze-pattern', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          context,
+          imageBase64: base64.split(',')[1], // Remove data:image prefix
+          deviceType: deviceType,
+        }),
+      });
+
+      const data = await response.json();
+
+      // Handle rate limit error
+      if (response.status === 429) {
+        setRateLimitError(data.message || "You've used all your free analyses for today. Come back tomorrow!");
+        setUploadedImage(null); // Clear the image since we can't analyze it
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Analysis failed');
+      }
+
+      setAnalysisResults(data as AnalysisResults);
+    } catch (error) {
+      console.error('Analysis error:', error);
+      // Don't alert - let chat handle errors gracefully
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, []);
+
+  // Handle clear/reset
+  const handleClear = useCallback(() => {
+    setUploadedImage(null);
+    setUploadedFileName('');
+    setDetectedDeviceType('desktop');
+    setAnalysisResults(null);
+    setIsAnalyzing(false);
+  }, []);
+
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-background-primary">
-      {/* Hero Section */}
-      <section className="pt-12 md:pt-16 pb-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-block px-4 py-1 mb-4 bg-accent-subtle border-2 border-border-primary rounded-full text-sm font-semibold text-text-primary">
-            🚧 Work in Progress
+
+      <div className="min-h-screen">
+        {/* Full-Page Canvas with Right Sidebar */}
+        <div className="relative min-h-[500px] md:min-h-[600px] md:h-[calc(100vh-64px)] flex flex-col md:flex-row">
+          {/* Dark Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
+
+          {/* Welcome Modal - overlays above the fold only */}
+          {!auditStarted && (
+            <WelcomeModal onStartAudit={() => setAuditStarted(true)} />
+          )}
+
+          {/* Rate Limit Modal */}
+          {rateLimitError && (
+            <UsageLimitModal
+              message={rateLimitError}
+              onClose={() => setRateLimitError(null)}
+            />
+          )}
+
+          {/* Mobile/Tablet Layout (below lg breakpoint) */}
+          <div className="flex-1 relative z-10 p-4 md:p-6 flex flex-col gap-4 lg:hidden">
+            {/* Upload Area */}
+            <div className="flex-shrink-0 bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative min-h-[300px] md:min-h-[400px]">
+              {/* Grid Pattern on Canvas */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
+              <CenterUpload
+                onImageUpload={handleImageUpload}
+                onClear={handleClear}
+                uploadedImage={uploadedImage}
+                uploadedFileName={uploadedFileName}
+                detectedDeviceType={detectedDeviceType}
+                isAnalyzing={isAnalyzing}
+              />
+            </div>
+
+            {/* Results Panel - Shows below upload on mobile */}
+            {(isAnalyzing || analysisResults) && (
+              <div className="flex-1 min-h-[400px]">
+                <ResultsPanel
+                  results={analysisResults}
+                  onNewAudit={handleClear}
+                  isAnalyzing={isAnalyzing}
+                />
+              </div>
+            )}
           </div>
-          <h1 className="text-5xl md:text-6xl font-semibold mb-6 text-text-primary tracking-tight">
-            AI UX Pattern Audit
-          </h1>
-          <p className="text-xl md:text-2xl text-text-secondary mb-10 max-w-2xl mx-auto">
-            Discover which essential AI patterns your interface is missing in 60 seconds
-          </p>
 
-          {/* Value Props */}
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 mb-4 text-text-primary">
-                <MagnifyingGlassIcon className="w-full h-full" />
-              </div>
-              <div className="font-semibold text-lg mb-2 text-text-primary">Detect Patterns</div>
-              <div className="text-sm text-text-tertiary">28 AI patterns analyzed</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 mb-4 text-text-primary">
-                <CheckCircleIcon className="w-full h-full" />
-              </div>
-              <div className="font-semibold text-lg mb-2 text-text-primary">Get Priorities</div>
-              <div className="text-sm text-text-tertiary">Know what to fix first</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 mb-4 text-text-primary">
-                <RocketLaunchIcon className="w-full h-full" />
-              </div>
-              <div className="font-semibold text-lg mb-2 text-text-primary">Implementation</div>
-              <div className="text-sm text-text-tertiary">Ready-to-use solutions</div>
-            </div>
-          </div>
+          {/* Desktop Layout - Resizable Panels (lg and above) */}
+          <div className="flex-1 relative z-10 p-4 xl:p-6 hidden lg:block">
+            <ResizablePanels
+              leftPanel={
+                <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative">
+                  {/* Grid Pattern on Canvas */}
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
 
-          {/* Main CTA */}
-          <Link
-            href="/audit/context"
-            className="inline-block bg-accent-primary dark:bg-white text-white dark:text-black font-semibold text-xl px-12 py-4 rounded-full hover:scale-[1.02] transition-transform shadow-card"
-          >
-            Start Free Audit →
-          </Link>
-          <p className="mt-4 text-sm text-text-tertiary">
-            No signup required • 60 seconds • Instant results
-          </p>
-        </div>
-      </section>
+                  {/* Dot Pattern */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
 
-      {/* How It Works */}
-      <section className="py-16 px-6 bg-background-secondary">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-semibold text-center mb-12 text-text-primary">How It Works</h2>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            {/* Step 1 */}
-            <div className="flex flex-col items-center text-center max-w-xs">
-              <div className="w-16 h-16 bg-accent-primary dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
-                1
-              </div>
-              <div className="font-semibold text-lg mb-2 text-text-primary">Answer 3 Questions</div>
-              <div className="text-sm text-text-secondary">About your AI product</div>
-            </div>
-
-            <div className="text-2xl text-text-tertiary hidden md:block">→</div>
-
-            {/* Step 2 */}
-            <div className="flex flex-col items-center text-center max-w-xs">
-              <div className="w-16 h-16 bg-accent-primary dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
-                2
-              </div>
-              <div className="font-semibold text-lg mb-2 text-text-primary">Upload Design</div>
-              <div className="text-sm text-text-secondary">Screenshot or Figma</div>
-            </div>
-
-            <div className="text-2xl text-text-tertiary hidden md:block">→</div>
-
-            {/* Step 3 */}
-            <div className="flex flex-col items-center text-center max-w-xs">
-              <div className="w-16 h-16 bg-accent-primary dark:bg-white text-white dark:text-black rounded-full flex items-center justify-center font-semibold text-xl mb-4">
-                3
-              </div>
-              <div className="font-semibold text-lg mb-2 text-text-primary">Get Report</div>
-              <div className="text-sm text-text-secondary">Personalized insights</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-16 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <p className="text-sm text-text-tertiary mb-6">Trusted by designers at</p>
-          <div className="flex flex-wrap justify-center gap-10 opacity-60">
-            <div className="text-lg font-semibold text-text-secondary">Stripe</div>
-            <div className="text-lg font-semibold text-text-secondary">Linear</div>
-            <div className="text-lg font-semibold text-text-secondary">Vercel</div>
-            <div className="text-lg font-semibold text-text-secondary">Notion</div>
+                  {/* Center Upload Area / Image Display */}
+                  <CenterUpload
+                    onImageUpload={handleImageUpload}
+                    onClear={handleClear}
+                    uploadedImage={uploadedImage}
+                    uploadedFileName={uploadedFileName}
+                    detectedDeviceType={detectedDeviceType}
+                    isAnalyzing={isAnalyzing}
+                  />
+                </div>
+              }
+              rightPanel={
+                (isAnalyzing || analysisResults) ? (
+                  <ResultsPanel
+                    results={analysisResults}
+                    onNewAudit={handleClear}
+                    isAnalyzing={isAnalyzing}
+                  />
+                ) : (
+                  <AnalysisPreviewPanel />
+                )
+              }
+              defaultRightWidth={480}
+              minRightWidth={380}
+              maxRightWidthPercent={0.6}
+              preferWiderPanel={detectedDeviceType === 'mobile'}
+            />
           </div>
         </div>
-      </section>
 
-      {/* Example Results */}
-      <section className="py-16 px-6 bg-background-secondary">
-        <div className="max-w-5xl mx-auto">
-          <h3 className="text-2xl font-semibold text-center mb-8 text-text-primary">
-            Example Audit Results
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Missing Pattern */}
-            <div className="p-5 bg-surface-primary rounded-2xl border-2 border-border-primary shadow-card">
-              <div className="font-semibold text-text-primary mb-2">
-                ❌ Missing: Confidence Indicators
-              </div>
-              <div className="text-sm text-text-secondary">
-                Users can't judge AI reliability
-              </div>
-            </div>
-
-            {/* Weak Pattern */}
-            <div className="p-5 bg-surface-primary rounded-2xl border-2 border-border-primary shadow-card">
-              <div className="font-semibold text-text-primary mb-2">
-                ⚠️ Weak: Error Recovery
-              </div>
-              <div className="text-sm text-text-secondary">
-                No fallback when AI fails
-              </div>
-            </div>
-
-            {/* Good Pattern */}
-            <div className="p-5 bg-surface-primary rounded-2xl border-2 border-border-primary shadow-card">
-              <div className="font-semibold text-text-primary mb-2">
-                ✅ Good: Conversational UI
-              </div>
-              <div className="text-sm text-text-secondary">
-                Natural chat interface
-              </div>
-            </div>
-          </div>
-
-          {/* Final CTA */}
-          <div className="text-center mt-12">
-            <Link
-              href="/audit/context"
-              className="inline-block bg-accent-primary dark:bg-white text-white dark:text-black font-semibold text-lg px-10 py-3 rounded-full hover:scale-[1.02] transition-transform shadow-card"
-            >
-              Start Your Free Audit →
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
-    <Footer />
+        {/* Social Proof & Promotions */}
+        <SocialProof />
+      </div>
+      <Footer />
     </>
   );
 }

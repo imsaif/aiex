@@ -2,6 +2,9 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPromptBySlug, getPatternsWithPrompts } from '@/data/utils/prompt-utils';
 import ClientPage from './client-page';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import ScrollToTop from '@/components/ui/ScrollToTop';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -54,10 +57,15 @@ export default async function PromptDetailPage({ params }: PageProps) {
   const nextPattern = currentIndex < allPatterns.length - 1 ? allPatterns[currentIndex + 1] : null;
 
   return (
-    <ClientPage
-      pattern={pattern}
-      previousPattern={previousPattern}
-      nextPattern={nextPattern}
-    />
+    <main className="min-h-screen bg-background-primary text-text-primary">
+      <Navbar />
+      <ClientPage
+        pattern={pattern}
+        previousPattern={previousPattern}
+        nextPattern={nextPattern}
+      />
+      <Footer />
+      <ScrollToTop />
+    </main>
   );
 }

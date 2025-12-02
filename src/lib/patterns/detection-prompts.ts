@@ -2,38 +2,39 @@ import type { ContextData, InterfaceType, MainConcern } from '@/types/audit';
 
 /**
  * Pattern Detection Prompts for Claude Vision API
+ * Context-aware analysis that only evaluates RELEVANT patterns
  */
 
-// All 28 AI UX patterns to check
+// All 28 AI UX patterns with their applicable UI contexts
 const patterns = [
-  { id: 'adaptive-interfaces', name: 'Adaptive Interfaces', description: 'Interface adapts to user behavior and preferences' },
-  { id: 'ambient-intelligence', name: 'Ambient Intelligence', description: 'Subtle, non-intrusive assistance in the background' },
-  { id: 'anti-manipulation', name: 'Anti-Manipulation Safeguards', description: 'Protects users from manipulative design patterns' },
-  { id: 'augmented-creation', name: 'Augmented Creation', description: 'AI assists creative process without replacing it' },
-  { id: 'collaborative-ai', name: 'Collaborative AI', description: 'AI works alongside humans as a partner' },
-  { id: 'confidence-visualization', name: 'Confidence Visualization', description: 'Shows AI certainty/confidence levels' },
-  { id: 'context-switching', name: 'Context Switching', description: 'Smooth transitions between different contexts' },
-  { id: 'contextual-assistance', name: 'Contextual Assistance', description: 'Help relevant to current task' },
-  { id: 'conversational-ui', name: 'Conversational UI', description: 'Natural language interaction' },
-  { id: 'crisis-detection', name: 'Crisis Detection & Escalation', description: 'Detects emergencies and escalates appropriately' },
-  { id: 'error-recovery', name: 'Error Recovery', description: 'Graceful error handling with recovery options' },
-  { id: 'explainable-ai', name: 'Explainable AI', description: 'AI explains its reasoning and decisions' },
-  { id: 'feedback-loops', name: 'Feedback Loops', description: 'User feedback improves AI over time' },
-  { id: 'graceful-handoff', name: 'Graceful Handoff', description: 'Smooth transition from AI to human support' },
-  { id: 'guided-learning', name: 'Guided Learning', description: 'Helps users learn to use AI features' },
-  { id: 'human-in-the-loop', name: 'Human-in-the-Loop', description: 'Users review/approve AI actions' },
-  { id: 'intelligent-caching', name: 'Intelligent Caching', description: 'Smart caching of AI responses' },
-  { id: 'multimodal-interaction', name: 'Multimodal Interaction', description: 'Multiple input/output modalities (text, voice, image)' },
-  { id: 'predictive-anticipation', name: 'Predictive Anticipation', description: 'Anticipates user needs proactively' },
-  { id: 'privacy-first', name: 'Privacy-First Design', description: 'Privacy controls and transparency' },
-  { id: 'progressive-disclosure', name: 'Progressive Disclosure', description: 'Information revealed gradually as needed' },
-  { id: 'progressive-enhancement', name: 'Progressive Enhancement', description: 'Graceful degradation when AI unavailable' },
-  { id: 'responsible-ai', name: 'Responsible AI Design', description: 'Ethical considerations in AI design' },
-  { id: 'safe-exploration', name: 'Safe Exploration', description: 'Users can experiment safely without consequences' },
-  { id: 'selective-memory', name: 'Selective Memory', description: 'AI remembers relevant context across sessions' },
-  { id: 'session-degradation', name: 'Session Degradation Prevention', description: 'Maintains quality over long sessions' },
-  { id: 'universal-access', name: 'Universal Access Patterns', description: 'Accessibility for all users' },
-  { id: 'vulnerable-user-protection', name: 'Vulnerable User Protection', description: 'Extra safeguards for vulnerable populations' },
+  { id: 'adaptive-interfaces', name: 'Adaptive Interfaces', description: 'Interface adapts to user behavior and preferences', appliesTo: ['dashboard', 'settings', 'main-interface'] },
+  { id: 'ambient-intelligence', name: 'Ambient Intelligence', description: 'Subtle, non-intrusive assistance in the background', appliesTo: ['main-interface', 'editor', 'workspace'] },
+  { id: 'anti-manipulation', name: 'Anti-Manipulation Safeguards', description: 'Protects users from manipulative design patterns', appliesTo: ['checkout', 'subscription', 'onboarding', 'pricing'] },
+  { id: 'augmented-creation', name: 'Augmented Creation', description: 'AI assists creative process without replacing it', appliesTo: ['editor', 'canvas', 'content-creation', 'chat-response'] },
+  { id: 'collaborative-ai', name: 'Collaborative AI', description: 'AI works alongside humans as a partner', appliesTo: ['editor', 'workspace', 'chat-response', 'content-creation'] },
+  { id: 'confidence-visualization', name: 'Confidence Visualization', description: 'Shows AI certainty/confidence levels', appliesTo: ['chat-response', 'ai-output', 'analytics', 'predictions'] },
+  { id: 'context-switching', name: 'Context Switching', description: 'Smooth transitions between different contexts', appliesTo: ['navigation', 'sidebar', 'tabs', 'chat-history'] },
+  { id: 'contextual-assistance', name: 'Contextual Assistance', description: 'Help relevant to current task', appliesTo: ['editor', 'form', 'workspace', 'onboarding'] },
+  { id: 'conversational-ui', name: 'Conversational UI', description: 'Natural language interaction', appliesTo: ['chat-input', 'chat-response', 'search', 'command-palette'] },
+  { id: 'crisis-detection', name: 'Crisis Detection & Escalation', description: 'Detects emergencies and escalates appropriately', appliesTo: ['chat-input', 'chat-response', 'support-interface'] },
+  { id: 'error-recovery', name: 'Error Recovery', description: 'Graceful error handling with recovery options', appliesTo: ['form', 'chat-response', 'ai-output', 'upload'] },
+  { id: 'explainable-ai', name: 'Explainable AI', description: 'AI explains its reasoning and decisions', appliesTo: ['chat-response', 'ai-output', 'recommendations', 'analytics'] },
+  { id: 'feedback-loops', name: 'Feedback Loops', description: 'User feedback improves AI over time', appliesTo: ['chat-response', 'ai-output', 'recommendations'] },
+  { id: 'graceful-handoff', name: 'Graceful Handoff', description: 'Smooth transition from AI to human support', appliesTo: ['chat-response', 'support-interface', 'help'] },
+  { id: 'guided-learning', name: 'Guided Learning', description: 'Helps users learn to use AI features', appliesTo: ['onboarding', 'empty-state', 'first-use', 'help'] },
+  { id: 'human-in-the-loop', name: 'Human-in-the-Loop', description: 'Users review/approve AI actions', appliesTo: ['ai-output', 'content-creation', 'automation', 'chat-response'] },
+  { id: 'intelligent-caching', name: 'Intelligent Caching', description: 'Smart caching of AI responses', appliesTo: ['search', 'recommendations', 'dashboard'] },
+  { id: 'multimodal-interaction', name: 'Multimodal Interaction', description: 'Multiple input/output modalities (text, voice, image)', appliesTo: ['chat-input', 'upload', 'main-interface'] },
+  { id: 'predictive-anticipation', name: 'Predictive Anticipation', description: 'Anticipates user needs proactively', appliesTo: ['search', 'chat-input', 'autocomplete', 'recommendations'] },
+  { id: 'privacy-first', name: 'Privacy-First Design', description: 'Privacy controls and transparency', appliesTo: ['settings', 'onboarding', 'data-display', 'chat-history'] },
+  { id: 'progressive-disclosure', name: 'Progressive Disclosure', description: 'Information revealed gradually as needed', appliesTo: ['navigation', 'sidebar', 'settings', 'help', 'chat-response'] },
+  { id: 'progressive-enhancement', name: 'Progressive Enhancement', description: 'Graceful degradation when AI unavailable', appliesTo: ['main-interface', 'chat-response', 'ai-output'] },
+  { id: 'responsible-ai', name: 'Responsible AI Design', description: 'Ethical considerations in AI design', appliesTo: ['chat-response', 'content-creation', 'ai-output'] },
+  { id: 'safe-exploration', name: 'Safe Exploration', description: 'Users can experiment safely without consequences', appliesTo: ['editor', 'sandbox', 'playground', 'content-creation'] },
+  { id: 'selective-memory', name: 'Selective Memory', description: 'AI remembers relevant context across sessions', appliesTo: ['chat-history', 'sidebar', 'preferences', 'context-panel'] },
+  { id: 'session-degradation', name: 'Session Degradation Prevention', description: 'Maintains quality over long sessions', appliesTo: ['chat-response', 'long-form-editor', 'workspace'] },
+  { id: 'universal-access', name: 'Universal Access Patterns', description: 'Accessibility for all users', appliesTo: ['all'] },
+  { id: 'vulnerable-user-protection', name: 'Vulnerable User Protection', description: 'Extra safeguards for vulnerable populations', appliesTo: ['chat-input', 'chat-response', 'content-moderation'] },
 ];
 
 // Context-specific priorities
@@ -55,64 +56,102 @@ const concernPriorities: Record<MainConcern, string[]> = {
   consistency: ['feedback-loops', 'session-degradation', 'intelligent-caching', 'error-recovery'],
 };
 
+// UI component types that can be detected
+const UI_COMPONENT_TYPES = [
+  'navigation',      // Sidebars, navbars, menus
+  'sidebar',         // Specifically sidebar navigation
+  'chat-history',    // List of past conversations
+  'chat-input',      // Message input area
+  'chat-response',   // AI response/message area
+  'ai-output',       // AI-generated content display
+  'editor',          // Text/code editor
+  'form',            // Input forms
+  'settings',        // Settings/preferences
+  'dashboard',       // Overview/analytics dashboard
+  'onboarding',      // First-time user experience
+  'empty-state',     // Empty/placeholder state
+  'search',          // Search interface
+  'main-interface',  // Full application view
+] as const;
+
+// Map UI components to applicable patterns
+function getApplicablePatterns(componentType: string): typeof patterns {
+  return patterns.filter(p =>
+    p.appliesTo.includes('all') ||
+    p.appliesTo.includes(componentType)
+  );
+}
+
 export function buildContextAwarePrompt(context: ContextData): string {
-  const priorities = contextPriorities[context.interfaceType] || [];
-  const concernPriorities = concernPriorities[context.mainConcern] || [];
+  return `You are an expert AI UX analyst. Analyze this screenshot to evaluate AI design patterns.
 
-  return `You are analyzing an AI interface screenshot. Your task is to detect which of 28 AI UX design patterns are present and evaluate their implementation quality.
+**CRITICAL FIRST STEP - Identify the UI Component:**
+Before analyzing patterns, you MUST identify what type of UI component this screenshot shows:
+- navigation / sidebar: A navigation menu or sidebar with links/options
+- chat-history: A list of previous conversations or chat threads
+- chat-input: The message input area where users type
+- chat-response: An AI response or message bubble
+- ai-output: AI-generated content (text, code, images)
+- editor: A text, code, or content editor
+- form: An input form or configuration
+- settings: Settings or preferences panel
+- dashboard: An overview or analytics view
+- onboarding: First-time user or tutorial experience
+- search: Search interface or results
+- main-interface: Full application view with multiple components
 
-**Context:**
-- Interface Type: ${context.interfaceType}
-- User's Main Concern: ${context.mainConcern}
-- Primary Goal: ${context.userGoal}
-${context.industry ? `- Industry: ${context.industry}` : ''}
-${context.stage ? `- Stage: ${context.stage}` : ''}
+**WHY THIS MATTERS:**
+Different UI components need different patterns. For example:
+- A "sidebar" or "chat-history" does NOT need: Confidence Visualization, Crisis Detection, Explainable AI
+- A "sidebar" DOES need: Context Switching, Progressive Disclosure, Selective Memory
+- Only "chat-response" and "ai-output" need: Confidence Visualization, Explainable AI
+- Only "chat-input" and "chat-response" need: Crisis Detection
 
-**Instructions:**
-1. Carefully analyze the screenshot for evidence of each pattern
-2. Rate each pattern as:
-   - "well-implemented": Clearly present and follows best practices
-   - "weak": Present but poorly implemented or incomplete
-   - "missing": Not found or critically lacking
+**ONLY evaluate patterns that are RELEVANT to the detected component type.**
 
-3. For each pattern, provide:
-   - Specific evidence from the screenshot
-   - Priority level (high/medium/low) based on the context
-   - Improvement suggestions if weak or missing
+**Available UI Component → Pattern Mappings:**
+${UI_COMPONENT_TYPES.map(type => {
+  const applicable = getApplicablePatterns(type);
+  return `- ${type}: ${applicable.map(p => p.name).join(', ')}`;
+}).join('\n')}
 
-**Patterns to Check:**
-${patterns.map((p, i) => `${i + 1}. **${p.name}** (${p.id}): ${p.description}`).join('\n')}
-
-**Context-Specific Priorities:**
-For ${context.interfaceType} interfaces, these patterns are CRITICAL:
-${priorities.map(p => `- ${patterns.find(pt => pt.id === p)?.name}`).join('\n')}
-
-Given the user's concern about "${context.mainConcern}", prioritize:
-${concernPriorities.map(p => `- ${patterns.find(pt => pt.id === p)?.name}`).join('\n')}
+**Analysis Instructions:**
+1. First, identify the UI component type shown in the screenshot
+2. Filter to ONLY the patterns that apply to that component type
+3. Evaluate ONLY those relevant patterns
+4. Mark non-applicable patterns as "not-applicable" (they should NOT count against the score)
 
 **Output Format:**
 Return a valid JSON object with this exact structure:
 {
+  "detectedComponent": "sidebar|chat-history|chat-response|navigation|etc",
+  "componentDescription": "Brief description of what you see (e.g., 'ChatGPT sidebar showing conversation history')",
+  "applicablePatternCount": 6,
   "patterns": {
-    "adaptive-interfaces": {
-      "status": "well-implemented|weak|missing",
-      "evidence": "What you observed in the screenshot",
-      "priority": "high|medium|low",
-      "improvement": "Specific suggestion if weak/missing, empty string otherwise"
-    },
-    // ... repeat for all 28 patterns
+    "pattern-id": {
+      "status": "well-implemented|weak|missing|not-applicable",
+      "evidence": "What you observed (or 'Not applicable to this UI component')",
+      "priority": "high|medium|low|none",
+      "improvement": "Specific suggestion if weak/missing, empty string otherwise",
+      "name": "Pattern Name"
+    }
   },
-  "summary": "1-2 paragraph summary of overall findings",
-  "criticalMissing": ["array", "of", "critical", "missing", "pattern", "ids"],
-  "score": 14
+  "summary": "2-3 sentence summary focused on the component's strengths and 1-2 actionable improvements",
+  "criticalMissing": ["only", "applicable", "missing", "patterns"],
+  "score": 4,
+  "maxScore": 6
 }
 
-**Important:**
-- Be objective and evidence-based
-- Consider the specific interface type and user concern
-- Provide actionable improvement suggestions
-- Score is the count of well-implemented patterns (max 28)
-- Critical missing patterns should align with context priorities`;
+**Scoring Rules:**
+- score = count of well-implemented patterns that APPLY to this component
+- maxScore = total patterns that APPLY to this component (not 28!)
+- "not-applicable" patterns do NOT count toward score or maxScore
+- For a sidebar with 6 applicable patterns, a perfect score is 6/6, not 6/28
+
+**Be Practical:**
+- A chat history sidebar showing past conversations is doing its job well if it has good context switching
+- Don't penalize a navigation component for not having confidence indicators
+- Focus on what MATTERS for the specific UI component shown`;
 }
 
 export function getContextSpecificDescription(patternId: string, context: ContextData): string {

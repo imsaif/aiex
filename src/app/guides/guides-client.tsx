@@ -87,8 +87,8 @@ export default function GuidesClient() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="pt-12 md:pt-16 pb-12 md:pb-16">
+      {/* Hero Section - with background + grain */}
+      <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
@@ -110,7 +110,7 @@ export default function GuidesClient() {
       </section>
 
       {/* Main Content */}
-      <div id="guides" className="max-w-7xl mx-auto px-6 pb-24">
+      <div id="guides" className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
         {/* Top Filter Bar */}
         <div ref={dropdownRef} className="mb-6 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
           {/* Tool Filter Dropdown */}

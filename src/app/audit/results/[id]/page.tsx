@@ -3,27 +3,19 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {
-  ChartBarIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  XCircleIcon,
-  DocumentArrowDownIcon,
-  ShareIcon,
-  DocumentTextIcon
-} from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { ScoreCircle } from '@/components/audit/ScoreCircle';
+import { IssueCard } from '@/components/audit/IssueCard';
 import { PatternCard } from '@/components/audit/PatternCard';
-import type { AnalysisResults, PatternStatus } from '@/types/audit';
-
-type FilterType = 'all' | PatternStatus;
+import { getPatternExamplesLimited } from '@/data/utils/pattern-utils';
+import type { AnalysisResults } from '@/types/audit';
 
 export default function ResultsPage() {
   const router = useRouter();
   const [results, setResults] = useState<AnalysisResults | null>(null);
-  const [filter, setFilter] = useState<FilterType>('all');
-  const [selectedPattern, setSelectedPattern] = useState<string | null>(null);
+  const [showFullReport, setShowFullReport] = useState(false);
 
   useEffect(() => {
     const savedResults = sessionStorage.getItem('auditResults');
@@ -47,234 +39,143 @@ export default function ResultsPage() {
     ...data,
   }));
 
-  const wellImplemented = patternArray.filter((p) => p.status === 'well-implemented');
-  const weak = patternArray.filter((p) => p.status === 'weak');
-  const missing = patternArray.filter((p) => p.status === 'missing');
-
-  const filteredPatterns =
-    filter === 'all'
-      ? patternArray
-      : patternArray.filter((p) => p.status === filter);
-
-  const sortedPatterns = filteredPatterns.sort((a, b) => {
-    const priorityOrder = { high: 0, medium: 1, low: 2 };
-    return priorityOrder[a.priority] - priorityOrder[b.priority];
-  });
-
-  const getInterfaceTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      chatbot: 'Chatbot/Conversational',
-      content: 'Content Generator',
-      code: 'Code Assistant',
-      image: 'Image/Creative AI',
-      analytics: 'Analytics/Insights',
-      other: 'AI Interface',
-    };
-    return labels[type] || type;
-  };
+  // Get top 3 issues (weak or missing patterns, sorted by priority)
+  const issues = patternArray
+    .filter((p) => p.status === 'weak' || p.status === 'missing')
+    .sort((a, b) => {
+      const priorityOrder = { high: 0, medium: 1, low: 2 };
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    })
+    .slice(0, 3);
 
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-background-primary py-12 px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Critical Alert Banner */}
-        {results.criticalMissing.length > 0 && (
-          <div className="mb-8 bg-accent-subtle border-2 border-text-primary text-text-primary p-6 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-semibold text-lg mb-2">
-                  ⚠️ Critical Finding for {getInterfaceTypeLabel(results.context.interfaceType)}
-                </div>
-                <div className="text-text-secondary">
-                  Your interface lacks {results.criticalMissing.length} essential pattern
-                  {results.criticalMissing.length > 1 ? 's' : ''}. These are critical for {results.context.mainConcern} concerns.
-                </div>
-              </div>
-              <button
-                onClick={() => setFilter('missing')}
-                className="px-6 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-xl font-semibold hover:scale-[1.02] transition-transform whitespace-nowrap shadow-card"
-              >
-                Show Missing →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Header with Score */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 pb-8 border-b-2 border-border-primary">
-          <div className="flex-1">
-            <h1 className="text-3xl md:text-4xl font-semibold mb-3 text-text-primary tracking-tight">
-              Pattern Audit Results
+        <div className="max-w-4xl mx-auto">
+          {/* Header with Score */}
+          <div className="text-center mb-12">
+            <ScoreCircle score={results.score} total={28} />
+            <h1 className="text-3xl font-semibold mt-6 mb-3 text-text-primary">
+              Pattern Audit Complete
             </h1>
-            <p className="text-lg text-text-secondary">
-              Analyzed: {getInterfaceTypeLabel(results.context.interfaceType)} •
-              Focus: {results.context.mainConcern.replace('-', ' ')}
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+              {results.summary}
             </p>
           </div>
 
-          {/* Score Card */}
-          <div className="bg-accent-primary dark:bg-white text-white dark:text-black px-8 py-6 rounded-2xl text-center min-w-[200px] shadow-card">
-            <div className="text-5xl font-semibold mb-2">{results.score}/28</div>
-            <div className="text-sm opacity-90 mb-2">Patterns Detected</div>
-            {results.criticalMissing.length > 0 && (
-              <div className="text-xs opacity-80">
-                {results.criticalMissing.length} Critical Missing
+          {/* Top 3 Issues */}
+          {issues.length > 0 && (
+            <div className="mb-12">
+              <h2 className="text-2xl font-semibold mb-6 text-text-primary">
+                🔧 Top {issues.length} Issues to Fix
+              </h2>
+              <div className="space-y-4">
+                {issues.map((issue) => (
+                  <IssueCard
+                    key={issue.id}
+                    patternId={issue.id}
+                    patternName={patterns.find(p => p.id === issue.id)?.name || issue.id}
+                    status={issue.status as 'weak' | 'missing'}
+                    improvementPrompt={issue.improvement || 'No specific improvement suggestion available.'}
+                    priority={issue.priority}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Link
+              href="/audit"
+              className="px-8 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card text-center"
+            >
+              Start New Audit
+            </Link>
+            <Link
+              href="/"
+              className="px-8 py-3 border-2 border-border-primary rounded-2xl font-semibold text-text-primary hover:border-border-secondary transition-colors text-center"
+            >
+              Explore All Patterns
+            </Link>
+          </div>
+
+          {/* Full Report (Collapsible) */}
+          <div className="border-2 border-border-primary rounded-2xl p-6 bg-background-secondary">
+            <button
+              onClick={() => setShowFullReport(!showFullReport)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <div>
+                <h3 className="text-xl font-semibold text-text-primary">
+                  Full Pattern Report
+                </h3>
+                <p className="text-sm text-text-secondary mt-1">
+                  View all 28 patterns analyzed
+                </p>
+              </div>
+              {showFullReport ? (
+                <ChevronUpIcon className="w-6 h-6 text-text-primary" />
+              ) : (
+                <ChevronDownIcon className="w-6 h-6 text-text-primary" />
+              )}
+            </button>
+
+            {showFullReport && (
+              <div className="mt-6 pt-6 border-t-2 border-border-primary space-y-6">
+                {patternArray
+                  .sort((a, b) => {
+                    const priorityOrder = { high: 0, medium: 1, low: 2 };
+                    return priorityOrder[a.priority] - priorityOrder[b.priority];
+                  })
+                  .map((pattern) => (
+                    <PatternCard
+                      key={pattern.id}
+                      pattern={pattern}
+                      context={results.context}
+                      examples={getPatternExamplesLimited(pattern.id, 2)}
+                      onImplementationClick={() => {}}
+                    />
+                  ))}
               </div>
             )}
           </div>
-        </div>
-
-        {/* Summary */}
-        <div className="mb-8 p-6 bg-background-secondary rounded-2xl border-2 border-border-primary">
-          <h2 className="text-xl font-semibold mb-3 text-text-primary">Summary</h2>
-          <p className="text-text-secondary leading-relaxed">{results.summary}</p>
-        </div>
-
-        {/* Filter Sidebar + Patterns Grid */}
-        <div className="grid lg:grid-cols-[250px_1fr] gap-8">
-          {/* Sidebar */}
-          <div className="space-y-4">
-            {/* Status Filters */}
-            <div className="bg-background-secondary p-5 rounded-2xl border-2 border-border-primary">
-              <h3 className="font-semibold mb-4 text-text-primary">Filter by Status</h3>
-              <div className="space-y-2">
-                <button
-                  onClick={() => setFilter('all')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
-                    filter === 'all'
-                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
-                      : 'hover:bg-accent-subtle border-2 border-transparent'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <ChartBarIcon className="w-5 h-5 text-text-primary" />
-                    <span className="font-semibold text-text-primary">All Patterns</span>
-                  </div>
-                  <span className="px-2 py-1 bg-background-tertiary border border-border-primary rounded-lg text-xs font-semibold text-text-primary">
-                    {patternArray.length}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setFilter('well-implemented')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
-                    filter === 'well-implemented'
-                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
-                      : 'hover:bg-accent-subtle border-2 border-transparent'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <CheckCircleIcon className="w-5 h-5 text-text-primary" />
-                    <span className="font-semibold text-text-primary">✓ Well Implemented</span>
-                  </div>
-                  <span className="px-2 py-1 bg-background-tertiary border border-border-primary rounded-lg text-xs font-semibold text-text-primary">
-                    {wellImplemented.length}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setFilter('weak')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
-                    filter === 'weak'
-                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
-                      : 'hover:bg-accent-subtle border-2 border-transparent'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <ExclamationTriangleIcon className="w-5 h-5 text-text-primary" />
-                    <span className="font-semibold text-text-primary">⚠ Needs Work</span>
-                  </div>
-                  <span className="px-2 py-1 bg-background-tertiary border border-border-primary rounded-lg text-xs font-semibold text-text-primary">
-                    {weak.length}
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setFilter('missing')}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${
-                    filter === 'missing'
-                      ? 'bg-accent-subtle border-2 border-accent-primary dark:border-white'
-                      : 'hover:bg-accent-subtle border-2 border-transparent'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <XCircleIcon className="w-5 h-5 text-text-primary" />
-                    <span className="font-semibold text-text-primary">✗ Missing</span>
-                  </div>
-                  <span className="px-2 py-1 bg-background-tertiary border border-border-primary rounded-lg text-xs font-semibold text-text-primary">
-                    {missing.length}
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-background-secondary p-5 rounded-2xl border-2 border-border-primary">
-              <h3 className="font-semibold mb-4 text-text-primary">Quick Actions</h3>
-              <div className="space-y-2">
-                <button
-                  aria-label="Export audit results as PDF"
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-surface-primary border-2 border-border-primary rounded-xl font-semibold text-text-primary hover:border-border-secondary transition-colors text-sm"
-                >
-                  <DocumentArrowDownIcon className="w-4 h-4" />
-                  Export PDF
-                </button>
-                <button
-                  aria-label="Download audit results as JSON"
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-surface-primary border-2 border-border-primary rounded-xl font-semibold text-text-primary hover:border-border-secondary transition-colors text-sm"
-                >
-                  <DocumentTextIcon className="w-4 h-4" />
-                  Download JSON
-                </button>
-                <button
-                  aria-label="Share audit results via link"
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-surface-primary border-2 border-border-primary rounded-xl font-semibold text-text-primary hover:border-border-secondary transition-colors text-sm"
-                >
-                  <ShareIcon className="w-4 h-4" />
-                  Share Link
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Pattern Cards */}
-          <div className="space-y-6">
-            {sortedPatterns.length === 0 ? (
-              <div className="text-center py-12 text-text-tertiary">
-                No patterns match this filter
-              </div>
-            ) : (
-              sortedPatterns.map((pattern) => (
-                <PatternCard
-                  key={pattern.id}
-                  pattern={pattern}
-                  context={results.context}
-                  onImplementationClick={() => setSelectedPattern(pattern.id)}
-                />
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Bottom Actions */}
-        <div className="mt-12 flex justify-center gap-4">
-          <Link
-            href="/audit"
-            className="px-6 py-3 border-2 border-border-primary rounded-2xl font-semibold text-text-primary hover:border-border-secondary transition-colors"
-          >
-            ← Start New Audit
-          </Link>
-          <Link
-            href="/"
-            className="px-6 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card"
-          >
-            Explore All 28 Patterns →
-          </Link>
         </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </>
   );
 }
+
+// Pattern names mapping
+const patterns = [
+  { id: 'adaptive-interfaces', name: 'Adaptive Interfaces' },
+  { id: 'ambient-intelligence', name: 'Ambient Intelligence' },
+  { id: 'anti-manipulation', name: 'Anti-Manipulation Safeguards' },
+  { id: 'augmented-creation', name: 'Augmented Creation' },
+  { id: 'collaborative-ai', name: 'Collaborative AI' },
+  { id: 'confidence-visualization', name: 'Confidence Visualization' },
+  { id: 'context-switching', name: 'Context Switching' },
+  { id: 'contextual-assistance', name: 'Contextual Assistance' },
+  { id: 'conversational-ui', name: 'Conversational UI' },
+  { id: 'crisis-detection', name: 'Crisis Detection & Escalation' },
+  { id: 'error-recovery', name: 'Error Recovery' },
+  { id: 'explainable-ai', name: 'Explainable AI' },
+  { id: 'feedback-loops', name: 'Feedback Loops' },
+  { id: 'graceful-handoff', name: 'Graceful Handoff' },
+  { id: 'guided-learning', name: 'Guided Learning' },
+  { id: 'human-in-the-loop', name: 'Human-in-the-Loop' },
+  { id: 'intelligent-caching', name: 'Intelligent Caching' },
+  { id: 'multimodal-interaction', name: 'Multimodal Interaction' },
+  { id: 'predictive-anticipation', name: 'Predictive Anticipation' },
+  { id: 'privacy-first', name: 'Privacy-First Design' },
+  { id: 'progressive-disclosure', name: 'Progressive Disclosure' },
+  { id: 'progressive-enhancement', name: 'Progressive Enhancement' },
+  { id: 'responsible-ai', name: 'Responsible AI Design' },
+  { id: 'safe-exploration', name: 'Safe Exploration' },
+  { id: 'selective-memory', name: 'Selective Memory' },
+  { id: 'session-degradation', name: 'Session Degradation Prevention' },
+  { id: 'universal-access', name: 'Universal Access Patterns' },
+  { id: 'vulnerable-user-protection', name: 'Vulnerable User Protection' },
+];

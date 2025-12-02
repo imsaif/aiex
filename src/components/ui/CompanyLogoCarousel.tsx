@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { CompanyLogo } from '@/data/company-logos';
 import { useThemeFilter } from '@/hooks/useTheme';
 
@@ -21,7 +20,7 @@ interface CompanyLogoCarouselProps {
    * Size variant for logos
    * @default 'md'
    */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
 
   /**
    * Gap between logos
@@ -62,14 +61,16 @@ export default function CompanyLogoCarousel({
   showLabel = false,
   className = '',
 }: CompanyLogoCarouselProps) {
-  // Get theme-aware filter for logos
-  const logoFilter = useThemeFilter('grayscale(100%)');
+  // Get theme-aware filter for logos - navy tint to match design system (#162036)
+  // brightness(0) makes it black, then invert + sepia + hue-rotate shifts to darker navy
+  const logoFilter = useThemeFilter('brightness(0) saturate(100%) invert(10%) sepia(50%) saturate(2000%) hue-rotate(200deg) brightness(85%) contrast(95%)');
 
   // Duplicate the companies array for seamless looping
   const doubledCompanies = [...companies, ...companies];
 
   // Size configurations
   const sizeClasses = {
+    xs: 'h-5',
     sm: 'h-8',
     md: 'h-12',
     lg: 'h-16',
@@ -79,7 +80,8 @@ export default function CompanyLogoCarousel({
   let containerGap = 'gap-12';
 
   if (gap === 'default') {
-    if (size === 'sm') containerGap = 'gap-8';
+    if (size === 'xs') containerGap = 'gap-6';
+    else if (size === 'sm') containerGap = 'gap-8';
     else if (size === 'lg') containerGap = 'gap-16';
     else containerGap = 'gap-12';
   } else if (gap === 'sm') {
@@ -93,16 +95,13 @@ export default function CompanyLogoCarousel({
   }
 
   return (
-    <div className={`relative w-full overflow-hidden py-8 min-h-16 ${className}`}>
-      {/* Scrolling container using Framer Motion - matches handbook behavior */}
-      <motion.div
-        className={`flex ${containerGap}`}
-        animate={{ x: [-2000, 0] }}
-        transition={{
-          duration: duration,
-          repeat: Infinity,
-          repeatType: 'loop',
-          ease: 'linear',
+    <div className={`relative w-full overflow-hidden ${className}`}>
+      {/* Scrolling container using CSS animation for seamless loop */}
+      <div
+        className={`flex ${containerGap} animate-scroll`}
+        style={{
+          animationDuration: `${duration}s`,
+          width: 'max-content',
         }}
       >
         {doubledCompanies.map((company, index) => (
@@ -110,12 +109,11 @@ export default function CompanyLogoCarousel({
             key={`${company.name}-${index}`}
             className="flex-shrink-0 flex flex-col items-center justify-center"
           >
-            {/* Logo Image - grayscale with color on hover */}
+            {/* Logo Image - navy tint with original color on hover */}
             <img
               src={company.logo}
               alt={company.name}
-              className={`${sizeClasses[size]} w-auto object-contain opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-300`}
-              style={{ filter: logoFilter }}
+              className={`${sizeClasses[size]} w-auto object-contain logo-navy`}
             />
 
             {/* Optional Label */}
@@ -126,7 +124,40 @@ export default function CompanyLogoCarousel({
             )}
           </div>
         ))}
-      </motion.div>
+      </div>
+
+      {/* CSS for seamless scrolling and logo styling */}
+      <style jsx>{`
+        @keyframes scroll {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+        .animate-scroll {
+          animation: scroll linear infinite;
+        }
+        .logo-navy {
+          filter: brightness(0) saturate(100%) invert(10%) sepia(50%) saturate(2000%) hue-rotate(200deg) brightness(85%) contrast(95%);
+          opacity: 0.6;
+          transition: all 0.3s ease;
+        }
+        .logo-navy:hover {
+          filter: none;
+          opacity: 1;
+        }
+        /* Dark mode: use light gray/white filter instead of navy */
+        :global([data-theme="dark"]) .logo-navy {
+          filter: brightness(0) invert(1);
+          opacity: 0.5;
+        }
+        :global([data-theme="dark"]) .logo-navy:hover {
+          filter: none;
+          opacity: 1;
+        }
+      `}</style>
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import type { PatternResult, ContextData } from '@/types/audit';
+import type { Example } from '@/types';
 import { getContextSpecificDescription } from '@/lib/patterns/detection-prompts';
 
 interface PatternCardProps {
   pattern: PatternResult;
   context: ContextData;
+  examples?: Example[];
   onImplementationClick?: () => void;
 }
 
@@ -43,7 +45,7 @@ const priorityLabels = {
   low: 'Low Priority',
 };
 
-export function PatternCard({ pattern, context, onImplementationClick }: PatternCardProps) {
+export function PatternCard({ pattern, context, examples = [], onImplementationClick }: PatternCardProps) {
   const colors = statusColors[pattern.status];
   const contextDescription = getContextSpecificDescription(pattern.id, context);
 
@@ -90,24 +92,40 @@ export function PatternCard({ pattern, context, onImplementationClick }: Pattern
         </div>
       )}
 
-      {/* Visual comparison (placeholder) */}
-      {pattern.status !== 'well-implemented' && (
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="border border-border-primary rounded-xl p-3 bg-background-secondary">
-            <div className="text-xs uppercase text-text-tertiary mb-2 font-semibold">
-              Current State
-            </div>
-            <div className="h-20 flex items-center justify-center bg-surface-primary rounded text-text-tertiary text-sm border border-border-primary">
-              {pattern.status === 'missing' ? 'Not implemented' : 'Weak implementation'}
-            </div>
+      {/* Product Examples */}
+      {examples.length > 0 && (
+        <div className="mb-4">
+          <div className="text-sm font-semibold text-text-secondary mb-3">
+            {pattern.status === 'well-implemented'
+              ? '✨ You\'re implementing this like:'
+              : '📚 See how leading products do this:'}
           </div>
-          <div className="border-2 border-accent-primary dark:border-white rounded-xl p-3 bg-accent-subtle">
-            <div className="text-xs uppercase text-text-primary mb-2 font-semibold">
-              With Pattern
-            </div>
-            <div className="h-20 flex items-center justify-center bg-surface-primary rounded text-text-primary text-sm border border-border-primary">
-              Improved UX
-            </div>
+          <div className="grid grid-cols-2 gap-3">
+            {examples.map((example, index) => (
+              <a
+                key={index}
+                href={`/patterns/${pattern.id}`}
+                className="group block border border-border-primary rounded-xl overflow-hidden bg-background-secondary hover:border-accent-primary transition-all hover:scale-[1.02]"
+              >
+                {example.image && (
+                  <div className="h-24 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    <img
+                      src={example.image}
+                      alt={example.altText || example.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+                <div className="p-2">
+                  <div className="text-sm font-semibold text-text-primary truncate">
+                    {example.title}
+                  </div>
+                  <div className="text-xs text-text-secondary line-clamp-1">
+                    {example.description}
+                  </div>
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       )}
