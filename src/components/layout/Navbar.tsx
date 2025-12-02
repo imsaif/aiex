@@ -20,7 +20,7 @@ const Navbar = () => {
   // Get link classes based on active state - minimal style with no layout shift
   const getLinkClasses = (href: string) => {
     const active = isActive(href);
-    return `flex items-center gap-2 px-4 py-2 transition-colors duration-200 ease-out text-sm border-b-2 ${
+    return `flex items-center gap-2 px-4 py-2 transition-colors duration-200 ease-out text-base border-b-2 ${
       active
         ? 'text-text-primary border-text-primary font-semibold'
         : 'text-text-secondary hover:text-text-primary border-transparent'
@@ -56,28 +56,28 @@ const Navbar = () => {
           <div className="flex items-center gap-3">
             <Link href="/" className={getLinkClasses('/')}>
               <Squares2X2Icon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm relative">
+              <span className="hidden sm:inline relative">
                 Patterns
                 <span className="invisible font-semibold block h-0" aria-hidden="true">Patterns</span>
               </span>
             </Link>
             <Link href="/prompts" className={getLinkClasses('/prompts')}>
               <SparklesIcon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm relative">
+              <span className="hidden sm:inline relative">
                 Prompts
                 <span className="invisible font-semibold block h-0" aria-hidden="true">Prompts</span>
               </span>
             </Link>
             <Link href="/audit" className={getLinkClasses('/audit')}>
               <BeakerIcon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm relative">
+              <span className="hidden sm:inline relative">
                 Audit
                 <span className="invisible font-semibold block h-0" aria-hidden="true">Audit</span>
               </span>
             </Link>
             <Link href="/guides" className={getLinkClasses('/guides')}>
               <BookOpenIcon className="w-5 h-5" />
-              <span className="hidden sm:inline text-sm relative">
+              <span className="hidden sm:inline relative">
                 Guides
                 <span className="invisible font-semibold block h-0" aria-hidden="true">Guides</span>
               </span>

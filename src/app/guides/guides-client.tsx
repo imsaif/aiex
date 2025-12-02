@@ -110,7 +110,7 @@ export default function GuidesClient() {
       </section>
 
       {/* Main Content */}
-      <div id="guides" className="max-w-7xl mx-auto px-6 pb-24">
+      <div id="guides" className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
         {/* Top Filter Bar */}
         <div ref={dropdownRef} className="mb-6 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
           {/* Tool Filter Dropdown */}

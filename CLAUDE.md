@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-02 15:14 (MacBook)
+- **Pattern:** Design System Refinements - Navbar & Guides Page
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Increased navbar text size from text-sm to text-base for better readability on MacBook screens. Added proper spacing (pt-12 md:pt-16) between guides page hero section and filter content to match prompts/patterns pages. Updated BRAND_GUIDELINES.md with comprehensive documentation including text colors, hero backgrounds, Satoshi font, card patterns, navigation anti-shift techniques, and logo carousel CSS.
+
 ### Session 2025-12-02 12:05 (MacBook)
 - **Pattern:** Design System Typography & Layout Refinements
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed navbar layout shift on page navigation by adding scrollbar-gutter: stable to CSS and fixing ThemeToggle hydration placeholder size (36px→40px). Added active/selected state to navbar links with background highlight and bold text. Removed framer-motion y-offset animation on Prompts page that caused perceived "jump". Added industry filtering feature: created industry-utils.ts with product-to-industry mapping (AI/ML, Developer Tools, Technology, Productivity, Entertainment, Design, Healthcare, Education, Automotive), IndustryFilterBar component with green theme, updated home page with industry state and filtering logic, and added Industries tab to mobile CategoryFilterSheet.
 
 ### Session 2025-11-22 10:47 (MacBook)
-- **Pattern:** Prompt Builder - Dark/Light Mode & Tech Stack UX
-- **Status:** ✅ Completed
-- **Files Changed:** 9
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed dark/light mode styling for AI tool selector and "What do you need?" chips using JS-controlled styles instead of unreliable Tailwind dark: variants. Selected items now show white bg/black text in dark mode, black bg/white text in light mode. Fixed logo visibility by inverting black SVGs in dark mode. Added clickable tech stack chips (React, Next.js, Tailwind, Shadcn, etc.) to help designers communicate technical context without typing jargon. Updated prompt generator to include tech stack in generated prompts. Fixed Copy/Download buttons appearing after generation by fixing useEffect dependency bug. Added auto-scroll to prompt content during typewriter effect. Simplified "Describe Your Project" field to be designer-friendly with guiding tip.
-
-### Session 2025-11-21 10:11 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
