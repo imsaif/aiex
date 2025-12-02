@@ -58,6 +58,17 @@ node_modules/
 *.sln
 *.sw?
 # OS specific
+.DS_Store
+
+# Backup files
+*.bak
+*.backup
+*.backup-*
+*.tsx.backup-*
+
+# One-off test scripts in root
+create-test-*.js
+test-*.js
 
 # Task files
 tasks.json
