@@ -141,10 +141,19 @@ export default function CompanyLogoCarousel({
         }
         .logo-navy {
           filter: brightness(0) saturate(100%) invert(10%) sepia(50%) saturate(2000%) hue-rotate(200deg) brightness(85%) contrast(95%);
-          opacity: 0.5;
+          opacity: 0.6;
           transition: all 0.3s ease;
         }
         .logo-navy:hover {
+          filter: none;
+          opacity: 1;
+        }
+        /* Dark mode: use light gray/white filter instead of navy */
+        :global([data-theme="dark"]) .logo-navy {
+          filter: brightness(0) invert(1);
+          opacity: 0.5;
+        }
+        :global([data-theme="dark"]) .logo-navy:hover {
           filter: none;
           opacity: 1;
         }

@@ -136,13 +136,13 @@ export default function PredictiveAnticipationDemo() {
     <div className="max-w-5xl mx-auto p-6 space-y-6">
       {/* Header with Reset Button */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Predictive Content Loading</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Predictive Content Loading</h2>
         {viewedIds.length > 0 && (
           <motion.button
             onClick={handleReset}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-lg text-sm font-medium transition-colors"
           >
             ↻ Reset Demo
           </motion.button>
@@ -156,7 +156,7 @@ export default function PredictiveAnticipationDemo() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="bg-purple-100 border border-purple-300 text-purple-900 px-4 py-3 rounded-lg text-sm"
+            className="bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-700 text-purple-900 dark:text-purple-200 px-4 py-3 rounded-lg text-sm"
           >
             {notification}
           </motion.div>
@@ -170,16 +170,16 @@ export default function PredictiveAnticipationDemo() {
             initial={{ scale: 0.95, opacity: 0, y: -10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-300 rounded-lg p-5"
+            className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/30 dark:to-blue-900/30 border-2 border-purple-300 dark:border-purple-700 rounded-lg p-5"
           >
             <div className="flex items-start gap-4">
               <span className="text-3xl flex-shrink-0">🧠</span>
               <div className="flex-1">
-                <p className="font-semibold text-gray-900 text-lg">Pattern Detected!</p>
-                <p className="text-gray-700 mt-1">
-                  You've viewed <span className="font-bold text-purple-600">{detectedPattern.count}</span> {detectedPattern.category} movies ({detectedPattern.percentage}% of your views)
+                <p className="font-semibold text-gray-900 dark:text-white text-lg">Pattern Detected!</p>
+                <p className="text-gray-700 dark:text-gray-300 mt-1">
+                  You've viewed <span className="font-bold text-purple-600 dark:text-purple-400">{detectedPattern.count}</span> {detectedPattern.category} movies ({detectedPattern.percentage}% of your views)
                 </p>
-                <p className="text-sm text-gray-600 mt-2">→ Pre-loading more {detectedPattern.category} content for faster loading...</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">→ Pre-loading more {detectedPattern.category} content for faster loading...</p>
               </div>
             </div>
           </motion.div>
@@ -191,21 +191,21 @@ export default function PredictiveAnticipationDemo() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-gray-50 rounded-lg p-4"
+          className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4"
         >
-          <p className="text-xs font-semibold text-gray-600 uppercase mb-3">Your Viewing Pattern</p>
+          <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-3">Your Viewing Pattern</p>
           <div className="grid grid-cols-4 gap-3">
             {categories.map(category => (
               <div key={category} className="text-center">
-                <div className="text-2xl font-bold text-gray-900">{preferences[category] || 0}</div>
-                <p className="text-xs text-gray-600 capitalize">{category}</p>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{preferences[category] || 0}</div>
+                <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{category}</p>
                 {preferences[category] && (
-                  <div className="w-full bg-gray-200 rounded-full h-1 mt-2">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-2">
                     <div
                       className={`h-1 rounded-full transition-all ${
                         detectedPattern?.category === category
                           ? 'bg-purple-500'
-                          : 'bg-gray-400'
+                          : 'bg-gray-400 dark:bg-gray-500'
                       }`}
                       style={{
                         width: `${Math.min(100, (preferences[category] / viewedIds.length) * 100)}%`
@@ -230,14 +230,14 @@ export default function PredictiveAnticipationDemo() {
           >
             <div className="flex items-center gap-2">
               <span className="text-lg">🎯</span>
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                 Recommended For You
               </h3>
-              <span className="text-xs font-semibold text-green-600 bg-green-100 px-2 py-1 rounded">
+              <span className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/50 px-2 py-1 rounded">
                 AI Pick
               </span>
             </div>
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 dark:text-gray-400">
               Based on your preference for <span className="font-semibold capitalize">{detectedPattern.category}</span> movies
             </p>
 
@@ -249,13 +249,13 @@ export default function PredictiveAnticipationDemo() {
                   disabled={isLoading === item.id}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="p-4 rounded-lg border-2 border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 text-left transition-all relative overflow-hidden group hover:shadow-lg"
+                  className="p-4 rounded-lg border-2 border-green-400 dark:border-green-600 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 text-left transition-all relative overflow-hidden group hover:shadow-lg"
                   whileHover={isLoading === item.id ? {} : { y: -4 }}
                   whileTap={isLoading === item.id ? {} : { scale: 0.96 }}
                 >
                   {/* Shimmer animation */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent"
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent"
                     animate={{ x: ['−100%', '100%'] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
@@ -263,8 +263,8 @@ export default function PredictiveAnticipationDemo() {
                   <div className="relative z-10">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
-                        <p className="font-semibold text-gray-900 text-sm line-clamp-2">{item.title}</p>
-                        <span className="inline-block text-xs text-green-700 capitalize bg-green-200/50 px-2 py-0.5 rounded mt-2">
+                        <p className="font-semibold text-gray-900 dark:text-white text-sm line-clamp-2">{item.title}</p>
+                        <span className="inline-block text-xs text-green-700 dark:text-green-300 capitalize bg-green-200/50 dark:bg-green-800/50 px-2 py-0.5 rounded mt-2">
                           {item.category}
                         </span>
                       </div>
@@ -278,13 +278,13 @@ export default function PredictiveAnticipationDemo() {
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="text-green-600 text-lg flex-shrink-0 mt-1"
+                          className="text-green-600 dark:text-green-400 text-lg flex-shrink-0 mt-1"
                         >
                           ⚡
                         </motion.div>
                       )}
                     </div>
-                    <p className="text-xs text-green-700 font-semibold mt-2">
+                    <p className="text-xs text-green-700 dark:text-green-300 font-semibold mt-2">
                       {isLoading === item.id ? 'Loading...' : 'Instant load'}
                     </p>
                   </div>
@@ -298,7 +298,7 @@ export default function PredictiveAnticipationDemo() {
       {/* Content Grid - 3 columns */}
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
             {regularContent.length > 0
               ? `Browse More (${regularContent.length}/${contents.length - preloadedContent.length})`
               : preloadedContent.length === 0
@@ -317,8 +317,8 @@ export default function PredictiveAnticipationDemo() {
               animate={{ opacity: 1, y: 0 }}
               className={`p-3 rounded-lg border-2 text-left transition-all relative overflow-hidden group ${
                 item.isPreloaded
-                  ? 'bg-green-50 border-green-400 hover:bg-green-100 shadow-md'
-                  : 'bg-white border-gray-300 hover:bg-gray-50'
+                  ? 'bg-green-50 dark:bg-green-900/30 border-green-400 dark:border-green-600 hover:bg-green-100 dark:hover:bg-green-900/50 shadow-md'
+                  : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
               } ${isLoading === item.id ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
               whileHover={isLoading === item.id ? {} : { y: -2 }}
               whileTap={isLoading === item.id ? {} : { scale: 0.98 }}
@@ -326,16 +326,16 @@ export default function PredictiveAnticipationDemo() {
               {/* Shimmer animation for pre-loaded items */}
               {item.isPreloaded && !viewedIds.includes(item.id) && (
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent"
                   animate={{ x: ['−100%', '100%'] }}
                   transition={{ duration: 2.5, repeat: Infinity }}
                 />
               )}
 
               <div className="relative z-10">
-                <p className="font-medium text-gray-900 text-sm line-clamp-2">{item.title}</p>
+                <p className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2">{item.title}</p>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs text-gray-600 capitalize bg-gray-100 px-2 py-1 rounded">
+                  <span className="text-xs text-gray-600 dark:text-gray-400 capitalize bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
                     {item.category}
                   </span>
                   {isLoading === item.id ? (
@@ -348,16 +348,16 @@ export default function PredictiveAnticipationDemo() {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="text-green-600 text-sm font-semibold"
+                      className="text-green-600 dark:text-green-400 text-sm font-semibold"
                     >
                       ✓
                     </motion.div>
                   ) : (
-                    <span className="text-xs text-gray-400">Pending</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500">Pending</span>
                   )}
                 </div>
                 {!viewedIds.includes(item.id) && (
-                  <p className="text-xs text-gray-500 mt-2">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     {item.isPreloaded ? '⚡ Instant' : '⏱️ ~1.8s'}
                   </p>
                 )}
@@ -370,7 +370,7 @@ export default function PredictiveAnticipationDemo() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-12 text-gray-500"
+            className="text-center py-12 text-gray-500 dark:text-gray-400"
           >
             <p className="text-lg font-semibold mb-2">You've viewed all content! 🎉</p>
             <p className="text-sm mb-4">Try the reset button to explore different patterns.</p>
@@ -387,9 +387,9 @@ export default function PredictiveAnticipationDemo() {
       </div>
 
       {/* Instructions */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
-        <p className="text-sm font-semibold text-blue-900">How it works:</p>
-        <ul className="text-sm text-blue-900 space-y-1 ml-4 list-disc">
+      <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
+        <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">How it works:</p>
+        <ul className="text-sm text-blue-900 dark:text-blue-300 space-y-1 ml-4 list-disc">
           <li>View 3+ movies from the same genre to trigger the AI detection</li>
           <li>Watch as the system identifies your preference and pre-loads similar content</li>
           <li>Pre-loaded content loads instantly (⚡) instead of the normal ~1.8 seconds</li>

@@ -93,7 +93,7 @@ export default function HomeClient() {
       <Navbar />
 
       {/* Hero Section - Minimal & Spacious with neutral gray background + grain texture */}
-      <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-gray-900 bg-grain">
+      <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Heading - Larger & More Prominent */}

@@ -513,14 +513,14 @@ export default function CodeExampleBlock({
       <div className="relative">
         {/* Segmented Control Header */}
         <div className="flex justify-center p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="inline-flex rounded-lg border border-gray-200 dark:border-gray-700 bg-background-secondary p-1">
+          <div className="inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 p-1">
             {/* Preview Button */}
             <button
               onClick={() => setShowCode(false)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                 !showCode
-                  ? 'bg-accent-primary text-white shadow-sm hover:bg-gray-800'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -535,8 +535,8 @@ export default function CodeExampleBlock({
               onClick={() => setShowCode(true)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                 showCode
-                  ? 'bg-accent-primary text-white shadow-sm hover:bg-gray-800'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

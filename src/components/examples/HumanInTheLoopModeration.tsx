@@ -182,72 +182,72 @@ export default function HumanInTheLoopModeration() {
   return (
     <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Left panel - Moderation Queue */}
-      <div className="md:col-span-2 bg-white rounded-lg shadow p-4">
-        <h2 className="text-xl font-semibold mb-4">Content Moderation Queue</h2>
-        
+      <div className="md:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Content Moderation Queue</h2>
+
         {currentItem ? (
-          <div className="border rounded-lg p-4 mb-4">
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 mb-4">
             <div className="flex flex-wrap justify-between mb-2">
-              <span className="font-medium text-gray-700">{currentItem.user}</span>
-              <span className="text-sm text-gray-500">{new Date(currentItem.timestamp).toLocaleString()}</span>
+              <span className="font-medium text-gray-700 dark:text-gray-300">{currentItem.user}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{new Date(currentItem.timestamp).toLocaleString()}</span>
             </div>
-            
-            <p className="mb-4 p-3 bg-gray-50 rounded border">{currentItem.content}</p>
-            
+
+            <p className="mb-4 p-3 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100">{currentItem.content}</p>
+
             <div className="flex flex-wrap items-center gap-2 mb-4">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                 currentItem.aiModeration.decision === 'flagged'
-                  ? 'bg-gray-200 text-gray-900'
-                  : 'bg-gray-100 text-gray-900'
+                  ? 'bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-100'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
               }`}>
                 {currentItem.aiModeration.decision === 'flagged' ? 'AI Flagged' : 'AI Approved'}
               </span>
-              
-              <span className="text-sm text-gray-500">
+
+              <span className="text-sm text-gray-500 dark:text-gray-400">
                 {Math.round(currentItem.aiModeration.confidence * 100)}% confidence
               </span>
-              
+
               {currentItem.aiModeration.reason && (
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-gray-700 dark:text-gray-300">
                   Reason: {currentItem.aiModeration.reason}
                 </span>
               )}
             </div>
-            
+
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => handleModeration('approve')}
-                className="px-4 py-2 bg-accent-primary text-white rounded hover:bg-gray-800 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
+                className="px-4 py-2 bg-accent-primary dark:bg-white text-white dark:text-black rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
                 Approve
               </button>
               <button
                 onClick={() => handleModeration('reject')}
-                className="px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded hover:bg-gray-50 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                className="px-4 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-600 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
               >
                 Reject
               </button>
               <button
                 onClick={() => handleModeration('escalate')}
-                className="px-4 py-2 bg-gray-100 text-gray-900 border border-gray-300 rounded hover:bg-gray-200 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                className="px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-500 rounded hover:bg-gray-200 dark:hover:bg-gray-500 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
               >
                 Escalate
               </button>
             </div>
           </div>
         ) : (
-          <div className="border rounded-lg p-6 mb-4 text-center text-gray-500">
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-6 mb-4 text-center text-gray-500 dark:text-gray-400">
             No content waiting for moderation
           </div>
         )}
-        
+
         <div className="mt-4">
-          <h3 className="font-medium mb-2">Test with your own content</h3>
+          <h3 className="font-medium mb-2 text-gray-900 dark:text-white">Test with your own content</h3>
           <form onSubmit={handleContentSubmit} className="space-y-3">
             <textarea
               value={newContent}
               onChange={(e) => setNewContent(e.target.value)}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400"
               rows={3}
               placeholder="Type content to test moderation system..."
             ></textarea>
@@ -255,45 +255,45 @@ export default function HumanInTheLoopModeration() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-4 py-2 bg-accent-primary text-white rounded hover:bg-gray-800 transition disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
+                className="px-4 py-2 bg-accent-primary dark:bg-white text-white dark:text-black rounded hover:bg-gray-800 dark:hover:bg-gray-100 transition disabled:opacity-50 cursor-pointer focus:outline-none focus:ring-2 focus:ring-black focus:ring-opacity-50"
               >
                 {isSubmitting ? 'Processing...' : 'Submit for Moderation'}
               </button>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Try including words like &quot;password&quot; or &quot;click here&quot; to trigger the AI moderation
               </p>
             </div>
           </form>
         </div>
       </div>
-      
+
       {/* Right panel - Stats and Info */}
-      <div className="bg-white rounded-lg shadow p-4 space-y-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 space-y-4">
         <div>
-          <h2 className="text-xl font-semibold mb-3">Moderation Stats</h2>
+          <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Moderation Stats</h2>
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-2 bg-gray-50 rounded border">
-              <div className="text-sm text-gray-600">Content Reviewed</div>
-              <div className="font-medium text-lg">{stats.reviewed}</div>
+            <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Content Reviewed</div>
+              <div className="font-medium text-lg text-gray-900 dark:text-white">{stats.reviewed}</div>
             </div>
-            <div className="p-2 bg-gray-50 rounded border border-gray-300">
-              <div className="text-sm text-gray-600">Approved</div>
-              <div className="font-medium text-lg text-gray-900">{stats.approved}</div>
+            <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Approved</div>
+              <div className="font-medium text-lg text-gray-900 dark:text-white">{stats.approved}</div>
             </div>
-            <div className="p-2 bg-gray-50 rounded border border-gray-300">
-              <div className="text-sm text-gray-600">Rejected</div>
-              <div className="font-medium text-lg text-gray-900">{stats.rejected}</div>
+            <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Rejected</div>
+              <div className="font-medium text-lg text-gray-900 dark:text-white">{stats.rejected}</div>
             </div>
-            <div className="p-2 bg-gray-50 rounded border border-gray-300">
-              <div className="text-sm text-gray-600">Escalated</div>
-              <div className="font-medium text-lg text-gray-900">{stats.escalated}</div>
+            <div className="p-2 bg-gray-50 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600">
+              <div className="text-sm text-gray-600 dark:text-gray-400">Escalated</div>
+              <div className="font-medium text-lg text-gray-900 dark:text-white">{stats.escalated}</div>
             </div>
           </div>
         </div>
-        
+
         <div>
-          <h2 className="text-xl font-semibold mb-2">How It Works</h2>
-          <ol className="list-decimal list-inside space-y-1 text-sm">
+          <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">How It Works</h2>
+          <ol className="list-decimal list-inside space-y-1 text-sm text-gray-700 dark:text-gray-300">
             <li>Content is first processed by AI moderation</li>
             <li>High-confidence safe content may be auto-approved</li>
             <li>Flagged or uncertain content goes to human review</li>
@@ -301,10 +301,10 @@ export default function HumanInTheLoopModeration() {
             <li>The system learns from human decisions over time</li>
           </ol>
         </div>
-        
-        <div className="p-3 bg-gray-50 rounded border border-gray-300">
-          <h3 className="font-medium text-gray-900 mb-1">Key Principle</h3>
-          <p className="text-sm text-gray-700">
+
+        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded border border-gray-300 dark:border-gray-600">
+          <h3 className="font-medium text-gray-900 dark:text-white mb-1">Key Principle</h3>
+          <p className="text-sm text-gray-700 dark:text-gray-300">
             Human-in-the-loop systems combine AI efficiency with human judgment
             to create safer, more reliable content moderation.
           </p>

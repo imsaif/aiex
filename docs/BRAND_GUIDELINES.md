@@ -44,9 +44,9 @@ This document defines the brand design system for **AIUX Design Guide** – a Ne
 
 | Value | Light Mode | Dark Mode | Usage |
 |-------|-----------|-----------|--------|
-| Hero background | `#F0F1F5` | `gray-900` | Hero sections, newsletter sections (cool gray with grain texture) |
+| Hero background | `#F0F1F5` | `#162036` | Hero sections, newsletter sections (cool gray / brand navy with grain texture) |
 
-**Usage:** Apply with `bg-[#F0F1F5] dark:bg-gray-900 bg-grain` for hero sections with subtle noise texture overlay.
+**Usage:** Apply with `bg-[#F0F1F5] dark:bg-[#162036] bg-grain` for hero sections with subtle noise texture overlay.
 
 #### Surface Colors
 
@@ -338,7 +338,7 @@ className={`border-b-2 ${active ? 'border-text-primary font-semibold' : 'border-
 
 **Standard Hero Pattern:**
 ```tsx
-<section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-gray-900 bg-grain">
+<section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
   <div className="max-w-7xl mx-auto px-6">
     <div className="text-center max-w-4xl mx-auto">
       <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9" style={{ color: 'var(--text-hero)' }}>

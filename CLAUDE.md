@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-02 16:07 (MacBook)
+- **Pattern:** Dark Mode Fixes - Pattern Demo Components
+- **Status:** ✅ Completed
+- **Files Changed:** 13
+- **Tests Added/Modified:** 0
+- **Notes:** Comprehensive dark mode fixes across pattern demo components. Fixed 5 interactive demos (Progressive Disclosure, Human-in-the-Loop, Multimodal Search, Ambient Intelligence, Predictive Anticipation) with proper dark mode classes for backgrounds, text, borders, and gradients. Fixed hero section backgrounds to use brand navy (#162036) in dark mode. Added dark mode support to logo carousel with white filter. Fixed CodeExampleBlock Preview/Code toggle with inverted color scheme (dark button on light, white button on dark) for proper visibility in both modes.
+
 ### Session 2025-12-02 15:14 (MacBook)
 - **Pattern:** Design System Refinements - Navbar & Guides Page
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Comprehensive design system audit inspired by fold.money. Changed default font from Inter to Satoshi via Fontshare CDN. Updated typography to use font-semibold for headings (replacing font-bold). Standardized all cards to rounded-2xl with shadow-card design token and border-gray-100. Changed all buttons to pill shape (rounded-full) with hover:scale-[1.02] animations. Updated hero sections across all pages to pt-32 md:pt-40 for consistent spacing. Updated 8 core files: PromptCard, FigmaPromptCard, CourseCard, and 5 page files (prompts, prompt detail, builder, guides, guide detail). Also updated About page with new content reflecting 28 patterns, 8 categories, and Tools & Resources section.
 
 ### Session 2025-11-22 13:37 (MacBook)
-- **Pattern:** Navbar & Industry Filter UX
-- **Status:** ✅ Completed
-- **Files Changed:** 9
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed navbar layout shift on page navigation by adding scrollbar-gutter: stable to CSS and fixing ThemeToggle hydration placeholder size (36px→40px). Added active/selected state to navbar links with background highlight and bold text. Removed framer-motion y-offset animation on Prompts page that caused perceived "jump". Added industry filtering feature: created industry-utils.ts with product-to-industry mapping (AI/ML, Developer Tools, Technology, Productivity, Entertainment, Design, Healthcare, Education, Automotive), IndustryFilterBar component with green theme, updated home page with industry state and filtering logic, and added Industries tab to mobile CategoryFilterSheet.
-
-### Session 2025-11-22 10:47 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

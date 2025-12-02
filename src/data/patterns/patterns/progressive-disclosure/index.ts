@@ -136,27 +136,27 @@ export default function ProgressiveDisclosureEmailDemo() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+    <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
       {/* Email header */}
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">{email.subject}</h3>
+      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{email.subject}</h3>
         <div className="flex justify-between mt-1">
-          <div className="text-sm text-gray-600">From: {email.sender}</div>
-          <div className="text-sm text-gray-500">{email.date}</div>
+          <div className="text-sm text-gray-600 dark:text-gray-300">From: {email.sender}</div>
+          <div className="text-sm text-gray-500 dark:text-gray-400">{email.date}</div>
         </div>
       </div>
-      
+
       {/* AI Summary Toggle Button - First level of disclosure */}
-      <div className="px-6 py-3 bg-blue-50 flex justify-between items-center">
+      <div className="px-6 py-3 bg-blue-50 dark:bg-blue-900/30 flex justify-between items-center">
         <div className="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500 dark:text-blue-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
           </svg>
-          <span className="text-sm font-medium text-blue-700">AI Assistant</span>
+          <span className="text-sm font-medium text-blue-700 dark:text-blue-300">AI Assistant</span>
         </div>
-        <button 
+        <button
           onClick={toggleSummary}
-          className="text-sm px-3 py-1 rounded-full bg-white border border-blue-300 text-blue-600 hover:bg-blue-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          className="text-sm px-3 py-1 rounded-full bg-white dark:bg-gray-700 border border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
         >
           {showDetailed ? "Hide AI Summary" : showSummary ? "Show More" : "Show AI Summary"}
         </button>
@@ -173,13 +173,13 @@ export default function ProgressiveDisclosureEmailDemo() {
             className="overflow-hidden"
           >
             {/* Basic summary - First level of content */}
-            <div className="px-6 py-3 bg-blue-50/50 border-t border-blue-100">
-              <p className="text-sm text-gray-700">
+            <div className="px-6 py-3 bg-blue-50/50 dark:bg-blue-900/20 border-t border-blue-100 dark:border-blue-800">
+              <p className="text-sm text-gray-700 dark:text-gray-300">
                 <span className="font-medium">Summary: </span>
                 {summary.shortSummary}
               </p>
             </div>
-            
+
             {/* Detailed summary - Second level of content */}
             <AnimatePresence>
               {showDetailed && (
@@ -191,36 +191,36 @@ export default function ProgressiveDisclosureEmailDemo() {
                   className="overflow-hidden"
                 >
                   {/* Detailed summary */}
-                  <div className="px-6 py-3 bg-blue-50/30 border-t border-blue-100">
-                    <p className="text-sm text-gray-700 mb-3">
+                  <div className="px-6 py-3 bg-blue-50/30 dark:bg-blue-900/10 border-t border-blue-100 dark:border-blue-800">
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                       <span className="font-medium">Detailed: </span>
                       {summary.detailedSummary}
                     </p>
-                    
+
                     {/* Key Points */}
                     <div className="mb-3">
-                      <h4 className="text-xs uppercase font-semibold text-gray-500 mb-2">Key Points</h4>
+                      <h4 className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-2">Key Points</h4>
                       <ul className="grid grid-cols-2 gap-2">
                         {summary.keypoints.map((point, index) => (
                           <li key={index} className="text-xs flex items-start">
-                            <svg className="h-3.5 w-3.5 text-blue-500 mr-1 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400 mr-1 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
                             </svg>
-                            <span className="text-gray-700">{point}</span>
+                            <span className="text-gray-700 dark:text-gray-300">{point}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
-                    
+
                     {/* Suggested Actions */}
                     <div>
-                      <h4 className="text-xs uppercase font-semibold text-gray-500 mb-2">Suggested Actions</h4>
+                      <h4 className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-2">Suggested Actions</h4>
                       <div className="flex flex-wrap gap-2">
                         {summary.suggestedActions.map((action, index) => (
-                          <button 
+                          <button
                             key={index}
                             onClick={() => handleOptionClick(action)}
-                            className="text-xs px-3 py-1.5 rounded-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            className="text-xs px-3 py-1.5 rounded-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                           >
                             {action}
                           </button>
@@ -234,18 +234,18 @@ export default function ProgressiveDisclosureEmailDemo() {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* Email content */}
       <div className="px-6 py-4">
-        <p className="text-sm text-gray-700 whitespace-pre-line">{email.content}</p>
+        <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">{email.content}</p>
       </div>
-      
+
       {/* Email footer */}
-      <div className="px-6 py-3 bg-gray-50 border-t border-gray-200">
+      <div className="px-6 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
         <div className="flex gap-2">
           {email.attachments.map((attachment, index) => (
-            <div key={index} className="text-xs py-1 px-2 bg-gray-200 rounded flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-gray-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <div key={index} className="text-xs py-1 px-2 bg-gray-200 dark:bg-gray-600 rounded flex items-center text-gray-700 dark:text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd" />
               </svg>
               {attachment}
