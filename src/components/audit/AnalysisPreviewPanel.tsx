@@ -26,7 +26,7 @@ export function AnalysisPreviewPanel() {
         <ShieldCheckIcon className="w-4 h-4 text-text-tertiary" />
         <p className="text-sm text-text-tertiary">
           Checked against <span className="font-semibold">28 AI patterns</span> from{' '}
-          <span className="font-semibold">500+ products</span>
+          <span className="font-semibold">50+ products</span>
         </p>
       </div>
 

@@ -86,7 +86,7 @@ export default function AuditPage() {
 
       <div className="min-h-screen">
         {/* Full-Page Canvas with Right Sidebar */}
-        <div className="relative min-h-[600px] lg:h-[calc(100vh-64px)] flex">
+        <div className="relative min-h-[500px] md:min-h-[600px] md:h-[calc(100vh-64px)] flex flex-col md:flex-row">
           {/* Dark Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
 
@@ -103,8 +103,37 @@ export default function AuditPage() {
             />
           )}
 
-          {/* Resizable Layout - Canvas and Results/Preview Panel */}
-          <div className="flex-1 relative z-10 p-6 hidden lg:block">
+          {/* Mobile/Tablet Layout (below lg breakpoint) */}
+          <div className="flex-1 relative z-10 p-4 md:p-6 flex flex-col gap-4 lg:hidden">
+            {/* Upload Area */}
+            <div className="flex-shrink-0 bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative min-h-[300px] md:min-h-[400px]">
+              {/* Grid Pattern on Canvas */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
+              <CenterUpload
+                onImageUpload={handleImageUpload}
+                onClear={handleClear}
+                uploadedImage={uploadedImage}
+                uploadedFileName={uploadedFileName}
+                detectedDeviceType={detectedDeviceType}
+                isAnalyzing={isAnalyzing}
+              />
+            </div>
+
+            {/* Results Panel - Shows below upload on mobile */}
+            {(isAnalyzing || analysisResults) && (
+              <div className="flex-1 min-h-[400px]">
+                <ResultsPanel
+                  results={analysisResults}
+                  onNewAudit={handleClear}
+                  isAnalyzing={isAnalyzing}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Desktop Layout - Resizable Panels (lg and above) */}
+          <div className="flex-1 relative z-10 p-4 xl:p-6 hidden lg:block">
             <ResizablePanels
               leftPanel={
                 <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative">
@@ -136,9 +165,9 @@ export default function AuditPage() {
                   <AnalysisPreviewPanel />
                 )
               }
-              defaultRightWidth={550}
-              minRightWidth={400}
-              maxRightWidthPercent={0.7}
+              defaultRightWidth={480}
+              minRightWidth={380}
+              maxRightWidthPercent={0.6}
               preferWiderPanel={detectedDeviceType === 'mobile'}
             />
           </div>

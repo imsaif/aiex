@@ -9,15 +9,18 @@ import {
   ChevronUpIcon,
   PaperAirplaneIcon,
   MinusCircleIcon,
+  ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline';
 import { CheckBadgeIcon, SparklesIcon, ShieldCheckIcon } from '@heroicons/react/24/solid';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
+import { getPatternUrl } from '@/utils/pattern-links';
 
 // Designer-friendly analysis messages
 const ANALYSIS_MESSAGES = [
   "Scanning your interface...",
-  "Comparing against 500+ top AI products...",
+  "Comparing against 50+ top AI products...",
   "Checking design patterns and best practices...",
   "Analyzing visual hierarchy...",
   "Evaluating user flow clarity...",
@@ -257,32 +260,46 @@ function PatternCategorySection({
 
       {expanded && (
         <div className="px-4 pb-4 space-y-3">
-          {sortedPatterns.map((pattern) => (
-            <div key={pattern.id} className="bg-background-primary rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-base font-medium text-text-primary">{pattern.name}</span>
-                    {(status === 'weak' || status === 'missing') && pattern.priority !== 'none' && (
-                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                        pattern.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                        pattern.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                        'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
-                      }`}>
-                        {pattern.priority}
-                      </span>
+          {sortedPatterns.map((pattern) => {
+            const patternUrl = getPatternUrl(pattern.id);
+            return (
+              <div key={pattern.id} className="bg-background-primary rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      {patternUrl ? (
+                        <Link
+                          href={patternUrl}
+                          target="_blank"
+                          className="text-base font-medium text-accent-primary hover:underline inline-flex items-center gap-1 group"
+                        >
+                          {pattern.name}
+                          <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                        </Link>
+                      ) : (
+                        <span className="text-base font-medium text-text-primary">{pattern.name}</span>
+                      )}
+                      {(status === 'weak' || status === 'missing') && pattern.priority !== 'none' && (
+                        <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                          pattern.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                          pattern.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                          'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
+                        }`}>
+                          {pattern.priority}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-sm text-text-secondary leading-relaxed">{pattern.evidence}</p>
+                    {pattern.improvement && (status === 'weak' || status === 'missing') && (
+                      <div className="mt-3 p-3 bg-accent-subtle rounded-lg">
+                        <p className="text-sm text-accent-primary font-medium">💡 {pattern.improvement}</p>
+                      </div>
                     )}
                   </div>
-                  <p className="text-sm text-text-secondary leading-relaxed">{pattern.evidence}</p>
-                  {pattern.improvement && (status === 'weak' || status === 'missing') && (
-                    <div className="mt-3 p-3 bg-accent-subtle rounded-lg">
-                      <p className="text-sm text-accent-primary font-medium">💡 {pattern.improvement}</p>
-                    </div>
-                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
@@ -567,7 +584,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false }: Resul
         <ShieldCheckIcon className="w-4 h-4 text-accent-primary" />
         <p className="text-sm text-text-secondary">
           Checked against <span className="font-semibold text-text-primary">28 AI patterns</span> from{' '}
-          <span className="font-semibold text-text-primary">500+ products</span>
+          <span className="font-semibold text-text-primary">50+ products</span>
         </p>
       </div>
 
