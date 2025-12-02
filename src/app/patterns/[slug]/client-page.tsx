@@ -241,7 +241,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
                 </div>
               </div>
 
-              <div className="flex-1 p-6 md:p-8 bg-[#F0F1F5] bg-grain">
+              <div className="flex-1 p-6 md:p-8 bg-[#F0F1F5] dark:bg-gray-900 bg-grain">
                 <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-gray-300 dark:border-gray-600">
                   Design Considerations
                 </h3>

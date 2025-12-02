@@ -119,7 +119,7 @@ export default function Footer() {
   return (
     <footer className="bg-background-secondary border-t border-primary">
       {/* Newsletter Section - with hero background + grain */}
-      <section id="newsletter" className="py-24 md:py-32 bg-[#F0F1F5] bg-grain">
+      <section id="newsletter" className="py-24 md:py-32 bg-[#F0F1F5] dark:bg-gray-900 bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-4">
