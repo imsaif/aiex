@@ -186,7 +186,7 @@ export function InlineNewsletterSignup({
 
             {/* Trust Badge */}
             {(isHero || isPatternDetail) && (
-              <p className="text-xs text-text-tertiary/60 mt-4 text-center">
+              <p className="text-xs text-text-secondary mt-4 text-center">
                 Free • No spam • Unsubscribe anytime
               </p>
             )}

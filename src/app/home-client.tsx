@@ -108,7 +108,7 @@ export default function HomeClient() {
 
             {/* Company Logo Carousel - Social Proof Before CTA */}
             <div className="mb-16">
-              <p className="text-[9px] font-bold text-text-tertiary/70 uppercase tracking-tight mb-4">
+              <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                 Patterns used by leading companies
               </p>
               <CompanyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
