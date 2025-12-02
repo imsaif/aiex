@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-02 16:49 (MacBook)
+- **Pattern:** Audit Results - Product Examples & Chat Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Added product examples to pattern audit analysis results. Each detected pattern now shows up to 2 real-world product examples (ChatGPT, Notion, etc.) with images from the pattern database. Fixed chat panel auto-scroll issue where the entire page was scrolling when messages arrived; now only the messages container scrolls using scrollTop instead of scrollIntoView.
+
 ### Session 2025-12-02 16:07 (MacBook)
 - **Pattern:** Dark Mode Fixes - Pattern Demo Components
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed Tailwind v4 dark mode by adding @config directive to globals.css. Updated all border-gray-100 to border-gray-200 across 16 files for better visibility (inspired by Vercel). Redesigned FigmaPromptCard to "AI Design Prompt" with multi-tool support showing logos for Figma, Uizard, Cursor, Claude, Gemini, and Galileo AI. Added polished custom tooltips for tool logos. Removed card hover text lightening effect. Used black/white brand colors for prompt section header.
 
 ### Session 2025-11-24 09:07 (MacBook)
-- **Pattern:** Design System Audit & Consistency
-- **Status:** ✅ Completed
-- **Files Changed:** 19
-- **Tests Added/Modified:** 0
-- **Notes:** Comprehensive design system audit inspired by fold.money. Changed default font from Inter to Satoshi via Fontshare CDN. Updated typography to use font-semibold for headings (replacing font-bold). Standardized all cards to rounded-2xl with shadow-card design token and border-gray-100. Changed all buttons to pill shape (rounded-full) with hover:scale-[1.02] animations. Updated hero sections across all pages to pt-32 md:pt-40 for consistent spacing. Updated 8 core files: PromptCard, FigmaPromptCard, CourseCard, and 5 page files (prompts, prompt detail, builder, guides, guide detail). Also updated About page with new content reflecting 28 patterns, 8 categories, and Tools & Resources section.
-
-### Session 2025-11-22 13:37 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

@@ -20,12 +20,14 @@ export function ChatPanel({
   onFixPromptCopy,
 }: ChatPanelProps) {
   const [inputValue, setInputValue] = useState('');
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll chat container to bottom when new messages arrive (without scrolling the page)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   }, [session?.messages]);
 
   // Auto-resize textarea
@@ -82,7 +84,7 @@ export function ChatPanel({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
         {!session?.messages?.length ? (
           // Empty state with suggestions
           <div className="h-full flex flex-col items-center justify-center text-center px-4">
@@ -136,7 +138,6 @@ export function ChatPanel({
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </>
         )}
       </div>

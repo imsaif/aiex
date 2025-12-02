@@ -12,10 +12,13 @@ import {
   ArrowTopRightOnSquareIcon,
 } from '@heroicons/react/24/outline';
 import { CheckBadgeIcon, SparklesIcon, ShieldCheckIcon } from '@heroicons/react/24/solid';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
+import type { Example } from '@/types';
 import { getPatternUrl } from '@/utils/pattern-links';
+import { patterns as allPatternsData } from '@/data/patterns';
 
 // Designer-friendly analysis messages
 const ANALYSIS_MESSAGES = [
@@ -195,6 +198,20 @@ function CompactScore({ score, total }: { score: number; total: number }) {
   );
 }
 
+// Helper to get examples for a pattern by ID
+function getPatternExamples(patternId: string): Example[] {
+  const pattern = allPatternsData.find(p => p.id === patternId || p.slug === patternId);
+  if (!pattern) return [];
+  // Return first 2 examples that have images
+  return (pattern.content?.examples || [])
+    .filter(ex => ex.image || ex.imagePath)
+    .slice(0, 2)
+    .map(ex => ({
+      ...ex,
+      image: ex.image || ex.imagePath, // Normalize to single field
+    }));
+}
+
 // Pattern Category Section Component
 function PatternCategorySection({
   title,
@@ -202,12 +219,14 @@ function PatternCategorySection({
   patterns,
   status,
   defaultExpanded = false,
+  showExamples = false,
 }: {
   title: string;
   icon: React.ReactNode;
   patterns: (PatternResult & { id: string })[];
   status: 'good' | 'weak' | 'missing' | 'na';
   defaultExpanded?: boolean;
+  showExamples?: boolean;
 }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -262,6 +281,7 @@ function PatternCategorySection({
         <div className="px-4 pb-4 space-y-3">
           {sortedPatterns.map((pattern) => {
             const patternUrl = getPatternUrl(pattern.id);
+            const examples = showExamples ? getPatternExamples(pattern.id) : [];
             return (
               <div key={pattern.id} className="bg-background-primary rounded-lg p-4">
                 <div className="flex items-start gap-3">
@@ -293,6 +313,46 @@ function PatternCategorySection({
                     {pattern.improvement && (status === 'weak' || status === 'missing') && (
                       <div className="mt-3 p-3 bg-accent-subtle rounded-lg">
                         <p className="text-sm text-accent-primary font-medium">💡 {pattern.improvement}</p>
+                      </div>
+                    )}
+
+                    {/* Product Examples */}
+                    {examples.length > 0 && (
+                      <div className="mt-3">
+                        <div className="text-xs font-semibold text-text-secondary mb-2">
+                          {status === 'good'
+                            ? '✨ You\'re implementing this like:'
+                            : '📚 See how leading products do this:'}
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          {examples.map((example, index) => (
+                            <Link
+                              key={index}
+                              href={patternUrl || '#'}
+                              target="_blank"
+                              className="group block border border-border-primary rounded-lg overflow-hidden bg-background-secondary hover:border-accent-primary transition-all hover:scale-[1.02]"
+                            >
+                              {example.image && (
+                                <div className="h-16 overflow-hidden bg-background-secondary relative">
+                                  <Image
+                                    src={example.image}
+                                    alt={example.altText || example.title}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                  />
+                                </div>
+                              )}
+                              <div className="p-2">
+                                <div className="text-xs font-semibold text-text-primary truncate">
+                                  {example.title}
+                                </div>
+                                <div className="text-[10px] text-text-secondary line-clamp-1">
+                                  {example.description}
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -614,6 +674,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false }: Resul
             patterns={missingPatterns}
             status="missing"
             defaultExpanded={true}
+            showExamples={true}
           />
 
           {/* Weak Patterns - Expanded by default */}
@@ -623,6 +684,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false }: Resul
             patterns={weakPatterns}
             status="weak"
             defaultExpanded={true}
+            showExamples={true}
           />
 
           {/* Good Patterns - Collapsed by default */}
@@ -632,6 +694,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false }: Resul
             patterns={goodPatterns}
             status="good"
             defaultExpanded={false}
+            showExamples={true}
           />
 
           {/* Not Applicable - Collapsed by default */}
