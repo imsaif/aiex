@@ -61,8 +61,9 @@ export default function CompanyLogoCarousel({
   showLabel = false,
   className = '',
 }: CompanyLogoCarouselProps) {
-  // Get theme-aware filter for logos
-  const logoFilter = useThemeFilter('grayscale(100%)');
+  // Get theme-aware filter for logos - navy tint to match design system (#162036)
+  // brightness(0) makes it black, then invert + sepia + hue-rotate shifts to darker navy
+  const logoFilter = useThemeFilter('brightness(0) saturate(100%) invert(10%) sepia(50%) saturate(2000%) hue-rotate(200deg) brightness(85%) contrast(95%)');
 
   // Duplicate the companies array for seamless looping
   const doubledCompanies = [...companies, ...companies];
@@ -108,12 +109,11 @@ export default function CompanyLogoCarousel({
             key={`${company.name}-${index}`}
             className="flex-shrink-0 flex flex-col items-center justify-center"
           >
-            {/* Logo Image - grayscale with color on hover */}
+            {/* Logo Image - navy tint with original color on hover */}
             <img
               src={company.logo}
               alt={company.name}
-              className={`${sizeClasses[size]} w-auto object-contain opacity-50 hover:opacity-80 transition-all duration-300`}
-              style={{ filter: logoFilter }}
+              className={`${sizeClasses[size]} w-auto object-contain logo-navy`}
             />
 
             {/* Optional Label */}
@@ -126,7 +126,7 @@ export default function CompanyLogoCarousel({
         ))}
       </div>
 
-      {/* CSS for seamless scrolling - left to right */}
+      {/* CSS for seamless scrolling and logo styling */}
       <style jsx>{`
         @keyframes scroll {
           0% {
@@ -138,6 +138,15 @@ export default function CompanyLogoCarousel({
         }
         .animate-scroll {
           animation: scroll linear infinite;
+        }
+        .logo-navy {
+          filter: brightness(0) saturate(100%) invert(10%) sepia(50%) saturate(2000%) hue-rotate(200deg) brightness(85%) contrast(95%);
+          opacity: 0.5;
+          transition: all 0.3s ease;
+        }
+        .logo-navy:hover {
+          filter: none;
+          opacity: 1;
         }
       `}</style>
     </div>

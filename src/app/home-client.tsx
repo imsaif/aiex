@@ -92,8 +92,8 @@ export default function HomeClient() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section - Minimal & Spacious */}
-      <section className="pt-16 md:pt-20 pb-8 md:pb-12">
+      {/* Hero Section - Minimal & Spacious with neutral gray background + grain texture */}
+      <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Heading - Larger & More Prominent */}
@@ -102,40 +102,39 @@ export default function HomeClient() {
             </h1>
 
             {/* Subheading - More Space */}
-            <p className="text-xl md:text-2xl text-text-secondary mb-16">
+            <p className="text-2xl md:text-3xl text-text-secondary mb-12">
               Real examples. Best practices.
             </p>
+
+            {/* Company Logo Carousel - Social Proof Before CTA */}
+            <div className="mb-16">
+              <p className="text-[9px] font-bold text-text-tertiary/70 uppercase tracking-tight mb-4">
+                Patterns used by leading companies
+              </p>
+              <CompanyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
+            </div>
 
             {/* Inline Newsletter Signup - High Converting */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="mb-16"
             >
               <InlineNewsletterSignup variant="hero" />
             </motion.div>
-
-            {/* Company Logo Carousel - Social Proof After CTA */}
-            <div className="mt-12">
-              <p className="text-[9px] font-bold text-text-tertiary/70 uppercase tracking-tight mb-4">
-                Patterns used by leading companies
-              </p>
-              <CompanyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
-            </div>
           </div>
         </div>
       </section>
 
       {/* Main Content with Sidebar */}
-      <div id="patterns" className="max-w-7xl mx-auto px-6 pb-24">
+      <div id="patterns" className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
             <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
               <h3
-                className="font-semibold text-lg mb-4"
-                style={{ color: isDarkMode ? '#ffffff' : '#1e293b' }}
+                className="font-semibold text-xl mb-4"
+                style={{ color: isDarkMode ? '#ffffff' : '#162036' }}
               >
                 Categories
               </h3>
@@ -253,12 +252,12 @@ export default function HomeClient() {
                                   hover:shadow-card-hover hover:border-gray-200 transition-all duration-300 h-full
                                   flex flex-col">
                       {/* Title */}
-                      <h3 className="text-xl font-medium text-text-primary mb-4 transition-colors">
+                      <h3 className="text-lg font-semibold text-text-primary mb-4 transition-colors">
                         {pattern.title}
                       </h3>
 
                       {/* Description */}
-                      <p className="text-base text-text-secondary leading-relaxed line-clamp-3 flex-grow mb-8">
+                      <p className="text-lg text-text-secondary leading-relaxed line-clamp-3 flex-grow mb-8">
                         {pattern.description}
                       </p>
 
@@ -267,12 +266,12 @@ export default function HomeClient() {
 
                       {/* Top Metadata Row - Category & Status */}
                       <div className="flex items-center gap-2 mb-6">
-                        <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                        <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
                           {pattern.category}
                         </span>
                         {pattern.status === 'in-progress' && (
                           <span
-                            className="px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 cursor-help"
+                            className="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 cursor-help"
                             title="Work in Progress: This pattern is not fully documented yet. Documentation and code examples are being refined."
                             aria-label="Work in Progress pattern"
                           >
@@ -284,7 +283,7 @@ export default function HomeClient() {
                       {/* Used By Logos Section */}
                       {getProductsForPattern(pattern).filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 0 && (
                         <div className="flex items-center gap-3">
-                          <span className="text-xs text-text-secondary font-medium">Used by:</span>
+                          <span className="text-sm text-text-secondary font-medium">Used by:</span>
                           <div className="flex items-center gap-2">
                             {getProductsForPattern(pattern).filter(p => p !== 'Superhuman').slice(0, 3).map((product) => {
                               const logoUrl = getProductLogoUrl(product);

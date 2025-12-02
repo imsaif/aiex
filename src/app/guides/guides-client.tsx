@@ -87,8 +87,8 @@ export default function GuidesClient() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="pt-12 md:pt-16 pb-12 md:pb-16">
+      {/* Hero Section - with background + grain */}
+      <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}

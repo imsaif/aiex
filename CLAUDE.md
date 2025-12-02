@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-02 12:05 (MacBook)
+- **Pattern:** Design System Typography & Layout Refinements
+- **Status:** ✅ Completed
+- **Files Changed:** 11
+- **Tests Added/Modified:** 0
+- **Notes:** Refined text colors inspired by Fold.money with navy headings (#162036) and readable slate body text (#20294C). Updated company logo carousel to use navy tint filter with hover-to-reveal original colors. Fixed navbar layout shift by adding invisible bold text spacer and always-present transparent border. Aligned prompt/pattern page structures for consistent navbar positioning. Standardized card typography (text-lg font-semibold titles, text-sm py-1.5 category badges). Added proper spacing between hero sections and content areas across prompts and guides pages.
+
 ### Session 2025-11-26 18:03 (MacBook)
 - **Pattern:** Design System Color Refresh - Navy Aesthetic
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed dark/light mode styling for AI tool selector and "What do you need?" chips using JS-controlled styles instead of unreliable Tailwind dark: variants. Selected items now show white bg/black text in dark mode, black bg/white text in light mode. Fixed logo visibility by inverting black SVGs in dark mode. Added clickable tech stack chips (React, Next.js, Tailwind, Shadcn, etc.) to help designers communicate technical context without typing jargon. Updated prompt generator to include tech stack in generated prompts. Fixed Copy/Download buttons appearing after generation by fixing useEffect dependency bug. Added auto-scroll to prompt content during typewriter effect. Simplified "Describe Your Project" field to be designer-friendly with guiding tip.
 
 ### Session 2025-11-21 10:11 (MacBook)
-- **Pattern:** Prompt Builder - Designer-Focused UX Improvements
-- **Status:** ✅ Completed
-- **Files Changed:** 16 (11 new files, 5 modified)
-- **Tests Added/Modified:** 0
-- **Notes:** Built complete prompt builder feature for designers with intentional generation flow. Created progressive summary card that fills in as users make selections (AI tool logo, use case icon, design context, specific task). Implemented "Start Over" button always visible across all states. Removed all default selections to make choices intentional. Added brand logos (Claude, Cursor) and contextual icons (wrench for New Project, cube for Component, lightbulb for Get Help, paintbrush for design context). Built typewriter effect (20ms/char) with inline cursor for generated prompts. Complete page includes: AIToolSelector (6 tools with logos), PromptBuilderForm (4 cards: tool, purpose, context, task), PromptPreview (3 states: empty with placeholders, generating with shimmer, generated with typewriter), PromptTemplates (8 quick-start templates), and prompt generation utilities supporting multiple file formats (.cursorrules, .clinerules, CLAUDE.md, .txt).
-
-### Session 2025-11-20 11:35 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
