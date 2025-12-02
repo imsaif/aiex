@@ -9,6 +9,7 @@ import Footer from '@/components/layout/Footer';
 import { ScoreCircle } from '@/components/audit/ScoreCircle';
 import { IssueCard } from '@/components/audit/IssueCard';
 import { PatternCard } from '@/components/audit/PatternCard';
+import { getPatternExamplesLimited } from '@/data/utils/pattern-utils';
 import type { AnalysisResults } from '@/types/audit';
 
 export default function ResultsPage() {
@@ -133,6 +134,7 @@ export default function ResultsPage() {
                       key={pattern.id}
                       pattern={pattern}
                       context={results.context}
+                      examples={getPatternExamplesLimited(pattern.id, 2)}
                       onImplementationClick={() => {}}
                     />
                   ))}
