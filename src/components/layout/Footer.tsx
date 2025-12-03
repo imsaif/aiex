@@ -163,7 +163,7 @@ export default function Footer() {
                 </p>
               )}
               {status === 'error' && (
-                <p className="mt-3 text-sm text-red-500 dark:text-red-400">
+                <p className="mt-3 text-sm text-status-error">
                   {errorMessage}
                 </p>
               )}
@@ -217,7 +217,7 @@ export default function Footer() {
                 </span>
                 <h3 className="text-2xl font-semibold text-text-primary">aiux</h3>
               </div>
-              <p className="text-text-secondary text-sm leading-relaxed">
+              <p className="text-text-secondary text-base leading-relaxed">
                 Discover, Compare, and Leverage the Best AI Design Patterns
               </p>
             </div>
@@ -226,14 +226,14 @@ export default function Footer() {
             <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* RESOURCES Column */}
               <div>
-                <h4 className="text-sm font-semibold text-text-primary mb-5">
+                <h4 className="text-base font-semibold text-text-primary mb-5">
                   Resources
                 </h4>
                 <ul className="space-y-3">
                   <li>
                     <a
                       href="/#patterns"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       All Patterns
                     </a>
@@ -241,7 +241,7 @@ export default function Footer() {
                   <li>
                     <a
                       href="/#patterns"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Browse Categories
                     </a>
@@ -251,7 +251,7 @@ export default function Footer() {
                       href="https://github.com/imsaif/aiex/blob/master/CONTRIBUTING.md"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Contribute
                     </a>
@@ -259,7 +259,7 @@ export default function Footer() {
                   <li>
                     <a
                       href="#newsletter"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Newsletter
                     </a>
@@ -269,7 +269,7 @@ export default function Footer() {
                       href="https://github.com/imsaif/aiex?tab=readme-ov-file#ai-design-patterns"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Documentation
                     </a>
@@ -277,7 +277,7 @@ export default function Footer() {
                   <li>
                     <a
                       href="mailto:imranrizom@gmail.com"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Submit Feedback
                     </a>
@@ -287,14 +287,14 @@ export default function Footer() {
 
               {/* COMPANY Column */}
               <div>
-                <h4 className="text-sm font-semibold text-text-primary mb-5">
+                <h4 className="text-base font-semibold text-text-primary mb-5">
                   Company
                 </h4>
                 <ul className="space-y-3">
                   <li>
                     <a
                       href="/about"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       About Us
                     </a>
@@ -302,7 +302,7 @@ export default function Footer() {
                   <li>
                     <a
                       href="/privacy"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Privacy Policy
                     </a>
@@ -310,7 +310,7 @@ export default function Footer() {
                   <li>
                     <a
                       href="/terms"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Terms of Service
                     </a>
@@ -318,7 +318,7 @@ export default function Footer() {
                   <li>
                     <a
                       href="mailto:imranrizom@gmail.com"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Contact
                     </a>
@@ -328,7 +328,7 @@ export default function Footer() {
 
               {/* LINKS Column */}
               <div>
-                <h4 className="text-sm font-semibold text-text-primary mb-5">
+                <h4 className="text-base font-semibold text-text-primary mb-5">
                   Links
                 </h4>
                 <ul className="space-y-3">
@@ -337,7 +337,7 @@ export default function Footer() {
                       href="https://www.imranaidesign.com/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Portfolio
                     </a>
@@ -347,7 +347,7 @@ export default function Footer() {
                       href="https://github.com/imsaif"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       GitHub
                     </a>
@@ -357,7 +357,7 @@ export default function Footer() {
                       href="https://www.linkedin.com/in/imsaif/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       LinkedIn
                     </a>
@@ -367,7 +367,7 @@ export default function Footer() {
                       href="https://github.com/imsaif/aiex"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       More Resources
                     </a>

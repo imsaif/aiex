@@ -9,9 +9,30 @@ interface ResizablePanelsProps {
   minRightWidth?: number;
   maxRightWidthPercent?: number;
   storageKey?: string;
-  /** When true, uses a wider default for the right panel (better for narrow content like mobile screenshots) */
+  /** Device type of uploaded screenshot - controls panel sizing */
+  deviceType?: 'mobile' | 'desktop';
+  /** @deprecated Use deviceType instead. When true, uses a wider default for the right panel */
   preferWiderPanel?: boolean;
 }
+
+// Width configurations based on device type
+const DEVICE_CONFIG = {
+  mobile: {
+    defaultWidth: 600,      // Wider right panel for mobile (narrow canvas needed)
+    minWidth: 450,          // Higher minimum since mobile frame is small
+    maxPercent: 0.7,        // Allow up to 70% for results
+  },
+  desktop: {
+    defaultWidth: 480,      // Narrower right panel for desktop (larger canvas needed)
+    minWidth: 380,          // Lower minimum since desktop frame needs space
+    maxPercent: 0.5,        // Only allow up to 50% to preserve canvas space
+  },
+  default: {
+    defaultWidth: 480,      // Before upload, balanced default
+    minWidth: 380,
+    maxPercent: 0.6,
+  },
+};
 
 export function ResizablePanels({
   leftPanel,
@@ -20,44 +41,53 @@ export function ResizablePanels({
   minRightWidth = 350,
   maxRightWidthPercent = 0.6,
   storageKey = 'audit-panel-width',
+  deviceType,
   preferWiderPanel = false,
 }: ResizablePanelsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Calculate smart default based on content type
-  // Mobile screenshots are narrow, so give even more room to results panel
-  // Desktop screenshots still benefit from a wider panel since image is already in a frame
-  const smartDefaultWidth = preferWiderPanel ? 650 : 550;
+  // Get width configuration based on device type
+  // If deviceType is provided, use it; otherwise fall back to preferWiderPanel for backwards compatibility
+  const config = deviceType
+    ? DEVICE_CONFIG[deviceType]
+    : (preferWiderPanel ? DEVICE_CONFIG.mobile : DEVICE_CONFIG.default);
+
+  const smartDefaultWidth = config.defaultWidth;
+  const effectiveMinWidth = config.minWidth;
+  const effectiveMaxPercent = config.maxPercent;
 
   // Always initialize with the default to avoid hydration mismatch
   const [rightWidth, setRightWidth] = useState(smartDefaultWidth);
   const [isHydrated, setIsHydrated] = useState(false);
 
+  // Determine storage key based on device type
+  const deviceStorageKey = deviceType
+    ? `${storageKey}-${deviceType}`
+    : (preferWiderPanel ? `${storageKey}-mobile` : `${storageKey}-desktop`);
+
   // Load from localStorage after hydration
   useEffect(() => {
     setIsHydrated(true);
-    const deviceStorageKey = preferWiderPanel ? `${storageKey}-mobile` : `${storageKey}-desktop`;
     const stored = localStorage.getItem(deviceStorageKey);
 
     if (stored) {
       const parsed = parseInt(stored, 10);
-      if (!isNaN(parsed) && parsed >= minRightWidth) {
+      if (!isNaN(parsed) && parsed >= effectiveMinWidth) {
         setRightWidth(parsed);
         return;
       }
     }
     // No stored preference, use smart default
     setRightWidth(smartDefaultWidth);
-  }, [preferWiderPanel, storageKey, minRightWidth, smartDefaultWidth]);
+  }, [deviceStorageKey, effectiveMinWidth, smartDefaultWidth]);
 
   // Persist width to localStorage (device-specific) - only after hydration
   useEffect(() => {
     if (isHydrated && !isDragging) {
-      const deviceStorageKey = preferWiderPanel ? `${storageKey}-mobile` : `${storageKey}-desktop`;
       localStorage.setItem(deviceStorageKey, rightWidth.toString());
     }
-  }, [rightWidth, isDragging, storageKey, preferWiderPanel, isHydrated]);
+  }, [rightWidth, isDragging, deviceStorageKey, isHydrated]);
 
   // Handle drag start
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -74,9 +104,9 @@ export function ResizablePanels({
 
       const containerRect = containerRef.current.getBoundingClientRect();
       const newRightWidth = containerRect.right - e.clientX;
-      const maxWidth = containerRect.width * maxRightWidthPercent;
+      const maxWidth = containerRect.width * effectiveMaxPercent;
 
-      setRightWidth(Math.min(Math.max(newRightWidth, minRightWidth), maxWidth));
+      setRightWidth(Math.min(Math.max(newRightWidth, effectiveMinWidth), maxWidth));
     };
 
     const handleMouseUp = () => {
@@ -96,7 +126,7 @@ export function ResizablePanels({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, minRightWidth, maxRightWidthPercent]);
+  }, [isDragging, effectiveMinWidth, effectiveMaxPercent]);
 
   return (
     <div ref={containerRef} className="flex h-full w-full">

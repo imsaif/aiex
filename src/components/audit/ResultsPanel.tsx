@@ -37,6 +37,7 @@ interface ResultsPanelProps {
   results: AnalysisResults | null;
   onNewAudit: () => void;
   isAnalyzing?: boolean;
+  isDemoMode?: boolean;
 }
 
 interface ChatMessage {
@@ -373,7 +374,7 @@ const SUGGESTIONS = [
   'Explain this score',
 ];
 
-export function ResultsPanel({ results, onNewAudit, isAnalyzing = false }: ResultsPanelProps) {
+export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoMode = false }: ResultsPanelProps) {
   const [chatMode, setChatMode] = useState(false); // false = analysis view, true = chat view
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -632,10 +633,20 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false }: Resul
   // ANALYSIS VIEW (default)
   return (
     <aside className="w-full h-full flex-shrink-0 p-6 bg-background-primary/95 backdrop-blur-sm rounded-2xl shadow-lg border border-border-primary/50 flex flex-col overflow-hidden">
+      {/* Demo Mode Banner */}
+      {isDemoMode && (
+        <div className="flex items-center justify-center gap-2 mb-4 py-2 px-4 bg-accent-subtle rounded-full">
+          <SparklesIcon className="w-4 h-4 text-accent-primary" />
+          <p className="text-sm text-accent-primary font-medium">
+            Demo Mode — Upload your own screenshot to get a real analysis
+          </p>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center gap-3 mb-3">
         <CheckBadgeIcon className="w-7 h-7 text-status-success" />
-        <span className="text-lg font-semibold text-text-primary">Analysis Complete</span>
+        <span className="text-lg font-semibold text-text-primary">{isDemoMode ? 'Sample Analysis' : 'Analysis Complete'}</span>
         <CompactScoreInline score={results.score} total={maxScore} />
       </div>
 

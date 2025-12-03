@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import {
   BeakerIcon,
   ExclamationTriangleIcon,
@@ -20,11 +21,11 @@ export function WelcomeModal({ onStartAudit }: WelcomeModalProps) {
       <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]" />
 
       {/* Modal Content - wider with more breathing room */}
-      <div className="relative bg-background-primary rounded-3xl shadow-2xl p-10 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white dark:bg-surface-elevated rounded-3xl shadow-2xl p-10 max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-transparent dark:border-border-primary">
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <BeakerIcon className="w-7 h-7 text-accent-primary" />
+            <BeakerIcon className="w-7 h-7 text-accent-primary dark:text-white" />
             <h2 className="text-3xl font-extrabold" style={{ color: 'var(--text-hero)' }}>AI UX Design Audit</h2>
           </div>
           <p className="text-base text-text-secondary leading-relaxed max-w-xl mx-auto">
@@ -35,8 +36,8 @@ export function WelcomeModal({ onStartAudit }: WelcomeModalProps) {
         {/* Logo Carousel - gentle, subtle with padding on sides */}
         <div className="mb-8 mx-6 overflow-hidden relative">
           {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-background-primary to-transparent z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background-primary to-transparent z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white dark:from-surface-elevated to-transparent z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white dark:from-surface-elevated to-transparent z-10" />
           <CompanyLogoCarousel
             companies={companyLogos}
             size="xs"
@@ -71,14 +72,14 @@ export function WelcomeModal({ onStartAudit }: WelcomeModalProps) {
         <button
           type="button"
           onClick={onStartAudit}
-          className="w-full px-8 py-4 bg-accent-primary text-white text-lg font-semibold rounded-full hover:bg-accent-hover hover:scale-[1.02] transition-all active:scale-[0.98] shadow-lg cursor-pointer"
+          className="w-full px-8 py-4 bg-accent-primary text-lg font-semibold rounded-full hover:bg-accent-hover transition-colors shadow-lg cursor-pointer"
         >
-          Start Audit
+          <span className="text-white">Start Audit</span>
         </button>
 
         {/* Footer note */}
         <p className="text-sm text-text-tertiary text-center mt-5">
-          Upload a screenshot and get instant AI-powered feedback
+          Just upload a screenshot to get started
         </p>
       </div>
     </div>

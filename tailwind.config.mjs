@@ -12,6 +12,7 @@ export default {
           primary: 'var(--background-primary)',
           secondary: 'var(--background-secondary)',
           tertiary: 'var(--background-tertiary)',
+          grain: 'var(--background-grain)',
         },
         surface: {
           primary: 'var(--surface-primary)',

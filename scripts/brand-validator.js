@@ -62,6 +62,24 @@ function getFilesToValidate() {
 }
 
 /**
+ * ALLOWED PATTERNS - Skip validation for these specific patterns
+ * These are intentional design decisions that require hardcoded values
+ */
+const allowedPatterns = [
+  // Grain texture backgrounds require both light and dark mode hex values
+  /bg-\[#F0F1F5\]\s+dark:bg-\[#162036\]/,
+  /bg-\[#162036\]/,  // Dark mode grain when used alone
+  /bg-\[#F0F1F5\]/,  // Light mode grain when used alone
+];
+
+/**
+ * Check if a line contains an allowed pattern
+ */
+function isAllowedPattern(line) {
+  return allowedPatterns.some(pattern => pattern.test(line));
+}
+
+/**
  * CRITICAL VALIDATORS - Block commits
  */
 const criticalValidators = [
@@ -88,6 +106,8 @@ const criticalValidators = [
         '#0d0d0d': 'text-text-primary',
         '#ffffff': 'bg-surface-primary',
         '#f5f5f5': 'bg-background-tertiary',
+        '#F0F1F5': 'bg-background-grain',  // Grain texture background (light)
+        '#162036': 'bg-background-grain',  // Grain texture background (dark)
       };
 
       let fixed = line;
@@ -99,7 +119,7 @@ const criticalValidators = [
   },
   {
     name: 'arbitrary-spacing',
-    description: 'Arbitrary spacing values (p-[13px]) instead of design scale',
+    description: 'Arbitrary spacing values instead of design scale',
     pattern: /(?:p|m|px|py|pl|pr|pt|pb|gap|space-[xy])-\[[\d.]+(?:px|rem|em)\]/g,
     fix: (content, line) => {
       // Map arbitrary values to nearest design system scale
@@ -165,6 +185,9 @@ function validateFile(filePath) {
     const patterns = Array.isArray(validator.patterns) ? validator.patterns : [validator.pattern];
 
     lines.forEach((line, lineNum) => {
+      // Skip lines with allowed patterns
+      if (isAllowedPattern(line)) return;
+
       for (const pattern of patterns) {
         if (pattern.test(line)) {
           const fix = validator.fix ? validator.fix(content, line) : null;

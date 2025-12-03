@@ -41,7 +41,7 @@ export default function ScrollToTop({
     <AnimatePresence>
       {isVisible && (
         <motion.button
-          className="fixed z-50 p-3 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="fixed z-50 p-3 rounded-full bg-accent-primary text-white shadow-lg hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 cursor-pointer"
           style={{ bottom, right }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

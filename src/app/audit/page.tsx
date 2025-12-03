@@ -3,24 +3,34 @@
 import { useState, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { WelcomeModal } from '@/components/audit/WelcomeModal';
 import { ResultsPanel } from '@/components/audit/ResultsPanel';
 import { CenterUpload } from '@/components/audit/CenterUpload';
 import { SocialProof } from '@/components/audit/SocialProof';
 import { ResizablePanels } from '@/components/audit/ResizablePanels';
-import { AnalysisPreviewPanel } from '@/components/audit/AnalysisPreviewPanel';
+import { WelcomePanel } from '@/components/audit/WelcomePanel';
 import { UsageLimitModal } from '@/components/audit/UsageLimitModal';
+import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import type { AnalysisResults, DeviceType } from '@/types/audit';
 
 export default function AuditPage() {
   // State
-  const [auditStarted, setAuditStarted] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
   const [detectedDeviceType, setDetectedDeviceType] = useState<DeviceType>('desktop');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
   const [rateLimitError, setRateLimitError] = useState<string | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [showDeviceFrame, setShowDeviceFrame] = useState(true);
+
+  // Handle demo mode
+  const handleStartDemo = useCallback(() => {
+    setIsDemoMode(true);
+    setUploadedImage(DEMO_SCREENSHOT_FALLBACK);
+    setUploadedFileName('demo-chat-interface.png');
+    setDetectedDeviceType('desktop');
+    setAnalysisResults(DEMO_ANALYSIS_RESULTS);
+  }, []);
 
   // Handle image upload - immediately start analysis
   const handleImageUpload = useCallback(async (base64: string, fileName: string, deviceType: DeviceType) => {
@@ -29,6 +39,7 @@ export default function AuditPage() {
     setDetectedDeviceType(deviceType);
     setIsAnalyzing(true);
     setRateLimitError(null); // Clear any previous rate limit error
+    setShowDeviceFrame(true); // Reset frame visibility on new upload
 
     try {
       // Use defaults - AI will detect interface type, chat can clarify later
@@ -78,6 +89,8 @@ export default function AuditPage() {
     setDetectedDeviceType('desktop');
     setAnalysisResults(null);
     setIsAnalyzing(false);
+    setIsDemoMode(false);
+    setShowDeviceFrame(true);
   }, []);
 
   return (
@@ -89,11 +102,6 @@ export default function AuditPage() {
         <div className="relative min-h-[500px] md:min-h-[600px] md:h-[calc(100vh-64px)] flex flex-col md:flex-row">
           {/* Dark Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
-
-          {/* Welcome Modal - overlays above the fold only */}
-          {!auditStarted && (
-            <WelcomeModal onStartAudit={() => setAuditStarted(true)} />
-          )}
 
           {/* Rate Limit Modal */}
           {rateLimitError && (
@@ -113,10 +121,13 @@ export default function AuditPage() {
               <CenterUpload
                 onImageUpload={handleImageUpload}
                 onClear={handleClear}
+                onStartDemo={handleStartDemo}
                 uploadedImage={uploadedImage}
                 uploadedFileName={uploadedFileName}
                 detectedDeviceType={detectedDeviceType}
                 isAnalyzing={isAnalyzing}
+                showDeviceFrame={showDeviceFrame}
+                onToggleFrame={() => setShowDeviceFrame(!showDeviceFrame)}
               />
             </div>
 
@@ -127,6 +138,7 @@ export default function AuditPage() {
                   results={analysisResults}
                   onNewAudit={handleClear}
                   isAnalyzing={isAnalyzing}
+                  isDemoMode={isDemoMode}
                 />
               </div>
             )}
@@ -147,10 +159,13 @@ export default function AuditPage() {
                   <CenterUpload
                     onImageUpload={handleImageUpload}
                     onClear={handleClear}
+                    onStartDemo={handleStartDemo}
                     uploadedImage={uploadedImage}
                     uploadedFileName={uploadedFileName}
                     detectedDeviceType={detectedDeviceType}
                     isAnalyzing={isAnalyzing}
+                    showDeviceFrame={showDeviceFrame}
+                    onToggleFrame={() => setShowDeviceFrame(!showDeviceFrame)}
                   />
                 </div>
               }
@@ -160,15 +175,13 @@ export default function AuditPage() {
                     results={analysisResults}
                     onNewAudit={handleClear}
                     isAnalyzing={isAnalyzing}
+                    isDemoMode={isDemoMode}
                   />
                 ) : (
-                  <AnalysisPreviewPanel />
+                  <WelcomePanel />
                 )
               }
-              defaultRightWidth={480}
-              minRightWidth={380}
-              maxRightWidthPercent={0.6}
-              preferWiderPanel={detectedDeviceType === 'mobile'}
+              deviceType={uploadedImage ? detectedDeviceType : undefined}
             />
           </div>
         </div>
