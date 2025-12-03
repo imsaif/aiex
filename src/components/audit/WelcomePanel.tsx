@@ -17,7 +17,7 @@ import { companyLogos } from '@/data/company-logos';
  */
 export function WelcomePanel() {
   return (
-    <aside className="w-full h-full flex-shrink-0 p-6 bg-white dark:bg-background-primary rounded-2xl shadow-lg border border-border-primary/50 flex flex-col">
+    <aside className="w-full h-full flex-shrink-0 p-4 xl:p-6 bg-white dark:bg-background-primary rounded-2xl shadow-lg border border-border-primary/50 flex flex-col overflow-hidden">
       {/* Header Container */}
       <div className="p-6 rounded-2xl bg-background-grain border border-border-primary/50 mb-4">
         {/* Header */}
@@ -55,7 +55,7 @@ export function WelcomePanel() {
       </div>
 
       {/* How It Works - Contained Box */}
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex-1 flex flex-col justify-center overflow-y-auto min-h-0">
         <div className="p-6 rounded-2xl bg-background-grain border border-border-primary/50">
           <h3 className="text-base font-semibold text-text-tertiary mb-6 uppercase tracking-wide text-center">How It Works</h3>
 

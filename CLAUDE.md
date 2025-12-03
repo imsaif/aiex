@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-03 17:24 (MacBook)
+- **Pattern:** Audit Page - Responsive Overflow Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed vertical overflow issue where the right panel (WelcomePanel/ResultsPanel) extended beyond viewport into the SocialProof section on Windows laptops. Added proper height constraints (lg:h-[calc(100vh-64px)], lg:max-h-[calc(100vh-64px)]) and overflow-hidden to parent containers. Added min-h-0 to flex children for proper scroll behavior. Updated "Suggest Feature" link to use featurebase URL (https://aiuxdesign.featurebase.app/).
+
 ### Session 2025-12-03 15:05 (MacBook)
 - **Pattern:** Audit Tool - WelcomePanel Redesign
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Created inline newsletter signup component to replace modal-only approach, improving conversion from 0.23% toward 5-10% target. Simplified hero section by removing "28 AI Patterns" chip, "or download handbook" link, and increasing spacing (mb-6→mb-9, mb-10→mb-16) for minimal aesthetic. Moved company logo carousel below email form as social proof. Fixed logo carousel by switching from CSS animation to Framer Motion with right-to-left scroll (animate={{ x: [-2000, 0] }}), ensuring all 17 logos display continuously. Added Midjourney logo to local assets. Slowed carousel duration from 30s to 100s for very slow, ambient animation. Newsletter form now sends handbook PDF immediately upon signup using 'handbook' source.
 
 ### Session 2025-11-25 10:53 (MacBook)
-- **Pattern:** Pattern Audit Tool - WIP Chip
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Added "Work in Progress" chip to the audit landing page hero section. The chip displays above the main heading with a construction emoji (🚧), pill-shaped design, and accent-subtle background to clearly indicate the feature is under development.
-
-### Session 2025-11-25 10:06 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

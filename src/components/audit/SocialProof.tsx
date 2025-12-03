@@ -371,7 +371,9 @@ export function SocialProof() {
                   <div className="flex items-center justify-between">
                     <span className="text-base text-text-primary">Have an idea?</span>
                     <a
-                      href="mailto:hello@aiux.design?subject=Feature%20Suggestion"
+                      href="https://aiuxdesign.featurebase.app/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-border-primary bg-background-secondary text-sm text-text-secondary hover:border-accent-primary hover:text-accent-primary transition-colors"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

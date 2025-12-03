@@ -163,7 +163,7 @@ export function ResizablePanels({
       {/* Right Panel (Results) */}
       <div
         style={{ width: rightWidth }}
-        className="flex-shrink-0 will-change-[width]"
+        className="flex-shrink-0 will-change-[width] h-full overflow-hidden"
       >
         {rightPanel}
       </div>

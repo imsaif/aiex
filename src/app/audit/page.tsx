@@ -99,7 +99,7 @@ export default function AuditPage() {
 
       <div className="min-h-screen">
         {/* Full-Page Canvas with Right Sidebar */}
-        <div className="relative min-h-[500px] md:min-h-[600px] md:h-[calc(100vh-64px)] flex flex-col md:flex-row">
+        <div className="relative min-h-[500px] md:min-h-[600px] lg:h-[calc(100vh-64px)] lg:max-h-[calc(100vh-64px)] flex flex-col md:flex-row overflow-hidden">
           {/* Dark Gradient Background */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
 
@@ -145,7 +145,7 @@ export default function AuditPage() {
           </div>
 
           {/* Desktop Layout - Resizable Panels (lg and above) */}
-          <div className="flex-1 relative z-10 p-4 xl:p-6 hidden lg:block">
+          <div className="flex-1 relative z-10 p-4 xl:p-6 hidden lg:block h-full overflow-hidden">
             <ResizablePanels
               leftPanel={
                 <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-hidden relative">

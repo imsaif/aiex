@@ -562,7 +562,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
           )}
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto space-y-5 mb-5 min-h-[100px]">
+          <div className="flex-1 overflow-y-auto space-y-5 mb-5 min-h-0">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -667,7 +667,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
       )}
 
       {/* Full Analysis Results - Scrollable */}
-      <div className="flex-1 overflow-y-auto mb-5">
+      <div className="flex-1 overflow-y-auto mb-5 min-h-0">
         {/* Score Circle */}
         <div className="text-center mb-6">
           <CompactScore score={results.score} total={maxScore} />
