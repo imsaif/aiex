@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-08 19:46 (MacBook)
+- **Pattern:** Hotjar Analytics Integration
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Added Hotjar tracking code (Site ID: 6596133) to the root layout for aiuxdesign.guide. Script placed in head section using dangerouslySetInnerHTML for inline execution with async loading.
+
 ### Session 2025-12-08 16:15 (MacBook)
 - **Pattern:** Critical Security Patch - Next.js CVE-2025-55182
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Comprehensive design system update replacing all black colors with sophisticated navy (#1e293b, slate-800). Simplified navigation by removing sticky positioning, reducing padding (py-5→py-3→py-5), and implementing minimal active states with bottom borders and bold text. Updated hero heading to extrabold with larger size and new --text-hero token. Replaced entire color system: --text-primary, --accent-primary, all button colors (bg-black→bg-accent-primary), shadow system (rgba black→rgba navy), and --accent-hover (#262626→#475569). Fixed 24+ components and inline buttons across app to use design tokens instead of hardcoded colors. Added cursor-pointer to newsletter button and theme toggle. Result: Softer, more sophisticated aesthetic with 12.6:1 contrast (AAA), consistent navy throughout text/buttons/shadows, and improved visual hierarchy.
 
 ### Session 2025-11-26 14:56 (MacBook)
-- **Pattern:** Pattern Detail Page Newsletter Integration
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Added email collection to pattern detail pages with contextual "Want More Patterns Like This?" messaging. Enhanced InlineNewsletterSignup component with pattern-detail variant, localStorage-based hiding after subscription, and custom heading/subheading props. Placed newsletter section after Guidelines & Considerations for optimal conversion timing. Removed Related Guides section to reduce clutter. All newsletter CTAs (hero, pattern detail, footer) now use same API with 'handbook' source sending PDF + newsletter signup, and hide across all pages once user subscribes via localStorage check.
-
-### Session 2025-11-26 14:20 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
