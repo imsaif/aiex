@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-08 20:03 (MacBook)
+- **Pattern:** Footer Attribution - Claude Code
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Added "Built with Claude Code by Anthropic" attribution to footer under the aiux branding section. Includes Anthropic logo SVG icon and link to claude.ai/code. Updated text color from tertiary to secondary for better accessibility.
+
 ### Session 2025-12-08 19:46 (MacBook)
 - **Pattern:** Hotjar Analytics Integration
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Refined text colors inspired by Fold.money with navy headings (#162036) and readable slate body text (#20294C). Updated company logo carousel to use navy tint filter with hover-to-reveal original colors. Fixed navbar layout shift by adding invisible bold text spacer and always-present transparent border. Aligned prompt/pattern page structures for consistent navbar positioning. Standardized card typography (text-lg font-semibold titles, text-sm py-1.5 category badges). Added proper spacing between hero sections and content areas across prompts and guides pages.
 
 ### Session 2025-11-26 18:03 (MacBook)
-- **Pattern:** Design System Color Refresh - Navy Aesthetic
-- **Status:** ✅ Completed
-- **Files Changed:** 37
-- **Tests Added/Modified:** 0
-- **Notes:** Comprehensive design system update replacing all black colors with sophisticated navy (#1e293b, slate-800). Simplified navigation by removing sticky positioning, reducing padding (py-5→py-3→py-5), and implementing minimal active states with bottom borders and bold text. Updated hero heading to extrabold with larger size and new --text-hero token. Replaced entire color system: --text-primary, --accent-primary, all button colors (bg-black→bg-accent-primary), shadow system (rgba black→rgba navy), and --accent-hover (#262626→#475569). Fixed 24+ components and inline buttons across app to use design tokens instead of hardcoded colors. Added cursor-pointer to newsletter button and theme toggle. Result: Softer, more sophisticated aesthetic with 12.6:1 contrast (AAA), consistent navy throughout text/buttons/shadows, and improved visual hierarchy.
-
-### Session 2025-11-26 14:56 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
