@@ -13,9 +13,11 @@ interface ResizablePanelsProps {
   deviceType?: 'mobile' | 'desktop';
   /** @deprecated Use deviceType instead. When true, uses a wider default for the right panel */
   preferWiderPanel?: boolean;
+  /** Whether analysis results are showing - triggers wider panel */
+  hasResults?: boolean;
 }
 
-// Width configurations based on device type
+// Width configurations based on device type (legacy, kept for backwards compatibility)
 const DEVICE_CONFIG = {
   mobile: {
     defaultWidth: 600,      // Wider right panel for mobile (narrow canvas needed)
@@ -34,6 +36,20 @@ const DEVICE_CONFIG = {
   },
 };
 
+// State-based width configuration (percentage-based for responsive sizing)
+const STATE_CONFIG = {
+  welcome: {
+    defaultPercent: 0.5,    // 50% for welcome state
+    minWidth: 380,
+    maxPercent: 0.6,
+  },
+  results: {
+    defaultPercent: 0.7,    // 70% for results state
+    minWidth: 450,
+    maxPercent: 0.8,
+  },
+};
+
 export function ResizablePanels({
   leftPanel,
   rightPanel,
@@ -43,51 +59,84 @@ export function ResizablePanels({
   storageKey = 'audit-panel-width',
   deviceType,
   preferWiderPanel = false,
+  hasResults = false,
 }: ResizablePanelsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [hasUserResized, setHasUserResized] = useState(false);
+  const prevHasResults = useRef(hasResults);
 
-  // Get width configuration based on device type
+  // Get state-based configuration (primary method now)
+  const stateConfig = hasResults ? STATE_CONFIG.results : STATE_CONFIG.welcome;
+
+  // Get width configuration based on device type (kept for manual drag constraints)
   // If deviceType is provided, use it; otherwise fall back to preferWiderPanel for backwards compatibility
-  const config = deviceType
+  const deviceConfig = deviceType
     ? DEVICE_CONFIG[deviceType]
     : (preferWiderPanel ? DEVICE_CONFIG.mobile : DEVICE_CONFIG.default);
 
-  const smartDefaultWidth = config.defaultWidth;
-  const effectiveMinWidth = config.minWidth;
-  const effectiveMaxPercent = config.maxPercent;
+  // Use state-based config for defaults, device config for constraints during manual resize
+  const effectiveMinWidth = stateConfig.minWidth;
+  const effectiveMaxPercent = stateConfig.maxPercent;
+
+  // Calculate initial width based on a reasonable default container width
+  const estimatedContainerWidth = 1200;
+  const smartDefaultWidth = Math.round(estimatedContainerWidth * stateConfig.defaultPercent);
 
   // Always initialize with the default to avoid hydration mismatch
   const [rightWidth, setRightWidth] = useState(smartDefaultWidth);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Determine storage key based on device type
-  const deviceStorageKey = deviceType
-    ? `${storageKey}-${deviceType}`
-    : (preferWiderPanel ? `${storageKey}-mobile` : `${storageKey}-desktop`);
+  // Determine storage key based on state (welcome vs results)
+  const stateStorageKey = `${storageKey}-${hasResults ? 'results' : 'welcome'}`;
 
   // Load from localStorage after hydration
   useEffect(() => {
     setIsHydrated(true);
-    const stored = localStorage.getItem(deviceStorageKey);
+    const stored = localStorage.getItem(stateStorageKey);
 
     if (stored) {
       const parsed = parseInt(stored, 10);
       if (!isNaN(parsed) && parsed >= effectiveMinWidth) {
         setRightWidth(parsed);
+        setHasUserResized(true);
         return;
       }
     }
-    // No stored preference, use smart default
-    setRightWidth(smartDefaultWidth);
-  }, [deviceStorageKey, effectiveMinWidth, smartDefaultWidth]);
 
-  // Persist width to localStorage (device-specific) - only after hydration
-  useEffect(() => {
-    if (isHydrated && !isDragging) {
-      localStorage.setItem(deviceStorageKey, rightWidth.toString());
+    // No stored preference, calculate percentage-based default
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.getBoundingClientRect().width;
+      const targetWidth = Math.round(containerWidth * stateConfig.defaultPercent);
+      setRightWidth(Math.max(targetWidth, effectiveMinWidth));
+    } else {
+      setRightWidth(smartDefaultWidth);
     }
-  }, [rightWidth, isDragging, deviceStorageKey, isHydrated]);
+    setHasUserResized(false);
+  }, [stateStorageKey, effectiveMinWidth, smartDefaultWidth, stateConfig.defaultPercent]);
+
+  // Handle state transition (welcome <-> results) with smooth resize
+  useEffect(() => {
+    if (prevHasResults.current !== hasResults && isHydrated) {
+      // State changed, animate to new target width (unless user manually resized)
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.getBoundingClientRect().width;
+        const targetPercent = hasResults ? STATE_CONFIG.results.defaultPercent : STATE_CONFIG.welcome.defaultPercent;
+        const targetWidth = Math.round(containerWidth * targetPercent);
+        const minWidth = hasResults ? STATE_CONFIG.results.minWidth : STATE_CONFIG.welcome.minWidth;
+        setRightWidth(Math.max(targetWidth, minWidth));
+        setHasUserResized(false);
+      }
+    }
+    prevHasResults.current = hasResults;
+  }, [hasResults, isHydrated]);
+
+  // Persist width to localStorage (state-specific) - only after hydration
+  useEffect(() => {
+    if (isHydrated && !isDragging && hasUserResized) {
+      localStorage.setItem(stateStorageKey, rightWidth.toString());
+    }
+  }, [rightWidth, isDragging, stateStorageKey, isHydrated, hasUserResized]);
 
   // Handle drag start
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -111,6 +160,7 @@ export function ResizablePanels({
 
     const handleMouseUp = () => {
       setIsDragging(false);
+      setHasUserResized(true);
     };
 
     // Prevent text selection during drag
@@ -163,7 +213,9 @@ export function ResizablePanels({
       {/* Right Panel (Results) */}
       <div
         style={{ width: rightWidth }}
-        className="flex-shrink-0 will-change-[width] h-full overflow-hidden"
+        className={`flex-shrink-0 will-change-[width] h-full overflow-hidden ${
+          isDragging ? '' : 'transition-[width] duration-300 ease-out'
+        }`}
       >
         {rightPanel}
       </div>

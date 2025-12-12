@@ -182,6 +182,7 @@ export default function AuditPage() {
                 )
               }
               deviceType={uploadedImage ? detectedDeviceType : undefined}
+              hasResults={!!(isAnalyzing || analysisResults)}
             />
           </div>
         </div>

@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-12 19:22 (MacBook)
+- **Pattern:** Audit Page - Dynamic Panel Width
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented dynamic panel widths for audit page based on state. Analysis panel now takes 50% width on welcome screen and expands to 70% when results are showing. Added smooth CSS transitions for state changes, percentage-based width calculations, and separate localStorage keys per state.
+
 ### Session 2025-12-12 16:20 (MacBook)
 - **Pattern:** Audit Page - Dark Mode Button Fixes
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added product examples to pattern audit analysis results. Each detected pattern now shows up to 2 real-world product examples (ChatGPT, Notion, etc.) with images from the pattern database. Fixed chat panel auto-scroll issue where the entire page was scrolling when messages arrived; now only the messages container scrolls using scrollTop instead of scrollIntoView.
 
 ### Session 2025-12-02 16:07 (MacBook)
-- **Pattern:** Dark Mode Fixes - Pattern Demo Components
-- **Status:** ✅ Completed
-- **Files Changed:** 13
-- **Tests Added/Modified:** 0
-- **Notes:** Comprehensive dark mode fixes across pattern demo components. Fixed 5 interactive demos (Progressive Disclosure, Human-in-the-Loop, Multimodal Search, Ambient Intelligence, Predictive Anticipation) with proper dark mode classes for backgrounds, text, borders, and gradients. Fixed hero section backgrounds to use brand navy (#162036) in dark mode. Added dark mode support to logo carousel with white filter. Fixed CodeExampleBlock Preview/Code toggle with inverted color scheme (dark button on light, white button on dark) for proper visibility in both modes.
-
-### Session 2025-12-02 15:14 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
