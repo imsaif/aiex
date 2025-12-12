@@ -569,7 +569,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 {msg.role === 'user' ? (
-                  <div className="max-w-[85%] px-5 py-3.5 rounded-2xl rounded-br-md text-lg bg-accent-primary text-white leading-relaxed">
+                  <div className="max-w-[85%] px-5 py-3.5 rounded-2xl rounded-br-md text-lg bg-accent-primary text-white dark:text-gray-900 leading-relaxed">
                     {msg.content}
                   </div>
                 ) : (
@@ -608,7 +608,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
               type="button"
               onClick={() => sendMessage(inputValue)}
               disabled={!inputValue.trim() || isLoading}
-              className="p-4 bg-accent-primary text-white rounded-xl hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-4 bg-accent-primary text-white dark:text-gray-900 rounded-xl hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <PaperAirplaneIcon className="w-6 h-6" />
             </button>
@@ -733,7 +733,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
         <button
           type="button"
           onClick={() => setChatMode(true)}
-          className="w-full flex items-center justify-center gap-2 px-5 py-4 bg-accent-primary text-white rounded-full text-lg font-medium hover:bg-accent-hover transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-5 py-4 bg-accent-primary text-white dark:text-gray-900 rounded-full text-lg font-medium hover:bg-accent-hover transition-colors"
         >
           <SparklesIcon className="w-6 h-6" />
           Chat with Design Mentor

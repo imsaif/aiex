@@ -82,7 +82,7 @@ export function UsageLimitModal({ message, onClose }: UsageLimitModalProps) {
         {/* CTA */}
         <button
           onClick={onClose}
-          className="w-full py-3 px-4 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-hover transition-colors"
+          className="w-full py-3 px-4 bg-accent-primary text-white dark:text-gray-900 rounded-xl font-medium hover:bg-accent-hover transition-colors"
         >
           Got it
         </button>

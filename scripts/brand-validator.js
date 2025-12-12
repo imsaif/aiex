@@ -70,6 +70,9 @@ const allowedPatterns = [
   /bg-\[#F0F1F5\]\s+dark:bg-\[#162036\]/,
   /bg-\[#162036\]/,  // Dark mode grain when used alone
   /bg-\[#F0F1F5\]/,  // Light mode grain when used alone
+  // Accent button text - white in light mode (navy bg), dark in dark mode (white bg)
+  /text-white\s+dark:text-gray-900/,
+  /dark:text-gray-900/,
 ];
 
 /**

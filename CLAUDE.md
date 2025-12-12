@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-12 16:20 (MacBook)
+- **Pattern:** Audit Page - Dark Mode Button Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed dark mode visibility issues on audit page buttons and chat bubbles. The issue was `dark:text-background-primary` not applying correctly when `accent-primary` becomes white in dark mode. Changed to explicit `dark:text-gray-900` for proper contrast. Fixed in CenterUpload.tsx, ResultsPanel.tsx, RightWizard.tsx, and UsageLimitModal.tsx.
+
 ### Session 2025-12-12 11:58 (MacBook)
 - **Pattern:** Newsletter Email Subscription Fix
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Comprehensive dark mode fixes across pattern demo components. Fixed 5 interactive demos (Progressive Disclosure, Human-in-the-Loop, Multimodal Search, Ambient Intelligence, Predictive Anticipation) with proper dark mode classes for backgrounds, text, borders, and gradients. Fixed hero section backgrounds to use brand navy (#162036) in dark mode. Added dark mode support to logo carousel with white filter. Fixed CodeExampleBlock Preview/Code toggle with inverted color scheme (dark button on light, white button on dark) for proper visibility in both modes.
 
 ### Session 2025-12-02 15:14 (MacBook)
-- **Pattern:** Design System Refinements - Navbar & Guides Page
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Increased navbar text size from text-sm to text-base for better readability on MacBook screens. Added proper spacing (pt-12 md:pt-16) between guides page hero section and filter content to match prompts/patterns pages. Updated BRAND_GUIDELINES.md with comprehensive documentation including text colors, hero backgrounds, Satoshi font, card patterns, navigation anti-shift techniques, and logo carousel CSS.
-
-### Session 2025-12-02 12:05 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

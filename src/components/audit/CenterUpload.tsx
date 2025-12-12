@@ -141,7 +141,7 @@ export function CenterUpload({
                     e.stopPropagation();
                     open();
                   }}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-accent-primary text-white rounded-full shadow-lg text-sm font-semibold hover:bg-accent-hover hover:scale-105 transition-all"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full shadow-lg text-sm font-semibold hover:bg-accent-hover hover:scale-105 transition-all"
                 >
                   <ArrowPathIcon className="w-4 h-4" />
                   Replace Image
@@ -278,7 +278,7 @@ export function CenterUpload({
               <button
                 type="button"
                 onClick={onStartDemo}
-                className="px-6 py-2.5 bg-accent-primary text-white text-sm font-semibold rounded-full hover:bg-accent-hover transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold rounded-full hover:bg-accent-hover transition-colors cursor-pointer"
               >
                 View Demo Results
               </button>

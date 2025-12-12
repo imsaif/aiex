@@ -96,7 +96,7 @@ export function RightWizard({
           className={`
             w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-medium text-base transition-all
             ${canContinue && !isAnalyzing
-              ? 'bg-accent-primary text-white hover:bg-accent-hover'
+              ? 'bg-accent-primary text-white dark:text-gray-900 hover:bg-accent-hover'
               : 'bg-background-tertiary text-text-tertiary cursor-not-allowed'
             }
           `}

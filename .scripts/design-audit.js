@@ -41,12 +41,20 @@ const RELIABLE_TAILWIND_COLORS = {
   'bg-red-600': true,
   'bg-yellow-400': true,
   'bg-yellow-300': true,
-  'text-gray-900': true,
   'border-gray-200': true,
   'border-gray-300': true,
   'hover:bg-gray-100': true,
   'hover:bg-gray-800': true,
   'hover:text-gray-900': true,
+  // Dark mode variants
+  'dark:text-gray-900': true,
+  'dark:text-gray-700': true,
+  'dark:text-white': true,
+  'dark:text-black': true,
+  'dark:bg-white': true,
+  'dark:bg-black': true,
+  'dark:bg-gray-800': true,
+  'dark:bg-gray-900': true,
 };
 
 // Known issues with design tokens
