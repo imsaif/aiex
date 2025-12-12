@@ -64,7 +64,7 @@ export function InlineNewsletterSignup({
         setTimeout(() => setStatus('idle'), 5000);
       } else {
         setStatus('error');
-        setErrorMessage(data.message || 'Something went wrong');
+        setErrorMessage(data.error || data.message || 'Something went wrong');
       }
     } catch (error) {
       setStatus('error');

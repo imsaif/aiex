@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-12 11:58 (MacBook)
+- **Pattern:** Newsletter Email Subscription Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed hero email subscription failing on production. Root cause: Prisma schema was configured for SQLite but Vercel requires PostgreSQL (serverless has read-only filesystem). Changed prisma/schema.prisma provider from sqlite to postgresql. Also fixed frontend error display to show actual API error messages instead of generic "Something went wrong".
+
 ### Session 2025-12-08 20:03 (MacBook)
 - **Pattern:** Footer Attribution - Claude Code
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Increased navbar text size from text-sm to text-base for better readability on MacBook screens. Added proper spacing (pt-12 md:pt-16) between guides page hero section and filter content to match prompts/patterns pages. Updated BRAND_GUIDELINES.md with comprehensive documentation including text colors, hero backgrounds, Satoshi font, card patterns, navigation anti-shift techniques, and logo carousel CSS.
 
 ### Session 2025-12-02 12:05 (MacBook)
-- **Pattern:** Design System Typography & Layout Refinements
-- **Status:** ✅ Completed
-- **Files Changed:** 11
-- **Tests Added/Modified:** 0
-- **Notes:** Refined text colors inspired by Fold.money with navy headings (#162036) and readable slate body text (#20294C). Updated company logo carousel to use navy tint filter with hover-to-reveal original colors. Fixed navbar layout shift by adding invisible bold text spacer and always-present transparent border. Aligned prompt/pattern page structures for consistent navbar positioning. Standardized card typography (text-lg font-semibold titles, text-sm py-1.5 category badges). Added proper spacing between hero sections and content areas across prompts and guides pages.
-
-### Session 2025-11-26 18:03 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
