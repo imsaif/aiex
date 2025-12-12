@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-12 22:29 (MacBook)
+- **Pattern:** Prompts Page - Button Text Visibility Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed invisible button text on prompts page "Want to learn more about this pattern?" section. The "View Full Pattern" button text was invisible in dark mode because white text on white accent-primary background. Added `dark:text-gray-900` for proper contrast.
+
 ### Session 2025-12-12 19:22 (MacBook)
 - **Pattern:** Audit Page - Dynamic Panel Width
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Updated audit page SocialProof component with redesigned sharing section (social icons + URL copy), brand logo fix, grain backgrounds on Trust Points and Showcase Gallery sections, and "Actionable design insights" trust point. Fixed WelcomeModal footer text to be more natural. Fixed hardcoded border color in CenterUpload for accessibility compliance.
 
 ### Session 2025-12-02 16:49 (MacBook)
-- **Pattern:** Audit Results - Product Examples & Chat Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Added product examples to pattern audit analysis results. Each detected pattern now shows up to 2 real-world product examples (ChatGPT, Notion, etc.) with images from the pattern database. Fixed chat panel auto-scroll issue where the entire page was scrolling when messages arrived; now only the messages container scrolls using scrollTop instead of scrollIntoView.
-
-### Session 2025-12-02 16:07 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

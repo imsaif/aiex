@@ -178,7 +178,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </p>
             <Link
               href={`/patterns/${pattern.slug}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent-primary hover:bg-accent-hover text-white rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all font-medium"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent-primary hover:bg-accent-hover text-white dark:text-gray-900 rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all font-medium"
             >
               View Full Pattern
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
