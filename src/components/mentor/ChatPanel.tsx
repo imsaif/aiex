@@ -22,10 +22,19 @@ export function ChatPanel({
   const [inputValue, setInputValue] = useState('');
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const isNearBottomRef = useRef(true);
 
-  // Auto-scroll chat container to bottom when new messages arrive (without scrolling the page)
-  useEffect(() => {
+  // Track if user is near bottom of chat
+  const handleScroll = useCallback(() => {
     if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+      isNearBottomRef.current = scrollHeight - scrollTop - clientHeight < 100;
+    }
+  }, []);
+
+  // Only auto-scroll if user is near bottom (don't interrupt reading)
+  useEffect(() => {
+    if (messagesContainerRef.current && isNearBottomRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [session?.messages]);
@@ -84,7 +93,7 @@ export function ChatPanel({
       </div>
 
       {/* Messages */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={messagesContainerRef} onScroll={handleScroll} className="flex-1 overflow-y-auto p-4 space-y-4">
         {!session?.messages?.length ? (
           // Empty state with suggestions
           <div className="h-full flex flex-col items-center justify-center text-center px-4">

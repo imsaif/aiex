@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-12 22:37 (MacBook)
+- **Pattern:** UI Fixes - Dark Mode & Chat Auto-scroll
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed ScrollToTop button arrow visibility in dark mode by adding `dark:text-gray-900`. Fixed ChatPanel auto-scroll behavior to only scroll when user is near bottom, preventing disruption when reading earlier messages.
+
 ### Session 2025-12-12 22:29 (MacBook)
 - **Pattern:** Prompts Page - Button Text Visibility Fix
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Replaced WelcomeModal overlay with new WelcomePanel component in right panel. Implemented 2-column grid layout for "How It Works" steps with brand colors (#F0F1F5 hero background, #162036 navy text). Added device-aware canvas resizing in ResizablePanels. Added "No Frame" toggle for screenshots. Updated icons (MagnifyingGlassCircleIcon for analyze, ComputerDesktopIcon for demo). Applied proper dark mode support with white text on navy backgrounds. Created demo mode with sample analysis data.
 
 ### Session 2025-12-02 20:31 (MacBook)
-- **Pattern:** Audit Page - Social Proof & Welcome Modal Updates
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Updated audit page SocialProof component with redesigned sharing section (social icons + URL copy), brand logo fix, grain backgrounds on Trust Points and Showcase Gallery sections, and "Actionable design insights" trust point. Fixed WelcomeModal footer text to be more natural. Fixed hardcoded border color in CenterUpload for accessibility compliance.
-
-### Session 2025-12-02 16:49 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
