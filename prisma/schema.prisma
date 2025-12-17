@@ -19,3 +19,32 @@ model Subscriber {
   unsubscribeToken  String   @unique @default(cuid())
   updatedAt         DateTime @updatedAt
 }
+
+model Newsletter {
+  id          String          @id @default(cuid())
+  title       String
+  slug        String          @unique
+  summary     String          @db.Text
+  content     String          @db.Text
+  publishedAt DateTime
+  published   Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  tags        NewsletterTag[]
+}
+
+model Tag {
+  id          String          @id @default(cuid())
+  name        String          @unique
+  slug        String          @unique
+  newsletters NewsletterTag[]
+}
+
+model NewsletterTag {
+  newsletter   Newsletter @relation(fields: [newsletterId], references: [id], onDelete: Cascade)
+  newsletterId String
+  tag          Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId        String
+
+  @@id([newsletterId, tagId])
+}

@@ -314,3 +314,49 @@ export interface GuideContextType {
   searchGuides: (query: string) => Guide[];
 }
 
+// ============================================================================
+// Newsletter Archive Type Definitions
+// ============================================================================
+
+/**
+ * Represents a tag for categorizing newsletters
+ */
+export interface NewsletterTag {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+/**
+ * Represents a newsletter issue
+ */
+export interface Newsletter {
+  id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  content: string;
+  publishedAt: Date | string;
+  published: boolean;
+  tags: NewsletterTag[];
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+}
+
+/**
+ * Filter options for newsletter queries
+ */
+export interface NewsletterFilter {
+  tags?: string[];
+  searchQuery?: string;
+}
+
+/**
+ * Response structure for newsletter list queries
+ */
+export interface NewsletterListResponse {
+  newsletters: Newsletter[];
+  totalCount: number;
+  tags: NewsletterTag[];
+}
+

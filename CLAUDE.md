@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-17 20:26 (MacBook)
+- **Pattern:** Newsletter Archive Page (/news)
+- **Status:** ✅ Completed
+- **Files Changed:** 12
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented newsletter archive page at /news similar to news.smol.ai. Added Prisma models (Newsletter, Tag, NewsletterTag), data access layer, NewsletterCard and TagFilter UI components, archive page with search/filtering, individual newsletter detail pages with prev/next navigation, and seed script with 5 sample newsletters.
+
 ### Session 2025-12-12 22:37 (MacBook)
 - **Pattern:** UI Fixes - Dark Mode & Chat Auto-scroll
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed vertical overflow issue where the right panel (WelcomePanel/ResultsPanel) extended beyond viewport into the SocialProof section on Windows laptops. Added proper height constraints (lg:h-[calc(100vh-64px)], lg:max-h-[calc(100vh-64px)]) and overflow-hidden to parent containers. Added min-h-0 to flex children for proper scroll behavior. Updated "Suggest Feature" link to use featurebase URL (https://aiuxdesign.featurebase.app/).
 
 ### Session 2025-12-03 15:05 (MacBook)
-- **Pattern:** Audit Tool - WelcomePanel Redesign
-- **Status:** ✅ Completed
-- **Files Changed:** 14
-- **Tests Added/Modified:** 0
-- **Notes:** Replaced WelcomeModal overlay with new WelcomePanel component in right panel. Implemented 2-column grid layout for "How It Works" steps with brand colors (#F0F1F5 hero background, #162036 navy text). Added device-aware canvas resizing in ResizablePanels. Added "No Frame" toggle for screenshots. Updated icons (MagnifyingGlassCircleIcon for analyze, ComputerDesktopIcon for demo). Applied proper dark mode support with white text on navy backgrounds. Created demo mode with sample analysis data.
-
-### Session 2025-12-02 20:31 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
