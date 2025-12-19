@@ -59,7 +59,6 @@
     "workflow:run": "node scripts/workflow-automation.js run",
     "workflow:list": "node scripts/workflow-automation.js list",
     "send-newsletter": "node scripts/send-newsletter.js",
-    "seed-newsletters": "npx ts-node scripts/seed-newsletters.ts",
     "validate": "node scripts/agents/validation-agent/validate.mjs",
     "usage": "ccusage",
     "usage:daily": "ccusage daily",

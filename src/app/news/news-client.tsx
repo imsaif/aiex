@@ -1,14 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import UnifiedSearchBar from '@/components/ui/UnifiedSearchBar';
-import NewsletterCard from '@/components/ui/NewsletterCard';
-import TagFilter from '@/components/ui/TagFilter';
-import CategoryFilterSheet from '@/components/ui/CategoryFilterSheet';
-import FilterPills from '@/components/ui/FilterPills';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { Newsletter, NewsletterTag } from '@/types';
 
@@ -17,185 +13,163 @@ interface NewsClientProps {
   availableTags: NewsletterTag[];
 }
 
-export default function NewsClient({ initialNewsletters, availableTags }: NewsClientProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+export default function NewsClient({ initialNewsletters }: NewsClientProps) {
+  const [filterQuery, setFilterQuery] = useState('');
+  const [showAll, setShowAll] = useState(false);
+
+  // Filter newsletters from last 30 days
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const recentNewsletters = useMemo(() => {
+    return initialNewsletters.filter(
+      (n) => new Date(n.publishedAt) >= thirtyDaysAgo
+    );
+  }, [initialNewsletters]);
+
+  const olderNewsletters = useMemo(() => {
+    return initialNewsletters.filter(
+      (n) => new Date(n.publishedAt) < thirtyDaysAgo
+    );
+  }, [initialNewsletters]);
+
+  const displayedNewsletters = showAll ? initialNewsletters : recentNewsletters;
 
   const filteredNewsletters = useMemo(() => {
-    let results = initialNewsletters;
+    if (!filterQuery) return displayedNewsletters;
 
-    // Filter by tags
-    if (selectedTags.length > 0) {
-      results = results.filter((newsletter) =>
-        newsletter.tags.some((tag) => selectedTags.includes(tag.slug))
-      );
-    }
-
-    // Filter by search query
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      results = results.filter(
-        (newsletter) =>
-          newsletter.title.toLowerCase().includes(query) ||
-          newsletter.summary.toLowerCase().includes(query) ||
-          newsletter.tags.some((tag) => tag.name.toLowerCase().includes(query))
-      );
-    }
-
-    return results;
-  }, [initialNewsletters, selectedTags, searchQuery]);
-
-  const handleTagToggle = (tagSlug: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tagSlug) ? prev.filter((t) => t !== tagSlug) : [...prev, tagSlug]
+    const query = filterQuery.toLowerCase();
+    return displayedNewsletters.filter(
+      (newsletter) =>
+        newsletter.title.toLowerCase().includes(query) ||
+        newsletter.summary.toLowerCase().includes(query) ||
+        newsletter.tags.some((tag) => tag.name.toLowerCase().includes(query))
     );
-  };
+  }, [displayedNewsletters, filterQuery]);
 
-  const handleClearAllTags = () => {
-    setSelectedTags([]);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.05 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
-
-  // Get selected filter label for mobile
-  const getFilterLabel = () => {
-    if (selectedTags.length === 0) return 'All Tags';
-    if (selectedTags.length === 1) {
-      const tag = availableTags.find((t) => t.slug === selectedTags[0]);
-      return tag?.name || 'All Tags';
-    }
-    return `${selectedTags.length} tags selected`;
+  const formatDate = (date: string | Date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
   };
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section */}
+      {/* Hero Section - with background + grain */}
       <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
-                {initialNewsletters.length} {initialNewsletters.length === 1 ? 'Issue' : 'Issues'}
-              </span>
-            </div>
-
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-text-primary">
-              Newsletter Archive
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-text-primary">
+              AIUX News
             </h1>
-            <p className="text-lg md:text-xl text-text-secondary mb-8">
-              AI design patterns, UX insights, and industry updates.
+            <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto">
+              How designers stay ahead of AI. Weekly insights on design patterns, UX strategies, and what&apos;s shaping the future of human-AI interaction.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Main Content with Sidebar */}
-      <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Desktop Sidebar */}
-          <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
-              <h3 className="font-semibold text-lg mb-4 text-text-primary">Filter by Tag</h3>
-              <TagFilter
-                tags={availableTags}
-                selectedTags={selectedTags}
-                onTagToggle={handleTagToggle}
-                onClearAll={handleClearAllTags}
+      <div className="max-w-4xl mx-auto px-6 py-12 md:py-16">
+        {/* Section Header with Filter */}
+        <div className="flex items-center justify-between gap-4 mb-8">
+          <h2 className="text-lg font-semibold text-text-primary">
+            {showAll ? 'All issues' : 'Last 30 days in AIUX'}
+          </h2>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="text-text-tertiary text-sm">Filter:</span>
+              <input
+                type="text"
+                value={filterQuery}
+                onChange={(e) => setFilterQuery(e.target.value)}
+                placeholder="Type to filter..."
+                className="bg-transparent border-b border-border-secondary focus:border-accent-primary outline-none text-sm px-1 py-0.5 w-32 text-text-primary placeholder:text-text-tertiary"
               />
             </div>
-          </aside>
-
-          {/* Newsletter Grid */}
-          <div className="flex-1">
-            {/* Search */}
-            <div className="mb-6 bg-surface-primary rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card">
-              <UnifiedSearchBar
-                placeholder="Search newsletters..."
-                value={searchQuery}
-                onChange={setSearchQuery}
-                size="sm"
-              />
-            </div>
-
-            {/* Mobile Filter Pills */}
-            <div className="lg:hidden mb-6">
-              <FilterPills
-                selectedCategory={getFilterLabel()}
-                onFilterClick={() => setIsFilterSheetOpen(true)}
-              />
-            </div>
-
-            {/* Results Count */}
-            <div className="mb-6">
-              <p className="text-sm text-text-secondary">
-                {filteredNewsletters.length}{' '}
-                {filteredNewsletters.length === 1 ? 'issue' : 'issues'}
-                {searchQuery && ` for "${searchQuery}"`}
-              </p>
-            </div>
-
-            {/* Grid */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-6"
-            >
-              {filteredNewsletters.map((newsletter, index) => (
-                <motion.div key={newsletter.id} variants={itemVariants}>
-                  <NewsletterCard newsletter={newsletter} index={index} />
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Empty State */}
-            {filteredNewsletters.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-text-secondary text-lg mb-2">No newsletters found</p>
-                <p className="text-text-tertiary text-sm">
-                  Try adjusting your search or filters
-                </p>
-              </div>
+            {!showAll && olderNewsletters.length > 0 && (
+              <button
+                onClick={() => setShowAll(true)}
+                className="text-accent-primary hover:underline text-sm font-medium"
+              >
+                See all issues
+              </button>
+            )}
+            {showAll && (
+              <button
+                onClick={() => setShowAll(false)}
+                className="text-accent-primary hover:underline text-sm font-medium"
+              >
+                Last 30 days
+              </button>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Mobile Filter Sheet */}
-      <CategoryFilterSheet
-        isOpen={isFilterSheetOpen}
-        onClose={() => setIsFilterSheetOpen(false)}
-        categories={[
-          { id: 'all', title: 'All Tags' },
-          ...availableTags.map((tag) => ({ id: tag.slug, title: tag.name })),
-        ]}
-        selectedCategory={selectedTags.length === 1 ? availableTags.find((t) => t.slug === selectedTags[0])?.name || 'All Tags' : 'All Tags'}
-        onCategorySelect={(category) => {
-          if (category === 'All Tags') {
-            setSelectedTags([]);
-          } else {
-            const tag = availableTags.find((t) => t.name === category);
-            if (tag) {
-              setSelectedTags([tag.slug]);
-            }
-          }
-          setIsFilterSheetOpen(false);
-        }}
-      />
+        {/* Newsletter List */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="space-y-0"
+        >
+          {filteredNewsletters.map((newsletter, index) => (
+            <motion.div
+              key={newsletter.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.03 }}
+            >
+              <Link
+                href={`/news/${newsletter.slug}`}
+                className="group flex items-center gap-4 py-4 border-b border-border-secondary hover:bg-surface-secondary/50 -mx-4 px-4 transition-colors"
+              >
+                {/* Dot */}
+                <span className="w-2 h-2 rounded-full bg-text-tertiary group-hover:bg-accent-primary transition-colors flex-shrink-0" />
+
+                {/* Date */}
+                <span className="text-text-tertiary text-sm w-16 flex-shrink-0">
+                  {formatDate(newsletter.publishedAt)}
+                </span>
+
+                {/* Title */}
+                <span className="flex-1 text-text-primary group-hover:text-accent-primary transition-colors truncate">
+                  {newsletter.title}
+                </span>
+
+                {/* Arrow */}
+                <svg
+                  className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary group-hover:translate-x-1 transition-all flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Empty State */}
+        {filteredNewsletters.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-text-secondary mb-2">No newsletters match your filter</p>
+            <button
+              onClick={() => setFilterQuery('')}
+              className="text-accent-primary hover:underline text-sm"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
+      </div>
 
       <Footer />
       <ScrollToTop />

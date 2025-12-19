@@ -1,28 +1,20 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getNewsletterBySlug, getNewsletters, getAdjacentNewsletters } from '@/lib/newsletter';
+import { getNewsletterBySlug, getNewsletters, getAdjacentNewsletters } from '@/data/newsletters';
 import NewsletterDetailClient from './newsletter-detail-client';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Force dynamic rendering since this depends on database
-export const dynamic = 'force-dynamic';
-
-export async function generateStaticParams() {
-  try {
-    const { newsletters } = await getNewsletters();
-    return newsletters.map((n) => ({ slug: n.slug }));
-  } catch {
-    // Return empty array if database is not available at build time
-    return [];
-  }
+export function generateStaticParams() {
+  const newsletters = getNewsletters();
+  return newsletters.map((n) => ({ slug: n.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const newsletter = await getNewsletterBySlug(slug);
+  const newsletter = getNewsletterBySlug(slug);
 
   if (!newsletter) {
     return { title: 'Newsletter Not Found' };
@@ -42,14 +34,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function NewsletterPage({ params }: PageProps) {
   const { slug } = await params;
-  const newsletter = await getNewsletterBySlug(slug);
+  const newsletter = getNewsletterBySlug(slug);
 
   if (!newsletter) {
     notFound();
   }
 
   // Get adjacent newsletters for navigation
-  const { previous, next } = await getAdjacentNewsletters(slug);
+  const { previous, next } = getAdjacentNewsletters(slug);
 
   return (
     <NewsletterDetailClient

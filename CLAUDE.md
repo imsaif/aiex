@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-19 15:34 (MacBook)
+- **Pattern:** Navigation & Search Enhancement
+- **Status:** ✅ Completed
+- **Files Changed:** 14
+- **Tests Added/Modified:** 0
+- **Notes:** Refactored newsletter page from Prisma to TypeScript data files, implemented smol.ai-style list layout with "Last 30 days" filtering, added Resources dropdown in navbar (Prompts, Guides, News), and built global search modal (⌘K) with unified search across patterns, guides, prompts, and newsletters.
+
 ### Session 2025-12-17 20:26 (MacBook)
 - **Pattern:** Newsletter Archive Page (/news)
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Updated Next.js from 15.5.6 to 15.5.7 to patch critical RCE vulnerability (CVE-2025-55182, CVSS 10.0) in React Server Components. Vercel dashboard flagged the production deployment as vulnerable. Active exploitation observed in the wild since December 3, 2025.
 
 ### Session 2025-12-03 17:24 (MacBook)
-- **Pattern:** Audit Page - Responsive Overflow Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 5
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed vertical overflow issue where the right panel (WelcomePanel/ResultsPanel) extended beyond viewport into the SocialProof section on Windows laptops. Added proper height constraints (lg:h-[calc(100vh-64px)], lg:max-h-[calc(100vh-64px)]) and overflow-hidden to parent containers. Added min-h-0 to flex children for proper scroll behavior. Updated "Suggest Feature" link to use featurebase URL (https://aiuxdesign.featurebase.app/).
-
-### Session 2025-12-03 15:05 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
