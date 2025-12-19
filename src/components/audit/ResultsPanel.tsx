@@ -6,21 +6,17 @@ import {
   XCircleIcon,
   ArrowPathIcon,
   ChevronDownIcon,
-  ChevronUpIcon,
+  ChevronRightIcon,
   PaperAirplaneIcon,
   MinusCircleIcon,
-  ArrowTopRightOnSquareIcon,
   ClipboardDocumentIcon,
   ClipboardDocumentCheckIcon,
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
-import { CheckBadgeIcon, SparklesIcon, ShieldCheckIcon, FireIcon } from '@heroicons/react/24/solid';
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { CheckBadgeIcon, SparklesIcon } from '@heroicons/react/24/solid';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
-import type { Example } from '@/types';
-import { getPatternUrl } from '@/utils/pattern-links';
-import { patterns as allPatternsData } from '@/data/patterns';
+import { PatternModal } from './PatternModal';
 
 // Designer-friendly analysis messages
 const ANALYSIS_MESSAGES = [
@@ -33,6 +29,13 @@ const ANALYSIS_MESSAGES = [
   "Reviewing accessibility patterns...",
   "Checking for AI UX patterns...",
   "Polishing up the analysis...",
+];
+
+// Quick suggestion prompts for chat
+const SUGGESTIONS = [
+  "What should I fix first?",
+  "Explain the top issue",
+  "Show me examples",
 ];
 
 interface ResultsPanelProps {
@@ -152,222 +155,8 @@ function CompactScoreInline({ score, total }: { score: number; total: number }) 
   );
 }
 
-// Full score circle for expanded view
-function CompactScore({ score, total }: { score: number; total: number }) {
-  const percentage = total > 0 ? (score / total) * 100 : 0;
-  const strokeWidth = 8;
-  const radius = 40;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
-  const getColor = () => {
-    if (percentage >= 70) return 'text-status-success';
-    if (percentage >= 40) return 'text-status-warning';
-    return 'text-status-error';
-  };
 
-  return (
-    <div className="relative inline-flex items-center justify-center">
-      <svg width="100" height="100" className="transform -rotate-90">
-        <circle
-          cx="50"
-          cy="50"
-          r={radius}
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
-          fill="none"
-          className="text-border-primary"
-        />
-        <circle
-          cx="50"
-          cy="50"
-          r={radius}
-          stroke="currentColor"
-          strokeWidth={strokeWidth}
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round"
-          className={`${getColor()} transition-all duration-1000 ease-out`}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-2xl font-semibold text-text-primary">
-          {score}
-          <span className="text-lg text-text-tertiary">/{total}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Helper to get examples for a pattern by ID
-function getPatternExamples(patternId: string): Example[] {
-  const pattern = allPatternsData.find(p => p.id === patternId || p.slug === patternId);
-  if (!pattern) return [];
-  // Return first 2 examples that have images
-  return (pattern.content?.examples || [])
-    .filter(ex => ex.image || ex.imagePath)
-    .slice(0, 2)
-    .map(ex => ({
-      ...ex,
-      image: ex.image || ex.imagePath, // Normalize to single field
-    }));
-}
-
-// Pattern Category Section Component
-function PatternCategorySection({
-  title,
-  icon,
-  patterns,
-  status,
-  defaultExpanded = false,
-  showExamples = false,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  patterns: (PatternResult & { id: string })[];
-  status: 'good' | 'weak' | 'missing' | 'na';
-  defaultExpanded?: boolean;
-  showExamples?: boolean;
-}) {
-  const [expanded, setExpanded] = useState(defaultExpanded);
-
-  if (patterns.length === 0) return null;
-
-  const getHeaderColor = () => {
-    switch (status) {
-      case 'good': return 'text-status-success';
-      case 'weak': return 'text-status-warning';
-      case 'missing': return 'text-status-error';
-      case 'na': return 'text-text-tertiary';
-    }
-  };
-
-  const getBgColor = () => {
-    switch (status) {
-      case 'good': return 'bg-green-50 dark:bg-green-900/10';
-      case 'weak': return 'bg-yellow-50 dark:bg-yellow-900/10';
-      case 'missing': return 'bg-red-50 dark:bg-red-900/10';
-      case 'na': return 'bg-gray-50 dark:bg-gray-800/50';
-    }
-  };
-
-  // Sort by priority for weak/missing
-  const sortedPatterns = status === 'weak' || status === 'missing'
-    ? [...patterns].sort((a, b) => {
-        const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2, none: 3 };
-        return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
-      })
-    : patterns;
-
-  return (
-    <div className={`rounded-xl overflow-hidden border border-border-primary ${getBgColor()}`}>
-      <button
-        type="button"
-        onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-background-secondary/50 transition-colors"
-      >
-        <div className="flex items-center gap-3">
-          <span className={getHeaderColor()}>{icon}</span>
-          <span className={`text-lg font-semibold ${getHeaderColor()}`}>{title}</span>
-          <span className="text-base text-text-tertiary">({patterns.length})</span>
-        </div>
-        {expanded ? (
-          <ChevronUpIcon className="w-5 h-5 text-text-tertiary" />
-        ) : (
-          <ChevronDownIcon className="w-5 h-5 text-text-tertiary" />
-        )}
-      </button>
-
-      {expanded && (
-        <div className="px-4 pb-4 space-y-3">
-          {sortedPatterns.map((pattern) => {
-            const patternUrl = getPatternUrl(pattern.id);
-            const examples = showExamples ? getPatternExamples(pattern.id) : [];
-            return (
-              <div key={pattern.id} className="bg-background-primary rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      {patternUrl ? (
-                        <Link
-                          href={patternUrl}
-                          target="_blank"
-                          className="text-base font-medium text-accent-primary hover:underline inline-flex items-center gap-1 group"
-                        >
-                          {pattern.name}
-                          <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
-                        </Link>
-                      ) : (
-                        <span className="text-base font-medium text-text-primary">{pattern.name}</span>
-                      )}
-                      {(status === 'weak' || status === 'missing') && pattern.priority !== 'none' && (
-                        <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                          pattern.priority === 'high' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
-                          pattern.priority === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                          'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
-                        }`}>
-                          {pattern.priority}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-text-secondary leading-relaxed">{pattern.evidence}</p>
-                    {pattern.improvement && (status === 'weak' || status === 'missing') && (
-                      <div className="mt-3 p-3 bg-accent-subtle rounded-lg">
-                        <p className="text-sm text-accent-primary font-medium">💡 {pattern.improvement}</p>
-                      </div>
-                    )}
-
-                    {/* Product Examples */}
-                    {examples.length > 0 && (
-                      <div className="mt-3">
-                        <div className="text-xs font-semibold text-text-secondary mb-2">
-                          {status === 'good'
-                            ? '✨ You\'re implementing this like:'
-                            : '📚 See how leading products do this:'}
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          {examples.map((example, index) => (
-                            <Link
-                              key={index}
-                              href={patternUrl || '#'}
-                              target="_blank"
-                              className="group block border border-border-primary rounded-lg overflow-hidden bg-background-secondary hover:border-accent-primary transition-all hover:scale-[1.02]"
-                            >
-                              {example.image && (
-                                <div className="h-16 overflow-hidden bg-background-secondary relative">
-                                  <Image
-                                    src={example.image}
-                                    alt={example.altText || example.title}
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                </div>
-                              )}
-                              <div className="p-2">
-                                <div className="text-xs font-semibold text-text-primary truncate">
-                                  {example.title}
-                                </div>
-                                <div className="text-[10px] text-text-secondary line-clamp-1">
-                                  {example.description}
-                                </div>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
 
 // Get top 3 priority patterns to fix
 function getTopPriorities(
@@ -426,89 +215,6 @@ function generateResultsSummary(
   return lines.join('\n');
 }
 
-// Get dynamic chat CTA based on score
-function getChatCTA(score: number, maxScore: number): string {
-  const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
-  if (percentage < 50) return 'Get Help Fixing These Issues';
-  if (percentage < 70) return 'How Can I Improve?';
-  return 'Fine-tune Your Design';
-}
-
-// Top 3 Priorities Card Component
-function TopPrioritiesCard({
-  priorities,
-  onAskAbout,
-}: {
-  priorities: (PatternResult & { id: string })[];
-  onAskAbout: (patternName: string) => void;
-}) {
-  if (priorities.length === 0) return null;
-
-  return (
-    <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-accent-subtle to-accent-subtle/50 border border-accent-primary/20">
-      <div className="flex items-center gap-2 mb-3">
-        <FireIcon className="w-5 h-5 text-accent-primary" />
-        <h3 className="text-base font-semibold text-text-primary">Your Top Priorities</h3>
-      </div>
-
-      <div className="space-y-3">
-        {priorities.map((pattern, index) => {
-          const patternUrl = getPatternUrl(pattern.id);
-          return (
-            <div key={pattern.id} className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent-primary text-white dark:text-gray-900 flex items-center justify-center text-sm font-semibold">
-                {index + 1}
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {patternUrl ? (
-                    <Link
-                      href={patternUrl}
-                      target="_blank"
-                      className="text-sm font-medium text-accent-primary hover:underline inline-flex items-center gap-1"
-                    >
-                      {pattern.name}
-                      <ArrowTopRightOnSquareIcon className="w-3 h-3" />
-                    </Link>
-                  ) : (
-                    <span className="text-sm font-medium text-text-primary">{pattern.name}</span>
-                  )}
-                  <span className={`px-1.5 py-0.5 text-[10px] font-medium rounded ${
-                    pattern.status === 'missing'
-                      ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                      : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                  }`}>
-                    {pattern.status === 'missing' ? 'missing' : 'weak'}
-                  </span>
-                </div>
-                {pattern.improvement && (
-                  <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{pattern.improvement}</p>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <button
-        type="button"
-        onClick={() => onAskAbout(priorities[0]?.name || '')}
-        className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors"
-      >
-        <SparklesIcon className="w-4 h-4" />
-        Help me fix #{1}
-      </button>
-    </div>
-  );
-}
-
-// Suggestion pills for chat - now dynamic based on top pattern
-const SUGGESTIONS = [
-  'How do I fix the top issue?',
-  'What should I prioritize?',
-  'Explain this score',
-];
-
 export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoMode = false }: ResultsPanelProps) {
   const [chatMode, setChatMode] = useState(false); // false = analysis view, true = chat view
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -516,6 +222,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
   const [isLoading, setIsLoading] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [selectedPattern, setSelectedPattern] = useState<(PatternResult & { id: string }) | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -795,165 +502,298 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
     );
   }
 
-  // ANALYSIS VIEW (default)
+  // Get top 3 priorities for the hero section
+  const topPriorities = getTopPriorities(missingPatterns, weakPatterns);
+  const remainingPatternCount = allPatterns.length - topPriorities.length;
+
+  // ANALYSIS VIEW (default) - SIMPLIFIED
   return (
     <aside className="w-full h-full flex-shrink-0 p-6 bg-background-primary/95 backdrop-blur-sm rounded-2xl shadow-lg border border-border-primary/50 flex flex-col overflow-hidden">
-      {/* Demo Mode Banner */}
-      {isDemoMode && (
-        <div className="flex items-center justify-center gap-2 mb-4 py-2 px-4 bg-accent-subtle rounded-full">
-          <SparklesIcon className="w-4 h-4 text-accent-primary" />
-          <p className="text-sm text-accent-primary font-medium">
-            Demo Mode — Upload your own screenshot to get a real analysis
-          </p>
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      {/* Compact Header */}
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <CheckBadgeIcon className="w-7 h-7 text-status-success" />
-          <span className="text-lg font-semibold text-text-primary">{isDemoMode ? 'Sample Analysis' : 'Analysis Complete'}</span>
-          <CompactScoreInline score={results.score} total={maxScore} />
+          <CheckBadgeIcon className="w-6 h-6 text-status-success" />
+          <span className="font-semibold text-text-primary">
+            {isDemoMode ? 'Sample Analysis' : 'Analysis Complete'}
+          </span>
+          <span className="text-text-secondary">
+            {results.score}/{maxScore}
+          </span>
         </div>
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="p-2 text-text-tertiary hover:text-text-primary hover:bg-background-secondary rounded-lg transition-colors"
-          title={copied ? 'Copied!' : 'Copy results'}
-        >
-          {copied ? (
-            <ClipboardDocumentCheckIcon className="w-5 h-5 text-status-success" />
-          ) : (
-            <ClipboardDocumentIcon className="w-5 h-5" />
-          )}
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="p-2 text-text-tertiary hover:text-text-primary hover:bg-background-secondary rounded-lg transition-colors"
+            title={copied ? 'Copied!' : 'Copy results'}
+          >
+            {copied ? (
+              <ClipboardDocumentCheckIcon className="w-5 h-5 text-status-success" />
+            ) : (
+              <ClipboardDocumentIcon className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Trust Header */}
-      <div className="flex items-center justify-center gap-2 mb-4 py-2 px-4 bg-background-secondary rounded-full">
-        <ShieldCheckIcon className="w-4 h-4 text-accent-primary" />
-        <p className="text-sm text-text-secondary">
-          Checked against <span className="font-semibold text-text-primary">28 AI patterns</span> from{' '}
-          <span className="font-semibold text-text-primary">50+ products</span>
-        </p>
-      </div>
-
-      {/* Detected component badge */}
-      {results.componentDescription && (
-        <p className="text-base text-text-secondary mb-4 px-4 py-2.5 bg-background-secondary rounded-full text-center">
-          {results.componentDescription}
+      {/* Demo mode subtle hint */}
+      {isDemoMode && (
+        <p className="text-xs text-text-tertiary text-center mb-4">
+          Demo mode — Upload your own screenshot for a real analysis
         </p>
       )}
 
-      {/* Full Analysis Results - Scrollable */}
-      <div className="flex-1 overflow-y-auto mb-5 min-h-0">
-        {/* Score Circle */}
-        <div className="text-center mb-6">
-          <CompactScore score={results.score} total={maxScore} />
-          <p className="text-lg text-text-secondary mt-4 leading-relaxed">
-            {results.summary}
-          </p>
-        </div>
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {/* TOP 3 PRIORITIES - Hero Section */}
+        {topPriorities.length > 0 ? (
+          <div className="mb-6">
+            {/* Hero Header */}
+            <div className="flex items-center gap-3 mb-5">
+              <div className="p-2.5 rounded-xl bg-accent-subtle">
+                <SparklesIcon className="w-6 h-6 text-accent-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-text-primary">
+                  Top {topPriorities.length} Priorities
+                </h2>
+                <p className="text-sm text-text-tertiary">Fix these first for maximum impact</p>
+              </div>
+            </div>
 
-        {/* Top 3 Priorities Card */}
-        <TopPrioritiesCard
-          priorities={getTopPriorities(missingPatterns, weakPatterns)}
-          onAskAbout={handleAskAboutPattern}
-        />
+            {/* Priority Cards */}
+            <div className="space-y-3">
+              {topPriorities.map((pattern, index) => {
+                const isMissing = pattern.status === 'missing';
 
-        {/* Pattern Category Sections */}
-        <div className="space-y-3">
-          {/* Missing Patterns - Expanded by default, shown first for urgency */}
-          <PatternCategorySection
-            title="Missing Patterns"
-            icon={<XCircleIcon className="w-6 h-6" />}
-            patterns={missingPatterns}
-            status="missing"
-            defaultExpanded={true}
-            showExamples={true}
-          />
+                return (
+                  <button
+                    key={pattern.id}
+                    type="button"
+                    onClick={() => setSelectedPattern(pattern)}
+                    className="w-full group p-4 rounded-xl border border-border-primary bg-background-secondary/50 hover:bg-background-secondary hover:border-accent-primary/50 transition-all text-left"
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Rank Number */}
+                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent-primary text-white dark:text-gray-900 flex items-center justify-center text-sm font-bold">
+                        {index + 1}
+                      </div>
 
-          {/* Weak Patterns - Expanded by default */}
-          <PatternCategorySection
-            title="Needs Improvement"
-            icon={<ExclamationTriangleIcon className="w-6 h-6" />}
-            patterns={weakPatterns}
-            status="weak"
-            defaultExpanded={true}
-            showExamples={true}
-          />
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                          <span className="font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
+                            {pattern.name}
+                          </span>
+                          {/* Status Badge */}
+                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                            isMissing
+                              ? 'bg-status-error/10 text-status-error'
+                              : 'bg-status-warning/10 text-status-warning'
+                          }`}>
+                            {isMissing ? (
+                              <><XCircleIcon className="w-3 h-3" /> Missing</>
+                            ) : (
+                              <><ExclamationTriangleIcon className="w-3 h-3" /> Improve</>
+                            )}
+                          </span>
+                        </div>
+                        {pattern.improvement && (
+                          <p className="text-sm text-text-secondary leading-relaxed">
+                            {pattern.improvement}
+                          </p>
+                        )}
+                      </div>
 
-          {/* Good Patterns - Collapsed by default */}
-          <PatternCategorySection
-            title="Well Implemented"
-            icon={<CheckCircleIcon className="w-6 h-6" />}
-            patterns={goodPatterns}
-            status="good"
-            defaultExpanded={false}
-            showExamples={true}
-          />
+                      {/* Arrow */}
+                      <ChevronRightIcon className="w-5 h-5 text-text-tertiary group-hover:text-accent-primary transition-colors flex-shrink-0 mt-1" />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* Not Applicable - Collapsed by default */}
-          <PatternCategorySection
-            title="Not Applicable"
-            icon={<MinusCircleIcon className="w-6 h-6" />}
-            patterns={naPatterns}
-            status="na"
-            defaultExpanded={false}
-          />
-        </div>
-
-        {/* All Good Message - Only if no issues */}
-        {missingPatterns.length === 0 && weakPatterns.length === 0 && (
-          <div className="text-center py-8">
+            {/* Primary CTA */}
+            <button
+              type="button"
+              onClick={() => {
+                setChatMode(true);
+                setTimeout(() => sendMessage(`Help me fix ${topPriorities[0]?.name}. Give me specific steps.`), 100);
+              }}
+              className="w-full mt-5 flex items-center justify-center gap-2 px-5 py-4 bg-accent-primary text-white dark:text-gray-900 rounded-xl text-base font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
+            >
+              <ChatBubbleLeftRightIcon className="w-5 h-5" />
+              Get Help Fixing These
+            </button>
+          </div>
+        ) : (
+          /* All Good State */
+          <div className="text-center py-8 mb-6">
             <CheckCircleIcon className="w-14 h-14 mx-auto mb-4 text-status-success" />
             <p className="text-lg font-medium text-text-primary">Great job!</p>
             <p className="text-base text-text-secondary">All applicable patterns are well implemented.</p>
           </div>
         )}
+
+        {/* FULL REPORT - Collapsed Accordion */}
+        {remainingPatternCount > 0 && (
+          <details className="group">
+            <summary className="flex items-center gap-2 cursor-pointer text-sm text-text-secondary hover:text-text-primary py-3 border-t border-border-primary">
+              <ChevronDownIcon className="w-4 h-4 transition-transform group-open:rotate-180" />
+              View Full Report ({remainingPatternCount} more patterns)
+            </summary>
+
+            <div className="pt-4 space-y-5">
+              {/* Missing Patterns */}
+              {missingPatterns.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-status-error mb-3 flex items-center gap-2">
+                    <XCircleIcon className="w-4 h-4" />
+                    Missing ({missingPatterns.length})
+                  </h3>
+                  <div className="space-y-2">
+                    {missingPatterns.map(pattern => (
+                      <button
+                        key={pattern.id}
+                        type="button"
+                        onClick={() => setSelectedPattern(pattern)}
+                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors">
+                            {pattern.name}
+                          </span>
+                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
+                        </div>
+                        {pattern.evidence && (
+                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Weak Patterns */}
+              {weakPatterns.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-status-warning mb-3 flex items-center gap-2">
+                    <ExclamationTriangleIcon className="w-4 h-4" />
+                    Needs Improvement ({weakPatterns.length})
+                  </h3>
+                  <div className="space-y-2">
+                    {weakPatterns.map(pattern => (
+                      <button
+                        key={pattern.id}
+                        type="button"
+                        onClick={() => setSelectedPattern(pattern)}
+                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors">
+                            {pattern.name}
+                          </span>
+                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
+                        </div>
+                        {pattern.evidence && (
+                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Good Patterns */}
+              {goodPatterns.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-status-success mb-3 flex items-center gap-2">
+                    <CheckCircleIcon className="w-4 h-4" />
+                    Well Implemented ({goodPatterns.length})
+                  </h3>
+                  <div className="space-y-2">
+                    {goodPatterns.map(pattern => (
+                      <button
+                        key={pattern.id}
+                        type="button"
+                        onClick={() => setSelectedPattern(pattern)}
+                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors">
+                            {pattern.name}
+                          </span>
+                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
+                        </div>
+                        {pattern.evidence && (
+                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* N/A Patterns */}
+              {naPatterns.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold text-text-tertiary mb-3 flex items-center gap-2">
+                    <MinusCircleIcon className="w-4 h-4" />
+                    Not Applicable ({naPatterns.length})
+                  </h3>
+                  <div className="space-y-2">
+                    {naPatterns.map(pattern => (
+                      <button
+                        key={pattern.id}
+                        type="button"
+                        onClick={() => setSelectedPattern(pattern)}
+                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <span className="text-sm font-medium text-text-secondary group-hover:text-accent-primary transition-colors">
+                            {pattern.name}
+                          </span>
+                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
+                        </div>
+                        {pattern.evidence && (
+                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </details>
+        )}
       </div>
 
-      {/* Chat with Design Mentor CTA */}
-      <div className="pt-4 border-t border-border-primary">
-        {/* Quick Action Pills */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          {SUGGESTIONS.map((suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              onClick={() => {
-                setChatMode(true);
-                setTimeout(() => sendMessage(suggestion), 100);
-              }}
-              className="px-3 py-1.5 text-sm bg-background-secondary hover:bg-background-tertiary text-text-secondary hover:text-text-primary rounded-full transition-colors"
-            >
-              {suggestion}
-            </button>
-          ))}
-        </div>
-
-        {/* Main CTA Button */}
-        <button
-          type="button"
-          onClick={() => setChatMode(true)}
-          className="w-full flex items-center justify-center gap-2 px-5 py-4 bg-accent-primary text-white dark:text-gray-900 rounded-full text-lg font-medium hover:bg-accent-hover transition-colors"
-        >
-          <SparklesIcon className="w-6 h-6" />
-          {getChatCTA(results.score, maxScore)}
-        </button>
-      </div>
-
-      {/* New Audit Button */}
-      <div className="pt-3">
+      {/* Bottom Actions */}
+      <div className="pt-4 mt-4 border-t border-border-primary flex items-center justify-between">
         <button
           type="button"
           onClick={onNewAudit}
-          className="w-full flex items-center justify-center gap-2 px-4 py-3 text-base text-text-secondary hover:text-text-primary hover:bg-background-secondary rounded-full transition-colors"
+          className="text-sm text-text-secondary hover:text-text-primary flex items-center gap-2 transition-colors"
         >
-          <ArrowPathIcon className="w-5 h-5" />
-          Start New Audit
+          <ArrowPathIcon className="w-4 h-4" />
+          New Audit
+        </button>
+        <button
+          type="button"
+          onClick={() => setChatMode(true)}
+          className="text-sm text-accent-primary hover:underline flex items-center gap-2 cursor-pointer"
+        >
+          <ChatBubbleLeftRightIcon className="w-4 h-4" />
+          Chat with AI Mentor
         </button>
       </div>
+
+      {/* Pattern Detail Modal */}
+      <PatternModal
+        isOpen={!!selectedPattern}
+        onClose={() => setSelectedPattern(null)}
+        pattern={selectedPattern}
+      />
     </aside>
   );
 }

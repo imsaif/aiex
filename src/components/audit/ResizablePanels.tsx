@@ -44,9 +44,9 @@ const STATE_CONFIG = {
     maxPercent: 0.6,
   },
   results: {
-    defaultPercent: 0.7,    // 70% for results state
-    minWidth: 450,
-    maxPercent: 0.8,
+    defaultPercent: 0.5,    // 50% for results state (balanced split)
+    minWidth: 380,
+    maxPercent: 0.65,
   },
 };
 

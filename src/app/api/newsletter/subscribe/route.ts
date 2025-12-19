@@ -7,7 +7,7 @@ import { generateHandbookToken } from '@/lib/handbook-token';
 // Email validation schema
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
-  source: z.enum(['footer', 'handbook', 'direct', 'news']).optional().default('direct'),
+  source: z.enum(['footer', 'handbook', 'direct', 'news', 'audit']).optional().default('direct'),
 });
 
 export async function POST(request: NextRequest) {
@@ -120,10 +120,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | 'direct' | 'news' = 'direct') {
+async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | 'direct' | 'news' | 'audit' = 'direct') {
   try {
     const isHandbookFlow = source === 'handbook';
     const isNewsFlow = source === 'news';
+    const isAuditFlow = source === 'audit';
     const token = isHandbookFlow ? generateHandbookToken(email) : null;
 
     let subject: string;
@@ -135,6 +136,9 @@ async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | '
     } else if (isNewsFlow) {
       subject = '📱 Welcome to AIUX News!';
       html = getNewsWelcomeEmail();
+    } else if (isAuditFlow) {
+      subject = '🔍 Your AI UX Audit Report is Saved!';
+      html = getAuditWelcomeEmail();
     } else {
       subject = 'Welcome to AI UX Patterns Newsletter! 🎨';
       html = getNewsletterWelcomeEmail();
@@ -337,6 +341,57 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
 
           <p style="font-size: 12px; color: #999999; text-align: center; margin-top: 30px;">
             Download link valid for 30 days
+          </p>
+
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+function getAuditWelcomeEmail(): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your AI UX Audit Report is Saved</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Your Audit Report is Saved!</h1>
+        </div>
+
+        <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+          <p style="font-size: 16px; margin-bottom: 20px;">
+            Thanks for using our AI UX Design Audit tool! Your report has been downloaded.
+          </p>
+
+          <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #1e293b;">
+            <h2 style="font-size: 18px; margin: 0 0 10px 0; color: #1e293b; font-weight: 600;">What's next?</h2>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li style="margin-bottom: 8px;">Review your report and focus on the <strong>top 3 priorities</strong></li>
+              <li style="margin-bottom: 8px;">Use the pattern links to see real examples and implementation tips</li>
+              <li style="margin-bottom: 8px;">Re-run the audit after making changes to track your progress</li>
+            </ul>
+          </div>
+
+          <p style="font-size: 16px; margin-bottom: 20px;">
+            You're now subscribed to receive AI UX tips and pattern updates. We'll help you build better AI experiences.
+          </p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://www.aiuxdesign.guide/audit"
+               style="display: inline-block; background: #1e293b;
+                      color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px;
+                      font-weight: 600; font-size: 16px; margin-bottom: 15px;">
+              Run Another Audit
+            </a>
+          </div>
+
+          <p style="font-size: 14px; text-align: center;">
+            Explore all <a href="https://www.aiuxdesign.guide" style="color: #1e293b; text-decoration: underline;">28 AI design patterns</a>
           </p>
 
         </div>
