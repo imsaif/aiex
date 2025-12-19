@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -19,6 +19,32 @@ const Navbar = () => {
   const pathname = usePathname();
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Handle dropdown open with delay cancel
+  const handleMouseEnter = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setIsResourcesOpen(true);
+  }, []);
+
+  // Handle dropdown close with delay
+  const handleMouseLeave = useCallback(() => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsResourcesOpen(false);
+    }, 150); // 150ms delay before closing
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Global keyboard shortcut for search (⌘K / Ctrl+K)
   useEffect(() => {
@@ -127,8 +153,8 @@ const Navbar = () => {
             {/* Resources Dropdown */}
             <div
               className="relative"
-              onMouseEnter={() => setIsResourcesOpen(true)}
-              onMouseLeave={() => setIsResourcesOpen(false)}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
               <button className={getDropdownTriggerClasses()}>
                 <span className="hidden sm:inline relative">
@@ -144,32 +170,38 @@ const Navbar = () => {
 
               {/* Dropdown Menu */}
               {isResourcesOpen && (
-                <div className="absolute top-full right-0 mt-1 w-48 bg-surface-primary border border-border-primary rounded-xl shadow-lg overflow-hidden z-50">
-                  <Link
-                    href="/prompts"
-                    className={getDropdownItemClasses('/prompts')}
-                    onClick={() => setIsResourcesOpen(false)}
-                  >
-                    <SparklesIcon className="w-5 h-5" />
-                    <span>Prompts</span>
-                  </Link>
-                  <Link
-                    href="/guides"
-                    className={getDropdownItemClasses('/guides')}
-                    onClick={() => setIsResourcesOpen(false)}
-                  >
-                    <BookOpenIcon className="w-5 h-5" />
-                    <span>Guides</span>
-                  </Link>
-                  <Link
-                    href="/news"
-                    className={getDropdownItemClasses('/news')}
-                    onClick={() => setIsResourcesOpen(false)}
-                  >
-                    <NewspaperIcon className="w-5 h-5" />
-                    <span>News</span>
-                  </Link>
-                </div>
+                <>
+                  {/* Invisible bridge to prevent gap issues */}
+                  <div className="absolute top-full right-0 h-2 w-48" />
+                  <div className="absolute top-full right-0 pt-2 w-48 z-50">
+                    <div className="bg-surface-primary border border-border-primary rounded-xl shadow-lg overflow-hidden">
+                      <Link
+                        href="/prompts"
+                        className={getDropdownItemClasses('/prompts')}
+                        onClick={() => setIsResourcesOpen(false)}
+                      >
+                        <SparklesIcon className="w-5 h-5" />
+                        <span>Prompts</span>
+                      </Link>
+                      <Link
+                        href="/guides"
+                        className={getDropdownItemClasses('/guides')}
+                        onClick={() => setIsResourcesOpen(false)}
+                      >
+                        <BookOpenIcon className="w-5 h-5" />
+                        <span>Guides</span>
+                      </Link>
+                      <Link
+                        href="/news"
+                        className={getDropdownItemClasses('/news')}
+                        onClick={() => setIsResourcesOpen(false)}
+                      >
+                        <NewspaperIcon className="w-5 h-5" />
+                        <span>News</span>
+                      </Link>
+                    </div>
+                  </div>
+                </>
               )}
             </div>
 
