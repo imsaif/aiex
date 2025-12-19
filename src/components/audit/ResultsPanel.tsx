@@ -10,8 +10,10 @@ import {
   PaperAirplaneIcon,
   MinusCircleIcon,
   ArrowTopRightOnSquareIcon,
+  ClipboardDocumentIcon,
+  ClipboardDocumentCheckIcon,
 } from '@heroicons/react/24/outline';
-import { CheckBadgeIcon, SparklesIcon, ShieldCheckIcon } from '@heroicons/react/24/solid';
+import { CheckBadgeIcon, SparklesIcon, ShieldCheckIcon, FireIcon } from '@heroicons/react/24/solid';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -367,7 +369,140 @@ function PatternCategorySection({
   );
 }
 
-// Suggestion pills for chat
+// Get top 3 priority patterns to fix
+function getTopPriorities(
+  missingPatterns: (PatternResult & { id: string })[],
+  weakPatterns: (PatternResult & { id: string })[]
+): (PatternResult & { id: string })[] {
+  const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2, none: 3 };
+
+  // Combine missing and weak, prioritize missing first, then by priority level
+  const combined = [
+    ...missingPatterns.map(p => ({ ...p, isMissing: true })),
+    ...weakPatterns.map(p => ({ ...p, isMissing: false })),
+  ].sort((a, b) => {
+    // Missing patterns first
+    if (a.isMissing !== b.isMissing) return a.isMissing ? -1 : 1;
+    // Then by priority
+    return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
+  });
+
+  return combined.slice(0, 3);
+}
+
+// Generate copyable results summary
+function generateResultsSummary(
+  results: AnalysisResults,
+  missingPatterns: (PatternResult & { id: string })[],
+  weakPatterns: (PatternResult & { id: string })[],
+  goodPatterns: (PatternResult & { id: string })[]
+): string {
+  const lines: string[] = [
+    'AI UX Audit Results',
+    `Score: ${results.score}/${results.maxScore || 28} patterns detected`,
+    '',
+  ];
+
+  if (missingPatterns.length > 0) {
+    lines.push('Missing Patterns:');
+    missingPatterns.slice(0, 5).forEach(p => {
+      lines.push(`• ${p.name}${p.improvement ? ` - ${p.improvement}` : ''}`);
+    });
+    lines.push('');
+  }
+
+  if (weakPatterns.length > 0) {
+    lines.push('Needs Improvement:');
+    weakPatterns.slice(0, 5).forEach(p => {
+      lines.push(`• ${p.name}${p.improvement ? ` - ${p.improvement}` : ''}`);
+    });
+    lines.push('');
+  }
+
+  lines.push(`Well Implemented: ${goodPatterns.length} patterns`);
+  lines.push('');
+  lines.push('Run your own audit: aiuxdesign.guide/audit');
+
+  return lines.join('\n');
+}
+
+// Get dynamic chat CTA based on score
+function getChatCTA(score: number, maxScore: number): string {
+  const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0;
+  if (percentage < 50) return 'Get Help Fixing These Issues';
+  if (percentage < 70) return 'How Can I Improve?';
+  return 'Fine-tune Your Design';
+}
+
+// Top 3 Priorities Card Component
+function TopPrioritiesCard({
+  priorities,
+  onAskAbout,
+}: {
+  priorities: (PatternResult & { id: string })[];
+  onAskAbout: (patternName: string) => void;
+}) {
+  if (priorities.length === 0) return null;
+
+  return (
+    <div className="mb-6 p-4 rounded-xl bg-gradient-to-br from-accent-subtle to-accent-subtle/50 border border-accent-primary/20">
+      <div className="flex items-center gap-2 mb-3">
+        <FireIcon className="w-5 h-5 text-accent-primary" />
+        <h3 className="text-base font-semibold text-text-primary">Your Top Priorities</h3>
+      </div>
+
+      <div className="space-y-3">
+        {priorities.map((pattern, index) => {
+          const patternUrl = getPatternUrl(pattern.id);
+          return (
+            <div key={pattern.id} className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent-primary text-white dark:text-gray-900 flex items-center justify-center text-sm font-semibold">
+                {index + 1}
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {patternUrl ? (
+                    <Link
+                      href={patternUrl}
+                      target="_blank"
+                      className="text-sm font-medium text-accent-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      {pattern.name}
+                      <ArrowTopRightOnSquareIcon className="w-3 h-3" />
+                    </Link>
+                  ) : (
+                    <span className="text-sm font-medium text-text-primary">{pattern.name}</span>
+                  )}
+                  <span className={`px-1.5 py-0.5 text-[10px] font-medium rounded ${
+                    pattern.status === 'missing'
+                      ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                      : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                  }`}>
+                    {pattern.status === 'missing' ? 'missing' : 'weak'}
+                  </span>
+                </div>
+                {pattern.improvement && (
+                  <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{pattern.improvement}</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => onAskAbout(priorities[0]?.name || '')}
+        className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-lg text-sm font-medium hover:bg-accent-hover transition-colors"
+      >
+        <SparklesIcon className="w-4 h-4" />
+        Help me fix #{1}
+      </button>
+    </div>
+  );
+}
+
+// Suggestion pills for chat - now dynamic based on top pattern
 const SUGGESTIONS = [
   'How do I fix the top issue?',
   'What should I prioritize?',
@@ -380,6 +515,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
+  const [copied, setCopied] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -464,6 +600,35 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
     }
   };
 
+  // Handle asking about a specific pattern - switches to chat and sends question
+  const handleAskAboutPattern = useCallback((patternName: string) => {
+    setChatMode(true);
+    // Small delay to allow chat mode to render, then send message
+    setTimeout(() => {
+      sendMessage(`How do I implement ${patternName}? Give me specific, actionable steps.`);
+    }, 100);
+  }, [sendMessage]);
+
+  // Handle copy results to clipboard
+  const handleCopy = useCallback(async () => {
+    if (!results) return;
+
+    const allPatterns = Object.entries(results.patterns).map(([patternId, data]) => ({ ...data, id: patternId }));
+    const missing = allPatterns.filter(p => p.status === 'missing');
+    const weak = allPatterns.filter(p => p.status === 'weak');
+    const good = allPatterns.filter(p => p.status === 'well-implemented');
+
+    const summary = generateResultsSummary(results, missing, weak, good);
+
+    try {
+      await navigator.clipboard.writeText(summary);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  }, [results]);
+
   // Show loading state if analyzing
   if (isAnalyzing || !results) {
     return (
@@ -505,9 +670,9 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
 
   // Convert patterns object to array (include all patterns)
   const allPatterns = Object.entries(results.patterns)
-    .map(([id, data]) => ({
-      id,
+    .map(([patternId, data]) => ({
       ...data,
+      id: patternId,
     }));
 
   // Group patterns by status
@@ -644,10 +809,24 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
       )}
 
       {/* Header */}
-      <div className="flex items-center gap-3 mb-3">
-        <CheckBadgeIcon className="w-7 h-7 text-status-success" />
-        <span className="text-lg font-semibold text-text-primary">{isDemoMode ? 'Sample Analysis' : 'Analysis Complete'}</span>
-        <CompactScoreInline score={results.score} total={maxScore} />
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <CheckBadgeIcon className="w-7 h-7 text-status-success" />
+          <span className="text-lg font-semibold text-text-primary">{isDemoMode ? 'Sample Analysis' : 'Analysis Complete'}</span>
+          <CompactScoreInline score={results.score} total={maxScore} />
+        </div>
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="p-2 text-text-tertiary hover:text-text-primary hover:bg-background-secondary rounded-lg transition-colors"
+          title={copied ? 'Copied!' : 'Copy results'}
+        >
+          {copied ? (
+            <ClipboardDocumentCheckIcon className="w-5 h-5 text-status-success" />
+          ) : (
+            <ClipboardDocumentIcon className="w-5 h-5" />
+          )}
+        </button>
       </div>
 
       {/* Trust Header */}
@@ -675,6 +854,12 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
             {results.summary}
           </p>
         </div>
+
+        {/* Top 3 Priorities Card */}
+        <TopPrioritiesCard
+          priorities={getTopPriorities(missingPatterns, weakPatterns)}
+          onAskAbout={handleAskAboutPattern}
+        />
 
         {/* Pattern Category Sections */}
         <div className="space-y-3">
@@ -730,13 +915,31 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
 
       {/* Chat with Design Mentor CTA */}
       <div className="pt-4 border-t border-border-primary">
+        {/* Quick Action Pills */}
+        <div className="flex flex-wrap gap-2 mb-3">
+          {SUGGESTIONS.map((suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              onClick={() => {
+                setChatMode(true);
+                setTimeout(() => sendMessage(suggestion), 100);
+              }}
+              className="px-3 py-1.5 text-sm bg-background-secondary hover:bg-background-tertiary text-text-secondary hover:text-text-primary rounded-full transition-colors"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+
+        {/* Main CTA Button */}
         <button
           type="button"
           onClick={() => setChatMode(true)}
           className="w-full flex items-center justify-center gap-2 px-5 py-4 bg-accent-primary text-white dark:text-gray-900 rounded-full text-lg font-medium hover:bg-accent-hover transition-colors"
         >
           <SparklesIcon className="w-6 h-6" />
-          Chat with Design Mentor
+          {getChatCTA(results.score, maxScore)}
         </button>
       </div>
 
