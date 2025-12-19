@@ -4,17 +4,25 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface InlineNewsletterSignupProps {
-  variant?: 'hero' | 'footer' | 'pattern-detail';
+  variant?: 'hero' | 'footer' | 'pattern-detail' | 'news';
   className?: string;
   customHeading?: string;
   customSubheading?: string;
+  customButtonText?: string;
+  customSuccessMessage?: string;
+  stacked?: boolean;
+  source?: 'footer' | 'handbook' | 'direct' | 'news';
 }
 
 export function InlineNewsletterSignup({
   variant = 'hero',
   className = '',
   customHeading,
-  customSubheading
+  customSubheading,
+  customButtonText,
+  customSuccessMessage,
+  stacked = false,
+  source = 'handbook',
 }: InlineNewsletterSignupProps) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -47,7 +55,7 @@ export function InlineNewsletterSignup({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
-          source: 'handbook' // Send handbook PDF + subscribe to newsletter
+          source,
         }),
       });
 
@@ -74,6 +82,7 @@ export function InlineNewsletterSignup({
 
   const isHero = variant === 'hero';
   const isPatternDetail = variant === 'pattern-detail';
+  const isNews = variant === 'news';
 
   // Hide component if user has already subscribed
   if (isHidden) {
@@ -91,12 +100,12 @@ export function InlineNewsletterSignup({
             exit={{ opacity: 0, y: -10 }}
             className={`text-center ${isHero ? 'py-6' : 'py-4'}`}
           >
-            <div className="inline-flex items-center gap-2 px-6 py-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full">
-              <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-accent-subtle border border-success rounded-full">
+              <svg className="w-5 h-5 text-border-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <span className="text-sm font-medium text-green-900 dark:text-green-100">
-                Success! Check your email for the handbook PDF 🎉
+              <span className="text-sm font-medium text-text-primary">
+                {customSuccessMessage || 'Success! Check your email for the handbook PDF 🎉'}
               </span>
             </div>
           </motion.div>
@@ -109,22 +118,22 @@ export function InlineNewsletterSignup({
             onSubmit={handleSubmit}
             className="w-full"
           >
-            {/* Custom Heading for Pattern Detail */}
-            {isPatternDetail && customHeading && (
-              <h3 className="text-2xl font-semibold text-text-primary mb-2 text-center">
+            {/* Custom Heading */}
+            {(isPatternDetail || isNews) && customHeading && (
+              <h3 className={`font-semibold text-text-primary mb-2 ${isNews ? 'text-lg' : 'text-2xl text-center'}`}>
                 {customHeading}
               </h3>
             )}
 
             {/* Value Proposition / Subheading */}
-            {(isHero || (isPatternDetail && customSubheading)) && (
-              <p className="text-base text-text-secondary mb-4 text-center font-medium">
-                {isPatternDetail && customSubheading ? customSubheading : 'Get 6 essential AI design patterns'}
+            {(isHero || ((isPatternDetail || isNews) && customSubheading)) && (
+              <p className={`text-text-secondary mb-4 font-medium ${isNews ? 'text-sm' : 'text-base text-center'}`}>
+                {customSubheading || 'Get 6 essential AI design patterns'}
               </p>
             )}
 
             {/* Input Group */}
-            <div className={`flex flex-col sm:flex-row gap-3 ${isHero || isPatternDetail ? 'max-w-lg mx-auto' : ''}`}>
+            <div className={`flex ${stacked ? 'flex-col' : 'flex-col sm:flex-row'} gap-3 ${isHero || isPatternDetail ? 'max-w-lg mx-auto' : ''}`}>
               <input
                 type="email"
                 value={email}
@@ -168,7 +177,7 @@ export function InlineNewsletterSignup({
                     Subscribing...
                   </span>
                 ) : (
-                  'Get Patterns →'
+                  customButtonText || 'Get Patterns →'
                 )}
               </button>
             </div>
@@ -178,15 +187,15 @@ export function InlineNewsletterSignup({
               <motion.p
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="text-sm text-red-600 dark:text-red-400 mt-2 text-center"
+                className="text-sm text-border-error mt-2 text-center"
               >
                 {errorMessage}
               </motion.p>
             )}
 
             {/* Trust Badge */}
-            {(isHero || isPatternDetail) && (
-              <p className="text-xs text-text-secondary mt-4 text-center">
+            {(isHero || isPatternDetail || isNews) && (
+              <p className={`text-xs text-text-secondary mt-4 ${isNews ? '' : 'text-center'}`}>
                 Free • No spam • Unsubscribe anytime
               </p>
             )}

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { Newsletter, NewsletterTag } from '@/types';
 
 interface NewsClientProps {
@@ -62,12 +63,31 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
       <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-text-primary">
+            {/* Info Chip */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
+                Weekly AI Design Updates
+              </span>
+            </div>
+
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-text-primary">
               AIUX News
             </h1>
-            <p className="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto">
-              How designers stay ahead of AI. Weekly insights on design patterns, UX strategies, and what&apos;s shaping the future of human-AI interaction.
+            <p className="text-lg md:text-xl text-text-secondary mb-8">
+              What&apos;s new in AI products and what it means for design.
             </p>
+
+            {/* Subscribe Form */}
+            <div className="max-w-md mx-auto">
+              <InlineNewsletterSignup
+                variant="hero"
+                source="news"
+                customSubheading="Get weekly AI product updates, pattern breakdowns & design insights"
+                customButtonText="Solve my AI design overload →"
+                customSuccessMessage="You're in! Watch for our next issue."
+                stacked
+              />
+            </div>
           </div>
         </div>
       </section>

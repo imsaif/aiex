@@ -52,7 +52,7 @@ export default function NewsletterDetailClient({
               {newsletter.tags.map((tag) => (
                 <span
                   key={tag.id}
-                  className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
+                  className="px-3 py-1 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info"
                 >
                   {tag.name}
                 </span>
@@ -104,29 +104,20 @@ export default function NewsletterDetailClient({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="prose prose-lg dark:prose-invert max-w-none
-            prose-headings:text-text-primary prose-headings:font-semibold
-            prose-p:text-text-secondary prose-p:leading-relaxed
-            prose-a:text-accent-primary prose-a:no-underline hover:prose-a:underline
-            prose-strong:text-text-primary prose-strong:font-semibold
-            prose-ul:text-text-secondary prose-ol:text-text-secondary
-            prose-li:marker:text-text-tertiary
-            prose-blockquote:border-l-accent-primary prose-blockquote:text-text-secondary
-            prose-code:text-accent-primary prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-            prose-pre:bg-gray-900 dark:prose-pre:bg-gray-950 prose-pre:text-gray-100"
+          className="max-w-none [&>*]:max-w-none"
           dangerouslySetInnerHTML={{ __html: newsletter.content }}
         />
       </article>
 
       {/* Navigation */}
       <div className="max-w-4xl mx-auto px-6 pb-16">
-        <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+        <div className="border-t border-primary pt-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Previous */}
             {previousNewsletter ? (
               <Link
                 href={`/news/${previousNewsletter.slug}`}
-                className="group p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                className="group p-4 rounded-xl border border-primary hover:border-secondary transition-colors"
               >
                 <div className="flex items-center gap-2 text-text-tertiary text-sm mb-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +142,7 @@ export default function NewsletterDetailClient({
             {nextNewsletter ? (
               <Link
                 href={`/news/${nextNewsletter.slug}`}
-                className="group p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors md:text-right"
+                className="group p-4 rounded-xl border border-primary hover:border-secondary transition-colors md:text-right"
               >
                 <div className="flex items-center gap-2 text-text-tertiary text-sm mb-2 md:justify-end">
                   Next Issue

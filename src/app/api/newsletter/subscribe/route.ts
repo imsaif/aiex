@@ -7,7 +7,7 @@ import { generateHandbookToken } from '@/lib/handbook-token';
 // Email validation schema
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
-  source: z.enum(['footer', 'handbook', 'direct']).optional().default('direct'),
+  source: z.enum(['footer', 'handbook', 'direct', 'news']).optional().default('direct'),
 });
 
 export async function POST(request: NextRequest) {
@@ -120,16 +120,31 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | 'direct' = 'direct') {
+async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | 'direct' | 'news' = 'direct') {
   try {
     const isHandbookFlow = source === 'handbook';
+    const isNewsFlow = source === 'news';
     const token = isHandbookFlow ? generateHandbookToken(email) : null;
+
+    let subject: string;
+    let html: string;
+
+    if (isHandbookFlow) {
+      subject = '🎨 Your AI Design Patterns Handbook is Ready!';
+      html = getHandbookWelcomeEmail(email, token);
+    } else if (isNewsFlow) {
+      subject = '📱 Welcome to AIUX News!';
+      html = getNewsWelcomeEmail();
+    } else {
+      subject = 'Welcome to AI UX Patterns Newsletter! 🎨';
+      html = getNewsletterWelcomeEmail();
+    }
 
     const result = await resend.emails.send({
       from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
       to: email,
-      subject: isHandbookFlow ? '🎨 Your AI Design Patterns Handbook is Ready!' : 'Welcome to AI UX Patterns Newsletter! 🎨',
-      html: isHandbookFlow ? getHandbookWelcomeEmail(email, token) : getNewsletterWelcomeEmail(),
+      subject,
+      html,
     });
 
     console.log('Welcome email sent successfully:', { id: result.data?.id, source, timestamp: new Date().toISOString() });
@@ -193,6 +208,56 @@ function getNewsletterWelcomeEmail(): string {
             Want a quick overview? Check out our <a href="https://www.aiuxdesign.guide/handbook" style="color: #000000; text-decoration: underline;">6 Essential Patterns Handbook</a>
           </p>
 
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+function getNewsWelcomeEmail(): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome to AIUX News</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: #0f172a; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">📱 Welcome to AIUX News!</h1>
+        </div>
+
+        <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+          <p style="font-size: 16px; margin-bottom: 20px;">
+            You're in! Every week, we'll send you a curated roundup of what's new in AI design.
+          </p>
+
+          <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #0f172a;">
+            <h2 style="font-size: 18px; margin: 0 0 10px 0; color: #0f172a; font-weight: 600;">What you'll get:</h2>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li style="margin-bottom: 8px;"><strong>Weekly roundups</strong> of what's new in ChatGPT, Claude, Gemini, Cursor, and more</li>
+              <li style="margin-bottom: 8px;"><strong>Pattern breakdowns</strong> showing the UX thinking behind each update</li>
+              <li style="margin-bottom: 8px;"><strong>Actionable insights</strong> you can apply to your own AI products</li>
+            </ul>
+          </div>
+
+          <p style="font-size: 16px; margin-bottom: 20px;">
+            While you wait for the next issue, catch up on our latest:
+          </p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://www.aiuxdesign.guide/news"
+               style="display: inline-block; background: #0f172a;
+                      color: #ffffff; padding: 14px 32px; text-decoration: none; border-radius: 8px;
+                      font-weight: 600; font-size: 16px;">
+              Read Latest Issue →
+            </a>
+          </div>
+
+          <p style="font-size: 14px; color: #64748b; text-align: center; margin-top: 30px;">
+            Questions? Just reply to this email.
+          </p>
         </div>
       </body>
     </html>
