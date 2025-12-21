@@ -223,7 +223,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
   const [messageIndex, setMessageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const [selectedPattern, setSelectedPattern] = useState<(PatternResult & { id: string }) | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Rotate through analysis messages
@@ -238,12 +237,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
     return () => clearInterval(interval);
   }, [isAnalyzing]);
 
-  // Auto-scroll to bottom of messages (only after user sends a message)
-  useEffect(() => {
-    if (messages.length > 1) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
 
   // Send message to chat API
   const sendMessage = useCallback(async (content: string) => {
@@ -462,7 +455,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
