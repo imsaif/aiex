@@ -28,6 +28,68 @@ const getTagsBySlug = (slugs: string[]): NewsletterTag[] =>
  */
 export const newsletters: Newsletter[] = [
   {
+    id: 'ai-ux-daily-dec-21-chatgpt-personality-claude-code-navigation-gemini-delay',
+    title: 'AI UX Daily: ChatGPT Personality Sliders, Claude Code Navigation & Gemini Delay',
+    slug: 'ai-ux-daily-dec-21-chatgpt-personality-claude-code-navigation-gemini-delay',
+    summary: 'Personalization takes center stage: ChatGPT adds granular personality controls, Claude Code brings IDE-like navigation to the terminal, and Google buys Android users more time before the Gemini switch.',
+    content: `
+<p style="margin: 0 0 40px; font-size: 17px; line-height: 1.7; color: #334155;">Personalization takes center stage: ChatGPT adds granular personality controls, Claude Code brings IDE-like navigation to the terminal, and Google buys Android users more time before the Gemini switch.</p>
+
+<div style="border-top: 1px solid #e2e8f0; margin-bottom: 40px;"></div>
+
+<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">📱 Today in AI Products</h2>
+
+<!-- ChatGPT Update -->
+<div style="margin: 0 0 32px; border-left: 3px solid #10a37f; padding-left: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <span style="font-size: 11px; color: #10a37f; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">ChatGPT</span>
+    <span style="font-size: 12px; color: #94a3b8;">Dec 20</span>
+  </div>
+  <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">ChatGPT lets you dial in warmth, enthusiasm, and emoji use</p>
+  <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #555555;">OpenAI shipped personality sliders that let users fine-tune ChatGPT's conversational style beyond preset tones. Adjustable traits include Warmth, Enthusiasm, Emoji use, Headers, and Lists—each set to More, Less, or Default. This addresses the "robotic vs. sycophantic" criticism by putting tone control directly in users' hands. <a href="https://techcrunch.com/2025/12/20/openai-allows-users-to-directly-adjust-chatgpts-warmth-and-enthusiasm/" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="/patterns/adaptive-interfaces" style="background: #ecfdf5; color: #10a37f; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">Adaptive Interfaces</a></p>
+</div>
+
+<!-- Claude Code Update -->
+<div style="margin: 0 0 32px; border-left: 3px solid #d97706; padding-left: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <span style="font-size: 11px; color: #d97706; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Claude Code</span>
+    <span style="font-size: 12px; color: #94a3b8;">Dec 21</span>
+  </div>
+  <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">Claude Code adds go-to-definition and IDE-like code navigation</p>
+  <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #555555;">Version 2.0.74 brings LSP integration: go-to-definition, find references, and hover documentation—all inside the terminal. Also new: terminal setup for Kitty, Alacritty, Zed, and Warp. Reduces context-switching for developers who live in the command line. <a href="https://releasebot.io/updates/anthropic/claude-code" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="/patterns/contextual-assistance" style="background: #fef3c7; color: #d97706; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">Contextual Assistance</a></p>
+</div>
+
+<!-- Gemini Update -->
+<div style="margin: 0 0 40px; border-left: 3px solid #4285f4; padding-left: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <span style="font-size: 11px; color: #4285f4; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Gemini</span>
+    <span style="font-size: 12px; color: #94a3b8;">Dec 19</span>
+  </div>
+  <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">Google delays Assistant-to-Gemini switch until 2026</p>
+  <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #555555;">Android users get a reprieve: the planned retirement of Google Assistant on phones and tablets is pushed to next year. The "Switch to Google Assistant" option stays in the Gemini app through the holidays. Forced transitions during busy periods create friction—Google's giving users more runway to adapt. <a href="https://9to5google.com/2025/12/19/google-assistant-gemini-2026/" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="/patterns/graceful-handoff" style="background: #eff6ff; color: #4285f4; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">Graceful Handoff</a></p>
+</div>
+
+<!-- Today's Takeaway -->
+<div style="background-color: #1e293b; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
+  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px;">🎯 Today's Takeaway</h2>
+  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #94a3b8;"><strong style="color: #ffffff;">User control over AI personality is the next frontier.</strong> ChatGPT's sliders signal a shift from "one-size-fits-all" AI personas to granular, user-defined interaction styles.</p>
+  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #94a3b8;">Expect more products to ship similar customization—your design system should plan for it.</p>
+</div>
+
+<!-- CTA -->
+<div style="text-align: center; padding: 24px 0;">
+  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want to learn more about the patterns mentioned today?</p>
+  <a href="/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
+</div>
+    `.trim(),
+    publishedAt: '2025-12-21',
+    published: true,
+    tags: getTagsBySlug(['ai-design', 'ux-patterns']),
+  },
+  {
     id: 'this-week-in-aiux-gpt52-cursor-visual-editor-gemini-deep-research',
     title: 'This Week in AIUX: GPT-5.2, Cursor Visual Editor & Gemini Deep Research',
     slug: 'this-week-in-aiux-gpt52-cursor-visual-editor-gemini-deep-research',

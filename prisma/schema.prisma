@@ -19,3 +19,16 @@ model Subscriber {
   unsubscribeToken  String   @unique @default(cuid())
   updatedAt         DateTime @updatedAt
 }
+
+model NewsletterDraft {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  summary     String
+  content     String   @db.Text
+  publishDate DateTime
+  status      String   @default("pending_review") // pending_review, approved, published, rejected
+  sources     Json     @default("[]") // Array of source URLs used
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
