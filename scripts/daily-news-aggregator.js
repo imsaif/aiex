@@ -23,35 +23,22 @@ const parser = new Parser({
 
 // RSS feed sources for AI products
 const RSS_SOURCES = [
-  {
-    name: 'OpenAI',
-    url: 'https://openai.com/blog/rss.xml',
-    color: '#10a37f',
-  },
-  {
-    name: 'Anthropic',
-    url: 'https://www.anthropic.com/rss.xml',
-    color: '#d97706',
-  },
-  {
-    name: 'Google AI',
-    url: 'https://blog.google/technology/ai/rss/',
-    color: '#4285f4',
-  },
-  {
-    name: 'Vercel',
-    url: 'https://vercel.com/atom',
-    color: '#000000',
-  },
-  {
-    name: 'GitHub',
-    url: 'https://github.blog/feed/',
-    color: '#333333',
-  },
+  // AI Companies
+  { name: 'OpenAI', url: 'https://openai.com/blog/rss.xml', color: '#10a37f' },
+  { name: 'Anthropic', url: 'https://www.anthropic.com/rss.xml', color: '#d97706' },
+  { name: 'Google AI', url: 'https://blog.google/technology/ai/rss/', color: '#4285f4' },
+  { name: 'Microsoft AI', url: 'https://blogs.microsoft.com/ai/feed/', color: '#00a4ef' },
+  // Design Tools
+  { name: 'Figma', url: 'https://www.figma.com/blog/feed/atom.xml', color: '#f24e1e' },
+  // Dev Tools
+  { name: 'Vercel', url: 'https://vercel.com/atom', color: '#000000' },
+  { name: 'GitHub', url: 'https://github.blog/feed/', color: '#333333' },
+  { name: 'Supabase', url: 'https://supabase.com/blog/rss.xml', color: '#3ecf8e' },
 ];
 
 // Keywords to filter for AI/UX relevant content
 const RELEVANCE_KEYWORDS = [
+  // AI terms
   'ai',
   'artificial intelligence',
   'machine learning',
@@ -64,16 +51,22 @@ const RELEVANCE_KEYWORDS = [
   'assistant',
   'model',
   'agent',
+  // Design terms
   'ux',
   'user experience',
   'interface',
   'design',
+  'figma',
+  'prototype',
+  'component',
+  // Product terms
   'feature',
   'update',
   'launch',
   'release',
   'new',
   'announce',
+  'announcement',
 ];
 
 /**
