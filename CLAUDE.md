@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-22 12:01 (MacBook)
+- **Pattern:** Daily Newsletter Automation
+- **Status:** ✅ Completed
+- **Files Changed:** 15
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented full daily newsletter automation system with AI-powered content generation. Added RSS aggregator for OpenAI/Anthropic/Google/Vercel/GitHub feeds, Claude API integration for newsletter generation, admin dashboard for review/edit/publish workflow, cron API route for scheduled generation via cron-job.org, and "quiet day" feature for slow news days with creative inline messages. Deployed to production and tested end-to-end.
+
 ### Session 2025-12-19 20:58 (MacBook)
 - **Pattern:** Audit Results Page Simplification
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed hero email subscription failing on production. Root cause: Prisma schema was configured for SQLite but Vercel requires PostgreSQL (serverless has read-only filesystem). Changed prisma/schema.prisma provider from sqlite to postgresql. Also fixed frontend error display to show actual API error messages instead of generic "Something went wrong".
 
 ### Session 2025-12-08 20:03 (MacBook)
-- **Pattern:** Footer Attribution - Claude Code
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Added "Built with Claude Code by Anthropic" attribution to footer under the aiux branding section. Includes Anthropic logo SVG icon and link to claude.ai/code. Updated text color from tertiary to secondary for better accessibility.
-
-### Session 2025-12-08 19:46 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
