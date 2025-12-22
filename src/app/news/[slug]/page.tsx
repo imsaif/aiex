@@ -85,11 +85,38 @@ export default async function NewsletterPage({ params }: PageProps) {
   // Get adjacent newsletters for navigation (static only for now)
   const { previous, next } = getAdjacentNewsletters(slug);
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: newsletter.title,
+    datePublished: new Date(newsletter.publishedAt).toISOString(),
+    author: {
+      '@type': 'Person',
+      name: 'Imran',
+      url: 'https://www.aiuxdesign.guide/about',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI UX Design Guide',
+    },
+    description: newsletter.summary || newsletter.title,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://www.aiuxdesign.guide/news/${newsletter.slug}`,
+    },
+  };
+
   return (
-    <NewsletterDetailClient
-      newsletter={newsletter}
-      previousNewsletter={previous}
-      nextNewsletter={next}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <NewsletterDetailClient
+        newsletter={newsletter}
+        previousNewsletter={previous}
+        nextNewsletter={next}
+      />
+    </>
   );
 }

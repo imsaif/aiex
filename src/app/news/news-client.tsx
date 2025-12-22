@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { Newsletter, NewsletterTag } from '@/types';
+import { patterns } from '@/data/patterns';
 
 interface NewsClientProps {
   initialNewsletters: Newsletter[];
@@ -54,6 +55,13 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
       day: 'numeric',
     });
   };
+
+  // Get a random pattern for quiet day suggestions (client-side only to avoid hydration mismatch)
+  const [suggestedPattern, setSuggestedPattern] = useState<typeof patterns[0] | null>(null);
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * patterns.length);
+    setSuggestedPattern(patterns[randomIndex]);
+  }, []);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -160,11 +168,22 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                       {formatDate(newsletter.publishedAt)}
                     </span>
 
-                    {/* Title + Summary inline */}
+                    {/* Summary + Pattern suggestion */}
                     <div className="flex-1">
                       <span className="text-text-secondary italic">
                         {newsletter.summary}
                       </span>
+                      {suggestedPattern && (
+                        <span className="ml-2 text-text-tertiary">
+                          Explore:{' '}
+                          <Link
+                            href={`/patterns/${suggestedPattern.slug}`}
+                            className="text-accent-primary hover:underline"
+                          >
+                            {suggestedPattern.name} →
+                          </Link>
+                        </span>
+                      )}
                     </div>
                   </div>
                 ) : (

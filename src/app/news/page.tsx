@@ -5,13 +5,13 @@ import NewsClient from './news-client';
 import type { Newsletter } from '@/types';
 
 export const metadata: Metadata = {
-  title: 'Newsletter Archive | AI UX Design Patterns',
+  title: 'AI UX News | Daily Updates on ChatGPT, Claude, Cursor & AI Design',
   description:
-    'Browse our archive of newsletters covering AI design patterns, UX insights, and industry updates. Filter by tags and search for specific topics.',
+    'Track what\'s happening in AI products daily. UX-focused updates on ChatGPT, Claude, Gemini, Cursor and more — filtered for what designers need to know.',
   openGraph: {
-    title: 'Newsletter Archive | AI UX Design Patterns',
+    title: 'AI UX News | Daily Updates on ChatGPT, Claude, Cursor & AI Design',
     description:
-      'Browse our archive of newsletters covering AI design patterns, UX insights, and industry updates.',
+      'Track what\'s happening in AI products daily. UX-focused updates on ChatGPT, Claude, Gemini, Cursor and more.',
     type: 'website',
   },
 };
@@ -62,5 +62,26 @@ export default async function NewsPage() {
 
   const tags = getAllTags();
 
-  return <NewsClient initialNewsletters={allNewsletters} availableTags={tags} />;
+  const newsPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'AI UX News',
+    description: 'Daily AI product updates for designers',
+    url: 'https://www.aiuxdesign.guide/news',
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI UX Design Guide',
+      url: 'https://www.aiuxdesign.guide',
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsPageSchema) }}
+      />
+      <NewsClient initialNewsletters={allNewsletters} availableTags={tags} />
+    </>
+  );
 }

@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-22 22:59 (MacBook)
+- **Pattern:** News Page SEO Improvements
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Added SEO improvements to /news section: updated page title/description for better search visibility, added JSON-LD Blog schema to listing page and Article schema to individual articles, and added random pattern suggestion link to quiet day entries (with hydration fix using useEffect).
+
 ### Session 2025-12-22 12:01 (MacBook)
 - **Pattern:** Daily Newsletter Automation
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed dark mode visibility issues on audit page buttons and chat bubbles. The issue was `dark:text-background-primary` not applying correctly when `accent-primary` becomes white in dark mode. Changed to explicit `dark:text-gray-900` for proper contrast. Fixed in CenterUpload.tsx, ResultsPanel.tsx, RightWizard.tsx, and UsageLimitModal.tsx.
 
 ### Session 2025-12-12 11:58 (MacBook)
-- **Pattern:** Newsletter Email Subscription Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed hero email subscription failing on production. Root cause: Prisma schema was configured for SQLite but Vercel requires PostgreSQL (serverless has read-only filesystem). Changed prisma/schema.prisma provider from sqlite to postgresql. Also fixed frontend error display to show actual API error messages instead of generic "Something went wrong".
-
-### Session 2025-12-08 20:03 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
