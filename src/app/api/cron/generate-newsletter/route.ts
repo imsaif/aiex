@@ -313,11 +313,53 @@ export async function GET(request: NextRequest) {
     // Step 1: Aggregate news
     const newsItems = await aggregateNews();
 
+    // Handle quiet days with a creative message
     if (newsItems.length === 0) {
+      const quietDayMessages = [
+        { title: 'A Quiet Day in AI', message: 'No major AI updates today. Perfect time to explore a new pattern or refine your designs.' },
+        { title: 'The AI World Takes a Breath', message: 'Nothing groundbreaking today. Why not revisit a pattern you haven\'t explored yet?' },
+        { title: 'Slow News Day', message: 'The AI feeds are quiet. A good day to focus on craft over chaos.' },
+        { title: 'Design Day', message: 'No AI news to distract you. Go design something beautiful.' },
+        { title: 'All Quiet on the AI Front', message: 'Major players are silent today. Time to catch up on patterns you bookmarked.' },
+      ];
+
+      const randomMessage = quietDayMessages[Math.floor(Math.random() * quietDayMessages.length)];
+      const date = new Date();
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-quiet-day`;
+
+      // Check if we already have a quiet day entry for today
+      const existingQuietDay = await prisma.newsletterDraft.findFirst({
+        where: { slug },
+      });
+
+      if (existingQuietDay) {
+        return NextResponse.json({
+          success: true,
+          message: 'Quiet day entry already exists for today',
+          draftCreated: false,
+        });
+      }
+
+      // Create and auto-publish quiet day entry
+      const draft = await prisma.newsletterDraft.create({
+        data: {
+          title: `AI UX Daily: ${randomMessage.title}`,
+          slug,
+          summary: randomMessage.message,
+          content: '', // Empty content - will show inline only
+          publishDate: new Date(),
+          status: 'published', // Auto-publish quiet days
+          sources: [],
+        },
+      });
+
       return NextResponse.json({
         success: true,
-        message: 'No relevant news items found in the last 48 hours',
-        draftCreated: false,
+        message: 'Quiet day entry created and published',
+        draftId: draft.id,
+        title: draft.title,
+        isQuietDay: true,
       });
     }
 
