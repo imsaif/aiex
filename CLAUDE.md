@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-22 23:48 (MacBook)
+- **Pattern:** News Page Dark Mode & Footer Updates
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed dark mode accessibility issues on /news pages by implementing JavaScript-based inline style overrides for newsletter HTML content. Made quiet day "Explore" links fully clickable with aligned arrows. Updated footer tagline and removed Claude Code attribution.
+
 ### Session 2025-12-22 22:59 (MacBook)
 - **Pattern:** News Page SEO Improvements
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Implemented dynamic panel widths for audit page based on state. Analysis panel now takes 50% width on welcome screen and expands to 70% when results are showing. Added smooth CSS transitions for state changes, percentage-based width calculations, and separate localStorage keys per state.
 
 ### Session 2025-12-12 16:20 (MacBook)
-- **Pattern:** Audit Page - Dark Mode Button Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed dark mode visibility issues on audit page buttons and chat bubbles. The issue was `dark:text-background-primary` not applying correctly when `accent-primary` becomes white in dark mode. Changed to explicit `dark:text-gray-900` for proper contrast. Fixed in CenterUpload.tsx, ResultsPanel.tsx, RightWizard.tsx, and UsageLimitModal.tsx.
-
-### Session 2025-12-12 11:58 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

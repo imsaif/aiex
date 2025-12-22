@@ -339,3 +339,77 @@ p {
   pointer-events: none;
   z-index: 1;
 }
+
+/* Newsletter content dark mode overrides - forces readable text on inline-styled HTML */
+html[data-theme="dark"] .newsletter-content h2[style],
+html[data-theme="dark"] .newsletter-content h3[style] {
+  color: #f1f5f9 !important;
+}
+
+html[data-theme="dark"] .newsletter-content p[style] {
+  color: #cbd5e1 !important;
+}
+
+/* Article titles need to be brighter */
+html[data-theme="dark"] .newsletter-content div[style*="border-left"] > p:nth-child(2) {
+  color: #f1f5f9 !important;
+}
+
+/* Strong text */
+html[data-theme="dark"] .newsletter-content strong {
+  color: #f1f5f9 !important;
+}
+
+/* Dividers */
+html[data-theme="dark"] .newsletter-content div[style*="border-top"] {
+  border-color: #475569 !important;
+}
+
+/* Pattern badge links */
+html[data-theme="dark"] .newsletter-content a[href^="/patterns"] {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Source links */
+html[data-theme="dark"] .newsletter-content a[style*="color: #94a3b8"] {
+  color: #94a3b8 !important;
+}
+
+/* CTA button - invert for visibility */
+html[data-theme="dark"] .newsletter-content a[style*="background-color: #0f172a"] {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Media query fallback for system dark mode */
+@media (prefers-color-scheme: dark) {
+  .newsletter-content h2[style],
+  .newsletter-content h3[style] {
+    color: #f1f5f9 !important;
+  }
+
+  .newsletter-content p[style] {
+    color: #cbd5e1 !important;
+  }
+
+  .newsletter-content div[style*="border-left"] > p:nth-child(2) {
+    color: #f1f5f9 !important;
+  }
+
+  .newsletter-content strong {
+    color: #f1f5f9 !important;
+  }
+
+  .newsletter-content div[style*="border-top"] {
+    border-color: #475569 !important;
+  }
+
+  .newsletter-content a[href^="/patterns"] {
+    background: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .newsletter-content a[style*="background-color: #0f172a"] {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+  }
+}

@@ -154,38 +154,62 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 transition={{ delay: index * 0.03 }}
               >
                 {isQuietDay ? (
-                  // Quiet day - inline display, no link
-                  <div className="flex items-start gap-4 py-4 border-b border-border-secondary -mx-4 px-4">
-                    {/* Moon icon for quiet days */}
-                    <span className="w-5 h-5 flex items-center justify-center text-text-tertiary flex-shrink-0 mt-0.5">
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                        <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+                  // Quiet day - inline display with optional pattern link
+                  suggestedPattern ? (
+                    <Link
+                      href={`/patterns/${suggestedPattern.slug}`}
+                      className="group flex items-center gap-4 py-4 border-b border-border-secondary hover:bg-surface-secondary/50 -mx-4 px-4 transition-colors"
+                    >
+                      {/* Moon icon for quiet days */}
+                      <span className="w-5 h-5 flex items-center justify-center text-text-tertiary flex-shrink-0">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                          <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+                        </svg>
+                      </span>
+
+                      {/* Date */}
+                      <span className="text-text-tertiary text-sm w-16 flex-shrink-0">
+                        {formatDate(newsletter.publishedAt)}
+                      </span>
+
+                      {/* Summary + Explore label */}
+                      <span className="flex-1 text-text-secondary italic truncate">
+                        {newsletter.summary}
+                        <span className="ml-2 text-text-tertiary not-italic">
+                          Explore: <span className="text-accent-primary group-hover:underline">{suggestedPattern.name}</span>
+                        </span>
+                      </span>
+
+                      {/* Arrow - aligned with other rows */}
+                      <svg
+                        className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary transition-colors flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
-                    </span>
+                    </Link>
+                  ) : (
+                    <div className="flex items-center gap-4 py-4 border-b border-border-secondary -mx-4 px-4">
+                      {/* Moon icon for quiet days */}
+                      <span className="w-5 h-5 flex items-center justify-center text-text-tertiary flex-shrink-0">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                          <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+                        </svg>
+                      </span>
 
-                    {/* Date */}
-                    <span className="text-text-tertiary text-sm w-16 flex-shrink-0">
-                      {formatDate(newsletter.publishedAt)}
-                    </span>
+                      {/* Date */}
+                      <span className="text-text-tertiary text-sm w-16 flex-shrink-0">
+                        {formatDate(newsletter.publishedAt)}
+                      </span>
 
-                    {/* Summary + Pattern suggestion */}
-                    <div className="flex-1">
-                      <span className="text-text-secondary italic">
+                      {/* Summary only */}
+                      <span className="flex-1 text-text-secondary italic">
                         {newsletter.summary}
                       </span>
-                      {suggestedPattern && (
-                        <span className="ml-2 text-text-tertiary">
-                          Explore:{' '}
-                          <Link
-                            href={`/patterns/${suggestedPattern.slug}`}
-                            className="text-accent-primary hover:underline"
-                          >
-                            {suggestedPattern.name} →
-                          </Link>
-                        </span>
-                      )}
                     </div>
-                  </div>
+                  )
                 ) : (
                   // Regular newsletter - with link
                   <Link

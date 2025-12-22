@@ -17,28 +17,7 @@ export default function Footer() {
                 <h3 className="text-2xl font-semibold text-text-primary">aiux</h3>
               </div>
               <p className="text-text-secondary text-base leading-relaxed">
-                Discover, Compare, and Leverage the Best AI Design Patterns
-              </p>
-              <p className="text-text-secondary text-sm mt-3 flex items-center gap-1.5">
-                Built with{' '}
-                <a
-                  href="https://claude.ai/code"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-accent-primary transition-colors"
-                >
-                  Claude Code
-                </a>
-                {' '}by Anthropic
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 ml-0.5"
-                  aria-label="Anthropic logo"
-                >
-                  <path fillRule="evenodd" d="M9.218 2h2.402L16 12.987h-2.402zM4.379 2h2.512l4.38 10.987H8.82l-.895-2.308h-4.58l-.896 2.307H0L4.38 2.001zm2.755 6.64L5.635 4.777 4.137 8.64z" />
-                </svg>
+                AI UX patterns from shipped products. Demos, code, and real examples.
               </p>
             </div>
 
