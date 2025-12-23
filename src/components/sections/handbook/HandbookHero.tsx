@@ -76,6 +76,7 @@ const patterns = [
 
 export function HandbookHero() {
   const [email, setEmail] = useState('');
+  const [consentGiven, setConsentGiven] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
@@ -265,9 +266,21 @@ export function HandbookHero() {
                 className="w-full px-5 py-4 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition text-base placeholder:text-text-tertiary"
                 required
               />
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={consentGiven}
+                  onChange={(e) => setConsentGiven(e.target.checked)}
+                  disabled={isLoading}
+                  className="mt-0.5 w-4 h-4 rounded border-gray-600 bg-gray-800 text-white focus:ring-white focus:ring-offset-gray-900 cursor-pointer"
+                />
+                <span className="text-sm text-gray-400 group-hover:text-gray-300 transition leading-tight">
+                  I agree to receive the handbook and occasional updates about new AI design patterns. Unsubscribe anytime.
+                </span>
+              </label>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || !consentGiven}
                 className="w-full px-6 py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isLoading ? (
@@ -306,6 +319,7 @@ export function HandbookHero() {
                   setIsEmailSent(false);
                   setIsDownloaded(false);
                   setEmail('');
+                  setConsentGiven(false);
                   setError('');
                 }}
                 className="w-full px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition cursor-pointer"

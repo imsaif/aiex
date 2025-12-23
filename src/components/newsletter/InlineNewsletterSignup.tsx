@@ -196,7 +196,7 @@ export function InlineNewsletterSignup({
             {/* Trust Badge */}
             {(isHero || isPatternDetail || isNews) && (
               <p className={`text-xs text-text-secondary mt-4 ${isNews ? '' : 'text-center'}`}>
-                Free • No spam • Unsubscribe anytime
+                By subscribing, you agree to receive the handbook and occasional updates about new AI design patterns. Unsubscribe anytime.
               </p>
             )}
           </motion.form>

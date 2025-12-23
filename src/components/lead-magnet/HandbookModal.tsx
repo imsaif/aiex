@@ -10,6 +10,7 @@ interface HandbookModalProps {
 
 export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
   const [email, setEmail] = useState('');
+  const [consentGiven, setConsentGiven] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [error, setError] = useState('');
@@ -155,6 +156,24 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       />
                     </motion.div>
 
+                    <motion.label
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.45 }}
+                      className="flex items-start gap-3 cursor-pointer group"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={consentGiven}
+                        onChange={(e) => setConsentGiven(e.target.checked)}
+                        disabled={isLoading}
+                        className="mt-0.5 w-4 h-4 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-black dark:focus:ring-white cursor-pointer"
+                      />
+                      <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition leading-tight">
+                        I agree to receive the handbook and occasional updates about new AI design patterns. Unsubscribe anytime.
+                      </span>
+                    </motion.label>
+
                     {error && (
                       <motion.div
                         initial={{ opacity: 0, y: -10 }}
@@ -170,7 +189,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.5 }}
                       type="submit"
-                      disabled={isLoading}
+                      disabled={isLoading || !consentGiven}
                       className="w-full bg-accent-primary dark:bg-white text-white dark:text-black font-semibold py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
                     >
                       {isLoading ? (
@@ -204,10 +223,6 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </motion.a>
-
-                    <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                      Unsubscribe anytime.
-                    </p>
                   </form>
                 </>
               ) : (
