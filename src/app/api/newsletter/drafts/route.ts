@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isAdminAuthenticated } from '@/lib/admin-auth';
 
-// GET - List all drafts
-export async function GET() {
+// GET - List all drafts (requires admin auth)
+export async function GET(request: NextRequest) {
+  if (!(await isAdminAuthenticated(request))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const drafts = await prisma.newsletterDraft.findMany({
       orderBy: { createdAt: 'desc' },
@@ -14,8 +19,12 @@ export async function GET() {
   }
 }
 
-// PATCH - Update a draft
+// PATCH - Update a draft (requires admin auth)
 export async function PATCH(request: NextRequest) {
+  if (!(await isAdminAuthenticated(request))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { id, title, summary, content, status } = body;
@@ -48,8 +57,12 @@ export async function PATCH(request: NextRequest) {
   }
 }
 
-// DELETE - Delete a draft
+// DELETE - Delete a draft (requires admin auth)
 export async function DELETE(request: NextRequest) {
+  if (!(await isAdminAuthenticated(request))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

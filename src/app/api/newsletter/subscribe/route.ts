@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { resend } from '@/lib/resend';
 import { generateHandbookToken } from '@/lib/handbook-token';
+import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 // Email validation schema
 const subscribeSchema = z.object({
@@ -11,6 +12,30 @@ const subscribeSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Rate limiting by IP
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
+    request.headers.get('x-real-ip') ||
+    'unknown';
+
+  const rateLimit = checkRateLimit(
+    ip,
+    'newsletter-subscribe',
+    RATE_LIMIT_PRESETS.SUBSCRIBE.limit,
+    RATE_LIMIT_PRESETS.SUBSCRIBE.windowMs
+  );
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many subscription attempts. Please try again later.' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil(rateLimit.resetIn / 1000)),
+        },
+      }
+    );
+  }
+
   try {
     // Parse and validate request body
     const body = await request.json();

@@ -57,11 +57,21 @@ export async function GET() {
   });
 }
 
-export async function OPTIONS() {
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://www.aiuxdesign.guide',
+  'https://aiuxdesign.guide',
+  process.env.NEXT_PUBLIC_SITE_URL,
+].filter(Boolean);
+
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': allowedOrigin || 'https://www.aiuxdesign.guide',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },

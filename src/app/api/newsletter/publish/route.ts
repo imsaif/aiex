@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isAdminAuthenticated } from '@/lib/admin-auth';
+import { timingSafeEqual } from 'crypto';
 
-// POST - Publish a draft (called from admin dashboard)
+// POST - Publish a draft (requires admin auth)
 export async function POST(request: NextRequest) {
+  if (!(await isAdminAuthenticated(request))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { id, title, summary, content } = body;
@@ -34,14 +40,25 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Timing-safe secret comparison
+function secureCompareSecret(provided: string, expected: string): boolean {
+  if (provided.length !== expected.length) {
+    timingSafeEqual(Buffer.from(provided), Buffer.from(provided));
+    return false;
+  }
+  return timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
+}
+
 // GET - Quick approve via email link (with secret token)
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
   const secret = searchParams.get('secret');
 
-  // Validate secret
-  if (secret !== process.env.ADMIN_APPROVE_SECRET) {
+  const adminSecret = process.env.ADMIN_APPROVE_SECRET;
+
+  // Validate secret using timing-safe comparison
+  if (!secret || !adminSecret || !secureCompareSecret(secret, adminSecret)) {
     return NextResponse.json({ error: 'Invalid or missing secret' }, { status: 401 });
   }
 

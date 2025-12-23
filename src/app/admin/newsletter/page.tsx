@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { prisma } from '@/lib/prisma';
+import { checkAdminAuth } from '@/lib/admin-auth';
 import AdminNewsletterClient from './admin-newsletter-client';
 
 export const metadata: Metadata = {
@@ -10,22 +10,22 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-async function getDrafts() {
-  const drafts = await prisma.newsletterDraft.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: 20,
-  });
-  return drafts;
-}
-
 export default async function AdminNewsletterPage({
   searchParams,
 }: {
   searchParams: Promise<{ id?: string }>;
 }) {
   const params = await searchParams;
-  const drafts = await getDrafts();
+  const isAuthenticated = await checkAdminAuth();
   const selectedId = params.id;
 
-  return <AdminNewsletterClient drafts={drafts} selectedId={selectedId} />;
+  // Pass empty drafts initially - client will fetch after auth
+  // This prevents exposing draft data to unauthenticated users
+  return (
+    <AdminNewsletterClient
+      drafts={[]}
+      selectedId={selectedId}
+      initialAuth={isAuthenticated}
+    />
+  );
 }

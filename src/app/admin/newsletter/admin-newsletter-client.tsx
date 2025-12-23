@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import DOMPurify from 'dompurify';
 
 interface NewsletterDraft {
   id: string;
@@ -18,13 +19,16 @@ interface NewsletterDraft {
 interface AdminNewsletterClientProps {
   drafts: NewsletterDraft[];
   selectedId?: string;
+  initialAuth?: boolean;
 }
 
 export default function AdminNewsletterClient({
-  drafts,
+  drafts: initialDrafts,
   selectedId,
+  initialAuth = false,
 }: AdminNewsletterClientProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(initialAuth);
+  const [drafts, setDrafts] = useState<NewsletterDraft[]>(initialDrafts);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [activeDraft, setActiveDraft] = useState<NewsletterDraft | null>(null);
@@ -33,7 +37,33 @@ export default function AdminNewsletterClient({
   const [editedSummary, setEditedSummary] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isLoadingDrafts, setIsLoadingDrafts] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Sanitize HTML content for preview to prevent XSS
+  const sanitizedPreviewContent = useMemo(() => {
+    if (typeof window === 'undefined') return editedContent;
+    return DOMPurify.sanitize(editedContent, {
+      ADD_TAGS: ['style'],
+      ADD_ATTR: ['target', 'rel'],
+    });
+  }, [editedContent]);
+
+  // Fetch drafts after authentication
+  useEffect(() => {
+    if (isAuthenticated && drafts.length === 0) {
+      setIsLoadingDrafts(true);
+      fetch('/api/newsletter/drafts')
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setDrafts(data);
+          }
+        })
+        .catch(console.error)
+        .finally(() => setIsLoadingDrafts(false));
+    }
+  }, [isAuthenticated, drafts.length]);
 
   // Set active draft based on selectedId or first pending draft
   useEffect(() => {
@@ -56,13 +86,27 @@ export default function AdminNewsletterClient({
     }
   }, [drafts, selectedId]);
 
-  const handleAuth = (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === process.env.NEXT_PUBLIC_NEWSLETTER_ADMIN_PASSWORD || password === 'admin') {
-      setIsAuthenticated(true);
-      setAuthError('');
-    } else {
-      setAuthError('Invalid password');
+    setAuthError('');
+
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsAuthenticated(true);
+        setPassword(''); // Clear password from memory
+      } else {
+        setAuthError(data.error || 'Invalid password');
+      }
+    } catch {
+      setAuthError('Login failed. Please try again.');
     }
   };
 
@@ -202,7 +246,9 @@ export default function AdminNewsletterClient({
                 <h2 className="font-semibold text-text-primary dark:text-text-primary">Drafts</h2>
               </div>
               <div className="divide-y divide-border-secondary dark:divide-border-secondary">
-                {drafts.length === 0 ? (
+                {isLoadingDrafts ? (
+                  <p className="p-4 text-text-tertiary dark:text-text-tertiary text-sm">Loading drafts...</p>
+                ) : drafts.length === 0 ? (
                   <p className="p-4 text-text-tertiary dark:text-text-tertiary text-sm">No drafts found</p>
                 ) : (
                   drafts.map((draft) => (
@@ -304,7 +350,7 @@ export default function AdminNewsletterClient({
                   {/* Newsletter Preview */}
                   <div
                     className="prose max-w-none border border-border-primary dark:border-border-primary rounded-lg p-6 bg-surface-primary dark:bg-surface-primary"
-                    dangerouslySetInnerHTML={{ __html: editedContent }}
+                    dangerouslySetInnerHTML={{ __html: sanitizedPreviewContent }}
                   />
 
                   {/* Raw HTML Editor */}

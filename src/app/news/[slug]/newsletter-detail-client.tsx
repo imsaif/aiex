@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import DOMPurify from 'dompurify';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -42,6 +43,15 @@ export default function NewsletterDetailClient({
   // Estimate reading time (avg 200 words per minute)
   const wordCount = newsletter.content.split(/\s+/).length;
   const readingTime = Math.ceil(wordCount / 200);
+
+  // Sanitize HTML content to prevent XSS attacks
+  const sanitizedContent = useMemo(() => {
+    if (typeof window === 'undefined') return newsletter.content;
+    return DOMPurify.sanitize(newsletter.content, {
+      ADD_TAGS: ['style'],
+      ADD_ATTR: ['target', 'rel'],
+    });
+  }, [newsletter.content]);
 
   // Fix inline styles for dark mode
   useEffect(() => {
@@ -202,7 +212,7 @@ export default function NewsletterDetailClient({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
           className="max-w-none [&>*]:max-w-none newsletter-content"
-          dangerouslySetInnerHTML={{ __html: newsletter.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       </article>
 

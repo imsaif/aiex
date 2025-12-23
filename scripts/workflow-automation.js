@@ -8,9 +8,33 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, spawnSync } = require('child_process');
 const AgentOrchestrator = require('./agent-orchestrator');
 const ContextManager = require('./context-manager');
+
+/**
+ * Sanitize string for safe use in shell commands
+ * Removes/escapes characters that could be used for command injection
+ */
+function sanitizeShellArg(str) {
+  if (typeof str !== 'string') return '';
+  // Remove characters that could be used for command injection
+  return str
+    .replace(/[;&|`$(){}[\]<>\\!#*?~^]/g, '')
+    .replace(/\n/g, ' ')
+    .replace(/\r/g, '')
+    .trim()
+    .slice(0, 200); // Limit length
+}
+
+/**
+ * Validate git branch name
+ */
+function isValidBranchName(name) {
+  if (typeof name !== 'string') return false;
+  // Git branch naming rules (simplified)
+  return /^[a-zA-Z0-9._/-]+$/.test(name) && name.length <= 100;
+}
 
 class WorkflowAutomation {
   constructor() {
@@ -338,41 +362,57 @@ class WorkflowAutomation {
   }
 
   /**
-   * Handle git operations
+   * Handle git operations (with command injection protection)
    */
   async handleGit(step, options) {
     try {
       switch (step.action) {
         case 'commit':
-          const message = step.message || options.commitMessage || 'Auto-commit';
-          execSync(`git add . && git commit -m "${message}"`, {
+          const rawMessage = step.message || options.commitMessage || 'Auto-commit';
+          const message = sanitizeShellArg(rawMessage);
+          // Use spawnSync with array args to prevent injection
+          execSync('git add .', { cwd: this.projectRoot, stdio: 'pipe' });
+          spawnSync('git', ['commit', '-m', message], {
             cwd: this.projectRoot,
             stdio: 'pipe'
           });
           console.log(`  ✅ Committed: ${message}`);
           break;
-        
+
         case 'stash':
           execSync('git stash', { cwd: this.projectRoot, stdio: 'pipe' });
           console.log('  ✅ Changes stashed');
           break;
-        
+
         case 'checkout':
           const branch = step.branch || 'main';
-          execSync(`git checkout -b ${branch} 2>/dev/null || git checkout ${branch}`, {
+          if (!isValidBranchName(branch)) {
+            throw new Error(`Invalid branch name: ${branch}`);
+          }
+          // Try to create branch, fall back to checkout existing
+          const createResult = spawnSync('git', ['checkout', '-b', branch], {
             cwd: this.projectRoot,
             stdio: 'pipe'
           });
+          if (createResult.status !== 0) {
+            spawnSync('git', ['checkout', branch], {
+              cwd: this.projectRoot,
+              stdio: 'pipe'
+            });
+          }
           console.log(`  ✅ Checked out: ${branch}`);
           break;
-        
+
         case 'merge':
           const target = step.target || 'main';
-          execSync(`git merge ${target}`, { cwd: this.projectRoot, stdio: 'pipe' });
+          if (!isValidBranchName(target)) {
+            throw new Error(`Invalid branch name: ${target}`);
+          }
+          spawnSync('git', ['merge', target], { cwd: this.projectRoot, stdio: 'pipe' });
           console.log(`  ✅ Merged with: ${target}`);
           break;
       }
-      
+
       return { success: true, git: step.action };
     } catch (error) {
       return { success: false, error: `Git operation failed: ${error.message}` };

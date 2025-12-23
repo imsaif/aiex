@@ -1,6 +1,12 @@
-import crypto from 'crypto';
+import { createHmac, timingSafeEqual } from 'crypto';
 
-const TOKEN_SECRET = process.env.HANDBOOK_TOKEN_SECRET || 'handbook-default-secret-change-in-prod';
+// Require secret in production, use fallback only in development
+const TOKEN_SECRET = process.env.HANDBOOK_TOKEN_SECRET;
+if (!TOKEN_SECRET && process.env.NODE_ENV === 'production') {
+  throw new Error('HANDBOOK_TOKEN_SECRET environment variable is required in production');
+}
+const EFFECTIVE_SECRET = TOKEN_SECRET || 'dev-only-handbook-secret-not-for-production';
+
 const TOKEN_EXPIRY = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
 
 interface TokenPayload {
@@ -23,8 +29,7 @@ export function generateHandbookToken(email: string): string {
 
   // Create a JSON string and sign it with HMAC
   const payloadStr = JSON.stringify(payload);
-  const signature = crypto
-    .createHmac('sha256', TOKEN_SECRET)
+  const signature = createHmac('sha256', EFFECTIVE_SECRET)
     .update(payloadStr)
     .digest('hex');
 
@@ -49,13 +54,16 @@ export function validateHandbookToken(token: string): string | null {
     const decodedPayload = Buffer.from(payloadStr, 'base64').toString('utf-8');
     const payload: TokenPayload = JSON.parse(decodedPayload);
 
-    // Verify signature
-    const expectedSignature = crypto
-      .createHmac('sha256', TOKEN_SECRET)
+    // Verify signature using timing-safe comparison
+    const expectedSignature = createHmac('sha256', EFFECTIVE_SECRET)
       .update(decodedPayload)
       .digest('hex');
 
-    if (signature !== expectedSignature) {
+    // Use timing-safe comparison to prevent timing attacks
+    if (signature.length !== expectedSignature.length) {
+      return null;
+    }
+    if (!timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature))) {
       return null;
     }
 

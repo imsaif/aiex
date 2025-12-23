@@ -224,3 +224,69 @@ export function formatTimeUntilReset(resetAt: number): string {
   }
   return `${minutes}m`;
 }
+
+// ============================================
+// Generic API Rate Limiter
+// ============================================
+
+interface GenericRateLimitEntry {
+  count: number;
+  windowStart: number;
+}
+
+const genericLimits = new Map<string, GenericRateLimitEntry>();
+
+/**
+ * Generic rate limiter for API endpoints
+ * @param identifier - Unique identifier (e.g., IP address, user ID)
+ * @param endpoint - Endpoint name for namespacing
+ * @param limit - Maximum requests allowed
+ * @param windowMs - Time window in milliseconds
+ */
+export function checkRateLimit(
+  identifier: string,
+  endpoint: string,
+  limit: number,
+  windowMs: number
+): { allowed: boolean; remaining: number; resetIn: number } {
+  const now = Date.now();
+  const key = `${endpoint}:${identifier}`;
+
+  let entry = genericLimits.get(key);
+
+  // Reset if window expired
+  if (!entry || now - entry.windowStart >= windowMs) {
+    entry = { count: 0, windowStart: now };
+  }
+
+  const resetIn = windowMs - (now - entry.windowStart);
+
+  if (entry.count >= limit) {
+    return {
+      allowed: false,
+      remaining: 0,
+      resetIn,
+    };
+  }
+
+  entry.count += 1;
+  genericLimits.set(key, entry);
+
+  return {
+    allowed: true,
+    remaining: limit - entry.count,
+    resetIn,
+  };
+}
+
+/**
+ * Rate limit presets for common use cases
+ */
+export const RATE_LIMIT_PRESETS = {
+  // Newsletter subscribe: 5 requests per hour per IP
+  SUBSCRIBE: { limit: 5, windowMs: 60 * 60 * 1000 },
+  // Handbook download: 10 requests per hour per IP
+  DOWNLOAD: { limit: 10, windowMs: 60 * 60 * 1000 },
+  // General API: 60 requests per minute per IP
+  API: { limit: 60, windowMs: 60 * 1000 },
+} as const;

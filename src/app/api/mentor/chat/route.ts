@@ -412,13 +412,27 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function OPTIONS() {
+// Allowed origins for CORS
+const ALLOWED_ORIGINS = [
+  'https://www.aiuxdesign.guide',
+  'https://aiuxdesign.guide',
+  process.env.NEXT_PUBLIC_SITE_URL,
+].filter(Boolean);
+
+function getCorsHeaders(origin: string | null) {
+  // Check if origin is allowed
+  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin || 'https://www.aiuxdesign.guide',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
+
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
   return new NextResponse(null, {
     status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
+    headers: getCorsHeaders(origin),
   });
 }
