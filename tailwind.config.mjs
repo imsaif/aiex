@@ -41,6 +41,13 @@ export default {
           warning: 'var(--border-warning)',
           info: 'var(--border-info)',
         },
+        // Status colors for feedback states
+        status: {
+          success: '#10b981',  // emerald-500
+          error: '#ef4444',    // red-500
+          warning: '#f59e0b',  // amber-500
+          info: '#3b82f6',     // blue-500
+        },
         // Muted category colors for icons
         category: {
           blue: '#3B82F6',
