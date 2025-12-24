@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-24 18:06 (MacBook)
+- **Pattern:** Newsletter Admin System Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed newsletter admin login (added ADMIN_PASSWORD to Vercel), fixed cookie path for API auth, fixed email approve redirect URL (added NEXT_PUBLIC_SITE_URL), added newsletter deduplication to prevent repeated content, changed time window from 48h to 24h, and added Anthropic news scraper since their RSS feed returns 404.
+
 ### Session 2025-12-22 23:48 (MacBook)
 - **Pattern:** News Page Dark Mode & Footer Updates
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed invisible button text on prompts page "Want to learn more about this pattern?" section. The "View Full Pattern" button text was invisible in dark mode because white text on white accent-primary background. Added `dark:text-gray-900` for proper contrast.
 
 ### Session 2025-12-12 19:22 (MacBook)
-- **Pattern:** Audit Page - Dynamic Panel Width
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented dynamic panel widths for audit page based on state. Analysis panel now takes 50% width on welcome screen and expands to 70% when results are showing. Added smooth CSS transitions for state changes, percentage-based width calculations, and separate localStorage keys per state.
-
-### Session 2025-12-12 16:20 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

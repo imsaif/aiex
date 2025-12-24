@@ -23,7 +23,6 @@ const parser = new Parser({
 const RSS_SOURCES = [
   // AI Companies
   { name: 'OpenAI', url: 'https://openai.com/blog/rss.xml', color: '#10a37f' },
-  { name: 'Anthropic', url: 'https://www.anthropic.com/rss.xml', color: '#d97706' },
   { name: 'Google AI', url: 'https://blog.google/technology/ai/rss/', color: '#4285f4' },
   { name: 'Microsoft AI', url: 'https://blogs.microsoft.com/ai/feed/', color: '#00a4ef' },
   // Design Tools
@@ -33,6 +32,43 @@ const RSS_SOURCES = [
   { name: 'GitHub', url: 'https://github.blog/feed/', color: '#333333' },
   { name: 'Supabase', url: 'https://supabase.com/blog/rss.xml', color: '#3ecf8e' },
 ];
+
+// Scrape Anthropic news (no RSS feed available)
+async function scrapeAnthropicNews(): Promise<NewsItem[]> {
+  try {
+    const response = await fetch('https://www.anthropic.com/news', {
+      headers: { 'User-Agent': 'AIUX-Newsletter-Bot/1.0' },
+    });
+    const html = await response.text();
+
+    // Extract JSON data embedded in the page
+    const matches = [...html.matchAll(/publishedOn":"([^"]+)","slug":\{"_type":"slug","current":"([^"]+)"/g)];
+    const items: NewsItem[] = [];
+
+    for (const match of matches) {
+      const pubDate = match[1];
+      const slug = match[2];
+      // Convert slug to title (e.g., "claude-opus-4-5" -> "Claude Opus 4 5")
+      const title = slug.split('-').map(word =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+
+      items.push({
+        source: 'Anthropic',
+        sourceColor: '#d97706',
+        title,
+        description: '', // We don't have description from this extraction
+        link: `https://www.anthropic.com/news/${slug}`,
+        pubDate,
+      });
+    }
+
+    return items;
+  } catch (error) {
+    console.error('Failed to scrape Anthropic news:', error);
+    return [];
+  }
+}
 
 // Keywords for relevance filtering
 const RELEVANCE_KEYWORDS = [
@@ -132,15 +168,39 @@ interface NewsItem {
   pubDate: string;
 }
 
+async function getRecentlyUsedUrls(): Promise<Set<string>> {
+  // Get URLs from newsletters published in the last 7 days
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const recentNewsletters = await prisma.newsletterDraft.findMany({
+    where: {
+      status: { in: ['published', 'pending_review'] },
+      createdAt: { gte: sevenDaysAgo },
+    },
+    select: { content: true },
+  });
+
+  const usedUrls = new Set<string>();
+  for (const newsletter of recentNewsletters) {
+    // Extract URLs from href attributes in the content
+    const urlMatches = newsletter.content?.matchAll(/href="([^"]+)"/g) || [];
+    for (const match of urlMatches) {
+      usedUrls.add(match[1]);
+    }
+  }
+  return usedUrls;
+}
+
 async function aggregateNews(): Promise<NewsItem[]> {
   const allItems: NewsItem[] = [];
+  const usedUrls = await getRecentlyUsedUrls();
 
   const results = await Promise.allSettled(
     RSS_SOURCES.map(async (source) => {
       try {
         const feed = await parser.parseURL(source.url);
         return (feed.items || [])
-          .filter((item) => isRecent(item, 48) && isRelevant(item))
+          .filter((item) => isRecent(item, 24) && isRelevant(item))
+          .filter((item) => !item.link || !usedUrls.has(item.link)) // Exclude already-used URLs
           .map((item) => ({
             source: source.name,
             sourceColor: source.color,
@@ -158,6 +218,16 @@ async function aggregateNews(): Promise<NewsItem[]> {
   for (const result of results) {
     if (result.status === 'fulfilled') {
       allItems.push(...result.value);
+    }
+  }
+
+  // Add Anthropic news from scraper (no RSS feed available)
+  const anthropicNews = await scrapeAnthropicNews();
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  for (const item of anthropicNews) {
+    const itemDate = new Date(item.pubDate);
+    if (itemDate >= cutoff && !usedUrls.has(item.link)) {
+      allItems.push(item);
     }
   }
 

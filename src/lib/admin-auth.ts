@@ -125,7 +125,7 @@ export function getSessionCookie(sessionId: string): { name: string; value: stri
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict' as const,
       maxAge: SESSION_DURATION / 1000,
-      path: '/admin',
+      path: '/', // Allow cookie to be sent to API routes
     },
   };
 }
