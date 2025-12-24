@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-24 18:52 (MacBook)
+- **Pattern:** Interactive Demo Improvements
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Improved pattern demos: simplified AdaptiveDashboard (removed animations, cleaned colors), rebuilt ContextualAssistance with Gmail-style inline ghost text, enhanced ExplainableAI with live reasoning steps and dynamic sentiment analysis, added reset + more examples to HumanInTheLoop, widened demo containers for progressive-disclosure/contextual-assistance.
+
 ### Session 2025-12-24 18:06 (MacBook)
 - **Pattern:** Newsletter Admin System Fixes
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed ScrollToTop button arrow visibility in dark mode by adding `dark:text-gray-900`. Fixed ChatPanel auto-scroll behavior to only scroll when user is near bottom, preventing disruption when reading earlier messages.
 
 ### Session 2025-12-12 22:29 (MacBook)
-- **Pattern:** Prompts Page - Button Text Visibility Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed invisible button text on prompts page "Want to learn more about this pattern?" section. The "View Full Pattern" button text was invisible in dark mode because white text on white accent-primary background. Added `dark:text-gray-900` for proper contrast.
-
-### Session 2025-12-12 19:22 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

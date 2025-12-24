@@ -9,7 +9,6 @@ export const codeExamples: CodeExample[] = [
     code: `'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 
 interface Widget {
   id: string;
@@ -44,16 +43,14 @@ export default function AdaptiveDashboard() {
 
       <div className="grid grid-cols-2 gap-4">
         {widgets.map((widget) => (
-          <motion.div
+          <div
             key={widget.id}
-            layout
-            transition={{ duration: 0.3 }}
             onClick={() => handleClick(widget.id)}
             className="p-4 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600"
           >
             <h3 className="font-semibold">{widget.title}</h3>
             <p className="text-sm">Clicks: {widget.usage}</p>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

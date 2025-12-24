@@ -578,7 +578,7 @@ export default function CodeExampleBlock({
               ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection'].includes(componentId)
                 ? 'max-w-6xl'
                 // Components that need large width (max-w-4xl)
-                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo'].includes(componentId)
+                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email'].includes(componentId)
                 ? 'max-w-4xl'
                 // Components that need large width (max-w-4xl)
                 : ['VulnerableUserProtectionDemo'].includes(componentId)
