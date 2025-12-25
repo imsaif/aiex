@@ -14,8 +14,6 @@ export default function MultimodalSearchDemo() {
   }, []);
 
   const startVoiceMode = () => {
-    console.log('startVoiceMode called, hasVoiceSupport:', hasVoiceSupport);
-
     if (!hasVoiceSupport) {
       alert('Voice recognition not supported in this browser');
       return;
@@ -23,12 +21,10 @@ export default function MultimodalSearchDemo() {
 
     setTranscript('');
     setMode('transitioning');
-    console.log('Mode set to transitioning');
 
     // Wait for fade out, then switch to voice
     setTimeout(() => {
       setMode('voice');
-      console.log('Mode set to voice');
       startRecognition();
     }, 400);
   };
@@ -54,19 +50,17 @@ export default function MultimodalSearchDemo() {
         }
       };
 
-      recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
-        console.log('Speech recognition error:', e.error);
+      recognition.onerror = () => {
         // Don't auto-exit on error, let user cancel manually
       };
 
       recognition.onend = () => {
-        console.log('Speech recognition ended');
         // Don't auto-exit - let user cancel manually or speak again
       };
 
       recognition.start();
-    } catch (err) {
-      console.error('Failed to start recognition:', err);
+    } catch {
+      // Failed to start recognition
     }
   };
 
