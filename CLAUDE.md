@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2025-12-25 12:38 (MacBook)
+- **Pattern:** Multimodal Interaction Demo
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Rebuilt MultimodalSearchDemo with modern text-to-voice transition. Added smooth crossfade animation (500ms), Claude-style sound wave icon, black/white gradient voice panel with dark mode support, fixed transition state management, and removed redundant title.
+
 ### Session 2025-12-24 18:52 (MacBook)
 - **Pattern:** Interactive Demo Improvements
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Implemented newsletter archive page at /news similar to news.smol.ai. Added Prisma models (Newsletter, Tag, NewsletterTag), data access layer, NewsletterCard and TagFilter UI components, archive page with search/filtering, individual newsletter detail pages with prev/next navigation, and seed script with 5 sample newsletters.
 
 ### Session 2025-12-12 22:37 (MacBook)
-- **Pattern:** UI Fixes - Dark Mode & Chat Auto-scroll
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed ScrollToTop button arrow visibility in dark mode by adding `dark:text-gray-900`. Fixed ChatPanel auto-scroll behavior to only scroll when user is near bottom, preventing disruption when reading earlier messages.
-
-### Session 2025-12-12 22:29 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

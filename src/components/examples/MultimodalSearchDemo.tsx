@@ -1,348 +1,236 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function MultimodalSearchDemo() {
   const [query, setQuery] = useState('');
-  const [isListening, setIsListening] = useState(false);
+  const [mode, setMode] = useState<'text' | 'voice' | 'transitioning'>('text');
   const [hasVoiceSupport, setHasVoiceSupport] = useState(false);
-  const [results, setResults] = useState<string[]>([]);
-  const [interactionMode, setInteractionMode] = useState('text');
+  const [transcript, setTranscript] = useState('');
   const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Check for voice support on component mount
-  React.useEffect(() => {
+  useEffect(() => {
     const speechRecognition = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
     setHasVoiceSupport(speechRecognition);
   }, []);
 
-  const mockSearch = (searchQuery: string): string[] => {
-    if (!searchQuery.trim()) return [];
-    
-    const mockResults = [
-      'React documentation',
-      'Multimodal UI patterns',
-      'Voice interface design',
-      'Accessibility best practices',
-      'User experience guidelines'
-    ].filter(item => 
-      item.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    
-    return mockResults.slice(0, 3);
-  };
+  const startVoiceMode = () => {
+    console.log('startVoiceMode called, hasVoiceSupport:', hasVoiceSupport);
 
-  const handleVoiceInput = () => {
     if (!hasVoiceSupport) {
       alert('Voice recognition not supported in this browser');
       return;
     }
 
-    if (isListening) {
-      // Stop listening
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-      return;
-    }
+    setTranscript('');
+    setMode('transitioning');
+    console.log('Mode set to transitioning');
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const SpeechRecognitionClass = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const recognition = new SpeechRecognitionClass();
-    recognitionRef.current = recognition;
-
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
-
-    recognition.onstart = () => {
-      setIsListening(true);
-      setInteractionMode('voice');
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-      setInteractionMode('text');
-    };
-
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcript = event.results[0][0].transcript;
-      setQuery(transcript);
-      const searchResults = mockSearch(transcript);
-      setResults(searchResults);
-    };
-
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error('Speech recognition error:', event.error);
-      setIsListening(false);
-      setInteractionMode('text');
-    };
-
-    recognition.start();
-  };
-
-  const handleTextInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setQuery(value);
-    setInteractionMode('text');
-    
-    // Debounced search
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    clearTimeout((window as any).searchTimeout);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).searchTimeout = setTimeout(() => {
-      const searchResults = mockSearch(value);
-      setResults(searchResults);
-    }, 300);
-  };
-
-  const handleResultClick = (result: string) => {
-    setQuery(result);
-    setResults([]);
-    setInteractionMode('touch');
-    
-    // Simulate a brief touch feedback
+    // Wait for fade out, then switch to voice
     setTimeout(() => {
-      setInteractionMode('text');
-    }, 500);
+      setMode('voice');
+      console.log('Mode set to voice');
+      startRecognition();
+    }, 400);
   };
 
-  const clearSearch = () => {
-    setQuery('');
-    setResults([]);
-    setInteractionMode('text');
-  };
+  const startRecognition = () => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const SpeechRecognitionClass = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      const recognition = new SpeechRecognitionClass();
+      recognitionRef.current = recognition;
 
-  const getInteractionModeStyles = () => {
-    switch (interactionMode) {
-      case 'voice':
-        return {
-          container: 'border-red-300 dark:border-red-600 bg-gradient-to-r from-red-50 via-pink-50 to-red-50 dark:from-red-900/30 dark:via-pink-900/30 dark:to-red-900/30 shadow-red-100 dark:shadow-red-900/30',
-          glow: 'shadow-lg shadow-red-200/50 dark:shadow-red-900/50'
-        };
-      case 'touch':
-        return {
-          container: 'border-emerald-300 dark:border-emerald-600 bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-emerald-900/30 shadow-emerald-100 dark:shadow-emerald-900/30',
-          glow: 'shadow-lg shadow-emerald-200/50 dark:shadow-emerald-900/50'
-        };
-      default:
-        return {
-          container: 'border-blue-300 dark:border-blue-600 bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 dark:from-blue-900/30 dark:via-indigo-900/30 dark:to-blue-900/30 shadow-blue-100 dark:shadow-blue-900/30',
-          glow: 'shadow-lg shadow-blue-200/50 dark:shadow-blue-900/50'
-        };
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        const current = event.results[event.results.length - 1];
+        setTranscript(current[0].transcript);
+
+        if (current.isFinal) {
+          // Wait a moment to show the final transcript before exiting
+          setTimeout(() => exitVoiceMode(current[0].transcript), 800);
+        }
+      };
+
+      recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
+        console.log('Speech recognition error:', e.error);
+        // Don't auto-exit on error, let user cancel manually
+      };
+
+      recognition.onend = () => {
+        console.log('Speech recognition ended');
+        // Don't auto-exit - let user cancel manually or speak again
+      };
+
+      recognition.start();
+    } catch (err) {
+      console.error('Failed to start recognition:', err);
     }
   };
 
-  const styles = getInteractionModeStyles();
+  const exitVoiceMode = (finalText?: string) => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+
+    setMode('transitioning');
+
+    setTimeout(() => {
+      if (finalText) {
+        setQuery(finalText);
+      }
+      setTranscript('');
+      setMode('text');
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }, 400);
+  };
+
+  const cancelVoiceMode = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+    }
+    exitVoiceMode();
+  };
+
+  const isTextVisible = mode === 'text';
+  const isVoiceVisible = mode === 'voice';
 
   return (
-    <div className="max-w-md mx-auto p-8 space-y-6">
-      {/* Header with gradient text */}
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-3">
-          Multimodal Search
-        </h3>
-        <div className="inline-flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-200 dark:border-gray-700">
-          <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-            interactionMode === 'voice' ? 'bg-red-500 animate-pulse' :
-            interactionMode === 'touch' ? 'bg-emerald-500' : 'bg-blue-500'
-          }`}></div>
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">{interactionMode} Mode</span>
-        </div>
-      </div>
+    <div className="max-w-lg mx-auto p-6">
 
-      {/* Enhanced Search Input Container */}
-      <div className={`relative transition-all duration-500 ease-out ${styles.container} ${styles.glow} border-2 rounded-2xl p-1 backdrop-blur-sm`}>
-        <div className="flex items-center space-x-3 bg-white/80 dark:bg-gray-800/80 rounded-xl p-1">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={query}
-              onChange={handleTextInput}
-              placeholder="Type your search or use voice..."
-              className="w-full p-4 bg-transparent border-0 focus:outline-none focus:ring-0 text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 font-medium"
-            />
-            {query && (
-              <button
-                onClick={clearSearch}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
-                title="Clear search"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            )}
-          </div>
-          
-          <button
-            onClick={handleVoiceInput}
-            disabled={!hasVoiceSupport}
-            className={`p-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg ${
-              isListening 
-                ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white animate-pulse shadow-red-300' 
-                : hasVoiceSupport 
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 shadow-blue-300' 
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-gray-200'
-            }`}
-            title={isListening ? 'Stop listening' : 'Start voice search'}
-          >
-            {isListening ? (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <rect x="6" y="6" width="12" height="12" rx="2"/>
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 1c-1.654 0-3 1.346-3 3v8c0 1.654 1.346 3 3 3s3-1.346 3-3V4c0-1.654-1.346-3-3-3z"/>
-                <path d="M19 10v2c0 3.866-3.134 7-7 7s-7-3.134-7-7v-2h2v2c0 2.761 2.239 5 5 5s5-2.239 5-5v-2h2z"/>
-                <path d="M11 20h2v3h-2z"/>
-                <path d="M7 23h10v1H7z"/>
-              </svg>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Enhanced Voice Status */}
-      {isListening && (
-        <div className="text-center animate-fade-in">
-          <div className="inline-flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full shadow-lg">
-            <div className="flex space-x-1">
-              <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-            </div>
-            <span className="text-sm font-semibold">Listening...</span>
-          </div>
-        </div>
-      )}
-
-      {/* Enhanced Search Results */}
-      {results.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-xl backdrop-blur-sm overflow-hidden animate-slide-up">
-          <div className="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <div className="flex items-center space-x-2">
-              <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      {/* Main Container - fixed height to prevent collapse */}
+      <div className="relative min-h-[280px]">
+        {/* Text Input Mode */}
+        <div
+          className={`absolute inset-0 flex flex-col justify-center transition-all duration-500 ease-out ${
+            isTextVisible
+              ? 'opacity-100 scale-100 translate-y-0'
+              : 'opacity-0 scale-95 -translate-y-4 pointer-events-none'
+          }`}
+        >
+          <div className="relative flex items-center bg-surface-primary dark:bg-surface-elevated border border-border-primary rounded-full shadow-sm hover:shadow-md transition-shadow">
+            {/* Search Icon */}
+            <div className="pl-4 text-text-tertiary">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
-              <span className="text-sm text-gray-600 dark:text-gray-300 font-semibold">Search Results</span>
             </div>
+
+            {/* Text Input */}
+            <input
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search or click to speak..."
+              className="flex-1 px-3 py-4 bg-transparent border-0 focus:outline-none focus:ring-0 text-text-primary placeholder-text-tertiary"
+            />
+
+            {/* Voice Button */}
+            <button
+              onClick={startVoiceMode}
+              disabled={!hasVoiceSupport}
+              className={`mr-2 p-2.5 rounded-full transition-all duration-200 ${
+                hasVoiceSupport
+                  ? 'bg-text-primary text-background-primary hover:opacity-80 hover:scale-105'
+                  : 'bg-background-tertiary text-text-disabled cursor-not-allowed'
+              }`}
+              title="Search by voice"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="4" y="10" width="2" height="4" rx="1" />
+                <rect x="8" y="7" width="2" height="10" rx="1" />
+                <rect x="12" y="4" width="2" height="16" rx="1" />
+                <rect x="16" y="7" width="2" height="10" rx="1" />
+                <rect x="20" y="10" width="2" height="4" rx="1" />
+              </svg>
+            </button>
           </div>
-          <div className="divide-y divide-gray-100 dark:divide-gray-700">
-            {results.map((result, index) => (
-              <button
-                key={index}
-                onClick={() => handleResultClick(result)}
-                className="w-full text-left px-6 py-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 transition-all duration-200 focus:outline-none focus:bg-gradient-to-r focus:from-blue-50 focus:to-indigo-50 dark:focus:from-blue-900/30 dark:focus:to-indigo-900/30 group"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-blue-900/50 dark:to-indigo-900/50 rounded-lg flex items-center justify-center group-hover:from-blue-200 group-hover:to-indigo-200 dark:group-hover:from-blue-800/50 dark:group-hover:to-indigo-800/50 transition-colors">
-                    <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+
+          {/* Hint */}
+          <p className="text-center text-xs text-text-tertiary mt-4">
+            Click the voice icon to speak
+          </p>
+
+          {/* Result display */}
+          {query && (
+            <div className="mt-4 p-4 bg-background-secondary rounded-xl border border-border-primary">
+              <p className="text-sm text-text-secondary mb-1">Your search:</p>
+              <p className="text-text-primary font-medium">{query}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Voice Input Mode */}
+        <div
+          className={`absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out ${
+            isVoiceVisible
+              ? 'opacity-100 scale-100 translate-y-0'
+              : 'opacity-0 scale-105 translate-y-4 pointer-events-none'
+          }`}
+        >
+          <div className="w-full bg-text-primary rounded-3xl p-8 shadow-elevated">
+            <div className="flex flex-col items-center space-y-5">
+              {/* Animated Orb */}
+              <div className="relative">
+                <div className="w-20 h-20 bg-background-primary/10 rounded-full flex items-center justify-center animate-pulse">
+                  <div className="w-14 h-14 bg-background-primary rounded-full flex items-center justify-center shadow-lg">
+                    <svg className="w-6 h-6 text-text-primary" viewBox="0 0 24 24" fill="currentColor">
+                      <rect x="4" y="10" width="2" height="4" rx="1" />
+                      <rect x="8" y="7" width="2" height="10" rx="1" />
+                      <rect x="12" y="4" width="2" height="16" rx="1" />
+                      <rect x="16" y="7" width="2" height="10" rx="1" />
+                      <rect x="20" y="10" width="2" height="4" rx="1" />
                     </svg>
                   </div>
-                  <span className="text-gray-800 dark:text-gray-100 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">{result}</span>
                 </div>
+
+                {/* Pulsing rings */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full border-2 border-background-primary/20 animate-ping" style={{ animationDuration: '1.5s' }} />
+                </div>
+              </div>
+
+              {/* Status */}
+              <div className="text-center">
+                <p className="text-background-primary font-medium text-lg">
+                  {transcript || 'Listening...'}
+                </p>
+                {!transcript && (
+                  <p className="text-background-primary/60 text-sm mt-1">Speak now</p>
+                )}
+              </div>
+
+              {/* Sound Wave Bars */}
+              <div className="flex items-center justify-center space-x-1 h-6">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1 bg-background-primary rounded-full animate-pulse"
+                    style={{
+                      animationDelay: `${i * 0.15}s`,
+                      height: `${12 + (i === 2 ? 12 : i === 1 || i === 3 ? 8 : 0)}px`,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Cancel */}
+              <button
+                onClick={cancelVoiceMode}
+                className="px-6 py-2 bg-background-primary/20 hover:bg-background-primary/30 text-background-primary rounded-full text-sm font-medium transition-colors"
+              >
+                Cancel
               </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Enhanced Interaction Mode Indicators */}
-      <div className="flex justify-center space-x-6 py-4">
-        {/* Text Mode */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
-            interactionMode === 'text'
-              ? 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-300/50 dark:shadow-blue-900/50 scale-110'
-              : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
-          }`}>
-            <svg className={`w-5 h-5 ${interactionMode === 'text' ? 'text-white' : 'text-gray-500 dark:text-gray-400'} transition-colors`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-            </svg>
-          </div>
-          <span className={`text-xs font-medium transition-colors capitalize ${
-            interactionMode === 'text' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'
-          }`}>
-            Text
-          </span>
-        </div>
-
-        {/* Voice Mode */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
-            interactionMode === 'voice'
-              ? 'bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-300/50 dark:shadow-red-900/50 scale-110'
-              : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
-          }`}>
-            <svg className={`w-5 h-5 ${interactionMode === 'voice' ? 'text-white' : 'text-gray-500 dark:text-gray-400'} transition-colors`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a3 3 0 013 3v6a3 3 0 01-6 0V5a3 3 0 013-3z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 10v1a7 7 0 01-14 0v-1" />
-            </svg>
-          </div>
-          <span className={`text-xs font-medium transition-colors capitalize ${
-            interactionMode === 'voice' ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'
-          }`}>
-            Voice
-          </span>
-        </div>
-
-        {/* Touch Mode */}
-        <div className="flex flex-col items-center space-y-2">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
-            interactionMode === 'touch'
-              ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-300/50 dark:shadow-emerald-900/50 scale-110'
-              : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
-          }`}>
-            <svg className={`w-5 h-5 ${interactionMode === 'touch' ? 'text-white' : 'text-gray-500 dark:text-gray-400'} transition-colors`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5a2.5 2.5 0 015 0v-1.5a2.5 2.5 0 015 0v1.5a2.5 2.5 0 015 0v6a2.5 2.5 0 01-5 0v-6a2.5 2.5 0 00-5 0v6a2.5 2.5 0 01-5 0v-6z" />
-            </svg>
-          </div>
-          <span className={`text-xs font-medium transition-colors capitalize ${
-            interactionMode === 'touch' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400'
-          }`}>
-            Touch
-          </span>
-        </div>
-      </div>
-
-      {/* Enhanced Instructions */}
-      <div className="text-center bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl p-6 space-y-2">
-        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">How to use:</h4>
-        <div className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
-          <div className="flex items-center justify-center space-x-2">
-            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-            <span>Type to search with text input</span>
-          </div>
-          <div className="flex items-center justify-center space-x-2">
-            <div className="w-1.5 h-1.5 bg-red-500 rounded-full"></div>
-            <span>Click microphone for voice search</span>
-          </div>
-          <div className="flex items-center justify-center space-x-2">
-            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-            <span>Tap results to select them</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes slide-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
-        }
-        
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
-} 
+}
