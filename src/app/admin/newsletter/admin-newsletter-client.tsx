@@ -39,6 +39,8 @@ export default function AdminNewsletterClient({
   const [isPublishing, setIsPublishing] = useState(false);
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [sendToSubscribers, setSendToSubscribers] = useState(false);
+  const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
 
   // Sanitize HTML content for preview to prevent XSS
   const sanitizedPreviewContent = useMemo(() => {
@@ -64,6 +66,20 @@ export default function AdminNewsletterClient({
         .finally(() => setIsLoadingDrafts(false));
     }
   }, [isAuthenticated, drafts.length]);
+
+  // Fetch subscriber count
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetch('/api/newsletter/subscribers/count')
+        .then((res) => res.json())
+        .then((data) => {
+          if (typeof data.count === 'number') {
+            setSubscriberCount(data.count);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [isAuthenticated]);
 
   // Set active draft based on selectedId or first pending draft
   useEffect(() => {
@@ -161,13 +177,19 @@ export default function AdminNewsletterClient({
           title: editedTitle,
           summary: editedSummary,
           content: editedContent,
+          sendEmail: sendToSubscribers,
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Newsletter published successfully!' });
+        const successMsg = sendToSubscribers && data.emailResult
+          ? `Newsletter published and sent to ${data.emailResult.successCount} subscribers!`
+          : 'Newsletter published successfully!';
+        setMessage({ type: 'success', text: successMsg });
         // Refresh page to update draft list
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1500);
       } else {
         throw new Error('Failed to publish');
       }
@@ -304,7 +326,7 @@ export default function AdminNewsletterClient({
                         rows={2}
                       />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-3">
                       <button
                         onClick={saveDraft}
                         disabled={isSaving}
@@ -318,12 +340,24 @@ export default function AdminNewsletterClient({
                       >
                         Reject
                       </button>
+                      <div className="border-l border-border-primary dark:border-border-primary h-8 mx-1" />
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={sendToSubscribers}
+                          onChange={(e) => setSendToSubscribers(e.target.checked)}
+                          className="w-4 h-4 rounded border-border-primary text-accent-primary focus:ring-accent-primary"
+                        />
+                        <span className="text-sm text-text-secondary dark:text-text-secondary">
+                          Send to {subscriberCount ?? '...'} subscribers
+                        </span>
+                      </label>
                       <button
                         onClick={publishDraft}
                         disabled={isPublishing}
                         className="px-4 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50"
                       >
-                        {isPublishing ? 'Publishing...' : 'Publish'}
+                        {isPublishing ? 'Publishing...' : sendToSubscribers ? 'Publish & Send' : 'Publish'}
                       </button>
                     </div>
                   </div>
