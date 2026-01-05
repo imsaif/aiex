@@ -1,3 +1,9 @@
 {
-  "buildCommand": "next build"
+  "buildCommand": "next build",
+  "crons": [
+    {
+      "path": "/api/cron/generate-newsletter?type=weekly",
+      "schedule": "0 8 * * 1"
+    }
+  ]
 }
