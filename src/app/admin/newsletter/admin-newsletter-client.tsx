@@ -43,13 +43,15 @@ export default function AdminNewsletterClient({
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
   const [isSendingTest, setIsSendingTest] = useState(false);
 
-  // Sanitize HTML content for preview to prevent XSS
+  // Sanitize HTML content for preview to prevent XSS and make links open in new tab
   const sanitizedPreviewContent = useMemo(() => {
     if (typeof window === 'undefined') return editedContent;
-    return DOMPurify.sanitize(editedContent, {
+    const sanitized = DOMPurify.sanitize(editedContent, {
       ADD_TAGS: ['style'],
       ADD_ATTR: ['target', 'rel'],
     });
+    // Add target="_blank" and rel="noopener noreferrer" to all links
+    return sanitized.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
   }, [editedContent]);
 
   // Fetch drafts after authentication
@@ -289,8 +291,18 @@ export default function AdminNewsletterClient({
     <div className="min-h-screen bg-background-primary dark:bg-background-primary">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary">Newsletter Admin</h1>
-          <p className="text-text-secondary dark:text-text-secondary mt-1">Review and approve newsletter drafts</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary">Newsletter Admin</h1>
+              <p className="text-text-secondary dark:text-text-secondary mt-1">Review and approve newsletter drafts</p>
+            </div>
+            <a
+              href="/admin/subscribers"
+              className="px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors"
+            >
+              Manage Subscribers
+            </a>
+          </div>
         </header>
 
         <div className="grid grid-cols-12 gap-6">
@@ -341,47 +353,33 @@ export default function AdminNewsletterClient({
           {/* Main Content Area */}
           <div className="col-span-9">
             {activeDraft ? (
-              <div className="bg-surface-primary dark:bg-surface-primary rounded-lg shadow-sm border border-border-primary dark:border-border-primary">
-                {/* Header */}
-                <div className="p-6 border-b border-border-primary dark:border-border-primary">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <input
-                        type="text"
-                        value={editedTitle}
-                        onChange={(e) => setEditedTitle(e.target.value)}
-                        className="text-xl font-bold text-text-primary dark:text-text-primary w-full border-0 focus:ring-0 p-0 bg-transparent"
-                      />
-                      <textarea
-                        value={editedSummary}
-                        onChange={(e) => setEditedSummary(e.target.value)}
-                        className="mt-2 text-text-secondary dark:text-text-secondary w-full border-0 focus:ring-0 p-0 resize-none bg-transparent"
-                        rows={2}
-                      />
-                    </div>
-                    <div className="flex items-center gap-3 flex-wrap">
+              <div className="space-y-4">
+                {/* Action Bar - Fixed at top */}
+                <div className="bg-surface-primary dark:bg-surface-primary rounded-lg shadow-sm border border-border-primary dark:border-border-primary p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={saveDraft}
                         disabled={isSaving}
-                        className="px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50"
+                        className="px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-sm font-medium"
                       >
-                        {isSaving ? 'Saving...' : 'Save'}
+                        {isSaving ? 'Saving...' : 'Save Draft'}
                       </button>
-                      <button
-                        onClick={rejectDraft}
-                        className="px-4 py-2 bg-status-error/10 text-status-error rounded-md hover:bg-status-error/20 transition-colors"
-                      >
-                        Reject
-                      </button>
-                      <div className="border-l border-border-primary dark:border-border-primary h-8 mx-1" />
                       <button
                         onClick={sendTestEmail}
                         disabled={isSendingTest}
-                        className="px-4 py-2 bg-accent-primary/10 text-accent-primary rounded-md hover:bg-accent-primary/20 transition-colors disabled:opacity-50"
+                        className="px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-sm font-medium"
                       >
-                        {isSendingTest ? 'Sending...' : 'Send Test Email'}
+                        {isSendingTest ? 'Sending...' : 'Send Test'}
                       </button>
-                      <div className="border-l border-border-primary dark:border-border-primary h-8 mx-1" />
+                      <button
+                        onClick={rejectDraft}
+                        className="px-4 py-2 text-status-error hover:bg-status-error/10 rounded-md transition-colors text-sm font-medium"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-3">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -396,16 +394,15 @@ export default function AdminNewsletterClient({
                       <button
                         onClick={publishDraft}
                         disabled={isPublishing}
-                        className="px-4 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50"
+                        className="px-5 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50 text-sm font-medium"
                       >
                         {isPublishing ? 'Publishing...' : sendToSubscribers ? 'Publish & Send' : 'Publish'}
                       </button>
                     </div>
                   </div>
-
                   {message && (
                     <div
-                      className={`mt-4 p-3 rounded-md ${
+                      className={`mt-3 p-3 rounded-md text-sm ${
                         message.type === 'success'
                           ? 'bg-status-success/10 text-status-success'
                           : 'bg-status-error/10 text-status-error'
@@ -414,6 +411,24 @@ export default function AdminNewsletterClient({
                       {message.text}
                     </div>
                   )}
+                </div>
+
+                {/* Content Card */}
+                <div className="bg-surface-primary dark:bg-surface-primary rounded-lg shadow-sm border border-border-primary dark:border-border-primary">
+                {/* Header */}
+                <div className="p-6 border-b border-border-primary dark:border-border-primary">
+                  <input
+                    type="text"
+                    value={editedTitle}
+                    onChange={(e) => setEditedTitle(e.target.value)}
+                    className="text-xl font-bold text-text-primary dark:text-text-primary w-full border-0 focus:ring-0 p-0 bg-transparent"
+                  />
+                  <textarea
+                    value={editedSummary}
+                    onChange={(e) => setEditedSummary(e.target.value)}
+                    className="mt-2 text-text-secondary dark:text-text-secondary w-full border-0 focus:ring-0 p-0 resize-none bg-transparent"
+                    rows={2}
+                  />
                 </div>
 
                 {/* Preview & Edit Tabs */}
@@ -437,6 +452,7 @@ export default function AdminNewsletterClient({
                       className="w-full h-64 p-4 font-mono text-sm border border-border-primary dark:border-border-primary rounded-lg bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary focus:ring-2 focus:ring-accent-primary focus:border-accent-primary"
                     />
                   </div>
+                </div>
                 </div>
               </div>
             ) : (

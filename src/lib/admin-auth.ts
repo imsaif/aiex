@@ -1,13 +1,17 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { randomBytes, timingSafeEqual, createHmac } from 'crypto';
+import { timingSafeEqual, createHmac } from 'crypto';
 
 // Session duration: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 const COOKIE_NAME = 'admin_session';
 
-// In-memory session store (for production, use Redis or database)
-const sessions = new Map<string, { expiresAt: number }>();
+/**
+ * Get the secret key for signing cookies
+ */
+function getSecretKey(): string {
+  return process.env.HANDBOOK_TOKEN_SECRET || process.env.ADMIN_APPROVE_SECRET || 'fallback-secret-key';
+}
 
 /**
  * Timing-safe password comparison to prevent timing attacks
@@ -42,50 +46,37 @@ export function verifyAdminPassword(password: string): boolean {
 }
 
 /**
- * Create a new admin session
+ * Create a signed session token (stateless - no server-side storage needed)
+ * Format: expiresAt.signature
  */
 export function createSession(): string {
-  const sessionId = randomBytes(32).toString('hex');
   const expiresAt = Date.now() + SESSION_DURATION;
-
-  sessions.set(sessionId, { expiresAt });
-
-  // Clean up expired sessions periodically
-  cleanupExpiredSessions();
-
-  return sessionId;
+  const data = `admin:${expiresAt}`;
+  const signature = createHmac('sha256', getSecretKey()).update(data).digest('hex');
+  return `${expiresAt}.${signature}`;
 }
 
 /**
- * Validate a session ID
+ * Validate a signed session token (stateless)
  */
-export function validateSession(sessionId: string): boolean {
-  const session = sessions.get(sessionId);
-
-  if (!session) {
+export function validateSession(token: string): boolean {
+  if (!token || !token.includes('.')) {
     return false;
   }
 
-  if (Date.now() > session.expiresAt) {
-    sessions.delete(sessionId);
+  const [expiresAtStr, signature] = token.split('.');
+  const expiresAt = parseInt(expiresAtStr, 10);
+
+  // Check if expired
+  if (isNaN(expiresAt) || Date.now() > expiresAt) {
     return false;
   }
 
-  return true;
-}
+  // Verify signature
+  const data = `admin:${expiresAt}`;
+  const expectedSignature = createHmac('sha256', getSecretKey()).update(data).digest('hex');
 
-/**
- * Clean up expired sessions
- */
-function cleanupExpiredSessions(): void {
-  const now = Date.now();
-  const entries = Array.from(sessions.entries());
-  for (let i = 0; i < entries.length; i++) {
-    const [id, session] = entries[i];
-    if (now > session.expiresAt) {
-      sessions.delete(id);
-    }
-  }
+  return secureCompare(signature, expectedSignature);
 }
 
 /**
