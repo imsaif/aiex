@@ -147,12 +147,14 @@ function secureCompareSecret(provided: string, expected: string): boolean {
 }
 
 // GET - Quick approve via email link (with secret token)
-// Add &send=true to also send to subscribers
+// Shows confirmation page to prevent email client link prefetching from auto-approving
+// Add &confirm=true to actually approve (user clicks button on confirmation page)
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
   const secret = searchParams.get('secret');
   const shouldSend = searchParams.get('send') === 'true';
+  const confirmed = searchParams.get('confirm') === 'true';
 
   const adminSecret = process.env.ADMIN_APPROVE_SECRET;
 
@@ -165,6 +167,71 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Draft ID is required' }, { status: 400 });
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  // If not confirmed, show confirmation page (prevents email client prefetch from auto-approving)
+  if (!confirmed) {
+    try {
+      const draft = await prisma.newsletterDraft.findUnique({
+        where: { id },
+        select: { title: true, summary: true, status: true, slug: true },
+      });
+
+      if (!draft) {
+        return new NextResponse('Newsletter not found', { status: 404 });
+      }
+
+      if (draft.status === 'published') {
+        return NextResponse.redirect(`${siteUrl}/news/${draft.slug}?already_published=true`);
+      }
+
+      // Return confirmation page
+      const confirmUrl = `${siteUrl}/api/newsletter/publish?id=${id}&secret=${secret}&confirm=true`;
+      const confirmAndSendUrl = `${siteUrl}/api/newsletter/publish?id=${id}&secret=${secret}&confirm=true&send=true`;
+      const previewUrl = `${siteUrl}/admin/newsletter?id=${id}`;
+
+      return new NextResponse(
+        `<!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Approve Newsletter</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+            h1 { color: #0f172a; }
+            .card { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .btn { display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 5px; font-weight: 500; }
+            .btn-primary { background: #10b981; color: white; }
+            .btn-secondary { background: #0f172a; color: white; }
+            .btn-outline { background: white; color: #0f172a; border: 1px solid #e2e8f0; }
+            .note { color: #64748b; font-size: 14px; margin-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <h1>Approve Newsletter?</h1>
+          <div class="card">
+            <h2 style="margin: 0 0 10px;">${draft.title}</h2>
+            <p style="margin: 0; color: #64748b;">${draft.summary}</p>
+          </div>
+          <p>Click a button below to publish this newsletter:</p>
+          <div>
+            <a href="${confirmUrl}" class="btn btn-primary">Publish Only</a>
+            <a href="${confirmAndSendUrl}" class="btn btn-secondary">Publish & Send to Subscribers</a>
+            <a href="${previewUrl}" class="btn btn-outline">Preview First</a>
+          </div>
+          <p class="note">This page prevents accidental approval from email client link scanning.</p>
+        </body>
+        </html>`,
+        { headers: { 'Content-Type': 'text/html' } }
+      );
+    } catch (error) {
+      console.error('Failed to load draft:', error);
+      return NextResponse.json({ error: 'Failed to load draft' }, { status: 500 });
+    }
+  }
+
+  // Confirmed - actually publish
   try {
     const draft = await prisma.newsletterDraft.update({
       where: { id },
@@ -186,7 +253,6 @@ export async function GET(request: NextRequest) {
     }
 
     // Redirect to the published newsletter
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const sentParam = shouldSend ? '&sent=true' : '';
     return NextResponse.redirect(`${siteUrl}/news/${draft.slug}?published=true${sentParam}`);
   } catch (error) {
