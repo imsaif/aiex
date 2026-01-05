@@ -85,8 +85,38 @@ function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnl
   `;
 }
 
+// Send a single test email to admin
+async function sendTestEmail(
+  newsletter: { title: string; summary: string; content: string; slug: string; type: string }
+): Promise<{ success: boolean; error?: string }> {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) {
+    return { success: false, error: 'ADMIN_EMAIL not configured' };
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
+  const isWeekly = newsletter.type === 'weekly';
+  const subjectPrefix = isWeekly ? '📬' : '📰';
+  const viewOnlineUrl = `${baseUrl}/news/${newsletter.slug}`;
+  const unsubscribeUrl = `${baseUrl}/api/newsletter/unsubscribe?token=test-preview`;
+
+  try {
+    await resend.emails.send({
+      from: 'AI UX Design Guide <noreply@aiuxdesign.guide>',
+      to: adminEmail,
+      subject: `[TEST] ${subjectPrefix} ${newsletter.title}`,
+      html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to send test email:', error);
+    return { success: false, error: String(error) };
+  }
+}
+
 // POST - Publish a draft (requires admin auth)
 // Pass sendEmail=true to also send to subscribers
+// Pass sendTest=true to send a test email to admin first
 export async function POST(request: NextRequest) {
   if (!(await isAdminAuthenticated(request))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -94,10 +124,38 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, title, summary, content, sendEmail = false } = body;
+    const { id, title, summary, content, sendEmail = false, sendTest = false } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'Draft ID is required' }, { status: 400 });
+    }
+
+    // If sendTest, just send test email without publishing
+    if (sendTest) {
+      // Get current draft (with any pending edits)
+      const currentDraft = await prisma.newsletterDraft.findUnique({
+        where: { id },
+      });
+
+      if (!currentDraft) {
+        return NextResponse.json({ error: 'Draft not found' }, { status: 404 });
+      }
+
+      const testResult = await sendTestEmail({
+        title: title || currentDraft.title,
+        summary: summary || currentDraft.summary,
+        content: content || currentDraft.content,
+        slug: currentDraft.slug,
+        type: currentDraft.type,
+      });
+
+      return NextResponse.json({
+        success: testResult.success,
+        message: testResult.success
+          ? `Test email sent to ${process.env.ADMIN_EMAIL}`
+          : `Failed to send test email: ${testResult.error}`,
+        testEmail: process.env.ADMIN_EMAIL,
+      });
     }
 
     // Update the draft with any final edits and mark as published

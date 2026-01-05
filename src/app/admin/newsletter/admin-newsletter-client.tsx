@@ -41,6 +41,7 @@ export default function AdminNewsletterClient({
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [sendToSubscribers, setSendToSubscribers] = useState(false);
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
+  const [isSendingTest, setIsSendingTest] = useState(false);
 
   // Sanitize HTML content for preview to prevent XSS
   const sanitizedPreviewContent = useMemo(() => {
@@ -200,6 +201,38 @@ export default function AdminNewsletterClient({
     }
   };
 
+  const sendTestEmail = async () => {
+    if (!activeDraft) return;
+    setIsSendingTest(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch('/api/newsletter/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: activeDraft.id,
+          title: editedTitle,
+          summary: editedSummary,
+          content: editedContent,
+          sendTest: true,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setMessage({ type: 'success', text: data.message });
+      } else {
+        throw new Error(data.message || 'Failed to send test');
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: `Failed to send test email: ${error}` });
+    } finally {
+      setIsSendingTest(false);
+    }
+  };
+
   const rejectDraft = async () => {
     if (!activeDraft) return;
 
@@ -326,7 +359,7 @@ export default function AdminNewsletterClient({
                         rows={2}
                       />
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
                       <button
                         onClick={saveDraft}
                         disabled={isSaving}
@@ -339,6 +372,14 @@ export default function AdminNewsletterClient({
                         className="px-4 py-2 bg-status-error/10 text-status-error rounded-md hover:bg-status-error/20 transition-colors"
                       >
                         Reject
+                      </button>
+                      <div className="border-l border-border-primary dark:border-border-primary h-8 mx-1" />
+                      <button
+                        onClick={sendTestEmail}
+                        disabled={isSendingTest}
+                        className="px-4 py-2 bg-accent-primary/10 text-accent-primary rounded-md hover:bg-accent-primary/20 transition-colors disabled:opacity-50"
+                      >
+                        {isSendingTest ? 'Sending...' : 'Send Test Email'}
                       </button>
                       <div className="border-l border-border-primary dark:border-border-primary h-8 mx-1" />
                       <label className="flex items-center gap-2 cursor-pointer">
