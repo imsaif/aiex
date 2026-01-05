@@ -21,14 +21,16 @@ model Subscriber {
 }
 
 model NewsletterDraft {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  summary     String
-  content     String   @db.Text
-  publishDate DateTime
-  status      String   @default("pending_review") // pending_review, approved, published, rejected
-  sources     Json     @default("[]") // Array of source URLs used
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  title          String
+  slug           String   @unique
+  summary        String
+  content        String   @db.Text
+  publishDate    DateTime
+  status         String   @default("pending_review") // pending_review, approved, published, rejected
+  type           String   @default("daily") // daily, weekly
+  sources        Json     @default("[]") // Array of source URLs used
+  structuredData Json?    // Structured newsletter data (items, takeaway, etc.) for weekly compilation
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

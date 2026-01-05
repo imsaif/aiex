@@ -168,13 +168,15 @@ interface NewsItem {
   pubDate: string;
 }
 
-async function getRecentlyUsedUrls(): Promise<Set<string>> {
-  // Get URLs from newsletters published in the last 7 days
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+async function getRecentlyUsedUrls(deduplicationDays = 7, excludeWeekly = true): Promise<Set<string>> {
+  // Get URLs from newsletters published in the last N days
+  // Only check daily newsletters for deduplication (weekly compiles from daily, so shouldn't compete)
+  const cutoffDate = new Date(Date.now() - deduplicationDays * 24 * 60 * 60 * 1000);
   const recentNewsletters = await prisma.newsletterDraft.findMany({
     where: {
       status: { in: ['published', 'pending_review'] },
-      createdAt: { gte: sevenDaysAgo },
+      createdAt: { gte: cutoffDate },
+      ...(excludeWeekly && { type: 'daily' }), // Only check daily newsletters
     },
     select: { content: true },
   });
@@ -190,16 +192,16 @@ async function getRecentlyUsedUrls(): Promise<Set<string>> {
   return usedUrls;
 }
 
-async function aggregateNews(): Promise<NewsItem[]> {
+async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise<NewsItem[]> {
   const allItems: NewsItem[] = [];
-  const usedUrls = await getRecentlyUsedUrls();
+  const usedUrls = await getRecentlyUsedUrls(deduplicationDays);
 
   const results = await Promise.allSettled(
     RSS_SOURCES.map(async (source) => {
       try {
         const feed = await parser.parseURL(source.url);
         return (feed.items || [])
-          .filter((item) => isRecent(item, 24) && isRelevant(item))
+          .filter((item) => isRecent(item, lookbackHours) && isRelevant(item))
           .filter((item) => !item.link || !usedUrls.has(item.link)) // Exclude already-used URLs
           .map((item) => ({
             source: source.name,
@@ -223,7 +225,7 @@ async function aggregateNews(): Promise<NewsItem[]> {
 
   // Add Anthropic news from scraper (no RSS feed available)
   const anthropicNews = await scrapeAnthropicNews();
-  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const cutoff = new Date(Date.now() - lookbackHours * 60 * 60 * 1000);
   for (const item of anthropicNews) {
     const itemDate = new Date(item.pubDate);
     if (itemDate >= cutoff && !usedUrls.has(item.link)) {
@@ -251,6 +253,106 @@ interface NewsletterData {
     title: string;
     body: string;
   };
+}
+
+// Weekly newsletter specific interfaces
+interface WeeklyNewsletterData {
+  title: string;
+  summary: string;
+  items: NewsletterItem[];
+  stealThisWeek: {
+    product: string;
+    feature: string;
+    insight: string;
+  };
+  patternToKnow: {
+    patternSlug: string;
+    title: string;
+    explanation: string;
+    whenToUse: string;
+  };
+  weeklyTakeaway: string;
+}
+
+type NewsletterType = 'daily' | 'weekly';
+
+// Get items from daily newsletters for weekly compilation
+async function getDailyNewsletterItems(days = 7): Promise<NewsletterItem[]> {
+  const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+
+  const dailyNewsletters = await prisma.newsletterDraft.findMany({
+    where: {
+      type: 'daily',
+      status: { in: ['published', 'pending_review'] },
+      createdAt: { gte: cutoffDate },
+    },
+    orderBy: { createdAt: 'desc' },
+    select: { structuredData: true, title: true },
+  });
+
+  const allItems: NewsletterItem[] = [];
+
+  for (const newsletter of dailyNewsletters) {
+    if (newsletter.structuredData && typeof newsletter.structuredData === 'object') {
+      const data = newsletter.structuredData as { items?: NewsletterItem[] };
+      if (data.items && Array.isArray(data.items)) {
+        allItems.push(...data.items);
+      }
+    }
+  }
+
+  return allItems;
+}
+
+// Build prompt for weekly compilation from daily items
+function buildWeeklyCompilationPrompt(dailyItems: NewsletterItem[]): string {
+  const patternList = patterns.map((p) => `- ${p.slug}: ${p.title}`).join('\n');
+
+  return `You are an AI UX design expert writing a WEEKLY newsletter called "This Week in AIUX" for designers and product managers.
+
+I have collected items from this week's daily newsletters. Your job is to curate the BEST 5-8 items and create a comprehensive weekly roundup.
+
+ITEMS FROM THIS WEEK'S DAILY NEWSLETTERS:
+${JSON.stringify(dailyItems, null, 2)}
+
+AVAILABLE PATTERNS (for reference):
+${patternList}
+
+YOUR TASK:
+1. Select the 5-8 most UX-significant items from the daily newsletters
+2. Keep the original descriptions but you may slightly enhance them for the weekly context
+3. Identify ONE standout feature for "Steal This Week" - a feature other products should copy
+4. Identify ONE pattern that appeared multiple times for "Pattern to Know" deep dive
+5. Write a weekly takeaway that ties the themes together
+6. Create a compelling title and summary
+
+RESPOND IN THIS EXACT JSON FORMAT:
+{
+  "title": "This Week in AIUX: [3-4 word summary of key themes]",
+  "summary": "One sentence summary of this week's theme",
+  "items": [
+    {
+      "product": "Product Name",
+      "date": "Dec 21",
+      "headline": "Short headline",
+      "description": "Description from daily newsletter (keep or enhance)",
+      "sourceUrl": "Original URL",
+      "patternSlug": "pattern-slug"
+    }
+  ],
+  "stealThisWeek": {
+    "product": "Product with the standout feature",
+    "feature": "Feature name",
+    "insight": "2-3 sentences on why this matters and is worth copying"
+  },
+  "patternToKnow": {
+    "patternSlug": "pattern-slug",
+    "title": "Why [Pattern Name] dominated this week",
+    "explanation": "2-3 sentences on why this pattern appeared multiple times",
+    "whenToUse": "When to apply this pattern"
+  },
+  "weeklyTakeaway": "One sentence theme tying everything together"
+}`;
 }
 
 function buildPrompt(newsItems: NewsItem[]): string {
@@ -291,6 +393,57 @@ RESPOND IN THIS EXACT JSON FORMAT:
     "title": "Key insight title",
     "body": "2-3 sentences explaining the insight"
   }
+}`;
+}
+
+function buildWeeklyPrompt(newsItems: NewsItem[]): string {
+  const patternList = patterns.map((p) => `- ${p.slug}: ${p.title}`).join('\n');
+
+  return `You are an AI UX design expert writing a WEEKLY newsletter called "This Week in AIUX" for designers and product managers.
+
+Given these AI product news items from the past week, create a comprehensive weekly roundup:
+
+NEWS ITEMS:
+${JSON.stringify(newsItems, null, 2)}
+
+AVAILABLE PATTERNS (use these slugs for pattern matching):
+${patternList}
+
+YOUR TASK:
+1. Select the 5-8 most UX-significant items from this week's news
+2. For each selected item, write a description focused on the UX implications
+3. Match each item to one of the available patterns (use the slug exactly)
+4. Write "Steal This Week" - highlight ONE standout feature that other products should copy
+5. Write "Pattern to Know" - deep dive on one pattern that appeared multiple times this week
+6. Write a weekly takeaway that ties the theme together
+7. Create a title and summary for the newsletter
+
+RESPOND IN THIS EXACT JSON FORMAT:
+{
+  "title": "This Week in AIUX: [3-4 word summary of key themes]",
+  "summary": "One sentence summary of this week's theme",
+  "items": [
+    {
+      "product": "Product Name (e.g., ChatGPT, Claude, Gemini, Cursor)",
+      "date": "Dec 21",
+      "headline": "Short headline describing the update",
+      "description": "2-3 sentences explaining what happened and why it matters for UX",
+      "sourceUrl": "URL from the news item",
+      "patternSlug": "pattern-slug-from-list"
+    }
+  ],
+  "stealThisWeek": {
+    "product": "Product name with the standout feature",
+    "feature": "Name of the feature to steal",
+    "insight": "2-3 sentences on why this matters for UX and what makes it worth copying"
+  },
+  "patternToKnow": {
+    "patternSlug": "pattern-slug-from-list",
+    "title": "Why [Pattern Name] dominated this week",
+    "explanation": "2-3 sentences explaining why this pattern appeared multiple times",
+    "whenToUse": "When designers should apply this pattern in their own products"
+  },
+  "weeklyTakeaway": "One sentence theme that ties everything together this week"
 }`;
 }
 
@@ -335,7 +488,58 @@ ${itemsHTML}
   `.trim();
 }
 
-function generateSlug(title: string): string {
+function generateWeeklyHTML(data: WeeklyNewsletterData): string {
+  const itemsHTML = data.items
+    .map((item) => {
+      const color = getProductColor(item.product);
+      const bgColor = getPatternBgColor(color);
+
+      return `
+<div style="margin: 0 0 32px; border-left: 3px solid ${color}; padding-left: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <span style="font-size: 11px; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${item.product}</span>
+    <span style="font-size: 12px; color: #94a3b8;">${item.date}</span>
+  </div>
+  <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
+  <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="/patterns/${item.patternSlug}" style="background: ${bgColor}; color: ${color}; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
+</div>`;
+    })
+    .join('\n');
+
+  return `
+<p style="margin: 0 0 20px; font-size: 17px; line-height: 1.7; color: #334155;">${data.summary}</p>
+
+<p style="margin: 0 0 40px; font-size: 17px; line-height: 1.7; color: #334155;">${data.weeklyTakeaway}</p>
+
+<div style="border-top: 1px solid #e2e8f0; margin-bottom: 40px;"></div>
+
+<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">📱 This Week in AI Products</h2>
+
+${itemsHTML}
+
+<div style="background-color: #1e293b; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
+  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px;">🎯 Steal This Week</h2>
+  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #94a3b8;"><strong style="color: #ffffff;">${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}</strong></p>
+  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #94a3b8;">${data.stealThisWeek.insight}</p>
+</div>
+
+<div style="background-color: #0f172a; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
+  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px;">📚 Pattern to Know</h2>
+  <h3 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #ffffff;">${getPatternTitle(data.patternToKnow.patternSlug)}</h3>
+  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #cbd5e1;">${data.patternToKnow.explanation}</p>
+  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.7; color: #cbd5e1;"><strong style="color: #ffffff;">When to use it:</strong> ${data.patternToKnow.whenToUse}</p>
+  <p style="margin: 0;"><a href="/patterns/${data.patternToKnow.patternSlug}" style="color: #60a5fa; text-decoration: none; font-size: 15px; font-weight: 500;">Deep dive on ${getPatternTitle(data.patternToKnow.patternSlug)} →</a></p>
+</div>
+
+<div style="text-align: center; padding: 24px 0;">
+  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want the full breakdown on any pattern mentioned above?</p>
+  <a href="/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
+</div>
+  `.trim();
+}
+
+function generateSlug(title: string, type: NewsletterType = 'daily'): string {
   const date = new Date();
   const monthDay = date
     .toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
@@ -349,7 +553,8 @@ function generateSlug(title: string): string {
     .replace(/-+/g, '-')
     .slice(0, 60);
 
-  return `ai-ux-daily-${monthDay}-${titleSlug}`;
+  const prefix = type === 'weekly' ? 'this-week-in-aiux' : 'ai-ux-daily';
+  return `${prefix}-${monthDay}-${titleSlug}`;
 }
 
 async function sendAdminNotification(
@@ -400,11 +605,59 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Step 1: Aggregate news
-    const newsItems = await aggregateNews();
+    // Parse newsletter type from query params
+    const url = new URL(request.url);
+    const type = (url.searchParams.get('type') || 'daily') as NewsletterType;
 
-    // Handle quiet days with a creative message
+    // For daily: Skip if a weekly was already published today (avoid redundancy)
+    if (type === 'daily') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const weeklyToday = await prisma.newsletterDraft.findFirst({
+        where: {
+          type: 'weekly',
+          status: { in: ['published', 'pending_review'] },
+          createdAt: { gte: today, lt: tomorrow },
+        },
+      });
+
+      if (weeklyToday) {
+        return NextResponse.json({
+          success: true,
+          message: 'Skipped daily - weekly newsletter already exists for today',
+          weeklyId: weeklyToday.id,
+          weeklyTitle: weeklyToday.title,
+        });
+      }
+    }
+
+    // Get lookback hours from query param (for custom catch-up periods)
+    const customLookbackHours = url.searchParams.get('lookbackHours');
+
+    // Configure based on type
+    // Daily uses 72h lookback to catch content from companies that don't post daily
+    // Weekly uses 7 days (168h) for comprehensive roundup
+    const lookbackHours = customLookbackHours
+      ? parseInt(customLookbackHours, 10)
+      : (type === 'weekly' ? 168 : 72); // 7 days for weekly, 3 days for daily
+    const deduplicationDays = type === 'weekly' ? 30 : 7;
+
+    // Step 1: Aggregate news
+    const newsItems = await aggregateNews(lookbackHours, deduplicationDays);
+
+    // Handle quiet days with a creative message (only for daily)
     if (newsItems.length === 0) {
+      if (type === 'weekly') {
+        return NextResponse.json({
+          success: false,
+          message: 'No news items found for weekly newsletter. Try a longer lookback period.',
+          newsItemsFound: 0,
+        });
+      }
+
       const quietDayMessages = [
         { title: 'A Quiet Day in AI', message: 'No major AI updates today. Perfect time to explore a new pattern or refine your designs.' },
         { title: 'The AI World Takes a Breath', message: 'Nothing groundbreaking today. Why not revisit a pattern you haven\'t explored yet?' },
@@ -454,13 +707,33 @@ export async function GET(request: NextRequest) {
     }
 
     // Step 2: Generate newsletter with Claude
+    let prompt: string;
+    let structuredData: NewsletterData | WeeklyNewsletterData | null = null;
+    let dailyItemsUsed: NewsletterItem[] = [];
+
+    if (type === 'weekly') {
+      // Weekly: Try to compile from daily newsletters first
+      const dailyItems = await getDailyNewsletterItems(7);
+
+      if (dailyItems.length >= 3) {
+        // Have enough daily content to compile
+        prompt = buildWeeklyCompilationPrompt(dailyItems);
+        dailyItemsUsed = dailyItems;
+      } else {
+        // Fall back to fresh RSS (for initial setup or sparse weeks)
+        prompt = buildWeeklyPrompt(newsItems);
+      }
+    } else {
+      prompt = buildPrompt(newsItems);
+    }
+
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
       messages: [
         {
           role: 'user',
-          content: buildPrompt(newsItems),
+          content: prompt,
         },
       ],
     });
@@ -469,32 +742,52 @@ export async function GET(request: NextRequest) {
       response.content[0].type === 'text' ? response.content[0].text : '';
 
     // Parse Claude's response
-    let newsletterData: NewsletterData;
+    let htmlContent: string;
+    let title: string;
+    let summary: string;
+
     try {
       const jsonMatch =
         responseText.match(/```json\s*([\s\S]*?)\s*```/) ||
         responseText.match(/```\s*([\s\S]*?)\s*```/) || [null, responseText];
-      newsletterData = JSON.parse(jsonMatch[1] || responseText);
+      const parsedData = JSON.parse(jsonMatch[1] || responseText);
+
+      if (type === 'weekly') {
+        const weeklyData = parsedData as WeeklyNewsletterData;
+        htmlContent = generateWeeklyHTML(weeklyData);
+        title = weeklyData.title;
+        summary = weeklyData.summary;
+        structuredData = weeklyData;
+      } else {
+        const dailyData = parsedData as NewsletterData;
+        htmlContent = generateHTML(dailyData);
+        title = dailyData.title;
+        summary = dailyData.summary;
+        structuredData = dailyData; // Store for weekly compilation
+      }
     } catch {
       return NextResponse.json(
-        { error: 'Failed to parse newsletter content from Claude' },
+        { error: 'Failed to parse newsletter content from Claude', rawResponse: responseText.slice(0, 500) },
         { status: 500 }
       );
     }
 
-    // Step 3: Generate HTML and save draft
-    const htmlContent = generateHTML(newsletterData);
-    const slug = generateSlug(newsletterData.title);
+    // Step 3: Generate slug and save draft
+    const slug = generateSlug(title, type);
 
     const draft = await prisma.newsletterDraft.create({
       data: {
-        title: newsletterData.title,
+        title,
         slug,
-        summary: newsletterData.summary,
+        summary,
         content: htmlContent,
         publishDate: new Date(),
         status: 'pending_review',
-        sources: newsItems.map((item) => item.link),
+        type,
+        sources: type === 'weekly' && dailyItemsUsed.length > 0
+          ? dailyItemsUsed.map((item) => item.sourceUrl)
+          : newsItems.map((item) => item.link),
+        structuredData: structuredData as object,
       },
     });
 
@@ -504,9 +797,17 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      type,
       draftId: draft.id,
       title: draft.title,
       previewUrl,
+      newsItemsProcessed: newsItems.length,
+      lookbackHours,
+      // Weekly-specific info
+      ...(type === 'weekly' && {
+        compiledFromDaily: dailyItemsUsed.length > 0,
+        dailyItemsUsed: dailyItemsUsed.length,
+      }),
     });
   } catch (error) {
     console.error('Newsletter generation failed:', error);

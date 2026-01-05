@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-05 18:51 (MacBook)
+- **Pattern:** Weekly Newsletter Automation
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Built weekly newsletter automation ("This Week in AIUX") that compiles from daily newsletters. Added structuredData field to schema for weekly compilation, extended daily lookback to 72h, fixed deduplication to only check daily newsletters, added skip logic when weekly exists for same day, and published first weekly edition.
+
 ### Session 2025-12-25 12:38 (MacBook)
 - **Pattern:** Multimodal Interaction Demo
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Refactored newsletter page from Prisma to TypeScript data files, implemented smol.ai-style list layout with "Last 30 days" filtering, added Resources dropdown in navbar (Prompts, Guides, News), and built global search modal (⌘K) with unified search across patterns, guides, prompts, and newsletters.
 
 ### Session 2025-12-17 20:26 (MacBook)
-- **Pattern:** Newsletter Archive Page (/news)
-- **Status:** ✅ Completed
-- **Files Changed:** 12
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented newsletter archive page at /news similar to news.smol.ai. Added Prisma models (Newsletter, Tag, NewsletterTag), data access layer, NewsletterCard and TagFilter UI components, archive page with search/filtering, individual newsletter detail pages with prev/next navigation, and seed script with 5 sample newsletters.
-
-### Session 2025-12-12 22:37 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
