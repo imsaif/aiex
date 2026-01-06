@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-06 12:41 (MacBook)
+- **Pattern:** Newsletter Email Delivery Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed invalid pattern links in newsletters (changed relative `/patterns/` to absolute `https://www.aiuxdesign.guide/patterns/`). Upgraded email sending from sequential to Resend batch API to prevent Vercel function timeouts. Diagnosed and resent newsletter to 18 subscribers who didn't receive it due to timeout.
+
 ### Session 2026-01-05 18:51 (MacBook)
 - **Pattern:** Weekly Newsletter Automation
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added UX improvements to audit results page: Top 3 Priorities Card showing most important patterns to fix, Copy Results button for sharing formatted summary, dynamic Chat CTA text based on score, and quick action suggestion pills for common questions.
 
 ### Session 2025-12-19 15:34 (MacBook)
-- **Pattern:** Navigation & Search Enhancement
-- **Status:** ✅ Completed
-- **Files Changed:** 14
-- **Tests Added/Modified:** 0
-- **Notes:** Refactored newsletter page from Prisma to TypeScript data files, implemented smol.ai-style list layout with "Last 30 days" filtering, added Resources dropdown in navbar (Prompts, Guides, News), and built global search modal (⌘K) with unified search across patterns, guides, prompts, and newsletters.
-
-### Session 2025-12-17 20:26 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

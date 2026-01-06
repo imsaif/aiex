@@ -4,58 +4,85 @@ import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { timingSafeEqual } from 'crypto';
 import { resend } from '@/lib/resend';
 
-// Send newsletter to all active subscribers
+// Send newsletter to all active subscribers using Resend's batch API
 async function sendNewsletterToSubscribers(
   newsletter: { title: string; summary: string; content: string; slug: string; type: string }
-): Promise<{ successCount: number; failureCount: number; totalSubscribers: number }> {
+): Promise<{ successCount: number; failureCount: number; totalSubscribers: number; failedEmails: string[] }> {
   const subscribers = await prisma.subscriber.findMany({
     where: { active: true },
   });
 
   if (subscribers.length === 0) {
-    return { successCount: 0, failureCount: 0, totalSubscribers: 0 };
+    return { successCount: 0, failureCount: 0, totalSubscribers: 0, failedEmails: [] };
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
   const isWeekly = newsletter.type === 'weekly';
   const subjectPrefix = isWeekly ? '📬' : '📰';
+  const viewOnlineUrl = `${baseUrl}/news/${newsletter.slug}`;
 
-  // Send emails in batches of 10 to avoid rate limits
-  const batchSize = 10;
+  // Use Resend's batch API - much faster than individual sends
+  // Batch API supports up to 100 emails per request
+  const batchSize = 100;
   let successCount = 0;
   let failureCount = 0;
+  const failedEmails: string[] = [];
 
   for (let i = 0; i < subscribers.length; i += batchSize) {
     const batch = subscribers.slice(i, i + batchSize);
-    const emailPromises = batch.map(async (subscriber) => {
-      const unsubscribeUrl = `${baseUrl}/api/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`;
-      const viewOnlineUrl = `${baseUrl}/news/${newsletter.slug}`;
 
-      try {
-        await resend.emails.send({
-          from: 'AI UX Design Guide <noreply@aiuxdesign.guide>',
-          to: subscriber.email,
-          subject: `${subjectPrefix} ${newsletter.title}`,
-          html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl),
-        });
-        return true;
-      } catch (error) {
-        console.error(`Failed to send to ${subscriber.email}:`, error);
-        return false;
-      }
+    // Prepare batch emails
+    const emails = batch.map((subscriber) => {
+      const unsubscribeUrl = `${baseUrl}/api/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`;
+      return {
+        from: 'AI UX Design Guide <noreply@aiuxdesign.guide>',
+        to: subscriber.email,
+        subject: `${subjectPrefix} ${newsletter.title}`,
+        html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl),
+      };
     });
 
-    const results = await Promise.all(emailPromises);
-    successCount += results.filter(Boolean).length;
-    failureCount += results.filter((r) => !r).length;
+    try {
+      // Use batch send - single API call for up to 100 emails
+      const result = await resend.batch.send(emails);
 
-    // Small delay between batches to respect rate limits
+      // Count successes and failures from batch result
+      if (result.data) {
+        for (let j = 0; j < result.data.length; j++) {
+          const emailResult = result.data[j];
+          if (emailResult.id) {
+            successCount++;
+          } else {
+            failureCount++;
+            failedEmails.push(batch[j].email);
+          }
+        }
+      }
+
+      if (result.error) {
+        console.error('Batch send error:', result.error);
+        // If entire batch failed, count all as failures
+        failureCount += batch.length;
+        failedEmails.push(...batch.map(s => s.email));
+      }
+    } catch (error) {
+      console.error('Failed to send batch:', error);
+      failureCount += batch.length;
+      failedEmails.push(...batch.map(s => s.email));
+    }
+
+    // Small delay between batches if there are more
     if (i + batchSize < subscribers.length) {
       await new Promise((resolve) => setTimeout(resolve, 100));
     }
   }
 
-  return { successCount, failureCount, totalSubscribers: subscribers.length };
+  console.log(`Newsletter sent: ${successCount} success, ${failureCount} failed out of ${subscribers.length} total`);
+  if (failedEmails.length > 0) {
+    console.log('Failed emails:', failedEmails.join(', '));
+  }
+
+  return { successCount, failureCount, totalSubscribers: subscribers.length, failedEmails };
 }
 
 // Wrap newsletter HTML content for email delivery
@@ -185,7 +212,7 @@ export async function POST(request: NextRequest) {
       success: true,
       draft,
       message: sendEmail
-        ? `Newsletter published and sent to ${emailResult?.successCount} subscribers`
+        ? `Newsletter published and sent to ${emailResult?.successCount}/${emailResult?.totalSubscribers} subscribers${emailResult?.failureCount ? ` (${emailResult.failureCount} failed)` : ''}`
         : 'Newsletter published successfully',
       emailResult,
     });
