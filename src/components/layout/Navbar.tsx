@@ -11,6 +11,7 @@ import {
   ChevronDownIcon,
   NewspaperIcon,
   MagnifyingGlassIcon,
+  FolderIcon,
 } from '@heroicons/react/24/outline';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import SearchModal from '../ui/SearchModal';
@@ -69,11 +70,7 @@ const Navbar = () => {
 
   // Check if any resource route is active
   const isResourcesActive = () => {
-    return (
-      pathname.startsWith('/prompts') ||
-      pathname.startsWith('/guides') ||
-      pathname.startsWith('/news')
-    );
+    return pathname.startsWith('/prompts') || pathname.startsWith('/guides');
   };
 
   // Get link classes based on active state - minimal style with no layout shift
@@ -140,6 +137,16 @@ const Navbar = () => {
               </span>
             </Link>
 
+            <Link href="/news" className={getLinkClasses('/news')}>
+              <NewspaperIcon className="w-5 h-5" />
+              <span className="hidden sm:inline relative">
+                News
+                <span className="invisible font-semibold block h-0" aria-hidden="true">
+                  News
+                </span>
+              </span>
+            </Link>
+
             <Link href="/audit" className={getLinkClasses('/audit')}>
               <BeakerIcon className="w-5 h-5" />
               <span className="hidden sm:inline relative">
@@ -157,6 +164,7 @@ const Navbar = () => {
               onMouseLeave={handleMouseLeave}
             >
               <button className={getDropdownTriggerClasses()}>
+                <FolderIcon className="w-5 h-5" />
                 <span className="hidden sm:inline relative">
                   Resources
                   <span className="invisible font-semibold block h-0" aria-hidden="true">
@@ -191,14 +199,6 @@ const Navbar = () => {
                         <BookOpenIcon className="w-5 h-5" />
                         <span>Guides</span>
                       </Link>
-                      <Link
-                        href="/news"
-                        className={getDropdownItemClasses('/news')}
-                        onClick={() => setIsResourcesOpen(false)}
-                      >
-                        <NewspaperIcon className="w-5 h-5" />
-                        <span>News</span>
-                      </Link>
                     </div>
                   </div>
                 </>
@@ -208,13 +208,10 @@ const Navbar = () => {
             {/* Search Button */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-2 text-text-secondary hover:text-text-primary transition-colors rounded-lg hover:bg-surface-secondary"
+              className="flex items-center gap-2 px-3 py-2 text-text-secondary hover:text-text-primary transition-colors rounded-lg hover:bg-surface-secondary cursor-pointer"
               aria-label="Search (⌘K)"
             >
               <MagnifyingGlassIcon className="w-5 h-5" />
-              <kbd className="hidden sm:inline text-xs px-1.5 py-0.5 rounded bg-surface-secondary text-text-tertiary font-mono">
-                ⌘K
-              </kbd>
             </button>
 
             {/* Theme Toggle */}
