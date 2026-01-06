@@ -82,34 +82,29 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Brand colors
+// Brand colors - minimal palette following brand guidelines
 const COLORS = {
   primary: [0, 0, 0] as [number, number, number],           // Black
   accent: [217, 119, 87] as [number, number, number],       // Brand orange #D97757
-  accentLight: [255, 237, 230] as [number, number, number], // Light orange bg
-  text: [30, 30, 30] as [number, number, number],           // Dark text
-  textSecondary: [100, 100, 100] as [number, number, number], // Secondary text
-  textMuted: [150, 150, 150] as [number, number, number],   // Muted text
-  background: [250, 250, 250] as [number, number, number],  // Light gray bg
+  accentLight: [255, 245, 241] as [number, number, number], // Very light orange bg
+  text: [23, 23, 23] as [number, number, number],           // Near black text
+  textSecondary: [82, 82, 82] as [number, number, number],  // Dark gray
+  textMuted: [140, 140, 140] as [number, number, number],   // Medium gray
+  background: [248, 248, 248] as [number, number, number],  // Light gray bg
   white: [255, 255, 255] as [number, number, number],
-  success: [34, 197, 94] as [number, number, number],       // Green
-  warning: [245, 158, 11] as [number, number, number],      // Amber
-  warningBg: [255, 251, 235] as [number, number, number],
-  info: [59, 130, 246] as [number, number, number],         // Blue
-  infoBg: [239, 246, 255] as [number, number, number],
-  codeBg: [39, 39, 42] as [number, number, number],         // Dark code bg
+  codeBg: [30, 30, 30] as [number, number, number],         // Near black for code
 };
 
-// Module icons/colors
+// All modules use accent color for brand consistency
 const MODULE_COLORS: Record<string, [number, number, number]> = {
-  setup: [99, 102, 241],      // Indigo
-  features: [16, 185, 129],   // Emerald
-  prototype: [245, 158, 11],  // Amber
-  prototyping: [236, 72, 153], // Pink
-  collaboration: [139, 92, 246], // Purple
-  github: [0, 0, 0],          // Black
-  practices: [6, 182, 212],   // Cyan
-  general: [100, 100, 100],   // Gray
+  setup: [217, 119, 87],       // Brand accent
+  features: [217, 119, 87],    // Brand accent
+  prototype: [217, 119, 87],   // Brand accent
+  prototyping: [217, 119, 87], // Brand accent
+  collaboration: [217, 119, 87], // Brand accent
+  github: [217, 119, 87],      // Brand accent
+  practices: [217, 119, 87],   // Brand accent
+  general: [217, 119, 87],     // Brand accent
 };
 
 /**
@@ -306,7 +301,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
     }
 
     const modules = Array.from(moduleGroups.keys());
-    const moduleCardHeight = 18;
+    const moduleCardHeight = 16; // Reduced from 18 to fit more modules
 
     for (let i = 0; i < modules.length; i++) {
       const moduleId = modules[i];
@@ -314,34 +309,36 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
       const lessonCount = moduleGroups.get(moduleId)!.length;
       const moduleColor = MODULE_COLORS[moduleId] || COLORS.textSecondary;
 
-      if (yPos + moduleCardHeight > pageHeight - 40) break;
-
-      // Module card
+      // Module card (removed break - show all modules)
       drawRoundedRect(margin, yPos, contentWidth, moduleCardHeight, 2, COLORS.background);
 
-      // Module color indicator
+      // Module color indicator - subtle accent
       doc.setFillColor(...moduleColor);
-      doc.roundedRect(margin, yPos, 4, moduleCardHeight, 2, 2, 'F');
+      doc.roundedRect(margin + 1, yPos + 2, 2, moduleCardHeight - 4, 1, 1, 'F');
 
-      // Module number
+      // Module number - properly centered
+      const modCircleX = margin + 14;
+      const modCircleY = yPos + moduleCardHeight / 2;
       doc.setFillColor(...moduleColor);
-      doc.circle(margin + 15, yPos + moduleCardHeight / 2, 5, 'F');
-      doc.setFontSize(10);
+      doc.circle(modCircleX, modCircleY, 4, 'F');
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...COLORS.white);
-      doc.text(String(i + 1), margin + 13.5, yPos + moduleCardHeight / 2 + 1.5);
+      const modNumStr = String(i + 1);
+      const modNumWidth = doc.getTextWidth(modNumStr);
+      doc.text(modNumStr, modCircleX - modNumWidth / 2, modCircleY + 1.5);
 
       // Module name
-      doc.setFontSize(11);
+      doc.setFontSize(10);
       doc.setTextColor(...COLORS.text);
-      doc.text(moduleName, margin + 25, yPos + moduleCardHeight / 2 + 1.5);
+      doc.text(moduleName, margin + 23, modCircleY + 1.5);
 
       // Lesson count
-      doc.setFontSize(9);
+      doc.setFontSize(8);
       doc.setTextColor(...COLORS.textSecondary);
       doc.text(`${lessonCount} lesson${lessonCount > 1 ? 's' : ''}`, pageWidth - margin - 25, yPos + moduleCardHeight / 2 + 1.5);
 
-      yPos += moduleCardHeight + 4;
+      yPos += moduleCardHeight + 3; // Reduced spacing from 4 to 3
     }
   }
 
@@ -428,21 +425,38 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
   // LESSON CONTENT
   // =====================
   if (guide.lessons && guide.lessons.length > 0) {
+    let isFirstLesson = true;
+
     for (const lesson of guide.lessons) {
-      // Start each lesson on new page for better organization
-      doc.addPage();
-      currentPage++;
-      addPageHeader();
-      yPos = 30;
+      const lessonHeaderHeight = 45; // Height needed for lesson header
+
+      // Only start new page if not enough space for lesson header
+      // First lesson always starts on new page after TOC
+      if (isFirstLesson || yPos + lessonHeaderHeight > pageHeight - 40) {
+        addPageFooter();
+        doc.addPage();
+        currentPage++;
+        addPageHeader();
+        yPos = 30;
+      } else {
+        // Add subtle separator line between lessons on same page
+        yPos += 10;
+        doc.setDrawColor(220, 220, 220); // Very light gray
+        doc.setLineWidth(0.1);
+        doc.line(margin + 30, yPos, pageWidth - margin - 30, yPos);
+        yPos += 14;
+      }
+
+      isFirstLesson = false;
 
       const moduleColor = MODULE_COLORS[lesson.module || 'general'] || COLORS.textSecondary;
 
       // Lesson header block
       drawRoundedRect(margin - 5, yPos - 10, contentWidth + 10, 35, 4, COLORS.background);
 
-      // Module color bar on left
+      // Module color bar on left - subtle
       doc.setFillColor(...moduleColor);
-      doc.roundedRect(margin - 5, yPos - 10, 4, 35, 2, 2, 'F');
+      doc.roundedRect(margin - 4, yPos - 8, 2, 31, 1, 1, 'F');
 
       // Lesson number badge
       doc.setFillColor(...COLORS.accent);
@@ -491,8 +505,8 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
                 yPos += 8;
                 const headingSize = section.level === 'h2' ? 14 : 12;
                 doc.setFillColor(...COLORS.accent);
-                doc.rect(margin, yPos - 3, 3, headingSize * 0.8, 'F');
-                addText(section.content, margin + 8, headingSize, COLORS.text, 'bold');
+                doc.rect(margin, yPos - 2, 2, headingSize * 0.6, 'F');
+                addText(section.content, margin + 6, headingSize, COLORS.text, 'bold');
                 yPos += 4;
               }
               break;
@@ -514,19 +528,26 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
                   drawRoundedRect(margin, yPos, contentWidth, stepHeight, 3, COLORS.background);
 
-                  // Step number circle
+                  // Step number circle - properly centered
+                  const circleX = margin + 12;
+                  const circleY = yPos + 12;
+                  const circleR = 5;
                   doc.setFillColor(...COLORS.accent);
-                  doc.circle(margin + 10, yPos + 10, 6, 'F');
-                  doc.setFontSize(11);
+                  doc.circle(circleX, circleY, circleR, 'F');
+
+                  // Center the number text in circle
+                  doc.setFontSize(10);
                   doc.setFont('helvetica', 'bold');
                   doc.setTextColor(...COLORS.white);
-                  doc.text(String(step.number), margin + 8, yPos + 12);
+                  const numStr = String(step.number);
+                  const numWidth = doc.getTextWidth(numStr);
+                  doc.text(numStr, circleX - numWidth / 2, circleY + 1.5);
 
                   // Step title
                   doc.setFontSize(11);
                   doc.setFont('helvetica', 'bold');
                   doc.setTextColor(...COLORS.text);
-                  doc.text(step.title, margin + 22, yPos + 12);
+                  doc.text(step.title, margin + 22, circleY + 1.5);
 
                   // Step content bullets
                   if (step.content) {
@@ -557,33 +578,23 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               checkPageBreak(30);
               yPos += 5;
 
-              const isWarning = section.calloutType === 'warning';
-              const calloutBg = isWarning ? COLORS.warningBg : COLORS.infoBg;
-              const calloutAccent = isWarning ? COLORS.warning : COLORS.info;
-
               const calloutText = section.content || '';
-              const calloutLines = doc.splitTextToSize(calloutText, contentWidth - 25);
-              const calloutHeight = Math.max(25, (section.title ? 12 : 0) + calloutLines.length * 5 + 15);
+              const calloutLines = doc.splitTextToSize(calloutText, contentWidth - 20);
+              const calloutHeight = Math.max(20, (section.title ? 10 : 0) + calloutLines.length * 5 + 10);
 
-              drawRoundedRect(margin, yPos, contentWidth, calloutHeight, 3, calloutBg);
+              // Simple callout with subtle accent bar
+              drawRoundedRect(margin, yPos, contentWidth, calloutHeight, 3, COLORS.accentLight);
 
-              // Left accent bar
-              doc.setFillColor(...calloutAccent);
-              doc.roundedRect(margin, yPos, 4, calloutHeight, 2, 2, 'F');
+              // Left accent bar - subtle
+              doc.setFillColor(...COLORS.accent);
+              doc.roundedRect(margin + 1, yPos + 3, 2, calloutHeight - 6, 1, 1, 'F');
 
-              // Icon placeholder (simple shape)
-              doc.setFillColor(...calloutAccent);
-              doc.circle(margin + 12, yPos + 10, 4, 'F');
-              doc.setFontSize(8);
-              doc.setTextColor(...COLORS.white);
-              doc.text(isWarning ? '!' : 'i', margin + 10.5, yPos + 12);
-
-              let calloutY = yPos + 8;
+              let calloutY = yPos + 6;
               if (section.title) {
                 doc.setFontSize(10);
                 doc.setFont('helvetica', 'bold');
                 doc.setTextColor(...COLORS.text);
-                doc.text(section.title, margin + 20, calloutY + 3);
+                doc.text(section.title, margin + 10, calloutY + 3);
                 calloutY += 10;
               }
 
@@ -591,11 +602,11 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               doc.setFontSize(9);
               doc.setTextColor(...COLORS.textSecondary);
               for (const line of calloutLines) {
-                doc.text(line, margin + 20, calloutY + 3);
+                doc.text(line, margin + 10, calloutY + 3);
                 calloutY += 5;
               }
 
-              yPos += calloutHeight + 8;
+              yPos += calloutHeight + 5;
               break;
 
             case 'code':
@@ -655,38 +666,41 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               break;
 
             case 'image':
-              // Add placeholder for image
-              checkPageBreak(40);
+              // Minimal image placeholder - brand colors only
+              checkPageBreak(30);
               yPos += 5;
-              drawRoundedRect(margin, yPos, contentWidth, 30, 3, COLORS.background);
+
+              const imageHeight = 25;
+              drawRoundedRect(margin, yPos, contentWidth, imageHeight, 3, COLORS.background);
+
+              // Simple centered label
               doc.setFontSize(9);
-              doc.setTextColor(...COLORS.textMuted);
-              doc.text('[Image: ' + (section.alt || section.label || 'Visual reference') + ']', margin + 5, yPos + 18);
-              yPos += 38;
+              doc.setFont('helvetica', 'italic');
+              doc.setTextColor(...COLORS.textSecondary);
+              const imageLabel = section.alt || section.label || 'See online guide for visual reference';
+              const labelWidth = doc.getTextWidth(imageLabel);
+              doc.text(imageLabel, margin + (contentWidth - labelWidth) / 2, yPos + imageHeight / 2 + 2);
+              doc.setFont('helvetica', 'normal');
+
+              yPos += imageHeight + 5;
               break;
 
             case 'success':
-              checkPageBreak(25);
+              checkPageBreak(20);
               yPos += 5;
 
-              const successHeight = 25;
-              drawRoundedRect(margin, yPos, contentWidth, successHeight, 3, [236, 253, 245] as [number, number, number]);
-              doc.setFillColor(...COLORS.success);
-              doc.roundedRect(margin, yPos, 4, successHeight, 2, 2, 'F');
+              // Simple success box with subtle accent
+              const successHeight = 20;
+              drawRoundedRect(margin, yPos, contentWidth, successHeight, 3, COLORS.accentLight);
+              doc.setFillColor(...COLORS.accent);
+              doc.roundedRect(margin + 1, yPos + 3, 2, successHeight - 6, 1, 1, 'F');
 
-              // Checkmark circle
-              doc.setFillColor(...COLORS.success);
-              doc.circle(margin + 12, yPos + successHeight / 2, 5, 'F');
               doc.setFontSize(10);
-              doc.setTextColor(...COLORS.white);
-              doc.text('✓', margin + 10, yPos + successHeight / 2 + 2);
-
-              doc.setFontSize(11);
               doc.setFont('helvetica', 'bold');
               doc.setTextColor(...COLORS.text);
-              doc.text(section.title || 'Success!', margin + 22, yPos + successHeight / 2 + 2);
+              doc.text(section.title || 'Complete', margin + 10, yPos + successHeight / 2 + 2);
 
-              yPos += successHeight + 8;
+              yPos += successHeight + 5;
               break;
           }
         }
@@ -730,10 +744,10 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
   yPos += 15;
 
-  // Next steps box
+  // Next steps box with subtle accent
   drawRoundedRect(margin, yPos, contentWidth, 50, 4, COLORS.accentLight);
   doc.setFillColor(...COLORS.accent);
-  doc.roundedRect(margin, yPos, 4, 50, 2, 2, 'F');
+  doc.roundedRect(margin + 1, yPos + 4, 2, 42, 1, 1, 'F');
 
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
