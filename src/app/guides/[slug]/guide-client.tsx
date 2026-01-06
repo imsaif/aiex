@@ -1,10 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Claude, Cursor, Github, Replit, V0, Copilot } from '@lobehub/icons';
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowRightIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import { Guide } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import CopyButton from '@/components/ui/CopyButton';
@@ -12,6 +13,7 @@ import CourseMetadataBar from '@/components/ui/CourseMetadataBar';
 import IntroductionSection from '@/components/ui/IntroductionSection';
 import ModuleSection from '@/components/ui/ModuleSection';
 import ProgressBar from '@/components/ui/ProgressBar';
+import DownloadPDFModal from '@/components/ui/DownloadPDFModal';
 
 interface GuideClientProps {
   guide: Guide;
@@ -29,6 +31,7 @@ export default function GuideClient({
     getLessonProgress,
     getGuideStatus,
   } = useGuideProgress();
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   // Calculate lesson progress
   const hasLessons = guide.lessons && guide.lessons.length > 0;
@@ -56,9 +59,9 @@ export default function GuideClient({
       case 'claude code':
         return <div style={{ color: '#D97757' }}><Claude {...iconProps} /></div>;
       case 'cursor':
-        return <div style={{ color: '#000' }}><Cursor {...iconProps} /></div>;
+        return <div className="text-gray-900 dark:text-gray-100"><Cursor {...iconProps} /></div>;
       case 'github':
-        return <div style={{ color: '#000' }}><Github {...iconProps} /></div>;
+        return <div className="text-gray-900 dark:text-gray-100"><Github {...iconProps} /></div>;
       case 'github copilot':
         return <Copilot.Color {...iconProps} />;
       case 'replit ai':
@@ -66,7 +69,7 @@ export default function GuideClient({
         return <div style={{ color: '#FD5402' }}><Replit {...iconProps} /></div>;
       case 'v0 by vercel':
       case 'v0':
-        return <div style={{ color: '#000' }}><V0 {...iconProps} /></div>;
+        return <div className="text-gray-900 dark:text-gray-100"><V0 {...iconProps} /></div>;
       default:
         return null;
     }
@@ -98,7 +101,7 @@ export default function GuideClient({
 
             {/* Lesson Progress (if lessons exist and guide started) */}
             {hasLessons && guideStatus !== 'not-started' && (
-              <div className="mb-6 p-6 bg-surface-secondary/50 rounded-2xl border border-gray-200 shadow-card">
+              <div className="mb-6 p-6 bg-surface-secondary/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-card">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="text-sm font-medium text-text-primary">
@@ -116,7 +119,7 @@ export default function GuideClient({
             )}
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-gray-300">
+            <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-gray-300 dark:border-gray-600">
               <div className="flex items-center gap-2 px-3 py-1 rounded-full text-sm bg-accent-subtle text-accent-primary font-medium group">
                 <div>
                   {getIcon()}
@@ -127,6 +130,16 @@ export default function GuideClient({
               <span className="px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-text-secondary font-medium">
                 {guide.skillLevel}
               </span>
+
+              {/* Download PDF Button */}
+              <button
+                type="button"
+                onClick={() => setIsDownloadModalOpen(true)}
+                className="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-secondary border border-gray-200 dark:border-gray-700 text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium text-sm"
+              >
+                <DocumentArrowDownIcon className="w-4 h-4" />
+                Download PDF
+              </button>
             </div>
           </header>
 
@@ -188,7 +201,7 @@ export default function GuideClient({
             let lessonNumber = 1;
 
             return (
-              <section className="mb-12 pb-12 border-b border-gray-300 space-y-6">
+              <section className="mb-12 pb-12 border-b border-gray-300 dark:border-gray-600 space-y-6">
                 {moduleIds.map((moduleId) => {
                   const moduleLessons = guide.lessons!.filter(
                     (lesson) => lesson.module === moduleId
@@ -245,7 +258,7 @@ export default function GuideClient({
                 console.log('View All Guides button clicked');
                 router.push('/guides');
               }}
-              className="px-6 py-2 rounded-full bg-accent-primary text-white font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 cursor-pointer focus:outline-none"
+              className="px-6 py-2 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 cursor-pointer focus:outline-none"
               tabIndex={0}
             >
               View All Guides
@@ -268,6 +281,14 @@ export default function GuideClient({
           </div>
         </div>
       </div>
+
+      {/* Download PDF Modal */}
+      <DownloadPDFModal
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+        guideTitle={guide.title}
+        guideSlug={guide.slug}
+      />
     </div>
   );
 }

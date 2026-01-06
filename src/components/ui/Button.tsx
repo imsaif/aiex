@@ -30,13 +30,14 @@ export default function Button({
 
   const variantClasses = {
     // Primary: Filled with brand navy - pill shape with scale hover
-    primary: 'bg-accent-primary text-white hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98]',
+    // In dark mode, accent-primary is white, so we need dark text
+    primary: 'bg-accent-primary text-white dark:text-gray-900 hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98]',
 
     // Secondary: Navy border, light background
-    secondary: 'border border-accent-primary bg-white text-accent-primary hover:bg-gray-50 hover:scale-[1.02] active:scale-[0.98]',
+    secondary: 'border border-accent-primary bg-white dark:bg-gray-900 text-accent-primary hover:bg-gray-50 dark:hover:bg-gray-800 hover:scale-[1.02] active:scale-[0.98]',
 
     // Outline: Subtle border - pill shape
-    outline: 'border border-gray-200 bg-white text-gray-900 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98]',
+    outline: 'border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98]',
   };
 
   const sizeClasses = {

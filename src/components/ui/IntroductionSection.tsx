@@ -41,7 +41,7 @@ export default function IntroductionSection({
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full text-left transition-all duration-300"
       >
-        <div className="p-5 bg-surface-secondary/50 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-surface-secondary transition-all">
+        <div className="p-5 bg-surface-secondary/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-surface-secondary transition-all">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
@@ -73,7 +73,7 @@ export default function IntroductionSection({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="mt-2 rounded-b-lg bg-surface-primary border border-t-0 border-gray-200 p-8">
+            <div className="mt-2 rounded-b-lg bg-surface-primary border border-t-0 border-gray-200 dark:border-gray-700 p-8">
               {/* Visual separator at the top */}
               <div className="h-px bg-gradient-to-r from-accent-primary/0 via-accent-primary/20 to-accent-primary/0 mb-8" />
 

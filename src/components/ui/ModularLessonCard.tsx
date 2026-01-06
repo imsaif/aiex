@@ -52,8 +52,8 @@ export default function ModularLessonCard({
         onClick={() => setIsExpanded(!isExpanded)}
         className={`w-full text-left transition-all duration-300 rounded-lg border p-5 ${
           isExpanded
-            ? 'bg-surface-primary border-gray-300 shadow-md'
-            : 'bg-surface-primary border-gray-200 hover:border-gray-300 hover:shadow-md'
+            ? 'bg-surface-primary border-gray-300 dark:border-gray-600 shadow-md'
+            : 'bg-surface-primary border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md'
         }`}
       >
         <div className="flex items-start gap-4">
@@ -111,7 +111,7 @@ export default function ModularLessonCard({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="mt-2 rounded-b-lg bg-surface-primary border border-t-0 border-gray-200">
+            <div className="mt-2 rounded-b-lg bg-surface-primary border border-t-0 border-gray-200 dark:border-gray-700">
               <LessonContent
                 lesson={lesson}
                 guideId={guideId}

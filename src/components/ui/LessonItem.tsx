@@ -37,7 +37,7 @@ export default function LessonItem({
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="bg-surface-primary rounded-lg border border-gray-200 transition-all duration-300 hover:border-gray-300 hover:shadow-md"
+      className="bg-surface-primary rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md"
     >
       <button
         onClick={() => setIsExpanded(!isExpanded)}
@@ -130,7 +130,7 @@ export default function LessonItem({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="overflow-hidden border-t border-gray-300"
+            className="overflow-hidden border-t border-gray-300 dark:border-gray-600"
           >
             <LessonContent
               lesson={lesson}

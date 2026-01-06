@@ -90,7 +90,7 @@ export default function ModuleSection({
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full text-left transition-all duration-300"
       >
-        <div className="p-5 bg-surface-secondary/50 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-surface-secondary transition-all">
+        <div className="p-5 bg-surface-secondary/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-surface-secondary transition-all">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">

@@ -5,23 +5,23 @@
 }
 
 .guide-content h2 {
-  @apply text-2xl font-bold text-gray-900 mb-2 mt-6;
+  @apply text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 mt-6;
 }
 
 .guide-content h3 {
-  @apply text-xl font-bold text-gray-900 mt-8 mb-4;
+  @apply text-xl font-bold text-gray-900 dark:text-gray-100 mt-8 mb-4;
 }
 
 .guide-content h4 {
-  @apply text-lg font-bold text-gray-900 mb-3;
+  @apply text-lg font-bold text-gray-900 dark:text-gray-100 mb-3;
 }
 
 .guide-content p {
-  @apply text-base text-gray-700 mb-4;
+  @apply text-base text-gray-700 dark:text-gray-300 mb-4;
 }
 
 .guide-content strong {
-  @apply font-semibold text-gray-900;
+  @apply font-semibold text-gray-900 dark:text-gray-100;
 }
 
 .guide-content ol,
@@ -30,7 +30,7 @@
 }
 
 .guide-content li {
-  @apply text-gray-700;
+  @apply text-gray-700 dark:text-gray-300;
 }
 
 .guide-content code {
@@ -39,29 +39,39 @@
 
 /* Color-coded sections */
 .guide-content [class*="bg-blue-50"] {
-  @apply p-4 bg-blue-50 border-l-4 border-l-blue-500 rounded-lg mb-6;
+  @apply p-4 bg-blue-50 dark:bg-blue-900/30 border-l-4 border-l-blue-500 rounded-lg mb-6;
 }
 
 .guide-content [class*="bg-red-50"] {
-  @apply p-5 bg-red-50 border-l-4 border-l-red-600 rounded-lg;
+  @apply p-5 bg-red-50 dark:bg-red-900/30 border-l-4 border-l-red-600 dark:border-l-red-500 rounded-lg;
 }
 
 .guide-content [class*="bg-green-50"] {
-  @apply mt-8 p-4 bg-green-50 border-l-4 border-l-green-600 rounded-lg;
+  @apply mt-8 p-4 bg-green-50 dark:bg-green-900/30 border-l-4 border-l-green-600 dark:border-l-green-500 rounded-lg;
+}
+
+/* Text inside colored sections needs explicit dark mode colors */
+.guide-content [class*="bg-blue-50"] h3,
+.guide-content [class*="bg-blue-50"] p,
+.guide-content [class*="bg-red-50"] h3,
+.guide-content [class*="bg-red-50"] p,
+.guide-content [class*="bg-green-50"] h3,
+.guide-content [class*="bg-green-50"] p {
+  @apply dark:text-gray-100;
 }
 
 /* Step cards */
 .guide-content > div[class*="mb-8"] {
-  @apply p-5 bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors mb-8;
+  @apply p-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-gray-300 dark:hover:border-gray-600 transition-colors mb-8;
 }
 
 /* Light backgrounds */
 .guide-content [class*="bg-gray-50"] {
-  @apply bg-gray-50 p-4 rounded-lg;
+  @apply bg-gray-50 dark:bg-gray-800 p-4 rounded-lg;
 }
 
 .guide-content [class*="bg-white"] {
-  @apply bg-white border border-gray-200 rounded-lg;
+  @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg;
 }
 
 /* Flex utilities for steps */
@@ -84,15 +94,15 @@
 
 /* Text colors */
 .guide-content [class*="text-gray"] {
-  @apply text-gray-700;
+  @apply text-gray-700 dark:text-gray-300;
 }
 
 .guide-content [class*="text-red"] {
-  @apply text-red-600;
+  @apply text-red-600 dark:text-red-400;
 }
 
 .guide-content [class*="text-green"] {
-  @apply text-green-600;
+  @apply text-green-600 dark:text-green-400;
 }
 
 /* Font weight */
@@ -111,5 +121,164 @@
 
 /* Borders */
 .guide-content [class*="border"] {
-  @apply border border-gray-200;
+  @apply border border-gray-200 dark:border-gray-700;
+}
+
+/* Global dark mode overrides for prose content */
+/* These override any inline bg-white or bg-gray-* classes in dark mode */
+/* Support both data-theme attribute and media query */
+html[data-theme="dark"] .prose [class*="bg-white"],
+html[data-theme="dark"] .prose-invert [class*="bg-white"],
+html[data-theme="dark"] .guide-content [class*="bg-white"],
+.dark .prose [class*="bg-white"],
+.dark .prose-invert [class*="bg-white"],
+.dark .guide-content [class*="bg-white"] {
+  background-color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+html[data-theme="dark"] .prose [class*="bg-gray-50"],
+html[data-theme="dark"] .prose-invert [class*="bg-gray-50"],
+html[data-theme="dark"] .guide-content [class*="bg-gray-50"],
+.dark .prose [class*="bg-gray-50"],
+.dark .prose-invert [class*="bg-gray-50"],
+.dark .guide-content [class*="bg-gray-50"] {
+  background-color: rgb(31 41 55) !important; /* gray-800 */
+}
+
+html[data-theme="dark"] .prose [class*="bg-gray-100"],
+html[data-theme="dark"] .prose-invert [class*="bg-gray-100"],
+html[data-theme="dark"] .guide-content [class*="bg-gray-100"],
+.dark .prose [class*="bg-gray-100"],
+.dark .prose-invert [class*="bg-gray-100"],
+.dark .guide-content [class*="bg-gray-100"] {
+  background-color: rgb(55 65 81) !important; /* gray-700 */
+}
+
+/* Override text colors that become unreadable in dark mode */
+html[data-theme="dark"] .prose [class*="text-gray-500"],
+html[data-theme="dark"] .prose-invert [class*="text-gray-500"],
+html[data-theme="dark"] .guide-content [class*="text-gray-500"],
+.dark .prose [class*="text-gray-500"],
+.dark .prose-invert [class*="text-gray-500"],
+.dark .guide-content [class*="text-gray-500"] {
+  color: rgb(156 163 175) !important; /* gray-400 */
+}
+
+html[data-theme="dark"] .prose [class*="text-gray-600"],
+html[data-theme="dark"] .prose-invert [class*="text-gray-600"],
+html[data-theme="dark"] .guide-content [class*="text-gray-600"],
+.dark .prose [class*="text-gray-600"],
+.dark .prose-invert [class*="text-gray-600"],
+.dark .guide-content [class*="text-gray-600"] {
+  color: rgb(156 163 175) !important; /* gray-400 */
+}
+
+html[data-theme="dark"] .prose [class*="text-gray-700"],
+html[data-theme="dark"] .prose-invert [class*="text-gray-700"],
+html[data-theme="dark"] .guide-content [class*="text-gray-700"],
+.dark .prose [class*="text-gray-700"],
+.dark .prose-invert [class*="text-gray-700"],
+.dark .guide-content [class*="text-gray-700"] {
+  color: rgb(209 213 219) !important; /* gray-300 */
+}
+
+html[data-theme="dark"] .prose [class*="text-gray-800"],
+html[data-theme="dark"] .prose-invert [class*="text-gray-800"],
+html[data-theme="dark"] .guide-content [class*="text-gray-800"],
+.dark .prose [class*="text-gray-800"],
+.dark .prose-invert [class*="text-gray-800"],
+.dark .guide-content [class*="text-gray-800"] {
+  color: rgb(229 231 235) !important; /* gray-200 */
+}
+
+html[data-theme="dark"] .prose [class*="text-gray-900"],
+html[data-theme="dark"] .prose-invert [class*="text-gray-900"],
+html[data-theme="dark"] .guide-content [class*="text-gray-900"],
+.dark .prose [class*="text-gray-900"],
+.dark .prose-invert [class*="text-gray-900"],
+.dark .guide-content [class*="text-gray-900"] {
+  color: rgb(243 244 246) !important; /* gray-100 */
+}
+
+/* Override border colors */
+html[data-theme="dark"] .prose [class*="border-gray-200"],
+html[data-theme="dark"] .prose-invert [class*="border-gray-200"],
+html[data-theme="dark"] .guide-content [class*="border-gray-200"],
+.dark .prose [class*="border-gray-200"],
+.dark .prose-invert [class*="border-gray-200"],
+.dark .guide-content [class*="border-gray-200"] {
+  border-color: rgb(55 65 81) !important; /* gray-700 */
+}
+
+html[data-theme="dark"] .prose [class*="border-gray-300"],
+html[data-theme="dark"] .prose-invert [class*="border-gray-300"],
+html[data-theme="dark"] .guide-content [class*="border-gray-300"],
+.dark .prose [class*="border-gray-300"],
+.dark .prose-invert [class*="border-gray-300"],
+.dark .guide-content [class*="border-gray-300"] {
+  border-color: rgb(75 85 99) !important; /* gray-600 */
+}
+
+/* Text inside colored background sections for prose content */
+html[data-theme="dark"] .prose [class*="bg-blue-50"] h3,
+html[data-theme="dark"] .prose [class*="bg-blue-50"] p,
+html[data-theme="dark"] .prose-invert [class*="bg-blue-50"] h3,
+html[data-theme="dark"] .prose-invert [class*="bg-blue-50"] p,
+.dark .prose [class*="bg-blue-50"] h3,
+.dark .prose [class*="bg-blue-50"] p,
+.dark .prose-invert [class*="bg-blue-50"] h3,
+.dark .prose-invert [class*="bg-blue-50"] p {
+  color: rgb(243 244 246) !important; /* gray-100 */
+}
+
+html[data-theme="dark"] .prose [class*="bg-blue-50"],
+html[data-theme="dark"] .prose-invert [class*="bg-blue-50"],
+.dark .prose [class*="bg-blue-50"],
+.dark .prose-invert [class*="bg-blue-50"] {
+  background-color: rgb(30 58 138 / 0.3) !important; /* blue-900/30 */
+  border-color: rgb(59 130 246) !important; /* blue-500 */
+}
+
+html[data-theme="dark"] .prose [class*="bg-blue-200"],
+html[data-theme="dark"] .prose-invert [class*="bg-blue-200"],
+.dark .prose [class*="bg-blue-200"],
+.dark .prose-invert [class*="bg-blue-200"] {
+  border-color: rgb(96 165 250) !important; /* blue-400 */
+}
+
+/* Similar for green and red backgrounds */
+html[data-theme="dark"] .prose [class*="bg-green-50"] h3,
+html[data-theme="dark"] .prose [class*="bg-green-50"] p,
+html[data-theme="dark"] .prose-invert [class*="bg-green-50"] h3,
+html[data-theme="dark"] .prose-invert [class*="bg-green-50"] p,
+.dark .prose [class*="bg-green-50"] h3,
+.dark .prose [class*="bg-green-50"] p,
+.dark .prose-invert [class*="bg-green-50"] h3,
+.dark .prose-invert [class*="bg-green-50"] p {
+  color: rgb(243 244 246) !important; /* gray-100 */
+}
+
+html[data-theme="dark"] .prose [class*="bg-green-50"],
+html[data-theme="dark"] .prose-invert [class*="bg-green-50"],
+.dark .prose [class*="bg-green-50"],
+.dark .prose-invert [class*="bg-green-50"] {
+  background-color: rgb(20 83 45 / 0.3) !important; /* green-900/30 */
+}
+
+html[data-theme="dark"] .prose [class*="bg-red-50"] h3,
+html[data-theme="dark"] .prose [class*="bg-red-50"] p,
+html[data-theme="dark"] .prose-invert [class*="bg-red-50"] h3,
+html[data-theme="dark"] .prose-invert [class*="bg-red-50"] p,
+.dark .prose [class*="bg-red-50"] h3,
+.dark .prose [class*="bg-red-50"] p,
+.dark .prose-invert [class*="bg-red-50"] h3,
+.dark .prose-invert [class*="bg-red-50"] p {
+  color: rgb(243 244 246) !important; /* gray-100 */
+}
+
+html[data-theme="dark"] .prose [class*="bg-red-50"],
+html[data-theme="dark"] .prose-invert [class*="bg-red-50"],
+.dark .prose [class*="bg-red-50"],
+.dark .prose-invert [class*="bg-red-50"] {
+  background-color: rgb(127 29 29 / 0.3) !important; /* red-900/30 */
 }

@@ -3703,114 +3703,1043 @@ export const guides: Guide[] = [
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation', 'Guided Learning'],
   },
   {
-    id: 'replit-course',
-    slug: 'replit-ai-learning-path',
-    title: 'Replit AI Guide for Designers',
-    description: 'Master Replit AI for collaborative coding with AI assistance.',
-    excerpt: 'Your complete Replit AI guide: 8 lessons covering platform basics, AI features, collaboration, and deployment.',
-    tool: 'Replit AI',
-    useCase: 'Learning Path',
-    skillLevel: 'Intermediate',
-    designDomain: 'UX Design',
-    readTime: 15,
-    author: 'Design Team',
-    publishedDate: '2025-10-28',
-    status: 'work-in-progress',
-    thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/New_Replit_Logo.svg',
-    tags: ['replit', 'learning-path', 'cloud-coding', 'course', 'collaboration'],
-    lessons: [
-      { id: 'lesson-1', title: 'Getting Started with Replit', duration: 2, order: 1, content: '<h2>Getting Started with Replit</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Create Your First Repl', duration: 2, order: 2, content: '<h2>Create Your First Repl</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Replit AI Features', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Replit AI Features</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'Real-Time Collaboration', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Real-Time Collaboration</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Database Integration', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Database Integration</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Deploying Your Project', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Deploying Your Project</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Advanced Workflows', duration: 1, order: 7,
-        module: 'prototype', content: '<h2>Advanced Workflows</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Best Practices and Tips', duration: 0, order: 8,
-        module: 'prototype', content: '<h2>Best Practices and Tips</h2><p>Lesson content coming soon...</p>' },
-    ],
-    content: '<h2>Replit AI Learning Path</h2><p>Discover the power of Replit AI for collaborative cloud-based development. Master team coding and deployment.</p>',
-    relatedPatterns: ['Contextual Assistance', 'Collaborative AI'],
-  },
-  {
-    id: 'v0-course',
-    slug: 'v0-by-vercel-learning-path',
-    title: 'V0 by Vercel Guide for Designers',
-    description: 'Learn V0 by Vercel, the AI tool for generating React components.',
-    excerpt: 'Your complete V0 guide: 10 lessons covering component generation, design-to-code, and production workflows.',
-    tool: 'V0 by Vercel',
-    useCase: 'Learning Path',
-    skillLevel: 'Intermediate',
-    designDomain: 'UX Design',
-    readTime: 16,
-    author: 'Design Team',
-    publishedDate: '2025-10-28',
-    status: 'work-in-progress',
-    thumbnail: 'https://lobehub.com/icons/v0',
-    tags: ['v0', 'learning-path', 'design-to-code', 'course', 'react-components'],
-    lessons: [
-      { id: 'lesson-1', title: 'Introduction to V0', duration: 2, order: 1, content: '<h2>Introduction to V0</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Generate Your First Component', duration: 2, order: 2, content: '<h2>Generate Your First Component</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Design-to-Code Workflow', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Design-to-Code Workflow</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'Editing Generated Components', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Editing Generated Components</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Styling and Customization', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Styling and Customization</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Building Complex UIs', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Building Complex UIs</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Integration with Next.js', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Integration with Next.js</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Deployment to Production', duration: 1, order: 8,
-        module: 'prototype', content: '<h2>Deployment to Production</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'Performance Optimization', duration: 1, order: 9, content: '<h2>Performance Optimization</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Advanced Techniques', duration: 0, order: 10, content: '<h2>Advanced Techniques</h2><p>Lesson content coming soon...</p>' },
-    ],
-    content: '<h2>V0 by Vercel Learning Path</h2><p>Master V0 for AI-generated React components. Transform designs into production-ready code with ease.</p>',
-    relatedPatterns: ['Augmented Creation', 'Contextual Assistance'],
-  },
-  {
     id: 'github-course',
     slug: 'github-learning-path',
     title: 'GitHub Guide for Designers',
-    description: 'Master GitHub for version control and collaboration.',
-    excerpt: 'Your complete GitHub guide: 12 lessons covering repositories, version control, collaboration, branching, and design workflows.',
+    description: 'Master GitHub for version control and collaboration with your development team.',
+    excerpt: 'Your complete GitHub guide: 10 lessons covering account setup, repositories, version control basics, branching, pull requests, and design team workflows.',
     tool: 'GitHub',
     useCase: 'Learning Path',
     skillLevel: 'Beginner',
     designDomain: 'UX Design',
-    readTime: 20,
+    readTime: 18,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    status: 'work-in-progress',
+    status: 'ready',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/GitHub_Invertocat_Logo.svg',
     tags: ['github', 'learning-path', 'version-control', 'course', 'collaboration'],
     lessons: [
-      { id: 'lesson-1', title: 'GitHub Basics and Setup', duration: 2, order: 1, content: '<h2>GitHub Basics and Setup</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-2', title: 'Create Your First Repository', duration: 2, order: 2, content: '<h2>Create Your First Repository</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-3', title: 'Understanding Git Basics', duration: 2, order: 3,
-        module: 'setup', content: '<h2>Understanding Git Basics</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-4', title: 'Commits, Pulls, and Pushes', duration: 2, order: 4,
-        module: 'prototype', content: '<h2>Commits, Pulls, and Pushes</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-5', title: 'Branching Strategies', duration: 2, order: 5,
-        module: 'prototype', content: '<h2>Branching Strategies</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-6', title: 'Pull Requests and Code Review', duration: 2, order: 6,
-        module: 'prototype', content: '<h2>Pull Requests and Code Review</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-7', title: 'Merging and Conflict Resolution', duration: 2, order: 7,
-        module: 'prototype', content: '<h2>Merging and Conflict Resolution</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-8', title: 'Collaboration Best Practices', duration: 2, order: 8,
-        module: 'prototype', content: '<h2>Collaboration Best Practices</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-9', title: 'GitHub Pages and Documentation', duration: 2, order: 9, content: '<h2>GitHub Pages and Documentation</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-10', title: 'Project Management Tools', duration: 1, order: 10, content: '<h2>Project Management Tools</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-11', title: 'Automation and CI/CD Basics', duration: 1, order: 11, content: '<h2>Automation and CI/CD Basics</h2><p>Lesson content coming soon...</p>' },
-      { id: 'lesson-12', title: 'GitHub Workflows for Design Teams', duration: 1, order: 12, content: '<h2>GitHub Workflows for Design Teams</h2><p>Lesson content coming soon...</p>' },
+      // Setup Module (Lessons 1-3)
+      {
+        id: 'lesson-1',
+        title: 'Create Your GitHub Account',
+        duration: 2,
+        order: 1,
+        module: 'setup',
+        iconType: 'user',
+        sections: [
+          {
+            type: 'intro',
+            content: 'GitHub is where developers and designers collaborate on code. As a designer, having a GitHub account lets you review code, track changes, and work more effectively with your development team.',
+            icon: 'info',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Go to GitHub.com',
+                content: [
+                  'Open your web browser and go to github.com',
+                  'Click the "Sign up" button in the top right corner',
+                  'You\'ll see a form to create your account',
+                ],
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Enter Your Information',
+                content: [
+                  'Enter your email address (use your work email for team projects)',
+                  'Create a strong password',
+                  'Choose a username (this will be visible publicly)',
+                  'Complete the verification puzzle',
+                ],
+                icon: 'user',
+              },
+              {
+                number: 3,
+                title: 'Verify Your Email',
+                content: [
+                  'Check your email inbox for a verification message from GitHub',
+                  'Click the verification link in the email',
+                  'You\'ll be redirected back to GitHub',
+                ],
+                icon: 'check',
+              },
+              {
+                number: 4,
+                title: 'Complete Your Profile',
+                content: [
+                  'Add a profile photo so teammates can recognize you',
+                  'Fill in your name and bio',
+                  'Add your company or organization if applicable',
+                ],
+                icon: 'user',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Pro Tip',
+            content: 'Use the same email as your work Slack or communication tools. This makes it easier for teammates to find and add you to repositories.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Created a GitHub account',
+              'Verified your email address',
+              'Set up your profile',
+            ],
+            message: 'You now have a GitHub account. Next, we\'ll install Git on your computer.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-2',
+        title: 'Install Git on Your Computer',
+        duration: 2,
+        order: 2,
+        module: 'setup',
+        iconType: 'download',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Git is the version control software that powers GitHub. You need Git installed locally to clone repositories, make changes, and push updates.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'For Mac Users',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open Terminal',
+                content: [
+                  'Press Cmd + Space to open Spotlight',
+                  'Type "Terminal" and press Enter',
+                  'A command line window will open',
+                ],
+                icon: 'terminal',
+              },
+              {
+                number: 2,
+                title: 'Check if Git is Installed',
+                content: 'Type this command and press Enter to see if Git is already installed:',
+                icon: 'code',
+              },
+            ],
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git --version',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'If you see a version number, Git is already installed. If not, macOS will prompt you to install the Xcode Command Line Tools which includes Git.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'For Windows Users',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Download Git',
+                content: [
+                  'Go to git-scm.com/download/win',
+                  'The download should start automatically',
+                  'If not, click the download link for your Windows version',
+                ],
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Run the Installer',
+                content: [
+                  'Open the downloaded .exe file',
+                  'Accept the license agreement',
+                  'Use the default settings (just click Next)',
+                  'Click Install when ready',
+                ],
+                icon: 'cog',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Configure Git with Your Identity',
+          },
+          {
+            type: 'text',
+            content: 'After installing Git, you need to tell it who you are. This information appears in your commits.',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git config --global user.name "Your Name"\ngit config --global user.email "your.email@example.com"',
+            label: 'Terminal',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Use the Same Email',
+            content: 'Make sure to use the same email address you used for your GitHub account. This links your commits to your GitHub profile.',
+            icon: 'warning',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Installed Git on your computer',
+              'Configured your name and email',
+              'Ready to clone repositories',
+            ],
+            message: 'Git is now set up on your machine. Next, we\'ll learn the basic Git concepts.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-3',
+        title: 'Understanding Git Basics',
+        duration: 2,
+        order: 3,
+        module: 'setup',
+        iconType: 'code',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Before diving into GitHub, let\'s understand the core concepts of Git. These fundamentals will help you navigate version control with confidence.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Key Concepts',
+          },
+          {
+            type: 'list',
+            items: [
+              'Repository (Repo): A folder containing your project files and their entire version history',
+              'Commit: A snapshot of your project at a specific point in time, like saving a version',
+              'Branch: A parallel version of your code for working on features without affecting the main code',
+              'Clone: Creating a local copy of a remote repository on your computer',
+              'Push: Uploading your local changes to the remote repository on GitHub',
+              'Pull: Downloading the latest changes from GitHub to your local copy',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Git Workflow',
+          },
+          {
+            type: 'text',
+            content: 'Here\'s the typical flow when working with Git:',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Clone or Pull',
+                content: 'Get the latest code from GitHub to your computer',
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Make Changes',
+                content: 'Edit files, add features, or fix bugs in your local copy',
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Stage Changes',
+                content: 'Select which changes you want to include in your next commit',
+                icon: 'check',
+              },
+              {
+                number: 4,
+                title: 'Commit',
+                content: 'Save a snapshot with a message describing what you changed',
+                icon: 'check',
+              },
+              {
+                number: 5,
+                title: 'Push',
+                content: 'Upload your commits to GitHub so others can see them',
+                icon: 'upload',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Why Version Control Matters for Designers',
+            content: 'Version control lets you track every change, revert mistakes, and collaborate without overwriting others\' work. It\'s like having unlimited undo history that works across your entire team.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Understand repositories, commits, and branches',
+              'Know the basic Git workflow',
+              'Ready to start working with GitHub',
+            ],
+            message: 'You now understand the fundamentals. Let\'s put this into practice!',
+          },
+        ],
+      },
+      // Core Features Module (Lessons 4-6)
+      {
+        id: 'lesson-4',
+        title: 'Clone Your First Repository',
+        duration: 2,
+        order: 4,
+        module: 'features',
+        iconType: 'download',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Cloning creates a local copy of a repository on your computer. This is usually the first step when joining a project or starting to work on existing code.',
+            icon: 'info',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Find a Repository on GitHub',
+                content: [
+                  'Go to the repository page on GitHub',
+                  'Look for the green "Code" button',
+                  'Click it to see cloning options',
+                ],
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Copy the Repository URL',
+                content: [
+                  'Make sure "HTTPS" is selected',
+                  'Click the copy button next to the URL',
+                  'The URL looks like: https://github.com/username/repository.git',
+                ],
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Clone in Terminal',
+                content: 'Open Terminal, navigate to where you want the project, and run:',
+                icon: 'terminal',
+              },
+            ],
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'cd ~/Projects\ngit clone https://github.com/username/repository.git',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'This creates a new folder with the repository name containing all the project files.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Using GitHub Desktop (Visual Alternative)',
+          },
+          {
+            type: 'text',
+            content: 'If you prefer a visual interface, GitHub Desktop makes cloning even easier:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Download GitHub Desktop from desktop.github.com',
+              'Sign in with your GitHub account',
+              'Click "Clone a Repository from the Internet"',
+              'Select the repository and choose where to save it',
+              'Click "Clone"',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Organize Your Projects',
+            content: 'Create a dedicated folder like ~/Projects or ~/Code for all your repositories. This keeps everything organized and easy to find.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Cloned a repository to your computer',
+              'Understand HTTPS cloning',
+              'Know about GitHub Desktop as an alternative',
+            ],
+            message: 'You can now get any repository onto your local machine!',
+          },
+        ],
+      },
+      {
+        id: 'lesson-5',
+        title: 'Making and Committing Changes',
+        duration: 2,
+        order: 5,
+        module: 'features',
+        iconType: 'code',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Now that you have a local repository, let\'s learn how to make changes and save them as commits. Each commit is a checkpoint you can return to later.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Check Repository Status',
+          },
+          {
+            type: 'text',
+            content: 'First, see what\'s changed in your repository:',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git status',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'This shows modified files, new files, and files ready to commit.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Stage Your Changes',
+          },
+          {
+            type: 'text',
+            content: 'Before committing, you need to "stage" the changes you want to include:',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: '# Stage a specific file\ngit add filename.txt\n\n# Stage all changed files\ngit add .',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Create a Commit',
+          },
+          {
+            type: 'text',
+            content: 'Now save your staged changes with a descriptive message:',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git commit -m "Add new button styles to navigation"',
+            label: 'Terminal',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Writing Good Commit Messages',
+            content: 'Good commit messages describe WHAT changed and WHY. Start with a verb: "Add", "Fix", "Update", "Remove". Keep the first line under 50 characters.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Push to GitHub',
+          },
+          {
+            type: 'text',
+            content: 'Upload your commits to GitHub so others can see them:',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git push',
+            label: 'Terminal',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Check status with git status',
+              'Stage changes with git add',
+              'Commit with git commit -m',
+              'Push to GitHub with git push',
+            ],
+            message: 'You can now track and share your changes!',
+          },
+        ],
+      },
+      {
+        id: 'lesson-6',
+        title: 'Working with Branches',
+        duration: 2,
+        order: 6,
+        module: 'features',
+        iconType: 'code',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Branches let you work on new features or experiments without affecting the main codebase. Think of them as parallel timelines for your project.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Why Use Branches?',
+          },
+          {
+            type: 'list',
+            items: [
+              'Work on features without breaking the main code',
+              'Multiple people can work on different things simultaneously',
+              'Easy to discard experiments that don\'t work out',
+              'Clean history when merging completed features',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Create a New Branch',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: '# Create and switch to a new branch\ngit checkout -b feature/new-navigation\n\n# Or with newer Git versions\ngit switch -c feature/new-navigation',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Switch Between Branches',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: '# Switch to an existing branch\ngit checkout main\n\n# See all branches\ngit branch',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Branch Naming Conventions',
+          },
+          {
+            type: 'text',
+            content: 'Most teams use prefixes to categorize branches:',
+          },
+          {
+            type: 'list',
+            items: [
+              'feature/ - New features (feature/user-profile)',
+              'fix/ - Bug fixes (fix/login-error)',
+              'design/ - Design changes (design/new-color-scheme)',
+              'docs/ - Documentation (docs/api-guide)',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Always Know Your Branch',
+            content: 'Before making changes, always check which branch you\'re on with "git branch" or look at your terminal prompt. Committing to the wrong branch is a common mistake!',
+            icon: 'warning',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Create branches for new work',
+              'Switch between branches',
+              'Understand branch naming conventions',
+            ],
+            message: 'You\'re ready to work safely with branches!',
+          },
+        ],
+      },
+      // Collaboration Module (Lessons 7-8)
+      {
+        id: 'lesson-7',
+        title: 'Creating Pull Requests',
+        duration: 2,
+        order: 7,
+        module: 'collaboration',
+        iconType: 'user',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Pull Requests (PRs) are how you propose changes and get them reviewed before merging into the main codebase. They\'re central to team collaboration on GitHub.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Push Your Branch to GitHub',
+          },
+          {
+            type: 'text',
+            content: 'First, push your branch with its commits to GitHub:',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git push -u origin feature/new-navigation',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Create the Pull Request',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Go to GitHub',
+                content: [
+                  'Navigate to your repository on GitHub',
+                  'You\'ll see a prompt to create a PR for your recently pushed branch',
+                  'Click "Compare & pull request"',
+                ],
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Fill in the Details',
+                content: [
+                  'Write a clear title describing the change',
+                  'Add a description explaining what you did and why',
+                  'Reference any related issues (e.g., "Fixes #123")',
+                  'Add reviewers if you know who should review',
+                ],
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Create the PR',
+                content: [
+                  'Review your changes in the "Files changed" tab',
+                  'Make sure everything looks correct',
+                  'Click "Create pull request"',
+                ],
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What Makes a Good PR',
+          },
+          {
+            type: 'list',
+            items: [
+              'Small and focused - one feature or fix per PR',
+              'Clear description of what changed and why',
+              'Screenshots for visual changes',
+              'Links to related design files or issues',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Add Screenshots for Design Changes',
+            content: 'When your PR includes visual changes, add before/after screenshots. Drag and drop images directly into the PR description. This helps reviewers understand the impact.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Push branches to GitHub',
+              'Create pull requests',
+              'Write good PR descriptions',
+            ],
+            message: 'You can now propose changes for review!',
+          },
+        ],
+      },
+      {
+        id: 'lesson-8',
+        title: 'Reviewing and Merging PRs',
+        duration: 2,
+        order: 8,
+        module: 'collaboration',
+        iconType: 'check',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Code review is a collaborative process where team members check each other\'s work. As a designer, you can review design-related changes and provide valuable feedback.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Reviewing a Pull Request',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open the PR',
+                content: [
+                  'Go to the "Pull requests" tab in the repository',
+                  'Click on the PR you want to review',
+                  'Read the description to understand the changes',
+                ],
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Review the Code',
+                content: [
+                  'Click "Files changed" to see all modifications',
+                  'Green lines are additions, red lines are deletions',
+                  'Click on a line to add a comment',
+                ],
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Submit Your Review',
+                content: [
+                  'Click "Review changes" button',
+                  'Choose: Comment, Approve, or Request changes',
+                  'Add a summary of your feedback',
+                  'Click "Submit review"',
+                ],
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Merging a Pull Request',
+          },
+          {
+            type: 'text',
+            content: 'Once approved and all checks pass, the PR can be merged:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Click the green "Merge pull request" button',
+              'Choose merge method (usually "Squash and merge" for cleaner history)',
+              'Click "Confirm merge"',
+              'Optionally delete the branch after merging',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'What Designers Should Review',
+            content: 'Focus on CSS changes, component styling, spacing, colors, and anything that affects the visual appearance. You don\'t need to understand all the code - your design eye is valuable!',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Review pull requests',
+              'Leave helpful comments',
+              'Merge approved changes',
+            ],
+            message: 'You\'re now part of the code review process!',
+          },
+        ],
+      },
+      // Best Practices Module (Lessons 9-10)
+      {
+        id: 'lesson-9',
+        title: 'Handling Merge Conflicts',
+        duration: 2,
+        order: 9,
+        module: 'practices',
+        iconType: 'warning',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Merge conflicts happen when two people edit the same part of a file. They\'re normal and not scary once you understand how to resolve them.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Why Conflicts Happen',
+          },
+          {
+            type: 'text',
+            content: 'Git is smart about merging changes, but it can\'t decide when two people modify the same lines. You need to tell Git which changes to keep.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What a Conflict Looks Like',
+          },
+          {
+            type: 'code',
+            language: 'text',
+            code: '<<<<<<< HEAD\nYour changes here\n=======\nTheir changes here\n>>>>>>> feature-branch',
+            label: 'Conflict markers in file',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Resolving Conflicts',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Identify Conflicted Files',
+                content: 'Git will tell you which files have conflicts. Look for files marked as "both modified".',
+                icon: 'code',
+              },
+              {
+                number: 2,
+                title: 'Edit the File',
+                content: [
+                  'Open the conflicted file',
+                  'Find the conflict markers (<<<<<<, =======, >>>>>>)',
+                  'Decide which changes to keep (or combine both)',
+                  'Remove the conflict markers',
+                ],
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Save and Commit',
+                content: 'After resolving, stage the file and commit:',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git add resolved-file.css\ngit commit -m "Resolve merge conflict in styles"',
+            label: 'Terminal',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Use Visual Tools',
+            content: 'VS Code and GitHub Desktop have built-in merge conflict resolvers that make this process much easier. They show changes side-by-side and let you click to choose which version to keep.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Lesson Complete!',
+            items: [
+              'Understand why conflicts happen',
+              'Recognize conflict markers',
+              'Resolve conflicts manually or with tools',
+            ],
+            message: 'Conflicts are no longer scary!',
+          },
+        ],
+      },
+      {
+        id: 'lesson-10',
+        title: 'GitHub Workflow for Design Teams',
+        duration: 2,
+        order: 10,
+        module: 'practices',
+        iconType: 'check',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Now that you understand GitHub basics, let\'s look at how design teams can use GitHub effectively in their daily workflow.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Design Team Best Practices',
+          },
+          {
+            type: 'list',
+            items: [
+              'Use Issues to track design tasks and bug reports',
+              'Link Figma files in PR descriptions for context',
+              'Review CSS and style changes in pull requests',
+              'Use GitHub Projects for design sprint planning',
+              'Create a design-system repository for shared components',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Useful GitHub Features for Designers',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'GitHub Issues',
+                content: 'Create tickets for design tasks, attach mockups, and track progress. Use labels like "design", "needs-review", or "approved".',
+                icon: 'code',
+              },
+              {
+                number: 2,
+                title: 'GitHub Projects',
+                content: 'Kanban-style boards to organize work. Create columns like "Design", "In Development", "Review", "Done".',
+                icon: 'monitor',
+              },
+              {
+                number: 3,
+                title: 'GitHub Pages',
+                content: 'Host design documentation, style guides, or component libraries directly from your repository.',
+                icon: 'monitor',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Staying in Sync',
+          },
+          {
+            type: 'text',
+            content: 'Before starting work each day, pull the latest changes:',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            code: 'git checkout main\ngit pull\ngit checkout your-branch\ngit merge main',
+            label: 'Terminal',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Communication is Key',
+            content: 'GitHub works best when combined with good team communication. Use Slack or your team chat to discuss PRs, mention when you\'re working on something, and ask for reviews.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Course Complete!',
+            items: [
+              'Know GitHub best practices for designers',
+              'Can use Issues and Projects',
+              'Understand daily Git workflow',
+              'Ready to collaborate with your dev team',
+            ],
+            message: 'Congratulations! You\'ve completed the GitHub Guide for Designers. You\'re now equipped to collaborate effectively with your development team using version control.',
+          },
+        ],
+      },
     ],
-    content: '<h2>GitHub Learning Path</h2><p>Learn GitHub for design and development collaboration. Master version control, team workflows, and modern development practices.</p>',
+    content: `
+      <div class="space-y-12">
+        <!-- Hero Section -->
+        <section class="mb-12">
+          <h2 class="text-3xl font-bold mb-4">Master GitHub for Design Collaboration</h2>
+          <p class="text-xl text-gray-600 mb-6">
+            Learn to collaborate with developers, track design changes, and participate in code reviews.
+            GitHub is essential for modern design teams working alongside development.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h3 class="font-bold text-lg mb-2">📚 10 Lessons</h3>
+              <p>From account setup to team workflows, all in about 18 minutes</p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h3 class="font-bold text-lg mb-2">🎯 Designer Focused</h3>
+              <p>Learn what matters for design collaboration</p>
+            </div>
+            <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+              <h3 class="font-bold text-lg mb-2">🤝 Team Ready</h3>
+              <p>Work effectively with your dev team</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- What You'll Learn -->
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold mb-6">What You'll Learn</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="border-l-4 border-blue-500 pl-4">
+              <h3 class="font-bold mb-2">📦 Module 1: Setup (6 min)</h3>
+              <ul class="space-y-1 text-gray-600">
+                <li>→ Lesson 1: Create Your GitHub Account</li>
+                <li>→ Lesson 2: Install Git on Your Computer</li>
+                <li>→ Lesson 3: Understanding Git Basics</li>
+              </ul>
+            </div>
+            <div class="border-l-4 border-green-500 pl-4">
+              <h3 class="font-bold mb-2">⚙️ Module 2: Core Features (6 min)</h3>
+              <ul class="space-y-1 text-gray-600">
+                <li>→ Lesson 4: Clone Your First Repository</li>
+                <li>→ Lesson 5: Making and Committing Changes</li>
+                <li>→ Lesson 6: Working with Branches</li>
+              </ul>
+            </div>
+            <div class="border-l-4 border-yellow-500 pl-4">
+              <h3 class="font-bold mb-2">🤝 Module 3: Collaboration (4 min)</h3>
+              <ul class="space-y-1 text-gray-600">
+                <li>→ Lesson 7: Creating Pull Requests</li>
+                <li>→ Lesson 8: Reviewing and Merging PRs</li>
+              </ul>
+            </div>
+            <div class="border-l-4 border-purple-500 pl-4">
+              <h3 class="font-bold mb-2">✅ Module 4: Best Practices (4 min)</h3>
+              <ul class="space-y-1 text-gray-600">
+                <li>→ Lesson 9: Handling Merge Conflicts</li>
+                <li>→ Lesson 10: GitHub Workflow for Design Teams</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Getting Started -->
+        <section>
+          <h2 class="text-2xl font-bold mb-4">Getting Started</h2>
+          <p class="text-gray-600 mb-4">Choose the path that fits your needs:</p>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Complete Beginner:</strong> Start at Lesson 1 and follow through sequentially.</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Have Git Installed:</strong> Jump to Lesson 3 to learn the concepts.</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Know the Basics:</strong> Skip to Module 3 for collaboration workflows.</p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-600 mt-6">
+            <h3 class="font-bold mb-2">Ready to Get Started?</h3>
+            <p class="text-gray-700">Click on the Setup module below to begin your GitHub journey!</p>
+          </div>
+        </section>
+      </div>
+    `,
     relatedPatterns: ['Collaborative AI', 'Contextual Assistance'],
   },
 ];

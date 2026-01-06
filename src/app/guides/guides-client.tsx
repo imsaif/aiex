@@ -1,364 +1,282 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useMemo } from 'react';
+import Link from 'next/link';
+import { Claude, Cursor, Github, Copilot } from '@lobehub/icons';
+import { ClockIcon, BookOpenIcon, FolderIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import CourseCard from '@/components/ui/CourseCard';
-import GuideFilter from '@/components/ui/GuideFilter';
-import { guides, getAllTools, getAllSkillLevels, searchGuides } from '@/data/guides';
-import { GuideFilter as GuideFilterType } from '@/types';
+import { guides } from '@/data/guides';
+
+// Guide metadata
+const guideData: Record<string, { tagline: string; highlights: string[]; modules: string[] }> = {
+  'claude-code-learning-path': {
+    tagline: 'Start Here',
+    highlights: ['AI-powered prototyping', 'Design-to-code workflows', 'Version control basics'],
+    modules: ['Setup', 'Prototyping', 'GitHub', 'Best Practices'],
+  },
+  'cursor-learning-path': {
+    tagline: 'AI-native code editor',
+    highlights: ['Tab autocomplete & AI suggestions', 'Chat & Composer for code generation', 'Design-to-code workflows'],
+    modules: ['Setup', 'Core Features', 'Design-to-code', 'Customization'],
+  },
+  'github-copilot-learning-path': {
+    tagline: 'AI pair programmer',
+    highlights: ['Inline code suggestions', 'AI pair programming', 'Works in VS Code, JetBrains & more'],
+    modules: ['Setup', 'Core Features', 'Collaboration', 'Best Practices'],
+  },
+  'github-learning-path': {
+    tagline: 'Industry-standard version control',
+    highlights: ['Version control basics', 'Pull requests & code review', 'Team collaboration workflows'],
+    modules: ['Setup', 'Core Features', 'Collaboration', 'Best Practices'],
+  },
+};
+
+// Get icon component for a guide
+function GuideIcon({ tool, size = 40 }: { tool: string; size?: number }) {
+  const iconProps = { size };
+  switch (tool?.toLowerCase()) {
+    case 'claude code':
+      return <div style={{ color: '#D97757' }}><Claude {...iconProps} /></div>;
+    case 'cursor':
+      return <div className="text-gray-900 dark:text-gray-100"><Cursor {...iconProps} /></div>;
+    case 'github':
+      return <div className="text-gray-900 dark:text-gray-100"><Github {...iconProps} /></div>;
+    case 'github copilot':
+      return <Copilot.Color {...iconProps} />;
+    default:
+      return null;
+  }
+}
 
 export default function GuidesClient() {
-  const [filter, setFilter] = useState<GuideFilterType>({});
-  const [sortBy, setSortBy] = useState<'newest' | 'alphabetical' | 'progress' | 'readtime'>('newest');
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  // Get featured guide (Claude Code) and other guides
+  const featuredGuide = useMemo(() => guides.find(g => g.slug === 'claude-code-learning-path'), []);
+  const otherGuides = useMemo(() => guides.filter(g => g.slug !== 'claude-code-learning-path'), []);
 
-  const tools = useMemo(() => getAllTools(), []);
-  const skillLevels = useMemo(() => getAllSkillLevels(), []);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpenDropdown(null);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const filteredGuides = useMemo(() => {
-    let result = guides;
-
-    // Apply filters
-    if (Object.values(filter).some((v) => v !== undefined)) {
-      result = result.filter((guide) => {
-        if (filter.tool && guide.tool !== filter.tool) return false;
-        if (filter.skillLevel && guide.skillLevel !== filter.skillLevel) return false;
-        return true;
-      });
-    }
-
-    // Apply sorting
-    const sortedResult = [...result];
-    switch (sortBy) {
-      case 'alphabetical':
-        sortedResult.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'progress':
-        sortedResult.sort((a, b) => {
-          const totalA = a.lessons?.length || a.lessonCount || 0;
-          const totalB = b.lessons?.length || b.lessonCount || 0;
-          // Note: We could add progress sorting later if needed
-          return 0;
-        });
-        break;
-      case 'readtime':
-        sortedResult.sort((a, b) => a.readTime - b.readTime);
-        break;
-      case 'newest':
-      default:
-        // Keep original order
-        break;
-    }
-
-    return sortedResult;
-  }, [filter, sortBy]);
-
-  const handleToolChange = (tool: string) => {
-    setFilter({
-      tool: tool === 'all' ? undefined : (tool as any),
-      skillLevel: filter.skillLevel,
-    });
+  // Get metadata for a guide
+  const getGuideMeta = (guide: any) => {
+    const lessons = guide.lessons?.length || guide.lessonCount || 0;
+    const uniqueModules = guide.lessons
+      ? [...new Set(guide.lessons.map((l: any) => l.module).filter(Boolean))]
+      : [];
+    return {
+      lessons,
+      moduleCount: uniqueModules.length,
+      readTime: guide.readTime || 0,
+    };
   };
 
-  const handleSkillLevelChange = (level: string) => {
-    setFilter({
-      tool: filter.tool,
-      skillLevel: level === 'all' ? undefined : (level as any),
-    });
-  };
+  const featuredMeta = featuredGuide ? getGuideMeta(featuredGuide) : { lessons: 0, moduleCount: 0, readTime: 0 };
+  const featuredData = guideData['claude-code-learning-path'];
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section - with background + grain */}
-      <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+      {/* Hero Section */}
+      <section className="pt-12 md:pt-16 pb-8 md:pb-12 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
-            {/* Info Chip */}
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
-                {guides.length} AI Tool Learning Paths
-              </span>
-            </div>
-
-            {/* Heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-4">
               Master AI Design Tools
             </h1>
-            <p className="text-lg md:text-xl text-text-secondary mb-8">
+            <p className="text-lg md:text-xl text-text-secondary">
               Practical tutorials. Complete learning paths.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <div id="guides" className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
-        {/* Top Filter Bar */}
-        <div ref={dropdownRef} className="mb-6 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
-          {/* Tool Filter Dropdown */}
-          <div className="relative flex-1 lg:flex-none lg:w-48">
-            <button
-              onClick={() => setOpenDropdown(openDropdown === 'tool' ? null : 'tool')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-200
-                       bg-surface-primary text-text-primary hover:bg-surface-secondary
-                       transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
-            >
-              <span>{filter.tool ? `Tool: ${filter.tool}` : 'All Tools'}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className={`w-4 h-4 transition-transform ${openDropdown === 'tool' ? 'rotate-180' : ''}`}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-              </svg>
-            </button>
+      {/* Featured Guide Section */}
+      {featuredGuide && (
+        <section className="py-12 md:py-16 border-b border-gray-200 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-6">
+            {/* Section Label */}
+            <div className="flex items-center gap-2 mb-6">
+              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-accent-subtle text-accent-primary border border-accent-primary/20">
+                Recommended Start
+              </span>
+            </div>
 
-            {openDropdown === 'tool' && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
-                            rounded-lg shadow-lg z-50">
-                <button
-                  onClick={() => handleToolChange('all')}
-                  className={`w-full text-left px-4 py-2 text-sm transition-colors
-                             ${filter.tool ? 'text-text-secondary hover:bg-accent-subtle' : 'bg-accent-subtle text-accent-primary font-medium'}`}
-                >
-                  All Tools
-                </button>
-                {tools.map((tool) => (
-                  <button
-                    key={tool}
-                    onClick={() => handleToolChange(tool)}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors
-                               ${filter.tool === tool ? 'bg-accent-subtle text-accent-primary font-medium' : 'text-text-secondary hover:bg-accent-subtle'}`}
-                  >
-                    {tool}
-                  </button>
-                ))}
+            {/* Featured Card */}
+            <Link href={`/guides/${featuredGuide.slug}`} className="block group">
+              <div className="bg-surface-secondary rounded-3xl border border-gray-200 dark:border-gray-700 p-8 md:p-10 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-lg">
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+                  {/* Left: Icon & Title */}
+                  <div className="flex-1">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-14 h-14 rounded-2xl bg-orange-500/10 dark:bg-orange-500/20 flex items-center justify-center">
+                        <GuideIcon tool="claude code" size={36} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-accent-primary mb-1">
+                          {featuredData.tagline}
+                        </p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
+                          {featuredGuide.title}
+                        </h2>
+                      </div>
+                    </div>
+
+                    <p className="text-text-secondary text-lg mb-6 max-w-2xl">
+                      {featuredGuide.description}
+                    </p>
+
+                    {/* Metadata */}
+                    <div className="flex flex-wrap items-center gap-6 text-sm text-text-secondary mb-6">
+                      <div className="flex items-center gap-2">
+                        <ClockIcon className="w-4 h-4" />
+                        <span>{featuredMeta.readTime} min</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <BookOpenIcon className="w-4 h-4" />
+                        <span>{featuredMeta.lessons} lessons</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <FolderIcon className="w-4 h-4" />
+                        <span>{featuredMeta.moduleCount} modules</span>
+                      </div>
+                    </div>
+
+                    {/* CTA */}
+                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium group-hover:bg-accent-hover transition-colors">
+                      Start Learning
+                      <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
+
+                  {/* Right: Module List */}
+                  <div className="lg:w-72 w-full">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-3">
+                      What you'll learn
+                    </p>
+                    <div className="space-y-2">
+                      {featuredData.modules.map((module, i) => (
+                        <div
+                          key={module}
+                          className="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                        >
+                          <span className="w-6 h-6 rounded-full bg-accent-subtle text-accent-primary text-xs font-bold flex items-center justify-center">
+                            {i + 1}
+                          </span>
+                          <span className="text-sm font-medium text-text-primary">
+                            {module}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
+            </Link>
           </div>
+        </section>
+      )}
 
-          {/* Skill Level Filter Dropdown */}
-          <div className="relative flex-1 lg:flex-none lg:w-48">
-            <button
-              onClick={() => setOpenDropdown(openDropdown === 'level' ? null : 'level')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-200
-                       bg-surface-primary text-text-primary hover:bg-surface-secondary
-                       transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
-            >
-              <span>{filter.skillLevel ? `Level: ${filter.skillLevel}` : 'All Levels'}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className={`w-4 h-4 transition-transform ${openDropdown === 'level' ? 'rotate-180' : ''}`}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-              </svg>
-            </button>
+      {/* More Guides Section */}
+      {otherGuides.length > 0 && (
+        <section className="py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-6">
+            {/* Section Header */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-text-primary mb-2">More Guides</h2>
+              <p className="text-text-secondary">
+                Explore other AI tools to expand your workflow
+              </p>
+            </div>
 
-            {openDropdown === 'level' && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
-                            rounded-lg shadow-lg z-50">
-                <button
-                  onClick={() => handleSkillLevelChange('all')}
-                  className={`w-full text-left px-4 py-2 text-sm transition-colors
-                             ${filter.skillLevel ? 'text-text-secondary hover:bg-accent-subtle' : 'bg-accent-subtle text-accent-primary font-medium'}`}
-                >
-                  All Levels
-                </button>
-                {skillLevels.map((level) => (
-                  <button
-                    key={level}
-                    onClick={() => handleSkillLevelChange(level)}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors
-                               ${filter.skillLevel === level ? 'bg-accent-subtle text-accent-primary font-medium' : 'text-text-secondary hover:bg-accent-subtle'}`}
-                  >
-                    {level}
-                  </button>
-                ))}
-              </div>
-            )}
+            {/* Guides List - Horizontal Cards */}
+            <div className="space-y-6">
+              {otherGuides.map((guide) => {
+                const meta = getGuideMeta(guide);
+                const data = guideData[guide.slug] || { tagline: '', highlights: [], modules: [] };
+
+                return (
+                  <Link key={guide.id} href={`/guides/${guide.slug}`} className="block group">
+                    <div className="bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 p-6 md:p-8 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-lg">
+                      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
+                        {/* Left: Icon & Title */}
+                        <div className="flex-1">
+                          <div className="flex items-center gap-4 mb-4">
+                            <div className="w-14 h-14 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                              <GuideIcon tool={guide.tool} size={32} />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-accent-primary mb-1">
+                                {data.tagline}
+                              </p>
+                              <h3 className="text-2xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
+                                {guide.title}
+                              </h3>
+                            </div>
+                          </div>
+
+                          {/* Highlights */}
+                          {data.highlights.length > 0 && (
+                            <ul className="space-y-2 mb-5">
+                              {data.highlights.map((highlight, i) => (
+                                <li key={i} className="flex items-center gap-2 text-base text-text-secondary">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
+                                  {highlight}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {/* Metadata */}
+                          <div className="flex flex-wrap items-center gap-5 text-sm text-text-secondary">
+                            <div className="flex items-center gap-2">
+                              <ClockIcon className="w-4 h-4" />
+                              <span>{meta.readTime} min</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <BookOpenIcon className="w-4 h-4" />
+                              <span>{meta.lessons} lessons</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <FolderIcon className="w-4 h-4" />
+                              <span>{meta.moduleCount} modules</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right: Modules */}
+                        <div className="lg:w-64 w-full">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-3">
+                            Modules
+                          </p>
+                          <div className="space-y-2">
+                            {data.modules.map((module, i) => (
+                              <div
+                                key={module}
+                                className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50"
+                              >
+                                <span className="w-6 h-6 rounded-full bg-accent-subtle text-accent-primary text-xs font-bold flex items-center justify-center">
+                                  {i + 1}
+                                </span>
+                                <span className="text-sm font-medium text-text-primary">
+                                  {module}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* CTA Arrow */}
+                        <div className="hidden lg:flex items-center self-center">
+                          <ArrowRightIcon className="w-6 h-6 text-text-secondary group-hover:text-accent-primary group-hover:translate-x-1 transition-all" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-
-          {/* Sort Dropdown */}
-          <div className="relative flex-1 lg:flex-none lg:w-48 lg:ml-auto">
-            <button
-              onClick={() => setOpenDropdown(openDropdown === 'sort' ? null : 'sort')}
-              className="w-full flex items-center justify-between px-4 py-2 rounded-full border border-gray-200
-                       bg-surface-primary text-text-primary hover:bg-surface-secondary
-                       transition-all text-sm font-medium hover:scale-[1.01] active:scale-[0.99]"
-            >
-              <span>Sort: {sortBy === 'newest' ? 'Newest' : sortBy === 'alphabetical' ? 'A-Z' : sortBy === 'progress' ? 'Progress' : 'Duration'}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className={`w-4 h-4 transition-transform ${openDropdown === 'sort' ? 'rotate-180' : ''}`}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7-7m0 0l-7 7m7-7v12" />
-              </svg>
-            </button>
-
-            {openDropdown === 'sort' && (
-              <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200
-                            rounded-lg shadow-lg z-50 w-56">
-                {[
-                  { value: 'newest', label: 'Newest First' },
-                  { value: 'alphabetical', label: 'Alphabetical' },
-                  { value: 'progress', label: 'Most Progress' },
-                  { value: 'readtime', label: 'Shortest Duration' },
-                ].map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => {
-                      setSortBy(option.value as typeof sortBy);
-                      setOpenDropdown(null);
-                    }}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors
-                               ${sortBy === option.value ? 'bg-accent-subtle text-accent-primary font-medium' : 'text-text-secondary hover:bg-accent-subtle'}`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Active Filters Display and Clear */}
-        {(Object.values(filter).some((v) => v !== undefined) || sortBy !== 'newest') && (
-          <div className="mb-6 flex flex-wrap items-center gap-3">
-            {/* Selected Filter Chips */}
-            {filter.tool && (
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                           bg-accent-subtle border border-accent-primary/30">
-                <span className="text-sm text-accent-primary font-medium">Tool: {filter.tool}</span>
-                <button
-                  onClick={() => setFilter({ ...filter, tool: undefined })}
-                  className="text-accent-primary hover:text-accent-hover transition-colors"
-                  aria-label="Remove tool filter"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2.5}
-                    stroke="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            )}
-
-            {filter.skillLevel && (
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                           bg-accent-subtle border border-accent-primary/30">
-                <span className="text-sm text-accent-primary font-medium">Level: {filter.skillLevel}</span>
-                <button
-                  onClick={() => setFilter({ ...filter, skillLevel: undefined })}
-                  className="text-accent-primary hover:text-accent-hover transition-colors"
-                  aria-label="Remove skill level filter"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2.5}
-                    stroke="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            )}
-
-            {sortBy !== 'newest' && (
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                           bg-accent-subtle border border-accent-primary/30">
-                <span className="text-sm text-accent-primary font-medium">Sort: {sortBy}</span>
-                <button
-                  onClick={() => setSortBy('newest')}
-                  className="text-accent-primary hover:text-accent-hover transition-colors"
-                  aria-label="Reset sort order"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2.5}
-                    stroke="currentColor"
-                    className="w-4 h-4"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            )}
-
-            {/* Clear All Button */}
-            <button
-              onClick={() => {
-                setFilter({});
-                setSortBy('newest');
-              }}
-              className="text-sm text-accent-primary hover:text-accent-hover hover:underline transition-colors font-medium"
-            >
-              Clear all
-            </button>
-          </div>
-        )}
-
-        {/* Courses Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredGuides.map((guide, index) => (
-            <CourseCard key={guide.id} course={guide as any} index={index} />
-          ))}
-        </div>
-
-        {/* No Results */}
-        {filteredGuides.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-text-secondary mb-4">No courses found matching your filters.</p>
-            <button
-              onClick={() => {
-                setFilter({});
-              }}
-              className="px-6 py-2 rounded-full bg-accent-primary text-white
-                       font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              Clear Filters
-            </button>
-          </div>
-        )}
-      </div>
+        </section>
+      )}
 
       <Footer />
       <ScrollToTop />

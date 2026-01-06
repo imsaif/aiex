@@ -32,71 +32,86 @@ interface LessonRendererProps {
 }
 
 const getHeadingIcon = (headingText: string) => {
-  const iconProps = { className: 'w-7 h-7', style: { color: '#525252' } };
+  const iconClass = 'w-7 h-7 text-gray-600 dark:text-gray-400';
 
   if (headingText.includes('Setup')) {
-    return <Cog6ToothIcon {...iconProps} />;
+    return <Cog6ToothIcon className={iconClass} />;
   } else if (headingText.includes('Prototype')) {
-    return <LightBulbIcon {...iconProps} />;
+    return <LightBulbIcon className={iconClass} />;
   } else if (headingText.includes('GitHub') || headingText.includes('Git')) {
-    return <Github size={28} style={{ color: '#525252' }} />;
+    return <Github size={28} className="text-gray-600 dark:text-gray-400" />;
   } else if (headingText.includes('Best Practices') || headingText.includes('Practices')) {
-    return <StarIcon {...iconProps} />;
+    return <StarIcon className={iconClass} />;
   }
   return null;
 };
 
 const getIcon = (iconType: IconType) => {
-  const iconProps = { className: 'w-6 h-6' };
+  const iconClass = 'w-6 h-6';
   switch (iconType) {
     case 'info':
-      return <InformationCircleIcon {...iconProps} />;
+      return <InformationCircleIcon className={iconClass} />;
     case 'warning':
-      return <ExclamationTriangleIcon {...iconProps} />;
+      return <ExclamationTriangleIcon className={iconClass} />;
     case 'success':
-      return <CheckCircleIcon {...iconProps} />;
+      return <CheckCircleIcon className={iconClass} />;
     case 'error':
-      return <XCircleIcon {...iconProps} />;
+      return <XCircleIcon className={iconClass} />;
     case 'check':
-      return <CheckIcon {...iconProps} />;
+      return <CheckIcon className={iconClass} />;
     case 'monitor':
-      return <ComputerDesktopIcon {...iconProps} />;
+      return <ComputerDesktopIcon className={iconClass} />;
     case 'download':
-      return <ArrowDownTrayIcon {...iconProps} />;
+      return <ArrowDownTrayIcon className={iconClass} />;
     case 'lock':
-      return <LockClosedIcon {...iconProps} />;
+      return <LockClosedIcon className={iconClass} />;
     case 'user':
-      return <UserIcon {...iconProps} />;
+      return <UserIcon className={iconClass} />;
     case 'key':
-      return <KeyIcon {...iconProps} />;
+      return <KeyIcon className={iconClass} />;
     case 'terminal':
-      return <CommandLineIcon {...iconProps} />;
+      return <CommandLineIcon className={iconClass} />;
     case 'code':
-      return <CodeBracketIcon {...iconProps} />;
+      return <CodeBracketIcon className={iconClass} />;
     case 'github':
-      return <DocumentIcon {...iconProps} />;
+      return <DocumentIcon className={iconClass} />;
     case 'cog':
-      return <Cog6ToothIcon {...iconProps} />;
+      return <Cog6ToothIcon className={iconClass} />;
     default:
       return null;
   }
 };
 
-const getCalloutStyles = (calloutType: 'info' | 'warning' | 'success' | 'error' | 'tip') => {
-  const baseStyle = 'p-4 rounded-lg border-l-4 margin-bottom: 1.5rem;';
+const getCalloutClasses = (calloutType: 'info' | 'warning' | 'success' | 'error' | 'tip') => {
+  const baseClasses = 'p-4 rounded-lg border-l-4 mb-6';
   switch (calloutType) {
     case 'info':
-      return baseStyle + ' background-color: #eff6ff; border-left-color: #3b82f6; color: #374151;';
+      return `${baseClasses} bg-blue-50 dark:bg-blue-900/30 border-l-blue-500 text-gray-700 dark:text-gray-300`;
     case 'warning':
-      return baseStyle + ' background-color: #fef3c7; border-left-color: #f59e0b; color: #374151;';
+      return `${baseClasses} bg-amber-50 dark:bg-amber-900/30 border-l-amber-500 text-gray-700 dark:text-gray-300`;
     case 'success':
-      return baseStyle + ' background-color: #f0fdf4; border-left-color: #16a34a; color: #374151;';
+      return `${baseClasses} bg-green-50 dark:bg-green-900/30 border-l-green-500 text-gray-700 dark:text-gray-300`;
     case 'error':
-      return baseStyle + ' background-color: #fef2f2; border-left-color: #dc2626; color: #374151;';
+      return `${baseClasses} bg-red-50 dark:bg-red-900/30 border-l-red-500 text-gray-700 dark:text-gray-300`;
     case 'tip':
-      return baseStyle + ' background-color: #f5f3ff; border-left-color: #a78bfa; color: #374151;';
+      return `${baseClasses} bg-purple-50 dark:bg-purple-900/30 border-l-purple-400 text-gray-700 dark:text-gray-300`;
     default:
-      return baseStyle;
+      return baseClasses;
+  }
+};
+
+const getCalloutIconColor = (calloutType: 'info' | 'warning' | 'success' | 'error' | 'tip') => {
+  switch (calloutType) {
+    case 'warning':
+      return 'text-amber-500';
+    case 'error':
+      return 'text-red-500';
+    case 'success':
+      return 'text-green-500';
+    case 'tip':
+      return 'text-purple-400';
+    default:
+      return 'text-blue-500';
   }
 };
 
@@ -106,77 +121,53 @@ const renderSection = (section: LessonSection, index: number) => {
       return (
         <div
           key={index}
-          style={{
-            display: 'flex',
-            gap: '1rem',
-            marginBottom: '1.5rem',
-            padding: '1rem',
-            backgroundColor: '#f3f3f3',
-            borderLeft: '4px solid #525252',
-            borderRadius: '0.5rem',
-          }}
+          className="flex gap-4 mb-6 p-4 bg-gray-100 dark:bg-gray-800 border-l-4 border-l-gray-500 dark:border-l-gray-400 rounded-lg"
         >
           {section.icon && section.icon !== 'none' && (
-            <div style={{ color: '#525252', flexShrink: 0 }}>{getIcon(section.icon)}</div>
+            <div className="text-gray-600 dark:text-gray-400 flex-shrink-0">{getIcon(section.icon)}</div>
           )}
-          <p style={{ margin: 0, color: '#374151' }}>{section.content}</p>
+          <p className="m-0 text-gray-700 dark:text-gray-300">{section.content}</p>
         </div>
       );
 
     case 'heading':
-      const headingStyles = {
-        h2: {
-          fontSize: '1.75rem',
-          fontWeight: 700,
-          color: '#111827',
-          marginTop: section.level === 'h2' ? 0 : '2.5rem',
-          marginBottom: '1.5rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '1rem',
-          paddingBottom: '1rem',
-          borderBottom: '2px solid #e5e7eb',
-        },
-        h3: {
-          fontSize: '1.375rem',
-          fontWeight: 700,
-          color: '#111827',
-          marginTop: '2.5rem',
-          marginBottom: '1.25rem',
-        },
-        h4: {
-          fontSize: '1.125rem',
-          fontWeight: 600,
-          color: '#374151',
-          marginTop: '2rem',
-          marginBottom: '1rem',
-        },
-      };
-      const HeadingTag = section.level as 'h2' | 'h3' | 'h4';
-
-      // For h2, add icon on the right
       if (section.level === 'h2') {
         const icon = getHeadingIcon(section.content);
-        return React.createElement(
-          HeadingTag,
-          { key: index, style: headingStyles[section.level] as React.CSSProperties },
-          <>
+        return (
+          <h2
+            key={index}
+            className="text-[1.75rem] font-bold text-gray-900 dark:text-gray-100 mt-0 mb-6 flex justify-between items-center gap-4 pb-4 border-b-2 border-gray-200 dark:border-gray-700"
+          >
             <span>{section.content}</span>
-            {icon && <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>{icon}</div>}
-          </>
+            {icon && <div className="flex-shrink-0 flex items-center">{icon}</div>}
+          </h2>
         );
       }
-
-      return React.createElement(
-        HeadingTag,
-        { key: index, style: headingStyles[section.level] as React.CSSProperties },
-        section.content
-      );
+      if (section.level === 'h3') {
+        return (
+          <h3
+            key={index}
+            className="text-[1.375rem] font-bold text-gray-900 dark:text-gray-100 mt-10 mb-5"
+          >
+            {section.content}
+          </h3>
+        );
+      }
+      if (section.level === 'h4') {
+        return (
+          <h4
+            key={index}
+            className="text-[1.125rem] font-semibold text-gray-700 dark:text-gray-300 mt-8 mb-4"
+          >
+            {section.content}
+          </h4>
+        );
+      }
+      return null;
 
     case 'text':
       return (
-        <p key={index} style={{ color: '#6b7280', marginBottom: '1rem', lineHeight: '1.6', fontSize: '1rem' }}>
+        <p key={index} className="text-gray-500 dark:text-gray-400 mb-4 leading-relaxed text-base">
           {section.content}
         </p>
       );
@@ -185,14 +176,10 @@ const renderSection = (section: LessonSection, index: number) => {
       return (
         <ul
           key={index}
-          style={{
-            margin: '0 0 1.5rem 1.5rem',
-            padding: 0,
-            color: '#374151',
-          }}
+          className="mb-6 ml-6 p-0 text-gray-700 dark:text-gray-300 list-disc"
         >
           {section.items.map((item, i) => (
-            <li key={i} style={{ marginBottom: '0.5rem' }}>
+            <li key={i} className="mb-2">
               {item}
             </li>
           ))}
@@ -201,49 +188,14 @@ const renderSection = (section: LessonSection, index: number) => {
 
     case 'callout':
       return (
-        <div key={index} style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.75rem' }}>
+        <div key={index} className="mb-6 flex gap-3">
           {section.icon && section.icon !== 'none' && (
-            <div
-              style={{
-                flexShrink: 0,
-                color:
-                  section.calloutType === 'warning'
-                    ? '#f59e0b'
-                    : section.calloutType === 'error'
-                      ? '#dc2626'
-                      : section.calloutType === 'success'
-                        ? '#16a34a'
-                        : '#3b82f6',
-              }}
-            >
+            <div className={`flex-shrink-0 ${getCalloutIconColor(section.calloutType)}`}>
               {getIcon(section.icon)}
             </div>
           )}
-          <div
-            style={{
-              padding: '1rem',
-              borderRadius: '0.5rem',
-              backgroundColor:
-                section.calloutType === 'warning'
-                  ? '#fef3c7'
-                  : section.calloutType === 'error'
-                    ? '#fef2f2'
-                    : section.calloutType === 'success'
-                      ? '#f0fdf4'
-                      : '#eff6ff',
-              borderLeft: `4px solid ${
-                section.calloutType === 'warning'
-                  ? '#f59e0b'
-                  : section.calloutType === 'error'
-                    ? '#dc2626'
-                    : section.calloutType === 'success'
-                      ? '#16a34a'
-                      : '#3b82f6'
-              }`,
-              color: '#374151',
-            }}
-          >
-            {section.title && <strong style={{ display: 'block', marginBottom: '0.5rem' }}>{section.title}</strong>}
+          <div className={getCalloutClasses(section.calloutType)}>
+            {section.title && <strong className="block mb-2">{section.title}</strong>}
             <div>{section.content}</div>
           </div>
         </div>
@@ -251,45 +203,26 @@ const renderSection = (section: LessonSection, index: number) => {
 
     case 'steps':
       return (
-        <div key={index} style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+        <div key={index} className="grid gap-4 mb-8">
           {section.steps.map((step) => (
             <div
               key={step.number}
-              style={{
-                padding: '1.25rem',
-                backgroundColor: 'white',
-                border: '1px solid #e5e7eb',
-                borderRadius: '0.5rem',
-              }}
+              className="p-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg"
             >
-              <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '2rem',
-                    height: '2rem',
-                    borderRadius: '50%',
-                    backgroundColor: '#111827',
-                    color: 'white',
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    flexShrink: 0,
-                  }}
-                >
+              <div className="flex gap-3 mb-4">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold text-sm flex-shrink-0">
                   {step.number}
                 </div>
-                <h4 style={{ margin: 0, fontWeight: 700, color: '#111827', fontSize: '1.125rem' }}>
+                <h4 className="m-0 font-bold text-gray-900 dark:text-gray-100 text-[1.125rem]">
                   {step.title}
                 </h4>
               </div>
               {typeof step.content === 'string' ? (
-                <p style={{ margin: 0, color: '#374151' }}>{step.content}</p>
+                <p className="m-0 text-gray-700 dark:text-gray-300">{step.content}</p>
               ) : (
-                <ul style={{ margin: 0, paddingLeft: '1.5rem', color: '#374151' }}>
+                <ul className="m-0 pl-6 text-gray-700 dark:text-gray-300">
                   {step.content.map((item, i) => (
-                    <li key={i} style={{ marginBottom: '0.5rem' }}>
+                    <li key={i} className="mb-2">
                       {item}
                     </li>
                   ))}
@@ -302,66 +235,21 @@ const renderSection = (section: LessonSection, index: number) => {
 
     case 'code':
       return (
-        <div key={index} style={{ marginBottom: '1.5rem' }}>
-          <div
-            style={{
-              backgroundColor: '#111827',
-              color: 'white',
-              padding: '0.75rem 1rem',
-              borderRadius: '0.5rem',
-              marginBottom: '0',
-            }}
-          >
-            <span style={{ fontSize: '0.875rem', fontFamily: 'monospace' }}>
+        <div key={index} className="mb-6">
+          <div className="bg-gray-900 dark:bg-gray-950 text-white px-4 py-3 rounded-t-lg">
+            <span className="text-sm font-mono">
               {section.label || section.language || 'code'}
             </span>
           </div>
-          <div
-            style={{
-              position: 'relative',
-              borderRadius: '0 0 0.5rem 0.5rem',
-            }}
-          >
-            <pre
-              style={{
-                backgroundColor: 'white',
-                color: '#111827',
-                padding: '1rem',
-                margin: 0,
-                borderRadius: '0 0 0.5rem 0.5rem',
-                border: '1px solid #e5e7eb',
-                borderTop: 'none',
-                overflow: 'auto',
-                fontFamily: 'monospace',
-                fontSize: '0.875rem',
-              }}
-            >
+          <div className="relative">
+            <pre className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-4 m-0 rounded-b-lg border border-gray-200 dark:border-gray-700 border-t-0 overflow-auto font-mono text-sm">
               <code>{section.code}</code>
             </pre>
             <button
               onClick={() => {
                 navigator.clipboard.writeText(section.code);
               }}
-              style={{
-                position: 'absolute',
-                top: '0.75rem',
-                right: '0.75rem',
-                background: 'rgba(17, 24, 39, 0.8)',
-                border: '1px solid rgba(17, 24, 39, 0.5)',
-                color: 'white',
-                padding: '0.375rem 0.75rem',
-                borderRadius: '0.25rem',
-                cursor: 'pointer',
-                fontSize: '0.75rem',
-                fontWeight: 500,
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(17, 24, 39, 1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(17, 24, 39, 0.8)';
-              }}
+              className="absolute top-3 right-3 bg-gray-800/80 dark:bg-gray-700/80 border border-gray-700 dark:border-gray-600 text-white px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all hover:bg-gray-800 dark:hover:bg-gray-700"
             >
               Copy
             </button>
@@ -371,35 +259,27 @@ const renderSection = (section: LessonSection, index: number) => {
 
     case 'image':
       return (
-        <div key={index} style={{ marginBottom: '2rem' }}>
+        <div key={index} className="mb-8">
           {section.src ? (
-            <figure style={{ margin: 0 }}>
+            <figure className="m-0">
               <img
                 src={section.src}
                 alt={section.alt}
-                style={{ width: '100%', borderRadius: '0.5rem', border: '1px solid #e5e7eb' }}
+                className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
               />
               {section.label && (
-                <figcaption style={{ padding: '0.75rem', color: '#6b7280', fontSize: '0.875rem' }}>
+                <figcaption className="p-3 text-gray-500 dark:text-gray-400 text-sm">
                   {section.label}
                 </figcaption>
               )}
             </figure>
           ) : (
-            <div
-              style={{
-                borderRadius: '0.5rem',
-                border: '2px dashed #d1d5db',
-                backgroundColor: '#f9fafb',
-                padding: '3rem',
-                textAlign: 'center',
-              }}
-            >
-              <div style={{ color: '#9ca3af', marginBottom: '0.5rem' }}>{getIcon('github')}</div>
-              <p style={{ margin: '0 0 0.5rem 0', color: '#4b5563', fontWeight: 600 }}>
+            <div className="rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-12 text-center">
+              <div className="text-gray-400 dark:text-gray-500 mb-2">{getIcon('github')}</div>
+              <p className="m-0 mb-2 text-gray-600 dark:text-gray-400 font-semibold">
                 {section.label || 'Image coming soon'}
               </p>
-              <p style={{ margin: 0, color: '#9ca3af', fontSize: '0.875rem' }}>Add image here</p>
+              <p className="m-0 text-gray-400 dark:text-gray-500 text-sm">Add image here</p>
             </div>
           )}
         </div>
@@ -409,29 +289,23 @@ const renderSection = (section: LessonSection, index: number) => {
       return (
         <div
           key={index}
-          style={{
-            marginTop: '2rem',
-            padding: '1.5rem',
-            background: 'linear-gradient(to right, #f9fafb, #f3f4f6)',
-            borderRadius: '0.5rem',
-            border: '1px solid #e5e7eb',
-          }}
+          className="mt-8 p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg border border-gray-200 dark:border-gray-700"
         >
-          <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem' }}>
-            <CheckCircleIcon style={{ width: '1.5rem', height: '1.5rem', color: '#16a34a', flexShrink: 0 }} />
-            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 700, color: '#111827' }}>
+          <div className="flex gap-3 mb-4">
+            <CheckCircleIcon className="w-6 h-6 text-green-500 flex-shrink-0" />
+            <h3 className="m-0 text-xl font-bold text-gray-900 dark:text-gray-100">
               {section.title}
             </h3>
           </div>
-          <ul style={{ margin: '0 0 1rem 0', padding: 0, listStyle: 'none', color: '#374151' }}>
+          <ul className="m-0 mb-4 p-0 list-none text-gray-700 dark:text-gray-300">
             {section.items.map((item, i) => (
-              <li key={i} style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem' }}>
-                <CheckIcon style={{ width: '1.25rem', height: '1.25rem', color: '#16a34a', flexShrink: 0 }} />
+              <li key={i} className="mb-2 flex gap-2">
+                <CheckIcon className="w-5 h-5 text-green-500 flex-shrink-0" />
                 {item}
               </li>
             ))}
           </ul>
-          <p style={{ margin: 0, color: '#374151', fontWeight: 600 }}>{section.message}</p>
+          <p className="m-0 text-gray-700 dark:text-gray-300 font-semibold">{section.message}</p>
         </div>
       );
 
