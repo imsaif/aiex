@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-07 18:08 (MacBook)
+- **Pattern:** Newsletter Duplicate Prevention & Subscription CTA
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Added email subscription form (InlineNewsletterSignup) to individual news edition pages between article content and navigation. Fixed duplicate newsletter generation by adding same-day deduplication check before creating new drafts. Created merge-newsletter-duplicates.ts utility script to list/merge duplicate newsletters. Cleaned up existing duplicates from Jan 7, Jan 5, and Dec 23.
+
 ### Session 2026-01-07 16:50 (MacBook)
 - **Pattern:** Newsletter Cron Fix
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed dark mode accessibility issues on /news pages by implementing JavaScript-based inline style overrides for newsletter HTML content. Made quiet day "Explore" links fully clickable with aligned arrows. Updated footer tagline and removed Claude Code attribution.
 
 ### Session 2025-12-22 22:59 (MacBook)
-- **Pattern:** News Page SEO Improvements
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Added SEO improvements to /news section: updated page title/description for better search visibility, added JSON-LD Blog schema to listing page and Article schema to individual articles, and added random pattern suggestion link to quiet day entries (with hydration fix using useEffect).
-
-### Session 2025-12-22 12:01 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

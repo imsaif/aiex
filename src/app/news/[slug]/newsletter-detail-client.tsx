@@ -7,6 +7,7 @@ import DOMPurify from 'dompurify';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import InlineNewsletterSignup from '@/components/newsletter/InlineNewsletterSignup';
 import { Newsletter } from '@/types';
 
 interface NewsletterDetailClientProps {
@@ -215,6 +216,19 @@ export default function NewsletterDetailClient({
           dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       </article>
+
+      {/* Newsletter Subscription CTA */}
+      <section className="max-w-4xl mx-auto px-6 py-12 md:py-16">
+        <div className="bg-surface-primary border border-primary rounded-2xl p-8 md:p-12 shadow-card">
+          <InlineNewsletterSignup
+            variant="news"
+            customHeading="Enjoyed this issue?"
+            customSubheading="Get AIUX News delivered to your inbox every week"
+            customButtonText="Subscribe →"
+            source="news"
+          />
+        </div>
+      </section>
 
       {/* Navigation */}
       <div className="max-w-4xl mx-auto px-6 pb-16">

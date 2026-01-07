@@ -775,7 +775,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Step 3: Generate slug and save draft
+    // Step 3: Check if we already have a newsletter for today (prevent duplicates)
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+    const existingNewsletter = await prisma.newsletterDraft.findFirst({
+      where: {
+        type,
+        createdAt: { gte: todayStart, lt: tomorrowStart },
+        status: { in: ['published', 'pending_review'] },
+      },
+    });
+
+    if (existingNewsletter) {
+      return NextResponse.json({
+        success: true,
+        message: `${type} newsletter already exists for today`,
+        existingId: existingNewsletter.id,
+        existingTitle: existingNewsletter.title,
+        skipped: true,
+      });
+    }
+
+    // Step 4: Generate slug and save draft
     const slug = generateSlug(title, type);
 
     const draft = await prisma.newsletterDraft.create({
@@ -794,7 +818,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Step 4: Send admin notification
+    // Step 5: Send admin notification
     const previewUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/admin/newsletter?id=${draft.id}`;
     await sendAdminNotification(draft, previewUrl);
 
