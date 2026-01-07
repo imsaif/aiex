@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-07 16:50 (MacBook)
+- **Pattern:** Newsletter Cron Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Diagnosed missing daily newsletters (last was Dec 21). Found Vercel Hobby tier cron jobs don't execute reliably. Manually triggered today's newsletter via curl. Set up cron-job.org as external cron service for daily (9 AM UTC) and weekly (8 AM Mon) newsletters. Added "Known Issues & Learnings" section to CLAUDE.md for documenting issues Claude should remember across sessions.
+
 ### Session 2026-01-07 14:30 (MacBook)
 - **Pattern:** Audit Page Email Feature
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added SEO improvements to /news section: updated page title/description for better search visibility, added JSON-LD Blog schema to listing page and Article schema to individual articles, and added random pattern suggestion link to quiet day entries (with hydration fix using useEffect).
 
 ### Session 2025-12-22 12:01 (MacBook)
-- **Pattern:** Daily Newsletter Automation
-- **Status:** ✅ Completed
-- **Files Changed:** 15
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented full daily newsletter automation system with AI-powered content generation. Added RSS aggregator for OpenAI/Anthropic/Google/Vercel/GitHub feeds, Claude API integration for newsletter generation, admin dashboard for review/edit/publish workflow, cron API route for scheduled generation via cron-job.org, and "quiet day" feature for slow news days with creative inline messages. Deployed to production and tested end-to-end.
-
-### Session 2025-12-19 20:58 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
@@ -536,3 +536,38 @@ These tools are accessible via npm scripts and help maintain code quality and co
 - **Generated comprehensive tests for 6+ additional components**
 - **Implemented robust test infrastructure** for complex animations and interactions
 - **All 481 tests now have proper mocking** for Next.js, framer-motion, and browser APIs
+
+## Known Issues & Learnings
+
+This section documents issues we've encountered and their solutions, so Claude remembers them in future sessions.
+
+### Cron Jobs & Scheduled Tasks
+
+| Issue | Date | Solution |
+|-------|------|----------|
+| **Vercel Hobby cron doesn't execute** | Jan 2026 | Vercel free/hobby tier cron jobs are configured in `vercel.json` but don't reliably trigger. Use **cron-job.org** (free) as external trigger instead. |
+
+**cron-job.org Setup:**
+- Daily newsletter: `0 9 * * *` → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
+- Weekly newsletter: `0 8 * * 1` → `https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly`
+- Requires `Authorization: Bearer <CRON_SECRET>` header
+
+### Deployment & Infrastructure
+
+| Issue | Date | Solution |
+|-------|------|----------|
+| *Add future issues here* | - | - |
+
+### API & External Services
+
+| Issue | Date | Solution |
+|-------|------|----------|
+| **Anthropic has no RSS feed** | Dec 2025 | Scrape `anthropic.com/news` page directly instead of using RSS parser |
+
+### Adding New Issues
+
+When you encounter a problem, document it here with:
+1. **What failed** - Clear description of the issue
+2. **Date** - When it was discovered
+3. **Solution** - How it was fixed
+4. **Category** - Add to appropriate section above
