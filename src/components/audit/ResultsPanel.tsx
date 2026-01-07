@@ -12,11 +12,13 @@ import {
   ClipboardDocumentIcon,
   ClipboardDocumentCheckIcon,
   ChatBubbleLeftRightIcon,
+  EnvelopeIcon,
 } from '@heroicons/react/24/outline';
 import { CheckBadgeIcon, SparklesIcon } from '@heroicons/react/24/solid';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
 import { PatternModal } from './PatternModal';
+import { EmailReportModal } from './EmailReportModal';
 
 // Designer-friendly analysis messages
 const ANALYSIS_MESSAGES = [
@@ -223,6 +225,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
   const [messageIndex, setMessageIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const [selectedPattern, setSelectedPattern] = useState<(PatternResult & { id: string }) | null>(null);
+  const [showEmailModal, setShowEmailModal] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Rotate through analysis messages
@@ -617,13 +620,33 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
               <ChatBubbleLeftRightIcon className="w-5 h-5" />
               Get Help Fixing These
             </button>
+
+            {/* Email Report Button */}
+            <button
+              type="button"
+              onClick={() => setShowEmailModal(true)}
+              className="w-full mt-3 flex items-center justify-center gap-2 px-5 py-3 border border-border-primary text-text-secondary rounded-xl text-base font-medium hover:bg-background-secondary hover:text-text-primary transition-colors"
+            >
+              <EnvelopeIcon className="w-5 h-5" />
+              Email This Report
+            </button>
           </div>
         ) : (
           /* All Good State */
           <div className="text-center py-8 mb-6">
             <CheckCircleIcon className="w-14 h-14 mx-auto mb-4 text-status-success" />
             <p className="text-lg font-medium text-text-primary">Great job!</p>
-            <p className="text-base text-text-secondary">All applicable patterns are well implemented.</p>
+            <p className="text-base text-text-secondary mb-5">All applicable patterns are well implemented.</p>
+
+            {/* Email Report Button for All Good State */}
+            <button
+              type="button"
+              onClick={() => setShowEmailModal(true)}
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 border border-border-primary text-text-secondary rounded-xl text-base font-medium hover:bg-background-secondary hover:text-text-primary transition-colors"
+            >
+              <EnvelopeIcon className="w-5 h-5" />
+              Email This Report
+            </button>
           </div>
         )}
 
@@ -785,6 +808,13 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
         isOpen={!!selectedPattern}
         onClose={() => setSelectedPattern(null)}
         pattern={selectedPattern}
+      />
+
+      {/* Email Report Modal */}
+      <EmailReportModal
+        isOpen={showEmailModal}
+        onClose={() => setShowEmailModal(false)}
+        results={results}
       />
     </aside>
   );
