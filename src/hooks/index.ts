@@ -3,6 +3,7 @@ export { usePatternSearch } from './usePatternSearch';
 export { usePatternFavorites } from './usePatternFavorites';
 export { usePatternPagination } from './usePatternPagination';
 export { useRecentPatterns } from './useRecentPatterns';
+export { usePatternViewTracker } from './usePatternViewTracker';
 
 // Re-export pattern context hooks for convenience
 export {

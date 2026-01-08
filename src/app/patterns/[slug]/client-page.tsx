@@ -1,11 +1,14 @@
 'use client';
 
+import { useEffect } from 'react';
 import categories from '@/data/categories';
 import { Pattern } from '@/types';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+import { usePatternViewTracker } from '@/hooks';
+import { SmartHandbookPrompt } from '@/components/smart-prompt';
 
 // Lazy load heavy components to reduce initial bundle size
 const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
@@ -35,6 +38,20 @@ interface ClientPageProps {
 }
 
 export default function ClientPage({ pattern, previousPattern, nextPattern }: ClientPageProps) {
+  // Smart prompt tracking for handbook offer
+  const {
+    viewCount,
+    showPrompt,
+    trackView,
+    dismiss: dismissPrompt,
+    markHandbookDownloaded
+  } = usePatternViewTracker({ threshold: 4 });
+
+  // Track pattern view on mount
+  useEffect(() => {
+    trackView(pattern.id);
+  }, [pattern.id, trackView]);
+
   // Minimal animations - simplified for better performance
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -333,6 +350,14 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           ) : <div />}
         </motion.div>
       </div>
+
+      {/* Smart Handbook Prompt - appears after viewing 4 patterns */}
+      <SmartHandbookPrompt
+        isOpen={showPrompt}
+        onClose={dismissPrompt}
+        onSuccess={markHandbookDownloaded}
+        viewCount={viewCount}
+      />
     </motion.main>
   );
 }

@@ -5,7 +5,14 @@ const STORAGE_KEYS = {
   FAVORITES: 'ai-patterns-favorites',
   RECENT_PATTERNS: 'ai-patterns-recent',
   THEME: 'ai-patterns-theme',
-  SETTINGS: 'ai-patterns-settings'
+  SETTINGS: 'ai-patterns-settings',
+  VIEWED_PATTERNS: 'ai-patterns-viewed',
+  HANDBOOK_DOWNLOADED: 'ai-patterns-handbook-downloaded'
+} as const;
+
+// Session storage keys (reset on browser close)
+const SESSION_KEYS = {
+  SMART_PROMPT_DISMISSED: 'ai-patterns-smart-prompt-dismissed'
 } as const;
 
 // Types
@@ -217,9 +224,9 @@ export function importUserData(data: Partial<UserPreferences>): void {
  */
 export function getStorageInfo() {
   if (!isBrowser) return { used: 0, available: 0 };
-  
+
   let used = 0;
-  
+
   try {
     for (const key in localStorage) {
       if (localStorage.hasOwnProperty(key) && key.startsWith('ai-patterns-')) {
@@ -229,9 +236,109 @@ export function getStorageInfo() {
   } catch (error) {
     console.warn('Failed to calculate storage usage:', error);
   }
-  
+
   return {
     used: Math.round(used / 1024), // KB
     available: 5120 // 5MB typical localStorage limit
   };
+}
+
+// ============================================
+// Smart Prompt - Pattern View Tracking
+// ============================================
+
+/**
+ * Get list of viewed pattern IDs
+ */
+export function getViewedPatterns(): string[] {
+  return getStorageItem(STORAGE_KEYS.VIEWED_PATTERNS, []);
+}
+
+/**
+ * Track a pattern view (adds to unique viewed set)
+ */
+export function trackPatternView(patternId: string): string[] {
+  const viewed = getViewedPatterns();
+  if (!viewed.includes(patternId)) {
+    const newViewed = [...viewed, patternId];
+    setStorageItem(STORAGE_KEYS.VIEWED_PATTERNS, newViewed);
+    return newViewed;
+  }
+  return viewed;
+}
+
+/**
+ * Get count of unique patterns viewed
+ */
+export function getUniqueViewCount(): number {
+  return getViewedPatterns().length;
+}
+
+/**
+ * Check if handbook has been downloaded
+ */
+export function hasDownloadedHandbook(): boolean {
+  return getStorageItem(STORAGE_KEYS.HANDBOOK_DOWNLOADED, false);
+}
+
+/**
+ * Mark handbook as downloaded
+ */
+export function setHandbookDownloaded(): void {
+  setStorageItem(STORAGE_KEYS.HANDBOOK_DOWNLOADED, true);
+}
+
+/**
+ * Check if user is already subscribed to newsletter
+ */
+export function isNewsletterSubscribed(): boolean {
+  if (!isBrowser) return false;
+  try {
+    return localStorage.getItem('newsletter_subscribed') === 'true';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check if smart prompt was dismissed this session
+ */
+export function isSmartPromptDismissed(): boolean {
+  if (!isBrowser) return false;
+  try {
+    return sessionStorage.getItem(SESSION_KEYS.SMART_PROMPT_DISMISSED) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Dismiss the smart prompt for this session
+ */
+export function dismissSmartPrompt(): void {
+  if (!isBrowser) return;
+  try {
+    sessionStorage.setItem(SESSION_KEYS.SMART_PROMPT_DISMISSED, 'true');
+  } catch (error) {
+    console.warn('Failed to dismiss smart prompt:', error);
+  }
+}
+
+/**
+ * Check if smart prompt should be shown
+ * Returns true if:
+ * - User has viewed 4+ unique patterns
+ * - User is not subscribed to newsletter
+ * - User has not downloaded handbook
+ * - Prompt was not dismissed this session
+ */
+export function shouldShowSmartPrompt(threshold: number = 4): boolean {
+  if (!isBrowser) return false;
+
+  const viewCount = getUniqueViewCount();
+  const subscribed = isNewsletterSubscribed();
+  const downloaded = hasDownloadedHandbook();
+  const dismissed = isSmartPromptDismissed();
+
+  return viewCount >= threshold && !subscribed && !downloaded && !dismissed;
 }

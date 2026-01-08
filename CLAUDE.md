@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-08 10:45 (MacBook)
+- **Pattern:** Smart Handbook Prompt
+- **Status:** ✅ Completed
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented smart prompt system that appears after users browse 4 unique patterns, offering the handbook PDF download. Created usePatternViewTracker hook, SmartHandbookPrompt component, and added localStorage/sessionStorage utilities for view tracking and dismissal. Non-blocking modal with email capture that respects user dismissal per session.
+
 ### Session 2026-01-08 10:42 (MacBook)
 - **Pattern:** Newsletter System Fixes
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Improved pattern demos: simplified AdaptiveDashboard (removed animations, cleaned colors), rebuilt ContextualAssistance with Gmail-style inline ghost text, enhanced ExplainableAI with live reasoning steps and dynamic sentiment analysis, added reset + more examples to HumanInTheLoop, widened demo containers for progressive-disclosure/contextual-assistance.
 
 ### Session 2025-12-24 18:06 (MacBook)
-- **Pattern:** Newsletter Admin System Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed newsletter admin login (added ADMIN_PASSWORD to Vercel), fixed cookie path for API auth, fixed email approve redirect URL (added NEXT_PUBLIC_SITE_URL), added newsletter deduplication to prevent repeated content, changed time window from 48h to 24h, and added Anthropic news scraper since their RSS feed returns 404.
-
-### Session 2025-12-22 23:48 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
