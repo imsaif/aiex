@@ -3,11 +3,11 @@
   "crons": [
     {
       "path": "/api/cron/generate-newsletter",
-      "schedule": "0 9 * * *"
+      "schedule": "0 3 * * *"
     },
     {
       "path": "/api/cron/generate-newsletter?type=weekly",
-      "schedule": "0 8 * * 1"
+      "schedule": "0 2 * * 1"
     }
   ]
 }

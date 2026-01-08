@@ -548,8 +548,8 @@ This section documents issues we've encountered and their solutions, so Claude r
 | **Vercel Hobby cron doesn't execute** | Jan 2026 | Vercel free/hobby tier cron jobs are configured in `vercel.json` but don't reliably trigger. Use **cron-job.org** (free) as external trigger instead. |
 
 **cron-job.org Setup:**
-- Daily newsletter: `0 9 * * *` → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
-- Weekly newsletter: `0 8 * * 1` → `https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly`
+- Daily newsletter: `0 3 * * *` (3 AM UTC / 8:30 AM IST) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
+- Weekly newsletter: `0 2 * * 1` (2 AM UTC / 7:30 AM IST Mon) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly`
 - Requires `Authorization: Bearer <CRON_SECRET>` header
 
 ### Deployment & Infrastructure
