@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-08 10:42 (MacBook)
+- **Pattern:** Newsletter System Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Diagnosed why daily newsletter didn't run (cron was 9 AM UTC, user expected 9 AM IST). Updated cron schedule to 3 AM UTC (8:30 AM IST). Fixed critical bugs: secureCompareSecret was comparing wrong values, resend.batch getter was missing (causing silent email failures). Added failure warnings to admin UI. Added batch mock for tests. Added comprehensive newsletter troubleshooting checklist to CLAUDE.md Known Issues section.
+
 ### Session 2026-01-07 18:08 (MacBook)
 - **Pattern:** Newsletter Duplicate Prevention & Subscription CTA
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed newsletter admin login (added ADMIN_PASSWORD to Vercel), fixed cookie path for API auth, fixed email approve redirect URL (added NEXT_PUBLIC_SITE_URL), added newsletter deduplication to prevent repeated content, changed time window from 48h to 24h, and added Anthropic news scraper since their RSS feed returns 404.
 
 ### Session 2025-12-22 23:48 (MacBook)
-- **Pattern:** News Page Dark Mode & Footer Updates
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed dark mode accessibility issues on /news pages by implementing JavaScript-based inline style overrides for newsletter HTML content. Made quiet day "Explore" links fully clickable with aligned arrows. Updated footer tagline and removed Claude Code attribution.
-
-### Session 2025-12-22 22:59 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
