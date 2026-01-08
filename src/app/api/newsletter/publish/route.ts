@@ -225,7 +225,8 @@ export async function POST(request: NextRequest) {
 // Timing-safe secret comparison
 function secureCompareSecret(provided: string, expected: string): boolean {
   if (provided.length !== expected.length) {
-    timingSafeEqual(Buffer.from(provided), Buffer.from(provided));
+    // Still do a comparison to prevent timing attacks revealing length mismatch
+    timingSafeEqual(Buffer.from(provided), Buffer.from(expected.padEnd(provided.length, '0').slice(0, provided.length)));
     return false;
   }
   return timingSafeEqual(Buffer.from(provided), Buffer.from(expected));

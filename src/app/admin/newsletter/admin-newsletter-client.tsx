@@ -187,12 +187,24 @@ export default function AdminNewsletterClient({
       const data = await response.json();
 
       if (response.ok) {
-        const successMsg = sendToSubscribers && data.emailResult
-          ? `Newsletter published and sent to ${data.emailResult.successCount} subscribers!`
-          : 'Newsletter published successfully!';
-        setMessage({ type: 'success', text: successMsg });
-        // Refresh page to update draft list
-        setTimeout(() => window.location.reload(), 1500);
+        let successMsg = 'Newsletter published successfully!';
+        let msgType: 'success' | 'error' = 'success';
+        let hasFailures = false;
+
+        if (sendToSubscribers && data.emailResult) {
+          const { successCount, failureCount, totalSubscribers } = data.emailResult;
+          hasFailures = failureCount > 0;
+          if (hasFailures) {
+            successMsg = `Newsletter published. Sent to ${successCount}/${totalSubscribers} subscribers (${failureCount} failed)`;
+            msgType = 'error'; // Show as warning
+          } else {
+            successMsg = `Newsletter published and sent to ${successCount} subscribers!`;
+          }
+        }
+
+        setMessage({ type: msgType, text: successMsg });
+        // Refresh page to update draft list (longer delay if failures so user can see message)
+        setTimeout(() => window.location.reload(), hasFailures ? 3000 : 1500);
       } else {
         throw new Error('Failed to publish');
       }

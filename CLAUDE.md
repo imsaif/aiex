@@ -552,6 +552,43 @@ This section documents issues we've encountered and their solutions, so Claude r
 - Weekly newsletter: `0 2 * * 1` (2 AM UTC / 7:30 AM IST Mon) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly`
 - Requires `Authorization: Bearer <CRON_SECRET>` header
 
+**Newsletter Troubleshooting Checklist:**
+
+When newsletter doesn't run or emails don't send:
+
+1. **Check cron-job.org has correct CRON_SECRET**
+   - Must use the PRODUCTION value from Vercel environment variables
+   - NOT the local `.env.local` value (they're different!)
+
+2. **Check cron schedule is correct**
+   - Daily: `0 3 * * *` (3 AM UTC = 8:30 AM IST)
+   - Weekly: `0 2 * * 1` (2 AM UTC Monday = 7:30 AM IST)
+
+3. **Check database for recent newsletters**
+   ```bash
+   # Query last 5 newsletters
+   DATABASE_URL="..." node -e '
+   const { PrismaClient } = require("./src/generated/prisma");
+   const prisma = new PrismaClient();
+   prisma.newsletterDraft.findMany({ orderBy: { createdAt: "desc" }, take: 5 })
+     .then(n => n.forEach(x => console.log(x.createdAt, x.type, x.status, x.title.slice(0,40))))
+     .finally(() => prisma.$disconnect());
+   '
+   ```
+
+4. **Manual trigger (use production CRON_SECRET)**
+   ```bash
+   curl -H "Authorization: Bearer $CRON_SECRET" \
+     "https://www.aiuxdesign.guide/api/cron/generate-newsletter"
+   ```
+
+5. **Check Resend dashboard** for delivery logs: https://resend.com/emails
+
+6. **Common issues:**
+   - 401 Unauthorized → Wrong CRON_SECRET in cron-job.org
+   - No newsletter created → Check if "quiet day" (no news) or duplicate prevention blocked it
+   - Emails not sent → Check RESEND_API_KEY is valid, check subscriber count
+
 ### Deployment & Infrastructure
 
 | Issue | Date | Solution |
