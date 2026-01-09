@@ -818,9 +818,11 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Step 5: Send admin notification
+    // Step 5: Send admin notification (fire-and-forget, don't block response)
     const previewUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/admin/newsletter?id=${draft.id}`;
-    await sendAdminNotification(draft, previewUrl);
+    sendAdminNotification(draft, previewUrl).catch((err) =>
+      console.error('Admin notification failed:', err)
+    );
 
     return NextResponse.json({
       success: true,
