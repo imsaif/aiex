@@ -82,6 +82,11 @@ export default async function NewsletterPage({ params }: PageProps) {
     notFound();
   }
 
+  // Redirect to news list if newsletter has no content (quiet day entries)
+  if (!newsletter.content || newsletter.content.trim() === '') {
+    notFound();
+  }
+
   // Get adjacent newsletters for navigation (static only for now)
   const { previous, next } = getAdjacentNewsletters(slug);
 

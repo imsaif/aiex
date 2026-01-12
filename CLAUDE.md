@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-12 14:22 (MacBook)
+- **Pattern:** News Page Client-Side Error Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed client-side exception on /news page caused by newsletters with empty content. Added null checks for newsletter.content in newsletter-detail-client.tsx before calling .split() and DOMPurify.sanitize(). Added server-side redirect to 404 for "quiet day" newsletters without content. Fixed named import for InlineNewsletterSignup component.
+
 ### Session 2026-01-08 10:45 (MacBook)
 - **Pattern:** Smart Handbook Prompt
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Rebuilt MultimodalSearchDemo with modern text-to-voice transition. Added smooth crossfade animation (500ms), Claude-style sound wave icon, black/white gradient voice panel with dark mode support, fixed transition state management, and removed redundant title.
 
 ### Session 2025-12-24 18:52 (MacBook)
-- **Pattern:** Interactive Demo Improvements
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Improved pattern demos: simplified AdaptiveDashboard (removed animations, cleaned colors), rebuilt ContextualAssistance with Gmail-style inline ghost text, enhanced ExplainableAI with live reasoning steps and dynamic sentiment analysis, added reset + more examples to HumanInTheLoop, widened demo containers for progressive-disclosure/contextual-assistance.
-
-### Session 2025-12-24 18:06 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

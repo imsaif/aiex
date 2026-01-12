@@ -7,7 +7,7 @@ import DOMPurify from 'dompurify';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import InlineNewsletterSignup from '@/components/newsletter/InlineNewsletterSignup';
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { Newsletter } from '@/types';
 
 interface NewsletterDetailClientProps {
@@ -42,11 +42,12 @@ export default function NewsletterDetailClient({
   });
 
   // Estimate reading time (avg 200 words per minute)
-  const wordCount = newsletter.content.split(/\s+/).length;
-  const readingTime = Math.ceil(wordCount / 200);
+  const wordCount = newsletter.content ? newsletter.content.split(/\s+/).length : 0;
+  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
   // Sanitize HTML content to prevent XSS attacks
   const sanitizedContent = useMemo(() => {
+    if (!newsletter.content) return '';
     if (typeof window === 'undefined') return newsletter.content;
     return DOMPurify.sanitize(newsletter.content, {
       ADD_TAGS: ['style'],
