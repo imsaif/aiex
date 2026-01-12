@@ -60,7 +60,7 @@ export const selectivememory: Pattern = {
 - CTA to enable memory features if disabled
 
 Use a privacy-focused design with clear iconography, gentle colors (greens for important, yellows for temporary, reds for delete), and obvious confirmation dialogs for destructive actions. Prioritize transparency and user control.`,
-      customizationTips: [
+      tips: [
         "Add privacy indicators showing whether memories are stored locally vs cloud",
         "Include memory export/download feature for portability",
         "Show memory timeline visualization to see memory growth over time",

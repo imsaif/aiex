@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-12 17:49 (MacBook)
+- **Pattern:** Selective Memory & Universal Access Pattern Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed client-side exceptions on /patterns/selective-memory and /patterns/universal-access-patterns pages. Fixed malformed template literal ending in universal-access-patterns/code-examples.ts (changed `\`` to backtick). Fixed property name mismatch in both pattern figmaPrompt objects (changed `customizationTips` to `tips` to match FigmaPrompt type).
+
 ### Session 2026-01-12 14:22 (MacBook)
 - **Pattern:** News Page Client-Side Error Fix
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Built weekly newsletter automation ("This Week in AIUX") that compiles from daily newsletters. Added structuredData field to schema for weekly compilation, extended daily lookback to 72h, fixed deduplication to only check daily newsletters, added skip logic when weekly exists for same day, and published first weekly edition.
 
 ### Session 2025-12-25 12:38 (MacBook)
-- **Pattern:** Multimodal Interaction Demo
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Rebuilt MultimodalSearchDemo with modern text-to-voice transition. Added smooth crossfade animation (500ms), Claude-style sound wave icon, black/white gradient voice panel with dark mode support, fixed transition state management, and removed redundant title.
-
-### Session 2025-12-24 18:52 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

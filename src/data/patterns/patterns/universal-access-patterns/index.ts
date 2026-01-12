@@ -80,7 +80,7 @@ export const universalaccesspatterns: Pattern = {
 - Progress indicators for long-running tasks
 
 Include an "Accessibility Score" badge showing compliance level (A, AA, AAA) and a "Test with Assistive Tech" preview mode. Use inclusive iconography and avoid cultural assumptions.`,
-      customizationTips: [
+      tips: [
         "Add dyslexia-friendly font option (OpenDyslexic or similar)",
         "Include cognitive accessibility features like simplified language mode",
         "Add haptic feedback options for mobile devices",
