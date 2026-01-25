@@ -300,22 +300,11 @@ export default function AdminNewsletterClient({
 
   // Main admin interface
   return (
-    <div className="min-h-screen bg-background-primary dark:bg-background-primary">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-text-primary dark:text-text-primary">Newsletter Admin</h1>
-              <p className="text-text-secondary dark:text-text-secondary mt-1">Review and approve newsletter drafts</p>
-            </div>
-            <a
-              href="/admin/subscribers"
-              className="px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors"
-            >
-              Manage Subscribers
-            </a>
-          </div>
-        </header>
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-text-primary">Newsletter</h1>
+        <p className="text-text-secondary mt-1">Review and approve newsletter drafts</p>
+      </header>
 
         <div className="grid grid-cols-12 gap-6">
           {/* Draft List Sidebar */}
@@ -475,6 +464,5 @@ export default function AdminNewsletterClient({
           </div>
         </div>
       </div>
-    </div>
   );
 }

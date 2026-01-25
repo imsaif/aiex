@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 
 interface Subscriber {
   id: string;
@@ -199,38 +198,29 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
 
   // Main interface
   return (
-    <div className="min-h-screen bg-background-primary">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Header */}
-        <header className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-text-primary">Subscribers</h1>
-              <p className="text-text-secondary mt-1">
-                Manage newsletter subscribers
-                {pagination && (
-                  <span className="ml-2 text-text-tertiary">
-                    ({pagination.total} total)
-                  </span>
-                )}
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Link
-                href="/admin/newsletter"
-                className="px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors"
-              >
-                Newsletter Drafts
-              </Link>
-              <button
-                onClick={exportSubscribers}
-                className="px-4 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
-              >
-                Export CSV
-              </button>
-            </div>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      {/* Header */}
+      <header className="mb-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-text-primary">Subscribers</h1>
+            <p className="text-text-secondary mt-1">
+              Manage newsletter subscribers
+              {pagination && (
+                <span className="ml-2 text-text-tertiary">
+                  ({pagination.total} total)
+                </span>
+              )}
+            </p>
           </div>
-        </header>
+          <button
+            onClick={exportSubscribers}
+            className="px-4 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
+          >
+            Export CSV
+          </button>
+        </div>
+      </header>
 
         {/* Message */}
         {message && (
@@ -381,6 +371,5 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
           )}
         </div>
       </div>
-    </div>
   );
 }

@@ -303,24 +303,13 @@ export default function SocialAccountsClient({
   const linkedInAccount = accounts.find((a) => a.platform === 'linkedin');
 
   return (
-    <div className="min-h-screen bg-background-primary">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-text-primary">Social Media</h1>
-              <p className="text-text-secondary mt-1">
-                Manage accounts and post to X and LinkedIn
-              </p>
-            </div>
-            <a
-              href="/admin/newsletter"
-              className="px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors"
-            >
-              Back to Newsletter
-            </a>
-          </div>
-        </header>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-text-primary">Social Media</h1>
+        <p className="text-text-secondary mt-1">
+          Manage accounts and post to X and LinkedIn
+        </p>
+      </header>
 
         {message && (
           <div
@@ -898,6 +887,5 @@ SOCIAL_TOKEN_SECRET=your_32_byte_hex_secret`}
           </div>
         )}
       </div>
-    </div>
   );
 }
