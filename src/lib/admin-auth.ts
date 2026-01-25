@@ -114,7 +114,7 @@ export function getSessionCookie(sessionId: string): { name: string; value: stri
     options: {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict' as const,
+      sameSite: 'lax' as const, // 'lax' allows cookie on OAuth redirects
       maxAge: SESSION_DURATION / 1000,
       path: '/', // Allow cookie to be sent to API routes
     },
