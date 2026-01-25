@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get base URL for internal API calls
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
     // Get auth cookie for internal requests
     const cookies = request.headers.get('cookie') || '';

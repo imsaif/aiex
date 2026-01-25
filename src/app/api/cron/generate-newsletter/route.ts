@@ -4,6 +4,7 @@ import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend';
 import { patterns } from '@/data/patterns';
+import { generateSocialContent } from '@/lib/social/content-generator';
 
 // Initialize clients
 const anthropic = new Anthropic({
@@ -818,7 +819,87 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Step 5: Send admin notification (fire-and-forget, don't block response)
+    // Step 5: Generate social posts for the newsletter
+    let socialPostsGenerated = false;
+    if (structuredData && structuredData.items && structuredData.items.length > 0) {
+      try {
+        const newsletterUrl = `${SITE_URL}/news/${slug}`;
+
+        // Extract stealThisWeek and map insight to description if needed
+        let stealThisWeekData: { product: string; feature: string; description?: string; insight?: string } | undefined;
+        if ('stealThisWeek' in structuredData && structuredData.stealThisWeek) {
+          const stw = structuredData.stealThisWeek as { product: string; feature: string; insight?: string };
+          stealThisWeekData = {
+            product: stw.product,
+            feature: stw.feature,
+            insight: stw.insight,
+          };
+        }
+
+        const socialContent = await generateSocialContent(
+          {
+            title: structuredData.title,
+            summary: structuredData.summary,
+            type: type as 'daily' | 'weekly',
+            items: structuredData.items,
+            takeaway: 'takeaway' in structuredData ? (structuredData.takeaway as { title: string; body: string })?.body : undefined,
+            stealThisWeek: stealThisWeekData,
+            patternToKnow: 'patternToKnow' in structuredData
+              ? {
+                  name: (structuredData.patternToKnow as { title: string; patternSlug: string; explanation: string })?.title || '',
+                  description: (structuredData.patternToKnow as { title: string; patternSlug: string; explanation: string })?.explanation || '',
+                  slug: (structuredData.patternToKnow as { title: string; patternSlug: string; explanation: string })?.patternSlug || '',
+                }
+              : undefined,
+          },
+          newsletterUrl
+        );
+
+        // Get default accounts for each platform
+        const twitterAccount = await prisma.socialAccount.findFirst({
+          where: { platform: 'twitter', isActive: true },
+          select: { id: true },
+        });
+
+        const linkedInAccount = await prisma.socialAccount.findFirst({
+          where: { platform: 'linkedin', isActive: true },
+          select: { id: true },
+        });
+
+        // Create Twitter post
+        await prisma.socialPost.create({
+          data: {
+            newsletterId: draft.id,
+            platform: 'twitter',
+            content: socialContent.twitter.content,
+            threadContent: socialContent.twitter.threadContent || undefined,
+            hashtags: socialContent.twitter.hashtags,
+            status: 'draft',
+            accountId: twitterAccount?.id || null,
+          },
+        });
+
+        // Create LinkedIn post
+        await prisma.socialPost.create({
+          data: {
+            newsletterId: draft.id,
+            platform: 'linkedin',
+            content: socialContent.linkedin.content,
+            hashtags: socialContent.linkedin.hashtags,
+            status: 'draft',
+            accountId: linkedInAccount?.id || null,
+          },
+        });
+
+        socialPostsGenerated = true;
+        console.log(`Social posts generated for newsletter ${draft.id}`);
+      } catch (socialError) {
+        console.error('Failed to generate social posts:', socialError);
+        // Don't fail the whole request if social post generation fails
+      }
+    }
+
+    // Step 6: Send admin notification (fire-and-forget, don't block response)
     const previewUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/admin/newsletter?id=${draft.id}`;
     sendAdminNotification(draft, previewUrl).catch((err) =>
       console.error('Admin notification failed:', err)
@@ -832,6 +913,7 @@ export async function GET(request: NextRequest) {
       previewUrl,
       newsItemsProcessed: newsItems.length,
       lookbackHours,
+      socialPostsGenerated,
       // Weekly-specific info
       ...(type === 'weekly' && {
         compiledFromDaily: dailyItemsUsed.length > 0,

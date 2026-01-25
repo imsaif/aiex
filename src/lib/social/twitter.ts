@@ -34,7 +34,7 @@ function getConfig(): TwitterConfig {
     throw new Error('Twitter API credentials not configured');
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const redirectUri = `${baseUrl}/api/social/callback/twitter`;
 
   return { clientId, clientSecret, redirectUri };

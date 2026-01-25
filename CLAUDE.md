@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-25 19:26 (MacBook)
+- **Pattern:** Social Media OAuth Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed Twitter/LinkedIn OAuth callback failing due to environment variable mismatch. Changed `NEXT_PUBLIC_BASE_URL` to `NEXT_PUBLIC_SITE_URL` in 4 files (twitter.ts, linkedin.ts, callback route, bulk-publish route) so OAuth redirects work correctly in production.
+
 ### Session 2026-01-12 17:49 (MacBook)
 - **Pattern:** Selective Memory & Universal Access Pattern Fixes
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed invalid pattern links in newsletters (changed relative `/patterns/` to absolute `https://www.aiuxdesign.guide/patterns/`). Upgraded email sending from sequential to Resend batch API to prevent Vercel function timeouts. Diagnosed and resent newsletter to 18 subscribers who didn't receive it due to timeout.
 
 ### Session 2026-01-05 18:51 (MacBook)
-- **Pattern:** Weekly Newsletter Automation
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Built weekly newsletter automation ("This Week in AIUX") that compiles from daily newsletters. Added structuredData field to schema for weekly compilation, extended daily lookback to 72h, fixed deduplication to only check daily newsletters, added skip logic when weekly exists for same day, and published first weekly edition.
-
-### Session 2025-12-25 12:38 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
