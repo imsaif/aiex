@@ -87,12 +87,20 @@ export async function exchangeCodeForTokens(
     body: params.toString(),
   });
 
+  const responseText = await response.text();
+
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Twitter token exchange failed: ${error}`);
+    console.error('Twitter token exchange failed:', response.status, responseText);
+    throw new Error(`Twitter token exchange failed (${response.status}): ${responseText}`);
   }
 
-  const data = await response.json();
+  let data;
+  try {
+    data = JSON.parse(responseText);
+  } catch (e) {
+    console.error('Twitter returned invalid JSON:', responseText);
+    throw new Error(`Twitter returned invalid JSON: ${responseText.substring(0, 200)}`);
+  }
 
   return {
     accessToken: data.access_token,
