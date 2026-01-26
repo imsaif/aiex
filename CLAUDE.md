@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-26 11:15 (MacBook)
+- **Pattern:** Newsletter Cron & Email Sending Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 8
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed newsletter cron 500 errors by changing Prisma schema `sources` and `structuredData` from String to Json types. Removed auto social post generation from cron (now manual via admin UI). Fixed JSON serialization across all social post API routes. Fixed Resend batch API response parsing bug that showed "sent to 0 subscribers" by correctly accessing nested `result.data.data` array. Deployed with one-time `--accept-data-loss` for schema migration.
+
 ### Session 2026-01-25 19:26 (MacBook)
 - **Pattern:** Social Media OAuth Fix
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Refined PDF guide design to follow brand guidelines. Simplified color palette to brand colors only (black, white, accent orange #D97757), reduced all accent bars from 3-4px to 2px for subtle appearance, fixed cover page to show all 4 modules, reduced whitespace by continuing lessons on same page (32→24 pages), properly centered number text in circles, and simplified image/callout/success placeholders.
 
 ### Session 2026-01-06 12:41 (MacBook)
-- **Pattern:** Newsletter Email Delivery Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed invalid pattern links in newsletters (changed relative `/patterns/` to absolute `https://www.aiuxdesign.guide/patterns/`). Upgraded email sending from sequential to Resend batch API to prevent Vercel function timeouts. Diagnosed and resent newsletter to 18 subscribers who didn't receive it due to timeout.
-
-### Session 2026-01-05 18:51 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
