@@ -2,6 +2,7 @@ import { encrypt, decrypt } from './encryption';
 
 const TWITTER_API_BASE = 'https://api.twitter.com/2';
 const TWITTER_AUTH_BASE = 'https://twitter.com/i/oauth2';
+const TWITTER_TOKEN_URL = 'https://api.twitter.com/2/oauth2/token';
 
 interface TwitterConfig {
   clientId: string;
@@ -78,7 +79,7 @@ export async function exchangeCodeForTokens(
 
   const credentials = Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64');
 
-  const response = await fetch(`${TWITTER_AUTH_BASE}/token`, {
+  const response = await fetch(TWITTER_TOKEN_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -122,7 +123,7 @@ export async function refreshAccessToken(refreshToken: string): Promise<TwitterT
 
   const credentials = Buffer.from(`${config.clientId}:${config.clientSecret}`).toString('base64');
 
-  const response = await fetch(`${TWITTER_AUTH_BASE}/token`, {
+  const response = await fetch(TWITTER_TOKEN_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
