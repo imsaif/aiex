@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 
+function parseJsonArray(value: string | null | undefined): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Get a single social post
  * GET /api/social/posts/[id]
@@ -46,8 +56,8 @@ export async function GET(
         newsletter: post.newsletter,
         platform: post.platform,
         content: post.content,
-        threadContent: post.threadContent,
-        hashtags: post.hashtags,
+        threadContent: post.threadContent ? parseJsonArray(post.threadContent) : null,
+        hashtags: parseJsonArray(post.hashtags),
         status: post.status,
         platformPostId: post.platformPostId,
         platformPostUrl: post.platformPostUrl,
@@ -110,11 +120,11 @@ export async function PATCH(
     }
 
     if (threadContent !== undefined) {
-      updateData.threadContent = threadContent || undefined;
+      updateData.threadContent = threadContent ? JSON.stringify(threadContent) : null;
     }
 
     if (hashtags !== undefined) {
-      updateData.hashtags = hashtags;
+      updateData.hashtags = JSON.stringify(hashtags || []);
     }
 
     if (accountId !== undefined) {
@@ -166,8 +176,8 @@ export async function PATCH(
       post: {
         id: post.id,
         content: post.content,
-        threadContent: post.threadContent,
-        hashtags: post.hashtags,
+        threadContent: post.threadContent ? parseJsonArray(post.threadContent) : null,
+        hashtags: parseJsonArray(post.hashtags),
         status: post.status,
         account: post.account,
         updatedAt: post.updatedAt.toISOString(),

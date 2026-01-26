@@ -22,6 +22,16 @@ interface SocialPostResponse {
   updatedAt: string;
 }
 
+function parseJsonArray(value: string | null | undefined): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Get social posts for a newsletter
  * GET /api/social/posts?newsletterId=xxx
@@ -61,8 +71,8 @@ export async function GET(request: NextRequest) {
       newsletterId: post.newsletterId,
       platform: post.platform as 'twitter' | 'linkedin',
       content: post.content,
-      threadContent: post.threadContent as string[] | null,
-      hashtags: post.hashtags,
+      threadContent: post.threadContent ? parseJsonArray(post.threadContent) : null,
+      hashtags: parseJsonArray(post.hashtags),
       status: post.status as 'draft' | 'posted' | 'failed',
       platformPostId: post.platformPostId,
       platformPostUrl: post.platformPostUrl,
@@ -141,8 +151,8 @@ export async function POST(request: NextRequest) {
         newsletterId,
         platform,
         content,
-        threadContent: threadContent || null,
-        hashtags: hashtags || [],
+        threadContent: threadContent ? JSON.stringify(threadContent) : null,
+        hashtags: JSON.stringify(hashtags || []),
         status: 'draft',
         accountId: defaultAccount?.id || null,
       },

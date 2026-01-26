@@ -134,8 +134,8 @@ export async function POST(
 interface PostWithAccount {
   id: string;
   content: string;
-  threadContent: unknown;
-  hashtags: string[];
+  threadContent: string | null;
+  hashtags: string;
   account: {
     id: string;
     accessToken: string;
@@ -143,6 +143,16 @@ interface PostWithAccount {
     platformId: string | null;
     accountName: string;
   } | null;
+}
+
+function parseJsonArray(value: string | null | undefined): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 
 async function publishToTwitter(
@@ -159,11 +169,12 @@ async function publishToTwitter(
   });
 
   // Build content with hashtags
-  const hashtagString = post.hashtags.length > 0
-    ? '\n\n' + post.hashtags.map((h) => `#${h}`).join(' ')
+  const hashtags = parseJsonArray(post.hashtags);
+  const hashtagString = hashtags.length > 0
+    ? '\n\n' + hashtags.map((h) => `#${h}`).join(' ')
     : '';
 
-  const threadContent = post.threadContent as string[] | null;
+  const threadContent = parseJsonArray(post.threadContent);
 
   if (threadContent && threadContent.length > 0) {
     // Post as thread
@@ -211,8 +222,9 @@ async function publishToLinkedIn(
   });
 
   // Build content with hashtags
-  const hashtagString = post.hashtags.length > 0
-    ? '\n\n' + post.hashtags.map((h) => `#${h}`).join(' ')
+  const hashtags = parseJsonArray(post.hashtags);
+  const hashtagString = hashtags.length > 0
+    ? '\n\n' + hashtags.map((h) => `#${h}`).join(' ')
     : '';
 
   const fullContent = post.content + hashtagString;

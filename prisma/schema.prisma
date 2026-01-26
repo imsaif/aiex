@@ -29,8 +29,8 @@ model NewsletterDraft {
   publishDate    DateTime
   status         String   @default("pending_review") // pending_review, approved, published, rejected
   type           String   @default("daily") // daily, weekly
-  sources        String   @default("[]") // JSON array of source URLs used
-  structuredData String?  // JSON structured newsletter data
+  sources        Json     @default("[]") // JSON array of source URLs used
+  structuredData Json?    // JSON structured newsletter data
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   socialPosts    SocialPost[]

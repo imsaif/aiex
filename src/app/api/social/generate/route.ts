@@ -9,6 +9,16 @@ import {
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
 
+function safeParseJson(value: string | null | undefined): string[] {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Generate social posts for a newsletter
  * POST /api/social/generate
@@ -97,13 +107,13 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        const threadData = 'threadContent' in content && content.threadContent ? content.threadContent : undefined;
+        const threadData = 'threadContent' in content && content.threadContent ? JSON.stringify(content.threadContent) : undefined;
         const updatedPost = await prisma.socialPost.update({
           where: { id: existingPost.id },
           data: {
             content: content.content,
             threadContent: threadData,
-            hashtags: content.hashtags,
+            hashtags: JSON.stringify(content.hashtags),
             status: 'draft',
             errorMessage: null,
           },
@@ -117,14 +127,14 @@ export async function POST(request: NextRequest) {
               id: updatedPost.id,
               platform: updatedPost.platform,
               content: updatedPost.content,
-              threadContent: updatedPost.threadContent,
-              hashtags: updatedPost.hashtags,
+              threadContent: updatedPost.threadContent ? safeParseJson(updatedPost.threadContent) : null,
+              hashtags: safeParseJson(updatedPost.hashtags),
             },
           ],
         });
       } else {
         // Create new post
-        const threadData = 'threadContent' in content && content.threadContent ? content.threadContent : null;
+        const threadData = ('threadContent' in content && content.threadContent) ? (content.threadContent as string[]) : null;
         const newPost = await createSocialPost(
           newsletterId,
           platform,
@@ -156,13 +166,15 @@ export async function POST(request: NextRequest) {
     // Handle Twitter post
     if (existingTwitterPost) {
       if (existingTwitterPost.status !== 'posted' && regenerate) {
-        const twitterThreadData = generatedContent.twitter.threadContent || undefined;
+        const twitterThreadData = generatedContent.twitter.threadContent
+          ? JSON.stringify(generatedContent.twitter.threadContent)
+          : undefined;
         const updatedPost = await prisma.socialPost.update({
           where: { id: existingTwitterPost.id },
           data: {
             content: generatedContent.twitter.content,
             threadContent: twitterThreadData,
-            hashtags: generatedContent.twitter.hashtags,
+            hashtags: JSON.stringify(generatedContent.twitter.hashtags),
             status: 'draft',
             errorMessage: null,
           },
@@ -172,8 +184,8 @@ export async function POST(request: NextRequest) {
           id: updatedPost.id,
           platform: 'twitter',
           content: updatedPost.content,
-          threadContent: updatedPost.threadContent as string[] | null,
-          hashtags: updatedPost.hashtags,
+          threadContent: updatedPost.threadContent ? safeParseJson(updatedPost.threadContent) : null,
+          hashtags: safeParseJson(updatedPost.hashtags),
           isNew: false,
         });
       }
@@ -196,7 +208,7 @@ export async function POST(request: NextRequest) {
           where: { id: existingLinkedInPost.id },
           data: {
             content: generatedContent.linkedin.content,
-            hashtags: generatedContent.linkedin.hashtags,
+            hashtags: JSON.stringify(generatedContent.linkedin.hashtags),
             threadContent: undefined,
             status: 'draft',
             errorMessage: null,
@@ -207,7 +219,7 @@ export async function POST(request: NextRequest) {
           id: updatedPost.id,
           platform: 'linkedin',
           content: updatedPost.content,
-          hashtags: updatedPost.hashtags,
+          hashtags: safeParseJson(updatedPost.hashtags),
           isNew: false,
         });
       }
@@ -263,8 +275,8 @@ async function createSocialPost(
       newsletterId,
       platform,
       content,
-      threadContent: threadContent || undefined,
-      hashtags,
+      threadContent: threadContent ? JSON.stringify(threadContent) : undefined,
+      hashtags: JSON.stringify(hashtags),
       status: 'draft',
       accountId: defaultAccount?.id || null,
     },
@@ -274,7 +286,7 @@ async function createSocialPost(
     id: post.id,
     platform: post.platform,
     content: post.content,
-    threadContent: post.threadContent as string[] | null,
-    hashtags: post.hashtags,
+    threadContent: post.threadContent ? safeParseJson(post.threadContent) : null,
+    hashtags: safeParseJson(post.hashtags),
   };
 }
