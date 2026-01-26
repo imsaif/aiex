@@ -47,9 +47,11 @@ async function sendNewsletterToSubscribers(
       const result = await resend.batch.send(emails);
 
       // Count successes and failures from batch result
-      if (result.data) {
-        for (let j = 0; j < result.data.length; j++) {
-          const emailResult = result.data[j];
+      // Resend batch returns { data: { data: [{ id: string }] } }
+      const batchResults = result.data?.data;
+      if (batchResults && Array.isArray(batchResults)) {
+        for (let j = 0; j < batchResults.length; j++) {
+          const emailResult = batchResults[j];
           if (emailResult.id) {
             successCount++;
           } else {
@@ -57,6 +59,9 @@ async function sendNewsletterToSubscribers(
             failedEmails.push(batch[j].email);
           }
         }
+      } else if (result.data && !result.error) {
+        // If we got data but not in expected format, assume success for the batch
+        successCount += batch.length;
       }
 
       if (result.error) {
