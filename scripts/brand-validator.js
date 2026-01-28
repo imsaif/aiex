@@ -73,6 +73,20 @@ const allowedPatterns = [
   // Accent button text - white in light mode (navy bg), dark in dark mode (white bg)
   /text-white\s+dark:text-gray-900/,
   /dark:text-gray-900/,
+  // Dark container contexts (fixed dark panels that don't follow global light/dark mode)
+  // These are intentional for elements like toolkit download panel, CTAs on dark backgrounds
+  /bg-gray-900/,         // Dark container backgrounds
+  /bg-gray-800/,         // Dark panel secondary backgrounds
+  /border-gray-700/,     // Dark container borders
+  /border-gray-600/,     // Dark container lighter borders
+  /text-gray-400/,       // Secondary text on dark panels
+  /hover:border-gray-500/, // Hover states on dark panels
+  /hover:bg-gray-800/,   // Hover states on dark panels
+  /hover:bg-gray-100/,   // Light hover on dark panel buttons
+  /bg-white.*text-gray-900/, // Light buttons on dark backgrounds
+  /bg-emerald-500/,      // Success feedback colors
+  /text-emerald-200/,    // Success feedback text
+  /text-gray-900/,       // Dark text on light elements within dark containers
 ];
 
 /**

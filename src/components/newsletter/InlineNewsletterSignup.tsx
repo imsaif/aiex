@@ -145,10 +145,11 @@ export function InlineNewsletterSignup({
                 disabled={status === 'loading'}
                 className={`
                   flex-1 px-5 py-4 rounded-full
-                  border-2 border-gray-200 dark:border-gray-700
-                  bg-white dark:bg-gray-800
-                  text-text-primary placeholder:text-gray-400
-                  focus:outline-none focus:border-accent-primary dark:focus:border-white
+                  ${darkBackground
+                    ? 'border-2 border-gray-600 bg-gray-800 text-white placeholder:text-gray-500 focus:border-white'
+                    : 'border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary placeholder:text-gray-400 focus:border-accent-primary dark:focus:border-white'
+                  }
+                  focus:outline-none
                   disabled:opacity-50 disabled:cursor-not-allowed
                   transition-colors
                   ${isHero ? 'text-lg' : isPatternDetail ? 'text-base' : 'text-sm'}
@@ -160,9 +161,10 @@ export function InlineNewsletterSignup({
                 disabled={status === 'loading'}
                 className={`
                   px-8 py-4 rounded-full font-semibold
-                  bg-accent-primary dark:bg-white
-                  text-white dark:text-black
-                  hover:bg-gray-800 dark:hover:bg-gray-100
+                  ${darkBackground
+                    ? 'bg-white text-gray-900 hover:bg-gray-100'
+                    : 'bg-accent-primary dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100'
+                  }
                   disabled:opacity-50 disabled:cursor-not-allowed
                   cursor-pointer
                   transition-all duration-200

@@ -145,7 +145,7 @@ export function ToolkitClient() {
           <div className="max-w-lg mx-auto w-full">
             {/* What's Inside - Cards */}
             <div className="mb-10">
-              <p className="text-xs text-text-tertiary font-semibold uppercase tracking-wide mb-4">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-4">
                 What&apos;s Inside
               </p>
               <div className="space-y-3">
@@ -155,20 +155,20 @@ export function ToolkitClient() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: item.number * 0.1 }}
-                    className="bg-surface-elevated border border-secondary rounded-lg p-4 hover:border-primary transition"
+                    className="bg-gray-900 border border-gray-700 rounded-lg p-4 hover:border-gray-500 transition"
                   >
                     <div className="flex items-start gap-4">
                       {/* Icon */}
-                      <div className="w-10 h-10 rounded bg-background-tertiary text-text-primary flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 rounded bg-gray-800 text-white flex items-center justify-center flex-shrink-0">
                         <item.icon className="w-6 h-6" />
                       </div>
 
                       <div>
                         {/* Title */}
-                        <h3 className="text-base font-semibold text-text-primary mb-1">{item.name}</h3>
+                        <h3 className="text-base font-semibold text-white mb-1">{item.name}</h3>
 
                         {/* Description */}
-                        <p className="text-sm text-text-tertiary leading-relaxed">
+                        <p className="text-sm text-gray-400 leading-relaxed">
                           {item.description}
                         </p>
                       </div>
@@ -183,12 +183,12 @@ export function ToolkitClient() {
               <div className="mb-10">
                 <button
                   onClick={handleDownload}
-                  className="w-full px-6 py-4 bg-background-primary text-text-primary font-semibold rounded-lg hover:bg-background-secondary transition flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full px-6 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ArrowDownTrayIcon className="w-5 h-5" />
                   Download Toolkit (PDF)
                 </button>
-                <p className="text-xs text-text-tertiary text-center mt-3">
+                <p className="text-xs text-gray-400 text-center mt-3">
                   2 pages • No email required • Instant download
                 </p>
               </div>
@@ -199,17 +199,17 @@ export function ToolkitClient() {
                 className="mb-10"
               >
                 {/* Success Message */}
-                <div className="p-4 bg-status-success/10 border border-success rounded-lg mb-6">
-                  <p className="text-text-primary font-semibold mb-1">Your toolkit is downloading!</p>
-                  <p className="text-text-secondary text-sm">
+                <div className="p-4 bg-emerald-500/20 border border-emerald-500 rounded-lg mb-6">
+                  <p className="text-white font-semibold mb-1">Your toolkit is downloading!</p>
+                  <p className="text-emerald-200 text-sm">
                     Check your downloads folder for the PDF.
                   </p>
                 </div>
 
                 {/* Email Signup */}
-                <div className="bg-surface-elevated border border-secondary rounded-lg p-5">
-                  <h3 className="text-text-primary font-semibold mb-2">Want more frameworks like this?</h3>
-                  <p className="text-text-tertiary text-sm mb-4">
+                <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-5">
+                  <h3 className="text-white font-semibold mb-2">Want more frameworks like this?</h3>
+                  <p className="text-gray-400 text-sm mb-4">
                     Get weekly AI UX analysis in your inbox.
                   </p>
                   <InlineNewsletterSignup
@@ -225,7 +225,7 @@ export function ToolkitClient() {
                 {/* Download Again Button */}
                 <button
                   onClick={handleDownload}
-                  className="w-full mt-4 px-4 py-3 bg-transparent border border-primary text-text-primary font-medium rounded-lg hover:bg-background-secondary transition cursor-pointer text-sm"
+                  className="w-full mt-4 px-4 py-3 bg-transparent border border-gray-600 text-white font-medium rounded-lg hover:bg-gray-800 transition cursor-pointer text-sm"
                 >
                   Download Again
                 </button>
@@ -235,16 +235,16 @@ export function ToolkitClient() {
             {/* Benefits */}
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="flex flex-col items-center">
-                <DocumentIcon className="w-5 h-5 text-text-primary mb-2" />
-                <span className="text-xs text-text-tertiary">2-page PDF</span>
+                <DocumentIcon className="w-5 h-5 text-white mb-2" />
+                <span className="text-xs text-gray-400">2-page PDF</span>
               </div>
               <div className="flex flex-col items-center">
-                <CurrencyDollarIcon className="w-5 h-5 text-text-primary mb-2" />
-                <span className="text-xs text-text-tertiary">100% free</span>
+                <CurrencyDollarIcon className="w-5 h-5 text-white mb-2" />
+                <span className="text-xs text-gray-400">100% free</span>
               </div>
               <div className="flex flex-col items-center">
-                <BoltIcon className="w-5 h-5 text-text-primary mb-2" />
-                <span className="text-xs text-text-tertiary">Instant download</span>
+                <BoltIcon className="w-5 h-5 text-white mb-2" />
+                <span className="text-xs text-gray-400">Instant download</span>
               </div>
             </div>
           </div>
