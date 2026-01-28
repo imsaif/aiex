@@ -57,6 +57,14 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
+                      href="/toolkit"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      AI Interaction Toolkit
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="#newsletter"
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >

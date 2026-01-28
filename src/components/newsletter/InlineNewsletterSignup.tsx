@@ -11,7 +11,9 @@ interface InlineNewsletterSignupProps {
   customButtonText?: string;
   customSuccessMessage?: string;
   stacked?: boolean;
-  source?: 'footer' | 'handbook' | 'direct' | 'news';
+  source?: 'footer' | 'handbook' | 'direct' | 'news' | 'toolkit';
+  /** Use when component is placed on a dark background */
+  darkBackground?: boolean;
 }
 
 export function InlineNewsletterSignup({
@@ -23,6 +25,7 @@ export function InlineNewsletterSignup({
   customSuccessMessage,
   stacked = false,
   source = 'handbook',
+  darkBackground = false,
 }: InlineNewsletterSignupProps) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -195,7 +198,7 @@ export function InlineNewsletterSignup({
 
             {/* Trust Badge */}
             {(isHero || isPatternDetail || isNews) && (
-              <p className={`text-xs text-text-secondary mt-4 ${isNews ? '' : 'text-center'}`}>
+              <p className={`text-xs mt-4 ${isNews ? '' : 'text-center'} ${darkBackground ? 'text-gray-400' : 'text-text-secondary'}`}>
                 By subscribing, you agree to receive the handbook and occasional updates about new AI design patterns. Unsubscribe anytime.
               </p>
             )}
