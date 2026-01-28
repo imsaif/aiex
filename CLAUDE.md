@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-01-28 22:27 (MacBook)
+- **Pattern:** AI Interaction Toolkit Landing Page
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Created new /toolkit landing page with split hero layout for free PDF download. Implemented download-first flow (PDF downloads immediately, then shows email signup). Added 2-page branded PDF (Intent-Clarity Spectrum + Conversation Checklist). Built responsive mobile layout with condensed top section. Added darkBackground prop to InlineNewsletterSignup. Used Heroicons and design tokens throughout. Added toolkit link to Footer.
+
 ### Session 2026-01-26 11:15 (MacBook)
 - **Pattern:** Newsletter Cron & Email Sending Fixes
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Removed testimonials from audit page SocialProof component. Added "Email This Report" feature allowing users to email their audit results. Created new API route (/api/audit/send-report) with Resend integration and auto-newsletter subscription. Built EmailReportModal component with email input, loading states, and success feedback. Email includes score visualization, top priorities with pattern links, and full pattern breakdown (well-done, needs improvement, missing) with clickable links to each pattern page.
 
 ### Session 2026-01-06 19:06 (MacBook)
-- **Pattern:** PDF Guide Design Refinement
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Refined PDF guide design to follow brand guidelines. Simplified color palette to brand colors only (black, white, accent orange #D97757), reduced all accent bars from 3-4px to 2px for subtle appearance, fixed cover page to show all 4 modules, reduced whitespace by continuing lessons on same page (32→24 pages), properly centered number text in circles, and simplified image/callout/success placeholders.
-
-### Session 2026-01-06 12:41 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
