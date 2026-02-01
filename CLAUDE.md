@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-01 13:15 (MacBook)
+- **Pattern:** Newsletter Sources Expansion
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Added Google News RSS feeds for Cursor, Notion, Linear, Perplexity, Claude AI, and Windsurf to expand newsletter coverage from 14 to 20 sources. Replaced fragile web scrapers with reliable Google News aggregation. Increased daily newsletter item count from 2-4 to 4-6 items. News items processed jumped from 3-7 to 33 per run.
+
 ### Session 2026-02-01 11:40 (MacBook)
 - **Pattern:** Unsubscribe Flow Redesign
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added email subscription form (InlineNewsletterSignup) to individual news edition pages between article content and navigation. Fixed duplicate newsletter generation by adding same-day deduplication check before creating new drafts. Created merge-newsletter-duplicates.ts utility script to list/merge duplicate newsletters. Cleaned up existing duplicates from Jan 7, Jan 5, and Dec 23.
 
 ### Session 2026-01-07 16:50 (MacBook)
-- **Pattern:** Newsletter Cron Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Diagnosed missing daily newsletters (last was Dec 21). Found Vercel Hobby tier cron jobs don't execute reliably. Manually triggered today's newsletter via curl. Set up cron-job.org as external cron service for daily (9 AM UTC) and weekly (8 AM Mon) newsletters. Added "Known Issues & Learnings" section to CLAUDE.md for documenting issues Claude should remember across sessions.
-
-### Session 2026-01-07 14:30 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

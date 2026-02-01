@@ -22,18 +22,39 @@ const parser = new Parser({
   },
 });
 
-// RSS feed sources
+// RSS feed sources (verified working)
 const RSS_SOURCES = [
-  // AI Companies
+  // AI Companies - Direct blogs
   { name: 'OpenAI', url: 'https://openai.com/blog/rss.xml', color: '#10a37f' },
   { name: 'Google AI', url: 'https://blog.google/technology/ai/rss/', color: '#4285f4' },
   { name: 'Microsoft AI', url: 'https://blogs.microsoft.com/ai/feed/', color: '#00a4ef' },
+
+  // AI Coding Tools
+  { name: 'Replit', url: 'https://blog.replit.com/feed.xml', color: '#f26207' },
+
   // Design Tools
   { name: 'Figma', url: 'https://www.figma.com/blog/feed/atom.xml', color: '#f24e1e' },
+
   // Dev Tools
   { name: 'Vercel', url: 'https://vercel.com/atom', color: '#000000' },
   { name: 'GitHub', url: 'https://github.blog/feed/', color: '#333333' },
   { name: 'Supabase', url: 'https://supabase.com/blog/rss.xml', color: '#3ecf8e' },
+
+  // Tech News (AI focused) - these publish daily
+  { name: 'The Verge', url: 'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml', color: '#e5127d' },
+  { name: 'TechCrunch', url: 'https://techcrunch.com/category/artificial-intelligence/feed/', color: '#0a9e01' },
+  { name: 'Ars Technica', url: 'https://feeds.arstechnica.com/arstechnica/technology-lab', color: '#ff4e00' },
+  { name: 'Wired', url: 'https://www.wired.com/feed/tag/ai/latest/rss', color: '#000000' },
+  { name: 'MIT Tech Review', url: 'https://www.technologyreview.com/feed/', color: '#a31d35' },
+  { name: 'VentureBeat', url: 'https://venturebeat.com/category/ai/feed/', color: '#930c10' },
+
+  // Google News - Product-specific searches (catches news from any publication)
+  { name: 'Cursor', url: 'https://news.google.com/rss/search?q=Cursor+AI+editor+OR+Cursor+code+editor&hl=en-US&gl=US&ceid=US:en', color: '#7c3aed' },
+  { name: 'Notion', url: 'https://news.google.com/rss/search?q=Notion+AI+OR+Notion+app+update&hl=en-US&gl=US&ceid=US:en', color: '#000000' },
+  { name: 'Linear', url: 'https://news.google.com/rss/search?q=Linear+app+OR+Linear+project+management&hl=en-US&gl=US&ceid=US:en', color: '#5e6ad2' },
+  { name: 'Perplexity', url: 'https://news.google.com/rss/search?q=Perplexity+AI&hl=en-US&gl=US&ceid=US:en', color: '#20808d' },
+  { name: 'Claude AI', url: 'https://news.google.com/rss/search?q=Claude+AI+OR+Anthropic+Claude&hl=en-US&gl=US&ceid=US:en', color: '#d97706' },
+  { name: 'Windsurf', url: 'https://news.google.com/rss/search?q=Windsurf+AI+editor+OR+Codeium+Windsurf&hl=en-US&gl=US&ceid=US:en', color: '#09b6a2' },
 ];
 
 // Scrape Anthropic news (no RSS feed available)
@@ -73,37 +94,35 @@ async function scrapeAnthropicNews(): Promise<NewsItem[]> {
   }
 }
 
-// Keywords for relevance filtering
-const RELEVANCE_KEYWORDS = [
-  // AI terms
-  'ai',
-  'artificial intelligence',
-  'machine learning',
-  'llm',
-  'gpt',
-  'claude',
-  'gemini',
-  'copilot',
-  'model',
-  'agent',
-  // Design terms
-  'ux',
-  'user experience',
-  'interface',
-  'design',
-  'figma',
-  'prototype',
-  'component',
-  // Product terms
-  'feature',
-  'update',
-  'launch',
-  'release',
-  'announcement',
+
+// Keywords for relevance filtering - prioritized by UX significance
+const HIGH_RELEVANCE_KEYWORDS = [
+  // AI + UX specific
+  'ai assistant', 'ai agent', 'conversational ui', 'chat interface', 'prompt',
+  'ai-powered', 'generative ai', 'llm', 'copilot', 'autocomplete',
+  // UX specific
+  'user experience', 'ux design', 'ui design', 'interaction design',
+  'usability', 'accessibility', 'a11y', 'user research', 'user testing',
+  'onboarding', 'personalization', 'adaptive', 'contextual',
+  // Product design
+  'design system', 'component library', 'figma', 'prototype', 'wireframe',
+  'collaboration', 'real-time', 'workflow',
 ];
+
+const MEDIUM_RELEVANCE_KEYWORDS = [
+  // AI terms
+  'ai', 'artificial intelligence', 'machine learning', 'gpt', 'claude', 'gemini',
+  'model', 'agent', 'neural', 'transformer',
+  // Design terms
+  'interface', 'design', 'component', 'layout', 'responsive',
+  // Product terms
+  'feature', 'update', 'launch', 'release', 'announcement', 'beta',
+];
+
 
 // Product brand colors
 const PRODUCT_COLORS: Record<string, string> = {
+  // AI Companies
   OpenAI: '#10a37f',
   ChatGPT: '#10a37f',
   Anthropic: '#d97706',
@@ -114,11 +133,31 @@ const PRODUCT_COLORS: Record<string, string> = {
   Gemini: '#4285f4',
   Microsoft: '#00a4ef',
   Copilot: '#00a4ef',
-  Figma: '#f24e1e',
+  // AI Coding Tools
   Cursor: '#7c3aed',
+  Replit: '#f26207',
+  Codeium: '#09b6a2',
+  Windsurf: '#09b6a2',
+  // AI Products
+  Notion: '#000000',
+  Linear: '#5e6ad2',
+  Perplexity: '#20808d',
+  // Design Tools
+  Figma: '#f24e1e',
+  Framer: '#0055ff',
+  // Dev Tools
   Vercel: '#000000',
   GitHub: '#333333',
   Supabase: '#3ecf8e',
+  // UX & Design
+  'NN Group': '#c41230',
+  'Nielsen Norman': '#c41230',
+  'Smashing Magazine': '#e85c41',
+  'UX Collective': '#000000',
+  // Tech News
+  'The Verge': '#e5127d',
+  TechCrunch: '#0a9e01',
+  'Ars Technica': '#ff4e00',
 };
 
 function getProductColor(productName: string): string {
@@ -138,9 +177,19 @@ function getPatternBgColor(productColor: string): string {
     '#00a4ef': '#e0f2fe', // Microsoft blue
     '#f24e1e': '#fef2f2', // Figma red
     '#7c3aed': '#f3e8ff', // Cursor purple
-    '#000000': '#f8fafc', // Vercel black
+    '#000000': '#f8fafc', // Black (Vercel, Notion)
     '#333333': '#f1f5f9', // GitHub gray
     '#3ecf8e': '#ecfdf5', // Supabase green
+    '#f26207': '#fff7ed', // Replit orange
+    '#09b6a2': '#ecfdf5', // Codeium teal
+    '#5e6ad2': '#eef2ff', // Linear indigo
+    '#20808d': '#ecfeff', // Perplexity cyan
+    '#0055ff': '#eff6ff', // Framer blue
+    '#c41230': '#fef2f2', // NN Group red
+    '#e85c41': '#fff7ed', // Smashing orange
+    '#e5127d': '#fdf2f8', // The Verge pink
+    '#0a9e01': '#ecfdf5', // TechCrunch green
+    '#ff4e00': '#fff7ed', // Ars Technica orange
   };
   return colorMap[productColor] || '#f8fafc';
 }
@@ -150,9 +199,54 @@ function getPatternTitle(slug: string): string {
   return pattern ? pattern.title : slug;
 }
 
-function isRelevant(item: Parser.Item): boolean {
+// Primary AI product sources - these get priority
+const AI_PRODUCT_SOURCES = [
+  'openai', 'anthropic', 'google ai', 'microsoft ai', 'cursor', 'replit',
+  'codeium', 'notion', 'linear', 'perplexity', 'figma', 'framer', 'vercel',
+  'github', 'supabase'
+];
+
+// Score relevance 0-100 based on source + keyword matches
+function scoreRelevance(item: Parser.Item, sourceName?: string): number {
   const text = `${item.title || ''} ${item.contentSnippet || ''} ${item.content || ''}`.toLowerCase();
-  return RELEVANCE_KEYWORDS.some((keyword) => text.includes(keyword));
+  let score = 0;
+
+  // AI product sources get baseline priority (we want their updates)
+  if (sourceName) {
+    const sourceNameLower = sourceName.toLowerCase();
+    if (AI_PRODUCT_SOURCES.some(s => sourceNameLower.includes(s))) {
+      score += 30; // Base score for AI product sources
+    }
+  }
+
+  // High relevance keywords
+  for (const keyword of HIGH_RELEVANCE_KEYWORDS) {
+    if (text.includes(keyword)) {
+      score += 10;
+    }
+  }
+
+  // Medium relevance keywords
+  for (const keyword of MEDIUM_RELEVANCE_KEYWORDS) {
+    if (text.includes(keyword)) {
+      score += 3;
+    }
+  }
+
+  // Bonus for title matches
+  const title = (item.title || '').toLowerCase();
+  for (const keyword of HIGH_RELEVANCE_KEYWORDS) {
+    if (title.includes(keyword)) {
+      score += 5;
+    }
+  }
+
+  // Cap at 100
+  return Math.min(score, 100);
+}
+
+function isRelevant(item: Parser.Item, sourceName?: string): boolean {
+  return scoreRelevance(item, sourceName) >= 10; // Minimum threshold
 }
 
 function isRecent(item: Parser.Item, hoursAgo = 48): boolean {
@@ -169,6 +263,7 @@ interface NewsItem {
   description: string;
   link: string;
   pubDate: string;
+  relevanceScore?: number;
 }
 
 async function getRecentlyUsedUrls(deduplicationDays = 7, excludeWeekly = true): Promise<Set<string>> {
@@ -204,7 +299,7 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise
       try {
         const feed = await parser.parseURL(source.url);
         return (feed.items || [])
-          .filter((item) => isRecent(item, lookbackHours) && isRelevant(item))
+          .filter((item) => isRecent(item, lookbackHours) && isRelevant(item, source.name))
           .filter((item) => !item.link || !usedUrls.has(item.link)) // Exclude already-used URLs
           .map((item) => ({
             source: source.name,
@@ -213,6 +308,7 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise
             description: item.contentSnippet?.slice(0, 500) || item.content?.slice(0, 500) || '',
             link: item.link || '',
             pubDate: item.pubDate || item.isoDate || new Date().toISOString(),
+            relevanceScore: scoreRelevance(item, source.name),
           }));
       } catch {
         return [];
@@ -226,7 +322,7 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise
     }
   }
 
-  // Add Anthropic news from scraper (no RSS feed available)
+  // Add Anthropic news from scraper (their site doesn't have RSS)
   const anthropicNews = await scrapeAnthropicNews();
   const cutoff = new Date(Date.now() - lookbackHours * 60 * 60 * 1000);
   for (const item of anthropicNews) {
@@ -236,7 +332,15 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise
     }
   }
 
-  return allItems.sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+  // Sort by relevance score first, then by date
+  return allItems.sort((a, b) => {
+    const scoreA = a.relevanceScore || 0;
+    const scoreB = b.relevanceScore || 0;
+    if (scoreB !== scoreA) {
+      return scoreB - scoreA; // Higher relevance first
+    }
+    return new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime();
+  });
 }
 
 interface NewsletterItem {
@@ -244,6 +348,7 @@ interface NewsletterItem {
   date: string;
   headline: string;
   description: string;
+  designerTakeaway: string;
   sourceUrl: string;
   patternSlug: string;
 }
@@ -313,6 +418,12 @@ function buildWeeklyCompilationPrompt(dailyItems: NewsletterItem[]): string {
 
   return `You are an AI UX design expert writing a WEEKLY newsletter called "This Week in AIUX" for designers and product managers.
 
+WRITING STYLE:
+- Write naturally and conversationally
+- NEVER use em dashes (—). Use commas, periods, or "and" instead
+- Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
+- Be specific and concrete, not vague or hyperbolic
+
 I have collected items from this week's daily newsletters. Your job is to curate the BEST 5-8 items and create a comprehensive weekly roundup.
 
 ITEMS FROM THIS WEEK'S DAILY NEWSLETTERS:
@@ -324,10 +435,11 @@ ${patternList}
 YOUR TASK:
 1. Select the 5-8 most UX-significant items from the daily newsletters
 2. Keep the original descriptions but you may slightly enhance them for the weekly context
-3. Identify ONE standout feature for "Steal This Week" - a feature other products should copy
-4. Identify ONE pattern that appeared multiple times for "Pattern to Know" deep dive
-5. Write a weekly takeaway that ties the themes together
-6. Create a compelling title and summary
+3. Add or enhance "Designer's Takeaway" for each item - actionable insight for designers
+4. Identify ONE standout feature for "Steal This Week" - a feature other products should copy
+5. Identify ONE pattern that appeared multiple times for "Pattern to Know" deep dive
+6. Write a weekly takeaway that ties the themes together
+7. Create a compelling title and summary
 
 RESPOND IN THIS EXACT JSON FORMAT:
 {
@@ -339,6 +451,7 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "date": "Dec 21",
       "headline": "Short headline",
       "description": "Description from daily newsletter (keep or enhance)",
+      "designerTakeaway": "Actionable insight for designers",
       "sourceUrl": "Original URL",
       "patternSlug": "pattern-slug"
     }
@@ -363,6 +476,12 @@ function buildPrompt(newsItems: NewsItem[]): string {
 
   return `You are an AI UX design expert writing a daily newsletter called "AI UX Daily" for designers and product managers.
 
+WRITING STYLE:
+- Write naturally and conversationally
+- NEVER use em dashes (—). Use commas, periods, or "and" instead
+- Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
+- Be specific and concrete, not vague or hyperbolic
+
 Given these recent AI product news items, create a newsletter update:
 
 NEWS ITEMS:
@@ -372,8 +491,10 @@ AVAILABLE PATTERNS (use these slugs for pattern matching):
 ${patternList}
 
 YOUR TASK:
-1. Select the 2-4 most UX-significant items from the news
-2. For each selected item, write a short description focused on the UX implications
+1. Select 4-6 items most relevant to UX/product designers (prioritize AI product updates, design tools, and developer tools that affect design workflows)
+2. For each selected item:
+   - Write a short description of what happened
+   - Write a "Designer's Takeaway" - actionable insight for UX/product designers (1-2 sentences starting with a verb like "Consider...", "Notice how...", "Apply this by...")
 3. Match each item to one of the available patterns (use the slug exactly)
 4. Write a "Today's Takeaway" insight summarizing the key theme
 5. Create a title and summary for the newsletter
@@ -387,7 +508,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name (e.g., ChatGPT, Claude, Gemini)",
       "date": "Dec 21",
       "headline": "Short headline describing the update",
-      "description": "2-3 sentences explaining what happened and why it matters for UX",
+      "description": "2-3 sentences explaining what happened",
+      "designerTakeaway": "Actionable insight for designers - what can they learn or apply from this?",
       "sourceUrl": "URL from the news item",
       "patternSlug": "pattern-slug-from-list"
     }
@@ -404,6 +526,12 @@ function buildWeeklyPrompt(newsItems: NewsItem[]): string {
 
   return `You are an AI UX design expert writing a WEEKLY newsletter called "This Week in AIUX" for designers and product managers.
 
+WRITING STYLE:
+- Write naturally and conversationally
+- NEVER use em dashes (—). Use commas, periods, or "and" instead
+- Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
+- Be specific and concrete, not vague or hyperbolic
+
 Given these AI product news items from the past week, create a comprehensive weekly roundup:
 
 NEWS ITEMS:
@@ -414,7 +542,9 @@ ${patternList}
 
 YOUR TASK:
 1. Select the 5-8 most UX-significant items from this week's news
-2. For each selected item, write a description focused on the UX implications
+2. For each selected item:
+   - Write a description of what happened
+   - Write a "Designer's Takeaway" - actionable insight for UX/product designers
 3. Match each item to one of the available patterns (use the slug exactly)
 4. Write "Steal This Week" - highlight ONE standout feature that other products should copy
 5. Write "Pattern to Know" - deep dive on one pattern that appeared multiple times this week
@@ -430,7 +560,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name (e.g., ChatGPT, Claude, Gemini, Cursor)",
       "date": "Dec 21",
       "headline": "Short headline describing the update",
-      "description": "2-3 sentences explaining what happened and why it matters for UX",
+      "description": "2-3 sentences explaining what happened",
+      "designerTakeaway": "Actionable insight for designers - what can they learn or apply from this?",
       "sourceUrl": "URL from the news item",
       "patternSlug": "pattern-slug-from-list"
     }
@@ -463,7 +594,10 @@ function generateHTML(data: NewsletterData): string {
     <span style="font-size: 12px; color: #94a3b8;">${item.date}</span>
   </div>
   <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
-  <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <div style="margin: 0 0 16px; padding: 12px 16px; background: #f8fafc; border-radius: 8px;">
+    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #334155;"><strong style="color: #0f172a;">💡 Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
+  </div>
   <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: ${bgColor}; color: ${color}; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
 </div>`;
     })
@@ -504,7 +638,10 @@ function generateWeeklyHTML(data: WeeklyNewsletterData): string {
     <span style="font-size: 12px; color: #94a3b8;">${item.date}</span>
   </div>
   <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
-  <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <div style="margin: 0 0 16px; padding: 12px 16px; background: #f8fafc; border-radius: 8px;">
+    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #334155;"><strong style="color: #0f172a;">💡 Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
+  </div>
   <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: ${bgColor}; color: ${color}; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
 </div>`;
     })
