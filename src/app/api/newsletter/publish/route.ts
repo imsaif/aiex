@@ -4,12 +4,22 @@ import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { timingSafeEqual } from 'crypto';
 import { resend } from '@/lib/resend';
 
-// Send newsletter to all active subscribers using Resend's batch API
+// Send newsletter to subscribers based on type and frequency preferences
 async function sendNewsletterToSubscribers(
   newsletter: { title: string; summary: string; content: string; slug: string; type: string }
 ): Promise<{ successCount: number; failureCount: number; totalSubscribers: number; failedEmails: string[] }> {
+  // Filter subscribers based on newsletter type and their frequency preference
+  // - Daily newsletters: only send to subscribers with 'all' frequency
+  // - Weekly newsletters: send to subscribers with 'all' or 'weekly' frequency
+  const isWeeklyNewsletter = newsletter.type === 'weekly';
+
   const subscribers = await prisma.subscriber.findMany({
-    where: { active: true },
+    where: {
+      active: true,
+      emailFrequency: isWeeklyNewsletter
+        ? { in: ['all', 'weekly'] }  // Weekly: send to 'all' and 'weekly-only' subscribers
+        : 'all',                      // Daily: only send to 'all' subscribers
+    },
   });
 
   if (subscribers.length === 0) {
@@ -33,7 +43,8 @@ async function sendNewsletterToSubscribers(
 
     // Prepare batch emails
     const emails = batch.map((subscriber) => {
-      const unsubscribeUrl = `${baseUrl}/api/newsletter/unsubscribe?token=${subscriber.unsubscribeToken}`;
+      // Point to the new unsubscribe page instead of the API
+      const unsubscribeUrl = `${baseUrl}/unsubscribe?token=${subscriber.unsubscribeToken}`;
       return {
         from: 'AI UX Design Guide <noreply@aiuxdesign.guide>',
         to: subscriber.email,

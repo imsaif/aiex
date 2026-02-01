@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-01 11:40 (MacBook)
+- **Pattern:** Unsubscribe Flow Redesign
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented new unsubscribe page with frequency preferences (all/weekly/none) and optional feedback collection. Added emailFrequency, unsubscribeReason, and unsubscribedAt fields to Subscriber model. Created /unsubscribe page with clear UX (unsubscribe primary action, weekly-only as alternative). Updated newsletter publish logic to filter subscribers by frequency. Added frequency column and filter to admin subscribers page.
+
 ### Session 2026-01-28 22:27 (MacBook)
 - **Pattern:** AI Interaction Toolkit Landing Page
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Diagnosed missing daily newsletters (last was Dec 21). Found Vercel Hobby tier cron jobs don't execute reliably. Manually triggered today's newsletter via curl. Set up cron-job.org as external cron service for daily (9 AM UTC) and weekly (8 AM Mon) newsletters. Added "Known Issues & Learnings" section to CLAUDE.md for documenting issues Claude should remember across sessions.
 
 ### Session 2026-01-07 14:30 (MacBook)
-- **Pattern:** Audit Page Email Feature
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Removed testimonials from audit page SocialProof component. Added "Email This Report" feature allowing users to email their audit results. Created new API route (/api/audit/send-report) with Resend integration and auto-newsletter subscription. Built EmailReportModal component with email input, loading states, and success feedback. Email includes score visualization, top priorities with pattern links, and full pattern breakdown (well-done, needs improvement, missing) with clickable links to each pattern page.
-
-### Session 2026-01-06 19:06 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

@@ -2,63 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 
-// Unsubscribe validation schema
-const unsubscribeSchema = z.object({
-  token: z.string().min(1, 'Token is required'),
-});
-
-export async function POST(request: NextRequest) {
-  try {
-    // Parse and validate request body
-    const body = await request.json();
-    const { token } = unsubscribeSchema.parse(body);
-
-    // Find subscriber by unsubscribe token
-    const subscriber = await prisma.subscriber.findUnique({
-      where: { unsubscribeToken: token },
-    });
-
-    if (!subscriber) {
-      return NextResponse.json(
-        { error: 'Invalid unsubscribe token' },
-        { status: 404 }
-      );
-    }
-
-    if (!subscriber.active) {
-      return NextResponse.json(
-        { message: 'You are already unsubscribed.' },
-        { status: 200 }
-      );
-    }
-
-    // Deactivate subscription (soft delete)
-    await prisma.subscriber.update({
-      where: { unsubscribeToken: token },
-      data: { active: false },
-    });
-
-    return NextResponse.json(
-      { message: 'Successfully unsubscribed from newsletter.' },
-      { status: 200 }
-    );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid request' },
-        { status: 400 }
-      );
-    }
-
-    console.error('Newsletter unsubscribe error:', error);
-    return NextResponse.json(
-      { error: 'Failed to unsubscribe. Please try again later.' },
-      { status: 500 }
-    );
-  }
-}
-
-// GET method for one-click unsubscribe links
+// GET - Fetch subscriber data for the unsubscribe page
+// Does NOT auto-unsubscribe anymore - just returns subscriber info
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -74,6 +19,11 @@ export async function GET(request: NextRequest) {
     // Find subscriber by unsubscribe token
     const subscriber = await prisma.subscriber.findUnique({
       where: { unsubscribeToken: token },
+      select: {
+        email: true,
+        emailFrequency: true,
+        active: true,
+      },
     });
 
     if (!subscriber) {
@@ -83,73 +33,163 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (!subscriber.active) {
+    return NextResponse.json({
+      subscriber: {
+        email: subscriber.email,
+        emailFrequency: subscriber.emailFrequency,
+        active: subscriber.active,
+      },
+    });
+  } catch (error) {
+    console.error('Newsletter unsubscribe GET error:', error);
+    return NextResponse.json(
+      { error: 'Failed to load subscription data' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST - Handle unsubscribe, frequency updates, feedback, and resubscribe
+const postSchema = z.object({
+  token: z.string().min(1, 'Token is required'),
+  action: z.enum(['unsubscribe', 'update_frequency', 'feedback', 'resubscribe']),
+  frequency: z.enum(['all', 'weekly']).optional(),
+  reason: z.string().max(500).optional(),
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const parsed = postSchema.safeParse(body);
+
+    if (!parsed.success) {
       return NextResponse.json(
-        { message: 'You are already unsubscribed.' },
-        { status: 200 }
+        { error: 'Invalid request', details: parsed.error.errors },
+        { status: 400 }
       );
     }
 
-    // Deactivate subscription
-    await prisma.subscriber.update({
+    const { token, action, frequency, reason } = parsed.data;
+
+    // Find subscriber by unsubscribe token
+    const subscriber = await prisma.subscriber.findUnique({
       where: { unsubscribeToken: token },
-      data: { active: false },
     });
 
-    // Return a simple HTML page
-    return new NextResponse(
-      `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Unsubscribed - AI UX Patterns</title>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <style>
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              min-height: 100vh;
-              margin: 0;
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            }
-            .container {
-              background: white;
-              padding: 40px;
-              border-radius: 10px;
-              box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-              text-align: center;
-              max-width: 500px;
-            }
-            h1 { color: #667eea; margin-bottom: 20px; }
-            p { color: #6b7280; line-height: 1.6; margin-bottom: 20px; }
-            a { color: #667eea; text-decoration: none; font-weight: 600; }
-            a:hover { text-decoration: underline; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h1>✓ Successfully Unsubscribed</h1>
-            <p>You have been unsubscribed from the AI UX Patterns newsletter.</p>
-            <p>We're sorry to see you go! If you change your mind, you can always subscribe again on our website.</p>
-            <p><a href="https://www.aiuxdesign.guide">Return to AI UX Patterns</a></p>
-          </div>
-        </body>
-      </html>
-      `,
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/html',
-        },
+    if (!subscriber) {
+      return NextResponse.json(
+        { error: 'Invalid unsubscribe token' },
+        { status: 404 }
+      );
+    }
+
+    switch (action) {
+      case 'unsubscribe': {
+        // Immediate unsubscribe - no confirmation needed
+        await prisma.subscriber.update({
+          where: { unsubscribeToken: token },
+          data: {
+            active: false,
+            emailFrequency: 'none',
+            unsubscribedAt: new Date(),
+          },
+        });
+
+        return NextResponse.json({
+          success: true,
+          message: 'Successfully unsubscribed from newsletter.',
+        });
       }
-    );
+
+      case 'update_frequency': {
+        if (!frequency) {
+          return NextResponse.json(
+            { error: 'Frequency is required for update_frequency action' },
+            { status: 400 }
+          );
+        }
+
+        // Update frequency preference
+        const updated = await prisma.subscriber.update({
+          where: { unsubscribeToken: token },
+          data: {
+            emailFrequency: frequency,
+            active: true, // Ensure they're active when updating frequency
+            unsubscribedAt: null, // Clear unsubscribe date
+          },
+          select: {
+            email: true,
+            emailFrequency: true,
+            active: true,
+          },
+        });
+
+        return NextResponse.json({
+          success: true,
+          message: `Subscription updated to ${frequency === 'all' ? 'all emails' : 'weekly digest only'}.`,
+          subscriber: updated,
+        });
+      }
+
+      case 'feedback': {
+        // Store optional feedback reason after unsubscribe
+        if (reason) {
+          await prisma.subscriber.update({
+            where: { unsubscribeToken: token },
+            data: {
+              unsubscribeReason: reason,
+            },
+          });
+        }
+
+        return NextResponse.json({
+          success: true,
+          message: 'Thank you for your feedback.',
+        });
+      }
+
+      case 'resubscribe': {
+        // Reactivate subscription with default frequency
+        const resubscribed = await prisma.subscriber.update({
+          where: { unsubscribeToken: token },
+          data: {
+            active: true,
+            emailFrequency: 'all',
+            unsubscribedAt: null,
+            unsubscribeReason: null,
+          },
+          select: {
+            email: true,
+            emailFrequency: true,
+            active: true,
+          },
+        });
+
+        return NextResponse.json({
+          success: true,
+          message: 'Successfully resubscribed to newsletter.',
+          subscriber: resubscribed,
+        });
+      }
+
+      default: {
+        return NextResponse.json(
+          { error: 'Invalid action' },
+          { status: 400 }
+        );
+      }
+    }
   } catch (error) {
-    console.error('Newsletter unsubscribe error:', error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid request' },
+        { status: 400 }
+      );
+    }
+
+    console.error('Newsletter unsubscribe POST error:', error);
     return NextResponse.json(
-      { error: 'Failed to unsubscribe. Please try again later.' },
+      { error: 'Failed to process request. Please try again later.' },
       { status: 500 }
     );
   }

@@ -15,11 +15,21 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status'); // 'active', 'inactive', or null for all
     const search = searchParams.get('search') || '';
 
-    const where: { active?: boolean; email?: { contains: string; mode: 'insensitive' } } = {};
+    const where: {
+      active?: boolean;
+      email?: { contains: string; mode: 'insensitive' };
+      emailFrequency?: string;
+    } = {};
 
     if (status === 'active') where.active = true;
     if (status === 'inactive') where.active = false;
     if (search) where.email = { contains: search, mode: 'insensitive' };
+
+    // Filter by frequency preference
+    const frequency = searchParams.get('frequency');
+    if (frequency && ['all', 'weekly', 'none'].includes(frequency)) {
+      where.emailFrequency = frequency;
+    }
 
     const [subscribers, total] = await Promise.all([
       prisma.subscriber.findMany({
@@ -33,6 +43,9 @@ export async function GET(request: NextRequest) {
           subscribedAt: true,
           active: true,
           updatedAt: true,
+          emailFrequency: true,
+          unsubscribeReason: true,
+          unsubscribedAt: true,
         },
       }),
       prisma.subscriber.count({ where }),

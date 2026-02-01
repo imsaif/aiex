@@ -12,12 +12,15 @@ datasource db {
 }
 
 model Subscriber {
-  id                String   @id @default(cuid())
-  email             String   @unique
-  subscribedAt      DateTime @default(now())
-  active            Boolean  @default(true)
-  unsubscribeToken  String   @unique @default(cuid())
-  updatedAt         DateTime @updatedAt
+  id                String    @id @default(cuid())
+  email             String    @unique
+  subscribedAt      DateTime  @default(now())
+  active            Boolean   @default(true)
+  unsubscribeToken  String    @unique @default(cuid())
+  updatedAt         DateTime  @updatedAt
+  emailFrequency    String    @default("all")  // 'all' | 'weekly' | 'none'
+  unsubscribeReason String?                     // Optional feedback when unsubscribing
+  unsubscribedAt    DateTime?                   // When they unsubscribed
 }
 
 model NewsletterDraft {

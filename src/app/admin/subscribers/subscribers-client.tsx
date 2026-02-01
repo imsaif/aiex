@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface Subscriber {
   id: string;
@@ -8,6 +8,9 @@ interface Subscriber {
   subscribedAt: string;
   active: boolean;
   updatedAt: string;
+  emailFrequency: string;
+  unsubscribeReason: string | null;
+  unsubscribedAt: string | null;
 }
 
 interface Pagination {
@@ -29,8 +32,10 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [frequencyFilter, setFrequencyFilter] = useState<string>('all_frequencies');
   const [searchQuery, setSearchQuery] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [expandedSubscriber, setExpandedSubscriber] = useState<string | null>(null);
 
   const fetchSubscribers = useCallback(async (page = 1) => {
     setIsLoading(true);
@@ -40,6 +45,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
         limit: '50',
       });
       if (statusFilter !== 'all') params.set('status', statusFilter);
+      if (frequencyFilter !== 'all_frequencies') params.set('frequency', frequencyFilter);
       if (searchQuery) params.set('search', searchQuery);
 
       const response = await fetch(`/api/newsletter/subscribers?${params}`);
@@ -56,7 +62,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, searchQuery]);
+  }, [statusFilter, frequencyFilter, searchQuery]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -140,15 +146,16 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
     try {
       const params = new URLSearchParams({ limit: '10000' });
       if (statusFilter !== 'all') params.set('status', statusFilter);
+      if (frequencyFilter !== 'all_frequencies') params.set('frequency', frequencyFilter);
 
       const response = await fetch(`/api/newsletter/subscribers?${params}`);
       const data = await response.json();
 
       if (response.ok) {
         const csv = [
-          'Email,Subscribed At,Active,Updated At',
+          'Email,Subscribed At,Active,Frequency,Unsubscribe Reason,Unsubscribed At,Updated At',
           ...data.subscribers.map((s: Subscriber) =>
-            `${s.email},${s.subscribedAt},${s.active},${s.updatedAt}`
+            `${s.email},${s.subscribedAt},${s.active},${s.emailFrequency},${s.unsubscribeReason || ''},${s.unsubscribedAt || ''},${s.updatedAt}`
           ),
         ].join('\n');
 
@@ -259,9 +266,19 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-4 py-2 border border-border-primary rounded-md bg-background-secondary text-text-primary focus:ring-2 focus:ring-accent-primary"
             >
-              <option value="all">All Subscribers</option>
+              <option value="all">All Status</option>
               <option value="active">Active Only</option>
               <option value="inactive">Inactive Only</option>
+            </select>
+            <select
+              value={frequencyFilter}
+              onChange={(e) => setFrequencyFilter(e.target.value)}
+              className="px-4 py-2 border border-border-primary rounded-md bg-background-secondary text-text-primary focus:ring-2 focus:ring-accent-primary"
+            >
+              <option value="all_frequencies">All Frequencies</option>
+              <option value="all">Daily + Weekly</option>
+              <option value="weekly">Weekly Only</option>
+              <option value="none">Unsubscribed</option>
             </select>
             <button
               onClick={() => fetchSubscribers(1)}
@@ -291,6 +308,9 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                   <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Status
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                    Frequency
+                  </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Actions
                   </th>
@@ -298,43 +318,97 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
               </thead>
               <tbody className="divide-y divide-border-secondary">
                 {subscribers.map((subscriber) => (
-                  <tr key={subscriber.id} className="hover:bg-background-secondary/50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary">
-                      {subscriber.email}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
-                      {new Date(subscriber.subscribedAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          subscriber.active
-                            ? 'bg-status-success/20 text-status-success'
-                            : 'bg-status-error/20 text-status-error'
-                        }`}
-                      >
-                        {subscriber.active ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                      <button
-                        onClick={() => toggleSubscriberStatus(subscriber.id, subscriber.active)}
-                        className={`px-3 py-1 rounded text-xs font-medium mr-2 ${
-                          subscriber.active
-                            ? 'bg-status-warning/20 text-status-warning hover:bg-status-warning/30'
-                            : 'bg-status-success/20 text-status-success hover:bg-status-success/30'
-                        }`}
-                      >
-                        {subscriber.active ? 'Deactivate' : 'Activate'}
-                      </button>
-                      <button
-                        onClick={() => deleteSubscriber(subscriber.id, subscriber.email)}
-                        className="px-3 py-1 rounded text-xs font-medium bg-status-error/20 text-status-error hover:bg-status-error/30"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+                  <React.Fragment key={subscriber.id}>
+                    <tr className="hover:bg-background-secondary/50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary">
+                        <div className="flex items-center gap-2">
+                          {subscriber.email}
+                          {subscriber.unsubscribeReason && (
+                            <button
+                              onClick={() => setExpandedSubscriber(
+                                expandedSubscriber === subscriber.id ? null : subscriber.id
+                              )}
+                              className="text-text-tertiary hover:text-text-secondary"
+                              title="View unsubscribe reason"
+                            >
+                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
+                        {new Date(subscriber.subscribedAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                            subscriber.active
+                              ? 'bg-status-success/20 text-status-success'
+                              : 'bg-status-error/20 text-status-error'
+                          }`}
+                        >
+                          {subscriber.active ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                            subscriber.emailFrequency === 'all'
+                              ? 'bg-accent-primary/20 text-accent-primary'
+                              : subscriber.emailFrequency === 'weekly'
+                              ? 'bg-status-warning/20 text-status-warning'
+                              : 'bg-text-tertiary/20 text-text-tertiary'
+                          }`}
+                        >
+                          {subscriber.emailFrequency === 'all'
+                            ? 'All'
+                            : subscriber.emailFrequency === 'weekly'
+                            ? 'Weekly'
+                            : 'None'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                        <button
+                          onClick={() => toggleSubscriberStatus(subscriber.id, subscriber.active)}
+                          className={`px-3 py-1 rounded text-xs font-medium mr-2 ${
+                            subscriber.active
+                              ? 'bg-status-warning/20 text-status-warning hover:bg-status-warning/30'
+                              : 'bg-status-success/20 text-status-success hover:bg-status-success/30'
+                          }`}
+                        >
+                          {subscriber.active ? 'Deactivate' : 'Activate'}
+                        </button>
+                        <button
+                          onClick={() => deleteSubscriber(subscriber.id, subscriber.email)}
+                          className="px-3 py-1 rounded text-xs font-medium bg-status-error/20 text-status-error hover:bg-status-error/30"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedSubscriber === subscriber.id && subscriber.unsubscribeReason && (
+                      <tr className="bg-background-secondary/30">
+                        <td colSpan={5} className="px-6 py-3 text-sm">
+                          <div className="flex gap-6">
+                            <div>
+                              <span className="text-text-tertiary">Unsubscribe reason:</span>{' '}
+                              <span className="text-text-secondary">{subscriber.unsubscribeReason}</span>
+                            </div>
+                            {subscriber.unsubscribedAt && (
+                              <div>
+                                <span className="text-text-tertiary">Unsubscribed at:</span>{' '}
+                                <span className="text-text-secondary">
+                                  {new Date(subscriber.unsubscribedAt).toLocaleString()}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
