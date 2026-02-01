@@ -1,5 +1,10 @@
 {
   "buildCommand": "prisma generate && next build",
+  "functions": {
+    "src/app/api/cron/generate-newsletter/route.ts": {
+      "maxDuration": 60
+    }
+  },
   "crons": [
     {
       "path": "/api/cron/generate-newsletter",
