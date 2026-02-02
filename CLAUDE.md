@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-02 21:07 (MacBook)
+- **Pattern:** Newsletter Design Redesign
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Redesigned weekly newsletter with Featured Read section for Medium article. Replaced emojis with Heroicons (inline SVGs). Improved visual hierarchy: removed heavy cards for subtle dividers, increased whitespace, better typography. Added Simple Icons for product logos (Vercel, OpenAI, Figma). Made colors accessible with proper contrast. Applied slate brand palette throughout.
+
 ### Session 2026-02-01 13:15 (MacBook)
 - **Pattern:** Newsletter Sources Expansion
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Diagnosed why daily newsletter didn't run (cron was 9 AM UTC, user expected 9 AM IST). Updated cron schedule to 3 AM UTC (8:30 AM IST). Fixed critical bugs: secureCompareSecret was comparing wrong values, resend.batch getter was missing (causing silent email failures). Added failure warnings to admin UI. Added batch mock for tests. Added comprehensive newsletter troubleshooting checklist to CLAUDE.md Known Issues section.
 
 ### Session 2026-01-07 18:08 (MacBook)
-- **Pattern:** Newsletter Duplicate Prevention & Subscription CTA
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Added email subscription form (InlineNewsletterSignup) to individual news edition pages between article content and navigation. Fixed duplicate newsletter generation by adding same-day deduplication check before creating new drafts. Created merge-newsletter-duplicates.ts utility script to list/merge duplicate newsletters. Cleaned up existing duplicates from Jan 7, Jan 5, and Dec 23.
-
-### Session 2026-01-07 16:50 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
