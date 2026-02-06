@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-06 19:57 (MacBook)
+- **Pattern:** Vercel Speed Insights Performance Optimization
+- **Status:** ✅ Completed
+- **Files Changed:** 12
+- **Tests Added/Modified:** 0
+- **Notes:** Optimized 4 underperforming pages identified via Vercel Speed Insights (RES 78). /news and /news/[slug]: replaced force-dynamic with ISR (revalidate=3600), enabling SSG+edge caching. Removed framer-motion from /news, /news/[slug], /prompts, /guides/[slug] — replaced with CSS keyframe animations. Removed heavy client-side imports: patterns array (~50KB) from news-client, DOMPurify now lazy-loaded, @lobehub/icons lazy-loaded via next/dynamic. Eliminated DOM traversal dark mode logic from newsletter detail (replaced with existing CSS rules). Moved /prompts data fetching to server component, shipping only lightweight serializable data to client. Lazy-loaded DownloadPDFModal in guides.
+
 ### Session 2026-02-06 12:57 (MacBook)
 - **Pattern:** Newsletter Email Template Redesign
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed client-side exception on /news page caused by newsletters with empty content. Added null checks for newsletter.content in newsletter-detail-client.tsx before calling .split() and DOMPurify.sanitize(). Added server-side redirect to 404 for "quiet day" newsletters without content. Fixed named import for InlineNewsletterSignup component.
 
 ### Session 2026-01-08 10:45 (MacBook)
-- **Pattern:** Smart Handbook Prompt
-- **Status:** ✅ Completed
-- **Files Changed:** 6
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented smart prompt system that appears after users browse 4 unique patterns, offering the handbook PDF download. Created usePatternViewTracker hook, SmartHandbookPrompt component, and added localStorage/sessionStorage utilities for view tracking and dismissal. Non-blocking modal with email capture that respects user dismissal per session.
-
-### Session 2026-01-08 10:42 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

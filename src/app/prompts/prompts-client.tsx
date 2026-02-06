@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useMemo, useCallback } from 'react';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import UnifiedSearchBar from '@/components/ui/UnifiedSearchBar';
@@ -9,44 +9,53 @@ import PromptCard from '@/components/ui/PromptCard';
 import CategoryFilterSheet from '@/components/ui/CategoryFilterSheet';
 import FilterPills from '@/components/ui/FilterPills';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import { getPatternsWithPrompts, getPromptsByCategory } from '@/data/utils/prompt-utils';
-import categories from '@/data/categories';
 
-export default function PromptsClient() {
+export interface PromptItem {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  prompt: string;
+}
+
+interface CategoryItem {
+  id: string;
+  title: string;
+}
+
+interface PromptsClientProps {
+  prompts: PromptItem[];
+  categories: CategoryItem[];
+}
+
+export default function PromptsClient({ prompts, categories }: PromptsClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
 
-  const allPrompts = useMemo(() => getPatternsWithPrompts(), []);
-
   const filteredPrompts = useMemo(() => {
-    let results = getPromptsByCategory(selectedCategory);
+    let results = selectedCategory === 'All Categories'
+      ? prompts
+      : prompts.filter((p) => p.category === selectedCategory);
 
     if (searchQuery) {
-      results = results.filter(pattern =>
-        pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        pattern.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        pattern.content.figmaPrompt?.prompt.toLowerCase().includes(searchQuery.toLowerCase())
+      const query = searchQuery.toLowerCase();
+      results = results.filter(
+        (p) =>
+          p.title.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query) ||
+          p.prompt.toLowerCase().includes(query)
       );
     }
 
     return results;
-  }, [searchQuery, selectedCategory]);
+  }, [prompts, searchQuery, selectedCategory]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
+  const handleCategorySelect = useCallback((category: string) => {
+    setSelectedCategory(category);
+    setIsFilterSheetOpen(false);
+  }, []);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -57,8 +66,8 @@ export default function PromptsClient() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
-                {allPrompts.length} Figma Make Prompts
+              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
+                {prompts.length} Figma Make Prompts
               </span>
             </div>
 
@@ -91,12 +100,11 @@ export default function PromptsClient() {
                         : 'text-text-secondary hover:bg-white dark:hover:bg-gray-800 hover:text-black dark:hover:text-white'
                     }`}
                   >
-                    All Prompts ({allPrompts.length})
+                    All Prompts ({prompts.length})
                   </button>
                 </li>
-                {categories.map(cat => {
-                  const count = allPrompts.filter(p => p.category === cat.title).length;
-                  if (count === 0) return null;
+                {categories.map((cat) => {
+                  const count = prompts.filter((p) => p.category === cat.title).length;
 
                   return (
                     <li key={cat.id}>
@@ -146,18 +154,17 @@ export default function PromptsClient() {
             </div>
 
             {/* Grid */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            >
-              {filteredPrompts.map((pattern, index) => (
-                <motion.div key={pattern.id} variants={itemVariants}>
-                  <PromptCard pattern={pattern} index={index} />
-                </motion.div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+              {filteredPrompts.map((prompt, index) => (
+                <div
+                  key={prompt.id}
+                  className="animate-slide-in"
+                  style={{ animationDelay: `${Math.min(index * 50, 500)}ms` }}
+                >
+                  <PromptCard prompt={prompt} />
+                </div>
               ))}
-            </motion.div>
+            </div>
 
             {/* Empty State */}
             {filteredPrompts.length === 0 && (
@@ -180,13 +187,10 @@ export default function PromptsClient() {
         onClose={() => setIsFilterSheetOpen(false)}
         categories={[
           { id: 'all', title: 'All Categories' },
-          ...categories.filter(cat => allPrompts.some(p => p.category === cat.title)),
+          ...categories,
         ]}
         selectedCategory={selectedCategory}
-        onCategorySelect={(category) => {
-          setSelectedCategory(category);
-          setIsFilterSheetOpen(false);
-        }}
+        onCategorySelect={handleCategorySelect}
       />
 
       <Footer />

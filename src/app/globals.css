@@ -289,6 +289,25 @@ p {
   100% { transform: translateY(-20px); }
 }
 
+/* Lightweight CSS animations (replacing framer-motion) */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.25s ease-out both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* Smart Search Chat Styles */
 .line-clamp-2 {
   overflow: hidden;

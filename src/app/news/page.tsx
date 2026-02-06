@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR: revalidate every hour
 
 async function getPublishedDrafts(): Promise<Newsletter[]> {
   try {

@@ -14,7 +14,8 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR: revalidate every hour
+export const dynamicParams = true; // Allow DB-only slugs to render on-demand
 
 async function getNewsletterFromDb(slug: string): Promise<Newsletter | undefined> {
   try {

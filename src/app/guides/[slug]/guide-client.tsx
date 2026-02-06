@@ -1,19 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Claude, Cursor, Github, Replit, V0, Copilot } from '@lobehub/icons';
 import { ArrowLeftIcon, ArrowRightIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import { Guide } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import CopyButton from '@/components/ui/CopyButton';
-import CourseMetadataBar from '@/components/ui/CourseMetadataBar';
 import IntroductionSection from '@/components/ui/IntroductionSection';
 import ModuleSection from '@/components/ui/ModuleSection';
 import ProgressBar from '@/components/ui/ProgressBar';
-import DownloadPDFModal from '@/components/ui/DownloadPDFModal';
+
+// Lazy-load heavy components
+const DownloadPDFModal = dynamic(() => import('@/components/ui/DownloadPDFModal'), {
+  ssr: false,
+});
+
+// Lazy-load @lobehub/icons — only loaded when the component renders
+const LazyGuideIcon = dynamic(() => import('./guide-icon'), {
+  ssr: false,
+  loading: () => <div className="w-6 h-6" />,
+});
 
 interface GuideClientProps {
   guide: Guide;
@@ -39,41 +47,13 @@ export default function GuideClient({
   const lessonProgress = hasLessons ? getLessonProgress(guide.id, totalLessons) : { completed: 0, total: 0, percentage: 0 };
   const guideStatus = hasLessons ? getGuideStatus(guide.id, totalLessons) : 'not-started';
 
-
   // Extract and enhance code blocks in guide content
-  const enhancedContent = guide.content
-    ? guide.content.replace(/<code>([\s\S]*?)<\/code>/g, (match, code) => {
-        const encodedCode = code
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&quot;/g, '"')
-          .replace(/&#039;/g, "'");
-        return match; // Keep original for now, we'll add button separately
-      })
-    : '';
-
-  // Get the appropriate icon for the guide
-  const getIcon = () => {
-    const iconProps = { size: 24 };
-    switch (guide.tool?.toLowerCase()) {
-      case 'claude code':
-        return <div style={{ color: '#D97757' }}><Claude {...iconProps} /></div>;
-      case 'cursor':
-        return <div className="text-gray-900 dark:text-gray-100"><Cursor {...iconProps} /></div>;
-      case 'github':
-        return <div className="text-gray-900 dark:text-gray-100"><Github {...iconProps} /></div>;
-      case 'github copilot':
-        return <Copilot.Color {...iconProps} />;
-      case 'replit ai':
-      case 'replit':
-        return <div style={{ color: '#FD5402' }}><Replit {...iconProps} /></div>;
-      case 'v0 by vercel':
-      case 'v0':
-        return <div className="text-gray-900 dark:text-gray-100"><V0 {...iconProps} /></div>;
-      default:
-        return null;
-    }
-  };
+  const enhancedContent = useMemo(() => {
+    if (!guide.content) return '';
+    return guide.content.replace(/<code>([\s\S]*?)<\/code>/g, (match) => {
+      return match; // Keep original for now, we'll add button separately
+    });
+  }, [guide.content]);
 
   return (
     <div className="min-h-screen bg-background-primary text-text-primary">
@@ -84,7 +64,6 @@ export default function GuideClient({
           <button
             type="button"
             onClick={() => {
-              console.log('Back button clicked');
               router.push('/guides');
             }}
             className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-hover hover:underline mb-6 transition-colors cursor-pointer bg-transparent border-none p-2 -ml-2 focus:outline-none active:opacity-80 relative z-10 font-medium"
@@ -121,9 +100,7 @@ export default function GuideClient({
             {/* Metadata */}
             <div className="flex flex-wrap items-center gap-4 pt-6 border-t border-gray-300 dark:border-gray-600">
               <div className="flex items-center gap-2 px-3 py-1 rounded-full text-sm bg-accent-subtle text-accent-primary font-medium group">
-                <div>
-                  {getIcon()}
-                </div>
+                <LazyGuideIcon tool={guide.tool} />
                 {guide.tool}
               </div>
 
@@ -255,7 +232,6 @@ export default function GuideClient({
             <button
               type="button"
               onClick={() => {
-                console.log('View All Guides button clicked');
                 router.push('/guides');
               }}
               className="px-6 py-2 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 cursor-pointer focus:outline-none"
@@ -282,13 +258,15 @@ export default function GuideClient({
         </div>
       </div>
 
-      {/* Download PDF Modal */}
-      <DownloadPDFModal
-        isOpen={isDownloadModalOpen}
-        onClose={() => setIsDownloadModalOpen(false)}
-        guideTitle={guide.title}
-        guideSlug={guide.slug}
-      />
+      {/* Download PDF Modal - lazy loaded */}
+      {isDownloadModalOpen && (
+        <DownloadPDFModal
+          isOpen={isDownloadModalOpen}
+          onClose={() => setIsDownloadModalOpen(false)}
+          guideTitle={guide.title}
+          guideSlug={guide.slug}
+        />
+      )}
     </div>
   );
 }

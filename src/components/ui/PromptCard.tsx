@@ -2,45 +2,41 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { CheckIcon, ClipboardDocumentIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
-import { Pattern } from '@/types';
-import categories from '@/data/categories';
 
-interface PromptCardProps {
-  pattern: Pattern;
-  index?: number;
+interface PromptItem {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  prompt: string;
 }
 
-export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
+interface PromptCardProps {
+  prompt: PromptItem;
+}
+
+export default function PromptCard({ prompt }: PromptCardProps) {
   const [copied, setCopied] = useState(false);
 
   const handleQuickCopy = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (pattern.content.figmaPrompt) {
-      try {
-        await navigator.clipboard.writeText(pattern.content.figmaPrompt.prompt);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (error) {
-        console.error('Failed to copy prompt:', error);
-      }
+    try {
+      await navigator.clipboard.writeText(prompt.prompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy prompt:', error);
     }
   };
 
-  // No longer using colored chips on listing page
-
   return (
-    <motion.div
-      initial={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      transition={{ delay: index * 0.05, duration: 0.3 }}
-      className="h-full"
-    >
+    <div className="h-full hover:-translate-y-1 transition-transform duration-200">
       <Link
-        href={`/prompts/${pattern.slug}`}
+        href={`/prompts/${prompt.slug}`}
         className="block bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700
                    shadow-card hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-card-hover
                    transition-all h-full flex flex-col"
@@ -49,18 +45,18 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
         <div className="p-8 pb-4">
           <h3 className="text-lg font-semibold text-text-primary mb-3 hover:text-accent-primary
                        transition-colors">
-            {pattern.title}
+            {prompt.title}
           </h3>
-          <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 inline-block">
-            {pattern.category}
+          <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-surface-secondary text-text-secondary inline-block">
+            {prompt.category}
           </span>
         </div>
 
         {/* Prompt Preview */}
         <div className="px-8 pb-4 flex-grow">
           <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-300 dark:border-gray-600">
-            <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-3">
-              {pattern.content.figmaPrompt?.prompt}
+            <p className="text-sm text-text-secondary line-clamp-3">
+              {prompt.prompt}
             </p>
           </div>
         </div>
@@ -75,7 +71,7 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
           >
             {copied ? (
               <>
-                <CheckIcon className="w-4 h-4 text-green-600 dark:text-green-400" />
+                <CheckIcon className="w-4 h-4 text-status-success" />
                 <span>Copied!</span>
               </>
             ) : (
@@ -92,6 +88,6 @@ export default function PromptCard({ pattern, index = 0 }: PromptCardProps) {
           </span>
         </div>
       </Link>
-    </motion.div>
+    </div>
   );
 }

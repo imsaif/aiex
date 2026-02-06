@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import DOMPurify from 'dompurify';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -16,24 +14,13 @@ interface NewsletterDetailClientProps {
   nextNewsletter: Newsletter | null;
 }
 
-// Dark mode color mappings for inline styles
-const darkModeColors: Record<string, string> = {
-  '#0f172a': '#f1f5f9', // Dark navy -> light gray
-  '#334155': '#cbd5e1', // Slate -> light slate
-  '#555555': '#cbd5e1', // Gray -> light slate
-  '#64748b': '#94a3b8', // Muted -> lighter muted
-};
-
-const darkModeBorderColors: Record<string, string> = {
-  '#e2e8f0': '#475569', // Light border -> dark border
-};
-
 export default function NewsletterDetailClient({
   newsletter,
   previousNewsletter,
   nextNewsletter,
 }: NewsletterDetailClientProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [sanitizedContent, setSanitizedContent] = useState(newsletter.content || '');
 
   const formattedDate = new Date(newsletter.publishedAt).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -45,95 +32,18 @@ export default function NewsletterDetailClient({
   const wordCount = newsletter.content ? newsletter.content.split(/\s+/).length : 0;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-  // Sanitize HTML content to prevent XSS attacks
-  const sanitizedContent = useMemo(() => {
-    if (!newsletter.content) return '';
-    if (typeof window === 'undefined') return newsletter.content;
-    return DOMPurify.sanitize(newsletter.content, {
-      ADD_TAGS: ['style'],
-      ADD_ATTR: ['target', 'rel'],
-    });
-  }, [newsletter.content]);
-
-  // Fix inline styles for dark mode
+  // Lazy-load DOMPurify and sanitize content
   useEffect(() => {
-    const applyDarkModeStyles = () => {
-      if (!contentRef.current) return;
-
-      const html = document.documentElement;
-      const isDark = html.getAttribute('data-theme') === 'dark' ||
-        (html.getAttribute('data-theme') === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-      const elements = contentRef.current.querySelectorAll('[style]');
-
-      elements.forEach((el) => {
-        const htmlEl = el as HTMLElement;
-        const currentColor = htmlEl.style.color;
-        const currentBorderColor = htmlEl.style.borderTopColor || htmlEl.style.borderColor;
-
-        if (isDark) {
-          // Store original colors if not already stored
-          if (currentColor && !htmlEl.dataset.originalColor) {
-            htmlEl.dataset.originalColor = currentColor;
-          }
-          if (currentBorderColor && !htmlEl.dataset.originalBorder) {
-            htmlEl.dataset.originalBorder = currentBorderColor;
-          }
-
-          // Apply dark mode colors
-          const originalColor = htmlEl.dataset.originalColor || currentColor;
-          if (originalColor) {
-            const normalizedColor = originalColor.toLowerCase().replace(/\s/g, '');
-            for (const [light, dark] of Object.entries(darkModeColors)) {
-              if (normalizedColor.includes(light.toLowerCase())) {
-                htmlEl.style.color = dark;
-                break;
-              }
-            }
-          }
-
-          // Apply dark mode border colors
-          const originalBorder = htmlEl.dataset.originalBorder || currentBorderColor;
-          if (originalBorder) {
-            for (const [light, dark] of Object.entries(darkModeBorderColors)) {
-              if (originalBorder.toLowerCase().includes(light.toLowerCase())) {
-                htmlEl.style.borderTopColor = dark;
-                htmlEl.style.borderColor = dark;
-                break;
-              }
-            }
-          }
-        } else {
-          // Restore original colors in light mode
-          if (htmlEl.dataset.originalColor) {
-            htmlEl.style.color = htmlEl.dataset.originalColor;
-          }
-          if (htmlEl.dataset.originalBorder) {
-            htmlEl.style.borderTopColor = htmlEl.dataset.originalBorder;
-            htmlEl.style.borderColor = htmlEl.dataset.originalBorder;
-          }
-        }
-      });
-    };
-
-    // Apply on mount
-    applyDarkModeStyles();
-
-    // Watch for theme changes
-    const observer = new MutationObserver(applyDarkModeStyles);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme']
+    if (!newsletter.content) return;
+    import('dompurify').then((mod) => {
+      const DOMPurify = mod.default;
+      setSanitizedContent(
+        DOMPurify.sanitize(newsletter.content, {
+          ADD_TAGS: ['style'],
+          ADD_ATTR: ['target', 'rel'],
+        })
+      );
     });
-
-    // Watch for system preference changes
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', applyDarkModeStyles);
-
-    return () => {
-      observer.disconnect();
-      mediaQuery.removeEventListener('change', applyDarkModeStyles);
-    };
   }, [newsletter.content]);
 
   return (
@@ -169,13 +79,9 @@ export default function NewsletterDetailClient({
           )}
 
           {/* Title */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-text-primary"
-          >
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-text-primary animate-fade-in">
             {newsletter.title}
-          </motion.h1>
+          </h1>
 
           {/* Meta */}
           <div className="flex items-center gap-4 text-text-secondary text-sm">
@@ -208,12 +114,10 @@ export default function NewsletterDetailClient({
 
       {/* Content */}
       <article className="max-w-4xl mx-auto px-6 py-12 md:py-16">
-        <motion.div
+        <div
           ref={contentRef}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="max-w-none [&>*]:max-w-none newsletter-content"
+          className="max-w-none [&>*]:max-w-none newsletter-content newsletter-dark-mode animate-fade-in"
+          style={{ animationDelay: '100ms' }}
           dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         />
       </article>

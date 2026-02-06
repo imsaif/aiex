@@ -1,14 +1,12 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { Newsletter, NewsletterTag } from '@/types';
-import { patterns } from '@/data/patterns';
 
 interface NewsClientProps {
   initialNewsletters: Newsletter[];
@@ -19,21 +17,23 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
   const [filterQuery, setFilterQuery] = useState('');
   const [showAll, setShowAll] = useState(false);
 
-  // Filter newsletters from last 30 days
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgo = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 30);
+    return d;
+  }, []);
 
   const recentNewsletters = useMemo(() => {
     return initialNewsletters.filter(
       (n) => new Date(n.publishedAt) >= thirtyDaysAgo
     );
-  }, [initialNewsletters]);
+  }, [initialNewsletters, thirtyDaysAgo]);
 
   const olderNewsletters = useMemo(() => {
     return initialNewsletters.filter(
       (n) => new Date(n.publishedAt) < thirtyDaysAgo
     );
-  }, [initialNewsletters]);
+  }, [initialNewsletters, thirtyDaysAgo]);
 
   const displayedNewsletters = showAll ? initialNewsletters : recentNewsletters;
 
@@ -55,13 +55,6 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
       day: 'numeric',
     });
   };
-
-  // Get a random pattern for quiet day suggestions (client-side only to avoid hydration mismatch)
-  const [suggestedPattern, setSuggestedPattern] = useState<typeof patterns[0] | null>(null);
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * patterns.length);
-    setSuggestedPattern(patterns[randomIndex]);
-  }, []);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -137,79 +130,37 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
         </div>
 
         {/* Newsletter List */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-0"
-        >
+        <div className="space-y-0 animate-fade-in">
           {filteredNewsletters.map((newsletter, index) => {
             // Quiet day entries have empty content - show inline without link
             const isQuietDay = !newsletter.content || newsletter.content.trim() === '';
 
             return (
-              <motion.div
+              <div
                 key={newsletter.id}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.03 }}
+                className="animate-slide-in"
+                style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}
               >
                 {isQuietDay ? (
-                  // Quiet day - inline display with optional pattern link
-                  suggestedPattern ? (
-                    <Link
-                      href={`/patterns/${suggestedPattern.slug}`}
-                      className="group flex items-center gap-4 py-4 border-b border-border-secondary hover:bg-surface-secondary/50 -mx-4 px-4 transition-colors"
-                    >
-                      {/* Moon icon for quiet days */}
-                      <span className="w-5 h-5 flex items-center justify-center text-text-tertiary flex-shrink-0">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                          <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
-                        </svg>
-                      </span>
-
-                      {/* Date */}
-                      <span className="text-text-tertiary text-sm w-16 flex-shrink-0">
-                        {formatDate(newsletter.publishedAt)}
-                      </span>
-
-                      {/* Summary + Explore label */}
-                      <span className="flex-1 text-text-secondary italic truncate">
-                        {newsletter.summary}
-                        <span className="ml-2 text-text-tertiary not-italic">
-                          Explore: <span className="text-accent-primary group-hover:underline">{suggestedPattern.name}</span>
-                        </span>
-                      </span>
-
-                      {/* Arrow - aligned with other rows */}
-                      <svg
-                        className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary transition-colors flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  // Quiet day - inline display
+                  <div className="flex items-center gap-4 py-4 border-b border-border-secondary -mx-4 px-4">
+                    {/* Moon icon for quiet days */}
+                    <span className="w-5 h-5 flex items-center justify-center text-text-tertiary flex-shrink-0">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                        <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
                       </svg>
-                    </Link>
-                  ) : (
-                    <div className="flex items-center gap-4 py-4 border-b border-border-secondary -mx-4 px-4">
-                      {/* Moon icon for quiet days */}
-                      <span className="w-5 h-5 flex items-center justify-center text-text-tertiary flex-shrink-0">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                          <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
-                        </svg>
-                      </span>
+                    </span>
 
-                      {/* Date */}
-                      <span className="text-text-tertiary text-sm w-16 flex-shrink-0">
-                        {formatDate(newsletter.publishedAt)}
-                      </span>
+                    {/* Date */}
+                    <span className="text-text-tertiary text-sm w-16 flex-shrink-0">
+                      {formatDate(newsletter.publishedAt)}
+                    </span>
 
-                      {/* Summary only */}
-                      <span className="flex-1 text-text-secondary italic">
-                        {newsletter.summary}
-                      </span>
-                    </div>
-                  )
+                    {/* Summary only */}
+                    <span className="flex-1 text-text-secondary italic">
+                      {newsletter.summary}
+                    </span>
+                  </div>
                 ) : (
                   // Regular newsletter - with link
                   <Link
@@ -245,10 +196,10 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                     </svg>
                   </Link>
                 )}
-              </motion.div>
+              </div>
             );
           })}
-        </motion.div>
+        </div>
 
         {/* Empty State */}
         {filteredNewsletters.length === 0 && (
