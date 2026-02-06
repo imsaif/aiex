@@ -209,7 +209,7 @@ const ICON_ACADEMIC_CAP = `<img src="${EMAIL_IMG_BASE}/icon-academic-cap.png" al
 // Product logo image names (match filenames in /public/images/email/)
 const PRODUCT_ICON_NAMES: string[] = [
   'openai', 'vercel', 'figma', 'github', 'google', 'microsoft',
-  'supabase', 'replit', 'anthropic', 'cursor', 'notion', 'linear', 'perplexity',
+  'supabase', 'replit', 'claude', 'anthropic', 'cursor', 'notion', 'linear', 'perplexity',
 ];
 
 function getProductIconImg(productName: string): string {
