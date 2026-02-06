@@ -726,7 +726,7 @@ async function sendAdminNotification(
 
   try {
     await resend.emails.send({
-      from: 'AI UX Daily <noreply@aiuxdesign.guide>',
+      from: 'AI UX Daily <imran@aiuxdesign.guide>',
       to: process.env.ADMIN_EMAIL,
       subject: `📰 Newsletter Draft Ready: ${draft.title}`,
       html: `

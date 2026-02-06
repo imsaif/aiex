@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     const emailHtml = generateAuditReportEmail(results as AnalysisResults);
 
     await resend.emails.send({
-      from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
+      from: 'AI UX Patterns <imran@aiuxdesign.guide>',
       to: email,
       subject: `Your AI UX Audit Report - Score: ${results.score}/${results.maxScore}`,
       html: emailHtml,

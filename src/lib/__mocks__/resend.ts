@@ -22,7 +22,7 @@ export const mockResendClient = {
     send: jest.fn<() => Promise<EmailResponse>>().mockResolvedValue({
       data: {
         id: 'test-email-id',
-        from: 'noreply@aiuxdesign.guide',
+        from: 'imran@aiuxdesign.guide',
         to: 'test@example.com',
         created_at: new Date().toISOString(),
       },

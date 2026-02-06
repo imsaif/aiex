@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-06 12:57 (MacBook)
+- **Pattern:** Newsletter Email Template Redesign
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Updated generateHTML() and generateWeeklyHTML() to match Feb 2 redesign: replaced border-left cards with subtle border-bottom dividers, updated typography (20px headlines, 16px/1.75 body), removed emoji headings and background takeaway boxes. Added email-safe hosted PNG icons (17 images in public/images/email/) for product logos (Simple Icons) and section headings (Heroicons) since Gmail strips inline SVGs. Replaced flexbox with table layout for email compatibility. Changed sender address from noreply@ to imran@aiuxdesign.guide across all 7 email-sending files.
+
 ### Session 2026-02-02 21:07 (MacBook)
 - **Pattern:** Newsletter Design Redesign
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Implemented smart prompt system that appears after users browse 4 unique patterns, offering the handbook PDF download. Created usePatternViewTracker hook, SmartHandbookPrompt component, and added localStorage/sessionStorage utilities for view tracking and dismissal. Non-blocking modal with email capture that respects user dismissal per session.
 
 ### Session 2026-01-08 10:42 (MacBook)
-- **Pattern:** Newsletter System Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 6
-- **Tests Added/Modified:** 0
-- **Notes:** Diagnosed why daily newsletter didn't run (cron was 9 AM UTC, user expected 9 AM IST). Updated cron schedule to 3 AM UTC (8:30 AM IST). Fixed critical bugs: secureCompareSecret was comparing wrong values, resend.batch getter was missing (causing silent email failures). Added failure warnings to admin UI. Added batch mock for tests. Added comprehensive newsletter troubleshooting checklist to CLAUDE.md Known Issues section.
-
-### Session 2026-01-07 18:08 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

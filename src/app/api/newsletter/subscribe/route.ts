@@ -170,7 +170,7 @@ async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | '
     }
 
     const result = await resend.emails.send({
-      from: 'AI UX Patterns <noreply@aiuxdesign.guide>',
+      from: 'AI UX Patterns <imran@aiuxdesign.guide>',
       to: email,
       subject,
       html,
