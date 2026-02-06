@@ -199,6 +199,29 @@ function getPatternTitle(slug: string): string {
   return pattern ? pattern.title : slug;
 }
 
+// Email-safe icon helpers (hosted PNGs, since email clients strip inline SVGs)
+const EMAIL_IMG_BASE = `${SITE_URL}/images/email`;
+
+const ICON_NEWSPAPER = `<img src="${EMAIL_IMG_BASE}/icon-newspaper.png" alt="" width="18" height="18" style="width: 18px; height: 18px; display: inline; vertical-align: -3px; margin-right: 6px;" />`;
+const ICON_CURSOR_CLICK = `<img src="${EMAIL_IMG_BASE}/icon-cursor-click.png" alt="" width="18" height="18" style="width: 18px; height: 18px; display: inline; vertical-align: -3px; margin-right: 6px;" />`;
+const ICON_ACADEMIC_CAP = `<img src="${EMAIL_IMG_BASE}/icon-academic-cap.png" alt="" width="18" height="18" style="width: 18px; height: 18px; display: inline; vertical-align: -3px; margin-right: 6px;" />`;
+
+// Product logo image names (match filenames in /public/images/email/)
+const PRODUCT_ICON_NAMES: string[] = [
+  'openai', 'vercel', 'figma', 'github', 'google', 'microsoft',
+  'supabase', 'replit', 'anthropic', 'cursor', 'notion', 'linear', 'perplexity',
+];
+
+function getProductIconImg(productName: string): string {
+  const name = productName.toLowerCase();
+  for (const key of PRODUCT_ICON_NAMES) {
+    if (name.includes(key)) {
+      return `<img src="${EMAIL_IMG_BASE}/${key}.png" alt="" width="14" height="14" style="width: 14px; height: 14px; display: inline; vertical-align: -2px; margin-right: 5px;" />`;
+    }
+  }
+  return `<img src="${EMAIL_IMG_BASE}/fallback.png" alt="" width="14" height="14" style="width: 14px; height: 14px; display: inline; vertical-align: -2px; margin-right: 5px;" />`;
+}
+
 // Primary AI product sources - these get priority
 const AI_PRODUCT_SOURCES = [
   'openai', 'anthropic', 'google ai', 'microsoft ai', 'cursor', 'replit',
@@ -584,21 +607,18 @@ RESPOND IN THIS EXACT JSON FORMAT:
 function generateHTML(data: NewsletterData): string {
   const itemsHTML = data.items
     .map((item) => {
-      const color = getProductColor(item.product);
-      const bgColor = getPatternBgColor(color);
-
       return `
-<div style="margin: 0 0 32px; border-left: 3px solid ${color}; padding-left: 20px;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-    <span style="font-size: 11px; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${item.product}</span>
-    <span style="font-size: 12px; color: #94a3b8;">${item.date}</span>
+<div style="margin: 0 0 40px; padding: 0 0 32px 0; border-bottom: 1px solid #e2e8f0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 6px;"><tr>
+    <td style="font-size: 11px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${getProductIconImg(item.product)}${item.product}</td>
+    <td align="right" style="font-size: 14px; color: #475569;">${item.date}</td>
+  </tr></table>
+  <p style="margin: 0 0 20px; font-size: 20px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
+  <p style="margin: 0 0 12px; font-size: 16px; line-height: 1.75; color: #334155;">${item.description} <a href="${item.sourceUrl}" style="color: #475569; font-size: 14px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <div style="margin: 28px 0 24px 0;">
+    <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #334155;"><strong>Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
   </div>
-  <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
-  <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
-  <div style="margin: 0 0 16px; padding: 12px 16px; background: #f8fafc; border-radius: 8px;">
-    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #334155;"><strong style="color: #0f172a;">💡 Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
-  </div>
-  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: ${bgColor}; color: ${color}; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
+  <p style="margin: 20px 0 0 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: #f1f5f9; color: #0f172a; padding: 3px 10px; border-radius: 4px; font-size: 14px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
 </div>`;
     })
     .join('\n');
@@ -608,19 +628,19 @@ function generateHTML(data: NewsletterData): string {
 
 <div style="border-top: 1px solid #e2e8f0; margin-bottom: 40px;"></div>
 
-<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">📱 Today in AI Products</h2>
+<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">${ICON_NEWSPAPER}Today in AI Products</h2>
 
 ${itemsHTML}
 
 <div style="background-color: #1e293b; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px;">🎯 Today's Takeaway</h2>
-  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #94a3b8;"><strong style="color: #ffffff;">${data.takeaway.title}</strong></p>
-  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #94a3b8;">${data.takeaway.body}</p>
+  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">${ICON_CURSOR_CLICK}Today's Takeaway</h2>
+  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #f1f5f9;"><strong style="color: #f8fafc;">${data.takeaway.title}</strong></p>
+  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #f1f5f9;">${data.takeaway.body}</p>
 </div>
 
 <div style="text-align: center; padding: 24px 0;">
-  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want to learn more about the patterns mentioned today?</p>
-  <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
+  <p style="margin: 0 0 24px; font-size: 16px; color: #f1f5f9;">Want to learn more about the patterns mentioned today?</p>
+  <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
 </div>
   `.trim();
 }
@@ -628,21 +648,18 @@ ${itemsHTML}
 function generateWeeklyHTML(data: WeeklyNewsletterData): string {
   const itemsHTML = data.items
     .map((item) => {
-      const color = getProductColor(item.product);
-      const bgColor = getPatternBgColor(color);
-
       return `
-<div style="margin: 0 0 32px; border-left: 3px solid ${color}; padding-left: 20px;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-    <span style="font-size: 11px; color: ${color}; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${item.product}</span>
-    <span style="font-size: 12px; color: #94a3b8;">${item.date}</span>
+<div style="margin: 0 0 40px; padding: 0 0 32px 0; border-bottom: 1px solid #e2e8f0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 6px;"><tr>
+    <td style="font-size: 11px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${getProductIconImg(item.product)}${item.product}</td>
+    <td align="right" style="font-size: 14px; color: #475569;">${item.date}</td>
+  </tr></table>
+  <p style="margin: 0 0 20px; font-size: 20px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
+  <p style="margin: 0 0 12px; font-size: 16px; line-height: 1.75; color: #334155;">${item.description} <a href="${item.sourceUrl}" style="color: #475569; font-size: 14px; text-decoration: none; margin-left: 4px;">Source →</a></p>
+  <div style="margin: 28px 0 24px 0;">
+    <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #334155;"><strong>Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
   </div>
-  <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
-  <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
-  <div style="margin: 0 0 16px; padding: 12px 16px; background: #f8fafc; border-radius: 8px;">
-    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #334155;"><strong style="color: #0f172a;">💡 Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
-  </div>
-  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: ${bgColor}; color: ${color}; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
+  <p style="margin: 20px 0 0 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: #f1f5f9; color: #0f172a; padding: 3px 10px; border-radius: 4px; font-size: 14px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
 </div>`;
     })
     .join('\n');
@@ -654,27 +671,27 @@ function generateWeeklyHTML(data: WeeklyNewsletterData): string {
 
 <div style="border-top: 1px solid #e2e8f0; margin-bottom: 40px;"></div>
 
-<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">📱 This Week in AI Products</h2>
+<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">${ICON_NEWSPAPER}This Week in AI Products</h2>
 
 ${itemsHTML}
 
 <div style="background-color: #1e293b; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px;">🎯 Steal This Week</h2>
-  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #94a3b8;"><strong style="color: #ffffff;">${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}</strong></p>
-  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #94a3b8;">${data.stealThisWeek.insight}</p>
+  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">${ICON_CURSOR_CLICK}Steal This Week</h2>
+  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #f1f5f9;"><strong style="color: #f8fafc;">${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}</strong></p>
+  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #f1f5f9;">${data.stealThisWeek.insight}</p>
 </div>
 
 <div style="background-color: #0f172a; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px;">📚 Pattern to Know</h2>
-  <h3 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #ffffff;">${getPatternTitle(data.patternToKnow.patternSlug)}</h3>
-  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #cbd5e1;">${data.patternToKnow.explanation}</p>
-  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.7; color: #cbd5e1;"><strong style="color: #ffffff;">When to use it:</strong> ${data.patternToKnow.whenToUse}</p>
-  <p style="margin: 0;"><a href="${SITE_URL}/patterns/${data.patternToKnow.patternSlug}" style="color: #60a5fa; text-decoration: none; font-size: 15px; font-weight: 500;">Deep dive on ${getPatternTitle(data.patternToKnow.patternSlug)} →</a></p>
+  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">${ICON_ACADEMIC_CAP}Pattern to Know</h2>
+  <h3 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #f8fafc;">${getPatternTitle(data.patternToKnow.patternSlug)}</h3>
+  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #f1f5f9;">${data.patternToKnow.explanation}</p>
+  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.7; color: #f1f5f9;"><strong style="color: #f8fafc;">When to use it:</strong> ${data.patternToKnow.whenToUse}</p>
+  <p style="margin: 0;"><a href="${SITE_URL}/patterns/${data.patternToKnow.patternSlug}" style="color: #2563eb; text-decoration: none; font-size: 15px; font-weight: 500;">Deep dive on ${getPatternTitle(data.patternToKnow.patternSlug)} →</a></p>
 </div>
 
 <div style="text-align: center; padding: 24px 0;">
-  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want the full breakdown on any pattern mentioned above?</p>
-  <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
+  <p style="margin: 0 0 24px; font-size: 16px; color: #f1f5f9;">Want the full breakdown on any pattern mentioned above?</p>
+  <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
 </div>
   `.trim();
 }
