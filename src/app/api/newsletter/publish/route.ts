@@ -104,6 +104,7 @@ async function sendNewsletterToSubscribers(
 
 // Wrap newsletter HTML content for email delivery
 function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnlineUrl: string): string {
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
   return `
     <!DOCTYPE html>
     <html>
@@ -111,18 +112,36 @@ function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnl
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
-      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-          <p style="text-align: center; font-size: 12px; color: #666; margin-bottom: 20px;">
-            <a href="${viewOnlineUrl}" style="color: #666;">View in browser</a>
+      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f1f5f9;">
+        <div style="max-width: 640px; margin: 0 auto; padding: 24px 16px;">
+
+          <!-- View in browser -->
+          <p style="text-align: center; font-size: 12px; color: #94a3b8; margin: 0 0 16px;">
+            <a href="${viewOnlineUrl}" style="color: #94a3b8; text-decoration: none;">View in browser</a>
           </p>
-          ${content}
-          <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
-          <p style="font-size: 12px; color: #999; text-align: center;">
-            <a href="${unsubscribeUrl}" style="color: #666; text-decoration: underline;">
-              Unsubscribe from these emails
+
+          <!-- Header -->
+          <div style="background-color: #0f172a; padding: 28px 32px; border-radius: 12px 12px 0 0; text-align: center;">
+            <a href="${SITE_URL}" style="text-decoration: none;">
+              <h1 style="margin: 0; font-size: 20px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">AI UX Design Guide</h1>
             </a>
-          </p>
+          </div>
+
+          <!-- Content -->
+          <div style="background-color: #ffffff; padding: 40px 32px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+            ${content}
+          </div>
+
+          <!-- Footer -->
+          <div style="background-color: #f8fafc; padding: 24px 32px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px; text-align: center;">
+            <p style="margin: 0 0 8px; font-size: 13px; color: #64748b;">
+              <a href="${SITE_URL}" style="color: #64748b; text-decoration: none; font-weight: 500;">aiuxdesign.guide</a>
+            </p>
+            <p style="margin: 0; font-size: 12px; color: #94a3b8;">
+              <a href="${unsubscribeUrl}" style="color: #94a3b8; text-decoration: underline;">Unsubscribe</a>
+            </p>
+          </div>
+
         </div>
       </body>
     </html>

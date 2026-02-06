@@ -639,7 +639,7 @@ ${itemsHTML}
 </div>
 
 <div style="text-align: center; padding: 24px 0;">
-  <p style="margin: 0 0 24px; font-size: 16px; color: #f1f5f9;">Want to learn more about the patterns mentioned today?</p>
+  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want to learn more about the patterns mentioned today?</p>
   <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
 </div>
   `.trim();
@@ -690,7 +690,7 @@ ${itemsHTML}
 </div>
 
 <div style="text-align: center; padding: 24px 0;">
-  <p style="margin: 0 0 24px; font-size: 16px; color: #f1f5f9;">Want the full breakdown on any pattern mentioned above?</p>
+  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want the full breakdown on any pattern mentioned above?</p>
   <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
 </div>
   `.trim();
