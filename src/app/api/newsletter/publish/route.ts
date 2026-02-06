@@ -113,7 +113,7 @@ function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnl
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
       </head>
       <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f1f5f9;">
-        <div style="max-width: 640px; margin: 0 auto; padding: 24px 16px;">
+        <div style="max-width: 780px; margin: 0 auto; padding: 24px 16px;">
 
           <!-- View in browser -->
           <p style="text-align: center; font-size: 12px; color: #94a3b8; margin: 0 0 16px;">
@@ -128,7 +128,7 @@ function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnl
           </div>
 
           <!-- Content -->
-          <div style="background-color: #ffffff; padding: 40px 32px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+          <div style="background-color: #ffffff; padding: 40px 48px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
             ${content}
           </div>
 
