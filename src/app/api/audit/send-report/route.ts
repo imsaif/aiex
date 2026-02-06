@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
 
     await resend.emails.send({
       from: 'AI UX Patterns <imran@aiuxdesign.guide>',
+      replyTo: 'imranrizom@gmail.com',
       to: email,
       subject: `Your AI UX Audit Report - Score: ${results.score}/${results.maxScore}`,
       html: emailHtml,

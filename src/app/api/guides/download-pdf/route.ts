@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
     try {
       await resend.emails.send({
         from: 'AI UX Design Guide <imran@aiuxdesign.guide>',
+        replyTo: 'imranrizom@gmail.com',
         to: email,
         subject: `Your ${guideTitle} PDF is Ready`,
         html: getGuideDownloadEmail(guideTitle, downloadUrl, email),

@@ -47,6 +47,7 @@ async function sendNewsletterToSubscribers(
       const unsubscribeUrl = `${baseUrl}/unsubscribe?token=${subscriber.unsubscribeToken}`;
       return {
         from: 'AI UX Design Guide <imran@aiuxdesign.guide>',
+        replyTo: 'imranrizom@gmail.com',
         to: subscriber.email,
         subject: `${subjectPrefix} ${newsletter.title}`,
         html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl),
@@ -146,6 +147,7 @@ async function sendTestEmail(
   try {
     await resend.emails.send({
       from: 'AI UX Design Guide <imran@aiuxdesign.guide>',
+      replyTo: 'imranrizom@gmail.com',
       to: adminEmail,
       subject: `[TEST] ${subjectPrefix} ${newsletter.title}`,
       html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl),

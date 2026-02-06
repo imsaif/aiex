@@ -171,6 +171,7 @@ async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | '
 
     const result = await resend.emails.send({
       from: 'AI UX Patterns <imran@aiuxdesign.guide>',
+      replyTo: 'imranrizom@gmail.com',
       to: email,
       subject,
       html,
