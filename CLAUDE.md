@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-09 15:15 (MacBook)
+- **Pattern:** Homepage SEO & About Page Updates
+- **Status:** ✅ Completed
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Homepage SEO overhaul: updated H1 to "AI UX Design Patterns", new subtitle, updated meta title and description in generateHomeMetadata(). Added intro paragraph between hero and pattern grid. Added "What is aiuxdesign.guide?" definition block on /about page after bio section. Updated newsletter signup copy across hero, pattern detail, and InlineNewsletterSignup component to transparently communicate PDF + daily/weekly email cadence.
+
 ### Session 2026-02-09 13:38 (MacBook)
 - **Pattern:** About Page Redesign & Author Footer
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed Twitter/LinkedIn OAuth callback failing due to environment variable mismatch. Changed `NEXT_PUBLIC_BASE_URL` to `NEXT_PUBLIC_SITE_URL` in 4 files (twitter.ts, linkedin.ts, callback route, bulk-publish route) so OAuth redirects work correctly in production.
 
 ### Session 2026-01-12 17:49 (MacBook)
-- **Pattern:** Selective Memory & Universal Access Pattern Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed client-side exceptions on /patterns/selective-memory and /patterns/universal-access-patterns pages. Fixed malformed template literal ending in universal-access-patterns/code-examples.ts (changed `\`` to backtick). Fixed property name mismatch in both pattern figmaPrompt objects (changed `customizationTips` to `tips` to match FigmaPrompt type).
-
-### Session 2026-01-12 14:22 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

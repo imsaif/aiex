@@ -98,12 +98,12 @@ export default function HomeClient() {
           <div className="text-center max-w-4xl mx-auto">
             {/* Heading - Larger & More Prominent */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9" style={{ color: 'var(--text-hero)' }}>
-              Discover AI Design<br />Inspiration & Patterns
+              AI UX Design Patterns
             </h1>
 
             {/* Subheading - More Space */}
             <p className="text-2xl md:text-3xl text-text-secondary mb-12">
-              Real examples. Best practices.
+              How the world&apos;s best AI products design their experiences, documented, analyzed, and continuously updated.
             </p>
 
             {/* Company Logo Carousel - Social Proof Before CTA */}
@@ -125,6 +125,13 @@ export default function HomeClient() {
           </div>
         </div>
       </section>
+
+      {/* Intro Paragraph */}
+      <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
+        <p className="text-base md:text-lg text-text-secondary text-center leading-relaxed">
+          The AI UX design pattern library for product designers and teams building AI-powered experiences. Each pattern is documented from 3+ real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, and Notion, with examples, code demos, and research-backed guidance you can apply today.
+        </p>
+      </div>
 
       {/* Main Content with Sidebar */}
       <div id="patterns" className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
@@ -262,22 +269,13 @@ export default function HomeClient() {
                       </p>
 
                       {/* Divider */}
-                      <div className="border-t border-gray-300 mb-6"></div>
+                      <div className="border-t border-gray-200 dark:border-gray-700 mb-6"></div>
 
                       {/* Top Metadata Row - Category & Status */}
                       <div className="flex items-center gap-2 mb-6">
-                        <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                        <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
                           {pattern.category}
                         </span>
-                        {pattern.status === 'in-progress' && (
-                          <span
-                            className="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800 cursor-help"
-                            title="Work in Progress: This pattern is not fully documented yet. Documentation and code examples are being refined."
-                            aria-label="Work in Progress pattern"
-                          >
-                            WIP
-                          </span>
-                        )}
                       </div>
 
                       {/* Used By Logos Section */}

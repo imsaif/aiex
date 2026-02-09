@@ -171,6 +171,14 @@ export default function AboutPage() {
           </p>
         </section>
 
+        {/* Section 3.5: What is aiuxdesign.guide? */}
+        <section className="mb-20 space-y-6">
+          <h2 className="text-2xl md:text-3xl font-semibold">What is aiuxdesign.guide?</h2>
+          <p className="text-text-secondary text-lg leading-relaxed">
+            A framework of 28 validated AI/UX design patterns, documented from 50+ shipped AI products including ChatGPT, Claude, GitHub Copilot, Midjourney, and Google&apos;s AI features. It&apos;s the practical reference for designing AI-powered experiences, covering everything from contextual assistance and human-in-the-loop collaboration to error recovery, privacy controls, and harm prevention.
+          </p>
+        </section>
+
         {/* Section 4: The Pattern Framework */}
         <section className="mb-20">
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">The Pattern Framework</h2>

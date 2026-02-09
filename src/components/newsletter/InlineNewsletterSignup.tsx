@@ -131,7 +131,7 @@ export function InlineNewsletterSignup({
             {/* Value Proposition / Subheading */}
             {(isHero || ((isPatternDetail || isNews) && customSubheading)) && (
               <p className={`text-text-secondary mb-4 font-medium ${isNews ? 'text-sm' : 'text-base text-center'}`}>
-                {customSubheading || 'Get 6 essential AI design patterns'}
+                {customSubheading || 'Get 6 essential AI design patterns (free PDF) + weekly AI/UX analysis'}
               </p>
             )}
 
@@ -201,7 +201,7 @@ export function InlineNewsletterSignup({
             {/* Trust Badge */}
             {(isHero || isPatternDetail || isNews) && (
               <p className={`text-xs mt-4 ${isNews ? '' : 'text-center'} ${darkBackground ? 'text-gray-400' : 'text-text-secondary'}`}>
-                By subscribing, you agree to receive the handbook and occasional updates about new AI design patterns. Unsubscribe anytime.
+                You&apos;ll get the PDF instantly + daily AI/UX updates with a weekly roundup. Unsubscribe anytime.
               </p>
             )}
           </motion.form>

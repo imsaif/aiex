@@ -101,19 +101,16 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            Discover AI Design<br />
-            <span className="text-text-secondary">
-              Inspiration & Patterns
-            </span>
+            AI UX Design Patterns
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             className="text-xl md:text-2xl text-text-secondary mb-10 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
           >
-            Real examples. Best practices.
+            How the world&apos;s best AI products design their experiences, documented, analyzed, and continuously updated.
           </motion.p>
           
           {/* Smart Search Chat */}

@@ -275,7 +275,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             <InlineNewsletterSignup
               variant="pattern-detail"
               customHeading="Want More Patterns Like This?"
-              customSubheading="Get 6 essential AI design patterns delivered instantly"
+              customSubheading="Get 6 essential AI design patterns (free PDF) + weekly AI/UX analysis"
             />
           </div>
         </motion.section>
