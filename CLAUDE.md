@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-09 13:38 (MacBook)
+- **Pattern:** About Page Redesign & Author Footer
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Complete rewrite of /about page per spec: 9 sections including creator hero with grain background, bio in first-person voice, pattern framework list, criteria cards with icons, stats cards, tools card grid, open source CTAs, and newsletter signup. Upgraded all cards to match site design tokens (shadow-card, rounded-2xl, bg-surface-primary, hover states). Created AuthorFooter component added to all pattern detail pages with bio, links (Portfolio, Gist.design, GitHub). Updated copy to present tense for ongoing work feel. Added Claude and Google to referrer list.
+
 ### Session 2026-02-06 19:57 (MacBook)
 - **Pattern:** Vercel Speed Insights Performance Optimization
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed client-side exceptions on /patterns/selective-memory and /patterns/universal-access-patterns pages. Fixed malformed template literal ending in universal-access-patterns/code-examples.ts (changed `\`` to backtick). Fixed property name mismatch in both pattern figmaPrompt objects (changed `customizationTips` to `tips` to match FigmaPrompt type).
 
 ### Session 2026-01-12 14:22 (MacBook)
-- **Pattern:** News Page Client-Side Error Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed client-side exception on /news page caused by newsletters with empty content. Added null checks for newsletter.content in newsletter-detail-client.tsx before calling .split() and DOMPurify.sanitize(). Added server-side redirect to 404 for "quiet day" newsletters without content. Fixed named import for InlineNewsletterSignup component.
-
-### Session 2026-01-08 10:45 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

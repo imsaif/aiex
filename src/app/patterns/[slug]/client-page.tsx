@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { usePatternViewTracker } from '@/hooks';
 import { SmartHandbookPrompt } from '@/components/smart-prompt';
+import AuthorFooter from '@/components/sections/AuthorFooter';
 
 // Lazy load heavy components to reduce initial bundle size
 const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
@@ -139,15 +140,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getCategoryClasses(categories.find(c => c.title === pattern.category)?.color)}`}>
               {pattern.category}
             </span>
-            {pattern.status === 'in-progress' && (
-              <span
-                className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-700 cursor-help"
-                title="Work in Progress: This pattern is not fully documented yet. Documentation and code examples are being refined."
-                aria-label="Work in Progress pattern"
-              >
-                Work in Progress
-              </span>
-            )}
           </div>
         </div>
         <h1 className="text-5xl font-bold mt-6 mb-4 text-text-primary">{pattern.title}</h1>
@@ -318,7 +310,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           {previousPattern ? (
             <Link
               href={`/patterns/${previousPattern.slug}`}
-              className="flex items-center text-gray-600 hover:text-gray-800 dark:text-white dark:hover:text-gray-100 group mb-4 sm:mb-0"
+              className="flex items-center text-text-secondary hover:text-text-primary group mb-4 sm:mb-0"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 group-hover:transform group-hover:-translate-x-1 transition-transform">
                 <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -337,7 +329,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           {nextPattern ? (
             <Link
               href={`/patterns/${nextPattern.slug}`}
-              className="flex items-center text-gray-600 hover:text-gray-800 dark:text-white dark:hover:text-gray-100 text-right group mt-4 sm:mt-0"
+              className="flex items-center text-text-secondary hover:text-text-primary text-right group mt-4 sm:mt-0"
             >
               <span>
                 <span className="block text-sm text-text-tertiary">Next Pattern</span>
@@ -349,6 +341,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </Link>
           ) : <div />}
         </motion.div>
+
+        {/* Author Footer */}
+        <AuthorFooter />
       </div>
 
       {/* Smart Handbook Prompt - appears after viewing 4 patterns */}
