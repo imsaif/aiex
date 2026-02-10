@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-10 15:49 (MacBook)
+- **Pattern:** Agent Readability Audit Kit Page
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Created new /audit-kit page with Agent Readability Audit Kit — a 3-page downloadable PDF toolkit for testing how AI agents read and represent products. Merged 3 Desktop PDFs into one combined PDF. Built split-hero layout mirroring /toolkit page with 3 "What's Inside" cards (5-Prompt Test, Layer Stripping Checklist, Gap-Filling Scorecard), download-first flow with newsletter signup, and Continue Learning section. Added Audit Kit to Navbar Resources dropdown and Footer Resources column.
+
 ### Session 2026-02-09 15:15 (MacBook)
 - **Pattern:** Homepage SEO & About Page Updates
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed newsletter cron 500 errors by changing Prisma schema `sources` and `structuredData` from String to Json types. Removed auto social post generation from cron (now manual via admin UI). Fixed JSON serialization across all social post API routes. Fixed Resend batch API response parsing bug that showed "sent to 0 subscribers" by correctly accessing nested `result.data.data` array. Deployed with one-time `--accept-data-loss` for schema migration.
 
 ### Session 2026-01-25 19:26 (MacBook)
-- **Pattern:** Social Media OAuth Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 5
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed Twitter/LinkedIn OAuth callback failing due to environment variable mismatch. Changed `NEXT_PUBLIC_BASE_URL` to `NEXT_PUBLIC_SITE_URL` in 4 files (twitter.ts, linkedin.ts, callback route, bulk-publish route) so OAuth redirects work correctly in production.
-
-### Session 2026-01-12 17:49 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

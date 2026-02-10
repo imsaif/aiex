@@ -12,6 +12,7 @@ import {
   NewspaperIcon,
   MagnifyingGlassIcon,
   FolderIcon,
+  DocumentArrowDownIcon,
 } from '@heroicons/react/24/outline';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import SearchModal from '../ui/SearchModal';
@@ -70,7 +71,7 @@ const Navbar = () => {
 
   // Check if any resource route is active
   const isResourcesActive = () => {
-    return pathname.startsWith('/prompts') || pathname.startsWith('/guides');
+    return pathname.startsWith('/prompts') || pathname.startsWith('/guides') || pathname.startsWith('/audit-kit');
   };
 
   // Get link classes based on active state - minimal style with no layout shift
@@ -198,6 +199,14 @@ const Navbar = () => {
                       >
                         <BookOpenIcon className="w-5 h-5" />
                         <span>Guides</span>
+                      </Link>
+                      <Link
+                        href="/audit-kit"
+                        className={getDropdownItemClasses('/audit-kit')}
+                        onClick={() => setIsResourcesOpen(false)}
+                      >
+                        <DocumentArrowDownIcon className="w-5 h-5" />
+                        <span>Audit Kit</span>
                       </Link>
                     </div>
                   </div>
