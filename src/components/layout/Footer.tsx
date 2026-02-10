@@ -65,7 +65,7 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
-                      href="/audit-kit"
+                      href="/agent-readability-audit-kit"
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Agent Readability Audit

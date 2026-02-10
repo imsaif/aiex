@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: 'Agent Readability Audit | Free Download',
     description:
       'A 3-page toolkit to test how AI agents read, understand, and represent your product. Free PDF, no email required.',
-    url: 'https://www.aiuxdesign.guide/audit-kit',
+    url: 'https://www.aiuxdesign.guide/agent-readability-audit-kit',
     siteName: 'AI UX Design Guide',
     type: 'website',
   },

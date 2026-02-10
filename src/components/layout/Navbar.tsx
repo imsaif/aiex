@@ -71,7 +71,7 @@ const Navbar = () => {
 
   // Check if any resource route is active
   const isResourcesActive = () => {
-    return pathname.startsWith('/prompts') || pathname.startsWith('/guides') || pathname.startsWith('/audit-kit');
+    return pathname.startsWith('/prompts') || pathname.startsWith('/guides') || pathname.startsWith('/agent-readability-audit-kit');
   };
 
   // Get link classes based on active state - minimal style with no layout shift
@@ -201,8 +201,8 @@ const Navbar = () => {
                         <span>Guides</span>
                       </Link>
                       <Link
-                        href="/audit-kit"
-                        className={getDropdownItemClasses('/audit-kit')}
+                        href="/agent-readability-audit-kit"
+                        className={getDropdownItemClasses('/agent-readability-audit-kit')}
                         onClick={() => setIsResourcesOpen(false)}
                       >
                         <DocumentArrowDownIcon className="w-5 h-5" />

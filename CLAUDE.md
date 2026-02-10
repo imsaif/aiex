@@ -233,6 +233,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-10 16:16 (MacBook)
+- **Pattern:** Agent Readability Audit Kit URL Rename
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Renamed audit kit route from `/audit-kit` to `/agent-readability-audit-kit`. Updated directory name, OG metadata URL, Navbar dropdown link + isResourcesActive, and Footer link.
+
 ### Session 2026-02-10 15:49 (MacBook)
 - **Pattern:** Agent Readability Audit Kit Page
 - **Status:** ✅ Completed
@@ -297,13 +304,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Created new /toolkit landing page with split hero layout for free PDF download. Implemented download-first flow (PDF downloads immediately, then shows email signup). Added 2-page branded PDF (Intent-Clarity Spectrum + Conversation Checklist). Built responsive mobile layout with condensed top section. Added darkBackground prop to InlineNewsletterSignup. Used Heroicons and design tokens throughout. Added toolkit link to Footer.
 
 ### Session 2026-01-26 11:15 (MacBook)
-- **Pattern:** Newsletter Cron & Email Sending Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 8
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed newsletter cron 500 errors by changing Prisma schema `sources` and `structuredData` from String to Json types. Removed auto social post generation from cron (now manual via admin UI). Fixed JSON serialization across all social post API routes. Fixed Resend batch API response parsing bug that showed "sent to 0 subscribers" by correctly accessing nested `result.data.data` array. Deployed with one-time `--accept-data-loss` for schema migration.
-
-### Session 2026-01-25 19:26 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
