@@ -235,6 +235,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-11 23:45 (MacBook)
+- **Pattern:** Beehiiv Newsletter Subscriber Sync
+- **Status:** ✅ Completed
+- **Files Changed:** 10
+- **Tests Added/Modified:** 0
+- **Notes:** Migrated newsletter subscriber sync to Beehiiv (dual-write on signup, fire-and-forget). Created `src/lib/beehiiv.ts` helper. Initially moved all newsletter sending to Beehiiv, but reverted publish/send-update routes back to Resend after discovering Beehiiv free tier locks Create Post API behind Enterprise. Final state: Resend handles all email sending (preserving one-tap mobile workflow), Beehiiv receives subscriber syncs for future migration. Added BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID to env validation and Vercel. Tested subscribe flow locally — confirmed dual-write to both Prisma DB and Beehiiv API.
+
 ### Session 2026-02-10 16:16 (MacBook)
 - **Pattern:** Agent Readability Audit Kit URL Rename
 - **Status:** ✅ Completed
@@ -299,13 +306,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Implemented new unsubscribe page with frequency preferences (all/weekly/none) and optional feedback collection. Added emailFrequency, unsubscribeReason, and unsubscribedAt fields to Subscriber model. Created /unsubscribe page with clear UX (unsubscribe primary action, weekly-only as alternative). Updated newsletter publish logic to filter subscribers by frequency. Added frequency column and filter to admin subscribers page.
 
 ### Session 2026-01-28 22:27 (MacBook)
-- **Pattern:** AI Interaction Toolkit Landing Page
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Created new /toolkit landing page with split hero layout for free PDF download. Implemented download-first flow (PDF downloads immediately, then shows email signup). Added 2-page branded PDF (Intent-Clarity Spectrum + Conversation Checklist). Built responsive mobile layout with condensed top section. Added darkBackground prop to InlineNewsletterSignup. Used Heroicons and design tokens throughout. Added toolkit link to Footer.
-
-### Session 2026-01-26 11:15 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
