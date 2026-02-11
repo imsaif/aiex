@@ -17,4 +17,7 @@ export const resend = {
   get emails() {
     return getResend().emails;
   },
+  get batch() {
+    return getResend().batch;
+  },
 };

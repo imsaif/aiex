@@ -145,9 +145,9 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 - `npm run fix-patterns` - Fix pattern data structure issues
 
 ### Newsletter & Email Management
-- `npm run send-newsletter` - Register pattern updates for Beehiiv newsletter (interactive mode)
-- Newsletter delivery via **Beehiiv dashboard** (free tier — no Send API)
-- Transactional emails (welcome, audit, guides) still via **Resend**
+- `npm run send-newsletter` - Send pattern update emails to subscribers (interactive mode)
+- Newsletter delivery via **Resend** batch API (transactional + newsletters)
+- **Beehiiv** subscriber sync on signup for future migration
 - See [Newsletter Documentation](docs/NEWSLETTER.md) for complete setup and usage guide
 
 ## My Development Workflow
@@ -356,10 +356,10 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 #### 6. Newsletter Subscription System
 - **Prisma ORM** with SQLite database for subscriber management (source of truth)
-- **Beehiiv** for newsletter delivery (subscribers synced via API, newsletters sent from Beehiiv dashboard)
-- **Resend** for transactional emails only (welcome, audit reports, guide downloads, admin notifications)
-- **Dual-write** on subscribe: saves to Prisma DB + syncs to Beehiiv via API (fire-and-forget)
-- **API Routes** for subscribe, unsubscribe, publish (site only — email send via Beehiiv)
+- **Resend** for all email sending (transactional + newsletter delivery via batch API)
+- **Beehiiv** subscriber sync on signup (dual-write, fire-and-forget) for future migration when needed
+- **Dual-write** on subscribe: saves to Prisma DB + syncs to Beehiiv via API
+- **API Routes** for subscribe, unsubscribe, publish (with send-to-subscribers option)
 - **Soft Delete** active/inactive subscriber management
 - **Unsubscribe Tokens** for one-click unsubscribe functionality
 - **See** [Newsletter Documentation](docs/NEWSLETTER.md) for complete guide
@@ -368,7 +368,7 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 #### Source Code (`src/`)
 - `app/` - Next.js 15 app router pages and layouts
-  - `api/newsletter/` - Newsletter API routes (subscribe, unsubscribe, publish)
+  - `api/newsletter/` - Newsletter API routes (subscribe, unsubscribe, publish, send-update)
 - `components/` - React components organized by type
 - `contexts/` - React context providers and hooks
 - `data/` - Pattern data, categories, and utilities

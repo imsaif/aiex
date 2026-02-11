@@ -39,7 +39,9 @@ export default function AdminNewsletterClient({
   const [isPublishing, setIsPublishing] = useState(false);
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [sendToSubscribers, setSendToSubscribers] = useState(false);
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
+  const [isSendingTest, setIsSendingTest] = useState(false);
   const [showDraftList, setShowDraftList] = useState(false);
 
   // Sanitize HTML content for preview to prevent XSS and make links open in new tab
@@ -180,14 +182,31 @@ export default function AdminNewsletterClient({
           title: editedTitle,
           summary: editedSummary,
           content: editedContent,
+          sendEmail: sendToSubscribers,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: data.message || 'Published to site. Send newsletter via Beehiiv dashboard.' });
-        setTimeout(() => window.location.reload(), 1500);
+        let successMsg = 'Newsletter published successfully!';
+        let msgType: 'success' | 'error' = 'success';
+        let hasFailures = false;
+
+        if (sendToSubscribers && data.emailResult) {
+          const { successCount, failureCount, totalSubscribers } = data.emailResult;
+          hasFailures = failureCount > 0;
+          if (hasFailures) {
+            successMsg = `Newsletter published. Sent to ${successCount}/${totalSubscribers} subscribers (${failureCount} failed)`;
+            msgType = 'error'; // Show as warning
+          } else {
+            successMsg = `Newsletter published and sent to ${successCount} subscribers!`;
+          }
+        }
+
+        setMessage({ type: msgType, text: successMsg });
+        // Refresh page to update draft list (longer delay if failures so user can see message)
+        setTimeout(() => window.location.reload(), hasFailures ? 3000 : 1500);
       } else {
         throw new Error('Failed to publish');
       }
@@ -195,6 +214,38 @@ export default function AdminNewsletterClient({
       setMessage({ type: 'error', text: 'Failed to publish newsletter' });
     } finally {
       setIsPublishing(false);
+    }
+  };
+
+  const sendTestEmail = async () => {
+    if (!activeDraft) return;
+    setIsSendingTest(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch('/api/newsletter/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: activeDraft.id,
+          title: editedTitle,
+          summary: editedSummary,
+          content: editedContent,
+          sendTest: true,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setMessage({ type: 'success', text: data.message });
+      } else {
+        throw new Error(data.message || 'Failed to send test');
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: `Failed to send test email: ${error}` });
+    } finally {
+      setIsSendingTest(false);
     }
   };
 
@@ -368,15 +419,23 @@ export default function AdminNewsletterClient({
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     {/* Publish section - First on mobile for quick access */}
                     <div className="flex items-center justify-between md:order-2 gap-2 md:gap-3">
-                      <span className="text-xs md:text-sm text-text-secondary dark:text-text-secondary">
-                        {subscriberCount ?? '...'} subs
-                      </span>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={sendToSubscribers}
+                          onChange={(e) => setSendToSubscribers(e.target.checked)}
+                          className="w-4 h-4 rounded border-border-primary text-accent-primary focus:ring-accent-primary"
+                        />
+                        <span className="text-xs md:text-sm text-text-secondary dark:text-text-secondary">
+                          <span className="hidden md:inline">Send to </span>{subscriberCount ?? '...'} subs
+                        </span>
+                      </label>
                       <button
                         onClick={publishDraft}
                         disabled={isPublishing}
                         className="px-4 md:px-5 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50 text-sm font-medium"
                       >
-                        {isPublishing ? 'Publishing...' : 'Publish to Site'}
+                        {isPublishing ? 'Publishing...' : sendToSubscribers ? 'Publish & Send' : 'Publish'}
                       </button>
                     </div>
 
@@ -388,6 +447,13 @@ export default function AdminNewsletterClient({
                         className="px-3 md:px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
                       >
                         {isSaving ? 'Saving...' : 'Save'}
+                      </button>
+                      <button
+                        onClick={sendTestEmail}
+                        disabled={isSendingTest}
+                        className="px-3 md:px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
+                      >
+                        {isSendingTest ? 'Sending...' : 'Test'}
                       </button>
                       <button
                         onClick={rejectDraft}
@@ -432,7 +498,7 @@ export default function AdminNewsletterClient({
                 <div className="p-4 md:p-6">
                   <div className="mb-3 md:mb-4 flex items-center justify-between">
                     <h3 className="text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary">Preview</h3>
-                    <span className="text-xs text-text-tertiary hidden md:inline">Copy HTML for Beehiiv</span>
+                    <span className="text-xs text-text-tertiary hidden md:inline">Shown as it will appear in email</span>
                   </div>
 
                   {/* Newsletter Preview - Always light mode to match email appearance */}
