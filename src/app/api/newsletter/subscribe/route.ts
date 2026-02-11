@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { resend } from '@/lib/resend';
 import { generateHandbookToken } from '@/lib/handbook-token';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
+import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 
 // Email validation schema
 const subscribeSchema = z.object({
@@ -80,6 +81,9 @@ export async function POST(request: NextRequest) {
           data: { active: true },
         });
 
+        // Sync to Beehiiv (fire-and-forget)
+        addSubscriberToBeehiiv(email).catch(() => {});
+
         // Send welcome email
         try {
           await sendWelcomeEmail(email, source);
@@ -105,6 +109,9 @@ export async function POST(request: NextRequest) {
     const subscriber = await prisma.subscriber.create({
       data: { email },
     });
+
+    // Sync to Beehiiv (fire-and-forget)
+    addSubscriberToBeehiiv(email).catch(() => {});
 
     // Send welcome email
     try {

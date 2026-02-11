@@ -145,7 +145,9 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 - `npm run fix-patterns` - Fix pattern data structure issues
 
 ### Newsletter & Email Management
-- `npm run send-newsletter` - Send pattern update emails to subscribers (interactive mode)
+- `npm run send-newsletter` - Register pattern updates for Beehiiv newsletter (interactive mode)
+- Newsletter delivery via **Beehiiv dashboard** (free tier — no Send API)
+- Transactional emails (welcome, audit, guides) still via **Resend**
 - See [Newsletter Documentation](docs/NEWSLETTER.md) for complete setup and usage guide
 
 ## My Development Workflow
@@ -353,11 +355,11 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - Development helpers for detailed error reporting
 
 #### 6. Newsletter Subscription System
-- **Prisma ORM** with SQLite database for subscriber management
-- **Resend** email service integration for transactional emails
-- **API Routes** for subscribe, unsubscribe, and send-update operations
-- **Email Templates** built-in HTML email templates (welcome & pattern updates)
-- **CLI Tool** for sending pattern update notifications (`npm run send-newsletter`)
+- **Prisma ORM** with SQLite database for subscriber management (source of truth)
+- **Beehiiv** for newsletter delivery (subscribers synced via API, newsletters sent from Beehiiv dashboard)
+- **Resend** for transactional emails only (welcome, audit reports, guide downloads, admin notifications)
+- **Dual-write** on subscribe: saves to Prisma DB + syncs to Beehiiv via API (fire-and-forget)
+- **API Routes** for subscribe, unsubscribe, publish (site only — email send via Beehiiv)
 - **Soft Delete** active/inactive subscriber management
 - **Unsubscribe Tokens** for one-click unsubscribe functionality
 - **See** [Newsletter Documentation](docs/NEWSLETTER.md) for complete guide
@@ -366,7 +368,7 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 #### Source Code (`src/`)
 - `app/` - Next.js 15 app router pages and layouts
-  - `api/newsletter/` - Newsletter API routes (subscribe, unsubscribe, send-update)
+  - `api/newsletter/` - Newsletter API routes (subscribe, unsubscribe, publish)
 - `components/` - React components organized by type
 - `contexts/` - React context providers and hooks
 - `data/` - Pattern data, categories, and utilities
@@ -582,12 +584,15 @@ When newsletter doesn't run or emails don't send:
      "https://www.aiuxdesign.guide/api/cron/generate-newsletter"
    ```
 
-5. **Check Resend dashboard** for delivery logs: https://resend.com/emails
+5. **Check Resend dashboard** for transactional email logs: https://resend.com/emails
 
-6. **Common issues:**
+6. **Check Beehiiv dashboard** for newsletter delivery: https://app.beehiiv.com
+
+7. **Common issues:**
    - 401 Unauthorized → Wrong CRON_SECRET in cron-job.org
    - No newsletter created → Check if "quiet day" (no news) or duplicate prevention blocked it
-   - Emails not sent → Check RESEND_API_KEY is valid, check subscriber count
+   - Transactional emails not sent → Check RESEND_API_KEY is valid
+   - Subscriber not synced to Beehiiv → Check BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID
 
 ### Deployment & Infrastructure
 

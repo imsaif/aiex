@@ -3,17 +3,14 @@
 /**
  * Newsletter Update Script
  *
- * Sends pattern update emails to all active subscribers.
+ * NOTE: Bulk email sending has moved to Beehiiv dashboard.
+ * This script now registers pattern updates for manual inclusion
+ * in the next Beehiiv newsletter send.
  *
  * Usage:
  *   npm run send-newsletter                                # Interactive mode
  *   npm run send-newsletter -- --patterns pattern-slug-1   # Single pattern
  *   npm run send-newsletter -- --patterns pattern-1,pattern-2  # Multiple patterns
- *
- * Examples:
- *   npm run send-newsletter
- *   npm run send-newsletter -- --patterns contextual-assistance
- *   npm run send-newsletter -- --patterns adaptive-interfaces,explainable-ai
  */
 
 const readline = require('readline');
@@ -37,7 +34,7 @@ async function sendNewsletterUpdate(patternSlugs) {
     .map((slug) => {
       const pattern = findPattern(slug);
       if (!pattern) {
-        console.warn(`⚠️  Pattern not found: ${slug}`);
+        console.warn(`Warning: Pattern not found: ${slug}`);
         return null;
       }
       return {
@@ -51,17 +48,16 @@ async function sendNewsletterUpdate(patternSlugs) {
     .filter(Boolean);
 
   if (selectedPatterns.length === 0) {
-    console.error('❌ No valid patterns found');
+    console.error('No valid patterns found');
     process.exit(1);
   }
 
-  console.log('\n📧 Sending newsletter update...');
+  console.log('\nRegistering pattern update...');
   console.log(`Patterns: ${selectedPatterns.map((p) => p.title).join(', ')}\n`);
 
   const apiKey = process.env.NEWSLETTER_API_KEY;
   if (!apiKey || apiKey === 'your_secure_api_key_here') {
-    console.error('❌ NEWSLETTER_API_KEY is not configured in .env.local');
-    console.error('   Please set a secure API key in your .env.local file');
+    console.error('NEWSLETTER_API_KEY is not configured in .env.local');
     process.exit(1);
   }
 
@@ -80,25 +76,24 @@ async function sendNewsletterUpdate(patternSlugs) {
     const data = await response.json();
 
     if (response.ok) {
-      console.log('✅ Newsletter sent successfully!\n');
-      console.log(`   Total subscribers: ${data.totalSubscribers}`);
-      console.log(`   ✓ Sent: ${data.successCount}`);
-      if (data.failureCount > 0) {
-        console.log(`   ✗ Failed: ${data.failureCount}`);
-      }
+      console.log('Pattern update registered.\n');
+      console.log('Patterns:', data.patterns.map((p) => `  - ${p.title} (${p.slug})`).join('\n'));
+      console.log('\nNext step: Send the update to subscribers via Beehiiv dashboard.');
     } else {
-      console.error('❌ Failed to send newsletter:', data.error);
+      console.error('Failed:', data.error);
       process.exit(1);
     }
   } catch (error) {
-    console.error('❌ Error sending newsletter:', error.message);
-    console.error('   Make sure your dev server is running: npm run dev');
+    console.error('Error:', error.message);
+    console.error('Make sure your dev server is running: npm run dev');
     process.exit(1);
   }
 }
 
 async function interactiveMode() {
-  console.log('\n📧 Newsletter Update Tool\n');
+  console.log('\nNewsletter Update Tool\n');
+  console.log('NOTE: Emails are now sent via Beehiiv dashboard.');
+  console.log('This tool registers pattern updates for inclusion.\n');
   console.log('Available patterns:');
   patterns.forEach((p, idx) => {
     console.log(`  ${idx + 1}. ${p.title} (${p.slug})`);
@@ -122,7 +117,7 @@ async function interactiveMode() {
     .filter(Boolean);
 
   const confirm = await question(
-    `\nSend newsletter for ${patternSlugs.length} pattern(s)? (yes/no): `
+    `\nRegister ${patternSlugs.length} pattern(s) for newsletter? (yes/no): `
   );
 
   rl.close();

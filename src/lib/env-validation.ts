@@ -17,7 +17,9 @@ const envVars: EnvVar[] = [
 
   // External APIs
   { name: 'ANTHROPIC_API_KEY', required: false, description: 'Anthropic API key for AI features' },
-  { name: 'RESEND_API_KEY', required: false, description: 'Resend API key for emails' },
+  { name: 'RESEND_API_KEY', required: false, description: 'Resend API key for transactional emails' },
+  { name: 'BEEHIIV_API_KEY', required: false, description: 'Beehiiv API key for newsletter subscriber sync' },
+  { name: 'BEEHIIV_PUBLICATION_ID', required: false, description: 'Beehiiv publication ID' },
 
   // Admin & Security
   { name: 'ADMIN_PASSWORD', required: true, description: 'Admin panel password' },
