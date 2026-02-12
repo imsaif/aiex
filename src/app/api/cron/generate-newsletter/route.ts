@@ -210,12 +210,14 @@ const ICON_ACADEMIC_CAP = `<img src="${EMAIL_IMG_BASE}/icon-academic-cap.png" al
 const PRODUCT_ICON_NAMES: string[] = [
   'openai', 'vercel', 'figma', 'github', 'google', 'microsoft',
   'supabase', 'replit', 'claude', 'anthropic', 'cursor', 'notion', 'linear', 'perplexity',
+  'ubereats', 'posthog',
 ];
 
 function getProductIconImg(productName: string): string {
   const name = productName.toLowerCase();
+  const nameNoSpaces = name.replace(/\s+/g, '');
   for (const key of PRODUCT_ICON_NAMES) {
-    if (name.includes(key)) {
+    if (name.includes(key) || nameNoSpaces.includes(key)) {
       return `<img src="${EMAIL_IMG_BASE}/${key}.png" alt="" width="14" height="14" style="width: 14px; height: 14px; display: inline; vertical-align: -2px; margin-right: 5px;" />`;
     }
   }
@@ -289,6 +291,69 @@ interface NewsItem {
   relevanceScore?: number;
 }
 
+// Basic word stemming — reduces common suffixes so "compares" matches "compare", etc.
+function stemWord(word: string): string {
+  if (word.length <= 3) return word;
+  // Order matters: check longer suffixes first
+  if (word.endsWith('ies') && word.length > 4) return word.slice(0, -3) + 'y';
+  if (word.endsWith('ing') && word.length > 5) return word.slice(0, -3);
+  if (word.endsWith('tion') && word.length > 5) return word.slice(0, -4);
+  if (word.endsWith('es') && word.length > 4) return word.slice(0, -2);
+  if (word.endsWith('ed') && word.length > 4) return word.slice(0, -2);
+  if (word.endsWith('ly') && word.length > 4) return word.slice(0, -2);
+  if (word.endsWith('s') && !word.endsWith('ss') && word.length > 3) return word.slice(0, -1);
+  // Strip trailing 'e' to normalize base forms (compare → compar, response → respons)
+  if (word.endsWith('e') && word.length > 4) return word.slice(0, -1);
+  return word;
+}
+
+// Normalize a title for fuzzy deduplication comparison
+// Strips Google News source suffix, common prefixes, punctuation, and lowercases
+function normalizeTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/\s+-\s+[a-z0-9\s.]+$/i, '') // Strip " - SourceName" suffix (Google News)
+    .replace(/^(breaking|exclusive|update|new|report|review|analysis):\s*/i, '')
+    .replace(/[^a-z0-9\s]/g, '') // Remove punctuation
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Get stemmed word set from a title for comparison
+function getStemmedWords(title: string): Set<string> {
+  return new Set(
+    normalizeTitle(title)
+      .split(' ')
+      .filter(w => w.length > 2)
+      .map(stemWord)
+  );
+}
+
+// Check if two titles are similar enough to be considered duplicates
+function isSimilarTitle(title1: string, title2: string): boolean {
+  const norm1 = normalizeTitle(title1);
+  const norm2 = normalizeTitle(title2);
+
+  // Exact match after normalization
+  if (norm1 === norm2) return true;
+
+  // One title contains the other (handles cases like "X launches Y" vs "X launches Y: details")
+  if (norm1.length > 10 && norm2.length > 10) {
+    if (norm1.includes(norm2) || norm2.includes(norm1)) return true;
+  }
+
+  // Stemmed word overlap check — if 60%+ of stemmed words overlap, consider it a duplicate
+  const words1 = getStemmedWords(title1);
+  const words2 = getStemmedWords(title2);
+  if (words1.size >= 3 && words2.size >= 3) {
+    const overlap = Array.from(words1).filter(w => words2.has(w)).length;
+    const smaller = Math.min(words1.size, words2.size);
+    if (overlap / smaller >= 0.6) return true;
+  }
+
+  return false;
+}
+
 async function getRecentlyUsedUrls(deduplicationDays = 7, excludeWeekly = true): Promise<Set<string>> {
   // Get URLs from newsletters published in the last N days
   // Only check daily newsletters for deduplication (weekly compiles from daily, so shouldn't compete)
@@ -313,9 +378,45 @@ async function getRecentlyUsedUrls(deduplicationDays = 7, excludeWeekly = true):
   return usedUrls;
 }
 
+async function getRecentlyUsedTitles(deduplicationDays = 7, excludeWeekly = true): Promise<string[]> {
+  // Extract headlines from structuredData of recent newsletters for title-based dedup
+  const cutoffDate = new Date(Date.now() - deduplicationDays * 24 * 60 * 60 * 1000);
+  const recentNewsletters = await prisma.newsletterDraft.findMany({
+    where: {
+      status: { in: ['published', 'pending_review'] },
+      createdAt: { gte: cutoffDate },
+      ...(excludeWeekly && { type: 'daily' }),
+    },
+    select: { structuredData: true },
+  });
+
+  const usedTitles: string[] = [];
+  for (const newsletter of recentNewsletters) {
+    if (newsletter.structuredData && typeof newsletter.structuredData === 'object') {
+      const data = newsletter.structuredData as { items?: { headline?: string }[] };
+      if (Array.isArray(data.items)) {
+        for (const item of data.items) {
+          if (item.headline) {
+            usedTitles.push(item.headline);
+          }
+        }
+      }
+    }
+  }
+  return usedTitles;
+}
+
 async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise<NewsItem[]> {
   const allItems: NewsItem[] = [];
-  const usedUrls = await getRecentlyUsedUrls(deduplicationDays);
+  const [usedUrls, usedTitles] = await Promise.all([
+    getRecentlyUsedUrls(deduplicationDays),
+    getRecentlyUsedTitles(deduplicationDays),
+  ]);
+
+  // Helper: check if an item title is too similar to a previously used title
+  const isTitleAlreadyUsed = (title: string): boolean => {
+    return usedTitles.some(usedTitle => isSimilarTitle(title, usedTitle));
+  };
 
   const results = await Promise.allSettled(
     RSS_SOURCES.map(async (source) => {
@@ -324,6 +425,7 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise
         return (feed.items || [])
           .filter((item) => isRecent(item, lookbackHours) && isRelevant(item, source.name))
           .filter((item) => !item.link || !usedUrls.has(item.link)) // Exclude already-used URLs
+          .filter((item) => !item.title || !isTitleAlreadyUsed(item.title.trim())) // Exclude similar titles
           .map((item) => ({
             source: source.name,
             sourceColor: source.color,
@@ -350,7 +452,7 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise
   const cutoff = new Date(Date.now() - lookbackHours * 60 * 60 * 1000);
   for (const item of anthropicNews) {
     const itemDate = new Date(item.pubDate);
-    if (itemDate >= cutoff && !usedUrls.has(item.link)) {
+    if (itemDate >= cutoff && !usedUrls.has(item.link) && !isTitleAlreadyUsed(item.title)) {
       allItems.push(item);
     }
   }
