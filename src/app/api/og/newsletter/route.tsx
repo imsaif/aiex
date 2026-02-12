@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 export const runtime = 'nodejs';
 
-// Product colors for icon pills
+// Product colors for icon dots
 const PRODUCT_COLORS: Record<string, string> = {
   openai: '#10a37f',
   vercel: '#000000',
@@ -25,12 +25,32 @@ const PRODUCT_COLORS: Record<string, string> = {
   uber: '#06c167',
 };
 
+// OG image colors — hardcoded because Satori (OG renderer) has no access to CSS variables
+const OG_COLORS = {
+  bg: '#0f0f0f',
+  text: '#e5e5e5',
+  textMuted: '#737373',
+  textDim: '#525252',
+  textLabel: '#737373',
+  divider: 'rgba(255,255,255,0.08)',
+  dividerSubtle: 'rgba(255,255,255,0.06)',
+  white: '#ffffff',
+  navy: '#162036',
+  purple: '#7c3aed',
+} as const;
+
 function getProductColor(name: string): string {
   const lower = name.toLowerCase().replace(/\s+/g, '');
   for (const [key, color] of Object.entries(PRODUCT_COLORS)) {
     if (lower.includes(key)) return color;
   }
-  return '#64748b'; // slate fallback
+  return '#64748b';
+}
+
+interface NewsletterItem {
+  product?: string;
+  headline?: string;
+  designerTakeaway?: string;
 }
 
 export async function GET(request: NextRequest) {
@@ -55,29 +75,18 @@ export async function GET(request: NextRequest) {
     return new Response('Newsletter not found', { status: 404 });
   }
 
-  // Extract product names from structured data
-  const data = newsletter.structuredData as { items?: { product?: string }[] } | null;
-  const products = (data?.items || [])
-    .map((item) => item.product || '')
-    .filter(Boolean)
-    .slice(0, 5);
+  const data = newsletter.structuredData as { items?: NewsletterItem[] } | null;
+  const items = (data?.items || []).slice(0, 5);
 
-  // Format date
   const date = new Date(newsletter.publishDate);
   const dateStr = date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
     year: 'numeric',
   });
 
   const isWeekly = newsletter.type === 'weekly';
-  const label = isWeekly ? 'Weekly Roundup' : 'Daily';
-
-  // Strip "AI UX Daily: " or "AI UX Weekly: " prefix from title for cleaner display
-  const cleanTitle = newsletter.title
-    .replace(/^AI UX (Daily|Weekly):\s*/i, '')
-    .trim();
+  const label = isWeekly ? 'Weekly' : 'Daily';
 
   return new ImageResponse(
     (
@@ -87,8 +96,8 @@ export async function GET(request: NextRequest) {
           height: '630',
           display: 'flex',
           flexDirection: 'column',
-          backgroundColor: '#0f0f0f',
-          padding: '60px 72px',
+          backgroundColor: OG_COLORS.bg,
+          padding: '48px 64px',
           fontFamily: 'system-ui, -apple-system, sans-serif',
           position: 'relative',
           overflow: 'hidden',
@@ -102,169 +111,152 @@ export async function GET(request: NextRequest) {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'radial-gradient(ellipse at 20% 50%, rgba(22, 32, 54, 0.6) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at 10% 30%, rgba(22, 32, 54, 0.5) 0%, transparent 60%)',
             display: 'flex',
           }}
         />
 
-        {/* Top: Masthead */}
+        {/* Top bar: Logo + Type badge + Date */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: '40px',
+            marginBottom: '32px',
             position: 'relative',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {/* Heart + sparkle logo */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+              <path
+                d="M15.645 26.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C8.688 21.36 6.25 18.174 6.25 14.25 6.25 11.322 8.714 9 11.688 9A5.5 5.5 0 0116 11.052 5.5 5.5 0 0120.313 9c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
+                fill="white"
+              />
+              <path
+                d="M16 16l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z"
+                fill={OG_COLORS.bg}
+              />
+            </svg>
+            <span style={{ fontSize: '18px', fontWeight: 700, color: OG_COLORS.textMuted, letterSpacing: '-0.01em' }}>
+              AI UX {label}
+            </span>
             <div
               style={{
-                width: '36',
-                height: '36',
+                width: '4',
+                height: '4',
+                borderRadius: '50%',
+                backgroundColor: OG_COLORS.textDim,
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '28px',
               }}
-            >
-              <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
-                <path
-                  d="M15.645 26.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C8.688 21.36 6.25 18.174 6.25 14.25 6.25 11.322 8.714 9 11.688 9A5.5 5.5 0 0116 11.052 5.5 5.5 0 0120.313 9c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"
-                  fill="white"
-                />
-                <path
-                  d="M16 16l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z"
-                  fill="#0f0f0f"
-                />
-              </svg>
-            </div>
-            <span
-              style={{
-                fontSize: '22px',
-                fontWeight: 700,
-                color: '#a3a3a3',
-                letterSpacing: '-0.02em',
-              }}
-            >
-              aiuxdesign.guide
+            />
+            <span style={{ fontSize: '16px', fontWeight: 500, color: OG_COLORS.textDim }}>
+              {dateStr}
             </span>
           </div>
           <div
             style={{
+              backgroundColor: isWeekly ? OG_COLORS.purple : OG_COLORS.navy,
+              color: OG_COLORS.white,
+              fontSize: '12px',
+              fontWeight: 700,
+              padding: '5px 14px',
+              borderRadius: '100px',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
               display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
             }}
           >
-            <div
-              style={{
-                backgroundColor: isWeekly ? '#7c3aed' : '#162036',
-                color: '#ffffff',
-                fontSize: '14px',
-                fontWeight: 700,
-                padding: '6px 16px',
-                borderRadius: '100px',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-              }}
-            >
-              {label}
-            </div>
+            aiuxdesign.guide
           </div>
         </div>
 
-        {/* Middle: Title */}
+        {/* Divider */}
+        <div
+          style={{
+            width: '100%',
+            height: '1',
+            backgroundColor: OG_COLORS.divider,
+            marginBottom: '28px',
+            display: 'flex',
+          }}
+        />
+
+        {/* News items list */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            justifyContent: 'center',
+            gap: '0px',
             position: 'relative',
           }}
         >
-          <div
-            style={{
-              fontSize: cleanTitle.length > 60 ? '44px' : '52px',
-              fontWeight: 800,
-              color: '#fafafa',
-              lineHeight: 1.15,
-              letterSpacing: '-0.03em',
-              maxWidth: '1000px',
-            }}
-          >
-            {cleanTitle}
-          </div>
-        </div>
+          {items.map((item, index) => (
+            <div
+              key={index}
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '16px',
+                padding: '16px 0',
+                borderBottom: index < items.length - 1 ? `1px solid ${OG_COLORS.dividerSubtle}` : 'none',
+              }}
+            >
+              {/* Product color dot */}
+              <div
+                style={{
+                  width: '10',
+                  height: '10',
+                  borderRadius: '50%',
+                  backgroundColor: getProductColor(item.product || ''),
+                  marginTop: '8px',
+                  flexShrink: 0,
+                  display: 'flex',
+                }}
+              />
 
-        {/* Bottom: Date + product pills */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            position: 'relative',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '18px',
-              color: '#737373',
-              fontWeight: 500,
-            }}
-          >
-            {dateStr}
-          </div>
-
-          {/* Product pills */}
-          {products.length > 0 && (
-            <div style={{ display: 'flex', gap: '8px' }}>
-              {products.map((product) => (
-                <div
-                  key={product}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    backgroundColor: 'rgba(255,255,255,0.08)',
-                    borderRadius: '100px',
-                    padding: '6px 14px',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '8',
-                      height: '8',
-                      borderRadius: '50%',
-                      backgroundColor: getProductColor(product),
-                    }}
-                  />
+              {/* Content */}
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '4px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span
                     style={{
                       fontSize: '14px',
-                      fontWeight: 600,
-                      color: '#a3a3a3',
+                      fontWeight: 700,
+                      color: OG_COLORS.textLabel,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
                     }}
                   >
-                    {product}
+                    {item.product || ''}
                   </span>
                 </div>
-              ))}
+                <div
+                  style={{
+                    fontSize: '22px',
+                    fontWeight: 600,
+                    color: OG_COLORS.text,
+                    lineHeight: 1.3,
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {(item.headline || '').length > 75
+                    ? (item.headline || '').slice(0, 72) + '...'
+                    : item.headline || ''}
+                </div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
 
-        {/* Bottom border accent line */}
+        {/* Bottom accent line */}
         <div
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            height: '4',
-            background: 'linear-gradient(90deg, #162036, #7c3aed, #162036)',
+            height: '3',
+            background: `linear-gradient(90deg, ${OG_COLORS.navy}, ${OG_COLORS.purple}, ${OG_COLORS.navy})`,
             display: 'flex',
           }}
         />
