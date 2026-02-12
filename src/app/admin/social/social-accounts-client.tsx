@@ -340,7 +340,7 @@ export default function SocialAccountsClient({
                 {/* Twitter/X Account Card */}
                 <div className="flex items-center justify-between p-4 bg-background-secondary rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#000] rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-social-twitter rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                       </svg>
@@ -387,7 +387,7 @@ export default function SocialAccountsClient({
                     ) : (
                       <a
                         href="/api/social/auth/twitter"
-                        className="px-3 py-1.5 bg-[#000] text-white rounded text-sm hover:bg-[#333]"
+                        className="px-3 py-1.5 bg-social-twitter text-white rounded text-sm hover:bg-social-twitter-hover"
                       >
                         Connect
                       </a>
@@ -398,7 +398,7 @@ export default function SocialAccountsClient({
                 {/* LinkedIn Account Card */}
                 <div className="flex items-center justify-between p-4 bg-background-secondary rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#0a66c2] rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-social-linkedin rounded-full flex items-center justify-center">
                       <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                       </svg>
@@ -445,7 +445,7 @@ export default function SocialAccountsClient({
                     ) : (
                       <a
                         href="/api/social/auth/linkedin"
-                        className="px-3 py-1.5 bg-[#0a66c2] text-white rounded text-sm hover:bg-[#004182]"
+                        className="px-3 py-1.5 bg-social-linkedin text-white rounded text-sm hover:bg-social-linkedin-hover"
                       >
                         Connect
                       </a>
@@ -542,6 +542,32 @@ export default function SocialAccountsClient({
                 </>
               )}
 
+              {/* Social Share Image */}
+              {selectedNewsletter && (
+                <div className="mx-4 mt-4 p-4 bg-background-secondary rounded-lg border border-border-primary">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-sm font-medium text-text-primary">Share Image</p>
+                    <button
+                      onClick={() => {
+                        const url = `${window.location.origin}/api/og/newsletter?id=${selectedNewsletter.id}`;
+                        navigator.clipboard.writeText(url);
+                        setSocialMessage({ type: 'success', text: 'Image URL copied to clipboard!' });
+                        setTimeout(() => setSocialMessage(null), 3000);
+                      }}
+                      className="px-3 py-1.5 bg-background-tertiary text-text-secondary rounded-md hover:bg-border-primary transition-colors text-xs font-medium"
+                    >
+                      Copy Image URL
+                    </button>
+                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/api/og/newsletter?id=${selectedNewsletter.id}`}
+                    alt={`Social share image for ${selectedNewsletter.title}`}
+                    className="w-full rounded-md border border-border-primary"
+                  />
+                </div>
+              )}
+
               <div className="p-6">
                 {!selectedNewsletter ? (
                   <div className="text-center py-8">
@@ -560,7 +586,7 @@ export default function SocialAccountsClient({
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Twitter/X Post Card */}
                     <div className="border border-border-primary rounded-lg overflow-hidden">
-                      <div className="bg-[#000] p-3 flex items-center justify-between">
+                      <div className="bg-social-twitter p-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -572,7 +598,7 @@ export default function SocialAccountsClient({
                         ) : (
                           <a
                             href="/api/social/auth/twitter"
-                            className="text-xs text-blue-400 hover:text-blue-300"
+                            className="text-xs text-status-info hover:text-status-info/80"
                           >
                             Connect Account
                           </a>
@@ -614,7 +640,7 @@ export default function SocialAccountsClient({
                                     Thread ({twitterPost.threadContent.length} more tweets)
                                   </p>
                                   {twitterPost.threadContent.map((tweet, i) => (
-                                    <p key={i} className="text-sm text-text-secondary mb-2 pl-3 border-l-2 border-border-secondary">
+                                    <p key={i} className="text-sm text-text-secondary mb-2 pl-3" style={{ borderLeft: '2px solid var(--border-secondary)' }}>
                                       {tweet}
                                     </p>
                                   ))}
@@ -687,7 +713,7 @@ export default function SocialAccountsClient({
                                           <button
                                             onClick={() => publishSocialPost(twitterPost.id)}
                                             disabled={isPublishingSocial !== null || !getTwitterAccount()}
-                                            className="px-3 py-1 bg-[#000] text-white rounded text-xs hover:bg-[#333] disabled:opacity-50"
+                                            className="px-3 py-1 bg-social-twitter text-white rounded text-xs hover:bg-social-twitter-hover disabled:opacity-50"
                                           >
                                             {isPublishingSocial === twitterPost.id ? 'Posting...' : 'Post to X'}
                                           </button>
@@ -705,7 +731,7 @@ export default function SocialAccountsClient({
 
                     {/* LinkedIn Post Card */}
                     <div className="border border-border-primary rounded-lg overflow-hidden">
-                      <div className="bg-[#0a66c2] p-3 flex items-center justify-between">
+                      <div className="bg-social-linkedin p-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -713,11 +739,11 @@ export default function SocialAccountsClient({
                           <span className="text-white font-medium text-sm">LinkedIn</span>
                         </div>
                         {getLinkedInAccount() ? (
-                          <span className="text-xs text-blue-200">{getLinkedInAccount()?.accountName}</span>
+                          <span className="text-xs text-social-linkedin-light">{getLinkedInAccount()?.accountName}</span>
                         ) : (
                           <a
                             href="/api/social/auth/linkedin"
-                            className="text-xs text-blue-200 hover:text-white"
+                            className="text-xs text-social-linkedin-light hover:text-white"
                           >
                             Connect Account
                           </a>
@@ -756,7 +782,7 @@ export default function SocialAccountsClient({
                               {linkedInPost.hashtags.length > 0 && (
                                 <div className="mt-3 flex flex-wrap gap-1">
                                   {linkedInPost.hashtags.map((tag) => (
-                                    <span key={tag} className="text-xs text-[#0a66c2]">
+                                    <span key={tag} className="text-xs text-social-linkedin">
                                       #{tag}
                                     </span>
                                   ))}
@@ -819,7 +845,7 @@ export default function SocialAccountsClient({
                                           <button
                                             onClick={() => publishSocialPost(linkedInPost.id)}
                                             disabled={isPublishingSocial !== null || !getLinkedInAccount()}
-                                            className="px-3 py-1 bg-[#0a66c2] text-white rounded text-xs hover:bg-[#004182] disabled:opacity-50"
+                                            className="px-3 py-1 bg-social-linkedin text-white rounded text-xs hover:bg-social-linkedin-hover disabled:opacity-50"
                                           >
                                             {isPublishingSocial === linkedInPost.id ? 'Posting...' : 'Post to LinkedIn'}
                                           </button>

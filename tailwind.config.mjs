@@ -48,6 +48,14 @@ export default {
           warning: '#f59e0b',  // amber-500
           info: '#3b82f6',     // blue-500
         },
+        // Social platform brand colors
+        social: {
+          twitter: '#000000',
+          'twitter-hover': '#333333',
+          linkedin: '#0a66c2',
+          'linkedin-hover': '#004182',
+          'linkedin-light': '#bfdbfe', // for light text on dark bg
+        },
         // Muted category colors for icons
         category: {
           blue: '#3B82F6',
