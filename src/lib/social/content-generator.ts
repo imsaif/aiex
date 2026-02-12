@@ -268,9 +268,9 @@ Requirements:
 - Length: 1000-1300 characters (optimal for LinkedIn engagement)
 - Structure:
   1. Opening hook (1-2 lines) - question or bold statement
-  2. Key insights (bullet points or short paragraphs)
+  2. Key insights (bullet points or short paragraphs) - use a relevant emoji at the start of each item (e.g. 🔍 for research, 🚀 for launches, 🛡️ for security, 🛒 for commerce, 📊 for analytics)
   3. Call-to-action with link
-- Professional, thoughtful tone
+- Professional but engaging tone — use emojis to add visual interest like top LinkedIn creators do
 - Add value beyond just summarizing
 - Suggest 3-5 relevant hashtags
 

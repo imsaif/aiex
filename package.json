@@ -84,6 +84,7 @@
     "@types/dompurify": "^3.0.5",
     "@types/puppeteer": "^5.4.7",
     "@vercel/analytics": "^1.5.0",
+    "@vercel/og": "^0.8.6",
     "@vercel/speed-insights": "^1.2.0",
     "antd": "^6.0.0",
     "ccusage": "^15.9.4",
