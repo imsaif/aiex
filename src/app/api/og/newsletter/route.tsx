@@ -44,20 +44,21 @@ interface NewsletterItem {
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const id = searchParams.get('id');
+  const slug = searchParams.get('slug');
 
-  if (!id) {
-    return new Response('Missing newsletter id', { status: 400 });
+  if (!id && !slug) {
+    return new Response('Missing newsletter id or slug', { status: 400 });
   }
 
-  const newsletter = await prisma.newsletterDraft.findUnique({
-    where: { id },
-    select: {
-      title: true,
-      type: true,
-      publishDate: true,
-      structuredData: true,
-    },
-  });
+  const newsletter = id
+    ? await prisma.newsletterDraft.findUnique({
+        where: { id },
+        select: { title: true, type: true, publishDate: true, structuredData: true },
+      })
+    : await prisma.newsletterDraft.findFirst({
+        where: { slug: slug!, status: 'published' },
+        select: { title: true, type: true, publishDate: true, structuredData: true },
+      });
 
   if (!newsletter) {
     return new Response('Newsletter not found', { status: 404 });

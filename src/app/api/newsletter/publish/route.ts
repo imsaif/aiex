@@ -50,7 +50,7 @@ async function sendNewsletterToSubscribers(
         replyTo: 'imranrizom@gmail.com',
         to: subscriber.email,
         subject: `${subjectPrefix} ${newsletter.title}`,
-        html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl),
+        html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl, newsletter.title),
       };
     });
 
@@ -103,7 +103,7 @@ async function sendNewsletterToSubscribers(
 }
 
 // Wrap newsletter HTML content for email delivery
-function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnlineUrl: string): string {
+function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnlineUrl: string, title?: string): string {
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
   return `
     <!DOCTYPE html>
@@ -130,6 +130,27 @@ function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnl
           <!-- Content -->
           <div style="background-color: #ffffff; padding: 40px 48px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
             ${content}
+          </div>
+
+          <!-- Share -->
+          <div style="background-color: #ffffff; padding: 24px 48px 28px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="border-top: 1px solid #e2e8f0; padding-top: 24px; text-align: center;">
+                  <p style="margin: 0 0 12px; font-size: 13px; font-weight: 600; color: #334155; letter-spacing: -0.01em;">Enjoyed this? Share it with your network</p>
+                  <table cellpadding="0" cellspacing="0" border="0" align="center">
+                    <tr>
+                      <td style="padding: 0 4px;">
+                        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent((title || 'AI UX Newsletter') + ' — via @aiuxdesign')}&url=${encodeURIComponent(viewOnlineUrl)}" style="display: inline-block; padding: 8px 16px; background-color: #0f172a; color: #ffffff; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 6px; letter-spacing: -0.01em;">Share on X</a>
+                      </td>
+                      <td style="padding: 0 4px;">
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(viewOnlineUrl)}" style="display: inline-block; padding: 8px 16px; background-color: #0f172a; color: #ffffff; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 6px; letter-spacing: -0.01em;">Share on LinkedIn</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
           </div>
 
           <!-- Footer -->
@@ -169,7 +190,7 @@ async function sendTestEmail(
       replyTo: 'imranrizom@gmail.com',
       to: adminEmail,
       subject: `[TEST] ${subjectPrefix} ${newsletter.title}`,
-      html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl),
+      html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl, newsletter.title),
     });
     return { success: true };
   } catch (error) {

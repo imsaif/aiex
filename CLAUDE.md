@@ -235,6 +235,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-13 14:25 (MacBook)
+- **Pattern:** Newsletter Email Share & OG Image
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Added Share on X and Share on LinkedIn buttons to newsletter email template (publish route). Wired up dynamic OG image metadata on newsletter detail pages (`og:image` + `twitter:image`) pointing to existing `/api/og/newsletter` route. Added slug-based lookup to OG route alongside existing id param. Removed 4 secondary card CTAs (Audit Tool, Past Editions, Medium, GitHub) from both daily and weekly newsletter templates to reduce CTA clutter — keeping only Explore Patterns + Share + Unsubscribe.
+
 ### Session 2026-02-13 13:10 (MacBook)
 - **Pattern:** Social Share OG Image Refinement
 - **Status:** ✅ Completed
@@ -299,13 +306,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Redesigned weekly newsletter with Featured Read section for Medium article. Replaced emojis with Heroicons (inline SVGs). Improved visual hierarchy: removed heavy cards for subtle dividers, increased whitespace, better typography. Added Simple Icons for product logos (Vercel, OpenAI, Figma). Made colors accessible with proper contrast. Applied slate brand palette throughout.
 
 ### Session 2026-02-01 13:15 (MacBook)
-- **Pattern:** Newsletter Sources Expansion
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Added Google News RSS feeds for Cursor, Notion, Linear, Perplexity, Claude AI, and Windsurf to expand newsletter coverage from 14 to 20 sources. Replaced fragile web scrapers with reliable Google News aggregation. Increased daily newsletter item count from 2-4 to 4-6 items. News items processed jumped from 3-7 to 33 per run.
-
-### Session 2026-02-01 11:40 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

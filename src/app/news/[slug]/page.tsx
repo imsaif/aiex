@@ -58,6 +58,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Newsletter Not Found' };
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
+  const ogImageUrl = `${siteUrl}/api/og/newsletter?slug=${newsletter.slug}`;
+
   return {
     title: `${newsletter.title} | AI UX Newsletter`,
     description: newsletter.summary,
@@ -66,6 +69,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: newsletter.summary,
       type: 'article',
       publishedTime: new Date(newsletter.publishedAt).toISOString(),
+      images: [{ url: ogImageUrl, width: 1200, height: 630, alt: newsletter.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: newsletter.title,
+      description: newsletter.summary,
+      images: [ogImageUrl],
     },
   };
 }

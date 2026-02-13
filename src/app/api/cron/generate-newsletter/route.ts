@@ -744,33 +744,6 @@ ${itemsHTML}
   <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want to learn more about the patterns mentioned today?</p>
   <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
 </div>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 24px;">
-  <tr>
-    <td width="50%" style="padding: 0 6px 12px 0;" valign="top">
-      <a href="${SITE_URL}/audit" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">🔍 Try the Audit Tool →</span>
-      </a>
-    </td>
-    <td width="50%" style="padding: 0 0 12px 6px;" valign="top">
-      <a href="${SITE_URL}/news" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">📰 Read Past Editions →</span>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" style="padding: 0 6px 0 0;" valign="top">
-      <a href="https://medium.com/@imsaif" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">✏️ Read on Medium →</span>
-      </a>
-    </td>
-    <td width="50%" style="padding: 0 0 0 6px;" valign="top">
-      <a href="https://github.com/imsaif/aiex" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">⭐ Star on GitHub →</span>
-      </a>
-    </td>
-  </tr>
-</table>
   `.trim();
 }
 
@@ -822,33 +795,6 @@ ${itemsHTML}
   <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want the full breakdown on any pattern mentioned above?</p>
   <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
 </div>
-
-<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 24px;">
-  <tr>
-    <td width="50%" style="padding: 0 6px 12px 0;" valign="top">
-      <a href="${SITE_URL}/audit" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">🔍 Try the Audit Tool →</span>
-      </a>
-    </td>
-    <td width="50%" style="padding: 0 0 12px 6px;" valign="top">
-      <a href="${SITE_URL}/news" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">📰 Read Past Editions →</span>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" style="padding: 0 6px 0 0;" valign="top">
-      <a href="https://medium.com/@imsaif" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">✏️ Read on Medium →</span>
-      </a>
-    </td>
-    <td width="50%" style="padding: 0 0 0 6px;" valign="top">
-      <a href="https://github.com/imsaif/aiex" style="display: block; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; text-decoration: none;">
-        <span style="color: #334155; font-size: 14px; font-weight: 500;">⭐ Star on GitHub →</span>
-      </a>
-    </td>
-  </tr>
-</table>
   `.trim();
 }
 
