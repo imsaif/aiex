@@ -48,7 +48,7 @@ export function SmartHandbookPrompt({
       }
 
       // Open PDF in new tab
-      window.open('/handbook.pdf', '_blank');
+      window.open('/downloads/ai-ux-checklist.pdf', '_blank');
 
       // Mark newsletter as subscribed
       localStorage.setItem('newsletter_subscribed', 'true');
@@ -123,7 +123,7 @@ export function SmartHandbookPrompt({
                         className="inline-flex items-center justify-center w-12 h-12 bg-accent-primary/10 dark:bg-white/10 rounded-full mb-4"
                       >
                         <svg className="w-6 h-6 text-accent-primary dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                         </svg>
                       </motion.div>
 
@@ -142,7 +142,7 @@ export function SmartHandbookPrompt({
                         transition={{ delay: 0.2 }}
                         className="text-sm text-gray-600 dark:text-gray-400"
                       >
-                        You&apos;ve explored {viewCount} patterns. Get the complete 6-pattern starter handbook as a PDF.
+                        You&apos;ve explored {viewCount} patterns. Score your AI interface against all 28 with a one-page checklist.
                       </motion.p>
                     </div>
 
@@ -154,9 +154,9 @@ export function SmartHandbookPrompt({
                       className="space-y-2 mb-6"
                     >
                       {[
-                        'Curated essential patterns',
-                        'Offline reference guide',
-                        'Implementation checklists'
+                        '28 proven AI UX patterns',
+                        'One-page design review PDF',
+                        'Quick-score checklist format'
                       ].map((benefit, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                           <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -199,7 +199,7 @@ export function SmartHandbookPrompt({
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                             </svg>
                           ) : (
-                            'Get PDF'
+                            'Get Checklist'
                           )}
                         </button>
                       </div>
@@ -246,7 +246,7 @@ export function SmartHandbookPrompt({
                       All set!
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Your handbook is downloading.
+                      Your checklist is downloading.
                     </p>
                   </motion.div>
                 )}

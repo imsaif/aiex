@@ -5,8 +5,8 @@ import Link from 'next/link';
 export function DownloadClient() {
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = '/handbook.pdf';
-    link.download = 'AI-Design-Patterns-Handbook.pdf';
+    link.href = '/downloads/ai-ux-checklist.pdf';
+    link.download = 'AI-UX-Checklist.pdf';
     link.style.display = 'none';
     document.body.appendChild(link);
     link.click();

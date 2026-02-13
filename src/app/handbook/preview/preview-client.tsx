@@ -23,7 +23,7 @@ function PDFPreviewContent() {
     }
 
     // Open PDF in new tab
-    window.open('/handbook.pdf', '_blank');
+    window.open('/downloads/ai-ux-checklist.pdf', '_blank');
     // Redirect to homepage
     router.push('/');
   }, [token, email, router]);

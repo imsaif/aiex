@@ -51,14 +51,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Read the PDF file from public folder
-    const pdfPath = join(process.cwd(), 'public', 'handbook.pdf');
+    const pdfPath = join(process.cwd(), 'public', 'downloads', 'ai-ux-checklist.pdf');
     const pdfBuffer = readFileSync(pdfPath);
 
     // Return PDF file
     return new NextResponse(pdfBuffer, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="AI-Design-Patterns-Handbook.pdf"`,
+        'Content-Disposition': `attachment; filename="AI-UX-Checklist.pdf"`,
         'Content-Length': pdfBuffer.length.toString(),
       },
     });

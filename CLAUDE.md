@@ -235,6 +235,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-13 19:54 (MacBook)
+- **Pattern:** Hero CTA & Lead Magnet PDF Update
+- **Status:** ✅ Completed
+- **Files Changed:** 9
+- **Tests Added/Modified:** 0
+- **Notes:** Replaced old 6-pattern handbook PDF with new AI UX Checklist (28 patterns, combined from 2 source PDFs into `public/downloads/ai-ux-checklist.pdf`). Updated all CTA copy site-wide: hero subheading, button text, trust badge, SmartHandbookPrompt modal (icon, benefits, button), and success messages. Updated all `handbook.pdf` references across 5 files to point to new checklist PDF. Updated welcome email template in subscribe route with new checklist messaging and download link.
+
 ### Session 2026-02-13 14:25 (MacBook)
 - **Pattern:** Newsletter Email Share & OG Image
 - **Status:** ✅ Completed
@@ -299,13 +306,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Updated generateHTML() and generateWeeklyHTML() to match Feb 2 redesign: replaced border-left cards with subtle border-bottom dividers, updated typography (20px headlines, 16px/1.75 body), removed emoji headings and background takeaway boxes. Added email-safe hosted PNG icons (17 images in public/images/email/) for product logos (Simple Icons) and section headings (Heroicons) since Gmail strips inline SVGs. Replaced flexbox with table layout for email compatibility. Changed sender address from noreply@ to imran@aiuxdesign.guide across all 7 email-sending files.
 
 ### Session 2026-02-02 21:07 (MacBook)
-- **Pattern:** Newsletter Design Redesign
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Redesigned weekly newsletter with Featured Read section for Medium article. Replaced emojis with Heroicons (inline SVGs). Improved visual hierarchy: removed heavy cards for subtle dividers, increased whitespace, better typography. Added Simple Icons for product logos (Vercel, OpenAI, Figma). Made colors accessible with proper contrast. Applied slate brand palette throughout.
-
-### Session 2026-02-01 13:15 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

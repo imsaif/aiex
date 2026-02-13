@@ -54,14 +54,14 @@ export async function POST(request: NextRequest) {
           try {
             await sendWelcomeEmail(email, source);
             return NextResponse.json(
-              { message: 'Your handbook is ready! Check your email for confirmation.' },
+              { message: 'Your checklist is ready! Check your email.' },
               { status: 200 }
             );
           } catch (emailError) {
             console.error('Email send failed for existing handbook request:', { email: email.replace(/^(.{2}).*(@.*)$/, '$1***$2'), source, error: emailError instanceof Error ? emailError.message : 'Unknown error', timestamp: new Date().toISOString() });
             return NextResponse.json(
               {
-                message: 'Your handbook is ready, but we\'re having trouble sending the confirmation email right now.',
+                message: 'Your checklist is ready, but we\'re having trouble sending the email right now.',
                 emailWarning: true
               },
               { status: 200 }
@@ -163,7 +163,7 @@ async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | '
     let html: string;
 
     if (isHandbookFlow) {
-      subject = '🎨 Your AI Design Patterns Handbook is Ready!';
+      subject = '✅ Your AI UX Checklist is Ready!';
       html = getHandbookWelcomeEmail(email, token);
     } else if (isNewsFlow) {
       subject = '📱 Welcome to AIUX News!';
@@ -242,7 +242,7 @@ function getNewsletterWelcomeEmail(): string {
           </div>
 
           <p style="font-size: 14px; margin-bottom: 20px; text-align: center;">
-            Want a quick overview? Check out our <a href="https://www.aiuxdesign.guide/handbook" style="color: #000000; text-decoration: underline;">6 Essential Patterns Handbook</a>
+            Want a quick overview? Get our <a href="https://www.aiuxdesign.guide/handbook" style="color: #000000; text-decoration: underline;">AI UX Checklist (free PDF)</a>
           </p>
 
         </div>
@@ -312,20 +312,20 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Your AI Design Patterns Handbook</title>
+        <title>Your AI UX Checklist</title>
       </head>
       <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: #000000; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">🎁 Your Handbook is Ready!</h1>
+          <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">✅ Your AI UX Checklist is Ready!</h1>
         </div>
 
         <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
           <p style="font-size: 16px; margin-bottom: 20px;">
-            Thank you for downloading the <strong>6 Essential AI Design Patterns Handbook</strong>!
+            Here's your <strong>AI UX Design Checklist</strong> — score your AI interface against 28 proven UX patterns.
           </p>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
-            Your PDF is ready. Click the button below to download it now (or use the link anytime within the next 30 days).
+            Click below to download the one-page PDF (link valid for 30 days).
           </p>
 
           <div style="margin: 30px 0;">
@@ -334,7 +334,7 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
                 <td style="text-align: center;">
                   <a href="${downloadUrl}"
                      style="display: inline-block; background: #000000; color: #ffffff; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 18px; border: 2px solid #000000;">
-                    📥 Download Handbook PDF
+                    📥 Download Checklist PDF
                   </a>
                 </td>
               </tr>
@@ -344,15 +344,14 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
           <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #000000;">
             <h2 style="font-size: 18px; margin: 0 0 10px 0; color: #000000; font-weight: 600;">What's Inside:</h2>
             <ul style="margin: 0; padding-left: 20px;">
-              <li style="margin-bottom: 8px;">6 essential AI design patterns</li>
-              <li style="margin-bottom: 8px;">Real-world product examples</li>
-              <li style="margin-bottom: 8px;">Implementation guidance</li>
-              <li style="margin-bottom: 8px;">Best practices from industry leaders</li>
+              <li style="margin-bottom: 8px;">28 AI UX patterns to score against</li>
+              <li style="margin-bottom: 8px;">One-page format for quick design reviews</li>
+              <li style="margin-bottom: 8px;">Proven patterns from leading AI products</li>
             </ul>
           </div>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
-            You're now subscribed to our newsletter and will receive updates whenever we add new AI design patterns to our collection.
+            You're now subscribed to our newsletter — weekly AI/UX analysis delivered to your inbox.
           </p>
 
           <p style="font-size: 16px; margin-bottom: 20px;">

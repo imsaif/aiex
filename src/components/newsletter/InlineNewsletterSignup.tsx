@@ -108,7 +108,7 @@ export function InlineNewsletterSignup({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <span className="text-sm font-medium text-text-primary">
-                {customSuccessMessage || 'Success! Check your email for the handbook PDF 🎉'}
+                {customSuccessMessage || 'Success! Check your email for the checklist PDF 🎉'}
               </span>
             </div>
           </motion.div>
@@ -131,7 +131,7 @@ export function InlineNewsletterSignup({
             {/* Value Proposition / Subheading */}
             {(isHero || ((isPatternDetail || isNews) && customSubheading)) && (
               <p className={`text-text-secondary mb-4 font-medium ${isNews ? 'text-sm' : 'text-base text-center'}`}>
-                {customSubheading || 'Get 6 essential AI design patterns (free PDF) + weekly AI/UX analysis'}
+                {customSubheading || 'Score your AI interface against 28 proven UX patterns'}
               </p>
             )}
 
@@ -182,7 +182,7 @@ export function InlineNewsletterSignup({
                     Subscribing...
                   </span>
                 ) : (
-                  customButtonText || 'Get Patterns →'
+                  customButtonText || 'Get the Checklist →'
                 )}
               </button>
             </div>
@@ -201,7 +201,7 @@ export function InlineNewsletterSignup({
             {/* Trust Badge */}
             {(isHero || isPatternDetail || isNews) && (
               <p className={`text-xs mt-4 ${isNews ? '' : 'text-center'} ${darkBackground ? 'text-gray-400' : 'text-text-secondary'}`}>
-                You&apos;ll get the PDF instantly + daily AI/UX updates with a weekly roundup. Unsubscribe anytime.
+                One-page PDF for design reviews + weekly AI/UX analysis. Unsubscribe anytime.
               </p>
             )}
           </motion.form>
