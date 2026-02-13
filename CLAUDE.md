@@ -235,6 +235,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-13 13:10 (MacBook)
+- **Pattern:** Social Share OG Image Refinement
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Refined OG newsletter share image layout: added newsletter title + product icons per news item + readable headlines. Iterated on CTA prominence — final version shows "Detailed product analysis & UX implications inside" with branded pill button ("Read the full daily/weekly →"). Multiple design iterations based on feedback for spacing, icon size, and CTA balance.
+
 ### Session 2026-02-11 23:45 (MacBook)
 - **Pattern:** Beehiiv Newsletter Subscriber Sync
 - **Status:** ✅ Completed
@@ -299,13 +306,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added Google News RSS feeds for Cursor, Notion, Linear, Perplexity, Claude AI, and Windsurf to expand newsletter coverage from 14 to 20 sources. Replaced fragile web scrapers with reliable Google News aggregation. Increased daily newsletter item count from 2-4 to 4-6 items. News items processed jumped from 3-7 to 33 per run.
 
 ### Session 2026-02-01 11:40 (MacBook)
-- **Pattern:** Unsubscribe Flow Redesign
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented new unsubscribe page with frequency preferences (all/weekly/none) and optional feedback collection. Added emailFrequency, unsubscribeReason, and unsubscribedAt fields to Subscriber model. Created /unsubscribe page with clear UX (unsubscribe primary action, weekly-only as alternative). Updated newsletter publish logic to filter subscribers by frequency. Added frequency column and filter to admin subscribers page.
-
-### Session 2026-01-28 22:27 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
