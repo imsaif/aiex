@@ -60,7 +60,8 @@ export const explainableai: Pattern = {
       "Transparent Feedback",
       "Human-in-the-Loop",
       "Responsible AI Design",
-      "Error Recovery"
+      "Error Recovery",
+      "Plan Summary"
     ],
     codeExamples: codeExamples,
     figmaPrompt: {

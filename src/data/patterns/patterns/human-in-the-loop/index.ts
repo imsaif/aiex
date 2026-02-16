@@ -52,7 +52,9 @@ export const humanintheloop: Pattern = {
     relatedPatterns: [
       "Transparent Feedback",
       "Contextual Assistance",
-      "Progressive Disclosure"
+      "Progressive Disclosure",
+      "Autonomy Spectrum",
+      "Mixed-Initiative Control"
     ],
     figmaPrompt: {
       prompt: `Design an interface where humans can review and approve AI suggestions before they're applied:

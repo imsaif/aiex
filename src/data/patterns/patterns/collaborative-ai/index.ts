@@ -24,7 +24,8 @@ export const collaborativeai: Pattern = {
     relatedPatterns: [
       "Contextual Assistance",
       "Progressive Disclosure",
-      "Human-in-the-Loop"
+      "Human-in-the-Loop",
+      "Mixed-Initiative Control"
     ],
     codeExamples,
     figmaPrompt

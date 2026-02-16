@@ -23,7 +23,7 @@ function generateDownloadContent(results: AnalysisResults): string {
     '═══════════════════════════════════════════════════════════════',
     '',
     `Date: ${new Date().toLocaleDateString()}`,
-    `Score: ${results.score}/${results.maxScore || 28} patterns detected`,
+    `Score: ${results.score}/${results.maxScore || 36} patterns detected`,
     '',
     results.componentDescription ? `Interface Type: ${results.componentDescription}` : '',
     '',

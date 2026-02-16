@@ -37,7 +37,7 @@ export function WelcomePanel() {
         <div className="flex items-center justify-center gap-2 mb-4 py-2.5 px-4 rounded-full bg-white/80 dark:bg-white/10">
           <ShieldCheckIcon className="w-4 h-4 text-text-primary dark:text-white" />
           <p className="text-sm text-text-secondary">
-            <span className="font-semibold text-text-primary dark:text-white">28 patterns</span> from{' '}
+            <span className="font-semibold text-text-primary dark:text-white">36 patterns</span> from{' '}
             <span className="font-semibold text-text-primary dark:text-white">50+ products</span>
           </p>
         </div>
@@ -75,7 +75,7 @@ export function WelcomePanel() {
                 <MagnifyingGlassCircleIcon className="w-8 h-8 text-text-primary dark:text-white" />
               </div>
               <p className="text-base font-semibold text-text-primary dark:text-white mb-1">Auto-Analyze</p>
-              <p className="text-sm text-text-secondary">28 UX patterns instantly</p>
+              <p className="text-sm text-text-secondary">36 UX patterns instantly</p>
             </div>
 
             {/* Step 3 - spans full width */}

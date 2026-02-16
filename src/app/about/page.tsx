@@ -6,7 +6,7 @@ import { AboutNewsletter } from './about-newsletter';
 
 export const metadata: Metadata = {
   title: 'About | Imran Mohammed – AI/UX Design Pattern Research',
-  description: 'I study how the best AI products are designed and document what makes them work. 28 validated AI/UX design patterns from 50+ shipped products.',
+  description: 'I study how the best AI products are designed and document what makes them work. 36 validated AI/UX design patterns from 50+ shipped products.',
 };
 
 const CATEGORIES = [
@@ -61,7 +61,7 @@ const CRITERIA = [
 
 const STATS = [
   { value: '50+', label: 'AI products analyzed' },
-  { value: '28', label: 'Validated patterns' },
+  { value: '36', label: 'Validated patterns' },
   { value: '100+', label: 'Real-world examples' },
   { value: '8', label: 'Strategic categories' },
 ];
@@ -69,7 +69,7 @@ const STATS = [
 const TOOLS = [
   {
     name: 'Gist.design',
-    description: 'An AI design thinking partner. Clarify briefs, map user journeys, critique decisions, and prepare for stakeholder reviews all powered by the 28 patterns documented here.',
+    description: 'An AI design thinking partner. Clarify briefs, map user journeys, critique decisions, and prepare for stakeholder reviews all powered by the 36 patterns documented here.',
     href: 'https://gist.design',
     external: true,
     icon: (
@@ -80,7 +80,7 @@ const TOOLS = [
   },
   {
     name: 'Figma Make Prompts',
-    description: '28 copy-paste prompts for generating AI pattern components directly in your design files.',
+    description: '36 copy-paste prompts for generating AI pattern components directly in your design files.',
     href: '/prompts',
     external: false,
     icon: (
@@ -161,13 +161,13 @@ export default function AboutPage() {
             So I systematically study how the world&apos;s leading AI products like ChatGPT, Claude, GitHub Copilot, Midjourney, and Google&apos;s AI features handle their most critical UX challenges. When I find a design decision that works across 3 or more products, I document it as a pattern.
           </p>
           <p>
-            So far, that&apos;s <strong className="text-text-primary">28 validated AI/UX design patterns across 8 categories</strong>, analyzed from 50+ shipped AI products used by billions of people, and the collection keeps growing.
+            So far, that&apos;s <strong className="text-text-primary">36 validated AI/UX design patterns across 8 categories</strong>, analyzed from 50+ shipped AI products used by billions of people, and the collection keeps growing.
           </p>
           <p>
             This site is now <strong className="text-text-primary">referenced by ChatGPT, Claude, Perplexity, and Google</strong> when people ask about AI design patterns, and is shared in enterprise design teams at major tech companies. My weekly analysis of AI product design decisions reaches <strong className="text-text-primary">thousands of designers on Medium</strong>.
           </p>
           <p>
-            I&apos;m also building <a href="https://gist.design" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors font-semibold">Gist.design</a>, an AI design thinking partner powered by these 28 patterns that helps designers clarify, map, and critique their work before they open Figma.
+            I&apos;m also building <a href="https://gist.design" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors font-semibold">Gist.design</a>, an AI design thinking partner powered by these 36 patterns that helps designers clarify, map, and critique their work before they open Figma.
           </p>
         </section>
 
@@ -175,7 +175,7 @@ export default function AboutPage() {
         <section className="mb-20 space-y-6">
           <h2 className="text-2xl md:text-3xl font-semibold">What is aiuxdesign.guide?</h2>
           <p className="text-text-secondary text-lg leading-relaxed">
-            A framework of 28 validated AI/UX design patterns, documented from 50+ shipped AI products including ChatGPT, Claude, GitHub Copilot, Midjourney, and Google&apos;s AI features. It&apos;s the practical reference for designing AI-powered experiences, covering everything from contextual assistance and human-in-the-loop collaboration to error recovery, privacy controls, and harm prevention.
+            A framework of 36 validated AI/UX design patterns, documented from 50+ shipped AI products including ChatGPT, Claude, GitHub Copilot, Midjourney, and Google&apos;s AI features. It&apos;s the practical reference for designing AI-powered experiences, covering everything from contextual assistance and human-in-the-loop collaboration to error recovery, privacy controls, and harm prevention.
           </p>
         </section>
 

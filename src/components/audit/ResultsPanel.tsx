@@ -190,7 +190,7 @@ function generateResultsSummary(
 ): string {
   const lines: string[] = [
     'AI UX Audit Results',
-    `Score: ${results.score}/${results.maxScore || 28} patterns detected`,
+    `Score: ${results.score}/${results.maxScore || 36} patterns detected`,
     '',
   ];
 
@@ -384,7 +384,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
   const missingPatterns = allPatterns.filter((p) => p.status === 'missing');
   const naPatterns = allPatterns.filter((p) => p.status === 'not-applicable');
 
-  const maxScore = results.maxScore || 28;
+  const maxScore = results.maxScore || 36;
 
   // CHAT MODE VIEW
   if (chatMode) {

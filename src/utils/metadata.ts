@@ -142,9 +142,9 @@ export function generatePatternMetadata({
  */
 export function generateHomeMetadata(): Metadata {
   return generateMetadata({
-    title: 'AIUX — AI UX Design Patterns | 28 Patterns from 50+ Shipped Products',
+    title: 'AIUX — AI UX Design Patterns | 36 Patterns from 50+ Shipped Products',
     description:
-      'A framework of 28 AI UX design patterns documented from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products. Real examples, code demos, and actionable guidance for designing AI-powered experiences.',
+      'A framework of 36 AI UX design patterns documented from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products. Real examples, code demos, and actionable guidance for designing AI-powered experiences.',
     url: '/',
     keywords: [
       'AI design patterns',

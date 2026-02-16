@@ -37,7 +37,7 @@ export function SocialProof() {
             </h2>
             <p className="text-base text-text-secondary leading-relaxed mb-8">
               Upload any AI interface screenshot and get instant feedback on UX patterns.
-              Powered by 28 research-backed patterns for AI products.
+              Powered by 36 research-backed patterns for AI products.
             </p>
 
             {/* Feature Chips */}
@@ -376,7 +376,7 @@ export function SocialProof() {
                   <p className="text-sm font-semibold text-text-tertiary uppercase tracking-wide mb-4">Resources</p>
                   <div className="space-y-3">
                     <a href="/" className="block text-base text-text-secondary hover:text-accent-primary transition-colors">
-                      All 28 Patterns
+                      All 36 Patterns
                     </a>
                     <a href="/guides" className="block text-base text-text-secondary hover:text-accent-primary transition-colors">
                       Designer Guides

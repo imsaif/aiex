@@ -136,13 +136,13 @@ export default function ProgressiveDisclosureEmailDemo() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+    <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-primary shadow-sm overflow-hidden">
       {/* Email header */}
-      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{email.subject}</h3>
+      <div className="px-6 py-4 border-b border-primary">
+        <h3 className="text-lg font-semibold text-text-primary">{email.subject}</h3>
         <div className="flex justify-between mt-1">
-          <div className="text-sm text-gray-600 dark:text-gray-300">From: {email.sender}</div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">{email.date}</div>
+          <div className="text-sm text-text-secondary">From: {email.sender}</div>
+          <div className="text-sm text-text-tertiary">{email.date}</div>
         </div>
       </div>
 
@@ -174,7 +174,7 @@ export default function ProgressiveDisclosureEmailDemo() {
           >
             {/* Basic summary - First level of content */}
             <div className="px-6 py-3 bg-blue-50/50 dark:bg-blue-900/20 border-t border-blue-100 dark:border-blue-800">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
+              <p className="text-sm text-text-secondary">
                 <span className="font-medium">Summary: </span>
                 {summary.shortSummary}
               </p>
@@ -192,21 +192,21 @@ export default function ProgressiveDisclosureEmailDemo() {
                 >
                   {/* Detailed summary */}
                   <div className="px-6 py-3 bg-blue-50/30 dark:bg-blue-900/10 border-t border-blue-100 dark:border-blue-800">
-                    <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                    <p className="text-sm text-text-secondary mb-3">
                       <span className="font-medium">Detailed: </span>
                       {summary.detailedSummary}
                     </p>
 
                     {/* Key Points */}
                     <div className="mb-3">
-                      <h4 className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-2">Key Points</h4>
+                      <h4 className="text-xs uppercase font-semibold text-text-tertiary mb-2">Key Points</h4>
                       <ul className="grid grid-cols-2 gap-2">
                         {summary.keypoints.map((point, index) => (
                           <li key={index} className="text-xs flex items-start">
                             <svg className="h-3.5 w-3.5 text-blue-500 dark:text-blue-400 mr-1 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
                             </svg>
-                            <span className="text-gray-700 dark:text-gray-300">{point}</span>
+                            <span className="text-text-secondary">{point}</span>
                           </li>
                         ))}
                       </ul>
@@ -214,13 +214,13 @@ export default function ProgressiveDisclosureEmailDemo() {
 
                     {/* Suggested Actions */}
                     <div>
-                      <h4 className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-2">Suggested Actions</h4>
+                      <h4 className="text-xs uppercase font-semibold text-text-tertiary mb-2">Suggested Actions</h4>
                       <div className="flex flex-wrap gap-2">
                         {summary.suggestedActions.map((action, index) => (
                           <button
                             key={index}
                             onClick={() => handleOptionClick(action)}
-                            className="text-xs px-3 py-1.5 rounded-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            className="text-xs px-3 py-1.5 rounded-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-text-secondary hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                           >
                             {action}
                           </button>
@@ -237,15 +237,15 @@ export default function ProgressiveDisclosureEmailDemo() {
 
       {/* Email content */}
       <div className="px-6 py-4">
-        <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">{email.content}</p>
+        <p className="text-sm text-text-secondary whitespace-pre-line">{email.content}</p>
       </div>
 
       {/* Email footer */}
       <div className="px-6 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600">
         <div className="flex gap-2">
           {email.attachments.map((attachment, index) => (
-            <div key={index} className="text-xs py-1 px-2 bg-gray-200 dark:bg-gray-600 rounded flex items-center text-gray-700 dark:text-gray-300">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-gray-500 dark:text-gray-400 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <div key={index} className="text-xs py-1 px-2 bg-surface-secondary rounded flex items-center text-text-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 text-text-tertiary mr-1" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd" />
               </svg>
               {attachment}
@@ -275,7 +275,8 @@ export default function ProgressiveDisclosureEmailDemo() {
     relatedPatterns: [
       "Contextual Assistance",
       "Adaptive Interfaces",
-      "Transparent Feedback"
+      "Transparent Feedback",
+      "Intent Preview"
     ],
     figmaPrompt: {
       prompt: `Design an interface with progressive disclosure that reveals AI features gradually:

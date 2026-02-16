@@ -4,7 +4,7 @@ export default function AuthorFooter() {
       <div>
         <p className="text-sm font-medium text-text-secondary uppercase tracking-wider mb-3">About the author</p>
         <p className="text-base text-text-secondary leading-relaxed">
-          <strong className="text-text-primary">Imran Mohammed</strong> is a product designer who studies how the best AI products are designed. He studies and documents AI/UX patterns from shipped products (28 and counting) and is building{' '}
+          <strong className="text-text-primary">Imran Mohammed</strong> is a product designer who studies how the best AI products are designed. He studies and documents AI/UX patterns from shipped products (36 and counting) and is building{' '}
           <a href="https://gist.design" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Gist.design</a>, an AI design thinking partner. His weekly analysis reaches thousands of designers on Medium.
         </p>
         <div className="flex items-center gap-x-2 mt-3 text-sm">

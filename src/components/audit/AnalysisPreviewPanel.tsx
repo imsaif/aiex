@@ -25,7 +25,7 @@ export function AnalysisPreviewPanel() {
       <div className="flex items-center justify-center gap-2 mb-4 py-2 px-4 bg-background-secondary rounded-full">
         <ShieldCheckIcon className="w-4 h-4 text-text-tertiary" />
         <p className="text-sm text-text-tertiary">
-          Checked against <span className="font-semibold">28 AI patterns</span> from{' '}
+          Checked against <span className="font-semibold">36 AI patterns</span> from{' '}
           <span className="font-semibold">50+ products</span>
         </p>
       </div>
@@ -57,7 +57,7 @@ export function AnalysisPreviewPanel() {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <div className="text-2xl font-semibold text-text-tertiary">
-              ?<span className="text-lg">/28</span>
+              ?<span className="text-lg">/36</span>
             </div>
           </div>
         </div>

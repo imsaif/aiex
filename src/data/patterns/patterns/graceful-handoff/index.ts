@@ -26,7 +26,8 @@ export const gracefulhandoff: Pattern = {
     relatedPatterns: [
       "Human-in-the-Loop",
       "Error Recovery & Graceful Degradation",
-      "Contextual Assistance"
+      "Contextual Assistance",
+      "Escalation Pathways"
     ],
     codeExamples,
     figmaPrompt

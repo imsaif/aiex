@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 application showcasing AI design patterns with TypeScript, React 19, and Tailwind CSS. The project has **all 28 AI design patterns fully completed** across 8 categories, with complete implementations including code examples, interactive demos, real-world examples, and design guidance.
+This is a Next.js 15 application showcasing AI design patterns with TypeScript, React 19, and Tailwind CSS. The project has **all 36 AI design patterns fully completed** across 8 categories, with complete implementations including code examples, interactive demos, real-world examples, and design guidance.
 
 ### Pattern Status Summary
-- **✅ All Patterns Complete (28/28)**: Every pattern has complete implementations with code examples, interactive demos, real-world examples, guidelines, considerations, and Figma design prompts
+- **✅ All Patterns Complete (36/36)**: Every pattern has complete implementations with code examples, interactive demos, real-world examples, guidelines, considerations, and Figma design prompts
 
-### All Patterns - Complete (28/28)
+### All Patterns - Complete (36/36)
 1. ✅ Adaptive Interfaces
 2. ✅ Ambient Intelligence (Oct 17)
 3. ✅ Anti-Manipulation Safeguards (Nov 11)
@@ -38,6 +38,14 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 26. ✅ Session Degradation Prevention (Nov 11)
 27. ✅ Universal Access Patterns (Nov 7)
 28. ✅ Vulnerable User Protection (Nov 11)
+29. ✅ Autonomy Spectrum (Feb 16) 🤖
+30. ✅ Intent Preview (Feb 16) 🤖
+31. ✅ Plan Summary (Feb 16) 🤖
+32. ✅ Action Audit Trail (Feb 16) 🤖
+33. ✅ Escalation Pathways (Feb 16) 🤖
+34. ✅ Trust Calibration (Feb 16) 🤖
+35. ✅ Mixed-Initiative Control (Feb 16) 🤖
+36. ✅ Agent Status & Monitoring (Feb 16) 🤖
 
 ### Pattern Categories (8 Total)
 
@@ -50,13 +58,17 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
   - Guided Learning
   - Predictive Anticipation
 
-#### Human-AI Collaboration (6 patterns)
+#### Human-AI Collaboration (10 patterns)
   - Augmented Creation
   - Collaborative AI
   - Contextual Assistance
   - Feedback Loops
   - Graceful Handoff
   - Human-in-the-Loop
+  - Autonomy Spectrum 🤖
+  - Intent Preview 🤖
+  - Escalation Pathways 🤖
+  - Mixed-Initiative Control 🤖
 
 #### Natural Interaction (4 patterns)
   - Context Switching
@@ -64,9 +76,10 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
   - Multimodal Interaction
   - Progressive Disclosure
 
-#### Performance & Efficiency (2 patterns)
+#### Performance & Efficiency (3 patterns)
   - Intelligent Caching
   - Progressive Enhancement
+  - Agent Status & Monitoring 🤖
 
 #### Privacy & Control (2 patterns)
   - Privacy-First Design
@@ -78,12 +91,15 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
   - Session Degradation Prevention
   - Vulnerable User Protection
 
-#### Trustworthy & Reliable AI (5 patterns)
+#### Trustworthy & Reliable AI (8 patterns)
   - Confidence Visualization
   - Error Recovery
   - Explainable AI
   - Responsible AI Design
   - Safe Exploration
+  - Plan Summary 🤖
+  - Action Audit Trail 🤖
+  - Trust Calibration 🤖
 
 ## Development Commands
 
@@ -235,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-16 17:48 (MacBook)
+- **Pattern:** 8 Agentic AI UX Patterns (29-36)
+- **Status:** ✅ Completed
+- **Files Changed:** 86
+- **Tests Added/Modified:** 6
+- **Notes:** Added 8 new agentic AI UX patterns (Autonomy Spectrum, Intent Preview, Plan Summary, Action Audit Trail, Escalation Pathways, Trust Calibration, Mixed-Initiative Control, Agent Status & Monitoring). Created 56 new files (6 data files + 1 demo component per pattern). Updated pattern count from 28 to 36 across ~20 files. Added Agentic filter toggle to homepage. Updated existing patterns with reverse relatedPatterns references. Added patterns to audit tool detection prompts and PatternCheckingPanel. Updated CLAUDE.md with new pattern list and category counts.
+
 ### Session 2026-02-13 19:54 (MacBook)
 - **Pattern:** Hero CTA & Lead Magnet PDF Update
 - **Status:** ✅ Completed
@@ -299,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Optimized 4 underperforming pages identified via Vercel Speed Insights (RES 78). /news and /news/[slug]: replaced force-dynamic with ISR (revalidate=3600), enabling SSG+edge caching. Removed framer-motion from /news, /news/[slug], /prompts, /guides/[slug] — replaced with CSS keyframe animations. Removed heavy client-side imports: patterns array (~50KB) from news-client, DOMPurify now lazy-loaded, @lobehub/icons lazy-loaded via next/dynamic. Eliminated DOM traversal dark mode logic from newsletter detail (replaced with existing CSS rules). Moved /prompts data fetching to server component, shipping only lightweight serializable data to client. Lazy-loaded DownloadPDFModal in guides.
 
 ### Session 2026-02-06 12:57 (MacBook)
-- **Pattern:** Newsletter Email Template Redesign
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Updated generateHTML() and generateWeeklyHTML() to match Feb 2 redesign: replaced border-left cards with subtle border-bottom dividers, updated typography (20px headlines, 16px/1.75 body), removed emoji headings and background takeaway boxes. Added email-safe hosted PNG icons (17 images in public/images/email/) for product logos (Simple Icons) and section headings (Heroicons) since Gmail strips inline SVGs. Replaced flexbox with table layout for email compatibility. Changed sender address from noreply@ to imran@aiuxdesign.guide across all 7 email-sending files.
-
-### Session 2026-02-02 21:07 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
@@ -393,14 +409,14 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 ## Pattern Development Workflow
 
-### Pattern Structure (24/24 Complete ✅)
+### Pattern Structure (36/36 Complete ✅)
 Pattern implementation follows this structured format:
 1. Each pattern has its own directory in `src/data/patterns/patterns/[pattern-name]/`
 2. Consistent structure with index.ts, code-examples.ts, considerations.ts, guidelines.ts, examples.ts, figma-prompt.ts
 3. All patterns imported in `src/data/patterns.ts`
 4. Patterns validated with `npm run test:patterns`
 5. Interactive demos for all patterns with working code previews
-6. **Current Status**: All 24 patterns fully completed with comprehensive implementations
+6. **Current Status**: All 36 patterns fully completed with comprehensive implementations
 
 ### Pattern Structure Requirements
 - `id` and `slug` must match and use kebab-case
@@ -418,7 +434,7 @@ Pattern implementation follows this structured format:
   - Lines: 48.28% ✅
   - Functions: 39% ✅
   - Branches: 36.19% ✅
-- **✅ 24/24 AI design patterns fully completed** with comprehensive content, interactive demos, and code examples
+- **✅ 36/36 AI design patterns fully completed** with comprehensive content, interactive demos, and code examples
 - **100% component test coverage** - every component has comprehensive tests
 - Data validation with 83% coverage: Patterns, Categories
 - Advanced test infrastructure with proper mocking for Next.js, framer-motion, and browser APIs

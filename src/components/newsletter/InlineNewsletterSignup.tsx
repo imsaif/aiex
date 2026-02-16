@@ -131,7 +131,7 @@ export function InlineNewsletterSignup({
             {/* Value Proposition / Subheading */}
             {(isHero || ((isPatternDetail || isNews) && customSubheading)) && (
               <p className={`text-text-secondary mb-4 font-medium ${isNews ? 'text-sm' : 'text-base text-center'}`}>
-                {customSubheading || 'Score your AI interface against 28 proven UX patterns'}
+                {customSubheading || 'Score your AI interface against 36 proven UX patterns'}
               </p>
             )}
 

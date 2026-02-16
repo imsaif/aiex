@@ -27,6 +27,14 @@ import { crisisdetectionescalation } from './patterns/patterns/crisis-detection-
 import { sessiondegradationprevention } from './patterns/patterns/session-degradation-prevention';
 import { antimanipulationsafeguards } from './patterns/patterns/anti-manipulation-safeguards';
 import { vulnerableuserprotection } from './patterns/patterns/vulnerable-user-protection';
+import { autonomyspectrum } from './patterns/patterns/autonomy-spectrum';
+import { intentpreview } from './patterns/patterns/intent-preview';
+import { plansummary } from './patterns/patterns/plan-summary';
+import { actionaudittrail } from './patterns/patterns/action-audit-trail';
+import { escalationpathways } from './patterns/patterns/escalation-pathways';
+import { trustcalibration } from './patterns/patterns/trust-calibration';
+import { mixedinitiativecontrol } from './patterns/patterns/mixed-initiative-control';
+import { agentstatusmonitoring } from './patterns/patterns/agent-status-monitoring';
 
 export const patterns: Pattern[] = [
   contextualassistance,
@@ -56,7 +64,15 @@ export const patterns: Pattern[] = [
   crisisdetectionescalation,
   sessiondegradationprevention,
   antimanipulationsafeguards,
-  vulnerableuserprotection
+  vulnerableuserprotection,
+  autonomyspectrum,
+  intentpreview,
+  plansummary,
+  actionaudittrail,
+  escalationpathways,
+  trustcalibration,
+  mixedinitiativecontrol,
+  agentstatusmonitoring
 ];
 
 export default patterns;

@@ -87,6 +87,22 @@ const allowedPatterns = [
   /bg-emerald-500/,      // Success feedback colors
   /text-emerald-200/,    // Success feedback text
   /text-gray-900/,       // Dark text on light elements within dark containers
+  // Semantic status colors - intentional for status indicators, diffs, badges
+  /bg-green-/,           // Success/positive indicators
+  /text-green-/,         // Success/positive text
+  /bg-red-/,             // Error/negative indicators
+  /text-red-/,           // Error/negative text
+  /bg-amber-/,           // Warning indicators
+  /text-amber-/,         // Warning text
+  /border-amber-/,       // Warning borders
+  /bg-blue-/,            // Active/info indicators
+  /text-blue-/,          // Active/info text
+  /border-blue-/,        // Active/info borders
+  /bg-purple-/,          // Agent/AI indicators
+  /text-purple-/,        // Agent/AI text
+  /border-purple-/,      // Agent/AI borders
+  /bg-indigo-/,          // Category indicators
+  /text-indigo-/,        // Category text
 ];
 
 /**
@@ -109,7 +125,7 @@ const criticalValidators = [
       // Hardcoded hex in inline style
       /style=\{\s*{[^}]*?color\s*:\s*["']#[0-9a-fA-F]{3,6}["'][^}]*?}\s*\}/g,
       // Direct color values without tokens
-      /className=["'`]([^"'`]*(text|bg|border)-(?!text-|background-|surface-|category-|accent-|border-)[a-z]+-\d+[^"'`]*)["'`]/g,
+      /className=["'`]([^"'`]*(text|bg|border)-(?!text-|background-|surface-|category-|accent-|border-|b-|t-|l-|r-|x-|y-|s-|e-)[a-z]+-\d+[^"'`]*)["'`]/g,
     ],
     fix: (content, line) => {
       // Map common hardcoded colors to tokens
@@ -193,6 +209,9 @@ const warningValidators = [
  */
 function validateFile(filePath) {
   if (!fs.existsSync(filePath)) return;
+
+  // Skip code-examples.ts files - they contain TSX code as strings, not actual component code
+  if (filePath.endsWith('code-examples.ts')) return;
 
   const content = fs.readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');

@@ -5,7 +5,7 @@ import type { ContextData, InterfaceType, MainConcern } from '@/types/audit';
  * Context-aware analysis that only evaluates RELEVANT patterns
  */
 
-// All 28 AI UX patterns with their applicable UI contexts
+// All 36 AI UX patterns with their applicable UI contexts
 const patterns = [
   { id: 'adaptive-interfaces', name: 'Adaptive Interfaces', description: 'Interface adapts to user behavior and preferences', appliesTo: ['dashboard', 'settings', 'main-interface'] },
   { id: 'ambient-intelligence', name: 'Ambient Intelligence', description: 'Subtle, non-intrusive assistance in the background', appliesTo: ['main-interface', 'editor', 'workspace'] },
@@ -35,6 +35,14 @@ const patterns = [
   { id: 'session-degradation', name: 'Session Degradation Prevention', description: 'Maintains quality over long sessions', appliesTo: ['chat-response', 'long-form-editor', 'workspace'] },
   { id: 'universal-access', name: 'Universal Access Patterns', description: 'Accessibility for all users', appliesTo: ['all'] },
   { id: 'vulnerable-user-protection', name: 'Vulnerable User Protection', description: 'Extra safeguards for vulnerable populations', appliesTo: ['chat-input', 'chat-response', 'content-moderation'] },
+  { id: 'autonomy-spectrum', name: 'Autonomy Spectrum', description: 'Graduated autonomy levels per task type for AI agents', appliesTo: ['settings', 'automation', 'ai-output', 'workspace'] },
+  { id: 'intent-preview', name: 'Intent Preview', description: 'Preview of planned agent actions before execution', appliesTo: ['ai-output', 'automation', 'chat-response', 'workspace'] },
+  { id: 'plan-summary', name: 'Plan Summary', description: 'Structured breakdown of agent reasoning and approach', appliesTo: ['ai-output', 'chat-response', 'automation', 'workspace'] },
+  { id: 'action-audit-trail', name: 'Action Audit Trail', description: 'Timestamped log of agent actions with undo capability', appliesTo: ['dashboard', 'automation', 'workspace', 'ai-output'] },
+  { id: 'escalation-pathways', name: 'Escalation Pathways', description: 'Structured handoff when agent needs human guidance', appliesTo: ['chat-response', 'automation', 'support-interface', 'ai-output'] },
+  { id: 'trust-calibration', name: 'Trust Calibration', description: 'Progressive trust building through demonstrated competence', appliesTo: ['settings', 'dashboard', 'automation', 'ai-output'] },
+  { id: 'mixed-initiative-control', name: 'Mixed-Initiative Control', description: 'Fluid control transitions between human and agent', appliesTo: ['editor', 'content-creation', 'workspace', 'canvas'] },
+  { id: 'agent-status-monitoring', name: 'Agent Status & Monitoring', description: 'Layered status system for long-running agent tasks', appliesTo: ['dashboard', 'automation', 'workspace', 'main-interface'] },
 ];
 
 // Context-specific priorities

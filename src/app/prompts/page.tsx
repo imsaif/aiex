@@ -4,11 +4,11 @@ import categories from '@/data/categories';
 import PromptsClient from './prompts-client';
 
 export const metadata: Metadata = {
-  title: '28 Figma Make Prompts for AI Patterns | Copy-Paste Ready',
-  description: 'Copy-paste ready Figma Make prompts for 28 AI design patterns. Generate ChatGPT interfaces, feedback loops, error states, and more with one click.',
+  title: '36 Figma Make Prompts for AI Patterns | Copy-Paste Ready',
+  description: 'Copy-paste ready Figma Make prompts for 36 AI design patterns. Generate ChatGPT interfaces, feedback loops, error states, and more with one click.',
   openGraph: {
-    title: '28 Figma Make Prompts for AI Patterns | Copy-Paste Ready',
-    description: 'Copy-paste ready Figma Make prompts for 28 AI design patterns. Generate ChatGPT interfaces, feedback loops, error states, and more.',
+    title: '36 Figma Make Prompts for AI Patterns | Copy-Paste Ready',
+    description: 'Copy-paste ready Figma Make prompts for 36 AI design patterns. Generate ChatGPT interfaces, feedback loops, error states, and more.',
     type: 'website',
   },
 };

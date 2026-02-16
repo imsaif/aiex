@@ -26,7 +26,8 @@ export const confidencevisualization: Pattern = {
     relatedPatterns: [
       "Explainable AI",
       "Transparent Feedback",
-      "Error Recovery & Graceful Degradation"
+      "Error Recovery & Graceful Degradation",
+      "Trust Calibration"
     ],
     codeExamples,
     figmaPrompt

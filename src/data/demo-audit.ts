@@ -15,7 +15,7 @@ export const DEMO_ANALYSIS_RESULTS: AnalysisResults = {
     deviceType: 'desktop',
   },
   score: 19,
-  maxScore: 28,
+  maxScore: 36,
   detectedComponent: 'AI Chat Interface',
   componentDescription: 'A conversational AI assistant with message input, response display, and conversation history.',
   patterns: {

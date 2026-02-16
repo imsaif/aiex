@@ -15,7 +15,7 @@ const ContextualAssistanceDemo = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-category-blue"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
       </div>
     )
   }
@@ -398,6 +398,110 @@ const VulnerableUserProtectionDemo = dynamic(
   }
 );
 
+// Dynamically import the AutonomySpectrumDemo component
+const AutonomySpectrumDemo = dynamic(
+  () => import('@/components/examples/AutonomySpectrumDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the IntentPreviewDemo component
+const IntentPreviewDemo = dynamic(
+  () => import('@/components/examples/IntentPreviewDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the PlanSummaryDemo component
+const PlanSummaryDemo = dynamic(
+  () => import('@/components/examples/PlanSummaryDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the ActionAuditTrailDemo component
+const ActionAuditTrailDemo = dynamic(
+  () => import('@/components/examples/ActionAuditTrailDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the EscalationPathwaysDemo component
+const EscalationPathwaysDemo = dynamic(
+  () => import('@/components/examples/EscalationPathwaysDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the TrustCalibrationDemo component
+const TrustCalibrationDemo = dynamic(
+  () => import('@/components/examples/TrustCalibrationDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the MixedInitiativeControlDemo component
+const MixedInitiativeControlDemo = dynamic(
+  () => import('@/components/examples/MixedInitiativeControlDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
+// Dynamically import the AgentStatusMonitoringDemo component
+const AgentStatusMonitoringDemo = dynamic(
+  () => import('@/components/examples/AgentStatusMonitoringDemo'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    )
+  }
+);
+
 interface CodeExampleBlockProps {
   code: string;
   language: string;
@@ -486,6 +590,22 @@ export default function CodeExampleBlock({
         return <AntiManipulationSafeguardsDemo />;
       case 'VulnerableUserProtectionDemo':
         return <VulnerableUserProtectionDemo />;
+      case 'autonomy-spectrum-demo':
+        return <AutonomySpectrumDemo />;
+      case 'intent-preview-demo':
+        return <IntentPreviewDemo />;
+      case 'plan-summary-demo':
+        return <PlanSummaryDemo />;
+      case 'action-audit-trail-demo':
+        return <ActionAuditTrailDemo />;
+      case 'escalation-pathways-demo':
+        return <EscalationPathwaysDemo />;
+      case 'trust-calibration-demo':
+        return <TrustCalibrationDemo />;
+      case 'mixed-initiative-control-demo':
+        return <MixedInitiativeControlDemo />;
+      case 'agent-status-monitoring-demo':
+        return <AgentStatusMonitoringDemo />;
       default:
         return (
           <div className="flex items-center justify-center h-64 text-text-tertiary">
@@ -575,10 +695,10 @@ export default function CodeExampleBlock({
           <div className="p-6 flex justify-center min-h-[400px]">
             <div className={`w-full ${
               // Components that need full width (max-w-6xl)
-              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection'].includes(componentId)
+              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo'].includes(componentId)
                 ? 'max-w-6xl'
                 // Components that need large width (max-w-4xl)
-                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email'].includes(componentId)
+                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'autonomy-spectrum-demo', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo'].includes(componentId)
                 ? 'max-w-4xl'
                 // Components that need large width (max-w-4xl)
                 : ['VulnerableUserProtectionDemo'].includes(componentId)

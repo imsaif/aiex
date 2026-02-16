@@ -131,7 +131,7 @@ export function AuditKitClient() {
                     <Squares2X2Icon className="w-5 h-5 text-accent-primary" />
                   </div>
                   <div>
-                    <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">28 Patterns</span>
+                    <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">36 Patterns</span>
                     <span className="text-xs text-text-tertiary">Browse the full library</span>
                   </div>
                 </Link>
@@ -317,7 +317,7 @@ export function AuditKitClient() {
                 <Squares2X2Icon className="w-5 h-5 text-accent-primary" />
               </div>
               <div>
-                <span className="text-sm font-medium text-text-primary block">28 Patterns</span>
+                <span className="text-sm font-medium text-text-primary block">36 Patterns</span>
                 <span className="text-xs text-text-tertiary">Browse the full library</span>
               </div>
             </Link>

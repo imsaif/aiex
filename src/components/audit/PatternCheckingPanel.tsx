@@ -18,7 +18,7 @@ interface PatternCheckingPanelProps {
   isAnalyzing: boolean;
 }
 
-// All 28 AI UX patterns grouped by category
+// All 36 AI UX patterns grouped by category
 const patternsByCategory = [
   {
     category: 'Trustworthy AI',
@@ -28,6 +28,9 @@ const patternsByCategory = [
       { id: 'explainable-ai', name: 'Explainable AI' },
       { id: 'responsible-ai', name: 'Responsible AI Design' },
       { id: 'safe-exploration', name: 'Safe Exploration' },
+      { id: 'plan-summary', name: 'Plan Summary' },
+      { id: 'action-audit-trail', name: 'Action Audit Trail' },
+      { id: 'trust-calibration', name: 'Trust Calibration' },
     ],
   },
   {
@@ -39,6 +42,10 @@ const patternsByCategory = [
       { id: 'feedback-loops', name: 'Feedback Loops' },
       { id: 'graceful-handoff', name: 'Graceful Handoff' },
       { id: 'human-in-the-loop', name: 'Human-in-the-Loop' },
+      { id: 'autonomy-spectrum', name: 'Autonomy Spectrum' },
+      { id: 'intent-preview', name: 'Intent Preview' },
+      { id: 'escalation-pathways', name: 'Escalation Pathways' },
+      { id: 'mixed-initiative-control', name: 'Mixed-Initiative Control' },
     ],
   },
   {
@@ -80,6 +87,7 @@ const patternsByCategory = [
     patterns: [
       { id: 'intelligent-caching', name: 'Intelligent Caching' },
       { id: 'progressive-enhancement', name: 'Progressive Enhancement' },
+      { id: 'agent-status-monitoring', name: 'Agent Status & Monitoring' },
     ],
   },
   {
@@ -92,7 +100,7 @@ const patternsByCategory = [
 
 function StatusIcon({ status }: { status: PatternStatus }) {
   if (status === 'ready') {
-    return <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600" />;
+    return <div className="w-4 h-4 rounded-full border-2 border-primary" />;
   }
 
   if (status === 'checking') {
@@ -131,27 +139,27 @@ export function PatternCheckingPanel({ patternStatuses, checkingPatternIndex, is
   }, [isAnalyzing]);
 
   return (
-    <div className="flex flex-col bg-white dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+    <div className="flex flex-col bg-surface-primary border-2 border-primary rounded-xl overflow-hidden">
       {/* Header */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="px-4 py-4 border-b-2 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex items-center justify-between gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors w-full text-left"
+        className="px-4 py-4 border-b-2 border-primary bg-surface-secondary flex items-center justify-between gap-2 hover:bg-surface-secondary transition-colors w-full text-left"
         aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         <div>
-          <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+          <h2 className="text-sm font-bold text-text-primary mb-1">
             Pattern Analysis
           </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400">
-            28 patterns ready to evaluate
+          <p className="text-xs text-text-secondary">
+            36 patterns ready to evaluate
           </p>
         </div>
 
         <div className="flex-shrink-0">
           {isCollapsed ? (
-            <ChevronDownIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+            <ChevronDownIcon className="w-5 h-5 text-text-secondary" />
           ) : (
-            <ChevronUpIcon className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+            <ChevronUpIcon className="w-5 h-5 text-text-secondary" />
           )}
         </div>
       </button>
@@ -170,7 +178,7 @@ export function PatternCheckingPanel({ patternStatuses, checkingPatternIndex, is
               <div className="space-y-5">
                 {patternsByCategory.map((category, categoryIndex) => (
                   <div key={categoryIndex}>
-                    <h3 className="text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2.5 px-1">
+                    <h3 className="text-[11px] font-bold text-text-secondary uppercase tracking-wider mb-2.5 px-1">
                       {category.category}
                     </h3>
                     <div className="space-y-0.5">
@@ -179,12 +187,12 @@ export function PatternCheckingPanel({ patternStatuses, checkingPatternIndex, is
                         return (
                           <motion.div
                             key={pattern.id}
-                            className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900/50 transition-colors"
+                            className="flex items-center gap-2.5 px-2 py-2 rounded-lg hover:bg-surface-secondary transition-colors"
                             initial={{ opacity: 0.7 }}
                             animate={{ opacity: status === 'checking' ? 1 : 0.7 }}
                           >
                             <StatusIcon status={status} />
-                            <span className="text-xs text-slate-900 dark:text-slate-100 truncate flex-1 font-medium">
+                            <span className="text-xs text-text-primary truncate flex-1 font-medium">
                               {pattern.name}
                             </span>
                           </motion.div>

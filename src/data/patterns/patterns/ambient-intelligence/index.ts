@@ -24,7 +24,8 @@ export const ambientintelligence: Pattern = {
     relatedPatterns: [
       "Contextual Assistance",
       "Progressive Disclosure",
-      "Human-in-the-Loop"
+      "Human-in-the-Loop",
+      "Agent Status & Monitoring"
     ],
     codeExamples,
     figmaPrompt

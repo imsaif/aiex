@@ -29,6 +29,7 @@ export default function HomeClient() {
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [isHandbookModalOpen, setIsHandbookModalOpen] = useState(false);
+  const [showAgenticOnly, setShowAgenticOnly] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Track dark mode state
@@ -84,9 +85,12 @@ export default function HomeClient() {
         );
       }
 
-      return matchesSearch && matchesCategory && matchesProducts && matchesIndustries;
+      // Filter by agentic tag
+      const matchesAgentic = !showAgenticOnly || pattern.tags?.includes('agentic');
+
+      return matchesSearch && matchesCategory && matchesProducts && matchesIndustries && matchesAgentic;
     });
-  }, [searchQuery, selectedCategory, selectedProducts, selectedIndustries]);
+  }, [searchQuery, selectedCategory, selectedProducts, selectedIndustries, showAgenticOnly]);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -239,6 +243,17 @@ export default function HomeClient() {
                   selectedIndustries={selectedIndustries}
                   onIndustriesChange={setSelectedIndustries}
                 />
+                <button
+                  onClick={() => setShowAgenticOnly(!showAgenticOnly)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors border ${
+                    showAgenticOnly
+                      ? 'bg-purple-600 text-white border-purple-600'
+                      : 'bg-surface-primary text-text-secondary border-gray-300 dark:border-gray-600 hover:border-purple-400 hover:text-purple-600'
+                  }`}
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  Agentic
+                </button>
               </div>
             </div>
 

@@ -8,7 +8,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
-// All 28 AI UX patterns
+// All 36 AI UX patterns
 const PATTERNS = [
   { id: 'adaptive-interfaces', name: 'Adaptive Interfaces' },
   { id: 'ambient-intelligence', name: 'Ambient Intelligence' },
@@ -51,7 +51,7 @@ ${userGoal ? `- User Goal: ${userGoal}` : ''}
 
 1. **Identify UI Elements**: List the key interactive elements you see (buttons, inputs, cards, modals, etc.) with their approximate locations.
 
-2. **Pattern Analysis**: For each of the 28 AI UX patterns, determine:
+2. **Pattern Analysis**: For each of the 36 AI UX patterns, determine:
    - Status: "well-implemented", "weak", or "missing"
    - Evidence: What you see (or don't see) in the screenshot
    - Priority: "high", "medium", or "low" based on product type
@@ -85,7 +85,7 @@ ${PATTERNS.map((p, i) => `${i + 1}. ${p.name} (${p.id})`).join('\n')}
 
 **Important:**
 - Be specific about WHERE you see patterns (reference UI elements)
-- Score = count of well-implemented patterns (max 28)
+- Score = count of well-implemented patterns (max 36)
 - Focus on actionable, specific feedback
 - Consider the product type when setting priorities`;
 }
@@ -233,7 +233,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     };
 
-    console.log('[Mentor Scan] Complete. Score:', result.overallScore, '/ 28');
+    console.log('[Mentor Scan] Complete. Score:', result.overallScore, '/ 36');
 
     return NextResponse.json(result);
 
