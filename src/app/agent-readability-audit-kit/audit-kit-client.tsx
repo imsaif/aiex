@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import {
   ClipboardDocumentCheckIcon,
   AdjustmentsHorizontalIcon,
@@ -16,6 +15,7 @@ import {
   CurrencyDollarIcon,
   BoltIcon,
   ArrowLeftIcon,
+  EnvelopeIcon,
 } from '@heroicons/react/24/outline';
 
 const auditKitItems = [
@@ -51,17 +51,51 @@ const useCases = [
 ];
 
 export function AuditKitClient() {
-  const [isDownloaded, setIsDownloaded] = useState(false);
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleDownload = () => {
+  const triggerDownload = () => {
     const link = document.createElement('a');
     link.href = '/downloads/agent-readability-audit.pdf';
     link.download = 'agent-readability-audit.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
 
-    setIsDownloaded(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !email.includes('@')) {
+      setStatus('error');
+      setErrorMessage('Please enter a valid email');
+      return;
+    }
+
+    setStatus('loading');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'audit-kit' }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        triggerDownload();
+      } else {
+        setStatus('error');
+        setErrorMessage(data.error || 'Something went wrong. Please try again.');
+      }
+    } catch {
+      setStatus('error');
+      setErrorMessage('Network error. Please try again.');
+    }
   };
 
   return (
@@ -85,7 +119,7 @@ export function AuditKitClient() {
 
             {/* Subheading */}
             <p className="text-base lg:text-lg text-text-secondary mb-6 lg:mb-10 leading-relaxed">
-              A 3-page toolkit to test how AI agents read, understand, and represent your product.
+              A 4-page toolkit to test how AI agents read, understand, and represent your product.
             </p>
 
             {/* Use Cases - Pills (hidden on mobile, shown on desktop) */}
@@ -200,17 +234,46 @@ export function AuditKitClient() {
             </div>
 
             {/* Download Section */}
-            {!isDownloaded ? (
+            {status !== 'success' ? (
               <div className="mb-10">
-                <button
-                  onClick={handleDownload}
-                  className="w-full px-6 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <ArrowDownTrayIcon className="w-5 h-5" />
-                  Download Audit Kit (PDF)
-                </button>
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <EnvelopeIcon className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="your@email.com"
+                        disabled={status === 'loading'}
+                        className="w-full pl-12 pr-4 py-4 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={status === 'loading'}
+                      className="px-6 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                    >
+                      {status === 'loading' ? (
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                      ) : (
+                        <>
+                          <ArrowDownTrayIcon className="w-5 h-5" />
+                          Download
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  {status === 'error' && errorMessage && (
+                    <p className="text-sm text-red-400 text-center">{errorMessage}</p>
+                  )}
+                </form>
                 <p className="text-xs text-gray-400 text-center mt-3">
-                  3 pages · 15 minutes · No email required
+                  Enter email · Instant download · No spam
                 </p>
               </div>
             ) : (
@@ -220,34 +283,19 @@ export function AuditKitClient() {
                 className="mb-10"
               >
                 {/* Success Message */}
-                <div className="p-4 bg-emerald-500/20 border border-emerald-500 rounded-lg mb-6">
+                <div className="p-4 bg-emerald-500/20 border border-emerald-500 rounded-lg mb-4">
                   <p className="text-white font-semibold mb-1">Your audit kit is downloading!</p>
                   <p className="text-emerald-200 text-sm">
                     Check your downloads folder for the PDF.
                   </p>
                 </div>
 
-                {/* Email Signup */}
-                <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-5">
-                  <h3 className="text-white font-semibold mb-2">Want more frameworks like this?</h3>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Get weekly AI UX analysis in your inbox.
-                  </p>
-                  <InlineNewsletterSignup
-                    variant="news"
-                    source="audit-kit"
-                    customButtonText="Subscribe"
-                    customSuccessMessage="You're in! Check your inbox."
-                    stacked
-                    darkBackground
-                  />
-                </div>
-
                 {/* Download Again Button */}
                 <button
-                  onClick={handleDownload}
-                  className="w-full mt-4 px-4 py-3 bg-transparent border border-gray-600 text-white font-medium rounded-lg hover:bg-gray-800 transition cursor-pointer text-sm"
+                  onClick={triggerDownload}
+                  className="w-full px-4 py-3 bg-white text-gray-900 font-medium rounded-lg hover:bg-gray-100 transition cursor-pointer text-sm flex items-center justify-center gap-2"
                 >
+                  <ArrowDownTrayIcon className="w-4 h-4" />
                   Download Again
                 </button>
               </motion.div>
@@ -257,7 +305,7 @@ export function AuditKitClient() {
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="flex flex-col items-center">
                 <DocumentIcon className="w-5 h-5 text-white mb-2" />
-                <span className="text-xs text-gray-400">3-page PDF</span>
+                <span className="text-xs text-gray-400">4-page PDF</span>
               </div>
               <div className="flex flex-col items-center">
                 <CurrencyDollarIcon className="w-5 h-5 text-white mb-2" />

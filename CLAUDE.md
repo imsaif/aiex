@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-17 12:08 (MacBook)
+- **Pattern:** Agent Readability Audit Kit Email Gateway
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Added email gateway to Agent Readability Audit Kit page — email required before PDF download. Merged cover PDF into existing audit PDF (now 4 pages). Added `audit-kit` source to subscribe API with branded welcome email. Updated all page copy (metadata, trust text, page count). Removed post-download InlineNewsletterSignup since email is now collected upfront.
+
 ### Session 2026-02-17 10:26 (MacBook)
 - **Pattern:** Intent Preview & Agent Status Monitoring
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Homepage SEO overhaul: updated H1 to "AI UX Design Patterns", new subtitle, updated meta title and description in generateHomeMetadata(). Added intro paragraph between hero and pattern grid. Added "What is aiuxdesign.guide?" definition block on /about page after bio section. Updated newsletter signup copy across hero, pattern detail, and InlineNewsletterSignup component to transparently communicate PDF + daily/weekly email cadence.
 
 ### Session 2026-02-09 13:38 (MacBook)
-- **Pattern:** About Page Redesign & Author Footer
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Complete rewrite of /about page per spec: 9 sections including creator hero with grain background, bio in first-person voice, pattern framework list, criteria cards with icons, stats cards, tools card grid, open source CTAs, and newsletter signup. Upgraded all cards to match site design tokens (shadow-card, rounded-2xl, bg-surface-primary, hover states). Created AuthorFooter component added to all pattern detail pages with bio, links (Portfolio, Gist.design, GitHub). Updated copy to present tense for ongoing work feel. Added Claude and Google to referrer list.
-
-### Session 2026-02-06 19:57 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

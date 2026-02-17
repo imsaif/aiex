@@ -9,7 +9,7 @@ import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 // Email validation schema
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
-  source: z.enum(['footer', 'handbook', 'direct', 'news', 'audit']).optional().default('direct'),
+  source: z.enum(['footer', 'handbook', 'direct', 'news', 'audit', 'audit-kit']).optional().default('direct'),
 });
 
 export async function POST(request: NextRequest) {
@@ -49,19 +49,24 @@ export async function POST(request: NextRequest) {
 
     if (existingSubscriber) {
       if (existingSubscriber.active) {
-        // If they're already subscribed and requesting handbook, send handbook email
-        if (source === 'handbook') {
+        // If they're already subscribed and requesting handbook or audit-kit, send the email anyway
+        if (source === 'handbook' || source === 'audit-kit') {
           try {
             await sendWelcomeEmail(email, source);
+            const successMessage = source === 'audit-kit'
+              ? 'Your audit kit is ready! Check your email.'
+              : 'Your checklist is ready! Check your email.';
             return NextResponse.json(
-              { message: 'Your checklist is ready! Check your email.' },
+              { message: successMessage },
               { status: 200 }
             );
           } catch (emailError) {
-            console.error('Email send failed for existing handbook request:', { email: email.replace(/^(.{2}).*(@.*)$/, '$1***$2'), source, error: emailError instanceof Error ? emailError.message : 'Unknown error', timestamp: new Date().toISOString() });
+            console.error('Email send failed for existing subscriber request:', { email: email.replace(/^(.{2}).*(@.*)$/, '$1***$2'), source, error: emailError instanceof Error ? emailError.message : 'Unknown error', timestamp: new Date().toISOString() });
             return NextResponse.json(
               {
-                message: 'Your checklist is ready, but we\'re having trouble sending the email right now.',
+                message: source === 'audit-kit'
+                  ? 'Your audit kit is ready! Download has started.'
+                  : 'Your checklist is ready, but we\'re having trouble sending the email right now.',
                 emailWarning: true
               },
               { status: 200 }
@@ -152,11 +157,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | 'direct' | 'news' | 'audit' = 'direct') {
+async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | 'direct' | 'news' | 'audit' | 'audit-kit' = 'direct') {
   try {
     const isHandbookFlow = source === 'handbook';
     const isNewsFlow = source === 'news';
     const isAuditFlow = source === 'audit';
+    const isAuditKitFlow = source === 'audit-kit';
     const token = isHandbookFlow ? generateHandbookToken(email) : null;
 
     let subject: string;
@@ -171,6 +177,9 @@ async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | '
     } else if (isAuditFlow) {
       subject = '🔍 Your AI UX Audit Report is Saved!';
       html = getAuditWelcomeEmail();
+    } else if (isAuditKitFlow) {
+      subject = '📋 Your Agent Readability Audit Kit';
+      html = getAuditKitWelcomeEmail();
     } else {
       subject = 'Welcome to AI UX Patterns Newsletter! 🎨';
       html = getNewsletterWelcomeEmail();
@@ -375,6 +384,63 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
             Download link valid for 30 days
           </p>
 
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+function getAuditKitWelcomeEmail(): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Your Agent Readability Audit Kit</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: #000000; padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Your Audit Kit is Ready!</h1>
+        </div>
+
+        <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
+          <p style="font-size: 16px; margin-bottom: 20px;">
+            Thanks for downloading the <strong>Agent Readability Audit Kit</strong> — a 4-page toolkit to test how AI agents read, understand, and represent your product.
+          </p>
+
+          <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #000000;">
+            <h2 style="font-size: 18px; margin: 0 0 10px 0; color: #000000; font-weight: 600;">What's Inside:</h2>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li style="margin-bottom: 8px;"><strong>The 5-Prompt Test</strong> — exact prompts to test agent visibility</li>
+              <li style="margin-bottom: 8px;"><strong>Layer Stripping Checklist</strong> — score across four content layers</li>
+              <li style="margin-bottom: 8px;"><strong>Gap-Filling Scorecard</strong> — detect fabrication and competitor blending</li>
+            </ul>
+          </div>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://www.aiuxdesign.guide/agent-readability-audit-kit"
+               style="display: inline-block; background: #000000; color: #ffffff; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 18px; border: 2px solid #000000;">
+              Download Again
+            </a>
+          </div>
+
+          <p style="font-size: 16px; margin-bottom: 20px;">
+            You're now subscribed to receive AI UX tips and pattern updates. We'll help you build better AI experiences.
+          </p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://www.aiuxdesign.guide"
+               style="display: inline-block; background: #ffffff; border: 2px solid #000000;
+                      color: #000000; padding: 12px 30px; text-decoration: none; border-radius: 8px;
+                      font-weight: 600; font-size: 16px;">
+              Explore All 36 Patterns
+            </a>
+          </div>
+
+          <p style="font-size: 14px; color: #999999; text-align: center; margin-top: 30px;">
+            Questions? Just reply to this email.
+          </p>
         </div>
       </body>
     </html>

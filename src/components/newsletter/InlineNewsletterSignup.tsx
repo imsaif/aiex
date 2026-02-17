@@ -11,7 +11,7 @@ interface InlineNewsletterSignupProps {
   customButtonText?: string;
   customSuccessMessage?: string;
   stacked?: boolean;
-  source?: 'footer' | 'handbook' | 'direct' | 'news' | 'toolkit';
+  source?: 'footer' | 'handbook' | 'direct' | 'news' | 'toolkit' | 'audit-kit';
   /** Use when component is placed on a dark background */
   darkBackground?: boolean;
 }
