@@ -67,8 +67,40 @@ export default function AgentStatusMonitoringDemo() {
     setShowNotification(false);
   };
 
+  const resetDemo = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    setTasks([
+      { id: 1, title: 'Analyzing Q3 reports', status: 'running', progress: 67, estimatedTime: '~2 min left', detail: 'Scanning 12 documents for revenue data' },
+      { id: 2, title: 'Scheduling team syncs', status: 'paused', progress: 40, estimatedTime: 'Waiting for input', detail: 'Need confirmation on Thursday 2pm slot' },
+      { id: 3, title: 'Email digest compiled', status: 'completed', progress: 100, estimatedTime: 'Done', detail: '47 emails summarized, 3 flagged for review' },
+    ]);
+    setExpanded(false);
+    setShowNotification(false);
+    setTimeout(() => setShowNotification(true), 3000);
+    intervalRef.current = setInterval(() => {
+      setTasks(prev => prev.map(t => {
+        if (t.status === 'running' && t.progress < 100) {
+          const newProgress = Math.min(100, t.progress + 2);
+          return {
+            ...t,
+            progress: newProgress,
+            status: newProgress >= 100 ? 'completed' as const : 'running' as const,
+            estimatedTime: newProgress >= 100 ? 'Done' : `~${Math.ceil((100 - newProgress) / 10)} min left`,
+          };
+        }
+        return t;
+      }));
+    }, 500);
+  };
+
   return (
     <div className="max-w-md mx-auto space-y-4">
+      {/* Reset button */}
+      <div className="flex justify-end">
+        <button onClick={resetDemo} className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+          Reset Demo
+        </button>
+      </div>
       {/* Attention notification */}
       <AnimatePresence>
         {showNotification && (

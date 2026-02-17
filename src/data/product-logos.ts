@@ -51,6 +51,9 @@ export const productLogos: Record<string, string> = {
   GPTZero: 'https://cdn.simpleicons.org/openai', // GPTZero detection tool
   Hugging: 'huggingface', // Hugging Face (truncated product name)
 
+  // AI Development Tools
+  Devin: '/images/logos/devin_ai_logo.png',
+
   // Mental Health & Wellness AI
   'Woebot': '/images/logos/woebot_health_logo.png', // Mental health chatbot (local)
   'Crisis': '/images/logos/Crisis_Text_Line_logo.png', // Crisis Text Line (local)

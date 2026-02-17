@@ -13,7 +13,7 @@ export const intentpreview: Pattern = {
   description: "Before any significant action, the agent presents a clear, scannable summary of what it intends to do  -  showing planned steps, reversibility status, and edit controls for user approval.",
   category: "Human-AI Collaboration",
   tags: ["agentic", "preview", "approval", "transparency", "multi-step", "action plan"],
-  thumbnail: "/images/examples/intent-preview.png",
+  thumbnail: "/images/examples/claudepropose.gif",
   introduction: "The Intent Preview pattern addresses a core anxiety in agentic AI: users need to understand what will happen BEFORE it happens. Unlike traditional AI where the user explicitly types a prompt and evaluates the response, agentic actions may be initiated proactively or involve consequences that are difficult to reverse  -  sending emails, booking flights, modifying files. This pattern shows a clear, scannable summary of planned actions using plain language (not technical jargon), with each step marked for reversibility and editable by the user. The preview must be sequential for multi-step operations, highlight irreversible actions visually, and never auto-dismiss. This transforms the approval moment from a binary yes/no into a structured review that builds trust and catches misunderstandings before they cause harm.",
   datePublished: "2026-02-16",
   dateModified: "2026-02-16",

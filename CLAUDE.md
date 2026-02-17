@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-17 10:26 (MacBook)
+- **Pattern:** Intent Preview & Agent Status Monitoring
+- **Status:** ✅ Completed
+- **Files Changed:** 13
+- **Tests Added/Modified:** 0
+- **Notes:** Updated Intent Preview pattern with real example images (Claude, GitHub Copilot Workspace, Gemini Deep Research GIFs), trimmed from 4 to 3 examples, updated thumbnail. Updated Agent Status Monitoring with real example images and Devin AI logo.
+
 ### Session 2026-02-16 17:48 (MacBook)
 - **Pattern:** 8 Agentic AI UX Patterns (29-36)
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Complete rewrite of /about page per spec: 9 sections including creator hero with grain background, bio in first-person voice, pattern framework list, criteria cards with icons, stats cards, tools card grid, open source CTAs, and newsletter signup. Upgraded all cards to match site design tokens (shadow-card, rounded-2xl, bg-surface-primary, hover states). Created AuthorFooter component added to all pattern detail pages with bio, links (Portfolio, Gist.design, GitHub). Updated copy to present tense for ongoing work feel. Added Claude and Google to referrer list.
 
 ### Session 2026-02-06 19:57 (MacBook)
-- **Pattern:** Vercel Speed Insights Performance Optimization
-- **Status:** ✅ Completed
-- **Files Changed:** 12
-- **Tests Added/Modified:** 0
-- **Notes:** Optimized 4 underperforming pages identified via Vercel Speed Insights (RES 78). /news and /news/[slug]: replaced force-dynamic with ISR (revalidate=3600), enabling SSG+edge caching. Removed framer-motion from /news, /news/[slug], /prompts, /guides/[slug] — replaced with CSS keyframe animations. Removed heavy client-side imports: patterns array (~50KB) from news-client, DOMPurify now lazy-loaded, @lobehub/icons lazy-loaded via next/dynamic. Eliminated DOM traversal dark mode logic from newsletter detail (replaced with existing CSS rules). Moved /prompts data fetching to server component, shipping only lightweight serializable data to client. Lazy-loaded DownloadPDFModal in guides.
-
-### Session 2026-02-06 12:57 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

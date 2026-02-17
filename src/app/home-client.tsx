@@ -247,8 +247,8 @@ export default function HomeClient() {
                   onClick={() => setShowAgenticOnly(!showAgenticOnly)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-colors border ${
                     showAgenticOnly
-                      ? 'bg-purple-600 text-white border-purple-600'
-                      : 'bg-surface-primary text-text-secondary border-gray-300 dark:border-gray-600 hover:border-purple-400 hover:text-purple-600'
+                      ? 'bg-accent-primary text-background-primary border-accent-primary'
+                      : 'bg-surface-primary text-text-secondary border-primary hover:border-accent-primary hover:text-accent-primary'
                   }`}
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
