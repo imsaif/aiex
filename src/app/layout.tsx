@@ -1,8 +1,22 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import { defaultMetadata, siteConfig } from "@/config/seo";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+
+const satoshi = localFont({
+  src: [
+    { path: "../../public/fonts/satoshi-300.woff2", weight: "300", style: "normal" },
+    { path: "../../public/fonts/satoshi-400.woff2", weight: "400", style: "normal" },
+    { path: "../../public/fonts/satoshi-500.woff2", weight: "500", style: "normal" },
+    { path: "../../public/fonts/satoshi-700.woff2", weight: "700", style: "normal" },
+    { path: "../../public/fonts/satoshi-900.woff2", weight: "900", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  display: "swap",
+  preload: true,
+});
 
 export const metadata: Metadata = {
   ...defaultMetadata,
@@ -31,12 +45,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={satoshi.variable}>
       <head>
-        <link
-          href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,600,700,800&display=swap"
-          rel="stylesheet"
-        />
+        {/* Critical inline CSS — fallback styling if external CSS fails to load */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          body { margin: 0; font-family: var(--font-satoshi), ui-sans-serif, system-ui, -apple-system, sans-serif; color: #162036; background: #fff; }
+          nav { max-width: 80rem; margin: 0 auto; padding: 1.25rem 1.5rem; }
+          a { color: inherit; text-decoration: none; }
+          img { max-width: 100%; height: auto; }
+          svg:not([width]) { width: 1.25rem; height: 1.25rem; }
+        `}} />
         {/* Hotjar Tracking Code for aiuxdesign.guide */}
         <script
           dangerouslySetInnerHTML={{

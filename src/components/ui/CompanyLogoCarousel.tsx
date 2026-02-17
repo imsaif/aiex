@@ -76,6 +76,14 @@ export default function CompanyLogoCarousel({
     lg: 'h-16',
   };
 
+  // Explicit pixel sizes for width/height attributes (prevents unstyled blowup)
+  const sizeMap = {
+    xs: 20,
+    sm: 32,
+    md: 48,
+    lg: 64,
+  };
+
   // Gap configurations - determine the spacing between logos
   let containerGap = 'gap-12';
 
@@ -113,6 +121,8 @@ export default function CompanyLogoCarousel({
             <img
               src={company.logo}
               alt={company.name}
+              width={sizeMap[size]}
+              height={sizeMap[size]}
               className={`${sizeClasses[size]} w-auto object-contain logo-navy`}
             />
 

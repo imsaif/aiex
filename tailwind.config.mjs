@@ -110,7 +110,7 @@ export default {
         'focus-warning': 'var(--ring-focus-warning)',
       },
       fontFamily: {
-        sans: ['Satoshi', 'ui-sans-serif', 'system-ui'],
+        sans: ['var(--font-satoshi)', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
       },
       letterSpacing: {
         tightest: '-.075em',

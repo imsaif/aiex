@@ -101,6 +101,8 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             className="h-4 w-4"
             viewBox="0 0 20 20"
             fill="currentColor"
+            width="16"
+            height="16"
           >
             <path
               fillRule="evenodd"
@@ -122,6 +124,8 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               className="h-4 w-4"
               viewBox="0 0 20 20"
               fill="currentColor"
+              width="16"
+              height="16"
             >
               <path
                 fillRule="evenodd"

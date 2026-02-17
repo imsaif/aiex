@@ -17,72 +17,21 @@ export interface CompanyLogo {
  * These are companies known to use or benefit from the AI design patterns
  */
 export const companyLogos: CompanyLogo[] = [
-  {
-    name: 'Apple',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/apple.svg',
-  },
-  {
-    name: 'Google',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/google.svg',
-  },
-  {
-    name: 'GitHub',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/github.svg',
-  },
-  {
-    name: 'Figma',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/figma.svg',
-  },
-  {
-    name: 'OpenAI',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/openai.svg',
-  },
-  {
-    name: 'Anthropic',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/anthropic.svg',
-  },
-  {
-    name: 'Microsoft',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg',
-  },
-  {
-    name: 'Slack',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/slack.svg',
-  },
-  {
-    name: 'Notion',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/notion.svg',
-  },
-  {
-    name: 'Adobe',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/adobe.svg',
-  },
-  {
-    name: 'Tesla',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/tesla.svg',
-  },
-  {
-    name: 'Netflix',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/netflix.svg',
-  },
-  {
-    name: 'Duolingo',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/duolingo.svg',
-  },
-  {
-    name: 'Grammarly',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/grammarly.svg',
-  },
-  {
-    name: 'Midjourney',
-    logo: '/images/logos/Midjourney_Emblem.svg',
-  },
-  {
-    name: 'Perplexity',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/perplexity.svg',
-  },
-  {
-    name: 'Spotify',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/spotify.svg',
-  },
+  { name: 'Apple', logo: '/images/logos/simple-icons/apple.svg' },
+  { name: 'Google', logo: '/images/logos/simple-icons/google.svg' },
+  { name: 'GitHub', logo: '/images/logos/simple-icons/github.svg' },
+  { name: 'Figma', logo: '/images/logos/simple-icons/figma.svg' },
+  { name: 'OpenAI', logo: '/images/logos/simple-icons/openai.svg' },
+  { name: 'Anthropic', logo: '/images/logos/simple-icons/anthropic.svg' },
+  { name: 'Microsoft', logo: '/images/logos/simple-icons/microsoft.svg' },
+  { name: 'Slack', logo: '/images/logos/simple-icons/slack.svg' },
+  { name: 'Notion', logo: '/images/logos/simple-icons/notion.svg' },
+  { name: 'Adobe', logo: '/images/logos/simple-icons/adobe.svg' },
+  { name: 'Tesla', logo: '/images/logos/simple-icons/tesla.svg' },
+  { name: 'Netflix', logo: '/images/logos/simple-icons/netflix.svg' },
+  { name: 'Duolingo', logo: '/images/logos/simple-icons/duolingo.svg' },
+  { name: 'Grammarly', logo: '/images/logos/simple-icons/grammarly.svg' },
+  { name: 'Midjourney', logo: '/images/logos/Midjourney_Emblem.svg' },
+  { name: 'Perplexity', logo: '/images/logos/simple-icons/perplexity.svg' },
+  { name: 'Spotify', logo: '/images/logos/simple-icons/spotify.svg' },
 ];

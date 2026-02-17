@@ -251,7 +251,7 @@ export default function HomeClient() {
                       : 'bg-surface-primary text-text-secondary border-primary hover:border-accent-primary hover:text-accent-primary'
                   }`}
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                   Agentic
                 </button>
               </div>
@@ -320,6 +320,8 @@ export default function HomeClient() {
                                   <img
                                     src={logoUrl}
                                     alt={product}
+                                    width={16}
+                                    height={16}
                                     className="h-4 w-4 transition-all duration-300"
                                     style={{
                                       filter: logoFilter,

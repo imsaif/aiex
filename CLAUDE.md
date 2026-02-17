@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-17 20:58 (MacBook)
+- **Pattern:** CSS Resilience & Font/Asset Self-Hosting
+- **Status:** ✅ Completed
+- **Files Changed:** 32
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed Hotjar-reported broken rendering (blue shapes, no content) caused by external CSS/font/asset failures. Switched from Fontshare CDN to `next/font/local` with self-hosted Satoshi woff2 files. Self-hosted all 16 company logos from cdn.jsdelivr.net to `public/images/logos/simple-icons/`. Added explicit `width`/`height` HTML attributes to all inline SVGs and `<img>` tags. Added critical inline CSS fallback in layout.tsx. Added `loading.tsx` skeleton screens for homepage and pattern detail pages.
+
 ### Session 2026-02-17 12:08 (MacBook)
 - **Pattern:** Agent Readability Audit Kit Email Gateway
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Created new /audit-kit page with Agent Readability Audit Kit — a 3-page downloadable PDF toolkit for testing how AI agents read and represent products. Merged 3 Desktop PDFs into one combined PDF. Built split-hero layout mirroring /toolkit page with 3 "What's Inside" cards (5-Prompt Test, Layer Stripping Checklist, Gap-Filling Scorecard), download-first flow with newsletter signup, and Continue Learning section. Added Audit Kit to Navbar Resources dropdown and Footer Resources column.
 
 ### Session 2026-02-09 15:15 (MacBook)
-- **Pattern:** Homepage SEO & About Page Updates
-- **Status:** ✅ Completed
-- **Files Changed:** 6
-- **Tests Added/Modified:** 0
-- **Notes:** Homepage SEO overhaul: updated H1 to "AI UX Design Patterns", new subtitle, updated meta title and description in generateHomeMetadata(). Added intro paragraph between hero and pattern grid. Added "What is aiuxdesign.guide?" definition block on /about page after bio section. Updated newsletter signup copy across hero, pattern detail, and InlineNewsletterSignup component to transparently communicate PDF + daily/weekly email cadence.
-
-### Session 2026-02-09 13:38 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
