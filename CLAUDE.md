@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-18 08:24 (MacBook)
+- **Pattern:** CSS Resilience Hotfix
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Removed critical inline CSS that broke Tailwind v4 cascade layers (caused huge gap, missing carousel/form). Removed 900 font weight that made headings too bold. Updated newsletter checklist copy from 36 to 28 patterns.
+
 ### Session 2026-02-17 20:58 (MacBook)
 - **Pattern:** CSS Resilience & Font/Asset Self-Hosting
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Renamed audit kit route from `/audit-kit` to `/agent-readability-audit-kit`. Updated directory name, OG metadata URL, Navbar dropdown link + isResourcesActive, and Footer link.
 
 ### Session 2026-02-10 15:49 (MacBook)
-- **Pattern:** Agent Readability Audit Kit Page
-- **Status:** ✅ Completed
-- **Files Changed:** 5
-- **Tests Added/Modified:** 0
-- **Notes:** Created new /audit-kit page with Agent Readability Audit Kit — a 3-page downloadable PDF toolkit for testing how AI agents read and represent products. Merged 3 Desktop PDFs into one combined PDF. Built split-hero layout mirroring /toolkit page with 3 "What's Inside" cards (5-Prompt Test, Layer Stripping Checklist, Gap-Filling Scorecard), download-first flow with newsletter signup, and Continue Learning section. Added Audit Kit to Navbar Resources dropdown and Footer Resources column.
-
-### Session 2026-02-09 15:15 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
