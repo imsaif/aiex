@@ -179,6 +179,22 @@ export interface PatternContextType {
   filterPatterns: (filter: PatternFilter) => Pattern[];
 }
 
+/**
+ * Lightweight pattern summary for listing pages (homepage, search results).
+ * Excludes heavy content (code examples, guidelines, figma prompts) to reduce client bundle size.
+ */
+export interface PatternSummary {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  category: PatternCategory;
+  tags?: string[];
+  thumbnail?: string;
+  products: string[];
+  industries: string[];
+}
+
 // Re-export for backward compatibility and convenience
 export type { Pattern as AIPattern, CodeExample as PatternCodeExample, Example as PatternExample };
 

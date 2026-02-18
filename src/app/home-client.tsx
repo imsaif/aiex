@@ -14,15 +14,21 @@ import ProductFilterBar from '../components/ui/ProductFilterBar';
 import { HandbookModal } from '../components/lead-magnet/HandbookModal';
 import { InlineNewsletterSignup } from '../components/newsletter/InlineNewsletterSignup';
 import { useThemeFilter } from '../hooks/useTheme';
-import patterns from '../data/patterns';
-import categories from '../data/categories';
 import { companyLogos } from '../data/company-logos';
-import { getAllProducts, filterPatternsByProducts, getProductsForPattern } from '../data/utils/product-utils';
-import { getAllIndustries, getIndustriesForPattern } from '../data/utils/industry-utils';
 import { getProductLogoUrl, hasProductLogo } from '../data/product-logos';
 import IndustryFilterBar from '../components/ui/IndustryFilterBar';
+import type { PatternSummary, Category } from '../types';
+import type { Product } from '../data/utils/product-utils';
+import type { Industry } from '../data/utils/industry-utils';
 
-export default function HomeClient() {
+interface HomeClientProps {
+  patterns: PatternSummary[];
+  categories: Category[];
+  allProducts: Product[];
+  allIndustries: Industry[];
+}
+
+export default function HomeClient({ patterns, categories, allProducts, allIndustries }: HomeClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
@@ -55,33 +61,25 @@ export default function HomeClient() {
   // Get theme-aware filter for product logos
   const logoFilter = useThemeFilter('grayscale(100%)');
 
-  // Get all available products
-  const allProducts = useMemo(() => getAllProducts(patterns), []);
-
-  // Get all available industries
-  const allIndustries = useMemo(() => getAllIndustries(patterns), []);
-
   const filteredPatterns = useMemo(() => {
     return patterns.filter(pattern => {
       const matchesSearch = pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            pattern.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'All Categories' || pattern.category === selectedCategory;
 
-      // Filter by selected products
+      // Filter by selected products (using pre-computed products array)
       let matchesProducts = true;
       if (selectedProducts.length > 0) {
-        const patternProducts = getProductsForPattern(pattern);
         matchesProducts = selectedProducts.some(product =>
-          patternProducts.some(pp => pp.toLowerCase() === product.toLowerCase())
+          pattern.products.some(pp => pp.toLowerCase() === product.toLowerCase())
         );
       }
 
-      // Filter by selected industries
+      // Filter by selected industries (using pre-computed industries array)
       let matchesIndustries = true;
       if (selectedIndustries.length > 0) {
-        const patternIndustries = getIndustriesForPattern(pattern);
         matchesIndustries = selectedIndustries.some(industry =>
-          patternIndustries.some(pi => pi.toLowerCase() === industry.toLowerCase())
+          pattern.industries.some(pi => pi.toLowerCase() === industry.toLowerCase())
         );
       }
 
@@ -90,7 +88,7 @@ export default function HomeClient() {
 
       return matchesSearch && matchesCategory && matchesProducts && matchesIndustries && matchesAgentic;
     });
-  }, [searchQuery, selectedCategory, selectedProducts, selectedIndustries, showAgenticOnly]);
+  }, [patterns, searchQuery, selectedCategory, selectedProducts, selectedIndustries, showAgenticOnly]);
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -259,7 +257,7 @@ export default function HomeClient() {
 
             {/* Patterns Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPatterns.map((pattern, index) => (
+              {filteredPatterns.map((pattern) => (
                 <motion.div
                   key={pattern.id}
                   initial={{ opacity: 1, y: 0 }}
@@ -294,11 +292,11 @@ export default function HomeClient() {
                       </div>
 
                       {/* Used By Logos Section */}
-                      {getProductsForPattern(pattern).filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 0 && (
+                      {pattern.products.filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 0 && (
                         <div className="flex items-center gap-3">
                           <span className="text-sm text-text-secondary font-medium">Used by:</span>
                           <div className="flex items-center gap-2">
-                            {getProductsForPattern(pattern).filter(p => p !== 'Superhuman').slice(0, 3).map((product) => {
+                            {pattern.products.filter(p => p !== 'Superhuman').slice(0, 3).map((product) => {
                               const logoUrl = getProductLogoUrl(product);
                               const hasLogo = hasProductLogo(product);
 
@@ -338,9 +336,9 @@ export default function HomeClient() {
                                 </div>
                               );
                             })}
-                            {getProductsForPattern(pattern).filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 3 && (
+                            {pattern.products.filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 3 && (
                               <span className="text-xs text-text-secondary font-medium">
-                                +{getProductsForPattern(pattern).filter(p => p !== 'Superhuman' && hasProductLogo(p)).length - 3}
+                                +{pattern.products.filter(p => p !== 'Superhuman' && hasProductLogo(p)).length - 3}
                               </span>
                             )}
                           </div>

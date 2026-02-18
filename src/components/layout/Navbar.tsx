@@ -14,8 +14,11 @@ import {
   FolderIcon,
   DocumentArrowDownIcon,
 } from '@heroicons/react/24/outline';
+import dynamic from 'next/dynamic';
 import { ThemeToggle } from '../ui/ThemeToggle';
-import SearchModal from '../ui/SearchModal';
+
+// Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
+const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 
 const Navbar = () => {
   const pathname = usePathname();

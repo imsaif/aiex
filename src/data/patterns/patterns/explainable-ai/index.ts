@@ -30,7 +30,7 @@ export const explainableai: Pattern = {
       {
         title: "Hugging Face Model Cards",
         description: "Provides detailed documentation on model capabilities, limitations, training data, and biases to help users understand AI decision-making.",
-        image: "/images/examples/huggingfacemodels.gif",
+        image: "/images/examples/huggingface-models.gif",
         altText: "Hugging Face Model Card example"
       }
     ],

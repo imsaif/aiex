@@ -14,7 +14,16 @@ const nextConfig = {
   
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['framer-motion', 'fuse.js', 'react-syntax-highlighter'],
+    optimizePackageImports: [
+      'framer-motion',
+      'fuse.js',
+      'react-syntax-highlighter',
+      '@heroicons/react',
+      '@lobehub/icons',
+      'react-pdf',
+      'react-dropzone',
+      'antd',
+    ],
   },
 
   // Exclude large public directories from serverless function bundles

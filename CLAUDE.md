@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-18 21:42 (MacBook)
+- **Pattern:** Performance & Bounce Rate Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 10
+- **Tests Added/Modified:** 0
+- **Notes:** Investigated and fixed performance regression causing 48% bounce rate (+13%) and RES score drop from 92→50. Root cause: Feb 16 deployment added 8 patterns, inflating client-side JS bundles. Moved pattern data computation to server component (homepage bundle 329kB→167kB, -49%). Lazy-loaded SearchModal in Navbar via next/dynamic to defer pattern/guide/newsletter data. Added audit page loading.tsx skeleton (RES 39 fix). Created custom not-found.tsx with navigation to stop 404 bounces. Removed 17MB duplicate GIF. Expanded optimizePackageImports with 5 more libraries (@heroicons/react, @lobehub/icons, react-pdf, react-dropzone, antd).
+
 ### Session 2026-02-18 15:50 (MacBook)
 - **Pattern:** Claude Code Guide Reorder + PDF Overhaul
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Refined OG newsletter share image layout: added newsletter title + product icons per news item + readable headlines. Iterated on CTA prominence — final version shows "Detailed product analysis & UX implications inside" with branded pill button ("Read the full daily/weekly →"). Multiple design iterations based on feedback for spacing, icon size, and CTA balance.
 
 ### Session 2026-02-11 23:45 (MacBook)
-- **Pattern:** Beehiiv Newsletter Subscriber Sync
-- **Status:** ✅ Completed
-- **Files Changed:** 10
-- **Tests Added/Modified:** 0
-- **Notes:** Migrated newsletter subscriber sync to Beehiiv (dual-write on signup, fire-and-forget). Created `src/lib/beehiiv.ts` helper. Initially moved all newsletter sending to Beehiiv, but reverted publish/send-update routes back to Resend after discovering Beehiiv free tier locks Create Post API behind Enterprise. Final state: Resend handles all email sending (preserving one-tap mobile workflow), Beehiiv receives subscriber syncs for future migration. Added BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID to env validation and Vercel. Tested subscribe flow locally — confirmed dual-write to both Prisma DB and Beehiiv API.
-
-### Session 2026-02-10 16:16 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
