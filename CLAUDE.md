@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-18 15:50 (MacBook)
+- **Pattern:** Claude Code Guide Reorder + PDF Overhaul
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Reordered Claude Code guide Figma module from #5 to #2, added new "Bring Code Back to Figma" (Code to Canvas) lesson (#23). Major PDF generation overhaul: added Satoshi font (TTF from woff2), embedded actual images, removed gray background boxes from step cards and lesson headers for cleaner layout, added section dividers, replaced "bash" code labels, fixed footer double-render, sanitized Unicode (em dashes/smart quotes), dynamic lesson header sizing, duplicate title suppression, clock icon for duration.
+
 ### Session 2026-02-18 08:24 (MacBook)
 - **Pattern:** CSS Resilience Hotfix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Migrated newsletter subscriber sync to Beehiiv (dual-write on signup, fire-and-forget). Created `src/lib/beehiiv.ts` helper. Initially moved all newsletter sending to Beehiiv, but reverted publish/send-update routes back to Resend after discovering Beehiiv free tier locks Create Post API behind Enterprise. Final state: Resend handles all email sending (preserving one-tap mobile workflow), Beehiiv receives subscriber syncs for future migration. Added BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID to env validation and Vercel. Tested subscribe flow locally — confirmed dual-write to both Prisma DB and Beehiiv API.
 
 ### Session 2026-02-10 16:16 (MacBook)
-- **Pattern:** Agent Readability Audit Kit URL Rename
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Renamed audit kit route from `/audit-kit` to `/agent-readability-audit-kit`. Updated directory name, OG metadata URL, Navbar dropdown link + isResourcesActive, and Footer link.
-
-### Session 2026-02-10 15:49 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

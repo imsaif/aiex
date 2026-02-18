@@ -11,19 +11,20 @@ export const guides: Guide[] = [
     slug: 'claude-code-learning-path',
     title: "Claude Code Guide for Designers",
     description:
-      'Master Claude Code for design and prototyping with AI-powered assistance.',
+      'Master Claude Code for design and prototyping with AI-powered assistance. Now with bidirectional Figma MCP integration — design-to-code and code-to-design.',
     excerpt:
-      'Your complete Claude Code education: 18 sequential lessons covering setup, prototyping, version control, and professional workflows. Go from zero to confident in one comprehensive course.',
+      'Your complete Claude Code education: 23 sequential lessons covering setup, bidirectional Figma workflows, prototyping, version control, and professional best practices. Go from zero to confident in one comprehensive course.',
     tool: 'Claude Code',
     useCase: 'Learning Path',
     skillLevel: 'Beginner',
     designDomain: 'UX Design',
-    readTime: 27,
+    readTime: 39,
     author: 'Design Team',
     publishedDate: '2025-10-28',
+    lastUpdatedDate: '2026-02-18',
     status: 'ready',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Claude_AI_symbol.svg',
-    tags: ['claude-code', 'learning-path', 'getting-started', 'course', 'comprehensive'],
+    tags: ['claude-code', 'learning-path', 'getting-started', 'course', 'comprehensive', 'figma-mcp', 'design-to-code'],
     lessons: [
       // Setup Lessons (1-3)
       {
@@ -251,12 +252,562 @@ export const guides: Guide[] = [
           },
         ],
       },
-      // First Prototype Lessons (4-8)
+      // Figma ↔ Code Lessons (4-8)
+      {
+        id: 'lesson-19',
+        title: 'Set Up Figma MCP',
+        duration: 2,
+        order: 4,
+        module: 'figma',
+        sections: [
+          {
+            type: 'intro',
+            content: 'The Figma MCP server connects your Figma designs directly to Claude Code. Instead of describing your designs in words, Claude Code can read your actual Figma files — components, colors, spacing, layout — and generate accurate code from them.',
+            icon: 'info',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'What is MCP?',
+            content: 'MCP (Model Context Protocol) is a standard that lets AI tools like Claude Code connect to external services. The Figma MCP server gives Claude Code direct access to your design files.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option A: Desktop MCP Server (Recommended)',
+          },
+          {
+            type: 'text',
+            content: 'The desktop server runs locally on your computer and lets you select frames directly in the Figma app. This is the best option for most designers.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Update the Figma Desktop App',
+                content: 'Open the Figma desktop app and make sure it\'s updated to the latest version. The MCP server requires a recent update.',
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Open a Design File',
+                content: 'Open any Design file in the Figma desktop app (not FigJam — you need a Design file for the MCP toggle).',
+                icon: 'monitor',
+              },
+              {
+                number: 3,
+                title: 'Switch to Dev Mode',
+                content: 'Press Shift + D or click the Dev Mode toggle in the toolbar. The MCP server option lives in Dev Mode.',
+                icon: 'code',
+              },
+              {
+                number: 4,
+                title: 'Enable the MCP Server',
+                content: 'In the Dev Mode panel, find the "MCP" section and click "Enable desktop MCP server." The server will start running locally.',
+                icon: 'cog',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Connect Claude Code to the Desktop Server',
+          },
+          {
+            type: 'text',
+            content: 'Add the Figma MCP server to your Claude Code configuration. Run this command in your terminal:',
+          },
+          {
+            type: 'code',
+            code: 'claude mcp add figma-desktop --transport http http://127.0.0.1:3845/mcp',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option B: Remote MCP Server',
+          },
+          {
+            type: 'text',
+            content: 'If you don\'t have the desktop app or prefer a cloud connection, you can use the remote server instead. This works with any Figma plan.',
+          },
+          {
+            type: 'code',
+            code: 'claude mcp add figma-remote --transport http https://mcp.figma.com/mcp',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Desktop vs Remote',
+            content: 'The desktop server lets you select frames directly in the app — a faster workflow. The remote server requires you to paste Figma URLs. Use desktop if you can.',
+            icon: 'warning',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Verify the Connection',
+          },
+          {
+            type: 'text',
+            content: 'Start a new Claude Code session and ask it to check the Figma connection:',
+          },
+          {
+            type: 'code',
+            code: 'claude\n\n> Can you see my Figma MCP server? List the available tools.',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'text',
+            content: 'Claude Code should respond listing Figma-related tools like reading files, getting design data, and extracting components.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-20',
+        title: 'Turn Figma Frames into Code',
+        duration: 3,
+        order: 5,
+        module: 'figma',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Now that Figma is connected, you can select any frame in Figma and ask Claude Code to turn it into working code. No more describing hex codes and spacing — Claude Code reads your actual design.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Select a Frame in Figma',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open Your Design File',
+                content: 'In the Figma desktop app, open the design file you want to turn into code.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Select a Frame or Component',
+                content: 'Click on the frame, component, or screen you want to implement. You can select an entire page layout or just a single component like a button or card.',
+                icon: 'check',
+              },
+              {
+                number: 3,
+                title: 'Ask Claude Code to Implement It',
+                content: [
+                  'Switch to your Claude Code terminal',
+                  'Tell Claude Code what you want — it can see your Figma selection',
+                ],
+                icon: 'terminal',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example Prompts',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Simple component',
+            content: 'Implement the card component I have selected in Figma using React and Tailwind CSS.',
+            icon: 'check',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Full page layout',
+            content: 'Build the landing page I have selected in Figma. Use Next.js with Tailwind CSS. Make it responsive.',
+            icon: 'check',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'With specifications',
+            content: 'Implement my selected Figma frame. Use the exact colors, spacing, and typography from the design. Add hover states for all buttons.',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What Claude Code Extracts',
+          },
+          {
+            type: 'text',
+            content: 'When you point Claude Code at a Figma frame, it reads:',
+          },
+          {
+            type: 'list',
+            items: [
+              'Layout structure — how elements are arranged (rows, columns, grids)',
+              'Colors — exact hex/RGB values from your design tokens',
+              'Typography — font family, size, weight, line height',
+              'Spacing — padding, margins, gaps between elements',
+              'Components — reusable design system components',
+              'Design variables — your Figma variables and styles',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Start Small',
+            content: 'Begin with a single component (a button, a card) before asking Claude Code to implement an entire page. This helps you learn the workflow and check the output quality.',
+            icon: 'info',
+          },
+        ],
+      },
+      {
+        id: 'lesson-21',
+        title: 'Using Figma Links in Prompts',
+        duration: 2,
+        order: 6,
+        module: 'figma',
+        sections: [
+          {
+            type: 'intro',
+            content: 'You can also share specific Figma designs with Claude Code by pasting links. This is useful when using the remote MCP server or when you want to reference a specific layer or frame.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Copy a Figma Link',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Select a Frame or Layer',
+                content: 'In Figma, click on the frame, component, or layer you want to reference.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Copy the Link',
+                content: [
+                  'Right-click the selection and choose "Copy link to selection"',
+                  'Or use the shortcut: Cmd + L (Mac) / Ctrl + L (Windows)',
+                ],
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Paste in Claude Code',
+                content: 'Paste the Figma URL directly into your Claude Code prompt along with your instructions.',
+                icon: 'terminal',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example Prompts with Links',
+          },
+          {
+            type: 'code',
+            code: '> Implement this Figma component as a React component:\n> https://www.figma.com/design/abc123/MyProject?node-id=42-1337\n> Use Tailwind CSS and make it responsive.',
+            language: 'text',
+            label: 'Claude Code prompt',
+          },
+          {
+            type: 'code',
+            code: '> Here are two Figma frames — the mobile and desktop versions:\n> Mobile: https://www.figma.com/design/abc123/MyProject?node-id=10-200\n> Desktop: https://www.figma.com/design/abc123/MyProject?node-id=10-300\n> Build a responsive component that matches both layouts.',
+            language: 'text',
+            label: 'Claude Code prompt',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Multiple Links Work Too',
+            content: 'You can paste multiple Figma links in one prompt. This is great for showing Claude Code different states (default, hover, active) or responsive breakpoints (mobile, tablet, desktop).',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'When to Use Links vs Selection',
+          },
+          {
+            type: 'list',
+            items: [
+              'Use frame selection (desktop MCP) for quick iteration — select, prompt, repeat',
+              'Use links when sharing a specific part of a complex file',
+              'Use links when working with the remote MCP server (no desktop app)',
+              'Use links when referencing multiple frames or states in one prompt',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'lesson-22',
+        title: 'Figma to Code Best Practices',
+        duration: 2,
+        order: 7,
+        module: 'figma',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Get the best results from the Figma + Claude Code workflow with these practical tips learned from real designer workflows.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Organize Your Figma File for Better Output',
+          },
+          {
+            type: 'list',
+            items: [
+              'Use Auto Layout — Claude Code translates Auto Layout directly to Flexbox/Grid, giving much cleaner code than absolute positioning',
+              'Name your layers clearly — "hero-section" and "cta-button" produce better code than "Frame 437" and "Rectangle 12"',
+              'Use Figma variables for colors and spacing — Claude Code picks these up and can generate consistent design tokens',
+              'Group related elements into components — Claude Code will create reusable React components from Figma components',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Prompting Tips for Figma + Claude Code',
+          },
+          {
+            type: 'callout',
+            calloutType: 'error',
+            title: 'Too vague:',
+            content: 'Build this Figma design.',
+            icon: 'error',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Better:',
+            content: 'Implement my selected Figma frame as a React component with Tailwind CSS. Use the exact colors and spacing from the design. The button should have a hover state that darkens the background by 10%.',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Iterate Between Figma and Code',
+          },
+          {
+            type: 'text',
+            content: 'The best workflow is a loop between design and code:',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Design in Figma',
+                content: 'Create or refine your design in Figma as you normally would.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Generate Code',
+                content: 'Select the frame and ask Claude Code to implement it.',
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Review in Browser',
+                content: 'Check the result in your browser. Note what needs adjusting.',
+                icon: 'check',
+              },
+              {
+                number: 4,
+                title: 'Refine',
+                content: 'Either update the Figma design and regenerate, or ask Claude Code to adjust the code directly.',
+                icon: 'cog',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Use Code Connect for Design Systems',
+          },
+          {
+            type: 'text',
+            content: 'If your team has a component library, Figma\'s Code Connect feature links Figma components to their code equivalents. When Claude Code encounters a connected component, it uses your existing code instead of generating new code from scratch.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Design System Consistency',
+            content: 'Code Connect ensures that a "Primary Button" in Figma maps to your team\'s actual <Button variant="primary" /> component — not a generic button with hardcoded styles.',
+            icon: 'info',
+          },
+        ],
+      },
+      {
+        id: 'lesson-23',
+        title: 'Bring Code Back to Figma',
+        duration: 3,
+        order: 8,
+        module: 'figma',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Figma\'s Code to Canvas feature closes the loop: build UI in Claude Code, then bring it back to Figma as editable frames. This makes the Figma ↔ Code workflow truly bidirectional — not just design-to-code, but code-to-design too.',
+            icon: 'info',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Not Screenshots — Real Editable Frames',
+            content: 'Code to Canvas doesn\'t just paste images. It converts your built UI into real Figma layers — editable text, vector shapes, and auto-layout frames that your design team can modify directly.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The 4-Step Code to Canvas Workflow',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Build Your UI in Claude Code',
+                content: 'Create or update your component in Claude Code as you normally would. Run it locally so you can see the rendered output in your browser.',
+                icon: 'code',
+              },
+              {
+                number: 2,
+                title: 'Capture the Screen',
+                content: 'Ask Claude Code to capture the current UI state. It takes a structured snapshot of the rendered output — layout, styles, text content, and hierarchy.',
+                icon: 'monitor',
+              },
+              {
+                number: 3,
+                title: 'Paste into Figma',
+                content: 'Use the Figma MCP connection to push the captured UI into your Figma file. It arrives as editable frames with proper auto-layout, not flat images.',
+                icon: 'download',
+              },
+              {
+                number: 4,
+                title: 'Collaborate and Refine',
+                content: 'Your design team can now review, annotate, and refine the built UI directly in Figma. Leave comments, adjust spacing, or propose changes — all in the familiar Figma workflow.',
+                icon: 'user',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Example Prompts for Code to Canvas',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Capture a single screen',
+            content: 'Capture the current state of my dashboard page and push it to Figma as an editable frame.',
+            icon: 'check',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Capture a multi-step flow',
+            content: 'Capture the signup flow — show the email step, the password step, and the confirmation screen as three separate Figma frames.',
+            icon: 'check',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Compare design variants',
+            content: 'I built two versions of the pricing card. Capture both and put them side by side in Figma so the team can compare.',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Round-Trip Workflow',
+          },
+          {
+            type: 'text',
+            content: 'With Code to Canvas, the full design-development loop looks like this:',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Design in Figma',
+                content: 'Start with your design in Figma as usual.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Generate Code',
+                content: 'Use Figma MCP to turn your design into working code via Claude Code.',
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Capture Back to Figma',
+                content: 'Push the built UI back into Figma as editable frames using Code to Canvas.',
+                icon: 'download',
+              },
+              {
+                number: 4,
+                title: 'Refine in Figma',
+                content: 'Designers review the built result, leave feedback, and propose adjustments in Figma.',
+                icon: 'check',
+              },
+              {
+                number: 5,
+                title: 'Push Updates',
+                content: 'Apply the feedback in code and iterate. The loop continues until the design and code are perfectly aligned.',
+                icon: 'cog',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'When to Use Code to Canvas',
+          },
+          {
+            type: 'list',
+            items: [
+              'Team review — share built UI with designers who prefer reviewing in Figma over a browser',
+              'Comparing variants — capture multiple implementations side by side for design critique',
+              'Designer feedback on built UI — let the team annotate and comment on actual code output',
+              'Documentation — keep Figma files up to date with what\'s actually been built',
+              'Handoff verification — confirm the code matches the original design by overlaying them in Figma',
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'Figma ↔ Code Complete!',
+            items: [
+              'How to connect Figma to Claude Code via MCP',
+              'How to turn Figma frames into working code',
+              'How to use Figma links for precise references',
+              'Best practices for the Figma + Claude Code workflow',
+              'How to bring code back to Figma with Code to Canvas',
+            ],
+            message: 'You now have a truly bidirectional design-to-code workflow. Design in Figma, build in Claude Code, and bring it back to Figma for review. The loop is complete.',
+          },
+        ],
+      },
+      // First Prototype Lessons (9-13)
       {
         id: 'lesson-4',
         title: 'Start Your First Claude Code Session',
         duration: 2,
-        order: 4,
+        order: 9,
         module: 'prototype',
         sections: [
           {
@@ -321,7 +872,7 @@ export const guides: Guide[] = [
         id: 'lesson-5',
         title: 'Create Your Project Folder',
         duration: 1,
-        order: 5,
+        order: 10,
         module: 'prototype',
         sections: [
           {
@@ -388,7 +939,7 @@ export const guides: Guide[] = [
         id: 'lesson-6',
         title: 'Generate Your First Prototype',
         duration: 2,
-        order: 6,
+        order: 11,
         module: 'prototype',
         sections: [
           {
@@ -449,7 +1000,7 @@ export const guides: Guide[] = [
         id: 'lesson-7',
         title: 'See Your Prototype Live',
         duration: 2,
-        order: 7,
+        order: 12,
         module: 'prototype',
         sections: [
           {
@@ -519,7 +1070,7 @@ export const guides: Guide[] = [
         id: 'lesson-8',
         title: 'Get Back to Editing',
         duration: 1,
-        order: 8,
+        order: 13,
         module: 'prototype',
         sections: [
           {
@@ -597,12 +1148,12 @@ export const guides: Guide[] = [
           },
         ],
       },
-      // GitHub Lessons (9-13)
+      // GitHub Lessons (14-18)
       {
         id: 'lesson-9',
         title: 'Create a GitHub Account',
         duration: 1,
-        order: 9,
+        order: 14,
         module: 'github',
         sections: [
           {
@@ -654,7 +1205,7 @@ export const guides: Guide[] = [
         id: 'lesson-10',
         title: 'Create a Repository on GitHub',
         duration: 1,
-        order: 10,
+        order: 15,
         module: 'github',
         sections: [
           {
@@ -694,7 +1245,7 @@ export const guides: Guide[] = [
         id: 'lesson-11',
         title: 'Connect Your Local Project to GitHub',
         duration: 2,
-        order: 11,
+        order: 16,
         module: 'github',
         sections: [
           {
@@ -766,7 +1317,7 @@ export const guides: Guide[] = [
         id: 'lesson-12',
         title: 'Save Your Changes Going Forward',
         duration: 2,
-        order: 12,
+        order: 17,
         module: 'github',
         sections: [
           {
@@ -820,7 +1371,7 @@ export const guides: Guide[] = [
         id: 'lesson-13',
         title: 'Share Your Work & Use Claude\'s /save Command',
         duration: 1,
-        order: 13,
+        order: 18,
         module: 'github',
         sections: [
           {
@@ -889,18 +1440,25 @@ export const guides: Guide[] = [
           },
         ],
       },
-      // Best Practices Lessons (14-18)
+      // Best Practices Lessons (19-23)
       {
         id: 'lesson-14',
         title: 'How to Describe Your Design to Claude Code',
         duration: 2,
-        order: 14,
+        order: 19,
         module: 'practices',
         sections: [
           {
             type: 'heading',
             level: 'h2',
             content: 'How to Describe Your Design to Claude Code',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Even Better: Use Figma MCP',
+            content: 'If you use Figma, you can skip manual descriptions entirely. Connect Figma to Claude Code via MCP and let it read your actual designs — colors, spacing, components, everything. See Module 2: Figma ↔ Code for setup instructions.',
+            icon: 'info',
           },
           {
             type: 'heading',
@@ -955,7 +1513,7 @@ export const guides: Guide[] = [
         id: 'lesson-15',
         title: 'Testing Your Prototype',
         duration: 1,
-        order: 15,
+        order: 20,
         module: 'practices',
         sections: [
           {
@@ -1012,7 +1570,7 @@ export const guides: Guide[] = [
         id: 'lesson-16',
         title: 'Iterating Based on Feedback',
         duration: 1,
-        order: 16,
+        order: 21,
         module: 'practices',
         sections: [
           {
@@ -1075,7 +1633,7 @@ export const guides: Guide[] = [
         id: 'lesson-17',
         title: 'Handing Off Work to Developers',
         duration: 1,
-        order: 17,
+        order: 22,
         module: 'practices',
         sections: [
           {
@@ -1131,13 +1689,31 @@ export const guides: Guide[] = [
               'Discuss trade-offs (e.g., why animation smoothness matters)',
             ],
           },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Streamline Handoff with Figma MCP',
+          },
+          {
+            type: 'text',
+            content: 'If your team uses Figma, the Figma MCP server makes handoff seamless. Developers can connect Claude Code to your Figma files and generate code that matches your designs exactly — same colors, spacing, and components. No more "the padding looks off" back-and-forth.',
+          },
+          {
+            type: 'list',
+            items: [
+              'Share your Figma file link with the developer',
+              'They can connect Claude Code to Figma MCP and reference your frames directly',
+              'Code Connect can map your Figma components to the team\'s existing component library',
+              'Design tokens and variables from Figma carry over to code automatically',
+            ],
+          },
         ],
       },
       {
         id: 'lesson-18',
         title: 'Troubleshooting Common Issues',
         duration: 1,
-        order: 18,
+        order: 23,
         module: 'practices',
         sections: [
           {
@@ -1213,17 +1789,17 @@ export const guides: Guide[] = [
         ],
       },
     ],
-    lessonCount: 18,
+    lessonCount: 23,
     content: `
       <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to Claude Code Learning Path for Designers</h2>
-      <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. <strong>Complete this course in 27 minutes and go from zero to confident.</strong></p>
+      <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Now with bidirectional Figma MCP integration — design-to-code and code-to-design. <strong>Complete this course in 39 minutes and go from zero to confident.</strong></p>
 
       <h3 class="text-3xl font-bold text-gray-900 mt-12 mb-3">What You'll Learn</h3>
-      <p class="text-lg text-gray-700 mb-8">This learning path is structured in 4 sequential modules that build on each other. Complete all lessons in order for the best learning experience.</p>
+      <p class="text-lg text-gray-700 mb-8">This learning path is structured in 5 sequential modules that build on each other. Complete all lessons in order for the best learning experience.</p>
 
       <!-- Enhanced Module Flow with Visual Hierarchy - Black & White Design -->
       <div class="mb-12">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           <!-- Module 1: Setup -->
           <div class="group relative">
             <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
@@ -1239,10 +1815,25 @@ export const guides: Guide[] = [
             </div>
           </div>
 
-          <!-- Module 2: Prototype -->
+          <!-- Module 2: Figma ↔ Code -->
           <div class="group relative">
             <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
               <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">2</div>
+              <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Figma ↔ Code</h4>
+              <p class="text-sm text-gray-700 flex-grow text-center">Design-to-code and code-to-design with Figma MCP</p>
+              <div class="mt-6 pt-4 border-t border-gray-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Design-to-Code</div>
+              </div>
+            </div>
+            <div class="hidden lg:flex absolute -right-5 top-1/2 transform -translate-y-1/2 -translate-x-1/2 text-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.5rem; height: 1.5rem;"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+
+          <!-- Module 3: Prototype -->
+          <div class="group relative">
+            <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">3</div>
               <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Prototype</h4>
               <p class="text-sm text-gray-700 flex-grow text-center">Create your first interactive prototype with AI</p>
               <div class="mt-6 pt-4 border-t border-gray-200">
@@ -1254,10 +1845,10 @@ export const guides: Guide[] = [
             </div>
           </div>
 
-          <!-- Module 3: GitHub -->
+          <!-- Module 4: GitHub -->
           <div class="group relative">
             <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
-              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">3</div>
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">4</div>
               <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">GitHub</h4>
               <p class="text-sm text-gray-700 flex-grow text-center">Save and share your work with version control</p>
               <div class="mt-6 pt-4 border-t border-gray-200">
@@ -1269,12 +1860,12 @@ export const guides: Guide[] = [
             </div>
           </div>
 
-          <!-- Module 4: Best Practices -->
+          <!-- Module 5: Best Practices -->
           <div class="group relative">
             <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
-              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">4</div>
+              <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">5</div>
               <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">Best Practices</h4>
-              <p class="text-sm text-gray-700 flex-grow">Learn professional workflows and optimization techniques</p>
+              <p class="text-sm text-gray-700 flex-grow text-center">Learn professional workflows and optimization techniques</p>
               <div class="mt-6 pt-4 border-t border-gray-200">
                 <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Master</div>
               </div>
@@ -1287,11 +1878,11 @@ export const guides: Guide[] = [
           <div class="flex items-center justify-center flex-wrap gap-12">
             <div class="text-center">
               <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Modules</p>
-              <p class="text-3xl font-bold text-gray-900 mt-1">4</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">5</p>
             </div>
             <div class="text-center">
               <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Lessons</p>
-              <p class="text-3xl font-bold text-gray-900 mt-1">18</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">23</p>
             </div>
           </div>
         </div>
@@ -1320,7 +1911,18 @@ export const guides: Guide[] = [
               </td>
             </tr>
             <tr class="border-b border-gray-200">
-              <td class="py-4 px-4 text-gray-900 font-semibold align-top">2. Prototype</td>
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">2. Figma ↔ Code</td>
+              <td class="py-4 px-4 text-gray-700 align-top">Design-to-code and code-to-design with Figma MCP</td>
+              <td class="py-4 px-4 text-gray-700 align-top">
+                <ul class="space-y-1">
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Set up the Figma MCP server (desktop and remote)</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Turn Figma frames into working code</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Bring code back to Figma with Code to Canvas</span></li>
+                </ul>
+              </td>
+            </tr>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">3. Prototype</td>
               <td class="py-4 px-4 text-gray-700 align-top">Build your first interactive project</td>
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
@@ -1331,7 +1933,7 @@ export const guides: Guide[] = [
               </td>
             </tr>
             <tr class="border-b border-gray-200">
-              <td class="py-4 px-4 text-gray-900 font-semibold align-top">3. GitHub</td>
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">4. GitHub</td>
               <td class="py-4 px-4 text-gray-700 align-top">Save and collaborate on your work</td>
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
@@ -1342,7 +1944,7 @@ export const guides: Guide[] = [
               </td>
             </tr>
             <tr>
-              <td class="py-4 px-4 text-gray-900 font-semibold align-top">4. Best Practices</td>
+              <td class="py-4 px-4 text-gray-900 font-semibold align-top">5. Best Practices</td>
               <td class="py-4 px-4 text-gray-700 align-top">Master professional workflows</td>
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
@@ -1361,7 +1963,7 @@ export const guides: Guide[] = [
       <ul class="space-y-3 mb-8">
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">New to Claude Code?</strong> Start at the beginning and follow through sequentially to complete all lessons.</li>
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Claude Code installed?</strong> Jump straight to "Your First Prototype" and get hands-on immediately.</li>
-        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Need specific help?</strong> Each module builds on the previous, but you can use them as standalone references.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Use Figma?</strong> Jump to Module 2 to connect your Figma designs directly to Claude Code via MCP — both design-to-code and code-to-design.</li>
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Learn at your own pace</strong> — Pause between sections to practice and experiment with what you learned.</li>
       </ul>
 

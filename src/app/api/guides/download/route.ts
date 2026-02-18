@@ -3,6 +3,8 @@ import { validateGuideToken } from '@/lib/guide-token';
 import { prisma } from '@/lib/prisma';
 import { guides } from '@/data/guides';
 import { jsPDF } from 'jspdf';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 /**
  * Download guide PDF using a valid token
@@ -104,6 +106,7 @@ const MODULE_COLORS: Record<string, [number, number, number]> = {
   collaboration: [217, 119, 87], // Brand accent
   github: [217, 119, 87],      // Brand accent
   practices: [217, 119, 87],   // Brand accent
+  figma: [217, 119, 87],       // Brand accent
   general: [217, 119, 87],     // Brand accent
 };
 
@@ -116,6 +119,24 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
     unit: 'mm',
     format: 'a4',
   });
+
+  // Register Satoshi font
+  const fontsDir = path.join(process.cwd(), 'public', 'fonts');
+  try {
+    const satoshiRegular = readFileSync(path.join(fontsDir, 'satoshi-400.ttf'));
+    const satoshiBold = readFileSync(path.join(fontsDir, 'satoshi-700.ttf'));
+    const satoshiRegularB64 = satoshiRegular.toString('base64');
+    const satoshiBoldB64 = satoshiBold.toString('base64');
+    doc.addFileToVFS('Satoshi-Regular.ttf', satoshiRegularB64);
+    doc.addFont('Satoshi-Regular.ttf', 'Satoshi', 'normal');
+    doc.addFileToVFS('Satoshi-Bold.ttf', satoshiBoldB64);
+    doc.addFont('Satoshi-Bold.ttf', 'Satoshi', 'bold');
+    doc.setFont('Satoshi', 'normal');
+  } catch {
+    // Fallback to helvetica if font files not found
+  }
+
+  const fontFamily = doc.getFont().fontName === 'Satoshi' ? 'Satoshi' : 'helvetica';
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -133,6 +154,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
     collaboration: 'Developer Collaboration',
     github: 'GitHub',
     practices: 'Best Practices',
+    figma: 'Figma + Code',
     general: 'Lessons',
   };
 
@@ -145,7 +167,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
       // Guide title in header
       doc.setFontSize(9);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(fontFamily, 'normal');
       doc.setTextColor(...COLORS.textMuted);
       doc.text(guide.title, margin, 12);
 
@@ -154,9 +176,13 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
     }
   };
 
-  // Helper: Add page footer
+  // Helper: Add page footer (only once per page)
+  let footerDrawnOnPage = -1;
   const addPageFooter = () => {
+    if (footerDrawnOnPage === currentPage) return;
+    footerDrawnOnPage = currentPage;
     doc.setFontSize(8);
+    doc.setFont(fontFamily, 'normal');
     doc.setTextColor(...COLORS.textMuted);
     doc.text('aiuxdesign.guide', margin, pageHeight - 8);
   };
@@ -172,6 +198,17 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
       return true;
     }
     return false;
+  };
+
+  // Helper: sanitize text for PDF rendering (replace problematic Unicode)
+  const sanitize = (text: string): string => {
+    return text
+      .replace(/\u2014/g, ' - ')   // em dash
+      .replace(/\u2013/g, ' - ')   // en dash
+      .replace(/\u2018|\u2019/g, "'") // smart quotes
+      .replace(/\u201C|\u201D/g, '"') // smart double quotes
+      .replace(/\u2026/g, '...')   // ellipsis
+      .replace(/\u2194/g, '<->');  // ↔
   };
 
   // Helper: Draw rounded rectangle with optional border
@@ -200,9 +237,9 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
     maxWidth: number = contentWidth
   ): number => {
     doc.setFontSize(fontSize);
-    doc.setFont('helvetica', fontStyle);
+    doc.setFont(fontFamily, fontStyle);
     doc.setTextColor(...color);
-    const lines = doc.splitTextToSize(text, maxWidth);
+    const lines = doc.splitTextToSize(sanitize(text), maxWidth);
     const lineHeight = fontSize * 0.45;
 
     for (const line of lines) {
@@ -230,7 +267,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
   // Title
   doc.setTextColor(...COLORS.white);
   doc.setFontSize(32);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontFamily, 'bold');
   const titleLines = doc.splitTextToSize(guide.title, contentWidth);
   let titleY = 45;
   for (const line of titleLines) {
@@ -240,7 +277,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
   // Subtitle/Tool
   doc.setFontSize(14);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontFamily, 'normal');
   doc.setTextColor(...COLORS.accent);
   doc.text(`A ${guide.tool} Learning Path`, margin, titleY + 8);
 
@@ -248,7 +285,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
   yPos = 120;
   doc.setTextColor(...COLORS.text);
   doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontFamily, 'normal');
   const descLines = doc.splitTextToSize(guide.description, contentWidth);
   for (const line of descLines) {
     doc.text(line, margin, yPos);
@@ -276,10 +313,10 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
     doc.text(stat.label, cardX + 5, statsY + 9);
 
     doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(fontFamily, 'bold');
     doc.setTextColor(...COLORS.text);
     doc.text(stat.value, cardX + 5, statsY + 19);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(fontFamily, 'normal');
   });
 
   yPos = statsY + 40;
@@ -287,7 +324,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
   // What you'll learn section
   if (guide.lessons && guide.lessons.length > 0) {
     doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(fontFamily, 'bold');
     doc.setTextColor(...COLORS.text);
     doc.text("What You'll Learn", margin, yPos);
     yPos += 10;
@@ -309,12 +346,8 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
       const lessonCount = moduleGroups.get(moduleId)!.length;
       const moduleColor = MODULE_COLORS[moduleId] || COLORS.textSecondary;
 
-      // Module card (removed break - show all modules)
+      checkPageBreak(moduleCardHeight + 5);
       drawRoundedRect(margin, yPos, contentWidth, moduleCardHeight, 2, COLORS.background);
-
-      // Module color indicator - subtle accent
-      doc.setFillColor(...moduleColor);
-      doc.roundedRect(margin + 1, yPos + 2, 2, moduleCardHeight - 4, 1, 1, 'F');
 
       // Module number - properly centered
       const modCircleX = margin + 14;
@@ -322,7 +355,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
       doc.setFillColor(...moduleColor);
       doc.circle(modCircleX, modCircleY, 4, 'F');
       doc.setFontSize(9);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontFamily, 'bold');
       doc.setTextColor(...COLORS.white);
       const modNumStr = String(i + 1);
       const modNumWidth = doc.getTextWidth(modNumStr);
@@ -355,15 +388,11 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
   // TOC Header
   doc.setFontSize(24);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontFamily, 'bold');
   doc.setTextColor(...COLORS.text);
   doc.text('Table of Contents', margin, yPos);
 
-  // Accent underline
-  doc.setFillColor(...COLORS.accent);
-  doc.rect(margin, yPos + 3, 50, 2, 'F');
-
-  yPos += 20;
+  yPos += 15;
 
   if (guide.lessons && guide.lessons.length > 0) {
     const moduleGroups = new Map<string, typeof guide.lessons>();
@@ -380,19 +409,16 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
       const moduleName = moduleNames[moduleId] || moduleId;
       const moduleColor = MODULE_COLORS[moduleId] || COLORS.textSecondary;
 
-      // Module header with colored pill
-      doc.setFillColor(...moduleColor);
-      doc.roundedRect(margin, yPos - 1, 6, 6, 1, 1, 'F');
-
+      // Module header
       doc.setFontSize(13);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontFamily, 'bold');
       doc.setTextColor(...COLORS.text);
-      doc.text(`${moduleIndex}. ${moduleName}`, margin + 10, yPos + 4);
+      doc.text(`${moduleIndex}. ${moduleName}`, margin, yPos + 4);
       yPos += 12;
 
       // Lessons under module
       doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont(fontFamily, 'normal');
       for (const lesson of lessons) {
         checkPageBreak(8);
 
@@ -406,7 +432,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
         // Lesson title
         doc.setFontSize(10);
         doc.setTextColor(...COLORS.text);
-        doc.text(lesson.title, margin + 16, yPos);
+        doc.text(sanitize(lesson.title), margin + 16, yPos);
 
         // Duration
         doc.setTextColor(...COLORS.textMuted);
@@ -451,63 +477,91 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
       const moduleColor = MODULE_COLORS[lesson.module || 'general'] || COLORS.textSecondary;
 
-      // Lesson header block
-      drawRoundedRect(margin - 5, yPos - 10, contentWidth + 10, 35, 4, COLORS.background);
-
-      // Module color bar on left - subtle
-      doc.setFillColor(...moduleColor);
-      doc.roundedRect(margin - 4, yPos - 8, 2, 31, 1, 1, 'F');
-
       // Lesson number badge
+      const badgeText = `Lesson ${lesson.order}`;
+      doc.setFontSize(7.5);
+      doc.setFont(fontFamily, 'bold');
+      const badgeW = doc.getTextWidth(badgeText) + 6;
+      const badgeH = 7;
       doc.setFillColor(...COLORS.accent);
-      doc.roundedRect(margin + 5, yPos - 5, 24, 10, 2, 2, 'F');
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'bold');
+      doc.roundedRect(margin, yPos - 4, badgeW, badgeH, 1.5, 1.5, 'F');
       doc.setTextColor(...COLORS.white);
-      doc.text(`Lesson ${lesson.order}`, margin + 7, yPos + 2);
+      doc.text(badgeText, margin + 3, yPos - 4 + badgeH / 2 + 1);
+
+      // Duration with clock icon
+      const durText = `${lesson.duration} min`;
+      doc.setFontSize(8);
+      doc.setFont(fontFamily, 'normal');
+      doc.setTextColor(...COLORS.textSecondary);
+      const durTextW = doc.getTextWidth(durText);
+      const durX = pageWidth - margin - durTextW;
+      doc.text(durText, durX, yPos + 1);
+      const clockX = durX - 5;
+      const clockY = yPos - 0.5;
+      const clockR = 2.5;
+      doc.setDrawColor(...COLORS.textSecondary);
+      doc.setLineWidth(0.4);
+      doc.circle(clockX, clockY, clockR, 'S');
+      doc.line(clockX, clockY, clockX, clockY - 1.5);
+      doc.line(clockX, clockY, clockX + 1.2, clockY - 0.5);
 
       // Lesson title
       doc.setFontSize(18);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont(fontFamily, 'bold');
       doc.setTextColor(...COLORS.text);
-      const lessonTitleLines = doc.splitTextToSize(lesson.title, contentWidth - 35);
-      doc.text(lessonTitleLines[0], margin + 5, yPos + 15);
-      if (lessonTitleLines[1]) {
-        doc.text(lessonTitleLines[1], margin + 5, yPos + 22);
+      const lessonTitleLines = doc.splitTextToSize(sanitize(lesson.title), contentWidth);
+      const titleLineCount = Math.min(lessonTitleLines.length, 3);
+      let titleDrawY = yPos + 12;
+      for (let tl = 0; tl < titleLineCount; tl++) {
+        doc.text(lessonTitleLines[tl], margin, titleDrawY);
+        titleDrawY += 9;
       }
 
-      // Duration pill
-      doc.setFillColor(...COLORS.white);
-      drawRoundedRect(pageWidth - margin - 25, yPos - 3, 22, 8, 2, COLORS.white, COLORS.textMuted);
-      doc.setFontSize(8);
-      doc.setTextColor(...COLORS.textSecondary);
-      doc.text(`${lesson.duration} min`, pageWidth - margin - 23, yPos + 2);
+      yPos = titleDrawY + 4;
 
-      yPos += 35;
+      // Helper: draw a subtle section divider
+      const addSectionDivider = () => {
+        yPos += 4;
+        doc.setDrawColor(220, 220, 220);
+        doc.setLineWidth(0.2);
+        doc.line(margin, yPos, margin + contentWidth, yPos);
+        yPos += 6;
+      };
 
       // Process sections
       if (lesson.sections && Array.isArray(lesson.sections)) {
-        for (const section of lesson.sections) {
+        const lessonTitleNorm = lesson.title.trim().toLowerCase();
+        for (let sIdx = 0; sIdx < lesson.sections.length; sIdx++) {
+          const section = lesson.sections[sIdx];
+
+          // Skip heading that duplicates the lesson title
+          if (section.type === 'heading' && section.content &&
+              section.content.trim().toLowerCase() === lessonTitleNorm) {
+            continue;
+          }
+
           checkPageBreak(20);
 
           switch (section.type) {
             case 'intro':
             case 'text':
               if (section.content) {
-                yPos += 3;
+                yPos += 4;
                 addText(section.content, margin, 10, COLORS.text);
-                yPos += 5;
+                yPos += 6;
               }
               break;
 
             case 'heading':
               if (section.content) {
-                yPos += 8;
-                const headingSize = section.level === 'h2' ? 14 : 12;
-                doc.setFillColor(...COLORS.accent);
-                doc.rect(margin, yPos - 2, 2, headingSize * 0.6, 'F');
-                addText(section.content, margin + 6, headingSize, COLORS.text, 'bold');
+                // Add divider before heading (unless it's the first section)
+                if (sIdx > 0) {
+                  addSectionDivider();
+                }
                 yPos += 4;
+                const headingSize = section.level === 'h2' ? 14 : 12;
+                addText(section.content, margin, headingSize, COLORS.text, 'bold');
+                yPos += 6;
               }
               break;
 
@@ -515,62 +569,52 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               if (section.steps && Array.isArray(section.steps)) {
                 yPos += 5;
                 for (const step of section.steps) {
-                  checkPageBreak(30);
+                  checkPageBreak(20);
 
-                  // Step container - handle both array and string content
-                  const stepContentText = Array.isArray(step.content)
-                    ? step.content.join(' | ')
-                    : (step.content || '');
-                  const stepContentLines = stepContentText
-                    ? doc.splitTextToSize(stepContentText, contentWidth - 20)
+                  const contentItems = step.content
+                    ? (Array.isArray(step.content) ? step.content.slice(0, 5) : [step.content])
                     : [];
-                  const stepHeight = Math.max(25, 20 + stepContentLines.length * 5);
 
-                  drawRoundedRect(margin, yPos, contentWidth, stepHeight, 3, COLORS.background);
-
-                  // Step number circle - properly centered
-                  const circleX = margin + 12;
-                  const circleY = yPos + 12;
-                  const circleR = 5;
+                  // Circle + title row
+                  const circleX = margin + 3;
+                  const circleR = 3;
                   doc.setFillColor(...COLORS.accent);
-                  doc.circle(circleX, circleY, circleR, 'F');
+                  doc.circle(circleX, yPos, circleR, 'F');
 
-                  // Center the number text in circle
-                  doc.setFontSize(10);
-                  doc.setFont('helvetica', 'bold');
+                  // Center number in circle
+                  doc.setFontSize(7.5);
+                  doc.setFont(fontFamily, 'bold');
                   doc.setTextColor(...COLORS.white);
                   const numStr = String(step.number);
                   const numWidth = doc.getTextWidth(numStr);
-                  doc.text(numStr, circleX - numWidth / 2, circleY + 1.5);
+                  doc.text(numStr, circleX - numWidth / 2, yPos + 1.1);
 
-                  // Step title
+                  // Step title next to circle
                   doc.setFontSize(11);
-                  doc.setFont('helvetica', 'bold');
+                  doc.setFont(fontFamily, 'bold');
                   doc.setTextColor(...COLORS.text);
-                  doc.text(step.title, margin + 22, circleY + 1.5);
+                  doc.text(sanitize(step.title), margin + 10, yPos + 1.5);
+                  yPos += 7;
 
-                  // Step content bullets
+                  // Bullet items indented below
                   if (step.content) {
-                    doc.setFont('helvetica', 'normal');
+                    doc.setFont(fontFamily, 'normal');
                     doc.setFontSize(9);
                     doc.setTextColor(...COLORS.textSecondary);
-                    let bulletY = yPos + 20;
-
-                    const contentItems = Array.isArray(step.content)
-                      ? step.content.slice(0, 5)
-                      : [step.content];
 
                     for (const item of contentItems) {
-                      const bulletLines = doc.splitTextToSize(`• ${item}`, contentWidth - 30);
+                      const bulletLines = doc.splitTextToSize(`\u2022 ${sanitize(item)}`, contentWidth - 16);
                       for (const line of bulletLines.slice(0, 2)) {
-                        doc.text(line, margin + 22, bulletY);
-                        bulletY += 4.5;
+                        checkPageBreak(5);
+                        doc.text(line, margin + 10, yPos);
+                        yPos += 4.5;
                       }
                     }
                   }
 
-                  yPos += stepHeight + 5;
+                  yPos += 7; // breathing room between steps
                 }
+                yPos += 3;
               }
               break;
 
@@ -578,27 +622,23 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               checkPageBreak(30);
               yPos += 5;
 
-              const calloutText = section.content || '';
+              const calloutText = sanitize(section.content || '');
               const calloutLines = doc.splitTextToSize(calloutText, contentWidth - 20);
               const calloutHeight = Math.max(20, (section.title ? 10 : 0) + calloutLines.length * 5 + 10);
 
               // Simple callout with subtle accent bar
               drawRoundedRect(margin, yPos, contentWidth, calloutHeight, 3, COLORS.accentLight);
 
-              // Left accent bar - subtle
-              doc.setFillColor(...COLORS.accent);
-              doc.roundedRect(margin + 1, yPos + 3, 2, calloutHeight - 6, 1, 1, 'F');
-
               let calloutY = yPos + 6;
               if (section.title) {
                 doc.setFontSize(10);
-                doc.setFont('helvetica', 'bold');
+                doc.setFont(fontFamily, 'bold');
                 doc.setTextColor(...COLORS.text);
-                doc.text(section.title, margin + 10, calloutY + 3);
+                doc.text(sanitize(section.title), margin + 10, calloutY + 3);
                 calloutY += 10;
               }
 
-              doc.setFont('helvetica', 'normal');
+              doc.setFont(fontFamily, 'normal');
               doc.setFontSize(9);
               doc.setTextColor(...COLORS.textSecondary);
               for (const line of calloutLines) {
@@ -620,24 +660,15 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               // Code block with dark background
               drawRoundedRect(margin, yPos, contentWidth, codeHeight, 3, COLORS.codeBg);
 
-              // Code label if exists
-              if (section.label) {
-                doc.setFillColor(60, 60, 65);
-                doc.roundedRect(margin + 3, yPos + 3, 40, 6, 1, 1, 'F');
-                doc.setFontSize(6);
-                doc.setTextColor(180, 180, 180);
-                doc.text(section.language || 'code', margin + 5, yPos + 7);
-              }
-
               doc.setTextColor(220, 220, 220);
               doc.setFontSize(8);
               doc.setFont('courier', 'normal');
-              let codeY = yPos + (section.label ? 14 : 8);
+              let codeY = yPos + 8;
               for (const line of codeLines) {
                 doc.text(line.substring(0, 85), margin + 5, codeY);
                 codeY += 4;
               }
-              doc.setFont('helvetica', 'normal');
+              doc.setFont(fontFamily, 'normal');
 
               yPos += codeHeight + 8;
               break;
@@ -654,7 +685,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
                   doc.circle(margin + 3, yPos - 1.5, 1.5, 'F');
 
                   doc.setTextColor(...COLORS.text);
-                  const listLines = doc.splitTextToSize(item, contentWidth - 12);
+                  const listLines = doc.splitTextToSize(sanitize(item), contentWidth - 12);
                   for (const line of listLines) {
                     doc.text(line, margin + 8, yPos);
                     yPos += 5;
@@ -665,25 +696,71 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               }
               break;
 
-            case 'image':
-              // Minimal image placeholder - brand colors only
+            case 'image': {
               checkPageBreak(30);
               yPos += 5;
 
-              const imageHeight = 25;
-              drawRoundedRect(margin, yPos, contentWidth, imageHeight, 3, COLORS.background);
+              // Try to embed actual image from filesystem
+              let imageEmbedded = false;
+              if (section.src) {
+                try {
+                  // Try PNG version first, then original
+                  const publicDir = path.join(process.cwd(), 'public');
+                  const pngPath = path.join(publicDir, section.src.replace(/\.(gif|webp)$/i, '.png'));
+                  const origPath = path.join(publicDir, section.src);
+                  let imgPath = '';
+                  let imgFormat: 'PNG' | 'JPEG' = 'PNG';
 
-              // Simple centered label
-              doc.setFontSize(9);
-              doc.setFont('helvetica', 'italic');
-              doc.setTextColor(...COLORS.textSecondary);
-              const imageLabel = section.alt || section.label || 'See online guide for visual reference';
-              const labelWidth = doc.getTextWidth(imageLabel);
-              doc.text(imageLabel, margin + (contentWidth - labelWidth) / 2, yPos + imageHeight / 2 + 2);
-              doc.setFont('helvetica', 'normal');
+                  if (section.src.match(/\.png$/i)) {
+                    imgPath = origPath;
+                  } else if (section.src.match(/\.(gif|webp)$/i)) {
+                    // Check if a PNG conversion exists
+                    try { readFileSync(pngPath); imgPath = pngPath; } catch { /* no PNG version */ }
+                  } else if (section.src.match(/\.jpe?g$/i)) {
+                    imgPath = origPath;
+                    imgFormat = 'JPEG';
+                  }
 
-              yPos += imageHeight + 5;
+                  if (imgPath) {
+                    const imgData = readFileSync(imgPath);
+                    const imgB64 = imgData.toString('base64');
+                    const imgDataUri = `data:image/${imgFormat.toLowerCase()};base64,${imgB64}`;
+
+                    // Calculate dimensions to fit content width while maintaining aspect ratio
+                    const imgProps = doc.getImageProperties(imgDataUri);
+                    const aspectRatio = imgProps.width / imgProps.height;
+                    const imgWidth = Math.min(contentWidth, 160);
+                    const imgHeight = imgWidth / aspectRatio;
+
+                    checkPageBreak(imgHeight + 10);
+
+                    // Center the image
+                    const imgX = margin + (contentWidth - imgWidth) / 2;
+                    drawRoundedRect(imgX - 2, yPos - 2, imgWidth + 4, imgHeight + 4, 3, COLORS.background);
+                    doc.addImage(imgDataUri, imgFormat, imgX, yPos, imgWidth, imgHeight);
+                    yPos += imgHeight + 3;
+                    imageEmbedded = true;
+                  }
+                } catch {
+                  // Failed to embed — fall through to placeholder
+                }
+              }
+
+              if (!imageEmbedded) {
+                const imageHeight = 25;
+                drawRoundedRect(margin, yPos, contentWidth, imageHeight, 3, COLORS.background);
+                doc.setFontSize(9);
+                doc.setFont(fontFamily, 'normal');
+                doc.setTextColor(...COLORS.textSecondary);
+                const imageLabel = section.alt || section.label || 'See online guide for visual reference';
+                const labelWidth2 = doc.getTextWidth(imageLabel);
+                doc.text(imageLabel, margin + (contentWidth - labelWidth2) / 2, yPos + imageHeight / 2 + 2);
+                yPos += imageHeight;
+              }
+
+              yPos += 5;
               break;
+            }
 
             case 'success':
               checkPageBreak(20);
@@ -692,11 +769,9 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               // Simple success box with subtle accent
               const successHeight = 20;
               drawRoundedRect(margin, yPos, contentWidth, successHeight, 3, COLORS.accentLight);
-              doc.setFillColor(...COLORS.accent);
-              doc.roundedRect(margin + 1, yPos + 3, 2, successHeight - 6, 1, 1, 'F');
 
               doc.setFontSize(10);
-              doc.setFont('helvetica', 'bold');
+              doc.setFont(fontFamily, 'bold');
               doc.setTextColor(...COLORS.text);
               doc.text(section.title || 'Complete', margin + 10, yPos + successHeight / 2 + 2);
 
@@ -723,17 +798,14 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
   // Thank you section
   doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontFamily, 'bold');
   doc.setTextColor(...COLORS.text);
   doc.text("You're Ready!", margin, yPos);
 
-  doc.setFillColor(...COLORS.accent);
-  doc.rect(margin, yPos + 3, 40, 2, 'F');
-
-  yPos += 20;
+  yPos += 15;
 
   doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontFamily, 'normal');
   doc.setTextColor(...COLORS.textSecondary);
   const outroText = `Congratulations on completing the ${guide.title}! You now have the foundation to use ${guide.tool} effectively in your design workflow.`;
   const outroLines = doc.splitTextToSize(outroText, contentWidth);
@@ -746,16 +818,14 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
   // Next steps box with subtle accent
   drawRoundedRect(margin, yPos, contentWidth, 50, 4, COLORS.accentLight);
-  doc.setFillColor(...COLORS.accent);
-  doc.roundedRect(margin + 1, yPos + 4, 2, 42, 1, 1, 'F');
 
   doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(fontFamily, 'bold');
   doc.setTextColor(...COLORS.text);
   doc.text('Continue Learning', margin + 10, yPos + 12);
 
   doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(fontFamily, 'normal');
   doc.setTextColor(...COLORS.textSecondary);
   doc.text('• Explore more guides at aiuxdesign.guide/guides', margin + 10, yPos + 24);
   doc.text('• Browse AI design patterns at aiuxdesign.guide', margin + 10, yPos + 34);

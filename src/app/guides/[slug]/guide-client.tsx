@@ -166,6 +166,11 @@ export default function GuideClient({
                 description: 'Learn industry standards and patterns',
                 icon: 'check',
               },
+              figma: {
+                title: 'Figma ↔ Code',
+                description: 'Design-to-code and code-to-design with Figma MCP',
+                icon: 'monitor',
+              },
             };
 
             // Extract unique module IDs from lessons in order of appearance

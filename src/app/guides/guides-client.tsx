@@ -13,8 +13,8 @@ import { guides } from '@/data/guides';
 const guideData: Record<string, { tagline: string; highlights: string[]; modules: string[] }> = {
   'claude-code-learning-path': {
     tagline: 'Start Here',
-    highlights: ['AI-powered prototyping', 'Design-to-code workflows', 'Version control basics'],
-    modules: ['Setup', 'Prototyping', 'GitHub', 'Best Practices'],
+    highlights: ['Figma MCP design-to-code', 'AI-powered prototyping', 'Version control basics'],
+    modules: ['Setup', 'Figma ↔ Code', 'Prototyping', 'GitHub', 'Best Practices'],
   },
   'cursor-learning-path': {
     tagline: 'AI-native code editor',
