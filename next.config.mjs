@@ -17,6 +17,19 @@ const nextConfig = {
     optimizePackageImports: ['framer-motion', 'fuse.js', 'react-syntax-highlighter'],
   },
 
+  // Exclude large public directories from serverless function bundles
+  outputFileTracingExcludes: {
+    '/api/guides/download': [
+      './public/images/examples/**',
+      './public/images/categories/**',
+      './public/images/audit/**',
+      './public/images/logos/**',
+      './public/downloads/**',
+      './public/handbook.pdf',
+      './public/pdf.worker.min.js',
+    ],
+  },
+
   // Configure external image domains
   images: {
     remotePatterns: [
