@@ -47,14 +47,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={satoshi.variable}>
       <head>
-        {/* Critical inline CSS — fallback styling if external CSS fails to load */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          body { margin: 0; font-family: var(--font-satoshi), ui-sans-serif, system-ui, -apple-system, sans-serif; color: #162036; background: #fff; }
-          nav { max-width: 80rem; margin: 0 auto; padding: 1.25rem 1.5rem; }
-          a { color: inherit; text-decoration: none; }
-          img { max-width: 100%; height: auto; }
-          svg:not([width]) { width: 1.25rem; height: 1.25rem; }
-        `}} />
         {/* Hotjar Tracking Code for aiuxdesign.guide */}
         <script
           dangerouslySetInnerHTML={{
