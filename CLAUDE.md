@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-18 21:56 (MacBook)
+- **Pattern:** Performance & Bounce Rate Fix (Part 2)
+- **Status:** ✅ Completed
+- **Files Changed:** 59
+- **Tests Added/Modified:** 0
+- **Notes:** Converted 55 GIFs to MP4 via ffmpeg (283MB→107MB, 62% reduction). Updated OptimizedMedia component to prefer MP4 video with automatic GIF fallback. Refactored audit page into server component wrapper + client component for faster initial paint. Added 6 missing pages to sitemap (news, audit, prompts, toolkit, agent-readability-audit-kit, search) — now 50 URLs total.
+
 ### Session 2026-02-18 21:42 (MacBook)
 - **Pattern:** Performance & Bounce Rate Fix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added Share on X and Share on LinkedIn buttons to newsletter email template (publish route). Wired up dynamic OG image metadata on newsletter detail pages (`og:image` + `twitter:image`) pointing to existing `/api/og/newsletter` route. Added slug-based lookup to OG route alongside existing id param. Removed 4 secondary card CTAs (Audit Tool, Past Editions, Medium, GitHub) from both daily and weekly newsletter templates to reduce CTA clutter — keeping only Explore Patterns + Share + Unsubscribe.
 
 ### Session 2026-02-13 13:10 (MacBook)
-- **Pattern:** Social Share OG Image Refinement
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Refined OG newsletter share image layout: added newsletter title + product icons per news item + readable headlines. Iterated on CTA prominence — final version shows "Detailed product analysis & UX implications inside" with branded pill button ("Read the full daily/weekly →"). Multiple design iterations based on feedback for spacing, icon size, and CTA balance.
-
-### Session 2026-02-11 23:45 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
