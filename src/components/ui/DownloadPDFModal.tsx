@@ -80,10 +80,16 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
 
       {/* Modal */}
       <div
-        className={`fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md transition-all duration-200 ${
-          visible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-2'
+        className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-200 ${
+          visible ? 'opacity-100' : 'opacity-0'
         }`}
-        style={{ transform: `translate(-50%, -50%) ${visible ? '' : 'translateY(20px)'}` }}
+        onClick={handleClose}
+      >
+      <div
+        className={`w-full max-w-md transition-all duration-200 ${
+          visible ? 'scale-100' : 'scale-95 translate-y-2'
+        }`}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           {/* Header */}
@@ -183,6 +189,7 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
             )}
           </div>
         </div>
+      </div>
       </div>
     </>
   );
