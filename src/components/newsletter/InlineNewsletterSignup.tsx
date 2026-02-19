@@ -59,6 +59,7 @@ export function InlineNewsletterSignup({
         body: JSON.stringify({
           email,
           source,
+          website_url: '',
         }),
       });
 
@@ -134,6 +135,18 @@ export function InlineNewsletterSignup({
                 {customSubheading || 'Score your AI interface against 28 proven UX patterns'}
               </p>
             )}
+
+            {/* Honeypot - hidden from real users */}
+            <input
+              type="text"
+              name="website_url"
+              value=""
+              onChange={() => {}}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+            />
 
             {/* Input Group */}
             <div className={`flex ${stacked ? 'flex-col' : 'flex-col sm:flex-row'} gap-3 ${isHero || isPatternDetail ? 'max-w-lg mx-auto' : ''}`}>

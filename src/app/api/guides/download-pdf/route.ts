@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { resend } from '@/lib/resend';
 import { generateGuideToken } from '@/lib/guide-token';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
+import { validateEmailSecurity } from '@/lib/email-validation';
 
 // Request validation schema
 const requestSchema = z.object({
@@ -45,6 +46,12 @@ export async function POST(request: NextRequest) {
     // Parse and validate request body
     const body = await request.json();
     const { email, guideSlug, guideTitle } = requestSchema.parse(body);
+
+    // Bot protection: honeypot + disposable email check
+    const securityError = validateEmailSecurity(email, body);
+    if (securityError) {
+      return NextResponse.json({ error: securityError }, { status: 400 });
+    }
 
     // Check if email already exists
     const existingSubscriber = await prisma.subscriber.findUnique({

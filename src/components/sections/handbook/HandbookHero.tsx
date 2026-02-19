@@ -35,7 +35,7 @@ export function HandbookHero() {
       const handbookResponse = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website_url: '' }),
       });
 
       if (!handbookResponse.ok) {
@@ -215,6 +215,17 @@ export function HandbookHero() {
           {/* Email Form or Success */}
           {!isEmailSent ? (
             <form onSubmit={handleSubmit} className="space-y-4 mb-10">
+              {/* Honeypot - hidden from real users */}
+              <input
+                type="text"
+                name="website_url"
+                value=""
+                onChange={() => {}}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+              />
               <input
                 type="email"
                 placeholder="your@email.com"

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateHandbookToken } from '@/lib/handbook-token';
 import { z } from 'zod';
+import { validateEmailSecurity } from '@/lib/email-validation';
+import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 const emailSchema = z.object({
   email: z.string().email('Invalid email format'),
@@ -11,6 +13,30 @@ const emailSchema = z.object({
  * Returns token that can be used with /api/handbook/download
  */
 export async function POST(request: NextRequest) {
+  // Rate limiting by IP
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
+    request.headers.get('x-real-ip') ||
+    'unknown';
+
+  const rateLimit = checkRateLimit(
+    ip,
+    'handbook-generate-pdf',
+    RATE_LIMIT_PRESETS.SUBSCRIBE.limit,
+    RATE_LIMIT_PRESETS.SUBSCRIBE.windowMs
+  );
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      {
+        status: 429,
+        headers: {
+          'Retry-After': String(Math.ceil(rateLimit.resetIn / 1000)),
+        },
+      }
+    );
+  }
+
   try {
     const body = await request.json();
 
@@ -25,12 +51,21 @@ export async function POST(request: NextRequest) {
 
     const { email } = validation.data;
 
-    // Subscribe user to newsletter
+    // Bot protection: honeypot + disposable email check
+    const securityError = validateEmailSecurity(email, body);
+    if (securityError) {
+      return NextResponse.json({ error: securityError }, { status: 400 });
+    }
+
+    // Subscribe user to newsletter (forward client IP so rate limiting works correctly)
     const subscribeResponse = await fetch(
       new URL('/api/newsletter/subscribe', request.url),
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-forwarded-for': ip,
+        },
         body: JSON.stringify({ email, source: 'handbook' }),
       }
     );

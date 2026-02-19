@@ -40,7 +40,7 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
       const response = await fetch('/api/guides/download-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, guideSlug, guideTitle }),
+        body: JSON.stringify({ email, guideSlug, guideTitle, website_url: '' }),
       });
 
       const data = await response.json();
@@ -136,6 +136,18 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
                 </p>
 
                 <form onSubmit={handleSubmit}>
+                  {/* Honeypot - hidden from real users */}
+                  <input
+                    type="text"
+                    name="website_url"
+                    value=""
+                    onChange={() => {}}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+                  />
+
                   <div className="mb-4">
                     <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-2">
                       Email address

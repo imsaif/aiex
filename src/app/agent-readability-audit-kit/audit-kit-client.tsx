@@ -80,7 +80,7 @@ export function AuditKitClient() {
       const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'audit-kit' }),
+        body: JSON.stringify({ email, source: 'audit-kit', website_url: '' }),
       });
 
       const data = await response.json();
@@ -237,6 +237,17 @@ export function AuditKitClient() {
             {status !== 'success' ? (
               <div className="mb-10">
                 <form onSubmit={handleSubmit} className="space-y-3">
+                  {/* Honeypot - hidden from real users */}
+                  <input
+                    type="text"
+                    name="website_url"
+                    value=""
+                    onChange={() => {}}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+                  />
                   <div className="flex gap-2">
                     <div className="relative flex-1">
                       <EnvelopeIcon className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />

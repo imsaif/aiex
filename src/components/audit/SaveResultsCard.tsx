@@ -105,6 +105,7 @@ export function SaveResultsCard({ results, onCopy, copied }: SaveResultsCardProp
         body: JSON.stringify({
           email,
           source: 'audit',
+          website_url: '',
         }),
       });
 
@@ -156,6 +157,18 @@ export function SaveResultsCard({ results, onCopy, copied }: SaveResultsCardProp
           </p>
 
           <form onSubmit={handleEmailSubmit} className="space-y-3">
+            {/* Honeypot - hidden from real users */}
+            <input
+              type="text"
+              name="website_url"
+              value=""
+              onChange={() => {}}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+            />
+
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />

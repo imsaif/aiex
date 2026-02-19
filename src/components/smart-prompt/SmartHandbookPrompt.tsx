@@ -39,7 +39,7 @@ export function SmartHandbookPrompt({
       const response = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website_url: '' }),
       });
 
       if (!response.ok) {
@@ -175,6 +175,18 @@ export function SmartHandbookPrompt({
                       onSubmit={handleSubmit}
                       className="space-y-3"
                     >
+                      {/* Honeypot - hidden from real users */}
+                      <input
+                        type="text"
+                        name="website_url"
+                        value=""
+                        onChange={() => {}}
+                        tabIndex={-1}
+                        autoComplete="off"
+                        aria-hidden="true"
+                        style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+                      />
+
                       <div className="flex gap-2">
                         <input
                           type="email"

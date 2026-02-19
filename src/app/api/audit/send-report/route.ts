@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { resend } from '@/lib/resend';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { getPatternSlug } from '@/utils/pattern-links';
+import { validateEmailSecurity } from '@/lib/email-validation';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
 
 // Request validation schema
@@ -66,6 +67,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, results } = sendReportSchema.parse(body);
+
+    // Bot protection: honeypot + disposable email check
+    const securityError = validateEmailSecurity(email, body);
+    if (securityError) {
+      return NextResponse.json({ error: securityError }, { status: 400 });
+    }
 
     // Generate and send the email
     const emailHtml = generateAuditReportEmail(results as AnalysisResults);

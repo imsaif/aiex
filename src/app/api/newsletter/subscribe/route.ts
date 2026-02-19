@@ -5,6 +5,7 @@ import { resend } from '@/lib/resend';
 import { generateHandbookToken } from '@/lib/handbook-token';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
+import { validateEmailSecurity } from '@/lib/email-validation';
 
 // Email validation schema
 const subscribeSchema = z.object({
@@ -41,6 +42,12 @@ export async function POST(request: NextRequest) {
     // Parse and validate request body
     const body = await request.json();
     const { email, source } = subscribeSchema.parse(body);
+
+    // Bot protection: honeypot + disposable email check
+    const securityError = validateEmailSecurity(email, body);
+    if (securityError) {
+      return NextResponse.json({ error: securityError }, { status: 400 });
+    }
 
     // Check if email already exists
     const existingSubscriber = await prisma.subscriber.findUnique({

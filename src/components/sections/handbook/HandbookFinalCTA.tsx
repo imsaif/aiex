@@ -28,7 +28,7 @@ export function HandbookFinalCTA() {
       const subscribeResponse = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website_url: '' }),
       });
 
       if (!subscribeResponse.ok) {
@@ -108,6 +108,18 @@ export function HandbookFinalCTA() {
             onSubmit={handleSubmit}
             className="space-y-4 mb-8"
           >
+            {/* Honeypot - hidden from real users */}
+            <input
+              type="text"
+              name="website_url"
+              value=""
+              onChange={() => {}}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+            />
+
             <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
               <input
                 type="email"

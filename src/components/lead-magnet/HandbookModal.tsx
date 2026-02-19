@@ -34,7 +34,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
       const handbookResponse = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website_url: '' }),
       });
 
       if (!handbookResponse.ok) {
@@ -120,24 +120,36 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       <svg className="w-5 h-5 text-black dark:text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-sm text-gray-700 dark:text-gray-300">6 essential AI design patterns</span>
+                      <span className="text-sm text-text-secondary">6 essential AI design patterns</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <svg className="w-5 h-5 text-black dark:text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Implementation guides for each pattern</span>
+                      <span className="text-sm text-text-secondary">Implementation guides for each pattern</span>
                     </div>
                     <div className="flex items-start gap-3">
                       <svg className="w-5 h-5 text-black dark:text-white flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Best practices from Apple, Google, Figma</span>
+                      <span className="text-sm text-text-secondary">Best practices from Apple, Google, Figma</span>
                     </div>
                   </motion.div>
 
                   {/* Form */}
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Honeypot - hidden from real users */}
+                    <input
+                      type="text"
+                      name="website_url"
+                      value=""
+                      onChange={() => {}}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+                    />
+
                     <motion.div
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
@@ -243,7 +255,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                       </svg>
                     </motion.div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">All Set!</h3>
-                    <p className="text-gray-600 dark:text-gray-300">
+                    <p className="text-text-secondary">
                       Your handbook is downloading. Check your email for the welcome message.
                     </p>
                     <motion.button

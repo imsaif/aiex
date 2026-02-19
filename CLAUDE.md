@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-19 11:03 (MacBook)
+- **Pattern:** Bot Protection for Email Collection
+- **Status:** ✅ Completed
+- **Files Changed:** 14
+- **Tests Added/Modified:** 0
+- **Notes:** Added bot protection across all email collection forms. Created `src/lib/email-validation.ts` with ~50 disposable domain blocklist (mailinator, yopmail, etc.), honeypot field detection, and `validateEmailSecurity()` entry point. Updated 4 API routes (subscribe, generate-pdf, send-report, download-pdf) with server-side validation. Added rate limiting + client IP forwarding to generate-pdf route. Added hidden honeypot input + `website_url: ''` body param to all 9 client forms.
+
 ### Session 2026-02-19 10:23 (MacBook)
 - **Pattern:** Resources Page & Handbook Redesign
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added 8 new agentic AI UX patterns (Autonomy Spectrum, Intent Preview, Plan Summary, Action Audit Trail, Escalation Pathways, Trust Calibration, Mixed-Initiative Control, Agent Status & Monitoring). Created 56 new files (6 data files + 1 demo component per pattern). Updated pattern count from 28 to 36 across ~20 files. Added Agentic filter toggle to homepage. Updated existing patterns with reverse relatedPatterns references. Added patterns to audit tool detection prompts and PatternCheckingPanel. Updated CLAUDE.md with new pattern list and category counts.
 
 ### Session 2026-02-13 19:54 (MacBook)
-- **Pattern:** Hero CTA & Lead Magnet PDF Update
-- **Status:** ✅ Completed
-- **Files Changed:** 9
-- **Tests Added/Modified:** 0
-- **Notes:** Replaced old 6-pattern handbook PDF with new AI UX Checklist (28 patterns, combined from 2 source PDFs into `public/downloads/ai-ux-checklist.pdf`). Updated all CTA copy site-wide: hero subheading, button text, trust badge, SmartHandbookPrompt modal (icon, benefits, button), and success messages. Updated all `handbook.pdf` references across 5 files to point to new checklist PDF. Updated welcome email template in subscribe route with new checklist messaging and download link.
-
-### Session 2026-02-13 14:25 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

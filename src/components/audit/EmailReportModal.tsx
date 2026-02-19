@@ -53,7 +53,7 @@ export function EmailReportModal({ isOpen, onClose, results }: EmailReportModalP
       const response = await fetch('/api/audit/send-report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, results }),
+        body: JSON.stringify({ email, results, website_url: '' }),
       });
 
       const data = await response.json();
@@ -134,6 +134,18 @@ export function EmailReportModal({ isOpen, onClose, results }: EmailReportModalP
                   <p className="text-text-secondary text-sm mb-4">
                     Get your audit results delivered to your inbox with pattern recommendations and next steps.
                   </p>
+
+                  {/* Honeypot - hidden from real users */}
+                  <input
+                    type="text"
+                    name="website_url"
+                    value=""
+                    onChange={() => {}}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+                  />
 
                   <div className="mb-4">
                     <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-2">
