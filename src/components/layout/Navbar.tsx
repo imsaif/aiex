@@ -1,18 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Squares2X2Icon,
-  BookOpenIcon,
-  SparklesIcon,
   BeakerIcon,
-  ChevronDownIcon,
   NewspaperIcon,
   MagnifyingGlassIcon,
   FolderIcon,
-  DocumentArrowDownIcon,
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
 import { ThemeToggle } from '../ui/ThemeToggle';
@@ -22,34 +18,7 @@ const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 
 const Navbar = () => {
   const pathname = usePathname();
-  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Handle dropdown open with delay cancel
-  const handleMouseEnter = useCallback(() => {
-    if (closeTimeoutRef.current) {
-      clearTimeout(closeTimeoutRef.current);
-      closeTimeoutRef.current = null;
-    }
-    setIsResourcesOpen(true);
-  }, []);
-
-  // Handle dropdown close with delay
-  const handleMouseLeave = useCallback(() => {
-    closeTimeoutRef.current = setTimeout(() => {
-      setIsResourcesOpen(false);
-    }, 150); // 150ms delay before closing
-  }, []);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (closeTimeoutRef.current) {
-        clearTimeout(closeTimeoutRef.current);
-      }
-    };
-  }, []);
 
   // Global keyboard shortcut for search (⌘K / Ctrl+K)
   useEffect(() => {
@@ -69,12 +38,10 @@ const Navbar = () => {
     if (href === '/') {
       return pathname === '/' || pathname.startsWith('/patterns');
     }
+    if (href === '/resources') {
+      return pathname === '/resources' || pathname.startsWith('/prompts') || pathname.startsWith('/guides') || pathname.startsWith('/agent-readability-audit-kit');
+    }
     return pathname.startsWith(href);
-  };
-
-  // Check if any resource route is active
-  const isResourcesActive = () => {
-    return pathname.startsWith('/prompts') || pathname.startsWith('/guides') || pathname.startsWith('/agent-readability-audit-kit');
   };
 
   // Get link classes based on active state - minimal style with no layout shift
@@ -84,26 +51,6 @@ const Navbar = () => {
       active
         ? 'text-text-primary border-text-primary font-semibold'
         : 'text-text-secondary hover:text-text-primary border-transparent'
-    }`;
-  };
-
-  // Get dropdown trigger classes
-  const getDropdownTriggerClasses = () => {
-    const active = isResourcesActive();
-    return `flex items-center gap-2 px-4 py-2 transition-colors duration-200 ease-out text-base border-b-2 cursor-pointer ${
-      active
-        ? 'text-text-primary border-text-primary font-semibold'
-        : 'text-text-secondary hover:text-text-primary border-transparent'
-    }`;
-  };
-
-  // Get dropdown item classes
-  const getDropdownItemClasses = (href: string) => {
-    const active = isActive(href);
-    return `flex items-center gap-3 px-4 py-3 transition-colors ${
-      active
-        ? 'text-text-primary bg-surface-secondary font-medium'
-        : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
     }`;
   };
 
@@ -163,61 +110,15 @@ const Navbar = () => {
               </span>
             </Link>
 
-            {/* Resources Dropdown */}
-            <div
-              className="relative"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <button className={getDropdownTriggerClasses()}>
-                <FolderIcon className="w-5 h-5" />
-                <span className="hidden sm:inline relative">
+            <Link href="/resources" className={getLinkClasses('/resources')}>
+              <FolderIcon className="w-5 h-5" />
+              <span className="hidden sm:inline relative">
+                Resources
+                <span className="invisible font-semibold block h-0" aria-hidden="true">
                   Resources
-                  <span className="invisible font-semibold block h-0" aria-hidden="true">
-                    Resources
-                  </span>
                 </span>
-                <ChevronDownIcon
-                  className={`w-4 h-4 transition-transform ${isResourcesOpen ? 'rotate-180' : ''}`}
-                />
-              </button>
-
-              {/* Dropdown Menu */}
-              {isResourcesOpen && (
-                <>
-                  {/* Invisible bridge to prevent gap issues */}
-                  <div className="absolute top-full right-0 h-2 w-48" />
-                  <div className="absolute top-full right-0 pt-2 w-48 z-50">
-                    <div className="bg-surface-primary border border-border-primary rounded-xl shadow-lg overflow-hidden">
-                      <Link
-                        href="/prompts"
-                        className={getDropdownItemClasses('/prompts')}
-                        onClick={() => setIsResourcesOpen(false)}
-                      >
-                        <SparklesIcon className="w-5 h-5" />
-                        <span>Prompts</span>
-                      </Link>
-                      <Link
-                        href="/guides"
-                        className={getDropdownItemClasses('/guides')}
-                        onClick={() => setIsResourcesOpen(false)}
-                      >
-                        <BookOpenIcon className="w-5 h-5" />
-                        <span>Guides</span>
-                      </Link>
-                      <Link
-                        href="/agent-readability-audit-kit"
-                        className={getDropdownItemClasses('/agent-readability-audit-kit')}
-                        onClick={() => setIsResourcesOpen(false)}
-                      >
-                        <DocumentArrowDownIcon className="w-5 h-5" />
-                        <span>Audit Kit</span>
-                      </Link>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
+              </span>
+            </Link>
 
             {/* Search Button */}
             <button

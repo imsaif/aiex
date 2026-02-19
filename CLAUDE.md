@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-19 10:23 (MacBook)
+- **Pattern:** Resources Page & Handbook Redesign
+- **Status:** ✅ Completed
+- **Files Changed:** 9
+- **Tests Added/Modified:** 0
+- **Notes:** Built new `/resources` hub page with sidebar+grid layout, search, and category filtering (9 resource cards). Simplified Navbar from Resources dropdown to direct link. Redesigned handbook page: updated content for AIUX Design Checklist (28 patterns), added company logo carousel, side-by-side What You Get + Scoring Guide table, Continue Learning cards matching audit-kit pattern. Dark mode optimized all three PDF landing pages (handbook, toolkit, agent-readability-audit-kit) with design tokens. Added /resources to sitemap and footer.
+
 ### Session 2026-02-18 21:56 (MacBook)
 - **Pattern:** Performance & Bounce Rate Fix (Part 2)
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Replaced old 6-pattern handbook PDF with new AI UX Checklist (28 patterns, combined from 2 source PDFs into `public/downloads/ai-ux-checklist.pdf`). Updated all CTA copy site-wide: hero subheading, button text, trust badge, SmartHandbookPrompt modal (icon, benefits, button), and success messages. Updated all `handbook.pdf` references across 5 files to point to new checklist PDF. Updated welcome email template in subscribe route with new checklist messaging and download link.
 
 ### Session 2026-02-13 14:25 (MacBook)
-- **Pattern:** Newsletter Email Share & OG Image
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Added Share on X and Share on LinkedIn buttons to newsletter email template (publish route). Wired up dynamic OG image metadata on newsletter detail pages (`og:image` + `twitter:image`) pointing to existing `/api/og/newsletter` route. Added slug-based lookup to OG route alongside existing id param. Removed 4 secondary card CTAs (Audit Tool, Past Editions, Medium, GitHub) from both daily and weekly newsletter templates to reduce CTA clutter — keeping only Explore Patterns + Share + Unsubscribe.
-
-### Session 2026-02-13 13:10 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

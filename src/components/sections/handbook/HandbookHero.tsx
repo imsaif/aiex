@@ -4,75 +4,12 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { companyLogos } from '@/data/company-logos';
-
-const patterns = [
-  {
-    number: 1,
-    name: 'Contextual Assistance',
-    description: "Help users when they're actually stuck",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-    companies: ['Google', 'GitHub', 'Notion'],
-  },
-  {
-    number: 2,
-    name: 'Confidence Visualization',
-    description: 'Show certainty levels for AI results',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    ),
-    companies: ['ChatGPT', 'Claude', 'Perplexity'],
-  },
-  {
-    number: 3,
-    name: 'Error Recovery',
-    description: 'Handle AI failures gracefully',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    companies: ['Slack', 'Discord', 'Vercel'],
-  },
-  {
-    number: 4,
-    name: 'Privacy-First Design',
-    description: 'Make users feel safe sharing data',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-      </svg>
-    ),
-    companies: ['Apple', 'DuckDuckGo', 'Signal'],
-  },
-  {
-    number: 5,
-    name: 'Explainable AI',
-    description: 'Show why AI made each decision',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-      </svg>
-    ),
-    companies: ['Figma', 'Stripe', 'IBM'],
-  },
-  {
-    number: 6,
-    name: 'Progressive Disclosure',
-    description: 'Start simple, add power later',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-3" />
-      </svg>
-    ),
-    companies: ['Canva', 'Webflow', 'Linear'],
-  },
-];
+import {
+  FolderIcon,
+  Squares2X2Icon,
+  BeakerIcon,
+  ArrowLeftIcon,
+} from '@heroicons/react/24/outline';
 
 export function HandbookHero() {
   const [email, setEmail] = useState('');
@@ -95,8 +32,6 @@ export function HandbookHero() {
         return;
       }
 
-      // Call handbook PDF generation endpoint
-      // This will subscribe them to the newsletter AND generate a download token
       const handbookResponse = await fetch('/api/handbook/generate-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -105,15 +40,10 @@ export function HandbookHero() {
 
       if (!handbookResponse.ok) {
         const data = await handbookResponse.json();
-        throw new Error(data.error || 'Failed to prepare handbook download');
+        throw new Error(data.error || 'Failed to prepare download');
       }
 
-      const { token, email: responseEmail } = await handbookResponse.json();
-
-      // Open PDF in new tab
       window.open('/downloads/ai-ux-checklist.pdf', '_blank');
-
-      // Show success state
       setIsEmailSent(true);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
@@ -124,31 +54,32 @@ export function HandbookHero() {
   };
 
   return (
-    <section className="min-h-screen flex flex-col lg:flex-row">
-      {/* LEFT SIDE - White Background */}
-      <div className="flex-1 bg-white px-6 sm:px-8 lg:px-16 py-16 lg:py-24 flex flex-col justify-between">
+    <div className="min-h-screen">
+    <section className="lg:min-h-screen flex flex-col lg:flex-row">
+      {/* LEFT SIDE */}
+      <div className="flex-1 bg-background px-6 sm:px-8 lg:px-16 py-16 lg:py-24 flex flex-col justify-between">
         <div className="max-w-2xl">
           {/* Badge */}
-          <div className="mb-10">
-            <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200 inline-block">
-              ✨ Free Handbook
+          <div className="mb-8">
+            <span className="px-3 py-1.5 rounded-full text-xs font-semibold bg-accent-primary/10 text-accent-primary inline-block">
+              Free PDF Checklist
             </span>
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl lg:text-5xl font-bold text-text-primary mb-8 leading-loose">
-            Get 6 Essential AI Design Patterns
+          <h1 className="text-4xl lg:text-5xl font-bold text-text-primary mb-6 leading-tight">
+            AIUX Design Checklist
           </h1>
 
           {/* Subheading */}
-          <p className="text-lg text-text-secondary mb-12 leading-loose">
-            Master AI design with proven patterns from leading companies
+          <p className="text-lg text-text-secondary mb-10 leading-relaxed">
+            28 patterns across 7 categories. Print it, pin it next to your monitor, and use it during design reviews to score your AI product.
           </p>
 
-          {/* Logos Carousel */}
-          <div className="overflow-hidden mb-12">
-            <p className="text-xs text-text-secondary font-semibold uppercase tracking-wide mb-6 leading-relaxed">
-              Patterns used by leading companies
+          {/* Company Logos */}
+          <div className="overflow-hidden mb-10">
+            <p className="text-xs text-text-tertiary font-semibold uppercase tracking-wide mb-4">
+              Patterns sourced from leading companies
             </p>
             <motion.div
               className="flex gap-8"
@@ -174,84 +105,114 @@ export function HandbookHero() {
               ))}
             </motion.div>
           </div>
-        </div>
 
-        {/* Back Link at Bottom */}
-        <Link href="/" className="inline-block text-sm text-text-secondary hover:text-text-primary transition mt-12">
-          ← Back to Home
-        </Link>
-      </div>
-
-      {/* RIGHT SIDE - Black Background */}
-      <div className="flex-1 bg-accent-primary px-6 sm:px-8 lg:px-12 py-12 lg:py-16 flex flex-col justify-center overflow-y-auto">
-        <div className="max-w-lg mx-auto w-full">
-          {/* What's Inside - Pattern Cards Grid */}
-          <div className="mb-10">
-            <p className="text-xs text-text-tertiary font-semibold uppercase tracking-wide mb-4">
-              What's Inside
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              {patterns.map((pattern) => (
-                <motion.div
-                  key={pattern.number}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: pattern.number * 0.05 }}
-                  className="bg-gray-900 border border-gray-800 rounded-lg p-3 hover:border-gray-700 transition"
-                >
-                  {/* Icon */}
-                  <div className="w-8 h-8 rounded bg-gray-800 text-white flex items-center justify-center mb-2 text-text-tertiary">
-                    {pattern.icon}
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-sm font-semibold text-white mb-1">
-                    {pattern.name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-xs text-text-tertiary leading-tight">
-                    {pattern.description}
-                  </p>
-                </motion.div>
-              ))}
+          {/* Continue Learning - Desktop Only */}
+          <div className="hidden lg:block pt-8 border-t border-primary">
+            <h2 className="text-sm font-semibold text-text-primary mb-4">
+              Continue Learning
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/resources"
+                className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-primary hover:border-accent-primary hover:shadow-sm transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">
+                  <FolderIcon className="w-5 h-5 text-accent-primary" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">All Resources</span>
+                  <span className="text-xs text-text-tertiary">Tools, downloads & guides</span>
+                </div>
+              </Link>
+              <Link
+                href="/#patterns"
+                className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-primary hover:border-accent-primary hover:shadow-sm transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Squares2X2Icon className="w-5 h-5 text-accent-primary" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">36 Patterns</span>
+                  <span className="text-xs text-text-tertiary">Browse the full library</span>
+                </div>
+              </Link>
+              <Link
+                href="/audit"
+                className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-primary hover:border-accent-primary hover:shadow-sm transition"
+              >
+                <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">
+                  <BeakerIcon className="w-5 h-5 text-accent-primary" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">Pattern Audit</span>
+                  <span className="text-xs text-text-tertiary">Score your AI product</span>
+                </div>
+              </Link>
             </div>
           </div>
 
-          {/* Featured Pattern Preview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="mb-10"
-          >
-            <div className="bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 rounded-lg p-4">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-3">
-                Example: Pattern #1
-              </p>
-              <h3 className="text-base font-bold text-white mb-2">Contextual Assistance</h3>
-              <p className="text-xs text-gray-300 leading-relaxed mb-3">
-                Help users when they're stuck. Used by Gmail Smart Compose, GitHub Copilot, and Notion AI.
-              </p>
-              <div className="space-y-1 text-xs text-gray-300">
-                <div className="flex items-center gap-2">
-                  <svg className="w-3 h-3 flex-shrink-0 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Implementation guidelines</span>
+        </div>
+
+        {/* Back Link - Desktop Only */}
+        <Link
+          href="/resources"
+          className="hidden lg:inline-flex items-center gap-2 text-sm text-text-tertiary hover:text-text-primary transition mt-10"
+        >
+          <ArrowLeftIcon className="w-4 h-4" />
+          Back to Resources
+        </Link>
+      </div>
+
+      {/* RIGHT SIDE */}
+      <div className="flex-1 bg-accent-primary px-6 sm:px-8 lg:px-12 py-12 lg:py-16 flex flex-col justify-center overflow-y-auto">
+        <div className="max-w-lg mx-auto w-full">
+          {/* What You Get + Scoring Guide - Side by Side */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-4">What You Get</p>
+              <div className="space-y-3">
+                <div className="flex items-start gap-2.5">
+                  <svg className="w-4 h-4 flex-shrink-0 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  <span className="text-sm text-gray-400 leading-tight">28 patterns with checkboxes</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-3 h-3 flex-shrink-0 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Code examples & design prompts</span>
+                <div className="flex items-start gap-2.5">
+                  <svg className="w-4 h-4 flex-shrink-0 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  <span className="text-sm text-gray-400 leading-tight">One-line descriptions</span>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <svg className="w-4 h-4 flex-shrink-0 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  <span className="text-sm text-gray-400 leading-tight">4 maturity levels</span>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <svg className="w-4 h-4 flex-shrink-0 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  <span className="text-sm text-gray-400 leading-tight">Print-ready 2-page PDF</span>
                 </div>
               </div>
             </div>
-          </motion.div>
+            <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-4">Scoring Guide</p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3 h-3 rounded-full bg-green-500 flex-shrink-0" />
+                  <span className="text-sm text-gray-400">22-28 Production-ready</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0" />
+                  <span className="text-sm text-gray-400">15-21 Solid foundation</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3 h-3 rounded-full bg-amber-500 flex-shrink-0" />
+                  <span className="text-sm text-gray-400">8-14 Early stage</span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3 h-3 rounded-full bg-amber-600 flex-shrink-0" />
+                  <span className="text-sm text-gray-400">0-7 Significant UX debt</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          {/* Email Form or Success Message */}
+          {/* Email Form or Success */}
           {!isEmailSent ? (
             <form onSubmit={handleSubmit} className="space-y-4 mb-10">
               <input
@@ -263,7 +224,7 @@ export function HandbookHero() {
                   setError('');
                 }}
                 disabled={isLoading}
-                className="w-full px-5 py-4 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition text-base placeholder:text-text-tertiary"
+                className="w-full px-5 py-4 border border-gray-700 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition text-base placeholder:text-gray-500"
                 required
               />
               <label className="flex items-start gap-3 cursor-pointer group">
@@ -274,14 +235,14 @@ export function HandbookHero() {
                   disabled={isLoading}
                   className="mt-0.5 w-4 h-4 rounded border-gray-600 bg-gray-800 text-white focus:ring-white focus:ring-offset-gray-900 cursor-pointer"
                 />
-                <span className="text-sm text-gray-400 group-hover:text-gray-300 transition leading-tight">
-                  I agree to receive the handbook and occasional updates about new AI design patterns. Unsubscribe anytime.
+                <span className="text-sm text-gray-400 group-hover:text-gray-400 transition leading-tight">
+                  I agree to receive the checklist and occasional updates about new AI design patterns. Unsubscribe anytime.
                 </span>
               </label>
               <button
                 type="submit"
                 disabled={isLoading || !consentGiven}
-                className="w-full px-6 py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full px-6 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isLoading ? (
                   <>
@@ -289,15 +250,14 @@ export function HandbookHero() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Preparing your handbook...
+                    Preparing your checklist...
                   </>
                 ) : (
                   <>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                      <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                      <path d="M12 10l1-2.2 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="white" />
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
-                    Download Handbook
+                    Download Checklist
                   </>
                 )}
               </button>
@@ -311,8 +271,8 @@ export function HandbookHero() {
           ) : (
             <div className="space-y-4 mb-10">
               <div className="p-4 bg-green-900 border border-green-600 rounded-lg">
-                <p className="text-white font-semibold mb-1">✓ All Set!</p>
-                <p className="text-white text-sm mb-3">Your handbook is downloading. Check your email for the welcome message.</p>
+                <p className="text-white font-semibold mb-1">Your checklist is downloading.</p>
+                <p className="text-white text-sm">Check your email for the welcome message.</p>
               </div>
               <button
                 onClick={() => {
@@ -322,39 +282,93 @@ export function HandbookHero() {
                   setConsentGiven(false);
                   setError('');
                 }}
-                className="w-full px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition cursor-pointer"
+                className="w-full px-6 py-3 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition cursor-pointer"
               >
                 Download Another Copy
               </button>
-              <p className="text-center text-accent-primary text-xs">
-                You can also access it anytime from the link in your email.
-              </p>
             </div>
           )}
 
-          {/* Benefits Below Email */}
-          <div className="grid grid-cols-3 gap-4 mb-10 text-center">
+          {/* Benefits */}
+          <div className="grid grid-cols-3 gap-4 text-center">
             <div className="flex flex-col items-center">
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
-              <span className="text-xs text-gray-300">15-min read</span>
+              <span className="text-sm text-gray-400">Print-ready PDF</span>
             </div>
             <div className="flex flex-col items-center">
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" />
               </svg>
-              <span className="text-xs text-gray-300">100% free</span>
+              <span className="text-sm text-gray-400">100% free</span>
             </div>
             <div className="flex flex-col items-center">
               <svg className="w-5 h-5 text-white mb-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
               </svg>
-              <span className="text-xs text-gray-300">No spam ever</span>
+              <span className="text-sm text-gray-400">No spam ever</span>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    {/* Mobile-only: Continue Learning */}
+    <section className="lg:hidden bg-background px-6 py-8 border-t border-primary">
+      <div className="mb-6">
+        <h2 className="text-sm font-semibold text-text-primary mb-3">
+          Continue Learning
+        </h2>
+        <div className="flex flex-col gap-3">
+          <Link
+            href="/resources"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-primary"
+          >
+            <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">
+              <FolderIcon className="w-5 h-5 text-accent-primary" />
+            </div>
+            <div>
+              <span className="text-sm font-medium text-text-primary block">All Resources</span>
+              <span className="text-xs text-text-tertiary">Tools, downloads & guides</span>
+            </div>
+          </Link>
+          <Link
+            href="/#patterns"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-primary"
+          >
+            <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">
+              <Squares2X2Icon className="w-5 h-5 text-accent-primary" />
+            </div>
+            <div>
+              <span className="text-sm font-medium text-text-primary block">36 Patterns</span>
+              <span className="text-xs text-text-tertiary">Browse the full library</span>
+            </div>
+          </Link>
+          <Link
+            href="/audit"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl border border-primary"
+          >
+            <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">
+              <BeakerIcon className="w-5 h-5 text-accent-primary" />
+            </div>
+            <div>
+              <span className="text-sm font-medium text-text-primary block">Pattern Audit</span>
+              <span className="text-xs text-text-tertiary">Score your AI product</span>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* Back Link */}
+      <Link
+        href="/resources"
+        className="inline-flex items-center gap-2 text-sm text-text-tertiary"
+      >
+        <ArrowLeftIcon className="w-4 h-4" />
+        Back to Resources
+      </Link>
+    </section>
+    </div>
   );
 }

@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import { HandbookClient } from './handbook-client';
 
 export const metadata: Metadata = {
-  title: 'Free AI Design Patterns Handbook | 6 Essential Patterns',
-  description: 'Master AI design with 6 proven patterns used by Apple, Google, GitHub, and Figma. Learn when, where, and how to add AI without overwhelming users. Download free.',
+  title: 'AIUX Design Checklist | 28 AI UX Patterns Audit Checklist',
+  description: '28 AI UX patterns across 7 categories in a printable audit checklist. Score your AI product during design reviews. Free PDF download.',
   openGraph: {
-    title: 'Free AI Design Patterns Handbook | 6 Essential Patterns',
-    description: 'Master AI design with 6 proven patterns used by Apple, Google, GitHub, and Figma. Learn when, where, and how to add AI without overwhelming users.',
+    title: 'AIUX Design Checklist | 28 AI UX Patterns Audit Checklist',
+    description: '28 AI UX patterns across 7 categories in a printable audit checklist. Score your AI product during design reviews.',
     type: 'website',
     url: 'https://aiuxdesign.guide/handbook',
   },

@@ -91,10 +91,34 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
+                      href="/prompts"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Figma Make Prompts
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/guides"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Designer Guides
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="mailto:imranrizom@gmail.com"
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Submit Feedback
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/resources"
+                      className="text-base font-medium text-accent-primary hover:text-accent-hover transition-colors"
+                    >
+                      All Resources →
                     </a>
                   </li>
                 </ul>
