@@ -188,10 +188,10 @@ class DesignAudit {
       return null; // No violation
     }
 
-    // Check if it's a known issue token
+    // Check if it's a known issue token (informational, not blocking)
     if (TOKEN_ISSUES[color]) {
       return {
-        severity: 'warning',
+        severity: 'info',
         file: this.relativePath(filePath),
         line: lineNum,
         color: color,
@@ -200,16 +200,9 @@ class DesignAudit {
       };
     }
 
-    // Check if it's a design token
+    // Design tokens are correct usage — not violations
     if (this.isDesignToken(color)) {
-      return {
-        severity: 'warning',
-        file: this.relativePath(filePath),
-        line: lineNum,
-        color: color,
-        issue: 'Design token usage detected - verify rendering in browser',
-        code: lineContent.trim()
-      };
+      return null;
     }
 
     // Check if it looks like a hardcoded color

@@ -13,7 +13,7 @@ export const plansummary: Pattern = {
   description: "Provide a structured breakdown of the agent's reasoning and approach  -  showing goal interpretation, strategy, subtask checklist, and assumptions  -  so users can evaluate the plan before execution begins.",
   category: "Trustworthy & Reliable AI",
   tags: ["agentic", "planning", "transparency", "reasoning", "strategy", "progress"],
-  thumbnail: "/images/examples/plan-summary.png",
+  thumbnail: "",
   introduction: "While Intent Preview shows WHAT the agent will do, Plan Summary explains WHY and HOW. When an agent breaks a complex goal into subtasks, users need to understand the agent's reasoning  -  not just its intended actions. This is especially critical for knowledge work where there are multiple valid approaches. 'Research competitor pricing' could mean scraping websites, reading analyst reports, or checking public databases  -  the strategy matters as much as the outcome. The Plan Summary provides goal interpretation, strategy explanation, a subtask checklist that updates in real-time, explicit assumptions the user can correct, and resource and time estimates. This pattern extends explainability from retrospective ('here's why I gave this answer') to prospective ('here's why I'm taking this approach').",
   datePublished: "2026-02-16",
   dateModified: "2026-02-16",

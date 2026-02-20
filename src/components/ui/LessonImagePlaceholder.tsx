@@ -17,14 +17,16 @@ export default function LessonImagePlaceholder({
 }: LessonImagePlaceholderProps) {
   if (src) {
     return (
-      <figure className={`rounded-lg overflow-hidden border border-gray-200 ${className}`}>
+      <figure className={`rounded-lg overflow-hidden border border-border-primary ${className}`}>
         <img
           src={src}
           alt={alt}
+          width={800}
+          height={450}
           className="w-full h-auto object-cover"
         />
         {label && (
-          <figcaption className="px-4 py-2 bg-gray-50 text-sm text-gray-600 border-t border-gray-200">
+          <figcaption className="px-4 py-2 bg-background-secondary text-sm text-text-tertiary border-t border-border-primary">
             {label}
           </figcaption>
         )}
@@ -34,9 +36,9 @@ export default function LessonImagePlaceholder({
 
   return (
     <div
-      className={`rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center ${className}`}
+      className={`rounded-lg border-2 border-dashed border-border-secondary bg-background-secondary p-8 text-center ${className}`}
     >
-      <div className="text-gray-400 mb-2">
+      <div className="text-text-disabled mb-2">
         <svg
           className="w-12 h-12 mx-auto"
           fill="none"
@@ -51,8 +53,8 @@ export default function LessonImagePlaceholder({
           />
         </svg>
       </div>
-      <p className="text-gray-600 font-medium">{label}</p>
-      <p className="text-gray-400 text-sm mt-1">Image will be added here</p>
+      <p className="text-text-tertiary font-medium">{label}</p>
+      <p className="text-text-disabled text-sm mt-1">Image will be added here</p>
     </div>
   );
 }

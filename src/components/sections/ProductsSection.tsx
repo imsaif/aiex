@@ -73,6 +73,8 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
       <img
         src={logoUrl}
         alt={productName}
+        width={28}
+        height={28}
         className={`h-7 w-7 transition-all duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}

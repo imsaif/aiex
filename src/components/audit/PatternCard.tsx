@@ -112,6 +112,8 @@ export function PatternCard({ pattern, context, examples = [], onImplementationC
                     <img
                       src={example.image}
                       alt={example.altText || example.title}
+                      width={400}
+                      height={96}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>

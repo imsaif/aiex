@@ -46,9 +46,9 @@ function EmptyState({ formData }: { formData?: PromptFormData }) {
     const logoMap: Record<string, string> = {
       'claude': '/images/logos/claude.svg',
       'cursor': '/images/logos/cursor.svg',
-      'chatgpt': 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/openai.svg',
-      'copilot': 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/githubcopilot.svg',
-      'figma': 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/figma.svg',
+      'chatgpt': '/images/logos/simple-icons/openai.svg',
+      'copilot': '/images/logos/simple-icons/githubcopilot.svg',
+      'figma': '/images/logos/simple-icons/figma.svg',
     };
     return logoMap[formData.aiTool as AITool] || null;
   };
@@ -100,6 +100,8 @@ function EmptyState({ formData }: { formData?: PromptFormData }) {
                 <img
                   src={getToolLogo()!}
                   alt={getToolName()}
+                  width={20}
+                  height={20}
                   className="w-5 h-5 object-contain flex-shrink-0"
                   style={{ filter: logoFilter }}
                 />

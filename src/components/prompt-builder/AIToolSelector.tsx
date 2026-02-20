@@ -26,19 +26,19 @@ const tools: { id: AITool; name: string; description: string; logo?: string; ico
     id: 'chatgpt',
     name: 'ChatGPT',
     description: 'OpenAI ChatGPT',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/openai.svg',
+    logo: '/images/logos/simple-icons/openai.svg',
   },
   {
     id: 'copilot',
     name: 'Copilot',
     description: 'GitHub AI assistant',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/githubcopilot.svg',
+    logo: '/images/logos/simple-icons/githubcopilot.svg',
   },
   {
     id: 'figma',
     name: 'Figma',
     description: 'Design tool with AI',
-    logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/figma.svg',
+    logo: '/images/logos/simple-icons/figma.svg',
   },
   {
     id: 'generic',
@@ -127,6 +127,8 @@ export default function AIToolSelector({ selected, onChange }: AIToolSelectorPro
                   <img
                     src={tool.logo}
                     alt={tool.name}
+                    width={32}
+                    height={32}
                     className="h-8 w-8 object-contain"
                     style={{ filter: getLogoFilter(isSelected) }}
                   />

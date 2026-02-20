@@ -13,7 +13,7 @@ export const actionaudittrail: Pattern = {
   description: "Provide a timestamped, structured log of every action the agent took  -  grouped by task, with reversibility status, selective undo, and diff views  -  so users can review and correct agent behavior after the fact.",
   category: "Trustworthy & Reliable AI",
   tags: ["agentic", "audit", "logging", "undo", "accountability", "compliance"],
-  thumbnail: "/images/examples/action-audit-trail.png",
+  thumbnail: "",
   introduction: "After an agent has acted  -  especially across multiple steps or over extended periods  -  users need a clear, reviewable record of what happened. This is fundamentally different from traditional undo/redo because agentic actions may span multiple systems, occur asynchronously, and have cascading consequences. A user who discovers their agent has sent 15 emails, rescheduled 3 meetings, and updated a spreadsheet needs to quickly understand what happened, why, and how to reverse specific actions. The Action Audit Trail provides a timestamped log grouped by task with plain-language descriptions, reversibility color-coding (green/amber/red), selective undo capabilities, and before/after diff views for document modifications. This extends source attribution from citing information sources to citing action sources.",
   datePublished: "2026-02-16",
   dateModified: "2026-02-16",

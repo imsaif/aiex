@@ -13,7 +13,7 @@ export const autonomyspectrum: Pattern = {
   description: "Provide a spectrum of autonomy levels  -  from passive suggestions to full autonomy  -  that users can adjust per task type, enabling granular control over how independently an AI agent operates.",
   category: "Human-AI Collaboration",
   tags: ["agentic", "autonomy", "control", "delegation", "trust", "agent settings"],
-  thumbnail: "/images/examples/autonomy-spectrum.png",
+  thumbnail: "",
   introduction: "The Autonomy Spectrum pattern replaces binary AI controls (on/off, assist/don't assist) with a graduated range of independence levels. Traditional AI interactions are either fully manual or fully automated, but agentic workflows demand nuance. A user might want their email agent to auto-sort messages without asking, but require explicit approval before sending any reply. This pattern provides four core levels  -  Observe & Suggest, Propose & Confirm, Act & Notify, and Full Autonomy  -  adjustable per task type. The key insight is that trust isn't global: users develop different comfort levels for different domains based on the agent's track record. By making autonomy granular and visible, this pattern prevents the all-or-nothing dynamic where a single bad experience causes users to abandon the agent entirely.",
   datePublished: "2026-02-16",
   dateModified: "2026-02-16",

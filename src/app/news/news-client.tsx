@@ -5,8 +5,16 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+import dynamic from 'next/dynamic';
 import { Newsletter, NewsletterTag } from '@/types';
+
+const InlineNewsletterSignup = dynamic(
+  () => import('@/components/newsletter/InlineNewsletterSignup').then(mod => ({ default: mod.InlineNewsletterSignup })),
+  {
+    ssr: false,
+    loading: () => <div className="h-12 bg-background-secondary rounded-lg animate-pulse" />,
+  }
+);
 
 interface NewsClientProps {
   initialNewsletters: Newsletter[];

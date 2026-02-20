@@ -21,7 +21,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
   };
 
   return (
-    <div className="bg-surface-primary rounded-2xl border-2 border-gray-900 dark:border-gray-100 shadow-card overflow-hidden">
+    <div className="bg-surface-primary rounded-2xl border-2 border-accent-primary shadow-card overflow-hidden">
       {/* Header */}
       <div className="bg-gray-900 dark:bg-gray-100 px-6 py-4">
         <div className="flex items-center justify-between flex-wrap gap-4">
@@ -34,6 +34,8 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                 <img
                   src="/images/logos/figma.svg"
                   alt="Figma"
+                  width={20}
+                  height={20}
                   className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
@@ -46,6 +48,8 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                 <img
                   src="/images/logos/uizard.jpeg"
                   alt="Uizard"
+                  width={20}
+                  height={20}
                   className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity rounded cursor-pointer"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
@@ -58,6 +62,8 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                 <img
                   src="/images/logos/cursor.svg"
                   alt="Cursor"
+                  width={20}
+                  height={20}
                   className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
@@ -70,6 +76,8 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                 <img
                   src="/images/logos/claude.svg"
                   alt="Claude"
+                  width={20}
+                  height={20}
                   className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
@@ -80,8 +88,10 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
               {/* Gemini */}
               <div className="group relative">
                 <img
-                  src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/googlegemini.svg"
+                  src="/images/logos/simple-icons/googlegemini.svg"
                   alt="Gemini"
+                  width={20}
+                  height={20}
                   className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
@@ -91,7 +101,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
               </div>
               {/* Galileo AI */}
               <div className="group relative">
-                <div className="w-5 h-5 rounded opacity-80 group-hover:opacity-100 transition-opacity bg-[#6366F1] flex items-center justify-center cursor-pointer">
+                <div className="w-5 h-5 rounded opacity-80 group-hover:opacity-100 transition-opacity bg-indigo-500 flex items-center justify-center cursor-pointer">
                   <span className="text-[10px] font-bold text-white">G</span>
                 </div>
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">

@@ -3,18 +3,18 @@
 import { motion } from 'framer-motion';
 
 const companies = [
-  { name: 'Apple', logo: 'https://cdn.simpleicons.org/apple' },
-  { name: 'Google', logo: 'https://cdn.simpleicons.org/google' },
-  { name: 'GitHub', logo: 'https://cdn.simpleicons.org/github' },
-  { name: 'Figma', logo: 'https://cdn.simpleicons.org/figma' },
-  { name: 'OpenAI', logo: 'https://cdn.simpleicons.org/openai' },
-  { name: 'Anthropic', logo: 'https://cdn.simpleicons.org/anthropic' },
-  { name: 'Microsoft', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg' },
-  { name: 'Slack', logo: 'https://cdn.simpleicons.org/slack' },
-  { name: 'Notion', logo: 'https://cdn.simpleicons.org/notion' },
-  { name: 'Adobe', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/adobe.svg' },
-  { name: 'Tesla', logo: 'https://cdn.simpleicons.org/tesla' },
-  { name: 'Netflix', logo: 'https://cdn.simpleicons.org/netflix' },
+  { name: 'Apple', logo: '/images/logos/simple-icons/apple.svg' },
+  { name: 'Google', logo: '/images/logos/simple-icons/google.svg' },
+  { name: 'GitHub', logo: '/images/logos/simple-icons/github.svg' },
+  { name: 'Figma', logo: '/images/logos/simple-icons/figma.svg' },
+  { name: 'OpenAI', logo: '/images/logos/simple-icons/openai.svg' },
+  { name: 'Anthropic', logo: '/images/logos/simple-icons/anthropic.svg' },
+  { name: 'Microsoft', logo: '/images/logos/simple-icons/microsoft.svg' },
+  { name: 'Slack', logo: '/images/logos/simple-icons/slack.svg' },
+  { name: 'Notion', logo: '/images/logos/simple-icons/notion.svg' },
+  { name: 'Adobe', logo: '/images/logos/simple-icons/adobe.svg' },
+  { name: 'Tesla', logo: '/images/logos/simple-icons/tesla.svg' },
+  { name: 'Netflix', logo: '/images/logos/simple-icons/netflix.svg' },
 ];
 
 export function LogosCarousel() {
@@ -47,6 +47,8 @@ export function LogosCarousel() {
                 <img
                   src={company.logo}
                   alt={company.name}
+                  width={32}
+                  height={32}
                   className="h-8 opacity-60 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0"
                 />
               </div>

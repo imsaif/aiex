@@ -1,14 +1,38 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { ResultsPanel } from '@/components/audit/ResultsPanel';
+import dynamic from 'next/dynamic';
 import { CenterUpload } from '@/components/audit/CenterUpload';
-import { SocialProof } from '@/components/audit/SocialProof';
 import { ResizablePanels } from '@/components/audit/ResizablePanels';
 import { WelcomePanel } from '@/components/audit/WelcomePanel';
-import { UsageLimitModal } from '@/components/audit/UsageLimitModal';
 import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import type { AnalysisResults, DeviceType } from '@/types/audit';
+
+// Lazy load heavy components that aren't needed on initial paint
+const ResultsPanel = dynamic(
+  () => import('@/components/audit/ResultsPanel').then(mod => ({ default: mod.ResultsPanel })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full flex items-center justify-center bg-background-primary rounded-2xl">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+      </div>
+    ),
+  }
+);
+
+const SocialProof = dynamic(
+  () => import('@/components/audit/SocialProof').then(mod => ({ default: mod.SocialProof })),
+  {
+    ssr: false,
+    loading: () => <div className="h-64 bg-background-primary" />,
+  }
+);
+
+const UsageLimitModal = dynamic(
+  () => import('@/components/audit/UsageLimitModal').then(mod => ({ default: mod.UsageLimitModal })),
+  { ssr: false }
+);
 
 export default function AuditClient() {
   // State

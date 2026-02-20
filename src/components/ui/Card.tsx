@@ -57,6 +57,8 @@ export default function Card({
           <img
             src={image}
             alt={imageAlt || title || 'Card image'}
+            width={400}
+            height={192}
             className="w-full h-48 object-cover rounded-t-lg"
           />
         </div>

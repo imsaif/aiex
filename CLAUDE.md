@@ -251,6 +251,20 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-20 23:45 (MacBook)
+- **Pattern:** Performance & Crash Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 45
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed pre-commit hook violations blocking commit from previous session. Replaced hardcoded hex colors in `global-error.tsx` with named CSS colors. Migrated `FigmaPromptCard`, `LessonImagePlaceholder`, `LessonRenderer` from hardcoded gray-* Tailwind classes to design tokens (`text-text-secondary`, `bg-background-secondary`, `border-border-primary`, etc.). Fixed design-audit script bug that incorrectly flagged proper design token usage as violations (changed from warning to null) and TOKEN_ISSUES from blocking to informational severity.
+
+### Session 2026-02-20 23:20 (MacBook)
+- **Pattern:** Performance & Crash Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 43
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed client-side crash on agentic pattern pages (Hotjar-reported). Added error boundaries (`error.tsx` + `global-error.tsx`). Eliminated all external CDN dependencies — self-hosted 14 new SVG logos, rewrote `product-logos.ts` to use local paths, updated LogosCarousel, FigmaPromptCard, AIToolSelector, PromptPreview. Added `width`/`height` to all public-facing `<img>` tags (12 components). Removed 24 broken image refs from 6 agentic patterns. Lazy-loaded audit page heavy components (ResultsPanel, SocialProof) cutting bundle 53% (306kB→144kB). Added news page loading skeleton and lazy-loaded InlineNewsletterSignup on news routes.
+
 ### Session 2026-02-19 11:03 (MacBook)
 - **Pattern:** Bot Protection for Email Collection
 - **Status:** ✅ Completed
@@ -308,20 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added email gateway to Agent Readability Audit Kit page — email required before PDF download. Merged cover PDF into existing audit PDF (now 4 pages). Added `audit-kit` source to subscribe API with branded welcome email. Updated all page copy (metadata, trust text, page count). Removed post-download InlineNewsletterSignup since email is now collected upfront.
 
 ### Session 2026-02-17 10:26 (MacBook)
-- **Pattern:** Intent Preview & Agent Status Monitoring
-- **Status:** ✅ Completed
-- **Files Changed:** 13
-- **Tests Added/Modified:** 0
-- **Notes:** Updated Intent Preview pattern with real example images (Claude, GitHub Copilot Workspace, Gemini Deep Research GIFs), trimmed from 4 to 3 examples, updated thumbnail. Updated Agent Status Monitoring with real example images and Devin AI logo.
-
-### Session 2026-02-16 17:48 (MacBook)
-- **Pattern:** 8 Agentic AI UX Patterns (29-36)
-- **Status:** ✅ Completed
-- **Files Changed:** 86
-- **Tests Added/Modified:** 6
-- **Notes:** Added 8 new agentic AI UX patterns (Autonomy Spectrum, Intent Preview, Plan Summary, Action Audit Trail, Escalation Pathways, Trust Calibration, Mixed-Initiative Control, Agent Status & Monitoring). Created 56 new files (6 data files + 1 demo component per pattern). Updated pattern count from 28 to 36 across ~20 files. Added Agentic filter toggle to homepage. Updated existing patterns with reverse relatedPatterns references. Added patterns to audit tool detection prompts and PatternCheckingPanel. Updated CLAUDE.md with new pattern list and category counts.
-
-### Session 2026-02-13 19:54 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

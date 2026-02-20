@@ -99,6 +99,8 @@ export function HandbookHero() {
                   <img
                     src={company.logo}
                     alt={company.name}
+                    width={28}
+                    height={28}
                     className="h-7 opacity-60 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0"
                   />
                 </div>

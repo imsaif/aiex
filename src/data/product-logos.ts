@@ -1,79 +1,71 @@
 /**
- * Product logo mapping using Simple Icons CDN and fallbacks
- * Maps product names to Simple Icons slug names or custom URLs
- * CDN URL format: https://cdn.simpleicons.org/[slug]
+ * Product logo mapping using self-hosted Simple Icons
+ * All logos are stored locally in /public/images/logos/simple-icons/
  */
+
+const SI = '/images/logos/simple-icons';
 
 export const productLogos: Record<string, string> = {
   // Major AI & Tech Companies
-  Google: 'google',
-  GitHub: 'github',
-  Notion: 'notion',
-  Netflix: 'netflix',
-  Spotify: 'spotify',
-  OpenAI: 'openai',
-  Adobe: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/adobe.svg',
-  Photoshop: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/adobephotoshop.svg',
-  'Adobe Firefly': 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/adobe.svg',
-  Microsoft: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg',
-  ChatGPT: 'openai',
-  Claude: 'anthropic',
-  Bing: 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Bing_Fluent_Logo_Text.svg',
-  Figma: 'figma',
-  Slack: 'slack',
-  Discord: 'discord',
-  Gmail: 'gmail',
-  Copilot: 'github',
+  Google: `${SI}/google.svg`,
+  GitHub: `${SI}/github.svg`,
+  Notion: `${SI}/notion.svg`,
+  Netflix: `${SI}/netflix.svg`,
+  Spotify: `${SI}/spotify.svg`,
+  OpenAI: `${SI}/openai.svg`,
+  Adobe: `${SI}/adobe.svg`,
+  Photoshop: `${SI}/adobephotoshop.svg`,
+  'Adobe Firefly': `${SI}/adobe.svg`,
+  Microsoft: `${SI}/microsoft.svg`,
+  ChatGPT: `${SI}/openai.svg`,
+  Claude: `${SI}/anthropic.svg`,
+  Bing: `${SI}/bing.svg`,
+  Figma: `${SI}/figma.svg`,
+  Slack: `${SI}/slack.svg`,
+  Discord: `${SI}/discord.svg`,
+  Gmail: `${SI}/gmail.svg`,
+  Copilot: `${SI}/github.svg`,
 
   // Voice Assistants
-  'Siri': 'apple',
-  'Alexa': 'amazon',
-  'Cortana': 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/microsoft.svg',
+  'Siri': `${SI}/apple.svg`,
+  'Alexa': `${SI}/amazon.svg`,
+  'Cortana': `${SI}/microsoft.svg`,
 
-  // AI & Productivity Tools (newly added)
-  Loom: 'loom',
-  Superhuman: '/images/logos/superhumanlogo.png', // Local PNG
-  Grammarly: 'grammarly',
-  Perplexity: 'https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/perplexity.svg',
-  Midjourney: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Midjourney_Emblem.svg', // Official Wikimedia Commons
-  'Dall-E': 'openai', // Dall-E is made by OpenAI
-  DuckDuckGo: 'duckduckgo',
-  Signal: 'signal',
-  Anthropic: 'anthropic',
+  // AI & Productivity Tools
+  Loom: `${SI}/loom.svg`,
+  Superhuman: '/images/logos/superhumanlogo.png',
+  Grammarly: `${SI}/grammarly.svg`,
+  Perplexity: `${SI}/perplexity.svg`,
+  Midjourney: `${SI}/midjourney.svg`,
+  'Dall-E': `${SI}/openai.svg`,
+  DuckDuckGo: `${SI}/duckduckgo.svg`,
+  Signal: `${SI}/signal.svg`,
+  Anthropic: `${SI}/anthropic.svg`,
 
   // Consumer & Enterprise Platforms
-  Apple: 'apple',
-  Tesla: 'tesla',
-  IBM: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg', // Official IBM SVG from Wikimedia
-  AWS: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg', // Official AWS SVG from Wikimedia
-  Duolingo: 'duolingo',
-  'Be': 'https://upload.wikimedia.org/wikipedia/commons/a/af/Logo_BeMyEyes.svg', // Official Be My Eyes SVG from Wikimedia
-  GPTZero: 'https://cdn.simpleicons.org/openai', // GPTZero detection tool
-  Hugging: 'huggingface', // Hugging Face (truncated product name)
+  Apple: `${SI}/apple.svg`,
+  Tesla: `${SI}/tesla.svg`,
+  IBM: `${SI}/ibm.svg`,
+  AWS: `${SI}/aws.svg`,
+  Duolingo: `${SI}/duolingo.svg`,
+  'Be': '/images/logos/simple-icons/bemyeyes.svg',
+  GPTZero: `${SI}/openai.svg`,
+  Hugging: `${SI}/huggingface.svg`,
 
   // AI Development Tools
   Devin: '/images/logos/devin_ai_logo.png',
 
   // Mental Health & Wellness AI
-  'Woebot': '/images/logos/woebot_health_logo.png', // Mental health chatbot (local)
-  'Crisis': '/images/logos/Crisis_Text_Line_logo.png', // Crisis Text Line (local)
-  'Wysa': '/images/logos/wysa_logo.png', // Mental wellness AI (local)
+  'Woebot': '/images/logos/woebot_health_logo.png',
+  'Crisis': '/images/logos/Crisis_Text_Line_logo.png',
+  'Wysa': '/images/logos/wysa_logo.png',
 };
 
 /**
  * Get logo URL for a product
  */
 export function getProductLogoUrl(productName: string): string {
-  const slug = productLogos[productName];
-  if (!slug) return '';
-
-  // If slug is already a full URL or local path, return it directly
-  if (slug.startsWith('http') || slug.startsWith('/')) {
-    return slug;
-  }
-
-  // Otherwise build the jsdelivr CDN URL for Simple Icons
-  return `https://cdn.jsdelivr.net/npm/simple-icons@12.0.0/icons/${slug}.svg`;
+  return productLogos[productName] || '';
 }
 
 /**

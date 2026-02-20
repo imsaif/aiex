@@ -86,15 +86,15 @@ const getCalloutClasses = (calloutType: 'info' | 'warning' | 'success' | 'error'
   const baseClasses = 'p-4 rounded-lg border-l-4 mb-6';
   switch (calloutType) {
     case 'info':
-      return `${baseClasses} bg-blue-50 dark:bg-blue-900/30 border-l-blue-500 text-gray-700 dark:text-gray-300`;
+      return `${baseClasses} bg-blue-50 dark:bg-blue-900/30 border-l-blue-500 text-text-secondary`;
     case 'warning':
-      return `${baseClasses} bg-amber-50 dark:bg-amber-900/30 border-l-amber-500 text-gray-700 dark:text-gray-300`;
+      return `${baseClasses} bg-amber-50 dark:bg-amber-900/30 border-l-amber-500 text-text-secondary`;
     case 'success':
-      return `${baseClasses} bg-green-50 dark:bg-green-900/30 border-l-green-500 text-gray-700 dark:text-gray-300`;
+      return `${baseClasses} bg-green-50 dark:bg-green-900/30 border-l-green-500 text-text-secondary`;
     case 'error':
-      return `${baseClasses} bg-red-50 dark:bg-red-900/30 border-l-red-500 text-gray-700 dark:text-gray-300`;
+      return `${baseClasses} bg-red-50 dark:bg-red-900/30 border-l-red-500 text-text-secondary`;
     case 'tip':
-      return `${baseClasses} bg-purple-50 dark:bg-purple-900/30 border-l-purple-400 text-gray-700 dark:text-gray-300`;
+      return `${baseClasses} bg-purple-50 dark:bg-purple-900/30 border-l-purple-400 text-text-secondary`;
     default:
       return baseClasses;
   }
@@ -126,7 +126,7 @@ const renderSection = (section: LessonSection, index: number) => {
           {section.icon && section.icon !== 'none' && (
             <div className="text-gray-600 dark:text-gray-400 flex-shrink-0">{getIcon(section.icon)}</div>
           )}
-          <p className="m-0 text-gray-700 dark:text-gray-300">{section.content}</p>
+          <p className="m-0 text-text-secondary">{section.content}</p>
         </div>
       );
 
@@ -157,7 +157,7 @@ const renderSection = (section: LessonSection, index: number) => {
         return (
           <h4
             key={index}
-            className="text-[1.125rem] font-semibold text-gray-700 dark:text-gray-300 mt-8 mb-4"
+            className="text-[1.125rem] font-semibold text-text-secondary mt-8 mb-4"
           >
             {section.content}
           </h4>
@@ -176,7 +176,7 @@ const renderSection = (section: LessonSection, index: number) => {
       return (
         <ul
           key={index}
-          className="mb-6 ml-6 p-0 text-gray-700 dark:text-gray-300 list-disc"
+          className="mb-6 ml-6 p-0 text-text-secondary list-disc"
         >
           {section.items.map((item, i) => (
             <li key={i} className="mb-2">
@@ -218,9 +218,9 @@ const renderSection = (section: LessonSection, index: number) => {
                 </h4>
               </div>
               {typeof step.content === 'string' ? (
-                <p className="m-0 text-gray-700 dark:text-gray-300">{step.content}</p>
+                <p className="m-0 text-text-secondary">{step.content}</p>
               ) : (
-                <ul className="m-0 pl-6 text-gray-700 dark:text-gray-300">
+                <ul className="m-0 pl-6 text-text-secondary">
                   {step.content.map((item, i) => (
                     <li key={i} className="mb-2">
                       {item}
@@ -265,6 +265,8 @@ const renderSection = (section: LessonSection, index: number) => {
               <img
                 src={section.src}
                 alt={section.alt}
+                width={800}
+                height={450}
                 className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
               />
               {section.label && (
@@ -297,7 +299,7 @@ const renderSection = (section: LessonSection, index: number) => {
               {section.title}
             </h3>
           </div>
-          <ul className="m-0 mb-4 p-0 list-none text-gray-700 dark:text-gray-300">
+          <ul className="m-0 mb-4 p-0 list-none text-text-secondary">
             {section.items.map((item, i) => (
               <li key={i} className="mb-2 flex gap-2">
                 <CheckIcon className="w-5 h-5 text-green-500 flex-shrink-0" />
@@ -305,7 +307,7 @@ const renderSection = (section: LessonSection, index: number) => {
               </li>
             ))}
           </ul>
-          <p className="m-0 text-gray-700 dark:text-gray-300 font-semibold">{section.message}</p>
+          <p className="m-0 text-text-secondary font-semibold">{section.message}</p>
         </div>
       );
 
