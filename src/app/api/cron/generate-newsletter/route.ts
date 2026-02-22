@@ -16,7 +16,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
 
 const parser = new Parser({
-  timeout: 10000,
+  timeout: 5000,
   headers: {
     'User-Agent': 'AIUX-Newsletter-Bot/1.0',
   },
@@ -60,9 +60,13 @@ const RSS_SOURCES = [
 // Scrape Anthropic news (no RSS feed available)
 async function scrapeAnthropicNews(): Promise<NewsItem[]> {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
     const response = await fetch('https://www.anthropic.com/news', {
       headers: { 'User-Agent': 'AIUX-Newsletter-Bot/1.0' },
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     const html = await response.text();
 
     // Extract JSON data embedded in the page
@@ -418,37 +422,40 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7): Promise
     return usedTitles.some(usedTitle => isSimilarTitle(title, usedTitle));
   };
 
-  const results = await Promise.allSettled(
-    RSS_SOURCES.map(async (source) => {
-      try {
-        const feed = await parser.parseURL(source.url);
-        return (feed.items || [])
-          .filter((item) => isRecent(item, lookbackHours) && isRelevant(item, source.name))
-          .filter((item) => !item.link || !usedUrls.has(item.link)) // Exclude already-used URLs
-          .filter((item) => !item.title || !isTitleAlreadyUsed(item.title.trim())) // Exclude similar titles
-          .map((item) => ({
-            source: source.name,
-            sourceColor: source.color,
-            title: item.title?.trim() || 'Untitled',
-            description: item.contentSnippet?.slice(0, 500) || item.content?.slice(0, 500) || '',
-            link: item.link || '',
-            pubDate: item.pubDate || item.isoDate || new Date().toISOString(),
-            relevanceScore: scoreRelevance(item, source.name),
-          }));
-      } catch {
-        return [];
-      }
-    })
-  );
+  // Run RSS feeds and Anthropic scrape in parallel
+  const [rssResults, anthropicNews] = await Promise.all([
+    Promise.allSettled(
+      RSS_SOURCES.map(async (source) => {
+        try {
+          const feed = await parser.parseURL(source.url);
+          return (feed.items || [])
+            .filter((item) => isRecent(item, lookbackHours) && isRelevant(item, source.name))
+            .filter((item) => !item.link || !usedUrls.has(item.link)) // Exclude already-used URLs
+            .filter((item) => !item.title || !isTitleAlreadyUsed(item.title.trim())) // Exclude similar titles
+            .map((item) => ({
+              source: source.name,
+              sourceColor: source.color,
+              title: item.title?.trim() || 'Untitled',
+              description: item.contentSnippet?.slice(0, 500) || item.content?.slice(0, 500) || '',
+              link: item.link || '',
+              pubDate: item.pubDate || item.isoDate || new Date().toISOString(),
+              relevanceScore: scoreRelevance(item, source.name),
+            }));
+        } catch {
+          return [];
+        }
+      })
+    ),
+    scrapeAnthropicNews(),
+  ]);
 
-  for (const result of results) {
+  for (const result of rssResults) {
     if (result.status === 'fulfilled') {
       allItems.push(...result.value);
     }
   }
 
   // Add Anthropic news from scraper (their site doesn't have RSS)
-  const anthropicNews = await scrapeAnthropicNews();
   const cutoff = new Date(Date.now() - lookbackHours * 60 * 60 * 1000);
   for (const item of anthropicNews) {
     const itemDate = new Date(item.pubDate);
@@ -894,6 +901,30 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Early duplicate check: prevent wasting time on RSS + Claude if newsletter already exists today
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const tomorrowStart = new Date(todayStart);
+    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+
+    const existingNewsletter = await prisma.newsletterDraft.findFirst({
+      where: {
+        type,
+        createdAt: { gte: todayStart, lt: tomorrowStart },
+        status: { in: ['published', 'pending_review'] },
+      },
+    });
+
+    if (existingNewsletter) {
+      return NextResponse.json({
+        success: true,
+        message: `${type} newsletter already exists for today`,
+        existingId: existingNewsletter.id,
+        existingTitle: existingNewsletter.title,
+        skipped: true,
+      });
+    }
+
     // Get lookback hours from query param (for custom catch-up periods)
     const customLookbackHours = url.searchParams.get('lookbackHours');
 
@@ -989,7 +1020,7 @@ export async function GET(request: NextRequest) {
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 4096,
+      max_tokens: 2048,
       messages: [
         {
           role: 'user',
@@ -1032,31 +1063,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Step 3: Check if we already have a newsletter for today (prevent duplicates)
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
-    const tomorrowStart = new Date(todayStart);
-    tomorrowStart.setDate(tomorrowStart.getDate() + 1);
-
-    const existingNewsletter = await prisma.newsletterDraft.findFirst({
-      where: {
-        type,
-        createdAt: { gte: todayStart, lt: tomorrowStart },
-        status: { in: ['published', 'pending_review'] },
-      },
-    });
-
-    if (existingNewsletter) {
-      return NextResponse.json({
-        success: true,
-        message: `${type} newsletter already exists for today`,
-        existingId: existingNewsletter.id,
-        existingTitle: existingNewsletter.title,
-        skipped: true,
-      });
-    }
-
-    // Step 4: Generate slug and save draft
+    // Step 3: Generate slug and save draft
     const slug = generateSlug(title, type);
 
     const draft = await prisma.newsletterDraft.create({
