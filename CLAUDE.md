@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-22 12:14 (MacBook)
+- **Pattern:** ChunkLoadError Recovery
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Added inline ChunkLoadError recovery script to layout.tsx. Detects stale chunk failures after deployment and auto-reloads the page once (sessionStorage guard prevents infinite loops). Clears reload flag after 10s on successful load.
+
 ### Session 2026-02-20 23:45 (MacBook)
 - **Pattern:** Performance & Crash Fix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed Hotjar-reported broken rendering (blue shapes, no content) caused by external CSS/font/asset failures. Switched from Fontshare CDN to `next/font/local` with self-hosted Satoshi woff2 files. Self-hosted all 16 company logos from cdn.jsdelivr.net to `public/images/logos/simple-icons/`. Added explicit `width`/`height` HTML attributes to all inline SVGs and `<img>` tags. Added critical inline CSS fallback in layout.tsx. Added `loading.tsx` skeleton screens for homepage and pattern detail pages.
 
 ### Session 2026-02-17 12:08 (MacBook)
-- **Pattern:** Agent Readability Audit Kit Email Gateway
-- **Status:** ✅ Completed
-- **Files Changed:** 5
-- **Tests Added/Modified:** 0
-- **Notes:** Added email gateway to Agent Readability Audit Kit page — email required before PDF download. Merged cover PDF into existing audit PDF (now 4 pages). Added `audit-kit` source to subscribe API with branded welcome email. Updated all page copy (metadata, trust text, page count). Removed post-download InlineNewsletterSignup since email is now collected upfront.
-
-### Session 2026-02-17 10:26 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

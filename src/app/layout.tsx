@@ -46,6 +46,23 @@ export default function RootLayout({
   return (
     <html lang="en" className={satoshi.variable}>
       <head>
+        {/* ChunkLoadError recovery — auto-reload on stale chunk after deploy */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('error', function(e) {
+                var msg = (e.message || '').toLowerCase();
+                if (msg.indexOf('chunk') !== -1 || msg.indexOf('loading') !== -1 || msg.indexOf('dynamically imported module') !== -1) {
+                  if (!sessionStorage.getItem('chunk_reload')) {
+                    sessionStorage.setItem('chunk_reload', '1');
+                    window.location.reload();
+                  }
+                }
+              });
+              setTimeout(function() { sessionStorage.removeItem('chunk_reload'); }, 10000);
+            `,
+          }}
+        />
         {/* Hotjar Tracking Code for aiuxdesign.guide */}
         <script
           dangerouslySetInnerHTML={{
