@@ -1066,7 +1066,7 @@ export async function GET(request: NextRequest) {
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 2048,
+      max_tokens: type === 'weekly' ? 4096 : 2048,
       messages: [
         {
           role: 'user',

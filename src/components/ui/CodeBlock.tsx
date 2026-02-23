@@ -1,8 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx';
+import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript';
+import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
+
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('typescript', typescript);
+SyntaxHighlighter.registerLanguage('javascript', javascript);
 
 interface CodeBlockProps {
   code: string;
@@ -24,7 +31,7 @@ export default function CodeBlock({ code, language }: CodeBlockProps) {
         <span className="font-mono">{language}</span>
         <button 
           onClick={handleCopy}
-          className="text-gray-300 hover:text-white transition-colors flex items-center"
+          className="text-text-tertiary hover:text-text-primary transition-colors flex items-center"
         >
           {copied ? (
             <>

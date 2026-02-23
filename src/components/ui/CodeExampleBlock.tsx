@@ -4,9 +4,16 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import CopyCodeButton from './CopyCodeButton';
 
-// Import syntax highlighter directly to avoid dynamic import issues
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+// Import lightweight syntax highlighter with only needed languages
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import tsx from 'react-syntax-highlighter/dist/esm/languages/prism/tsx';
+import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript';
+import javascript from 'react-syntax-highlighter/dist/esm/languages/prism/javascript';
+
+SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('typescript', typescript);
+SyntaxHighlighter.registerLanguage('javascript', javascript);
 
 // Dynamically import the ContextualAssistanceDemo component with a more reliable approach
 const ContextualAssistanceDemo = dynamic(

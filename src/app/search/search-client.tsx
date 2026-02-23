@@ -3,25 +3,35 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import allPatterns from '@/data/patterns';
-import { Pattern } from '@/types';
 import SearchBar from '@/components/ui/SearchBar';
 import Navbar from '@/components/layout/Navbar';
 import CategoryNavigation from '@/components/layout/CategoryNavigation';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 
-function SearchResultsContent() {
+interface SearchPattern {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+}
+
+interface SearchResultsClientProps {
+  patterns: SearchPattern[];
+}
+
+function SearchResultsContent({ patterns }: SearchResultsClientProps) {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('query') || '';
   const [searchQuery, setSearchQuery] = useState(initialQuery);
-  const [searchResults, setSearchResults] = useState<Pattern[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchPattern[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const performSearch = () => {
       setLoading(true);
       if (searchQuery) {
-        const filtered = allPatterns.filter(pattern =>
+        const filtered = patterns.filter(pattern =>
           pattern.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           pattern.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
           pattern.category.toLowerCase().includes(searchQuery.toLowerCase())
@@ -40,7 +50,7 @@ function SearchResultsContent() {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchQuery]);
+  }, [searchQuery, patterns]);
 
   const handleSearchSubmit = (query: string) => {
     setSearchQuery(query);
@@ -60,7 +70,7 @@ function SearchResultsContent() {
       />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
-        <h1 className="text-4xl font-bold mb-8">Search Results for "{searchQuery}"</h1>
+        <h1 className="text-4xl font-bold mb-8">Search Results for &quot;{searchQuery}&quot;</h1>
 
         <div className="mb-8">
           <SearchBar
@@ -89,7 +99,7 @@ function SearchResultsContent() {
             ))}
           </div>
         ) : (
-          <p className="text-text-secondary">No patterns found matching "{searchQuery}".</p>
+          <p className="text-text-secondary">No patterns found matching &quot;{searchQuery}&quot;.</p>
         )}
       </div>
 
@@ -109,10 +119,10 @@ function SearchResultsContent() {
   );
 }
 
-export default function SearchResultsClient() {
+export default function SearchResultsClient({ patterns }: SearchResultsClientProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SearchResultsContent />
+      <SearchResultsContent patterns={patterns} />
     </Suspense>
   );
 }

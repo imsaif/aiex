@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import categories from '@/data/categories';
 import { Pattern } from '@/types';
-import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
@@ -53,17 +52,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
     trackView(pattern.id);
   }, [pattern.id, trackView]);
 
-  // Minimal animations - simplified for better performance
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.1 } }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.1 } }
-  };
-
   // Get category badge classes - safer approach for Tailwind JIT
   const getCategoryClasses = (color: string = 'blue') => {
     const colorMap: Record<string, string> = {
@@ -81,17 +69,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
   };
 
   return (
-    <motion.main
-      className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
+    <main className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6 animate-fade-in">
       {/* Breadcrumb Navigation */}
-      <motion.nav
-        className="flex items-center justify-between text-sm mb-6"
-        variants={itemVariants}
-      >
+      <nav className="flex items-center justify-between text-sm mb-6">
         <Link
           href="/"
           className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-white dark:hover:text-gray-100 transition-colors"
@@ -135,10 +115,10 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
             </svg>
           </Link>
         )}
-      </motion.nav>
+      </nav>
 
       {/* Pattern Header */}
-      <motion.div className="mb-10" variants={itemVariants}>
+      <div className="mb-10">
         <div className="mb-3">
           <div className="flex items-center gap-2 flex-wrap">
             <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getCategoryClasses(categories.find(c => c.title === pattern.category)?.color)}`}>
@@ -150,30 +130,24 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         <div className="text-lg text-text-secondary leading-relaxed">
           {pattern.description}
         </div>
-      </motion.div>
+      </div>
 
       {/* Introduction Section - SEO Enhanced */}
       {pattern.introduction && (
-        <motion.div
-          className="mb-10"
-          variants={itemVariants}
-        >
+        <div className="mb-10">
           <h2 className="text-xl font-semibold text-text-primary mb-4">
             What is {pattern.title}?
           </h2>
           <p className="text-lg text-text-secondary leading-relaxed">
             {pattern.introduction}
           </p>
-        </motion.div>
+        </div>
       )}
 
       {/* Main Content - Full Width */}
       <div className="space-y-12">
         {/* Problem and Solution Side by Side */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          variants={itemVariants}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="bg-surface-primary p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
             <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-gray-300 dark:border-gray-600">Problem</h2>
             <div className="prose prose-lg max-w-none text-text-secondary">
@@ -187,26 +161,26 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               <p>{pattern.content.solution}</p>
             </div>
           </section>
-        </motion.div>
+        </div>
 
         {/* Products Using This Pattern */}
-        <motion.div variants={itemVariants}>
+        <div>
           <ProductsSection pattern={pattern} />
-        </motion.div>
+        </div>
 
         {/* Image Carousel for Examples */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
-          <motion.section variants={itemVariants}>
+          <section>
             <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Real-World Examples</h2>
             <div className="bg-surface-primary rounded-lg p-2 overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
               <Carousel examples={pattern.content.examples} />
             </div>
-          </motion.section>
+          </section>
         )}
 
         {/* Code Examples */}
         {pattern.content.codeExamples && pattern.content.codeExamples.length > 0 && (
-          <motion.section variants={itemVariants}>
+          <section>
             <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Implementation</h2>
 
             <div className="space-y-8">
@@ -221,19 +195,19 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
                 />
               ))}
             </div>
-          </motion.section>
+          </section>
         )}
 
         {/* AI Design Prompt */}
         {pattern.content.figmaPrompt && (
-          <motion.section variants={itemVariants}>
+          <section>
             <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">AI Design Prompt</h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
-          </motion.section>
+          </section>
         )}
 
         {/* Implementation Guidelines and Design Considerations */}
-        <motion.section variants={itemVariants}>
+        <section>
           <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Guidelines & Considerations</h2>
 
           <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
@@ -271,21 +245,21 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               </div>
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Newsletter Signup */}
-        <motion.section variants={itemVariants}>
-          <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 shadow-card">
+        <section>
+          <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 shadow-card animate-fade-in">
             <InlineNewsletterSignup
               variant="pattern-detail"
               customHeading="Want More Patterns Like This?"
               customSubheading="Get 6 essential AI design patterns (free PDF) + weekly AI/UX analysis"
             />
           </div>
-        </motion.section>
+        </section>
 
         {/* Related Patterns */}
-        <motion.section variants={itemVariants}>
+        <section>
           <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Patterns</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {pattern.content.relatedPatterns.map((related, i) => (
@@ -304,13 +278,10 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               </Link>
             ))}
           </div>
-        </motion.section>
+        </section>
 
         {/* Previous/Next Pattern Navigation */}
-        <motion.div
-          className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-8 mt-12"
-          variants={itemVariants}
-        >
+        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-8 mt-12">
           {previousPattern ? (
             <Link
               href={`/patterns/${previousPattern.slug}`}
@@ -344,7 +315,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               </svg>
             </Link>
           ) : <div />}
-        </motion.div>
+        </div>
 
         {/* Author Footer */}
         <AuthorFooter />
@@ -357,6 +328,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         onSuccess={markHandbookDownloaded}
         viewCount={viewCount}
       />
-    </motion.main>
+    </main>
   );
 }

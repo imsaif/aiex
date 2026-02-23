@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ScrollToTop from '../components/ui/ScrollToTop';
@@ -117,13 +116,9 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
             </div>
 
             {/* Inline Newsletter Signup - High Converting */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
+            <div className="animate-fade-in">
               <InlineNewsletterSignup variant="hero" />
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -258,11 +253,9 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
             {/* Patterns Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPatterns.map((pattern) => (
-                <motion.div
+                <div
                   key={pattern.id}
-                  initial={{ opacity: 1, y: 0 }}
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="transition-transform duration-200 ease-out hover:-translate-y-1.5"
                 >
                   <Link
                     href={`/patterns/${pattern.slug}`}
@@ -346,7 +339,7 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
                       )}
                     </div>
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
 

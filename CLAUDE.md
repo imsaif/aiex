@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-23 11:35 (MacBook)
+- **Pattern:** Performance & Bundle Optimization
+- **Status:** ✅ Completed
+- **Files Changed:** 11
+- **Tests Added/Modified:** 0
+- **Notes:** Cut ~1MB from client bundles. Switched react-syntax-highlighter from full Prism (624KB, 343 languages) to PrismLight with only 3 languages (~30KB). Moved pattern data out of search page client bundle to server component props (~400KB saved). Removed framer-motion from pattern detail page and homepage (replaced with CSS animate-fade-in and hover:-translate-y). Added bundle analyzer to next.config. Fixed weekly newsletter max_tokens (2048→4096) to prevent truncated generation.
+
 ### Session 2026-02-22 12:14 (MacBook)
 - **Pattern:** ChunkLoadError Recovery
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Removed critical inline CSS that broke Tailwind v4 cascade layers (caused huge gap, missing carousel/form). Removed 900 font weight that made headings too bold. Updated newsletter checklist copy from 36 to 28 patterns.
 
 ### Session 2026-02-17 20:58 (MacBook)
-- **Pattern:** CSS Resilience & Font/Asset Self-Hosting
-- **Status:** ✅ Completed
-- **Files Changed:** 32
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed Hotjar-reported broken rendering (blue shapes, no content) caused by external CSS/font/asset failures. Switched from Fontshare CDN to `next/font/local` with self-hosted Satoshi woff2 files. Self-hosted all 16 company logos from cdn.jsdelivr.net to `public/images/logos/simple-icons/`. Added explicit `width`/`height` HTML attributes to all inline SVGs and `<img>` tags. Added critical inline CSS fallback in layout.tsx. Added `loading.tsx` skeleton screens for homepage and pattern detail pages.
-
-### Session 2026-02-17 12:08 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
