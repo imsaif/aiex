@@ -333,6 +333,19 @@ function getStemmedWords(title: string): Set<string> {
   );
 }
 
+// Known product/brand names for entity-aware deduplication
+const KNOWN_ENTITIES = [
+  'perplexity', 'chatgpt', 'openai', 'claude', 'anthropic', 'gemini', 'google',
+  'cursor', 'windsurf', 'codeium', 'replit', 'notion', 'linear', 'figma',
+  'copilot', 'microsoft', 'github', 'vercel', 'supabase', 'framer',
+];
+
+// Extract known product/brand entities from a title
+function getEntities(title: string): string[] {
+  const lower = normalizeTitle(title);
+  return KNOWN_ENTITIES.filter(e => lower.includes(e));
+}
+
 // Check if two titles are similar enough to be considered duplicates
 function isSimilarTitle(title1: string, title2: string): boolean {
   const norm1 = normalizeTitle(title1);
@@ -346,13 +359,23 @@ function isSimilarTitle(title1: string, title2: string): boolean {
     if (norm1.includes(norm2) || norm2.includes(norm1)) return true;
   }
 
-  // Stemmed word overlap check — if 60%+ of stemmed words overlap, consider it a duplicate
   const words1 = getStemmedWords(title1);
   const words2 = getStemmedWords(title2);
+
   if (words1.size >= 3 && words2.size >= 3) {
     const overlap = Array.from(words1).filter(w => words2.has(w)).length;
     const smaller = Math.min(words1.size, words2.size);
+
+    // Standard threshold: 60% stemmed word overlap
     if (overlap / smaller >= 0.6) return true;
+
+    // Entity-aware: if titles share a specific product/brand name,
+    // use a lower threshold (35%) since they likely cover the same story.
+    // e.g. "Perplexity removes ads" vs "Perplexity drops advertising"
+    const entities1 = getEntities(title1);
+    const entities2 = getEntities(title2);
+    const sharedEntities = entities1.filter(e => entities2.includes(e));
+    if (sharedEntities.length > 0 && overlap / smaller >= 0.35) return true;
   }
 
   return false;
@@ -603,8 +626,15 @@ RESPOND IN THIS EXACT JSON FORMAT:
 }`;
 }
 
-function buildPrompt(newsItems: NewsItem[]): string {
+function buildPrompt(newsItems: NewsItem[], recentHeadlines: string[] = []): string {
   const patternList = patterns.map((p) => `- ${p.slug}: ${p.title}`).join('\n');
+
+  const deduplicationBlock = recentHeadlines.length > 0
+    ? `\nRECENTLY COVERED TOPICS (from the past 7 days of newsletters — DO NOT repeat these):
+${recentHeadlines.map(h => `- ${h}`).join('\n')}
+
+IMPORTANT: Do NOT select any news item that covers the same topic or story as the headlines above, even if the wording is different. For example, if "Perplexity removes ads" was already covered, skip any new article about Perplexity and ads. Pick genuinely NEW stories instead.\n`
+    : '';
 
   return `You are an AI UX design expert writing a daily newsletter called "AI UX Daily" for designers and product managers.
 
@@ -615,7 +645,7 @@ WRITING STYLE:
 - Be specific and concrete, not vague or hyperbolic
 
 Given these recent AI product news items, create a newsletter update:
-
+${deduplicationBlock}
 NEWS ITEMS:
 ${JSON.stringify(newsItems, null, 2)}
 
@@ -653,8 +683,13 @@ RESPOND IN THIS EXACT JSON FORMAT:
 }`;
 }
 
-function buildWeeklyPrompt(newsItems: NewsItem[]): string {
+function buildWeeklyPrompt(newsItems: NewsItem[], recentHeadlines: string[] = []): string {
   const patternList = patterns.map((p) => `- ${p.slug}: ${p.title}`).join('\n');
+
+  const deduplicationBlock = recentHeadlines.length > 0
+    ? `\nRECENTLY COVERED TOPICS (from the past 30 days — avoid repeating the same stories):
+${recentHeadlines.map(h => `- ${h}`).join('\n')}\n`
+    : '';
 
   return `You are an AI UX design expert writing a WEEKLY newsletter called "This Week in AIUX" for designers and product managers.
 
@@ -665,7 +700,7 @@ WRITING STYLE:
 - Be specific and concrete, not vague or hyperbolic
 
 Given these AI product news items from the past week, create a comprehensive weekly roundup:
-
+${deduplicationBlock}
 NEWS ITEMS:
 ${JSON.stringify(newsItems, null, 2)}
 
@@ -901,6 +936,9 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Allow force-regeneration (deletes today's existing draft)
+    const forceRegenerate = url.searchParams.get('force') === 'true';
+
     // Early duplicate check: prevent wasting time on RSS + Claude if newsletter already exists today
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
@@ -916,13 +954,18 @@ export async function GET(request: NextRequest) {
     });
 
     if (existingNewsletter) {
-      return NextResponse.json({
-        success: true,
-        message: `${type} newsletter already exists for today`,
-        existingId: existingNewsletter.id,
-        existingTitle: existingNewsletter.title,
-        skipped: true,
-      });
+      if (forceRegenerate) {
+        // Delete the existing draft so we can regenerate
+        await prisma.newsletterDraft.delete({ where: { id: existingNewsletter.id } });
+      } else {
+        return NextResponse.json({
+          success: true,
+          message: `${type} newsletter already exists for today`,
+          existingId: existingNewsletter.id,
+          existingTitle: existingNewsletter.title,
+          skipped: true,
+        });
+      }
     }
 
     // Get lookback hours from query param (for custom catch-up periods)
@@ -997,7 +1040,10 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Step 2: Generate newsletter with Claude
+    // Step 2: Fetch recently used headlines for semantic deduplication in Claude's prompt
+    const recentHeadlines = await getRecentlyUsedTitles(deduplicationDays);
+
+    // Step 3: Generate newsletter with Claude
     let prompt: string;
     let structuredData: NewsletterData | WeeklyNewsletterData | null = null;
     let dailyItemsUsed: NewsletterItem[] = [];
@@ -1012,10 +1058,10 @@ export async function GET(request: NextRequest) {
         dailyItemsUsed = dailyItems;
       } else {
         // Fall back to fresh RSS (for initial setup or sparse weeks)
-        prompt = buildWeeklyPrompt(newsItems);
+        prompt = buildWeeklyPrompt(newsItems, recentHeadlines);
       }
     } else {
-      prompt = buildPrompt(newsItems);
+      prompt = buildPrompt(newsItems, recentHeadlines);
     }
 
     const response = await anthropic.messages.create({
