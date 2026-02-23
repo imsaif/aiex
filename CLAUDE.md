@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-23 12:31 (MacBook)
+- **Pattern:** Analytics Migration
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Replaced Hotjar with Microsoft Clarity (vj7nlmybbm) for session recordings and heatmaps. Clarity script is ~17KB vs Hotjar's ~57KB. Kept 3s deferred loading to protect LCP.
+
 ### Session 2026-02-23 12:17 (MacBook)
 - **Pattern:** LCP Optimization
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Investigated and fixed performance regression causing 48% bounce rate (+13%) and RES score drop from 92→50. Root cause: Feb 16 deployment added 8 patterns, inflating client-side JS bundles. Moved pattern data computation to server component (homepage bundle 329kB→167kB, -49%). Lazy-loaded SearchModal in Navbar via next/dynamic to defer pattern/guide/newsletter data. Added audit page loading.tsx skeleton (RES 39 fix). Created custom not-found.tsx with navigation to stop 404 bounces. Removed 17MB duplicate GIF. Expanded optimizePackageImports with 5 more libraries (@heroicons/react, @lobehub/icons, react-pdf, react-dropzone, antd).
 
 ### Session 2026-02-18 15:50 (MacBook)
-- **Pattern:** Claude Code Guide Reorder + PDF Overhaul
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Reordered Claude Code guide Figma module from #5 to #2, added new "Bring Code Back to Figma" (Code to Canvas) lesson (#23). Major PDF generation overhaul: added Satoshi font (TTF from woff2), embedded actual images, removed gray background boxes from step cards and lesson headers for cleaner layout, added section dividers, replaced "bash" code labels, fixed footer double-render, sanitized Unicode (em dashes/smart quotes), dynamic lesson header sizing, duplicate title suppression, clock icon for duration.
-
-### Session 2026-02-18 08:24 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
