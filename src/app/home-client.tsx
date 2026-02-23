@@ -313,6 +313,7 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
                                     alt={product}
                                     width={16}
                                     height={16}
+                                    loading="lazy"
                                     className="h-4 w-4 transition-all duration-300"
                                     style={{
                                       filter: logoFilter,

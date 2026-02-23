@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-23 12:17 (MacBook)
+- **Pattern:** LCP Optimization
+- **Status:** ✅ Completed
+- **Files Changed:** 17
+- **Tests Added/Modified:** 0
+- **Notes:** LCP optimization: deferred Hotjar script 3s after page load (-57KB critical path), converted 5 PNG logos to WebP (283KB→4.8KB, 98% reduction), added lazy loading to below-fold product logos. Created `scripts/perf-audit.js` Lighthouse runner with historical comparison (`npm run perf-audit`, `perf-audit:compare`, `perf-audit:history`). Baseline captured: homepage LCP 6.5s, pattern page LCP 1.8s.
+
 ### Session 2026-02-23 11:35 (MacBook)
 - **Pattern:** Performance & Bundle Optimization
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Reordered Claude Code guide Figma module from #5 to #2, added new "Bring Code Back to Figma" (Code to Canvas) lesson (#23). Major PDF generation overhaul: added Satoshi font (TTF from woff2), embedded actual images, removed gray background boxes from step cards and lesson headers for cleaner layout, added section dividers, replaced "bash" code labels, fixed footer double-render, sanitized Unicode (em dashes/smart quotes), dynamic lesson header sizing, duplicate title suppression, clock icon for duration.
 
 ### Session 2026-02-18 08:24 (MacBook)
-- **Pattern:** CSS Resilience Hotfix
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Removed critical inline CSS that broke Tailwind v4 cascade layers (caused huge gap, missing carousel/form). Removed 900 font weight that made headings too bold. Updated newsletter checklist copy from 36 to 28 patterns.
-
-### Session 2026-02-17 20:58 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

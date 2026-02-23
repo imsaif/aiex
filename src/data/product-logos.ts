@@ -33,7 +33,7 @@ export const productLogos: Record<string, string> = {
 
   // AI & Productivity Tools
   Loom: `${SI}/loom.svg`,
-  Superhuman: '/images/logos/superhumanlogo.png',
+  Superhuman: '/images/logos/superhumanlogo.webp',
   Grammarly: `${SI}/grammarly.svg`,
   Perplexity: `${SI}/perplexity.svg`,
   Midjourney: `${SI}/midjourney.svg`,
@@ -53,12 +53,12 @@ export const productLogos: Record<string, string> = {
   Hugging: `${SI}/huggingface.svg`,
 
   // AI Development Tools
-  Devin: '/images/logos/devin_ai_logo.png',
+  Devin: '/images/logos/devin_ai_logo.webp',
 
   // Mental Health & Wellness AI
-  'Woebot': '/images/logos/woebot_health_logo.png',
-  'Crisis': '/images/logos/Crisis_Text_Line_logo.png',
-  'Wysa': '/images/logos/wysa_logo.png',
+  'Woebot': '/images/logos/woebot_health_logo.webp',
+  'Crisis': '/images/logos/Crisis_Text_Line_logo.webp',
+  'Wysa': '/images/logos/wysa_logo.webp',
 };
 
 /**

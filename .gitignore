@@ -109,6 +109,7 @@ docs/*-agent.md
 build-metrics.json
 
 # Generated files and reports
+perf-audit-log.json
 consistency-report.json
 lint_output.txt
 *.log
