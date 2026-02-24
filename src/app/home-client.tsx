@@ -298,15 +298,7 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
                               return (
                                 <div
                                   key={product}
-                                  className="relative cursor-pointer peer"
-                                  onMouseEnter={(e) => {
-                                    const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
-                                    if (tooltip) tooltip.style.opacity = '1';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    const tooltip = e.currentTarget.querySelector('[data-tooltip]') as HTMLElement;
-                                    if (tooltip) tooltip.style.opacity = '0';
-                                  }}
+                                  className="relative group/logo"
                                 >
                                   <img
                                     src={logoUrl}
@@ -321,9 +313,7 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
                                   />
                                   {/* Tooltip */}
                                   <div
-                                    data-tooltip
-                                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap transition-opacity pointer-events-none z-50"
-                                    style={{ opacity: '0' }}
+                                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap opacity-0 group-hover/logo:opacity-100 transition-opacity pointer-events-none z-50"
                                   >
                                     {product}
                                   </div>

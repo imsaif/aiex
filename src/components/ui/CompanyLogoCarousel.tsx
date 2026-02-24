@@ -102,8 +102,16 @@ export default function CompanyLogoCarousel({
     containerGap = 'gap-20';
   }
 
+  // Fixed container heights to prevent CLS
+  const containerHeightClasses = {
+    xs: 'h-5',
+    sm: showLabel ? 'h-14' : 'h-8',
+    md: showLabel ? 'h-18' : 'h-12',
+    lg: showLabel ? 'h-22' : 'h-16',
+  };
+
   return (
-    <div className={`relative w-full overflow-hidden ${className}`}>
+    <div className={`relative w-full overflow-hidden ${containerHeightClasses[size]} ${className}`}>
       {/* Scrolling container using CSS animation for seamless loop */}
       <div
         className={`flex ${containerGap} animate-scroll`}
