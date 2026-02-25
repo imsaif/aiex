@@ -46,7 +46,9 @@ export async function GET(request: NextRequest) {
       createdAt: account.createdAt.toISOString(),
     }));
 
-    return NextResponse.json({ accounts: response });
+    return NextResponse.json({
+      accounts: response,
+    });
   } catch (error) {
     console.error('Failed to fetch social accounts:', error);
     return NextResponse.json(

@@ -59,7 +59,6 @@ export async function POST(
 
     // Check if token is expired
     if (post.account.tokenExpiry && new Date() > post.account.tokenExpiry) {
-      // Try to refresh token
       try {
         await refreshAccountToken(post.account.id, post.platform as 'twitter' | 'linkedin');
       } catch (refreshError) {
@@ -73,19 +72,24 @@ export async function POST(
     let platformPostId: string;
     let platformPostUrl: string;
 
-    if (post.platform === 'twitter') {
-      const result = await publishToTwitter(post);
-      platformPostId = result.postId;
-      platformPostUrl = result.postUrl;
-    } else if (post.platform === 'linkedin') {
-      const result = await publishToLinkedIn(post);
-      platformPostId = result.postId;
-      platformPostUrl = result.postUrl;
-    } else {
-      return NextResponse.json(
-        { error: 'Unsupported platform' },
-        { status: 400 }
-      );
+    switch (post.platform) {
+      case 'twitter': {
+        const result = await publishToTwitter(post);
+        platformPostId = result.postId;
+        platformPostUrl = result.postUrl;
+        break;
+      }
+      case 'linkedin': {
+        const result = await publishToLinkedIn(post);
+        platformPostId = result.postId;
+        platformPostUrl = result.postUrl;
+        break;
+      }
+      default:
+        return NextResponse.json(
+          { error: 'Unsupported platform' },
+          { status: 400 }
+        );
     }
 
     // Update post status

@@ -274,23 +274,23 @@ export default function AdminNewsletterClient({
   // Auth screen
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background-primary dark:bg-background-primary flex items-center justify-center p-4">
-        <div className="bg-surface-primary dark:bg-surface-primary p-8 rounded-lg shadow-md max-w-md w-full border border-border-primary dark:border-border-primary">
-          <h1 className="text-2xl font-bold text-text-primary dark:text-text-primary mb-6">Newsletter Admin</h1>
+      <div className="min-h-screen bg-background-primary flex items-center justify-center p-4">
+        <div className="bg-surface-primary p-8 rounded-lg shadow-md max-w-md w-full border border-border-primary">
+          <h1 className="text-2xl font-bold text-text-primary mb-6">Newsletter Admin</h1>
           <form onSubmit={handleAuth}>
-            <label className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-2">Password</label>
+            <label className="block text-sm font-medium text-text-secondary mb-2">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-border-primary dark:border-border-primary rounded-md bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary focus:ring-2 focus:ring-accent-primary focus:border-accent-primary"
+              className="w-full px-4 py-2 border border-border-primary rounded-md bg-background-secondary text-text-primary focus:ring-2 focus:ring-accent-primary focus:border-accent-primary"
               placeholder="Enter admin password"
               autoFocus
             />
             {authError && <p className="mt-2 text-sm text-status-error">{authError}</p>}
             <button
               type="submit"
-              className="mt-4 w-full bg-accent-primary text-white dark:text-background-primary py-2 px-4 rounded-md hover:bg-accent-primary/90 transition-colors"
+              className="mt-4 w-full bg-accent-primary text-white py-2 px-4 rounded-md hover:bg-accent-primary/90 transition-colors"
             >
               Login
             </button>
@@ -367,21 +367,21 @@ export default function AdminNewsletterClient({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
           {/* Draft List Sidebar - Hidden on mobile */}
           <div className="hidden md:block md:col-span-3">
-            <div className="bg-surface-primary dark:bg-surface-primary rounded-lg shadow-sm border border-border-primary dark:border-border-primary">
-              <div className="p-4 border-b border-border-primary dark:border-border-primary">
-                <h2 className="font-semibold text-text-primary dark:text-text-primary">Drafts</h2>
+            <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary">
+              <div className="p-4 border-b border-border-primary">
+                <h2 className="font-semibold text-text-primary">Drafts</h2>
               </div>
-              <div className="divide-y divide-border-secondary dark:divide-border-secondary">
+              <div className="divide-y divide-border-secondary">
                 {isLoadingDrafts ? (
-                  <p className="p-4 text-text-tertiary dark:text-text-tertiary text-sm">Loading drafts...</p>
+                  <p className="p-4 text-text-tertiary text-sm">Loading drafts...</p>
                 ) : drafts.length === 0 ? (
-                  <p className="p-4 text-text-tertiary dark:text-text-tertiary text-sm">No drafts found</p>
+                  <p className="p-4 text-text-tertiary text-sm">No drafts found</p>
                 ) : (
                   drafts.map((draft) => (
                     <button
                       key={draft.id}
                       onClick={() => selectDraft(draft)}
-                      className={`w-full text-left p-4 hover:bg-background-secondary dark:hover:bg-background-secondary transition-colors ${
+                      className={`w-full text-left p-4 hover:bg-background-secondary transition-colors ${
                         activeDraft?.id === draft.id ? 'bg-accent-primary/10 border-l-2 border-accent-primary' : ''
                       }`}
                     >
@@ -398,8 +398,8 @@ export default function AdminNewsletterClient({
                           {draft.status.replace('_', ' ')}
                         </span>
                       </div>
-                      <p className="font-medium text-text-primary dark:text-text-primary text-sm truncate">{draft.title}</p>
-                      <p className="text-xs text-text-tertiary dark:text-text-tertiary mt-1">
+                      <p className="font-medium text-text-primary text-sm truncate">{draft.title}</p>
+                      <p className="text-xs text-text-tertiary mt-1">
                         {new Date(draft.createdAt).toLocaleDateString()}
                       </p>
                     </button>
@@ -414,11 +414,38 @@ export default function AdminNewsletterClient({
             {activeDraft ? (
               <div className="space-y-4">
                 {/* Action Bar - Mobile optimized */}
-                <div className="bg-surface-primary dark:bg-surface-primary rounded-lg shadow-sm border border-border-primary dark:border-border-primary p-3 md:p-4">
-                  {/* Mobile: Primary actions on top */}
+                <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-3 md:p-4">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    {/* Publish section - First on mobile for quick access */}
-                    <div className="flex items-center justify-between md:order-2 gap-2 md:gap-3">
+                    {/* Save / Test / Reject */}
+                    <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+                      <button
+                        onClick={saveDraft}
+                        disabled={isSaving}
+                        className="px-3 md:px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
+                      >
+                        {isSaving ? 'Saving...' : 'Save'}
+                      </button>
+                      <button
+                        onClick={sendTestEmail}
+                        disabled={isSendingTest}
+                        className="px-3 md:px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
+                      >
+                        {isSendingTest ? 'Sending...' : 'Test'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (confirm('Are you sure you want to reject this draft?')) {
+                            rejectDraft();
+                          }
+                        }}
+                        className="px-3 md:px-4 py-2 text-status-error hover:bg-status-error/10 rounded-md transition-colors text-xs md:text-sm font-medium whitespace-nowrap"
+                      >
+                        Reject
+                      </button>
+                    </div>
+
+                    {/* Publish */}
+                    <div className="flex items-center justify-between gap-2 md:gap-3">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input
                           type="checkbox"
@@ -426,7 +453,7 @@ export default function AdminNewsletterClient({
                           onChange={(e) => setSendToSubscribers(e.target.checked)}
                           className="w-4 h-4 rounded border-border-primary text-accent-primary focus:ring-accent-primary"
                         />
-                        <span className="text-xs md:text-sm text-text-secondary dark:text-text-secondary">
+                        <span className="text-xs md:text-sm text-text-secondary">
                           <span className="hidden md:inline">Send to </span>{subscriberCount ?? '...'} subs
                         </span>
                       </label>
@@ -436,30 +463,6 @@ export default function AdminNewsletterClient({
                         className="px-4 md:px-5 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50 text-sm font-medium"
                       >
                         {isPublishing ? 'Publishing...' : sendToSubscribers ? 'Publish & Send' : 'Publish'}
-                      </button>
-                    </div>
-
-                    {/* Secondary actions */}
-                    <div className="flex items-center gap-2 md:order-1 overflow-x-auto pb-1 md:pb-0">
-                      <button
-                        onClick={saveDraft}
-                        disabled={isSaving}
-                        className="px-3 md:px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
-                      >
-                        {isSaving ? 'Saving...' : 'Save'}
-                      </button>
-                      <button
-                        onClick={sendTestEmail}
-                        disabled={isSendingTest}
-                        className="px-3 md:px-4 py-2 bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
-                      >
-                        {isSendingTest ? 'Sending...' : 'Test'}
-                      </button>
-                      <button
-                        onClick={rejectDraft}
-                        className="px-3 md:px-4 py-2 text-status-error hover:bg-status-error/10 rounded-md transition-colors text-xs md:text-sm font-medium whitespace-nowrap"
-                      >
-                        Reject
                       </button>
                     </div>
                   </div>
@@ -477,19 +480,19 @@ export default function AdminNewsletterClient({
                 </div>
 
                 {/* Content Card */}
-                <div className="bg-surface-primary dark:bg-surface-primary rounded-lg shadow-sm border border-border-primary dark:border-border-primary">
+                <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary">
                 {/* Header - Title & Summary */}
-                <div className="p-4 md:p-6 border-b border-border-primary dark:border-border-primary">
+                <div className="p-4 md:p-6 border-b border-border-primary">
                   <input
                     type="text"
                     value={editedTitle}
                     onChange={(e) => setEditedTitle(e.target.value)}
-                    className="text-lg md:text-xl font-bold text-text-primary dark:text-text-primary w-full border-0 focus:ring-0 p-0 bg-transparent"
+                    className="text-lg md:text-xl font-bold text-text-primary w-full border border-dashed border-border-secondary rounded px-2 py-1 focus:ring-1 focus:ring-accent-primary focus:border-accent-primary bg-transparent"
                   />
                   <textarea
                     value={editedSummary}
                     onChange={(e) => setEditedSummary(e.target.value)}
-                    className="mt-2 text-sm md:text-base text-text-secondary dark:text-text-secondary w-full border-0 focus:ring-0 p-0 resize-none bg-transparent"
+                    className="mt-2 text-sm md:text-base text-text-secondary w-full border border-dashed border-border-secondary rounded px-2 py-1 focus:ring-1 focus:ring-accent-primary focus:border-accent-primary resize-none bg-transparent"
                     rows={2}
                   />
                 </div>
@@ -497,7 +500,7 @@ export default function AdminNewsletterClient({
                 {/* Preview */}
                 <div className="p-4 md:p-6">
                   <div className="mb-3 md:mb-4 flex items-center justify-between">
-                    <h3 className="text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary">Preview</h3>
+                    <h3 className="text-xs md:text-sm font-medium text-text-secondary">Preview</h3>
                     <span className="text-xs text-text-tertiary hidden md:inline">Shown as it will appear in email</span>
                   </div>
 
@@ -512,21 +515,21 @@ export default function AdminNewsletterClient({
 
                   {/* Raw HTML Editor - Collapsed by default on mobile for reading focus */}
                   <details className="mt-4 md:mt-6">
-                    <summary className="text-xs md:text-sm font-medium text-text-secondary dark:text-text-secondary cursor-pointer hover:text-text-primary">
+                    <summary className="text-xs md:text-sm font-medium text-text-secondary cursor-pointer hover:text-text-primary">
                       Edit HTML
                     </summary>
                     <textarea
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
-                      className="mt-2 w-full h-48 md:h-64 p-3 md:p-4 font-mono text-xs md:text-sm border border-border-primary dark:border-border-primary rounded-lg bg-background-secondary dark:bg-background-secondary text-text-primary dark:text-text-primary focus:ring-2 focus:ring-accent-primary focus:border-accent-primary"
+                      className="mt-2 w-full h-48 md:h-64 p-3 md:p-4 font-mono text-xs md:text-sm border border-border-primary rounded-lg bg-background-secondary text-text-primary focus:ring-2 focus:ring-accent-primary focus:border-accent-primary"
                     />
                   </details>
                 </div>
                 </div>
               </div>
             ) : (
-              <div className="bg-surface-primary dark:bg-surface-primary rounded-lg shadow-sm border border-border-primary dark:border-border-primary p-8 md:p-12 text-center">
-                <p className="text-text-tertiary dark:text-text-tertiary">
+              <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-8 md:p-12 text-center">
+                <p className="text-text-tertiary">
                   <span className="md:hidden">Tap &quot;Drafts&quot; above to select</span>
                   <span className="hidden md:inline">Select a draft to preview and edit</span>
                 </p>

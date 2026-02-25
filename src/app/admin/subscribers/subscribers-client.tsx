@@ -205,7 +205,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
 
   // Main interface
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <header className="mb-8">
         <div className="flex items-center justify-between">
@@ -232,18 +232,20 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
         {/* Message */}
         {message && (
           <div
-            className={`mb-6 p-4 rounded-md ${
+            className={`mb-6 p-4 rounded-md flex items-center justify-between gap-2 ${
               message.type === 'success'
                 ? 'bg-status-success/10 text-status-success'
                 : 'bg-status-error/10 text-status-error'
             }`}
           >
-            {message.text}
+            <span>{message.text}</span>
             <button
               onClick={() => setMessage(null)}
-              className="float-right font-bold"
+              className="shrink-0 p-1 rounded hover:bg-black/10 transition-colors"
             >
-              &times;
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
         )}
@@ -289,8 +291,70 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
           </div>
         </div>
 
-        {/* Subscribers Table */}
-        <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary overflow-hidden">
+        {/* Subscribers - Mobile Cards */}
+        <div className="md:hidden space-y-3">
+          {isLoading ? (
+            <div className="p-8 text-center text-text-tertiary">Loading subscribers...</div>
+          ) : subscribers.length === 0 ? (
+            <div className="p-8 text-center text-text-tertiary">No subscribers found</div>
+          ) : (
+            subscribers.map((subscriber) => (
+              <div key={subscriber.id} className="bg-surface-primary rounded-lg border border-border-primary p-4">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <p className="text-sm font-medium text-text-primary break-all">{subscriber.email}</p>
+                  <span
+                    className={`shrink-0 inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${
+                      subscriber.active
+                        ? 'bg-status-success/20 text-status-success'
+                        : 'bg-status-error/20 text-status-error'
+                    }`}
+                  >
+                    {subscriber.active ? 'Active' : 'Inactive'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-text-tertiary mb-3">
+                  <span>{new Date(subscriber.subscribedAt).toLocaleDateString()}</span>
+                  <span
+                    className={`inline-flex px-2 py-0.5 rounded-full ${
+                      subscriber.emailFrequency === 'all'
+                        ? 'bg-accent-primary/20 text-accent-primary'
+                        : subscriber.emailFrequency === 'weekly'
+                        ? 'bg-status-warning/20 text-status-warning'
+                        : 'bg-text-tertiary/20 text-text-tertiary'
+                    }`}
+                  >
+                    {subscriber.emailFrequency === 'all'
+                      ? 'All'
+                      : subscriber.emailFrequency === 'weekly'
+                      ? 'Weekly'
+                      : 'None'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => toggleSubscriberStatus(subscriber.id, subscriber.active)}
+                    className={`px-3 py-1 rounded text-xs font-medium ${
+                      subscriber.active
+                        ? 'bg-status-warning/20 text-status-warning hover:bg-status-warning/30'
+                        : 'bg-status-success/20 text-status-success hover:bg-status-success/30'
+                    }`}
+                  >
+                    {subscriber.active ? 'Deactivate' : 'Activate'}
+                  </button>
+                  <button
+                    onClick={() => deleteSubscriber(subscriber.id, subscriber.email)}
+                    className="px-3 py-1 rounded text-xs font-medium bg-status-error/20 text-status-error hover:bg-status-error/30"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Subscribers Table - Desktop */}
+        <div className="hidden md:block bg-surface-primary rounded-lg shadow-sm border border-border-primary overflow-hidden">
           {isLoading ? (
             <div className="p-8 text-center text-text-tertiary">Loading subscribers...</div>
           ) : subscribers.length === 0 ? (
@@ -444,6 +508,29 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
             </div>
           )}
         </div>
+
+        {/* Mobile Pagination */}
+        {pagination && pagination.totalPages > 1 && (
+          <div className="md:hidden mt-4 p-4 bg-surface-primary rounded-lg border border-border-primary flex items-center justify-between">
+            <button
+              onClick={() => fetchSubscribers(pagination.page - 1)}
+              disabled={pagination.page === 1}
+              className="px-3 py-1 rounded border border-border-primary text-text-primary text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-background-tertiary"
+            >
+              Previous
+            </button>
+            <span className="text-sm text-text-secondary">
+              {pagination.page} / {pagination.totalPages}
+            </span>
+            <button
+              onClick={() => fetchSubscribers(pagination.page + 1)}
+              disabled={pagination.page === pagination.totalPages}
+              className="px-3 py-1 rounded border border-border-primary text-text-primary text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-background-tertiary"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
   );
 }

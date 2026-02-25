@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-02-25 13:35 (MacBook)
+- **Pattern:** Social Admin Layout Restructure
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Restructured social admin page from single-column to two-column grid layout (md:grid-cols-12). Left sidebar (col-span-4): newsletter selector, action buttons, social message, share image, compact connected accounts, setup instructions. Right main (col-span-8): stacked Twitter + LinkedIn post cards. Connected accounts compacted from large cards to inline rows with status badges. Container widened from max-w-4xl to max-w-7xl. Mobile: single column with posts after selector for optimal scroll order.
+
 ### Session 2026-02-23 12:31 (MacBook)
 - **Pattern:** Analytics Migration
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Converted 55 GIFs to MP4 via ffmpeg (283MB→107MB, 62% reduction). Updated OptimizedMedia component to prefer MP4 video with automatic GIF fallback. Refactored audit page into server component wrapper + client component for faster initial paint. Added 6 missing pages to sitemap (news, audit, prompts, toolkit, agent-readability-audit-kit, search) — now 50 URLs total.
 
 ### Session 2026-02-18 21:42 (MacBook)
-- **Pattern:** Performance & Bounce Rate Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 10
-- **Tests Added/Modified:** 0
-- **Notes:** Investigated and fixed performance regression causing 48% bounce rate (+13%) and RES score drop from 92→50. Root cause: Feb 16 deployment added 8 patterns, inflating client-side JS bundles. Moved pattern data computation to server component (homepage bundle 329kB→167kB, -49%). Lazy-loaded SearchModal in Navbar via next/dynamic to defer pattern/guide/newsletter data. Added audit page loading.tsx skeleton (RES 39 fix). Created custom not-found.tsx with navigation to stop 404 bounces. Removed 17MB duplicate GIF. Expanded optimizePackageImports with 5 more libraries (@heroicons/react, @lobehub/icons, react-pdf, react-dropzone, antd).
-
-### Session 2026-02-18 15:50 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
