@@ -45,7 +45,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
     trackView,
     dismiss: dismissPrompt,
     markHandbookDownloaded
-  } = usePatternViewTracker({ threshold: 4 });
+  } = usePatternViewTracker();
 
   // Track pattern view on mount
   useEffect(() => {

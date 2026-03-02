@@ -45,11 +45,12 @@ export default function NewsletterDetailClient({
     if (!newsletter.content) return;
     import('dompurify').then((mod) => {
       const DOMPurify = mod.default;
+      const sanitized = DOMPurify.sanitize(newsletter.content, {
+        ADD_TAGS: ['style'],
+        ADD_ATTR: ['target', 'rel'],
+      });
       setSanitizedContent(
-        DOMPurify.sanitize(newsletter.content, {
-          ADD_TAGS: ['style'],
-          ADD_ATTR: ['target', 'rel'],
-        })
+        sanitized.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ')
       );
     });
   }, [newsletter.content]);

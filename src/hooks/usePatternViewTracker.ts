@@ -11,10 +11,6 @@ import {
   isNewsletterSubscribed
 } from '../utils/userPreferences';
 
-interface UsePatternViewTrackerOptions {
-  threshold?: number;
-}
-
 interface UsePatternViewTrackerReturn {
   viewCount: number;
   showPrompt: boolean;
@@ -26,48 +22,40 @@ interface UsePatternViewTrackerReturn {
 }
 
 /**
- * Hook to track pattern views and manage smart prompt visibility
+ * Hook to track pattern views and manage smart prompt visibility.
  *
- * Usage:
- * const { viewCount, showPrompt, trackView, dismiss } = usePatternViewTracker();
- *
- * // Track view on mount
- * useEffect(() => { trackView(pattern.id); }, [pattern.id, trackView]);
- *
- * // Show prompt conditionally
- * {showPrompt && <SmartHandbookPrompt onDismiss={dismiss} />}
+ * The prompt shows only when the user crosses a new milestone
+ * (5, 10, 15, 20, 25, 30 unique patterns). Each milestone fires
+ * at most once — dismissing or downloading records it permanently.
  */
-export function usePatternViewTracker(
-  options: UsePatternViewTrackerOptions = {}
-): UsePatternViewTrackerReturn {
-  const { threshold = 4 } = options;
-
+export function usePatternViewTracker(): UsePatternViewTrackerReturn {
   const [viewCount, setViewCount] = useState(0);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isHandbookDownloaded, setIsHandbookDownloaded] = useState(false);
 
-  // Initialize state on mount
+  // Initialize state on mount — don't show prompt on mount,
+  // only after trackView detects a new milestone crossing
   useEffect(() => {
     setViewCount(getUniqueViewCount());
-    setShowPrompt(shouldShowSmartPrompt(threshold));
     setIsSubscribed(isNewsletterSubscribed());
     setIsHandbookDownloaded(hasDownloadedHandbook());
-  }, [threshold]);
+  }, []);
 
-  // Track a pattern view
+  // Track a pattern view — show prompt only if this view crosses a new milestone
   const trackView = useCallback((patternId: string) => {
+    const previousCount = getUniqueViewCount();
     trackPatternView(patternId);
     const newCount = getUniqueViewCount();
     setViewCount(newCount);
 
-    // Check if we should show prompt after this view
-    if (shouldShowSmartPrompt(threshold)) {
+    // Only check if the count actually changed (new unique pattern)
+    if (newCount > previousCount && shouldShowSmartPrompt()) {
       setShowPrompt(true);
     }
-  }, [threshold]);
+  }, []);
 
-  // Dismiss the prompt for this session
+  // Dismiss the prompt — marks the current milestone as shown
   const dismiss = useCallback(() => {
     dismissSmartPrompt();
     setShowPrompt(false);

@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-02 14:29 (MacBook)
+- **Pattern:** Newsletter & Smart Prompt Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed newsletter links to open in new tab via `target="_blank"` injection in `newsletter-detail-client.tsx`. Replaced session-based "You're on a roll" smart prompt with milestone-based triggering (5, 10, 15, 20, 25, 30 unique patterns) — each milestone fires at most once, stored in localStorage. Eliminates the modal appearing on every new session's first pattern page.
+
 ### Session 2026-02-25 13:35 (MacBook)
 - **Pattern:** Social Admin Layout Restructure
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Built new `/resources` hub page with sidebar+grid layout, search, and category filtering (9 resource cards). Simplified Navbar from Resources dropdown to direct link. Redesigned handbook page: updated content for AIUX Design Checklist (28 patterns), added company logo carousel, side-by-side What You Get + Scoring Guide table, Continue Learning cards matching audit-kit pattern. Dark mode optimized all three PDF landing pages (handbook, toolkit, agent-readability-audit-kit) with design tokens. Added /resources to sitemap and footer.
 
 ### Session 2026-02-18 21:56 (MacBook)
-- **Pattern:** Performance & Bounce Rate Fix (Part 2)
-- **Status:** ✅ Completed
-- **Files Changed:** 59
-- **Tests Added/Modified:** 0
-- **Notes:** Converted 55 GIFs to MP4 via ffmpeg (283MB→107MB, 62% reduction). Updated OptimizedMedia component to prefer MP4 video with automatic GIF fallback. Refactored audit page into server component wrapper + client component for faster initial paint. Added 6 missing pages to sitemap (news, audit, prompts, toolkit, agent-readability-audit-kit, search) — now 50 URLs total.
-
-### Session 2026-02-18 21:42 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

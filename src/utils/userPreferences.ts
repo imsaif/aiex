@@ -7,13 +7,12 @@ const STORAGE_KEYS = {
   THEME: 'ai-patterns-theme',
   SETTINGS: 'ai-patterns-settings',
   VIEWED_PATTERNS: 'ai-patterns-viewed',
-  HANDBOOK_DOWNLOADED: 'ai-patterns-handbook-downloaded'
+  HANDBOOK_DOWNLOADED: 'ai-patterns-handbook-downloaded',
+  SHOWN_MILESTONES: 'ai-patterns-shown-milestones'
 } as const;
 
-// Session storage keys (reset on browser close)
-const SESSION_KEYS = {
-  SMART_PROMPT_DISMISSED: 'ai-patterns-smart-prompt-dismissed'
-} as const;
+// Milestones at which the smart prompt appears (unique pattern view counts)
+const PROMPT_MILESTONES = [5, 10, 15, 20, 25, 30] as const;
 
 // Types
 export interface UserPreferences {
@@ -301,44 +300,61 @@ export function isNewsletterSubscribed(): boolean {
 }
 
 /**
- * Check if smart prompt was dismissed this session
+ * Get milestones that have already been shown to the user
  */
-export function isSmartPromptDismissed(): boolean {
-  if (!isBrowser) return false;
-  try {
-    return sessionStorage.getItem(SESSION_KEYS.SMART_PROMPT_DISMISSED) === 'true';
-  } catch {
-    return false;
+export function getShownMilestones(): number[] {
+  return getStorageItem(STORAGE_KEYS.SHOWN_MILESTONES, []);
+}
+
+/**
+ * Mark a milestone as shown so it won't trigger again
+ */
+export function markMilestoneShown(milestone: number): void {
+  const shown = getShownMilestones();
+  if (!shown.includes(milestone)) {
+    setStorageItem(STORAGE_KEYS.SHOWN_MILESTONES, [...shown, milestone]);
   }
 }
 
 /**
- * Dismiss the smart prompt for this session
+ * Dismiss the smart prompt — records the current milestone as shown
  */
 export function dismissSmartPrompt(): void {
-  if (!isBrowser) return;
-  try {
-    sessionStorage.setItem(SESSION_KEYS.SMART_PROMPT_DISMISSED, 'true');
-  } catch (error) {
-    console.warn('Failed to dismiss smart prompt:', error);
+  const viewCount = getUniqueViewCount();
+  const milestone = getCurrentMilestone(viewCount);
+  if (milestone !== null) {
+    markMilestoneShown(milestone);
   }
 }
 
 /**
- * Check if smart prompt should be shown
- * Returns true if:
- * - User has viewed 4+ unique patterns
- * - User is not subscribed to newsletter
- * - User has not downloaded handbook
- * - Prompt was not dismissed this session
+ * Get the highest milestone the user has reached (or null if none)
  */
-export function shouldShowSmartPrompt(threshold: number = 4): boolean {
+function getCurrentMilestone(viewCount: number): number | null {
+  // Find the highest milestone <= viewCount
+  for (let i = PROMPT_MILESTONES.length - 1; i >= 0; i--) {
+    if (viewCount >= PROMPT_MILESTONES[i]) {
+      return PROMPT_MILESTONES[i];
+    }
+  }
+  return null;
+}
+
+/**
+ * Check if the user just crossed a new milestone that hasn't been shown yet.
+ * Only returns true on the exact view that crosses the threshold.
+ */
+export function shouldShowSmartPrompt(): boolean {
   if (!isBrowser) return false;
 
-  const viewCount = getUniqueViewCount();
   const subscribed = isNewsletterSubscribed();
   const downloaded = hasDownloadedHandbook();
-  const dismissed = isSmartPromptDismissed();
+  if (subscribed || downloaded) return false;
 
-  return viewCount >= threshold && !subscribed && !downloaded && !dismissed;
+  const viewCount = getUniqueViewCount();
+  const milestone = getCurrentMilestone(viewCount);
+  if (milestone === null) return false;
+
+  const shown = getShownMilestones();
+  return !shown.includes(milestone);
 }
