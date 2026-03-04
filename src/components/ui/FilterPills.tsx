@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 
 interface FilterPillsProps {
   selectedCategory: string;
@@ -14,13 +13,12 @@ const FilterPills: React.FC<FilterPillsProps> = ({
   return (
     <div className="w-full overflow-x-auto pb-2 -mx-2 px-2">
       <div className="flex gap-2 min-w-max">
-        <motion.button
-          whileTap={{ scale: 0.95 }}
+        <button
           onClick={onFilterClick}
           className="px-4 py-2.5 rounded-full border-2 border-gray-200 dark:border-gray-600
                    bg-white dark:bg-gray-800 text-text-primary font-medium text-sm
                    hover:border-gray-300 dark:hover:border-gray-500
-                   transition-colors flex items-center gap-2 whitespace-nowrap
+                   active:scale-95 transition-all flex items-center gap-2 whitespace-nowrap
                    min-h-[44px] touch-manipulation"
         >
           <svg
@@ -54,7 +52,7 @@ const FilterPills: React.FC<FilterPillsProps> = ({
               d="M19.5 8.25l-7.5 7.5-7.5-7.5"
             />
           </svg>
-        </motion.button>
+        </button>
       </div>
     </div>
   );

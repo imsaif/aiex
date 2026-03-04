@@ -8,6 +8,9 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 
+// ISR: revalidate every hour to avoid cold function execution on every request
+export const revalidate = 3600;
+
 // Generate static params for all patterns at build time
 export async function generateStaticParams() {
   return patterns.map((pattern) => ({

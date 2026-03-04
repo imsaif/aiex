@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
 
 interface UnifiedSearchBarProps {
   /**
@@ -195,12 +194,7 @@ export default function UnifiedSearchBar({
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 gap-1">
           {/* Loading Spinner */}
           {isLoading && (
-            <motion.div
-              className="animate-spin"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
+            <div className="animate-spin">
               <svg
                 className={`${iconSizeClasses[size]} text-ring-focus`}
                 fill="none"
@@ -221,12 +215,12 @@ export default function UnifiedSearchBar({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
-            </motion.div>
+            </div>
           )}
 
           {/* Clear Button */}
           {!isLoading && value && (
-            <motion.button
+            <button
               type="button"
               onClick={handleClear}
               disabled={disabled}
@@ -234,12 +228,12 @@ export default function UnifiedSearchBar({
                 ${iconPaddingClasses[size]}
                 text-text-secondary
                 hover:text-text-primary
-                transition-colors
+                hover:scale-110
+                active:scale-95
+                transition-all
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               `}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
             >
               <svg
                 className={iconSizeClasses[size]}
@@ -254,7 +248,7 @@ export default function UnifiedSearchBar({
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </motion.button>
+            </button>
           )}
         </div>
       </div>

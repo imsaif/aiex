@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
@@ -8,9 +9,7 @@ import ScrollToTop from '../components/ui/ScrollToTop';
 import UnifiedSearchBar from '../components/ui/UnifiedSearchBar';
 import CompanyLogoCarousel from '../components/ui/CompanyLogoCarousel';
 import FilterPills from '../components/ui/FilterPills';
-import CategoryFilterSheet from '../components/ui/CategoryFilterSheet';
 import ProductFilterBar from '../components/ui/ProductFilterBar';
-import { HandbookModal } from '../components/lead-magnet/HandbookModal';
 import { InlineNewsletterSignup } from '../components/newsletter/InlineNewsletterSignup';
 import { useThemeFilter } from '../hooks/useTheme';
 import { companyLogos } from '../data/company-logos';
@@ -19,6 +18,10 @@ import IndustryFilterBar from '../components/ui/IndustryFilterBar';
 import type { PatternSummary, Category } from '../types';
 import type { Product } from '../data/utils/product-utils';
 import type { Industry } from '../data/utils/industry-utils';
+
+// Lazy-load components that use framer-motion or aren't needed at first paint
+const CategoryFilterSheet = dynamic(() => import('../components/ui/CategoryFilterSheet'), { ssr: false });
+const HandbookModal = dynamic(() => import('../components/lead-magnet/HandbookModal').then(mod => ({ default: mod.HandbookModal })), { ssr: false });
 
 interface HomeClientProps {
   patterns: PatternSummary[];
