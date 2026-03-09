@@ -3,18 +3,12 @@
 import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
-import ScrollToTop from '../components/ui/ScrollToTop';
 import UnifiedSearchBar from '../components/ui/UnifiedSearchBar';
-import CompanyLogoCarousel from '../components/ui/CompanyLogoCarousel';
 import FilterPills from '../components/ui/FilterPills';
 import ProductFilterBar from '../components/ui/ProductFilterBar';
-import { InlineNewsletterSignup } from '../components/newsletter/InlineNewsletterSignup';
-import { useThemeFilter } from '../hooks/useTheme';
-import { companyLogos } from '../data/company-logos';
-import { getProductLogoUrl, hasProductLogo } from '../data/product-logos';
 import IndustryFilterBar from '../components/ui/IndustryFilterBar';
+import { useThemeFilter } from '../hooks/useTheme';
+import { getProductLogoUrl, hasProductLogo } from '../data/product-logos';
 import type { PatternSummary, Category } from '../types';
 import type { Product } from '../data/utils/product-utils';
 import type { Industry } from '../data/utils/industry-utils';
@@ -23,14 +17,14 @@ import type { Industry } from '../data/utils/industry-utils';
 const CategoryFilterSheet = dynamic(() => import('../components/ui/CategoryFilterSheet'), { ssr: false });
 const HandbookModal = dynamic(() => import('../components/lead-magnet/HandbookModal').then(mod => ({ default: mod.HandbookModal })), { ssr: false });
 
-interface HomeClientProps {
+interface PatternGridProps {
   patterns: PatternSummary[];
   categories: Category[];
   allProducts: Product[];
   allIndustries: Industry[];
 }
 
-export default function HomeClient({ patterns, categories, allProducts, allIndustries }: HomeClientProps) {
+export default function PatternGrid({ patterns, categories, allProducts, allIndustries }: PatternGridProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
@@ -47,10 +41,8 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
       setIsDarkMode(theme === 'dark');
     };
 
-    // Check initial theme
     checkTheme();
 
-    // Watch for theme changes
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, {
       attributes: true,
@@ -69,7 +61,6 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
                            pattern.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'All Categories' || pattern.category === selectedCategory;
 
-      // Filter by selected products (using pre-computed products array)
       let matchesProducts = true;
       if (selectedProducts.length > 0) {
         matchesProducts = selectedProducts.some(product =>
@@ -77,7 +68,6 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
         );
       }
 
-      // Filter by selected industries (using pre-computed industries array)
       let matchesIndustries = true;
       if (selectedIndustries.length > 0) {
         matchesIndustries = selectedIndustries.some(industry =>
@@ -85,7 +75,6 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
         );
       }
 
-      // Filter by agentic tag
       const matchesAgentic = !showAgenticOnly || pattern.tags?.includes('agentic');
 
       return matchesSearch && matchesCategory && matchesProducts && matchesIndustries && matchesAgentic;
@@ -93,46 +82,7 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
   }, [patterns, searchQuery, selectedCategory, selectedProducts, selectedIndustries, showAgenticOnly]);
 
   return (
-    <main className="min-h-screen bg-background-primary text-text-primary">
-      <Navbar />
-
-      {/* Hero Section - Minimal & Spacious with neutral gray background + grain texture */}
-      <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Heading - Larger & More Prominent */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9" style={{ color: 'var(--text-hero)' }}>
-              AI UX Design Patterns
-            </h1>
-
-            {/* Subheading - More Space */}
-            <p className="text-2xl md:text-3xl text-text-secondary mb-12">
-              How the world&apos;s best AI products design their experiences, documented, analyzed, and continuously updated.
-            </p>
-
-            {/* Company Logo Carousel - Social Proof Before CTA */}
-            <div className="mb-16">
-              <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
-                Patterns used by leading companies
-              </p>
-              <CompanyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
-            </div>
-
-            {/* Inline Newsletter Signup - High Converting */}
-            <div className="animate-fade-in">
-              <InlineNewsletterSignup variant="hero" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Intro Paragraph */}
-      <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
-        <p className="text-base md:text-lg text-text-secondary text-center leading-relaxed">
-          The AI UX design pattern library for product designers and teams building AI-powered experiences. Each pattern is documented from 3+ real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, and Notion, with examples, code demos, and research-backed guidance you can apply today.
-        </p>
-      </div>
-
+    <>
       {/* Main Content with Sidebar */}
       <div id="patterns" className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
         <div className="flex flex-col lg:flex-row gap-8">
@@ -208,7 +158,7 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
 
           {/* Patterns Grid */}
           <div className="flex-1">
-            {/* Search Bar - Above filters with card styling */}
+            {/* Search Bar */}
             <div className="mb-6 bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card">
               <UnifiedSearchBar
                 placeholder="Search any AI Pattern you need"
@@ -280,14 +230,14 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
                       {/* Divider */}
                       <div className="border-t border-gray-200 dark:border-gray-700 mb-6"></div>
 
-                      {/* Top Metadata Row - Category & Status */}
+                      {/* Category */}
                       <div className="flex items-center gap-2 mb-6">
                         <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
                           {pattern.category}
                         </span>
                       </div>
 
-                      {/* Used By Logos Section */}
+                      {/* Used By Logos */}
                       {pattern.products.filter(p => p !== 'Superhuman' && hasProductLogo(p)).length > 0 && (
                         <div className="flex items-center gap-3">
                           <span className="text-sm text-text-secondary font-medium">Used by:</span>
@@ -314,7 +264,6 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
                                       filter: logoFilter,
                                     }}
                                   />
-                                  {/* Tooltip */}
                                   <div
                                     className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap opacity-0 group-hover/logo:opacity-100 transition-opacity pointer-events-none z-50"
                                   >
@@ -346,9 +295,6 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
         </div>
       </div>
 
-      {/* Scroll to Top Button */}
-      <ScrollToTop />
-
       {/* Mobile Category Filter Sheet */}
       <CategoryFilterSheet
         isOpen={isFilterSheetOpen}
@@ -364,14 +310,11 @@ export default function HomeClient({ patterns, categories, allProducts, allIndus
         onIndustriesSelect={setSelectedIndustries}
       />
 
-      {/* Footer */}
-      <Footer />
-
       {/* Handbook Modal */}
       <HandbookModal
         isOpen={isHandbookModalOpen}
         onClose={() => setIsHandbookModalOpen(false)}
       />
-    </main>
+    </>
   );
 }

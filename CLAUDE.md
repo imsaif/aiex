@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-09 17:44 (MacBook)
+- **Pattern:** Performance & Engagement Optimization
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Based on Clarity analytics (8s LCP, 1.37 pages/session, 43s active time). P0: Fixed field LCP by extracting hero section from client component into server-rendered HTML (`page.tsx` + new `pattern-grid.tsx`, deleted `home-client.tsx`). Added homepage cache headers (`s-maxage=3600, stale-while-revalidate=86400`). P1: Upgraded related patterns from bare text links to rich cards with descriptions + category badges. Added "More in [Category]" auto-computed section. Moved related patterns above newsletter CTA. Removed disruptive SmartHandbookPrompt modal from pattern pages — inline newsletter signup handles email capture instead.
+
 ### Session 2026-03-02 14:29 (MacBook)
 - **Pattern:** Newsletter & Smart Prompt Fixes
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added bot protection across all email collection forms. Created `src/lib/email-validation.ts` with ~50 disposable domain blocklist (mailinator, yopmail, etc.), honeypot field detection, and `validateEmailSecurity()` entry point. Updated 4 API routes (subscribe, generate-pdf, send-report, download-pdf) with server-side validation. Added rate limiting + client IP forwarding to generate-pdf route. Added hidden honeypot input + `website_url: ''` body param to all 9 client forms.
 
 ### Session 2026-02-19 10:23 (MacBook)
-- **Pattern:** Resources Page & Handbook Redesign
-- **Status:** ✅ Completed
-- **Files Changed:** 9
-- **Tests Added/Modified:** 0
-- **Notes:** Built new `/resources` hub page with sidebar+grid layout, search, and category filtering (9 resource cards). Simplified Navbar from Resources dropdown to direct link. Redesigned handbook page: updated content for AIUX Design Checklist (28 patterns), added company logo carousel, side-by-side What You Get + Scoring Guide table, Continue Learning cards matching audit-kit pattern. Dark mode optimized all three PDF landing pages (handbook, toolkit, agent-readability-audit-kit) with design tokens. Added /resources to sitemap and footer.
-
-### Session 2026-02-18 21:56 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

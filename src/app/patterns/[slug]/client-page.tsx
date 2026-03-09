@@ -1,13 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
 import categories from '@/data/categories';
-import { Pattern } from '@/types';
+import { Pattern, PatternSummary } from '@/types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
-import { usePatternViewTracker } from '@/hooks';
-import { SmartHandbookPrompt } from '@/components/smart-prompt';
 import AuthorFooter from '@/components/sections/AuthorFooter';
 
 // Lazy load heavy components to reduce initial bundle size
@@ -35,23 +32,11 @@ interface ClientPageProps {
   pattern: Pattern;
   previousPattern: Pattern | null;
   nextPattern: Pattern | null;
+  relatedPatterns: PatternSummary[];
+  categoryPatterns: PatternSummary[];
 }
 
-export default function ClientPage({ pattern, previousPattern, nextPattern }: ClientPageProps) {
-  // Smart prompt tracking for handbook offer
-  const {
-    viewCount,
-    showPrompt,
-    trackView,
-    dismiss: dismissPrompt,
-    markHandbookDownloaded
-  } = usePatternViewTracker();
-
-  // Track pattern view on mount
-  useEffect(() => {
-    trackView(pattern.id);
-  }, [pattern.id, trackView]);
-
+export default function ClientPage({ pattern, previousPattern, nextPattern, relatedPatterns, categoryPatterns }: ClientPageProps) {
   // Get category badge classes - safer approach for Tailwind JIT
   const getCategoryClasses = (color: string = 'blue') => {
     const colorMap: Record<string, string> = {
@@ -247,6 +232,61 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
           </div>
         </section>
 
+        {/* Related Patterns - Rich Cards (moved above newsletter for better engagement) */}
+        {relatedPatterns.length > 0 && (
+          <section>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Patterns</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {relatedPatterns.map((related) => (
+                <Link
+                  key={related.id}
+                  href={`/patterns/${related.slug}`}
+                  className="group block"
+                >
+                  <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
+                    <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
+                      {related.title}
+                    </h3>
+                    <p className="text-sm text-text-secondary leading-relaxed line-clamp-2 flex-grow mb-4">
+                      {related.description}
+                    </p>
+                    <span className="inline-block self-start px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
+                      {related.category}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* More from Category */}
+        {categoryPatterns.length > 0 && (
+          <section>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+              More in {pattern.category}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {categoryPatterns.map((catPattern) => (
+                <Link
+                  key={catPattern.id}
+                  href={`/patterns/${catPattern.slug}`}
+                  className="group block"
+                >
+                  <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
+                    <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
+                      {catPattern.title}
+                    </h3>
+                    <p className="text-sm text-text-secondary leading-relaxed line-clamp-2 flex-grow">
+                      {catPattern.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Newsletter Signup */}
         <section>
           <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 shadow-card animate-fade-in">
@@ -255,28 +295,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
               customHeading="Want More Patterns Like This?"
               customSubheading="Get 6 essential AI design patterns (free PDF) + weekly AI/UX analysis"
             />
-          </div>
-        </section>
-
-        {/* Related Patterns */}
-        <section>
-          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Patterns</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {pattern.content.relatedPatterns.map((related, i) => (
-              <Link
-                key={i}
-                href={`/patterns/${related.toLowerCase().replace(/\s+/g, '-')}`}
-                className="bg-surface-primary rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-background-secondary transition-colors"
-              >
-                <div className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-tertiary mr-3">
-                    <line x1="7" y1="17" x2="17" y2="7" />
-                    <polyline points="7 7 17 7 17 17" />
-                  </svg>
-                  <span className="text-lg font-medium text-text-secondary">{related}</span>
-                </div>
-              </Link>
-            ))}
           </div>
         </section>
 
@@ -321,13 +339,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern }: Cl
         <AuthorFooter />
       </div>
 
-      {/* Smart Handbook Prompt - appears after viewing 4 patterns */}
-      <SmartHandbookPrompt
-        isOpen={showPrompt}
-        onClose={dismissPrompt}
-        onSuccess={markHandbookDownloaded}
-        viewCount={viewCount}
-      />
     </main>
   );
 }

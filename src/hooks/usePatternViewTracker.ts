@@ -43,6 +43,7 @@ export function usePatternViewTracker(): UsePatternViewTrackerReturn {
   }, []);
 
   // Track a pattern view — show prompt only if this view crosses a new milestone
+  // Delay the prompt so the user has time to engage with the content first
   const trackView = useCallback((patternId: string) => {
     const previousCount = getUniqueViewCount();
     trackPatternView(patternId);
@@ -51,7 +52,14 @@ export function usePatternViewTracker(): UsePatternViewTrackerReturn {
 
     // Only check if the count actually changed (new unique pattern)
     if (newCount > previousCount && shouldShowSmartPrompt()) {
-      setShowPrompt(true);
+      // Wait 45 seconds before showing — let the user read first
+      const timer = setTimeout(() => {
+        // Re-check in case they subscribed or navigated away during the delay
+        if (shouldShowSmartPrompt()) {
+          setShowPrompt(true);
+        }
+      }, 45000);
+      return () => clearTimeout(timer);
     }
   }, []);
 

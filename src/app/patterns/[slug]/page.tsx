@@ -4,9 +4,11 @@ import { Metadata } from 'next';
 import ClientPage from './client-page';
 import { generatePatternMetadata } from '@/utils/metadata';
 import { generatePatternStructuredData } from '@/utils/structuredData';
+import { getProductsForPattern } from '@/data/utils/product-utils';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import { PatternSummary } from '@/types';
 
 // ISR: revalidate every hour to avoid cold function execution on every request
 export const revalidate = 3600;
@@ -58,6 +60,42 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
   const previousPattern = currentIndex > 0 ? patterns[currentIndex - 1] : null;
   const nextPattern = currentIndex < patterns.length - 1 ? patterns[currentIndex + 1] : null;
 
+  // Build rich related pattern summaries (from manual relatedPatterns list)
+  const relatedSummaries: PatternSummary[] = pattern.content.relatedPatterns
+    .map(title => {
+      const p = patterns.find(pat => pat.title === title);
+      if (!p) return null;
+      return {
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        description: p.description,
+        category: p.category,
+        tags: p.tags,
+        thumbnail: p.thumbnail,
+        products: getProductsForPattern(p),
+        industries: [],
+      };
+    })
+    .filter((p): p is PatternSummary => p !== null);
+
+  // Same-category patterns (excluding current + already-related ones)
+  const relatedSlugs = new Set(relatedSummaries.map(r => r.slug));
+  const categoryPatterns: PatternSummary[] = patterns
+    .filter(p => p.category === pattern.category && p.slug !== pattern.slug && !relatedSlugs.has(p.slug))
+    .slice(0, 3)
+    .map(p => ({
+      id: p.id,
+      title: p.title,
+      slug: p.slug,
+      description: p.description,
+      category: p.category,
+      tags: p.tags,
+      thumbnail: p.thumbnail,
+      products: getProductsForPattern(p),
+      industries: [],
+    }));
+
   // Generate structured data for SEO
   const structuredData = generatePatternStructuredData(pattern);
 
@@ -78,6 +116,8 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
           pattern={pattern}
           previousPattern={previousPattern}
           nextPattern={nextPattern}
+          relatedPatterns={relatedSummaries}
+          categoryPatterns={categoryPatterns}
         />
         <Footer />
         <ScrollToTop />
