@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-10 16:20 (MacBook)
+- **Pattern:** SEO & 404 Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed 8 Google Search Console 404s: added 6 permanent redirects in next.config.mjs for dead pattern slugs (graceful-degradation, onboarding-flow, transparent-feedback), removed guide (replit-ai-learning-path), missing /patterns index, and /favorites. Fixed /favorites redirect chain (was pointing to non-existent /patterns, now /). Added 8 missing agentic pattern mappings to pattern-links.ts. Fixed .id→.slug inconsistency in Hero, SmartSearchChat, PatternCard. Replaced rage-click-inducing AdaptiveDashboardDemo with "Simulate Usage" button that auto-plays interactions — prevents Google/Clarity rage click penalties.
+
 ### Session 2026-03-09 17:44 (MacBook)
 - **Pattern:** Performance & Engagement Optimization
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed client-side crash on agentic pattern pages (Hotjar-reported). Added error boundaries (`error.tsx` + `global-error.tsx`). Eliminated all external CDN dependencies — self-hosted 14 new SVG logos, rewrote `product-logos.ts` to use local paths, updated LogosCarousel, FigmaPromptCard, AIToolSelector, PromptPreview. Added `width`/`height` to all public-facing `<img>` tags (12 components). Removed 24 broken image refs from 6 agentic patterns. Lazy-loaded audit page heavy components (ResultsPanel, SocialProof) cutting bundle 53% (306kB→144kB). Added news page loading skeleton and lazy-loaded InlineNewsletterSignup on news routes.
 
 ### Session 2026-02-19 11:03 (MacBook)
-- **Pattern:** Bot Protection for Email Collection
-- **Status:** ✅ Completed
-- **Files Changed:** 14
-- **Tests Added/Modified:** 0
-- **Notes:** Added bot protection across all email collection forms. Created `src/lib/email-validation.ts` with ~50 disposable domain blocklist (mailinator, yopmail, etc.), honeypot field detection, and `validateEmailSecurity()` entry point. Updated 4 API routes (subscribe, generate-pdf, send-report, download-pdf) with server-side validation. Added rate limiting + client IP forwarding to generate-pdf route. Added hidden honeypot input + `website_url: ''` body param to all 9 client forms.
-
-### Session 2026-02-19 10:23 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

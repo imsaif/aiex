@@ -75,7 +75,7 @@ export default function Hero() {
 
   // Handle pattern selection from search
   const handlePatternSelect = (pattern: Pattern) => {
-    router.push(`/patterns/${pattern.id}`);
+    router.push(`/patterns/${pattern.slug}`);
   };
 
   // Simple static background elements - no random generation

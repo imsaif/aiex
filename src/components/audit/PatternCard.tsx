@@ -1,6 +1,7 @@
 import type { PatternResult, ContextData } from '@/types/audit';
 import type { Example } from '@/types';
 import { getContextSpecificDescription } from '@/lib/patterns/detection-prompts';
+import { getPatternSlug } from '@/utils/pattern-links';
 
 interface PatternCardProps {
   pattern: PatternResult;
@@ -104,7 +105,7 @@ export function PatternCard({ pattern, context, examples = [], onImplementationC
             {examples.map((example, index) => (
               <a
                 key={index}
-                href={`/patterns/${pattern.id}`}
+                href={`/patterns/${getPatternSlug(pattern.id)}`}
                 className="group block border border-border-primary rounded-xl overflow-hidden bg-background-secondary hover:border-accent-primary transition-all hover:scale-[1.02]"
               >
                 {example.image && (
@@ -143,7 +144,7 @@ export function PatternCard({ pattern, context, examples = [], onImplementationC
           </button>
         )}
         <a
-          href={`/patterns/${pattern.id}`}
+          href={`/patterns/${getPatternSlug(pattern.id)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 px-4 py-2 border-2 border-border-primary rounded-xl font-semibold text-text-primary hover:border-border-secondary transition-colors text-center text-sm"

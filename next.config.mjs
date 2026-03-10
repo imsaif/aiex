@@ -155,6 +155,40 @@ const nextConfig = {
         destination: '/audit',
         permanent: true,
       },
+      // Dead pattern slugs → closest existing patterns
+      {
+        source: '/patterns/graceful-degradation',
+        destination: '/patterns/graceful-handoff',
+        permanent: true,
+      },
+      {
+        source: '/patterns/onboarding-flow',
+        destination: '/patterns/guided-learning',
+        permanent: true,
+      },
+      {
+        source: '/patterns/transparent-feedback',
+        destination: '/patterns/feedback-loops',
+        permanent: true,
+      },
+      // Removed guide
+      {
+        source: '/guides/replit-ai-learning-path',
+        destination: '/guides/claude-code-learning-path',
+        permanent: true,
+      },
+      // /patterns index → homepage (homepage has the pattern grid)
+      {
+        source: '/patterns',
+        destination: '/',
+        permanent: true,
+      },
+      // /favorites → homepage (favorites feature removed)
+      {
+        source: '/favorites',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 

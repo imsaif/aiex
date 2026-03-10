@@ -33,6 +33,15 @@ const PATTERN_ID_TO_SLUG: Record<string, string> = {
   'session-degradation': 'session-degradation-prevention',
   'universal-access': 'universal-access-patterns',
   'vulnerable-user-protection': 'vulnerable-user-protection',
+  // Agentic patterns (Feb 2026)
+  'action-audit-trail': 'action-audit-trail',
+  'agent-status-monitoring': 'agent-status-monitoring',
+  'autonomy-spectrum': 'autonomy-spectrum',
+  'escalation-pathways': 'escalation-pathways',
+  'intent-preview': 'intent-preview',
+  'mixed-initiative-control': 'mixed-initiative-control',
+  'plan-summary': 'plan-summary',
+  'trust-calibration': 'trust-calibration',
 };
 
 /**
