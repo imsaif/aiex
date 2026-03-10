@@ -5,8 +5,12 @@ import { Metadata } from 'next';
 import { AboutNewsletter } from './about-newsletter';
 
 export const metadata: Metadata = {
-  title: 'About | Imran Mohammed – AI/UX Design Pattern Research',
-  description: 'I study how the best AI products are designed and document what makes them work. 36 validated AI/UX design patterns from 50+ shipped products.',
+  title: 'What is AIUX? | AI UX Design Patterns Framework – aiuxdesign.guide',
+  description: 'AIUX is a framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products like ChatGPT, Claude, and GitHub Copilot. The practical reference for designing AI-powered experiences.',
+  openGraph: {
+    title: 'What is AIUX? | AI UX Design Patterns Framework',
+    description: 'AIUX is a framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products. Learn how the best AI products are designed.',
+  },
 };
 
 const CATEGORIES = [
@@ -118,73 +122,48 @@ export default function AboutPage() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Section 1: Creator Hero */}
+      {/* Section 1: What is AIUX? */}
       <section className="pt-12 pb-16 md:pt-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center gap-5 mb-6">
-            <div className="w-16 h-16 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0">
-              <span className="text-xl font-semibold text-white dark:text-gray-900">IM</span>
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-semibold">Imran Mohammed</h1>
-              <p className="text-text-secondary text-sm mt-1">Product Designer · AI/UX Researcher · Builder</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-text-secondary ml-[84px] mb-12">
-            <a href="https://www.linkedin.com/in/imsaif/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">LinkedIn</a>
-            <span className="text-text-tertiary">·</span>
-            <a href="https://medium.com/@imsaif" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Medium</a>
-            <span className="text-text-tertiary">·</span>
-            <a href="https://github.com/imsaif" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">GitHub</a>
-            <span className="text-text-tertiary">·</span>
-            <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Portfolio</a>
-          </div>
-
-          {/* Section 2: Main Headline */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight">
-            I study how the best AI products are designed and document what makes them work.
-          </h2>
+          <p className="text-accent-primary font-medium text-sm uppercase tracking-wide mb-4">About</p>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight mb-6">
+            What is AIUX?
+          </h1>
+          <p className="text-text-secondary text-lg md:text-xl leading-relaxed max-w-3xl">
+            AIUX is a design discipline focused on how people interact with AI-powered products. <strong className="text-text-primary">aiuxdesign.guide</strong> is the practical reference for it: a growing framework of validated design patterns documented from 50+ shipped AI products including ChatGPT, Claude, GitHub Copilot, Midjourney, and Google&apos;s AI features.
+          </p>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-20 md:pt-20 md:pb-28">
 
-        {/* Section 3: Bio / Story */}
-        <section className="mb-20 space-y-6 text-text-secondary text-lg leading-relaxed">
-          <p>
-            I&apos;m a product designer with 8+ years of experience building digital products across healthcare, education, and enterprise. I&apos;ve led design teams, <strong className="text-text-primary">lead usability research for Google News and Google Maps</strong>, redesigned enterprise platforms at Optum achieving a <strong className="text-text-primary">27x improvement in task completion</strong>, and built AI-powered educational tools used by over 1000+ schools in Africa.
-          </p>
-          <p>
-            I created aiuxdesign.guide because I kept seeing the same problem: <strong className="text-text-primary">designers are building AI products without a shared vocabulary for what works.</strong> Everyone keeps reinventing solutions that other teams have already figured out.
-          </p>
-          <p>
-            So I systematically study how the world&apos;s leading AI products like ChatGPT, Claude, GitHub Copilot, Midjourney, and Google&apos;s AI features handle their most critical UX challenges. When I find a design decision that works across 3 or more products, I document it as a pattern.
-          </p>
-          <p>
-            So far, that&apos;s <strong className="text-text-primary">36 validated AI/UX design patterns across 8 categories</strong>, analyzed from 50+ shipped AI products used by billions of people, and the collection keeps growing.
-          </p>
-          <p>
-            This site is now <strong className="text-text-primary">referenced by ChatGPT, Claude, Perplexity, and Google</strong> when people ask about AI design patterns, and is shared in enterprise design teams at major tech companies. My weekly analysis of AI product design decisions reaches <strong className="text-text-primary">thousands of designers on Medium</strong>.
-          </p>
-          <p>
-            I&apos;m also building <a href="https://gist.design" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors font-semibold">Gist.design</a>, an AI design thinking partner powered by these 36 patterns that helps designers clarify, map, and critique their work before they open Figma.
-          </p>
-        </section>
-
-        {/* Section 3.5: What is aiuxdesign.guide? */}
+        {/* Section 2: Why AIUX Patterns? */}
         <section className="mb-20 space-y-6">
-          <h2 className="text-2xl md:text-3xl font-semibold">What is aiuxdesign.guide?</h2>
-          <p className="text-text-secondary text-lg leading-relaxed">
-            A framework of 36 validated AI/UX design patterns, documented from 50+ shipped AI products including ChatGPT, Claude, GitHub Copilot, Midjourney, and Google&apos;s AI features. It&apos;s the practical reference for designing AI-powered experiences, covering everything from contextual assistance and human-in-the-loop collaboration to error recovery, privacy controls, and harm prevention.
-          </p>
+          <h2 className="text-2xl md:text-3xl font-semibold">Why AIUX patterns?</h2>
+          <div className="space-y-6 text-text-secondary text-lg leading-relaxed">
+            <p>
+              Designers building AI products keep solving the same problems from scratch. How to show confidence levels, when to hand off to a human, how to handle errors in generative output. <strong className="text-text-primary">AIUX patterns are proven solutions to these recurring challenges</strong>, documented from products already serving millions of users.
+            </p>
+            <p>
+              This collection catalogs those patterns the same way Christopher Alexander built architectural patterns: by observing what works in the real world and making it <strong className="text-text-primary">systematic and repeatable</strong>. Each pattern covers everything from contextual assistance and human-in-the-loop collaboration to error recovery, privacy controls, and harm prevention.
+            </p>
+          </div>
         </section>
 
-        {/* Section 4: The Pattern Framework */}
+        {/* Section 3: The Pattern Framework */}
         <section className="mb-20">
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">The Pattern Framework</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-10">
-            This isn&apos;t a list of tips. It&apos;s a structured framework for making design decisions in AI products, built the same way Christopher Alexander built architectural patterns: by observing what works in the real world and making it systematic and repeatable.
+            36 patterns organized into 8 strategic categories, each addressing a distinct challenge in AI product design.
           </p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            {STATS.map((stat) => (
+              <div key={stat.value} className="p-8 bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
+                <div className="text-4xl font-semibold text-accent-primary mb-2">{stat.value}</div>
+                <p className="text-text-secondary">{stat.label}</p>
+              </div>
+            ))}
+          </div>
           <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl shadow-card overflow-hidden">
             {CATEGORIES.map((cat, i) => (
               <div key={cat.name} className={`flex items-baseline justify-between px-6 md:px-8 py-5 ${i < CATEGORIES.length - 1 ? 'border-b border-gray-200 dark:border-gray-700' : ''}`}>
@@ -199,13 +178,21 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
+          <div className="mt-8 text-center">
+            <Link href="/" className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-hover transition-colors font-medium">
+              Browse all 36 patterns
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
         </section>
 
         {/* Section 5: How Patterns Earn Their Spot */}
         <section className="mb-20">
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">How Patterns Earn Their Spot</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-10">
-            I don&apos;t document theoretical patterns. I document <strong className="text-text-primary">what&apos;s already working</strong> in products serving millions of users. This is design pattern mining: observing solutions in the wild and making them actionable.
+            These aren&apos;t theoretical patterns. They&apos;re documented from <strong className="text-text-primary">what&apos;s already working</strong> in products serving millions of users. Design pattern mining from the real world.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {CRITERIA.map((item) => (
@@ -223,24 +210,11 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* Section 6: By the Numbers */}
+        {/* Section 6: Tools & Resources */}
         <section className="mb-20">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-8">By the Numbers</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {STATS.map((stat) => (
-              <div key={stat.value} className="p-8 bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl shadow-card hover:shadow-card-hover transition-shadow">
-                <div className="text-4xl font-semibold text-accent-primary mb-2">{stat.value}</div>
-                <p className="text-text-secondary">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Section 7: Beyond Patterns */}
-        <section className="mb-20">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Beyond Patterns</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Tools & Resources</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-10">
-            I&apos;ve built additional tools to help designers apply these patterns in their daily work:
+            Beyond the pattern library, these tools help designers apply AI UX patterns in their daily work:
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {TOOLS.map((tool) => (
@@ -272,11 +246,41 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* Section 7: Who's Behind This */}
+        <section className="mb-20">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-8">Who&apos;s Behind This</h2>
+          <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl shadow-card p-8 md:p-12">
+            <div className="flex items-center gap-5 mb-6">
+              <div className="w-16 h-16 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0">
+                <span className="text-xl font-semibold text-white dark:text-gray-900">IM</span>
+              </div>
+              <div>
+                <h3 className="text-xl md:text-2xl font-semibold">Imran Mohammed</h3>
+                <p className="text-text-secondary text-sm mt-1">Product Designer · AI/UX Researcher · Builder</p>
+              </div>
+            </div>
+            <div className="space-y-4 text-text-secondary leading-relaxed">
+              <p>
+                Product designer with 12+ years of experience across healthcare, education, and enterprise. Led usability research for <strong className="text-text-primary">Google News and Google Maps</strong> and building AI-powered educational tools used by 1000+ schools in Africa.
+              </p>
+              <p>
+                Created aiuxdesign.guide because designers building AI products lacked a shared vocabulary for what works. This site is now <strong className="text-text-primary">referenced by ChatGPT, Claude, Perplexity, and Google</strong> when people ask about AI design patterns, and shared in enterprise design teams at major tech companies.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <a href="https://www.linkedin.com/in/imsaif/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">LinkedIn</a>
+              <a href="https://medium.com/@imsaif" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Medium</a>
+              <a href="https://github.com/imsaif" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">GitHub</a>
+              <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Portfolio</a>
+            </div>
+          </div>
+        </section>
+
         {/* Section 8: Open Source */}
         <section className="mb-20">
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">Open Source</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-8">
-            This project is open source. If you want to suggest patterns, improve existing content, or contribute examples, I&apos;d welcome it.
+            This project is open source. If you want to suggest patterns, improve existing content, or contribute examples, you&apos;re welcome to.
           </p>
           <div className="flex flex-wrap gap-4">
             <a
@@ -303,9 +307,9 @@ export default function AboutPage() {
 
         {/* Section 9: Newsletter CTA */}
         <section className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl shadow-card p-8 md:p-12">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Get my weekly AI/UX analysis</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Get weekly AI/UX analysis</h2>
           <p className="text-text-secondary leading-relaxed mb-8">
-            Every week I break down one AI product&apos;s design decisions: what patterns they&apos;re using, what&apos;s working, and what I&apos;d do differently. It&apos;s the analysis I wish existed when I started designing AI products.
+            Every week, one AI product&apos;s design decisions broken down: what patterns they&apos;re using, what&apos;s working, and what could be improved. The analysis designers wish existed when they started building AI products.
           </p>
           <AboutNewsletter />
         </section>

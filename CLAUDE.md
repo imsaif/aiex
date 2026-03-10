@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-10 17:12 (MacBook)
+- **Pattern:** About Page SEO Restructure
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Restructured /about page to match search intent. GSC showed "aiux", "ai ux patterns" queries landing on a personal bio page. Reordered: "What is AIUX?" hero → Why AIUX patterns → Pattern Framework (with stats) → Validation → Tools → Bio (condensed into card at bottom). Updated metadata title/description to target AIUX keywords. Removed em dashes throughout. Updated bio to 12+ years, removed Optum reference.
+
 ### Session 2026-03-10 16:20 (MacBook)
 - **Pattern:** SEO & 404 Fixes
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed pre-commit hook violations blocking commit from previous session. Replaced hardcoded hex colors in `global-error.tsx` with named CSS colors. Migrated `FigmaPromptCard`, `LessonImagePlaceholder`, `LessonRenderer` from hardcoded gray-* Tailwind classes to design tokens (`text-text-secondary`, `bg-background-secondary`, `border-border-primary`, etc.). Fixed design-audit script bug that incorrectly flagged proper design token usage as violations (changed from warning to null) and TOKEN_ISSUES from blocking to informational severity.
 
 ### Session 2026-02-20 23:20 (MacBook)
-- **Pattern:** Performance & Crash Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 43
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed client-side crash on agentic pattern pages (Hotjar-reported). Added error boundaries (`error.tsx` + `global-error.tsx`). Eliminated all external CDN dependencies — self-hosted 14 new SVG logos, rewrote `product-logos.ts` to use local paths, updated LogosCarousel, FigmaPromptCard, AIToolSelector, PromptPreview. Added `width`/`height` to all public-facing `<img>` tags (12 components). Removed 24 broken image refs from 6 agentic patterns. Lazy-loaded audit page heavy components (ResultsPanel, SocialProof) cutting bundle 53% (306kB→144kB). Added news page loading skeleton and lazy-loaded InlineNewsletterSignup on news routes.
-
-### Session 2026-02-19 11:03 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
