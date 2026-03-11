@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-11 20:49 (MacBook)
+- **Pattern:** Admin Beehiiv Publish Tab
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Added "Publish" tab to admin dashboard for publishing newsletters to Beehiiv. Beehiiv Posts API requires enterprise plan, so pivoted to clipboard-based workflow: numbered 1-2-3 copy buttons (title, subtitle, content HTML) to paste into Beehiiv's HTML Snippet block. New files: admin-nav link, publish page, publish-client component.
+
 ### Session 2026-03-10 17:12 (MacBook)
 - **Pattern:** About Page SEO Restructure
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added inline ChunkLoadError recovery script to layout.tsx. Detects stale chunk failures after deployment and auto-reloads the page once (sessionStorage guard prevents infinite loops). Clears reload flag after 10s on successful load.
 
 ### Session 2026-02-20 23:45 (MacBook)
-- **Pattern:** Performance & Crash Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 45
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed pre-commit hook violations blocking commit from previous session. Replaced hardcoded hex colors in `global-error.tsx` with named CSS colors. Migrated `FigmaPromptCard`, `LessonImagePlaceholder`, `LessonRenderer` from hardcoded gray-* Tailwind classes to design tokens (`text-text-secondary`, `bg-background-secondary`, `border-border-primary`, etc.). Fixed design-audit script bug that incorrectly flagged proper design token usage as violations (changed from warning to null) and TOKEN_ISSUES from blocking to informational severity.
-
-### Session 2026-02-20 23:20 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
