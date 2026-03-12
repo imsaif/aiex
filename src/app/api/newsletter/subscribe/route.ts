@@ -245,7 +245,7 @@ function getNewsletterWelcomeEmail(): string {
           </div>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
-            Explore our complete collection of <strong>24 AI design patterns</strong> across 7 categories:
+            Explore our complete collection of <strong>36 AI design patterns</strong> across 8 categories:
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
@@ -371,7 +371,7 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
           </p>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
-            Want to explore more? We have a complete collection of <strong>28 AI design patterns</strong> with interactive demos:
+            Want to explore more? We have a complete collection of <strong>36 AI design patterns</strong> with interactive demos:
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
@@ -379,7 +379,7 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
                style="display: inline-block; background: #ffffff; border: 2px solid #000000;
                       color: #000000; padding: 12px 30px; text-decoration: none; border-radius: 8px;
                       font-weight: 600; font-size: 16px;">
-              Explore All 28 Patterns
+              Explore All 36 Patterns
             </a>
           </div>
 

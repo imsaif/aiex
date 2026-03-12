@@ -5,7 +5,6 @@ import { Pattern, PatternSummary } from '@/types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
-import AuthorFooter from '@/components/sections/AuthorFooter';
 
 // Lazy load heavy components to reduce initial bundle size
 const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
@@ -293,7 +292,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
             <InlineNewsletterSignup
               variant="pattern-detail"
               customHeading="Want More Patterns Like This?"
-              customSubheading="Get 6 essential AI design patterns (free PDF) + weekly AI/UX analysis"
+              customSubheading="Score your AI interface against 28 proven UX patterns (free PDF) + weekly AI/UX analysis"
             />
           </div>
         </section>
@@ -334,9 +333,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
             </Link>
           ) : <div />}
         </div>
-
-        {/* Author Footer */}
-        <AuthorFooter />
       </div>
 
     </main>

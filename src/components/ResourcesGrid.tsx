@@ -16,6 +16,7 @@ import {
   BookOpenIcon,
   ClipboardDocumentCheckIcon,
   PencilSquareIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 
 interface Resource {
@@ -116,6 +117,18 @@ const RESOURCES: Resource[] = [
     tags: ['guides', 'learning', 'tools'],
     href: '/guides',
     ctaText: 'Start Learning',
+    linkType: 'internal',
+  },
+  {
+    id: 'agentic-ux-checklist',
+    title: 'Agentic UX Checklist',
+    description: '8 design patterns for building AI agents users trust. Covers autonomy, transparency, escalation, and control.',
+    icon: <SparklesIcon className={ICON_CLASS} />,
+    category: 'Downloads',
+    type: 'PDF',
+    tags: ['agent', 'checklist', 'agentic', 'patterns'],
+    href: '/agentic-ux-checklist',
+    ctaText: 'Get Checklist',
     linkType: 'internal',
   },
   {

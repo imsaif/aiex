@@ -70,7 +70,7 @@ export function HandbookPatternList() {
             What's Inside
           </h2>
           <p className="text-lg text-foreground-secondary">
-            Six essential patterns for designing human-centered AI
+            Key patterns for designing human-centered AI
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export function HandbookPatternList() {
               className="group bg-background-primary border border-border-primary rounded-xl p-6 hover:border-accent-primary hover:shadow-lg transition-all duration-300"
             >
               {/* Icon */}
-              <div className="w-12 h-12 rounded-lg bg-gray-100 text-black flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+              <div className="w-12 h-12 rounded-lg bg-accent-subtle text-text-primary flex items-center justify-center mb-4 group-hover:bg-accent-primary/20 transition-colors">
                 {pattern.icon}
               </div>
 

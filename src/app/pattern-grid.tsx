@@ -15,7 +15,6 @@ import type { Industry } from '../data/utils/industry-utils';
 
 // Lazy-load components that use framer-motion or aren't needed at first paint
 const CategoryFilterSheet = dynamic(() => import('../components/ui/CategoryFilterSheet'), { ssr: false });
-const HandbookModal = dynamic(() => import('../components/lead-magnet/HandbookModal').then(mod => ({ default: mod.HandbookModal })), { ssr: false });
 
 interface PatternGridProps {
   patterns: PatternSummary[];
@@ -30,7 +29,6 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
-  const [isHandbookModalOpen, setIsHandbookModalOpen] = useState(false);
   const [showAgenticOnly, setShowAgenticOnly] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -310,11 +308,6 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
         onIndustriesSelect={setSelectedIndustries}
       />
 
-      {/* Handbook Modal */}
-      <HandbookModal
-        isOpen={isHandbookModalOpen}
-        onClose={() => setIsHandbookModalOpen(false)}
-      />
     </>
   );
 }
