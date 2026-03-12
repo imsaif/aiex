@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { NewsletterSource } from '@/types/newsletter';
 
 interface InlineNewsletterSignupProps {
   variant?: 'hero' | 'footer' | 'pattern-detail' | 'news';
@@ -10,7 +11,7 @@ interface InlineNewsletterSignupProps {
   customButtonText?: string;
   customSuccessMessage?: string;
   stacked?: boolean;
-  source?: 'footer' | 'handbook' | 'direct' | 'news' | 'toolkit' | 'audit-kit' | 'agentic-checklist';
+  source?: NewsletterSource;
   /** Use when component is placed on a dark background */
   darkBackground?: boolean;
 }

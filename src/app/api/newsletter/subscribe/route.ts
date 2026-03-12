@@ -6,11 +6,13 @@ import { generateHandbookToken } from '@/lib/handbook-token';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 import { validateEmailSecurity } from '@/lib/email-validation';
+import { NEWSLETTER_SOURCES, PDF_DOWNLOAD_SOURCES } from '@/types/newsletter';
+import type { NewsletterSource } from '@/types/newsletter';
 
 // Email validation schema
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
-  source: z.enum(['footer', 'handbook', 'direct', 'news', 'audit', 'audit-kit', 'agentic-checklist']).optional().default('direct'),
+  source: z.enum(NEWSLETTER_SOURCES as unknown as [string, ...string[]]).optional().default('direct'),
 });
 
 export async function POST(request: NextRequest) {
@@ -56,8 +58,8 @@ export async function POST(request: NextRequest) {
 
     if (existingSubscriber) {
       if (existingSubscriber.active) {
-        // If they're already subscribed and requesting handbook or audit-kit, send the email anyway
-        if (source === 'handbook' || source === 'audit-kit') {
+        // If they're already subscribed and requesting a PDF download, send the email anyway
+        if (PDF_DOWNLOAD_SOURCES.includes(source as NewsletterSource)) {
           try {
             await sendWelcomeEmail(email, source);
             const successMessage = source === 'audit-kit'
@@ -164,7 +166,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function sendWelcomeEmail(email: string, source: 'footer' | 'handbook' | 'direct' | 'news' | 'audit' | 'audit-kit' = 'direct') {
+async function sendWelcomeEmail(email: string, source: NewsletterSource = 'direct') {
   try {
     const isHandbookFlow = source === 'handbook';
     const isNewsFlow = source === 'news';
