@@ -10,7 +10,7 @@ import { validateEmailSecurity } from '@/lib/email-validation';
 // Email validation schema
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),
-  source: z.enum(['footer', 'handbook', 'direct', 'news', 'audit', 'audit-kit']).optional().default('direct'),
+  source: z.enum(['footer', 'handbook', 'direct', 'news', 'audit', 'audit-kit', 'agentic-checklist']).optional().default('direct'),
 });
 
 export async function POST(request: NextRequest) {
