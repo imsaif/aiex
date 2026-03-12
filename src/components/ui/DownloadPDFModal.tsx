@@ -15,6 +15,7 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [downloadUrl, setDownloadUrl] = useState('');
   const [visible, setVisible] = useState(false);
 
   // Animate in on mount
@@ -49,6 +50,9 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
         throw new Error(data.error || 'Something went wrong');
       }
 
+      if (data.downloadUrl) {
+        setDownloadUrl(data.downloadUrl);
+      }
       setStatus('success');
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Something went wrong');
@@ -118,15 +122,24 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
                 <div className="w-16 h-16 rounded-full bg-status-success/10 flex items-center justify-center mx-auto mb-4">
                   <CheckCircleIcon className="w-8 h-8 text-status-success" />
                 </div>
-                <h3 className="text-lg font-semibold text-text-primary mb-2">Check your inbox!</h3>
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Your PDF is ready!</h3>
                 <p className="text-text-secondary mb-4">
-                  We've sent the PDF download link to <strong>{email}</strong>
+                  We've also sent a download link to <strong>{email}</strong>
                 </p>
+                {downloadUrl && (
+                  <a
+                    href={downloadUrl}
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors mb-3"
+                  >
+                    <DocumentArrowDownIcon className="w-5 h-5" />
+                    Download PDF
+                  </a>
+                )}
                 <button
                   onClick={handleClose}
-                  className="px-6 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors"
+                  className="block mx-auto text-sm text-text-secondary hover:text-text-primary transition-colors mt-2"
                 >
-                  Done
+                  Close
                 </button>
               </div>
             ) : (

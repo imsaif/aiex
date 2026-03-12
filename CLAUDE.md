@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-12 21:52 (MacBook)
+- **Pattern:** Quality Infrastructure + Guide PDF Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Extracted shared `NewsletterSource` type to prevent client/API source enum drift. Added Claude Code post-edit hooks (typecheck on every Edit/Write). Fixed guide PDF download modal to show immediate "Download PDF" button using API's `downloadUrl` instead of relying solely on email delivery.
+
 ### Session 2026-03-12 21:15 (MacBook)
 - **Pattern:** Agentic UX Checklist + Copy Fixes
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** LCP optimization: deferred Hotjar script 3s after page load (-57KB critical path), converted 5 PNG logos to WebP (283KB→4.8KB, 98% reduction), added lazy loading to below-fold product logos. Created `scripts/perf-audit.js` Lighthouse runner with historical comparison (`npm run perf-audit`, `perf-audit:compare`, `perf-audit:history`). Baseline captured: homepage LCP 6.5s, pattern page LCP 1.8s.
 
 ### Session 2026-02-23 11:35 (MacBook)
-- **Pattern:** Performance & Bundle Optimization
-- **Status:** ✅ Completed
-- **Files Changed:** 11
-- **Tests Added/Modified:** 0
-- **Notes:** Cut ~1MB from client bundles. Switched react-syntax-highlighter from full Prism (624KB, 343 languages) to PrismLight with only 3 languages (~30KB). Moved pattern data out of search page client bundle to server component props (~400KB saved). Removed framer-motion from pattern detail page and homepage (replaced with CSS animate-fade-in and hover:-translate-y). Added bundle analyzer to next.config. Fixed weekly newsletter max_tokens (2048→4096) to prevent truncated generation.
-
-### Session 2026-02-22 12:14 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
