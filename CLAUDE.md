@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-17 18:38 (MacBook)
+- **Pattern:** Social Post Generation Upgrade
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Overhauled X post generation from newsletter-summary teasers to opinion-first threaded format (hook tweet + one opinionated take per story + closing tweet with link). Added emojis to X prompt. Added Reddit post generation (title + markdown body, copy-paste workflow). Restructured social admin layout: newsletter selector full-width on top, 3 post cards (X, LinkedIn, Reddit) in horizontal columns, utilities row below.
+
 ### Session 2026-03-12 21:52 (MacBook)
 - **Pattern:** Quality Infrastructure + Guide PDF Fix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Replaced Hotjar with Microsoft Clarity (vj7nlmybbm) for session recordings and heatmaps. Clarity script is ~17KB vs Hotjar's ~57KB. Kept 3s deferred loading to protect LCP.
 
 ### Session 2026-02-23 12:17 (MacBook)
-- **Pattern:** LCP Optimization
-- **Status:** ✅ Completed
-- **Files Changed:** 17
-- **Tests Added/Modified:** 0
-- **Notes:** LCP optimization: deferred Hotjar script 3s after page load (-57KB critical path), converted 5 PNG logos to WebP (283KB→4.8KB, 98% reduction), added lazy loading to below-fold product logos. Created `scripts/perf-audit.js` Lighthouse runner with historical comparison (`npm run perf-audit`, `perf-audit:compare`, `perf-audit:history`). Baseline captured: homepage LCP 6.5s, pattern page LCP 1.8s.
-
-### Session 2026-02-23 11:35 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

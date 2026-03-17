@@ -84,19 +84,20 @@ export async function POST(request: NextRequest) {
     // Check for existing posts
     const existingTwitterPost = newsletter.socialPosts.find((p) => p.platform === 'twitter');
     const existingLinkedInPost = newsletter.socialPosts.find((p) => p.platform === 'linkedin');
+    const existingRedditPost = newsletter.socialPosts.find((p) => p.platform === 'reddit');
 
     // If regenerating a specific platform
     if (regenerate && platform) {
-      if (platform !== 'twitter' && platform !== 'linkedin') {
+      if (platform !== 'twitter' && platform !== 'linkedin' && platform !== 'reddit') {
         return NextResponse.json(
-          { error: 'Invalid platform. Must be "twitter" or "linkedin"' },
+          { error: 'Invalid platform. Must be "twitter", "linkedin", or "reddit"' },
           { status: 400 }
         );
       }
 
       const content = await regeneratePlatformContent(platform, newsletterData, newsletterUrl);
 
-      const existingPost = platform === 'twitter' ? existingTwitterPost : existingLinkedInPost;
+      const existingPost = platform === 'twitter' ? existingTwitterPost : platform === 'reddit' ? existingRedditPost : existingLinkedInPost;
 
       if (existingPost) {
         // Update existing post
@@ -107,13 +108,16 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        const threadData = 'threadContent' in content && content.threadContent ? JSON.stringify(content.threadContent) : undefined;
+        // For reddit, store title in threadContent; for twitter, store thread tweets
+        const threadData = platform === 'reddit' && 'title' in content
+          ? JSON.stringify([(content as { title: string }).title])
+          : 'threadContent' in content && content.threadContent ? JSON.stringify(content.threadContent) : undefined;
         const updatedPost = await prisma.socialPost.update({
           where: { id: existingPost.id },
           data: {
             content: content.content,
             threadContent: threadData,
-            hashtags: JSON.stringify(content.hashtags),
+            hashtags: JSON.stringify('hashtags' in content ? content.hashtags : []),
             status: 'draft',
             errorMessage: null,
           },
@@ -134,13 +138,15 @@ export async function POST(request: NextRequest) {
         });
       } else {
         // Create new post
-        const threadData = ('threadContent' in content && content.threadContent) ? (content.threadContent as string[]) : null;
+        const threadData = platform === 'reddit' && 'title' in content
+          ? [(content as { title: string }).title]
+          : ('threadContent' in content && content.threadContent) ? (content.threadContent as string[]) : null;
         const newPost = await createSocialPost(
           newsletterId,
           platform,
           content.content,
           threadData,
-          content.hashtags
+          'hashtags' in content ? content.hashtags : []
         );
 
         return NextResponse.json({
@@ -235,6 +241,41 @@ export async function POST(request: NextRequest) {
       createdPosts.push({ ...newPost, isNew: true });
     }
 
+    // Handle Reddit post
+    // Reddit content stores title in threadContent field as a single-element array
+    if (existingRedditPost) {
+      if (existingRedditPost.status !== 'posted' && regenerate) {
+        const updatedPost = await prisma.socialPost.update({
+          where: { id: existingRedditPost.id },
+          data: {
+            content: generatedContent.reddit.content,
+            threadContent: JSON.stringify([generatedContent.reddit.title]),
+            hashtags: JSON.stringify([]),
+            status: 'draft',
+            errorMessage: null,
+          },
+        });
+
+        createdPosts.push({
+          id: updatedPost.id,
+          platform: 'reddit',
+          content: updatedPost.content,
+          threadContent: safeParseJson(updatedPost.threadContent),
+          hashtags: [],
+          isNew: false,
+        });
+      }
+    } else {
+      const newPost = await createSocialPost(
+        newsletterId,
+        'reddit',
+        generatedContent.reddit.content,
+        [generatedContent.reddit.title],
+        []
+      );
+      createdPosts.push({ ...newPost, isNew: true });
+    }
+
     return NextResponse.json({
       success: true,
       posts: createdPosts,
@@ -250,7 +291,7 @@ export async function POST(request: NextRequest) {
 
 async function createSocialPost(
   newsletterId: string,
-  platform: 'twitter' | 'linkedin',
+  platform: 'twitter' | 'linkedin' | 'reddit',
   content: string,
   threadContent: string[] | null | undefined,
   hashtags: string[]
