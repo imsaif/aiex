@@ -702,10 +702,10 @@ export default function CodeExampleBlock({
           <div className="p-6 flex justify-center min-h-[400px]">
             <div className={`w-full ${
               // Components that need full width (max-w-6xl)
-              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo'].includes(componentId)
+              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo', 'autonomy-spectrum-demo'].includes(componentId)
                 ? 'max-w-6xl'
                 // Components that need large width (max-w-4xl)
-                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'autonomy-spectrum-demo', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo'].includes(componentId)
+                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo'].includes(componentId)
                 ? 'max-w-4xl'
                 // Components that need large width (max-w-4xl)
                 : ['VulnerableUserProtectionDemo'].includes(componentId)

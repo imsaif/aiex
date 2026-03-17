@@ -2,23 +2,21 @@ import { Example } from '../../../../types';
 
 export const examples: Example[] = [
   {
-    title: "Microsoft Copilot - Context-Dependent Autonomy",
-    description: "Copilot operates at different autonomy levels depending on context  -  suggesting text completions (Level 1), drafting full emails for review (Level 2), or auto-formatting documents (Level 3). Users experience different levels of AI independence without explicit configuration.",
-    altText: "Microsoft Copilot showing different autonomy levels across email drafting and document formatting tasks"
+    title: "Claude Code — Per-Tool Autonomy Control",
+    description: "Each tool the agent can use — file edits, git commands, test runners — can be set to Allow, Ask, or Deny independently. Developers grant full autonomy for low-risk actions while requiring confirmation for destructive operations.",
+    image: "/images/examples/autonomy-spectrum/claude-code-autonomy.webp",
+    altText: "Claude Code permissions panel showing Allow, Ask, Deny, and Workspace autonomy levels for individual tools"
   },
   {
-    title: "GitHub Copilot Workspace - Plan-Review-Execute",
-    description: "Lets developers review a plan of proposed code changes before the agent executes them, operating at Level 2 by default with the option to accept individual steps. Users can selectively approve or reject each planned change.",
-    altText: "GitHub Copilot Workspace showing a plan of proposed code changes with accept and reject controls for each step"
+    title: "Cursor — Agent Mode with Review Panel",
+    description: "Agent mode reads the codebase, generates a plan, and writes code across multiple files, but presents all changes in a review panel with Apply All and Undo All controls before anything is committed. Users can switch between Agent, Ask, and manual modes at any time.",
+    image: "/images/examples/autonomy-spectrum/cursor-agent-review.jpg",
+    altText: "Cursor IDE showing Agent mode with a review panel displaying pending file changes and Apply All and Undo All buttons"
   },
   {
-    title: "Tesla Autopilot - Driving Mode Spectrum",
-    description: "The autonomy spectrum is visible in driving modes  -  from lane-keeping assist (Level 1) to Navigate on Autopilot with auto-lane-changes (Level 3), each requiring different levels of driver engagement. Trust builds progressively as the system demonstrates competence.",
-    altText: "Tesla Autopilot interface showing different driving autonomy modes from lane-keeping assist to full navigation"
-  },
-  {
-    title: "Notion AI - Fixed Level 2 Autonomy",
-    description: "Currently operates only at Level 2 (propose and confirm). The user always reviews before AI content is inserted. No option to increase autonomy for routine tasks, showing how some products choose a single fixed point on the spectrum.",
-    altText: "Notion AI showing propose-and-confirm workflow where users review AI content before insertion"
+    title: "GitHub Copilot Workspace — Plan-Review-Execute",
+    description: "Breaks AI-assisted coding into discrete stages: specification, plan, and implementation. Users can edit the plan, accept or reject individual file changes, and only then let the agent write code. The diff view adds a final review checkpoint.",
+    image: "/images/examples/autonomy-spectrum/github-copilot-workspace.webp",
+    altText: "GitHub Copilot Workspace showing editable plan with checkboxes per file on the left and code diff on the right"
   }
 ];

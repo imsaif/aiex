@@ -53,6 +53,7 @@ export const productLogos: Record<string, string> = {
   Hugging: `${SI}/huggingface.svg`,
 
   // AI Development Tools
+  Cursor: '/images/logos/cursor.svg',
   Devin: '/images/logos/devin_ai_logo.webp',
 
   // Mental Health & Wellness AI
