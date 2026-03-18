@@ -4,7 +4,7 @@ export const examples: Example[] = [
   {
     title: "GitHub Actions - Workflow Run Logs",
     description: "Step-by-step execution log showing each workflow action with status indicators (completed, in-progress, pending), timing for every step, and searchable logs. Provides a clear sequential audit trail of automated CI/CD processes.",
-    image: "/images/examples/githubactions.gif",
+    image: "/images/examples/githubactions.webp",
     altText: "GitHub Actions workflow showing step-by-step execution log with status indicators and timing for each step"
   },
   {
