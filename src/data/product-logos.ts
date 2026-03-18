@@ -52,6 +52,9 @@ export const productLogos: Record<string, string> = {
   GPTZero: `${SI}/openai.svg`,
   Hugging: `${SI}/huggingface.svg`,
 
+  // Automation & Workflow Tools
+  Zapier: `${SI}/zapier.svg`,
+
   // AI Development Tools
   Cursor: '/images/logos/cursor.svg',
   Devin: '/images/logos/devin_ai_logo.webp',

@@ -2,23 +2,15 @@ import { Example } from '../../../../types';
 
 export const examples: Example[] = [
   {
-    title: "Intercom Fin - AI-to-Human Customer Service Handoff",
-    description: "When the AI agent can't confidently resolve a customer issue, it seamlessly transfers to a human agent with full conversation context and a summary of what it already tried, preserving continuity.",
-    altText: "Intercom Fin showing AI-to-human handoff with conversation context summary and attempted resolution log"
+    title: "Notion AI - Scope Confirmation Before Bulk Action",
+    description: "When asked to auto-fill a column with AI, Notion presents scope options — apply to this view only or fill all pages in the database. Gives users control over the blast radius before the AI acts across multiple items.",
+    image: "/images/examples/notionaiscope.gif",
+    altText: "Notion AI showing scope options for AI autofill with 'Try on this view' vs 'Fill all pages' choices"
   },
   {
-    title: "Microsoft Copilot in Teams - Authorization Escalation",
-    description: "When asked to perform an action it can't complete, like approving a purchase order above its authorization level, it explains why and routes the request to the appropriate person with full context.",
-    altText: "Microsoft Copilot in Teams showing an authorization escalation with explanation and routing to approver"
+    title: "Claude - Clarifying Questions Before Acting",
+    description: "When a request is ambiguous, Claude pauses to ask clarifying questions rather than guessing. This ensures the response matches user intent and avoids wasted effort from incorrect assumptions.",
+    image: "/images/examples/claudeclarifying.gif",
+    altText: "Claude asking clarifying questions to understand user intent before providing a response"
   },
-  {
-    title: "Cursor AI - Architectural Decision Escalation",
-    description: "When encountering a coding decision that requires architectural judgment, it presents options and asks the developer to choose rather than making the decision autonomously, preserving developer control over critical choices.",
-    altText: "Cursor AI presenting architectural options for developer choice rather than making autonomous decision"
-  },
-  {
-    title: "Amazon Warehouse Robots - Physical Task Escalation",
-    description: "Robots escalate to human workers when they encounter items they can't identify or pick reliably, providing camera footage and location data for efficient human intervention without disrupting overall workflow.",
-    altText: "Amazon warehouse robot escalation system showing camera view and location data for human worker assistance"
-  }
 ];

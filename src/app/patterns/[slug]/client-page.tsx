@@ -54,51 +54,31 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
 
   return (
     <main className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6 animate-fade-in">
-      {/* Breadcrumb Navigation */}
+      {/* Previous / Next Navigation */}
       <nav className="flex items-center justify-between text-sm mb-6">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-white dark:hover:text-gray-100 transition-colors"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            width="16"
-            height="16"
+        {previousPattern ? (
+          <Link
+            href={`/patterns/${previousPattern.slug}`}
+            className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors group"
           >
-            <path
-              fillRule="evenodd"
-              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span>Back to All Patterns</span>
-        </Link>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+            <span>Previous: {previousPattern.title}</span>
+          </Link>
+        ) : <div />}
 
-        {nextPattern && (
+        {nextPattern ? (
           <Link
             href={`/patterns/${nextPattern.slug}`}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-white dark:hover:text-gray-100 transition-colors"
+            className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors group text-right"
           >
             <span>Next: {nextPattern.title}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              width="16"
-              height="16"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+              <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           </Link>
-        )}
+        ) : <div />}
       </nav>
 
       {/* Pattern Header */}
@@ -313,10 +293,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
               </span>
             </Link>
           ) : <div />}
-
-          <Link href="/" className="px-5 py-2 bg-gradient-to-r from-pink-500/10 to-violet-500/10 text-text-secondary rounded-full hover:from-pink-500/20 hover:to-violet-500/20 transition-colors font-medium border border-gray-200 dark:border-gray-700">
-            View All Patterns
-          </Link>
 
           {nextPattern ? (
             <Link

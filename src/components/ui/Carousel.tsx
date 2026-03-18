@@ -27,7 +27,7 @@ export default function Carousel({ examples }: { examples: Example[] }) {
               <OptimizedMedia
                 src={example.image}
                 alt={example.title}
-                className={example.image.includes('pinwheelgpt') ? "w-auto max-w-full max-h-full object-contain" : "w-full h-full object-cover"}
+                className="w-full h-full object-cover"
                 width={800}
                 height={600}
                 priority={current === 0} // Only prioritize the first image

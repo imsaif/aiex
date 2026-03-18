@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-18 15:10 (MacBook)
+- **Pattern:** Agentic Pattern Demos Overhaul
+- **Status:** ✅ Completed
+- **Files Changed:** 22
+- **Tests Added/Modified:** 0
+- **Notes:** Overhauled 5 agentic pattern demos (Intent Preview, Plan Summary, Autonomy Spectrum, Action Audit Trail, Escalation Pathways) from static to interactive with idle→running→review→done phases, user-triggered start, animated step reveals, and replay buttons. Swapped developer-centric contexts to designer-friendly scenarios (design system tokens, accessibility checks, brand guidelines). Replaced pattern page "Back to All Patterns" nav with Previous/Next pattern links. Removed "View All Patterns" center button from bottom nav. Added real-world example images for Plan Summary (ChatGPT, GitHub Copilot Workspace, Gemini), Action Audit Trail (GitHub Actions, Zapier, Claude Code), and Escalation Pathways (Notion AI, Claude). Added Zapier logo to product-logos.ts. Converted 4 new GIFs to MP4 for performance. Fixed Carousel to use object-cover. Added data-clarity-region and cursor-pointer across all demos. Stripped non-brand colors from Escalation Pathways demo.
+
 ### Session 2026-03-17 22:16 (MacBook)
 - **Pattern:** Autonomy Spectrum
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed newsletter links to open in new tab via `target="_blank"` injection in `newsletter-detail-client.tsx`. Replaced session-based "You're on a roll" smart prompt with milestone-based triggering (5, 10, 15, 20, 25, 30 unique patterns) — each milestone fires at most once, stored in localStorage. Eliminates the modal appearing on every new session's first pattern page.
 
 ### Session 2026-02-25 13:35 (MacBook)
-- **Pattern:** Social Admin Layout Restructure
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Restructured social admin page from single-column to two-column grid layout (md:grid-cols-12). Left sidebar (col-span-4): newsletter selector, action buttons, social message, share image, compact connected accounts, setup instructions. Right main (col-span-8): stacked Twitter + LinkedIn post cards. Connected accounts compacted from large cards to inline rows with status badges. Container widened from max-w-4xl to max-w-7xl. Mobile: single column with posts after selector for optimal scroll order.
-
-### Session 2026-02-23 12:31 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
