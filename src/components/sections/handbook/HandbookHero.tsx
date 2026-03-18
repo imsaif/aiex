@@ -249,7 +249,7 @@ export function HandbookHero() {
                   className="mt-0.5 w-4 h-4 rounded border-gray-600 bg-gray-800 text-white focus:ring-white focus:ring-offset-gray-900 cursor-pointer"
                 />
                 <span className="text-sm text-gray-400 group-hover:text-gray-400 transition leading-tight">
-                  I agree to receive the checklist and occasional updates about new AI design patterns. Unsubscribe anytime.
+                  I agree to receive the checklist and daily AI UX news updates. Unsubscribe anytime.
                 </span>
               </label>
               <button

@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-18 19:17 (MacBook)
+- **Pattern:** Audit Page Simplification
+- **Status:** ✅ Completed
+- **Files Changed:** 23
+- **Tests Added/Modified:** 0
+- **Notes:** Simplified audit page from two-panel (ResizablePanels + WelcomePanel) to single full-width canvas with floating results sidebar overlay. Added multi-image support (up to 4 screenshots) with carousel navigation, page indicators, and combined analysis. Moved marketing pitch (trust badge, logo carousel, how-it-works) inline below upload card. Added floating bottom toolbar under device frame with contextual actions: pre-analysis (Analyze, Add More, Clear, Hide Frame) and post-analysis (New Audit, Chat with Design Mentor, Add More, Hide Frame). Chat trigger from toolbar opens sidebar and switches to chat mode. Removed duplicate New Audit/Chat buttons from ResultsPanel. API route updated to send multiple images to Claude with cross-screen context prompt. Rate limit bumped to 20 for testing (MUST revert before deploy).
+
 ### Session 2026-03-18 15:10 (MacBook)
 - **Pattern:** Agentic Pattern Demos Overhaul
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Based on Clarity analytics (8s LCP, 1.37 pages/session, 43s active time). P0: Fixed field LCP by extracting hero section from client component into server-rendered HTML (`page.tsx` + new `pattern-grid.tsx`, deleted `home-client.tsx`). Added homepage cache headers (`s-maxage=3600, stale-while-revalidate=86400`). P1: Upgraded related patterns from bare text links to rich cards with descriptions + category badges. Added "More in [Category]" auto-computed section. Moved related patterns above newsletter CTA. Removed disruptive SmartHandbookPrompt modal from pattern pages — inline newsletter signup handles email capture instead.
 
 ### Session 2026-03-02 14:29 (MacBook)
-- **Pattern:** Newsletter & Smart Prompt Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed newsletter links to open in new tab via `target="_blank"` injection in `newsletter-detail-client.tsx`. Replaced session-based "You're on a roll" smart prompt with milestone-based triggering (5, 10, 15, 20, 25, 30 unique patterns) — each milestone fires at most once, stored in localStorage. Eliminates the modal appearing on every new session's first pattern page.
-
-### Session 2026-02-25 13:35 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

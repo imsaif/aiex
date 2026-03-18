@@ -272,7 +272,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
             <InlineNewsletterSignup
               variant="pattern-detail"
               customHeading="Want More Patterns Like This?"
-              customSubheading="Score your AI interface against 28 proven UX patterns (free PDF) + weekly AI/UX analysis"
+              customSubheading="Score your AI interface against 28 proven UX patterns (free PDF) + daily AI/UX news"
             />
           </div>
         </section>

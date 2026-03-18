@@ -75,7 +75,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
             {/* Info Chip */}
             <div className="flex items-center justify-center gap-2 mb-6">
               <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
-                Weekly AI Design Updates
+                Daily AI Design Updates
               </span>
             </div>
 
@@ -91,7 +91,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
               <InlineNewsletterSignup
                 variant="hero"
                 source="news"
-                customSubheading="Get weekly AI product updates, pattern breakdowns & design insights"
+                customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
                 customButtonText="Solve my AI design overload →"
                 customSuccessMessage="You're in! Watch for our next issue."
                 stacked

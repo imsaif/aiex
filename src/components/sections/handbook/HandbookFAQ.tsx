@@ -9,7 +9,7 @@ const faqs = [
   },
   {
     question: 'Will you spam my email?',
-    answer: 'No. You\'ll only get occasional updates about new patterns. Unsubscribe anytime.',
+    answer: 'No. You\'ll get a daily AI UX news digest. Unsubscribe anytime.',
   },
   {
     question: 'Who is this for?',

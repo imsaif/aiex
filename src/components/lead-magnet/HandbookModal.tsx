@@ -150,7 +150,7 @@ export function HandbookModal({ isOpen, onClose }: HandbookModalProps) {
                     className="mt-0.5 w-4 h-4 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white focus:ring-black dark:focus:ring-white cursor-pointer"
                   />
                   <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition leading-tight">
-                    I agree to receive the handbook and occasional updates about new AI design patterns. Unsubscribe anytime.
+                    I agree to receive the handbook and daily AI UX news updates. Unsubscribe anytime.
                   </span>
                 </label>
 

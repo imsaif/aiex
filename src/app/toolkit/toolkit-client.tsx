@@ -111,7 +111,7 @@ export function ToolkitClient() {
                   </div>
                   <div>
                     <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">Newsletter</span>
-                    <span className="text-xs text-text-tertiary">Weekly AI UX analysis</span>
+                    <span className="text-xs text-text-tertiary">Daily AI UX news</span>
                   </div>
                 </Link>
                 <Link
@@ -210,7 +210,7 @@ export function ToolkitClient() {
                 <div className="bg-gray-900/50 border border-gray-700 rounded-lg p-5">
                   <h3 className="text-white font-semibold mb-2">Want more frameworks like this?</h3>
                   <p className="text-gray-400 text-sm mb-4">
-                    Get weekly AI UX analysis in your inbox.
+                    Get daily AI UX news in your inbox.
                   </p>
                   <InlineNewsletterSignup
                     variant="news"
@@ -285,7 +285,7 @@ export function ToolkitClient() {
               </div>
               <div>
                 <span className="text-sm font-medium text-text-primary block">Newsletter</span>
-                <span className="text-xs text-text-tertiary">Weekly AI UX analysis</span>
+                <span className="text-xs text-text-tertiary">Daily AI UX news</span>
               </div>
             </Link>
             <Link

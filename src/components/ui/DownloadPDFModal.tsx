@@ -208,7 +208,7 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
                 </form>
 
                 <p className="mt-4 text-xs text-text-secondary text-center">
-                  We'll also send you occasional updates about new guides. Unsubscribe anytime.
+                  We'll also send you daily AI UX news updates. Unsubscribe anytime.
                 </p>
               </>
             )}

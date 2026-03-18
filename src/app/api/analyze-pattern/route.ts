@@ -52,9 +52,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, imageBase64, deviceType } = body as {
+    const { context, imageBase64, images, deviceType } = body as {
       context: ContextData;
       imageBase64: string;
+      images?: Array<{ base64: string; deviceType: DeviceType }>;
       deviceType?: DeviceType;
     };
 
@@ -77,11 +78,25 @@ export async function POST(request: NextRequest) {
     const deviceContext = deviceType === 'mobile'
       ? '\n\nIMPORTANT: This is a MOBILE interface screenshot. Consider mobile-specific patterns like touch targets, thumb zones, mobile navigation patterns, and responsive design. Mobile interfaces have different UX considerations than desktop.'
       : '\n\nIMPORTANT: This is a DESKTOP interface screenshot. Consider desktop-specific patterns like hover states, keyboard navigation, larger information density, and multi-panel layouts.';
-    const prompt = basePrompt + deviceContext;
 
-    // Detect the image media type
-    const mediaType = detectMediaType(imageBase64);
-    console.log('[Pattern Audit] Analyzing with context:', context.interfaceType, 'Device:', deviceType || 'unknown', 'Media type:', mediaType);
+    // Build image content blocks
+    const imageList = images && images.length > 1 ? images : [{ base64: imageBase64, deviceType: deviceType || 'desktop' as DeviceType }];
+    const imageBlocks: Anthropic.ImageBlockParam[] = imageList.map((img) => ({
+      type: 'image' as const,
+      source: {
+        type: 'base64' as const,
+        media_type: detectMediaType(img.base64),
+        data: img.base64,
+      },
+    }));
+
+    const multiImageContext = imageList.length > 1
+      ? `\n\nYou are analyzing ${imageList.length} screenshots of the same product/flow. Consider all images together to get a complete picture of the user experience. Look for patterns across screens — continuity, consistency, flow progression, and cross-screen UX patterns.`
+      : '';
+
+    const prompt = basePrompt + deviceContext + multiImageContext;
+
+    console.log('[Pattern Audit] Analyzing with context:', context.interfaceType, 'Device:', deviceType || 'unknown', 'Images:', imageList.length);
 
     // Call Claude Vision API
     const response = await anthropic.messages.create({
@@ -91,14 +106,7 @@ export async function POST(request: NextRequest) {
         {
           role: 'user',
           content: [
-            {
-              type: 'image',
-              source: {
-                type: 'base64',
-                media_type: mediaType,
-                data: imageBase64,
-              },
-            },
+            ...imageBlocks,
             {
               type: 'text',
               text: prompt,

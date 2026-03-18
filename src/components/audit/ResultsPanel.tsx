@@ -45,6 +45,8 @@ interface ResultsPanelProps {
   onNewAudit: () => void;
   isAnalyzing?: boolean;
   isDemoMode?: boolean;
+  /** Increment to trigger chat mode from outside */
+  chatTrigger?: number;
 }
 
 interface ChatMessage {
@@ -217,7 +219,7 @@ function generateResultsSummary(
   return lines.join('\n');
 }
 
-export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoMode = false }: ResultsPanelProps) {
+export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoMode = false, chatTrigger = 0 }: ResultsPanelProps) {
   const [chatMode, setChatMode] = useState(false); // false = analysis view, true = chat view
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -227,6 +229,11 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
   const [selectedPattern, setSelectedPattern] = useState<(PatternResult & { id: string }) | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Switch to chat mode when triggered externally
+  useEffect(() => {
+    if (chatTrigger > 0) setChatMode(true);
+  }, [chatTrigger]);
 
   // Rotate through analysis messages
   useEffect(() => {
@@ -482,17 +489,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
           </div>
         </div>
 
-        {/* New Audit Button */}
-        <div className="pt-4 mt-4 border-t border-border-primary">
-          <button
-            type="button"
-            onClick={onNewAudit}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-base text-text-secondary hover:text-text-primary hover:bg-background-secondary rounded-full transition-colors"
-          >
-            <ArrowPathIcon className="w-5 h-5" />
-            Start New Audit
-          </button>
-        </div>
       </aside>
     );
   }
@@ -514,20 +510,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
           <span className="text-text-secondary">
             {results.score}/{maxScore}
           </span>
-        </div>
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="p-2 text-text-tertiary hover:text-text-primary hover:bg-background-secondary rounded-lg transition-colors"
-            title={copied ? 'Copied!' : 'Copy results'}
-          >
-            {copied ? (
-              <ClipboardDocumentCheckIcon className="w-5 h-5 text-status-success" />
-            ) : (
-              <ClipboardDocumentIcon className="w-5 h-5" />
-            )}
-          </button>
         </div>
       </div>
 
@@ -783,25 +765,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
         )}
       </div>
 
-      {/* Bottom Actions */}
-      <div className="pt-4 mt-4 border-t border-border-primary flex items-center justify-between">
-        <button
-          type="button"
-          onClick={onNewAudit}
-          className="text-sm text-text-secondary hover:text-text-primary flex items-center gap-2 transition-colors"
-        >
-          <ArrowPathIcon className="w-4 h-4" />
-          New Audit
-        </button>
-        <button
-          type="button"
-          onClick={() => setChatMode(true)}
-          className="text-sm text-accent-primary hover:underline flex items-center gap-2 cursor-pointer"
-        >
-          <ChatBubbleLeftRightIcon className="w-4 h-4" />
-          Chat with AI Mentor
-        </button>
-      </div>
 
       {/* Pattern Detail Modal */}
       <PatternModal

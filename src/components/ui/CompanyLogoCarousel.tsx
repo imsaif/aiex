@@ -105,7 +105,7 @@ export default function CompanyLogoCarousel({
   // Fixed container heights to prevent CLS
   const containerHeightClasses = {
     xs: 'h-5',
-    sm: showLabel ? 'h-14' : 'h-8',
+    sm: showLabel ? 'h-14' : 'h-10',
     md: showLabel ? 'h-18' : 'h-12',
     lg: showLabel ? 'h-22' : 'h-16',
   };

@@ -285,13 +285,13 @@ function getNewsWelcomeEmail(): string {
 
         <div style="background: #ffffff; padding: 40px 30px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
           <p style="font-size: 16px; margin-bottom: 20px;">
-            You're in! Every week, we'll send you a curated roundup of what's new in AI design.
+            You're in! Every day, we'll send you a curated roundup of what's new in AI design.
           </p>
 
           <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #0f172a;">
             <h2 style="font-size: 18px; margin: 0 0 10px 0; color: #0f172a; font-weight: 600;">What you'll get:</h2>
             <ul style="margin: 0; padding-left: 20px;">
-              <li style="margin-bottom: 8px;"><strong>Weekly roundups</strong> of what's new in ChatGPT, Claude, Gemini, Cursor, and more</li>
+              <li style="margin-bottom: 8px;"><strong>Daily roundups</strong> of what's new in ChatGPT, Claude, Gemini, Cursor, and more</li>
               <li style="margin-bottom: 8px;"><strong>Pattern breakdowns</strong> showing the UX thinking behind each update</li>
               <li style="margin-bottom: 8px;"><strong>Actionable insights</strong> you can apply to your own AI products</li>
             </ul>
@@ -369,7 +369,7 @@ function getHandbookWelcomeEmail(email: string, token: string | null): string {
           </div>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
-            You're now subscribed to our newsletter — weekly AI/UX analysis delivered to your inbox.
+            You're now subscribed to our newsletter — daily AI/UX news delivered to your inbox.
           </p>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
@@ -435,7 +435,7 @@ function getAuditKitWelcomeEmail(): string {
           </div>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
-            You're now subscribed to receive AI UX tips and pattern updates. We'll help you build better AI experiences.
+            You're now subscribed to receive daily AI UX news and pattern updates. We'll help you build better AI experiences.
           </p>
 
           <div style="text-align: center; margin: 30px 0;">
@@ -485,7 +485,7 @@ function getAuditWelcomeEmail(): string {
           </div>
 
           <p style="font-size: 16px; margin-bottom: 20px;">
-            You're now subscribed to receive AI UX tips and pattern updates. We'll help you build better AI experiences.
+            You're now subscribed to receive daily AI UX news and pattern updates. We'll help you build better AI experiences.
           </p>
 
           <div style="text-align: center; margin: 30px 0;">

@@ -5,6 +5,7 @@ import { resend } from '@/lib/resend';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { getPatternSlug } from '@/utils/pattern-links';
 import { validateEmailSecurity } from '@/lib/email-validation';
+import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
 
 // Request validation schema
@@ -17,13 +18,13 @@ const sendReportSchema = z.object({
     detectedComponent: z.string(),
     componentDescription: z.string().optional(),
     patterns: z.record(z.object({
-      id: z.string(),
+      id: z.string().optional(),
       name: z.string(),
       status: z.enum(['well-implemented', 'weak', 'missing', 'not-applicable']),
       evidence: z.string(),
       priority: z.enum(['high', 'medium', 'low', 'none']),
       improvement: z.string().optional(),
-      category: z.string(),
+      category: z.string().optional(),
     })),
     summary: z.string(),
     criticalMissing: z.array(z.string()),
@@ -102,6 +103,9 @@ export async function POST(request: NextRequest) {
         data: { active: true },
       });
     }
+
+    // Sync to Beehiiv (fire-and-forget)
+    addSubscriberToBeehiiv(email).catch(() => {});
 
     return NextResponse.json(
       { message: 'Report sent successfully! Check your inbox.' },

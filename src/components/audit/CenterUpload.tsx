@@ -6,13 +6,20 @@ import {
   ArrowUpTrayIcon,
   ComputerDesktopIcon,
   PhotoIcon,
-  ArrowPathIcon,
   DevicePhoneMobileIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PlusIcon,
+  SparklesIcon,
+  ArrowPathIcon,
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
 import { DeviceFrame } from './DeviceFrame';
 import { detectDeviceType, type DeviceType } from '@/utils/imageDetection';
 
 type TabType = 'upload' | 'demo';
+
+const MAX_IMAGES = 4;
 
 interface UsageInfo {
   used: number;
@@ -20,32 +27,46 @@ interface UsageInfo {
   limit: number;
 }
 
+export interface UploadedImage {
+  base64: string;
+  fileName: string;
+  deviceType: DeviceType;
+}
+
 interface CenterUploadProps {
-  onImageUpload: (base64: string, fileName: string, deviceType: DeviceType) => void;
+  onImagesUpload: (images: UploadedImage[]) => void;
+  onStartAnalysis?: () => void;
+  onOpenChat?: () => void;
   onClear?: () => void;
   onStartDemo?: () => void;
-  uploadedImage?: string | null;
-  uploadedFileName?: string;
-  detectedDeviceType?: DeviceType;
+  uploadedImages?: UploadedImage[];
   isAnalyzing?: boolean;
+  hasResults?: boolean;
   showDeviceFrame?: boolean;
   onToggleFrame?: () => void;
+  children?: React.ReactNode;
+  /** When true, shifts content left to make room for floating sidebar */
+  sidebarOpen?: boolean;
 }
 
 export function CenterUpload({
-  onImageUpload,
+  onImagesUpload,
+  onStartAnalysis,
+  onOpenChat,
   onClear,
   onStartDemo,
-  uploadedImage,
-  uploadedFileName = '',
-  detectedDeviceType = 'desktop',
+  uploadedImages = [],
   isAnalyzing = false,
+  hasResults = false,
   showDeviceFrame = true,
   onToggleFrame,
+  children,
+  sidebarOpen = false,
 }: CenterUploadProps) {
   const [activeTab, setActiveTab] = useState<TabType>('upload');
   const [isDetecting, setIsDetecting] = useState(false);
   const [usage, setUsage] = useState<UsageInfo | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   // Fetch usage on mount
   useEffect(() => {
@@ -55,25 +76,49 @@ export function CenterUpload({
       .catch(() => setUsage(null));
   }, []);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) return;
+  // Reset carousel index when images change
+  useEffect(() => {
+    if (uploadedImages.length === 0) setCurrentIndex(0);
+  }, [uploadedImages.length]);
 
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
+  const processFiles = useCallback(async (files: File[]) => {
+    if (files.length === 0) return;
 
-    reader.onload = async () => {
-      const base64 = reader.result as string;
-      setIsDetecting(true);
-      try {
+    setIsDetecting(true);
+    try {
+      const newImages: UploadedImage[] = [];
+
+      for (const file of files) {
+        const base64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(file);
+        });
+
         const result = await detectDeviceType(base64);
-        onImageUpload(base64, file.name, result.deviceType);
-      } finally {
-        setIsDetecting(false);
+        newImages.push({
+          base64,
+          fileName: file.name,
+          deviceType: result.deviceType,
+        });
       }
-    };
 
-    reader.readAsDataURL(file);
-  }, [onImageUpload]);
+      // Merge with existing, cap at MAX_IMAGES
+      const merged = [...uploadedImages, ...newImages].slice(0, MAX_IMAGES);
+      onImagesUpload(merged);
+      // Show the first newly added image
+      setCurrentIndex(uploadedImages.length);
+    } finally {
+      setIsDetecting(false);
+    }
+  }, [onImagesUpload, uploadedImages]);
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    // Cap files to remaining slots
+    const remaining = MAX_IMAGES - uploadedImages.length;
+    const filesToProcess = acceptedFiles.slice(0, Math.max(remaining, 1));
+    await processFiles(filesToProcess);
+  }, [processFiles, uploadedImages.length]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
@@ -83,15 +128,33 @@ export function CenterUpload({
       'image/webp': ['.webp'],
     },
     maxSize: 10 * 1024 * 1024,
-    multiple: false,
+    multiple: true,
     noClick: true,
   });
 
-  // If image is uploaded, show it on the canvas with optional device frame
-  if (uploadedImage) {
+  const hasImages = uploadedImages.length > 0;
+  const currentImage = uploadedImages[currentIndex];
+  const isMultiple = uploadedImages.length > 1;
+
+  // Navigation
+  const goToPrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((i) => (i - 1 + uploadedImages.length) % uploadedImages.length);
+  };
+  const goToNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((i) => (i + 1) % uploadedImages.length);
+  };
+
+  // If images are uploaded, show carousel/single view
+  if (hasImages && currentImage) {
     return (
-      <div className="absolute inset-0 flex items-center justify-center p-4" {...getRootProps()}>
+      <div className="absolute inset-0" {...getRootProps()}>
         <input {...getInputProps()} />
+
+        {/* Image area — shifts left when sidebar is open */}
+        {/* brand-audit-ignore: arbitrary padding needed to offset for floating sidebar width */}
+        <div className={`absolute inset-0 flex items-center justify-center p-4 transition-[padding] duration-500 ${sidebarOpen ? 'lg:pr-96' : ''}`}>
 
         {/* Device frame container */}
         <div className="relative flex flex-col items-center justify-center max-h-full overflow-hidden">
@@ -99,91 +162,158 @@ export function CenterUpload({
           <div className={`relative transition-all duration-500 ${isAnalyzing ? 'blur-[2px] opacity-80' : ''}`}>
             {showDeviceFrame ? (
               <DeviceFrame
-                deviceType={detectedDeviceType}
-                imageSrc={uploadedImage}
-                imageAlt={uploadedFileName || 'Uploaded screenshot'}
+                deviceType={currentImage.deviceType}
+                imageSrc={currentImage.base64}
+                imageAlt={currentImage.fileName || 'Uploaded screenshot'}
               />
             ) : (
-              // Raw image without frame
               <div className="relative max-w-full max-h-[70vh]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={uploadedImage}
-                  alt={uploadedFileName || 'Uploaded screenshot'}
+                  src={currentImage.base64}
+                  alt={currentImage.fileName || 'Uploaded screenshot'}
                   className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg"
                 />
               </div>
             )}
-          </div>
 
-          {/* Device type indicator - hide during analysis */}
-          {!isAnalyzing && (
-            <div className="mt-4 px-3 py-1 bg-background-secondary rounded-full text-xs text-text-secondary">
-              Detected: {detectedDeviceType === 'mobile' ? 'Mobile' : 'Desktop'}
-            </div>
-          )}
-
-          {/* Analyzing indicator below device */}
-          {isAnalyzing && (
-            <div className="mt-4 px-4 py-2 bg-accent-subtle rounded-full text-sm text-accent-primary font-medium animate-pulse">
-              Analyzing your design...
-            </div>
-          )}
-
-          {/* Overlay controls - hide during analysis */}
-          {!isAnalyzing && (
-            <div className="mt-6 flex flex-col items-center gap-3">
-              {/* Primary actions */}
-              <div className="flex items-center gap-3">
+            {/* Carousel navigation arrows — only when multiple images */}
+            {isMultiple && !isAnalyzing && (
+              <>
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    open();
-                  }}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full shadow-lg text-sm font-semibold hover:bg-accent-hover hover:scale-105 transition-all"
+                  onClick={goToPrev}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-background-primary/90 backdrop-blur-sm rounded-full shadow-lg border border-border-primary/50 text-text-secondary hover:text-text-primary hover:bg-background-primary transition-colors z-10 cursor-pointer"
+                >
+                  <ChevronLeftIcon className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={goToNext}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-background-primary/90 backdrop-blur-sm rounded-full shadow-lg border border-border-primary/50 text-text-secondary hover:text-text-primary hover:bg-background-primary transition-colors z-10 cursor-pointer"
+                >
+                  <ChevronRightIcon className="w-5 h-5" />
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Analyzing indicator */}
+          {isAnalyzing && (
+            <div className="mt-3 px-4 py-2 bg-accent-subtle rounded-full text-sm text-accent-primary font-medium animate-pulse">
+              Analyzing {uploadedImages.length > 1 ? `${uploadedImages.length} screenshots` : 'your design'}...
+            </div>
+          )}
+
+          {/* Page dots for multi-image */}
+          {!isAnalyzing && isMultiple && (
+            <div className="mt-3 flex items-center gap-2">
+              {uploadedImages.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setCurrentIndex(i); }}
+                  className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                    i === currentIndex
+                      ? 'bg-accent-primary scale-125'
+                      : 'bg-text-tertiary/40 hover:bg-text-tertiary'
+                  }`}
+                />
+              ))}
+              <span className="text-xs text-text-tertiary ml-1">
+                {currentIndex + 1}/{uploadedImages.length}
+              </span>
+            </div>
+          )}
+
+          {/* Toolbar — flows below the device frame */}
+          {!isAnalyzing && (
+            <div className="mt-4 flex items-center gap-2 px-4 py-2 bg-background-primary/90 backdrop-blur-sm rounded-full shadow-sm border border-border-primary/30">
+              {/* Analyze or New Audit — primary CTA */}
+              {!hasResults && onStartAnalysis ? (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); onStartAnalysis(); }}
+                  className="flex items-center gap-2 px-5 py-2 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-all cursor-pointer"
+                >
+                  <SparklesIcon className="w-4 h-4" />
+                  Analyze{uploadedImages.length > 1 ? ` (${uploadedImages.length})` : ''}
+                </button>
+              ) : hasResults && onClear ? (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); onClear(); }}
+                  className="flex items-center gap-2 px-5 py-2 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-all cursor-pointer"
                 >
                   <ArrowPathIcon className="w-4 h-4" />
-                  Replace Image
+                  New Audit
                 </button>
-                {onClear && (
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onClear();
-                    }}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-background-primary border-2 border-border-primary rounded-full shadow-lg text-sm font-semibold text-text-primary hover:border-accent-primary/50 hover:scale-105 transition-all"
-                  >
-                    Clear
-                  </button>
-                )}
-              </div>
+              ) : null}
 
-              {/* Frame toggle - secondary action */}
+              {/* Chat — post-analysis only */}
+              {hasResults && onOpenChat && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); onOpenChat(); }}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-background-secondary transition-colors cursor-pointer"
+                >
+                  <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                  Chat with Design Mentor
+                </button>
+              )}
+
+              {/* Add More — always available if under limit */}
+              {uploadedImages.length < MAX_IMAGES && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); open(); }}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-background-secondary transition-colors cursor-pointer"
+                >
+                  <PlusIcon className="w-4 h-4" />
+                  Add More
+                </button>
+              )}
+
+              <div className="w-px h-5 bg-border-primary/50" />
+
+              {/* Frame toggle */}
               {onToggleFrame && (
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onToggleFrame();
-                  }}
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  onClick={(e) => { e.stopPropagation(); onToggleFrame(); }}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-full text-sm text-text-tertiary hover:text-text-primary hover:bg-background-secondary transition-colors cursor-pointer"
                 >
                   <DevicePhoneMobileIcon className="w-4 h-4" />
                   {showDeviceFrame ? 'Hide Frame' : 'Show Frame'}
+                </button>
+              )}
+
+              {/* Clear — pre-analysis only */}
+              {!hasResults && onClear && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); onClear(); }}
+                  className="px-3 py-2 rounded-full text-sm text-text-tertiary hover:text-text-primary hover:bg-background-secondary transition-colors cursor-pointer"
+                >
+                  Clear
                 </button>
               )}
             </div>
           )}
         </div>
 
+        {/* Close image area div */}
+        </div>
+
         {/* Drag overlay */}
         {isDragActive && !isAnalyzing && (
           <div className="absolute inset-0 bg-accent-primary/10 backdrop-blur-sm flex items-center justify-center rounded-lg border-2 border-dashed border-accent-primary">
-            <p className="text-lg font-medium text-accent-primary">Drop to replace</p>
+            <p className="text-lg font-medium text-accent-primary">
+              Drop to add {uploadedImages.length < MAX_IMAGES ? `(${MAX_IMAGES - uploadedImages.length} slots left)` : '(max reached)'}
+            </p>
           </div>
         )}
+
       </div>
     );
   }
@@ -202,7 +332,9 @@ export function CenterUpload({
 
   // Default: show upload modal
   return (
-    <div className="absolute inset-0 flex items-center justify-center p-8">
+    <div className="absolute inset-0 flex flex-col items-center p-8 overflow-y-auto">
+      {/* Spacer to vertically center when content fits */}
+      <div className="flex-1 min-h-0" />
       {/* Upload Card */}
       <div className="relative w-full max-w-sm z-10">
         <div
@@ -258,9 +390,9 @@ export function CenterUpload({
               >
                 <PhotoIcon className="w-10 h-10 mx-auto mb-2 text-text-tertiary" />
                 <p className="text-sm font-medium text-text-primary">
-                  {isDragActive ? 'Drop it here!' : 'Drop your screenshot here'}
+                  {isDragActive ? 'Drop them here!' : 'Drop your screenshots here'}
                 </p>
-                <p className="text-xs text-text-tertiary mt-1">or click to browse</p>
+                <p className="text-xs text-text-tertiary mt-1">or click to browse · up to {MAX_IMAGES} images</p>
               </div>
 
             </>
@@ -301,7 +433,14 @@ export function CenterUpload({
             </p>
           </div>
         )}
+
       </div>
+
+      {/* Extra content below upload (e.g. marketing pitch) — outside max-w-sm constraint */}
+      {children}
+
+      {/* Bottom spacer for vertical centering */}
+      <div className="flex-1 min-h-0" />
     </div>
   );
 }

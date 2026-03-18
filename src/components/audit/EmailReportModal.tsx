@@ -191,7 +191,7 @@ export function EmailReportModal({ isOpen, onClose, results }: EmailReportModalP
                   </button>
 
                   <p className="mt-4 text-xs text-text-tertiary text-center">
-                    You&apos;ll also receive occasional AI UX tips and pattern updates.
+                    You&apos;ll also receive daily AI UX news and pattern updates.
                   </p>
                 </form>
               )}

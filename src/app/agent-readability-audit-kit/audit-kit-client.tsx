@@ -154,7 +154,7 @@ export function AuditKitClient() {
                   </div>
                   <div>
                     <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">Newsletter</span>
-                    <span className="text-xs text-text-tertiary">Weekly AI UX analysis</span>
+                    <span className="text-xs text-text-tertiary">Daily AI UX news</span>
                   </div>
                 </Link>
                 <Link
@@ -365,7 +365,7 @@ export function AuditKitClient() {
               </div>
               <div>
                 <span className="text-sm font-medium text-text-primary block">Newsletter</span>
-                <span className="text-xs text-text-tertiary">Weekly AI UX analysis</span>
+                <span className="text-xs text-text-tertiary">Daily AI UX news</span>
               </div>
             </Link>
             <Link

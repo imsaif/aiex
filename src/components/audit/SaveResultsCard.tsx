@@ -153,7 +153,7 @@ export function SaveResultsCard({ results, onCopy, copied }: SaveResultsCardProp
       ) : (
         <>
           <p className="text-sm text-text-secondary mb-4">
-            Get your audit report + weekly AI UX insights delivered to your inbox.
+            Get your audit report + daily AI UX insights delivered to your inbox.
           </p>
 
           <form onSubmit={handleEmailSubmit} className="space-y-3">

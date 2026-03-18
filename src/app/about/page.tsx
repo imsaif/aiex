@@ -307,9 +307,9 @@ export default function AboutPage() {
 
         {/* Section 9: Newsletter CTA */}
         <section className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl shadow-card p-8 md:p-12">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Get weekly AI/UX analysis</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4">Get daily AI/UX news</h2>
           <p className="text-text-secondary leading-relaxed mb-8">
-            Every week, one AI product&apos;s design decisions broken down: what patterns they&apos;re using, what&apos;s working, and what could be improved. The analysis designers wish existed when they started building AI products.
+            Every day, AI product design decisions broken down: what patterns they&apos;re using, what&apos;s working, and what could be improved. The analysis designers wish existed when they started building AI products.
           </p>
           <AboutNewsletter />
         </section>
