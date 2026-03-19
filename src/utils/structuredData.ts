@@ -45,6 +45,10 @@ export function generateArticleSchema(pattern: Pattern, url: string) {
 export function generateFAQSchema(pattern: Pattern) {
   if (!pattern.introduction) return null;
 
+  // Append click-through hooks to FAQ answers so users visit the page
+  // instead of getting the full answer from the featured snippet alone
+  const exampleProducts = pattern.products?.slice(0, 3).join(', ') || 'leading AI products';
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -54,7 +58,7 @@ export function generateFAQSchema(pattern: Pattern) {
         name: `What is ${pattern.title}?`,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: pattern.introduction
+          text: `${pattern.introduction} See real-world examples from ${exampleProducts}, interactive demos, and implementation guidelines.`
         }
       },
       {
@@ -62,7 +66,7 @@ export function generateFAQSchema(pattern: Pattern) {
         name: `When should I use ${pattern.title}?`,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: pattern.content.solution
+          text: `${pattern.content.solution} Includes code examples, design considerations, and Figma prompts for implementation.`
         }
       },
       {
@@ -70,7 +74,7 @@ export function generateFAQSchema(pattern: Pattern) {
         name: `What problem does ${pattern.title} solve?`,
         acceptedAnswer: {
           '@type': 'Answer',
-          text: pattern.content.problem
+          text: `${pattern.content.problem} See how ${exampleProducts} solved this with before-and-after comparisons.`
         }
       }
     ]

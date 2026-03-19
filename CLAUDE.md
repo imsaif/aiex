@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-19 20:31 (MacBook)
+- **Pattern:** SEO Phase 3 — Featured Snippet Optimization
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Added click-through hooks to FAQ JSON-LD schema answers in structuredData.ts. FAQ answers now end with dynamic product names and value props ("See real-world examples from..., interactive demos, and implementation guidelines") to encourage clicks from featured snippets instead of zero-click answers. Addresses GSC queries ranking pos 1-5 with 0 clicks (e.g. "what design pattern involves gradually revealing information" at pos 1.53).
+
 ### Session 2026-03-19 20:19 (MacBook)
 - **Pattern:** Audit Page Chrome Fix + SEO
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added "Publish" tab to admin dashboard for publishing newsletters to Beehiiv. Beehiiv Posts API requires enterprise plan, so pivoted to clipboard-based workflow: numbered 1-2-3 copy buttons (title, subtitle, content HTML) to paste into Beehiiv's HTML Snippet block. New files: admin-nav link, publish page, publish-client component.
 
 ### Session 2026-03-10 17:12 (MacBook)
-- **Pattern:** About Page SEO Restructure
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Restructured /about page to match search intent. GSC showed "aiux", "ai ux patterns" queries landing on a personal bio page. Reordered: "What is AIUX?" hero → Why AIUX patterns → Pattern Framework (with stats) → Validation → Tools → Bio (condensed into card at bottom). Updated metadata title/description to target AIUX keywords. Removed em dashes throughout. Updated bio to 12+ years, removed Optum reference.
-
-### Session 2026-03-10 16:20 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
