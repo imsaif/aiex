@@ -71,9 +71,45 @@ export function generateMetadata({
  * Custom SEO metadata for specific patterns
  */
 const customPatternMetadata: Record<string, { title: string; description: string }> = {
+  'progressive-disclosure': {
+    title: 'Progressive Disclosure in AI — Pattern, Examples & Best Practices',
+    description: 'Learn progressive disclosure for AI interfaces: gradually reveal complexity to reduce cognitive load. Real examples from ChatGPT, Claude, and Notion with interactive demos and implementation guidelines.',
+  },
   'conversational-ui': {
-    title: 'Conversational UI: Chat & Voice Interface Design Pattern (Slack, Copilot, Siri Examples)',
-    description: 'Learn conversational UI design with real examples from Slack, Microsoft Copilot, and Siri. Interactive demos, implementation guidelines, and best practices for chat and voice interfaces.',
+    title: 'Conversational UI Design Pattern — Chat & Voice Interface Examples',
+    description: 'Conversational UI design patterns with real examples from Slack, ChatGPT, and Siri. Interactive demos, implementation guidelines, and best practices for building chat and voice interfaces.',
+  },
+  'privacy-first-design': {
+    title: 'Privacy-First AI Design — Data Minimization & Transparent Controls',
+    description: 'Design AI products that prioritize user privacy. Patterns for data minimization, transparent consent, local-first processing, and privacy controls used by Apple, Signal, and DuckDuckGo.',
+  },
+  'confidence-visualization': {
+    title: 'AI Confidence Scores UX — How to Show Confidence Levels to Users',
+    description: 'How to display AI confidence scores and uncertainty to users. Patterns for confidence gauges, probability indicators, and trust signals with examples from GitHub Copilot and medical AI.',
+  },
+  'adaptive-interfaces': {
+    title: 'Adaptive Interfaces — AI-Powered UX That Learns User Behavior',
+    description: 'Design interfaces that adapt to individual users. AI-driven layout changes, smart defaults, and personalized workflows with examples from Spotify, Netflix, and Notion.',
+  },
+  'context-switching': {
+    title: 'Context Switching in AI — Helping Users Switch Between Tasks Seamlessly',
+    description: 'How to handle context switching in AI chatbots and tools. Patterns for preserving state, managing multiple conversations, and reducing cognitive load across projects.',
+  },
+  'multimodal-interaction': {
+    title: 'Multimodal Interaction Design — Voice, Touch, Gesture & Text Input Patterns',
+    description: 'Design multimodal AI interfaces combining voice, touch, gesture, and text input. Examples from Siri, Google Lens, and GPT-4V with implementation guidelines for natural interaction.',
+  },
+  'feedback-loops': {
+    title: 'AI Feedback Loops — Continuous Learning from User Input (Diagram & Examples)',
+    description: 'Design effective AI feedback loops that learn from user corrections. Patterns for thumbs up/down, implicit signals, and corrective feedback with diagrams and real-world examples.',
+  },
+  'error-recovery': {
+    title: 'Graceful Error Recovery in AI — Helping Users Recover from AI Mistakes',
+    description: 'Design graceful error recovery for AI products. Patterns for handling wrong predictions, failed generations, and AI hallucinations with undo, retry, and fallback strategies.',
+  },
+  'contextual-assistance': {
+    title: 'Contextual Assistance — Proactive AI Help Based on User Behavior',
+    description: 'Design AI that offers help at the right moment without interrupting. Patterns for contextual suggestions, smart tooltips, and proactive assistance from Gmail, Notion, and GitHub Copilot.',
   },
 };
 

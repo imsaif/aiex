@@ -137,7 +137,8 @@ export default function AuditClient() {
   return (
     <div className="min-h-screen">
       {/* Full-Page Canvas */}
-      <div className="relative h-[calc(100vh-64px)] max-h-[calc(100vh-64px)] overflow-hidden">
+      {/* dvh accounts for Chrome's dynamic address bar; vh is the fallback */}
+      <div className="relative h-[calc(100vh-64px)] h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] overflow-hidden">
         {/* Dark Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
 
@@ -195,17 +196,19 @@ export default function AuditClient() {
                 </div>
 
                 {/* How It Works steps */}
-                <div className="flex items-center justify-center gap-3 !mt-8">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 !mt-8">
                   <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-background-secondary/60">
                     <PhotoIcon className="w-5 h-5 text-accent-primary" />
                     <span className="text-sm font-medium text-text-primary">Upload</span>
                   </div>
-                  <span className="text-text-tertiary">→</span>
+                  <span className="text-text-tertiary hidden sm:inline">→</span>
+                  <span className="text-text-tertiary sm:hidden">↓</span>
                   <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-background-secondary/60">
                     <MagnifyingGlassCircleIcon className="w-5 h-5 text-accent-primary" />
                     <span className="text-sm font-medium text-text-primary">Analyze</span>
                   </div>
-                  <span className="text-text-tertiary">→</span>
+                  <span className="text-text-tertiary hidden sm:inline">→</span>
+                  <span className="text-text-tertiary sm:hidden">↓</span>
                   <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-background-secondary/60">
                     <ChatBubbleLeftRightIcon className="w-5 h-5 text-accent-primary" />
                     <span className="text-sm font-medium text-text-primary">Get Insights</span>

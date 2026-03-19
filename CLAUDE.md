@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-19 20:19 (MacBook)
+- **Pattern:** Audit Page Chrome Fix + SEO
+- **Status:** ✅ Completed
+- **Files Changed:** 9
+- **Tests Added/Modified:** 1
+- **Notes:** Fixed audit page Chrome visibility: replaced 100vh with dvh (dynamic viewport height) for canvas, bottom sheet, and image sizing. Capped sidebar width with min(420px,45vw) to prevent overflow at 1024-1200px. Fixed mobile navbar horizontal overflow (gap-1/px-2 on small screens). Added Playwright viewport screenshot tests across 8 screen sizes (375-1920px). Made How It Works steps vertical on mobile. SEO Phase 1: Added server-rendered content, FAQ JSON-LD schema, and improved meta targeting "ai ux audit tool" queries (pos 7.5). SEO Phase 2: Added custom meta titles/descriptions for top 10 pattern pages by impressions (progressive-disclosure, conversational-ui, privacy-first-design, confidence-visualization, adaptive-interfaces, context-switching, multimodal-interaction, feedback-loops, error-recovery, contextual-assistance).
+
 ### Session 2026-03-19 14:57 (MacBook)
 - **Pattern:** Chrome INP Performance Fix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Restructured /about page to match search intent. GSC showed "aiux", "ai ux patterns" queries landing on a personal bio page. Reordered: "What is AIUX?" hero → Why AIUX patterns → Pattern Framework (with stats) → Validation → Tools → Bio (condensed into card at bottom). Updated metadata title/description to target AIUX keywords. Removed em dashes throughout. Updated bio to 12+ years, removed Optum reference.
 
 ### Session 2026-03-10 16:20 (MacBook)
-- **Pattern:** SEO & 404 Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed 8 Google Search Console 404s: added 6 permanent redirects in next.config.mjs for dead pattern slugs (graceful-degradation, onboarding-flow, transparent-feedback), removed guide (replit-ai-learning-path), missing /patterns index, and /favorites. Fixed /favorites redirect chain (was pointing to non-existent /patterns, now /). Added 8 missing agentic pattern mappings to pattern-links.ts. Fixed .id→.slug inconsistency in Hero, SmartSearchChat, PatternCard. Replaced rage-click-inducing AdaptiveDashboardDemo with "Simulate Usage" button that auto-plays interactions — prevents Google/Clarity rage click penalties.
-
-### Session 2026-03-09 17:44 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

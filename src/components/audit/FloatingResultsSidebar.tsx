@@ -39,10 +39,10 @@ export function FloatingResultsSidebar({ children, isVisible, expandTrigger = 0 
           className={`
             h-full transition-all duration-500 ease-out
             ${mounted && !isCollapsed
-              ? 'w-[420px] xl:w-[460px] opacity-100 translate-x-0'
+              ? 'w-[min(420px,45vw)] xl:w-[460px] opacity-100 translate-x-0'
               : isCollapsed
                 ? 'w-12 opacity-100 translate-x-0'
-                : 'w-[420px] xl:w-[460px] opacity-0 translate-x-8'
+                : 'w-[min(420px,45vw)] xl:w-[460px] opacity-0 translate-x-8'
             }
           `}
         >
@@ -57,7 +57,7 @@ export function FloatingResultsSidebar({ children, isVisible, expandTrigger = 0 
             </button>
           ) : (
             /* Expanded state */
-            <div className="relative h-full bg-background-primary/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-border-primary/50 overflow-hidden">
+            <div className="relative h-full bg-background-primary/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-border-primary/50 flex flex-col overflow-hidden">
               {/* Collapse button */}
               <button
                 type="button"
@@ -68,8 +68,8 @@ export function FloatingResultsSidebar({ children, isVisible, expandTrigger = 0 
                 <ChevronDoubleRightIcon className="w-4 h-4" />
               </button>
 
-              {/* Content */}
-              <div className="h-full overflow-hidden">
+              {/* Content — single overflow boundary, children scroll internally */}
+              <div className="h-full min-h-0">
                 {children}
               </div>
             </div>
@@ -84,7 +84,7 @@ export function FloatingResultsSidebar({ children, isVisible, expandTrigger = 0 
             fixed inset-x-0 bottom-0 z-30 transition-transform duration-500 ease-out
             ${mounted && !isCollapsed ? 'translate-y-0' : isCollapsed ? 'translate-y-[calc(100%-48px)]' : 'translate-y-full'}
           `}
-          style={{ maxHeight: '85vh' }}
+          style={{ maxHeight: 'calc(85dvh - 64px)' }}
         >
           {/* Drag handle / header */}
           <button
@@ -98,7 +98,7 @@ export function FloatingResultsSidebar({ children, isVisible, expandTrigger = 0 
           {/* Content */}
           <div
             className="bg-background-primary/95 backdrop-blur-xl border-x border-border-primary/50 overflow-y-auto"
-            style={{ maxHeight: 'calc(85vh - 48px)' }}
+            style={{ maxHeight: 'calc(85dvh - 112px)' }}
           >
             {children}
           </div>

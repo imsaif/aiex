@@ -153,7 +153,7 @@ export function CenterUpload({
         <input {...getInputProps()} />
 
         {/* Image area — shifts left when sidebar is open */}
-        {/* brand-audit-ignore: arbitrary padding needed to offset for floating sidebar width */}
+        {/* brand-audit-ignore: pr offset must match floating sidebar width */}
         <div className={`absolute inset-0 flex items-center justify-center p-4 transition-[padding] duration-500 ${sidebarOpen ? 'lg:pr-96' : ''}`}>
 
         {/* Device frame container */}
@@ -167,12 +167,12 @@ export function CenterUpload({
                 imageAlt={currentImage.fileName || 'Uploaded screenshot'}
               />
             ) : (
-              <div className="relative max-w-full max-h-[70vh]">
+              <div className="relative max-w-full max-h-[70dvh]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={currentImage.base64}
                   alt={currentImage.fileName || 'Uploaded screenshot'}
-                  className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg"
+                  className="max-w-full max-h-[70dvh] object-contain rounded-lg shadow-lg"
                 />
               </div>
             )}

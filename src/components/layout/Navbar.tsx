@@ -47,7 +47,7 @@ const Navbar = () => {
   // Get link classes based on active state - minimal style with no layout shift
   const getLinkClasses = (href: string) => {
     const active = isActive(href);
-    return `flex items-center gap-2 px-4 py-2 transition-colors duration-200 ease-out text-base border-b-2 ${
+    return `flex items-center gap-2 px-2 sm:px-4 py-2 transition-colors duration-200 ease-out text-base border-b-2 ${
       active
         ? 'text-text-primary border-text-primary font-semibold'
         : 'text-text-secondary hover:text-text-primary border-transparent'
@@ -79,7 +79,7 @@ const Navbar = () => {
           </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1 sm:gap-3">
             <Link href="/" className={getLinkClasses('/')}>
               <Squares2X2Icon className="w-5 h-5" />
               <span className="hidden sm:inline relative">
