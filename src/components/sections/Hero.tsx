@@ -1,7 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Button from '../ui/Button';
 import SmartSearchChat from '../ui/SmartSearchChat';
@@ -9,61 +8,6 @@ import { Pattern } from '../../types';
 
 export default function Hero() {
   const router = useRouter();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  
-  // Smooth spring animation for mouse movement
-  const springConfig = { damping: 25, stiffness: 150 };
-  const followX = useSpring(mouseX, springConfig);
-  const followY = useSpring(mouseY, springConfig);
-  
-  // Floating animation for 3D elements
-  const floatingAnimation = {
-    y: [0, -10, 0],
-    transition: {
-      duration: 6,
-      ease: "easeInOut",
-      repeat: Infinity,
-    }
-  };
-
-  // Pulse animation
-  const pulseAnimation = {
-    scale: [1, 1.05, 1],
-    opacity: [0.5, 0.7, 0.5],
-    transition: {
-      duration: 8,
-      ease: "easeInOut",
-      repeat: Infinity,
-    }
-  };
-
-  // Rotate animation
-  const rotateAnimation = {
-    rotate: [0, 360],
-    transition: {
-      duration: 40,
-      ease: "linear",
-      repeat: Infinity,
-    }
-  };
-
-  // Handle mouse movement for interactive elements
-  // Throttle mouse movement using requestAnimationFrame
-  const mouseMoveFrame = useRef<number | null>(null);
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (mouseMoveFrame.current !== null) {
-      cancelAnimationFrame(mouseMoveFrame.current);
-    }
-    mouseMoveFrame.current = requestAnimationFrame(() => {
-      const { left, top, width, height } = containerRef.current?.getBoundingClientRect() || { left: 0, top: 0, width: 0, height: 0 };
-      const x = e.clientX - left;
-      const y = e.clientY - top;
-      mouseX.set(x - width / 2);
-      mouseY.set(y - height / 2);
-    });
-  };
 
   // Handle scroll to Discover section
   const scrollToDiscover = () => {
@@ -78,12 +22,8 @@ export default function Hero() {
     router.push(`/patterns/${pattern.slug}`);
   };
 
-  // Simple static background elements - no random generation
-
   return (
-    <div 
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
+    <div
       className="relative min-h-[80vh] flex items-center justify-center overflow-hidden pt-16"
     >
       {/* Clean minimal background */}

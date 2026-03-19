@@ -46,7 +46,6 @@ interface ProductLogoCardProps {
 const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
   const baseFilter = useThemeFilter('grayscale(100%)');
 
   if (hasError) {
@@ -61,13 +60,7 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
 
   return (
     <div
-      className="relative cursor-pointer"
-      onMouseEnter={() => {
-        setShowTooltip(true);
-      }}
-      onMouseLeave={() => {
-        setShowTooltip(false);
-      }}
+      className="relative group/logo cursor-pointer"
     >
       {/* Logo Image with Grayscale */}
       <img
@@ -85,12 +78,10 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
         onError={() => setHasError(true)}
       />
 
-      {/* Tooltip */}
-      {showTooltip && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap pointer-events-none z-50">
-          {productName}
-        </div>
-      )}
+      {/* Tooltip — CSS-only via group-hover, no state needed */}
+      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded whitespace-nowrap pointer-events-none z-50 opacity-0 group-hover/logo:opacity-100 transition-opacity">
+        {productName}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import UnifiedSearchBar from '../components/ui/UnifiedSearchBar';
@@ -30,25 +30,6 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [showAgenticOnly, setShowAgenticOnly] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // Track dark mode state
-  useEffect(() => {
-    const checkTheme = () => {
-      const theme = document.documentElement.getAttribute('data-theme');
-      setIsDarkMode(theme === 'dark');
-    };
-
-    checkTheme();
-
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme']
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   // Get theme-aware filter for product logos
   const logoFilter = useThemeFilter('grayscale(100%)');
@@ -88,8 +69,7 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
             <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
               <h3
-                className="font-semibold text-xl mb-4"
-                style={{ color: isDarkMode ? '#ffffff' : '#162036' }}
+                className="font-semibold text-xl mb-4 text-gray-900 dark:text-white"
               >
                 Categories
               </h3>
@@ -99,24 +79,9 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                     onClick={() => setSelectedCategory('All Categories')}
                     className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
                       selectedCategory === 'All Categories'
-                        ? 'bg-white font-semibold shadow-sm'
-                        : 'hover:bg-white'
+                        ? 'bg-white font-semibold shadow-sm text-black'
+                        : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
                     }`}
-                    style={{
-                      color: selectedCategory === 'All Categories'
-                        ? '#000000'
-                        : isDarkMode ? '#ffffff' : '#374151'
-                    }}
-                    onMouseEnter={(e) => {
-                      if (selectedCategory !== 'All Categories') {
-                        e.currentTarget.style.color = '#000000';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (selectedCategory !== 'All Categories') {
-                        e.currentTarget.style.color = isDarkMode ? '#ffffff' : '#374151';
-                      }
-                    }}
                   >
                     All Patterns
                   </button>
@@ -127,24 +92,9 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                       onClick={() => setSelectedCategory(cat.title)}
                       className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
                         selectedCategory === cat.title
-                          ? 'bg-white font-semibold shadow-sm'
-                          : 'hover:bg-white'
+                          ? 'bg-white font-semibold shadow-sm text-black'
+                          : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
                       }`}
-                      style={{
-                        color: selectedCategory === cat.title
-                          ? '#000000'
-                          : isDarkMode ? '#ffffff' : '#374151'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (selectedCategory !== cat.title) {
-                          e.currentTarget.style.color = '#000000';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (selectedCategory !== cat.title) {
-                          e.currentTarget.style.color = isDarkMode ? '#ffffff' : '#374151';
-                        }
-                      }}
                     >
                       {cat.title}
                     </button>

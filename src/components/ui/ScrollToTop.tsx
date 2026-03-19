@@ -19,11 +19,18 @@ export default function ScrollToTop({
   const { scrollTo } = useSmoothScroll();
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsVisible(window.scrollY > threshold);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          setIsVisible(window.scrollY > threshold);
+          ticking = false;
+        });
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
     return () => window.removeEventListener('scroll', handleScroll);

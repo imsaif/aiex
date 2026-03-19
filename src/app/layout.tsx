@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { defaultMetadata, siteConfig } from "@/config/seo";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const satoshi = localFont({
   src: [
@@ -63,19 +62,24 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Microsoft Clarity — deferred to avoid blocking LCP */}
+        {/* Microsoft Clarity — deferred to idle time to avoid blocking interactions */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              window.addEventListener('load', function() {
-                setTimeout(function() {
+              (function loadClarity() {
+                function init() {
                   (function(c,l,a,r,i,t,y){
                     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                     t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
                     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                   })(window,document,"clarity","script","vj7nlmybbm");
-                }, 3000);
-              });
+                }
+                if ('requestIdleCallback' in window) {
+                  requestIdleCallback(init, { timeout: 5000 });
+                } else {
+                  setTimeout(init, 4000);
+                }
+              })();
             `,
           }}
         />
@@ -83,7 +87,6 @@ export default function RootLayout({
       <body className="bg-background-primary text-text-primary antialiased font-sans min-h-screen">
         {children}
         <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

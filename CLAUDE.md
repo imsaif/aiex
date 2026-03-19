@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-19 14:57 (MacBook)
+- **Pattern:** Chrome INP Performance Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed critical INP (1.1s→expected <200ms) for Chrome users (65.5% of traffic). Phase 1: Removed dead mouse-tracking code from Hero.tsx (unused mouseX/mouseY/spring animations causing layout thrashing), throttled ScrollToTop scroll listener with RAF + passive, replaced JS onMouseEnter/Leave inline style mutations with Tailwind CSS hover: classes in pattern-grid.tsx and ProductsSection.tsx (CSS-only tooltips). Phase 2: Switched Clarity loading from fixed 3s setTimeout to requestIdleCallback, removed redundant SpeedInsights (Clarity already tracks Core Web Vitals). Net: -141 lines, +32 lines across 5 files.
+
 ### Session 2026-03-18 19:17 (MacBook)
 - **Pattern:** Audit Page Simplification
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed 8 Google Search Console 404s: added 6 permanent redirects in next.config.mjs for dead pattern slugs (graceful-degradation, onboarding-flow, transparent-feedback), removed guide (replit-ai-learning-path), missing /patterns index, and /favorites. Fixed /favorites redirect chain (was pointing to non-existent /patterns, now /). Added 8 missing agentic pattern mappings to pattern-links.ts. Fixed .id→.slug inconsistency in Hero, SmartSearchChat, PatternCard. Replaced rage-click-inducing AdaptiveDashboardDemo with "Simulate Usage" button that auto-plays interactions — prevents Google/Clarity rage click penalties.
 
 ### Session 2026-03-09 17:44 (MacBook)
-- **Pattern:** Performance & Engagement Optimization
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Based on Clarity analytics (8s LCP, 1.37 pages/session, 43s active time). P0: Fixed field LCP by extracting hero section from client component into server-rendered HTML (`page.tsx` + new `pattern-grid.tsx`, deleted `home-client.tsx`). Added homepage cache headers (`s-maxage=3600, stale-while-revalidate=86400`). P1: Upgraded related patterns from bare text links to rich cards with descriptions + category badges. Added "More in [Category]" auto-computed section. Moved related patterns above newsletter CTA. Removed disruptive SmartHandbookPrompt modal from pattern pages — inline newsletter signup handles email capture instead.
-
-### Session 2026-03-02 14:29 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
