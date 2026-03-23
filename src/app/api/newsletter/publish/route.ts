@@ -122,7 +122,7 @@ function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnl
 
           <!-- Header -->
           <div style="background-color: #0f172a; padding: 28px 32px; border-radius: 12px 12px 0 0; text-align: center;">
-            <a href="${SITE_URL}" style="text-decoration: none;">
+            <a href="${viewOnlineUrl}" style="text-decoration: none;">
               <h1 style="margin: 0; font-size: 20px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">AI UX Design Guide</h1>
             </a>
           </div>

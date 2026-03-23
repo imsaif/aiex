@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-23 20:28 (MacBook)
+- **Pattern:** Newsletter Email Header Link Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Changed newsletter email header "AI UX Design Guide" link from homepage to the specific newsletter page (`/news/[slug]`), matching the "View in browser" link. Also created comprehensive memory records documenting newsletter cron anti-patterns (after, waitUntil, two-step split, 2048 tokens) to prevent repeating failed approaches.
+
 ### Session 2026-03-23 20:21 (MacBook)
 - **Pattern:** Newsletter Cron Investigation & Fix
 - **Status:** ✅ Completed
