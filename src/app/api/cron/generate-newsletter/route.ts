@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { after } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
@@ -899,18 +900,10 @@ async function sendAdminNotification(
   }
 }
 
-export async function GET(request: NextRequest) {
-  // Verify cron secret
-  const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+// The heavy lifting: RSS aggregation + Claude API + DB write
+// Runs in the background via waitUntil so cron-job.org gets an immediate 200
+async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean, customLookbackHours: string | null): Promise<void> {
   try {
-    // Parse newsletter type from query params
-    const url = new URL(request.url);
-    const type = (url.searchParams.get('type') || 'daily') as NewsletterType;
-
     // For daily: Skip if a weekly was already published today (avoid redundancy)
     if (type === 'daily') {
       const today = new Date();
@@ -927,17 +920,10 @@ export async function GET(request: NextRequest) {
       });
 
       if (weeklyToday) {
-        return NextResponse.json({
-          success: true,
-          message: 'Skipped daily - weekly newsletter already exists for today',
-          weeklyId: weeklyToday.id,
-          weeklyTitle: weeklyToday.title,
-        });
+        console.log(`Skipped daily - weekly newsletter already exists for today: ${weeklyToday.title}`);
+        return;
       }
     }
-
-    // Allow force-regeneration (deletes today's existing draft)
-    const forceRegenerate = url.searchParams.get('force') === 'true';
 
     // Early duplicate check: prevent wasting time on RSS + Claude if newsletter already exists today
     const todayStart = new Date();
@@ -955,28 +941,17 @@ export async function GET(request: NextRequest) {
 
     if (existingNewsletter) {
       if (forceRegenerate) {
-        // Delete the existing draft so we can regenerate
         await prisma.newsletterDraft.delete({ where: { id: existingNewsletter.id } });
       } else {
-        return NextResponse.json({
-          success: true,
-          message: `${type} newsletter already exists for today`,
-          existingId: existingNewsletter.id,
-          existingTitle: existingNewsletter.title,
-          skipped: true,
-        });
+        console.log(`${type} newsletter already exists for today: ${existingNewsletter.title}`);
+        return;
       }
     }
 
-    // Get lookback hours from query param (for custom catch-up periods)
-    const customLookbackHours = url.searchParams.get('lookbackHours');
-
     // Configure based on type
-    // Daily uses 72h lookback to catch content from companies that don't post daily
-    // Weekly uses 7 days (168h) for comprehensive roundup
     const lookbackHours = customLookbackHours
       ? parseInt(customLookbackHours, 10)
-      : (type === 'weekly' ? 168 : 72); // 7 days for weekly, 3 days for daily
+      : (type === 'weekly' ? 168 : 72);
     const deduplicationDays = type === 'weekly' ? 30 : 7;
 
     // Step 1: Aggregate news
@@ -985,11 +960,8 @@ export async function GET(request: NextRequest) {
     // Handle quiet days with a creative message (only for daily)
     if (newsItems.length === 0) {
       if (type === 'weekly') {
-        return NextResponse.json({
-          success: false,
-          message: 'No news items found for weekly newsletter. Try a longer lookback period.',
-          newsItemsFound: 0,
-        });
+        console.log('No news items found for weekly newsletter.');
+        return;
       }
 
       const quietDayMessages = [
@@ -1005,39 +977,29 @@ export async function GET(request: NextRequest) {
       const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-quiet-day`;
 
-      // Check if we already have a quiet day entry for today
       const existingQuietDay = await prisma.newsletterDraft.findFirst({
         where: { slug },
       });
 
       if (existingQuietDay) {
-        return NextResponse.json({
-          success: true,
-          message: 'Quiet day entry already exists for today',
-          draftCreated: false,
-        });
+        console.log('Quiet day entry already exists for today');
+        return;
       }
 
-      // Create and auto-publish quiet day entry
-      const draft = await prisma.newsletterDraft.create({
+      await prisma.newsletterDraft.create({
         data: {
           title: `AI UX Daily: ${randomMessage.title}`,
           slug,
           summary: randomMessage.message,
-          content: '', // Empty content - will show inline only
+          content: '',
           publishDate: new Date(),
-          status: 'published', // Auto-publish quiet days
+          status: 'published',
           sources: [],
         },
       });
 
-      return NextResponse.json({
-        success: true,
-        message: 'Quiet day entry created and published',
-        draftId: draft.id,
-        title: draft.title,
-        isQuietDay: true,
-      });
+      console.log(`Quiet day entry created: ${randomMessage.title}`);
+      return;
     }
 
     // Step 2: Fetch recently used headlines for semantic deduplication in Claude's prompt
@@ -1049,15 +1011,12 @@ export async function GET(request: NextRequest) {
     let dailyItemsUsed: NewsletterItem[] = [];
 
     if (type === 'weekly') {
-      // Weekly: Try to compile from daily newsletters first
       const dailyItems = await getDailyNewsletterItems(7);
 
       if (dailyItems.length >= 3) {
-        // Have enough daily content to compile
         prompt = buildWeeklyCompilationPrompt(dailyItems);
         dailyItemsUsed = dailyItems;
       } else {
-        // Fall back to fresh RSS (for initial setup or sparse weeks)
         prompt = buildWeeklyPrompt(newsItems, recentHeadlines);
       }
     } else {
@@ -1083,33 +1042,26 @@ export async function GET(request: NextRequest) {
     let title: string;
     let summary: string;
 
-    try {
-      const jsonMatch =
-        responseText.match(/```json\s*([\s\S]*?)\s*```/) ||
-        responseText.match(/```\s*([\s\S]*?)\s*```/) || [null, responseText];
-      const parsedData = JSON.parse(jsonMatch[1] || responseText);
+    const jsonMatch =
+      responseText.match(/```json\s*([\s\S]*?)\s*```/) ||
+      responseText.match(/```\s*([\s\S]*?)\s*```/) || [null, responseText];
+    const parsedData = JSON.parse(jsonMatch[1] || responseText);
 
-      if (type === 'weekly') {
-        const weeklyData = parsedData as WeeklyNewsletterData;
-        htmlContent = generateWeeklyHTML(weeklyData);
-        title = weeklyData.title;
-        summary = weeklyData.summary;
-        structuredData = weeklyData;
-      } else {
-        const dailyData = parsedData as NewsletterData;
-        htmlContent = generateHTML(dailyData);
-        title = dailyData.title;
-        summary = dailyData.summary;
-        structuredData = dailyData; // Store for weekly compilation
-      }
-    } catch {
-      return NextResponse.json(
-        { error: 'Failed to parse newsletter content from Claude', rawResponse: responseText.slice(0, 500) },
-        { status: 500 }
-      );
+    if (type === 'weekly') {
+      const weeklyData = parsedData as WeeklyNewsletterData;
+      htmlContent = generateWeeklyHTML(weeklyData);
+      title = weeklyData.title;
+      summary = weeklyData.summary;
+      structuredData = weeklyData;
+    } else {
+      const dailyData = parsedData as NewsletterData;
+      htmlContent = generateHTML(dailyData);
+      title = dailyData.title;
+      summary = dailyData.summary;
+      structuredData = dailyData;
     }
 
-    // Step 3: Generate slug and save draft
+    // Save draft
     const slug = generateSlug(title, type);
 
     const draft = await prisma.newsletterDraft.create({
@@ -1128,32 +1080,40 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Step 5: Send admin notification (fire-and-forget, don't block response)
-    // Social posts are generated manually via /admin/social
+    // Send admin notification
     const previewUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/admin/newsletter?id=${draft.id}`;
-    sendAdminNotification(draft, previewUrl).catch((err) =>
+    await sendAdminNotification(draft, previewUrl).catch((err) =>
       console.error('Admin notification failed:', err)
     );
 
-    return NextResponse.json({
-      success: true,
-      type,
-      draftId: draft.id,
-      title: draft.title,
-      previewUrl,
-      newsItemsProcessed: newsItems.length,
-      lookbackHours,
-      // Weekly-specific info
-      ...(type === 'weekly' && {
-        compiledFromDaily: dailyItemsUsed.length > 0,
-        dailyItemsUsed: dailyItemsUsed.length,
-      }),
-    });
+    console.log(`Newsletter generated successfully: [${type}] ${draft.title} (${newsItems.length} items)`);
   } catch (error) {
-    console.error('Newsletter generation failed:', error);
-    return NextResponse.json(
-      { error: 'Newsletter generation failed', details: String(error) },
-      { status: 500 }
-    );
+    console.error(`Background newsletter generation failed [${type}]:`, error);
   }
+}
+
+export async function GET(request: NextRequest) {
+  // Verify cron secret
+  const authHeader = request.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Parse params before returning — these are fast
+  const url = new URL(request.url);
+  const type = (url.searchParams.get('type') || 'daily') as NewsletterType;
+  const forceRegenerate = url.searchParams.get('force') === 'true';
+  const customLookbackHours = url.searchParams.get('lookbackHours');
+
+  // Use after() to run the heavy work after the response is sent.
+  // This lets us return 200 immediately so cron-job.org doesn't time out,
+  // while Vercel keeps the function alive to finish the work.
+  after(generateNewsletter(type, forceRegenerate, customLookbackHours));
+
+  return NextResponse.json({
+    success: true,
+    message: `${type} newsletter generation started in background`,
+    type,
+    forceRegenerate,
+  });
 }

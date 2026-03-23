@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-23 16:15 (MacBook)
+- **Pattern:** Newsletter Cron Timeout Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed recurring cron-job.org timeout issue by refactoring newsletter generation to use Next.js 15 `after()` API. Endpoint now returns 200 immediately and runs RSS aggregation + Claude API + DB write in the background. Added known issues to CLAUDE.md for cron timeout and dual-trigger patterns. Created persistent memory records for cron troubleshooting to avoid re-investigating in future sessions.
+
 ### Session 2026-03-19 20:31 (MacBook)
 - **Pattern:** SEO Phase 3 — Featured Snippet Optimization
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Created Agentic UX Checklist landing page (split layout with email capture + PDF download) and added resource card to ResourcesGrid. Fixed stale copy: reverted pattern page CTA to "28" (PDF count), updated newsletter email templates to "36 patterns" / "8 categories". Removed AuthorFooter from pattern pages (redundant with /about). Merged and placed 3-page checklist PDF.
 
 ### Session 2026-03-11 20:49 (MacBook)
-- **Pattern:** Admin Beehiiv Publish Tab
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Added "Publish" tab to admin dashboard for publishing newsletters to Beehiiv. Beehiiv Posts API requires enterprise plan, so pivoted to clipboard-based workflow: numbered 1-2-3 copy buttons (title, subtitle, content HTML) to paste into Beehiiv's HTML Snippet block. New files: admin-nav link, publish page, publish-client component.
-
-### Session 2026-03-10 17:12 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
@@ -564,6 +564,8 @@ This section documents issues we've encountered and their solutions, so Claude r
 | Issue | Date | Solution |
 |-------|------|----------|
 | **Vercel Hobby cron doesn't execute** | Jan 2026 | Vercel free/hobby tier cron jobs are configured in `vercel.json` but don't reliably trigger. Use **cron-job.org** (free) as external trigger instead. |
+| **cron-job.org timeout kills newsletter generation** | Mar 2026 | Newsletter route fetches RSS + calls Claude API (~30-60s). cron-job.org default timeout is 30s — too short. **Fix: increase cron-job.org timeout to 60s.** Symptom: "Failed (timeout)" in cron-job.org dashboard. Side effects: weekly timeout causes daily to run instead (no weekly found to skip), or no newsletter created at all. **This is a recurring issue — check timeout first before investigating code.** |
+| **Duplicate cron runs from dual triggers** | Mar 2026 | If both Vercel crons (`vercel.json`) and cron-job.org are active, the endpoint gets hit twice. Only use ONE trigger system. Vercel hobby is unreliable, so prefer cron-job.org and remove/ignore `crons` in `vercel.json`. |
 
 **cron-job.org Setup:**
 - Daily newsletter: `0 3 * * *` (3 AM UTC / 8:30 AM IST) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
