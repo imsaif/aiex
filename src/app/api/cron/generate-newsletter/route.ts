@@ -1108,7 +1108,7 @@ export async function GET(request: NextRequest) {
   // Use after() to run the heavy work after the response is sent.
   // This lets us return 200 immediately so cron-job.org doesn't time out,
   // while Vercel keeps the function alive to finish the work.
-  after(generateNewsletter(type, forceRegenerate, customLookbackHours));
+  after(() => generateNewsletter(type, forceRegenerate, customLookbackHours));
 
   return NextResponse.json({
     success: true,
