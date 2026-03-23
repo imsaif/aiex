@@ -20,6 +20,7 @@ const nextConfig = {
   
   // Enable experimental features for better performance
   experimental: {
+    after: true,
     optimizePackageImports: [
       'framer-motion',
       'fuse.js',
