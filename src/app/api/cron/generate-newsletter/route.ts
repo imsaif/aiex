@@ -1105,9 +1105,27 @@ export async function GET(request: NextRequest) {
   const forceRegenerate = url.searchParams.get('force') === 'true';
   const customLookbackHours = url.searchParams.get('lookbackHours');
 
-  // Use after() to run the heavy work after the response is sent.
-  // This lets us return 200 immediately so cron-job.org doesn't time out,
-  // while Vercel keeps the function alive to finish the work.
+  // Debug mode: run synchronously to see errors. Use ?debug=true
+  const debug = url.searchParams.get('debug') === 'true';
+
+  if (debug) {
+    try {
+      await generateNewsletter(type, forceRegenerate, customLookbackHours);
+      return NextResponse.json({
+        success: true,
+        message: `${type} newsletter generated synchronously (debug mode)`,
+        type,
+      });
+    } catch (error) {
+      return NextResponse.json({
+        success: false,
+        error: String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      }, { status: 500 });
+    }
+  }
+
+  // Production mode: run in background so cron-job.org doesn't time out
   waitUntil(generateNewsletter(type, forceRegenerate, customLookbackHours));
 
   return NextResponse.json({
