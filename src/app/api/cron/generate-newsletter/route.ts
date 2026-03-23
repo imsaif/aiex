@@ -954,72 +954,75 @@ async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean
       : (type === 'weekly' ? 168 : 72);
     const deduplicationDays = type === 'weekly' ? 30 : 7;
 
-    // Step 1: Aggregate news
-    const newsItems = await aggregateNews(lookbackHours, deduplicationDays);
-
-    // Handle quiet days with a creative message (only for daily)
-    if (newsItems.length === 0) {
-      if (type === 'weekly') {
-        console.log('No news items found for weekly newsletter.');
-        return;
-      }
-
-      const quietDayMessages = [
-        { title: 'A Quiet Day in AI', message: 'No major AI updates today. Perfect time to explore a new pattern or refine your designs.' },
-        { title: 'The AI World Takes a Breath', message: 'Nothing groundbreaking today. Why not revisit a pattern you haven\'t explored yet?' },
-        { title: 'Slow News Day', message: 'The AI feeds are quiet. A good day to focus on craft over chaos.' },
-        { title: 'Design Day', message: 'No AI news to distract you. Go design something beautiful.' },
-        { title: 'All Quiet on the AI Front', message: 'Major players are silent today. Time to catch up on patterns you bookmarked.' },
-      ];
-
-      const randomMessage = quietDayMessages[Math.floor(Math.random() * quietDayMessages.length)];
-      const date = new Date();
-      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-quiet-day`;
-
-      const existingQuietDay = await prisma.newsletterDraft.findFirst({
-        where: { slug },
-      });
-
-      if (existingQuietDay) {
-        console.log('Quiet day entry already exists for today');
-        return;
-      }
-
-      await prisma.newsletterDraft.create({
-        data: {
-          title: `AI UX Daily: ${randomMessage.title}`,
-          slug,
-          summary: randomMessage.message,
-          content: '',
-          publishDate: new Date(),
-          status: 'published',
-          sources: [],
-        },
-      });
-
-      console.log(`Quiet day entry created: ${randomMessage.title}`);
-      return;
-    }
-
-    // Step 2: Fetch recently used headlines for semantic deduplication in Claude's prompt
-    const recentHeadlines = await getRecentlyUsedTitles(deduplicationDays);
-
-    // Step 3: Generate newsletter with Claude
+    // Step 1: Build the prompt — weekly tries daily compilation first to avoid slow RSS
     let prompt: string;
     let structuredData: NewsletterData | WeeklyNewsletterData | null = null;
     let dailyItemsUsed: NewsletterItem[] = [];
+    let newsItems: NewsItem[] = [];
 
     if (type === 'weekly') {
+      // Weekly: compile from existing daily newsletters (fast, no RSS needed)
       const dailyItems = await getDailyNewsletterItems(7);
 
       if (dailyItems.length >= 3) {
         prompt = buildWeeklyCompilationPrompt(dailyItems);
         dailyItemsUsed = dailyItems;
+        console.log(`Weekly: compiling from ${dailyItems.length} daily items (skipped RSS)`);
       } else {
+        // Not enough dailies — fall back to RSS aggregation
+        console.log(`Weekly: only ${dailyItems.length} daily items, falling back to RSS`);
+        newsItems = await aggregateNews(lookbackHours, deduplicationDays);
+        if (newsItems.length === 0) {
+          console.log('No news items found for weekly newsletter.');
+          return;
+        }
+        const recentHeadlines = await getRecentlyUsedTitles(deduplicationDays);
         prompt = buildWeeklyPrompt(newsItems, recentHeadlines);
       }
     } else {
+      // Daily: always aggregate fresh RSS
+      newsItems = await aggregateNews(lookbackHours, deduplicationDays);
+
+      if (newsItems.length === 0) {
+        const quietDayMessages = [
+          { title: 'A Quiet Day in AI', message: 'No major AI updates today. Perfect time to explore a new pattern or refine your designs.' },
+          { title: 'The AI World Takes a Breath', message: 'Nothing groundbreaking today. Why not revisit a pattern you haven\'t explored yet?' },
+          { title: 'Slow News Day', message: 'The AI feeds are quiet. A good day to focus on craft over chaos.' },
+          { title: 'Design Day', message: 'No AI news to distract you. Go design something beautiful.' },
+          { title: 'All Quiet on the AI Front', message: 'Major players are silent today. Time to catch up on patterns you bookmarked.' },
+        ];
+
+        const randomMessage = quietDayMessages[Math.floor(Math.random() * quietDayMessages.length)];
+        const date = new Date();
+        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-quiet-day`;
+
+        const existingQuietDay = await prisma.newsletterDraft.findFirst({
+          where: { slug },
+        });
+
+        if (existingQuietDay) {
+          console.log('Quiet day entry already exists for today');
+          return;
+        }
+
+        await prisma.newsletterDraft.create({
+          data: {
+            title: `AI UX Daily: ${randomMessage.title}`,
+            slug,
+            summary: randomMessage.message,
+            content: '',
+            publishDate: new Date(),
+            status: 'published',
+            sources: [],
+          },
+        });
+
+        console.log(`Quiet day entry created: ${randomMessage.title}`);
+        return;
+      }
+
+      const recentHeadlines = await getRecentlyUsedTitles(deduplicationDays);
       prompt = buildPrompt(newsItems, recentHeadlines);
     }
 
