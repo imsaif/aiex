@@ -251,12 +251,12 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
-### Session 2026-03-23 16:15 (MacBook)
-- **Pattern:** Newsletter Cron Timeout Fix
+### Session 2026-03-23 20:21 (MacBook)
+- **Pattern:** Newsletter Cron Investigation & Fix
 - **Status:** ✅ Completed
-- **Files Changed:** 2
+- **Files Changed:** 4
 - **Tests Added/Modified:** 0
-- **Notes:** Fixed recurring cron-job.org timeout issue by refactoring newsletter generation to use Next.js 15 `after()` API. Endpoint now returns 200 immediately and runs RSS aggregation + Claude API + DB write in the background. Added known issues to CLAUDE.md for cron timeout and dual-trigger patterns. Created persistent memory records for cron troubleshooting to avoid re-investigating in future sessions.
+- **Notes:** Investigated newsletter cron failures. Discovered Vercel's internal crons were successfully generating weeklies (Mar 2, 9, 16) while cron-job.org was newly added and timing out at 30s. Attempted background processing refactors (next/server after(), @vercel/functions waitUntil, two-step split) — all failed due to Vercel hobby 60s cap. Reverted to original synchronous handler which works with Vercel's internal cron. Generated today's weekly locally. Root cause of duplicate dailies: both Vercel and cron-job.org firing simultaneously. Fix: deleted weekly cron from cron-job.org, staggered daily to 10 min after Vercel. Created comprehensive memory records to prevent re-investigation.
 
 ### Session 2026-03-19 20:31 (MacBook)
 - **Pattern:** SEO Phase 3 — Featured Snippet Optimization
@@ -315,13 +315,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Extracted shared `NewsletterSource` type to prevent client/API source enum drift. Added Claude Code post-edit hooks (typecheck on every Edit/Write). Fixed guide PDF download modal to show immediate "Download PDF" button using API's `downloadUrl` instead of relying solely on email delivery.
 
 ### Session 2026-03-12 21:15 (MacBook)
-- **Pattern:** Agentic UX Checklist + Copy Fixes
-- **Status:** ✅ Completed
-- **Files Changed:** 10
-- **Tests Added/Modified:** 0
-- **Notes:** Created Agentic UX Checklist landing page (split layout with email capture + PDF download) and added resource card to ResourcesGrid. Fixed stale copy: reverted pattern page CTA to "28" (PDF count), updated newsletter email templates to "36 patterns" / "8 categories". Removed AuthorFooter from pattern pages (redundant with /about). Merged and placed 3-page checklist PDF.
-
-### Session 2026-03-11 20:49 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
