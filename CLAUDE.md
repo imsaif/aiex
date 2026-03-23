@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-23 22:00 (MacBook)
+- **Pattern:** Audit Page Performance & SEO
+- **Status:** ✅ Completed
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Performance optimization pass across site and audit page. Simplified grain SVG (numOctaves 4→2), reduced Clarity fallback timeout (4s→1.5s). Audit page: compressed SocialProof image (1.6MB→59KB), removed framer-motion from SocialProof (8 motion.divs→plain divs), removed radial gradient from canvas, lazy-loaded demo data. SEO: added OG image, Twitter card, canonical URL, H1 tag, ISR revalidate, FAQ click-through hooks, internal links to pattern pages. Dead clicks: removed shadow-card from use case cards, de-styled feature pills.
+
 ### Session 2026-03-23 20:28 (MacBook)
 - **Pattern:** Newsletter Email Header Link Fix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Overhauled X post generation from newsletter-summary teasers to opinion-first threaded format (hook tweet + one opinionated take per story + closing tweet with link). Added emojis to X prompt. Added Reddit post generation (title + markdown body, copy-paste workflow). Restructured social admin layout: newsletter selector full-width on top, 3 post cards (X, LinkedIn, Reddit) in horizontal columns, utilities row below.
 
 ### Session 2026-03-12 21:52 (MacBook)
-- **Pattern:** Quality Infrastructure + Guide PDF Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Extracted shared `NewsletterSource` type to prevent client/API source enum drift. Added Claude Code post-edit hooks (typecheck on every Edit/Write). Fixed guide PDF download modal to show immediate "Download PDF" button using API's `downloadUrl` instead of relying solely on email delivery.
-
-### Session 2026-03-12 21:15 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

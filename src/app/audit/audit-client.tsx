@@ -11,7 +11,6 @@ import {
 import { CenterUpload } from '@/components/audit/CenterUpload';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { FloatingResultsSidebar } from '@/components/audit/FloatingResultsSidebar';
-import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
 import type { AnalysisResults } from '@/types/audit';
@@ -55,8 +54,9 @@ export default function AuditClient() {
   const hasImages = uploadedImages.length > 0;
   const hasResults = !!(isAnalyzing || analysisResults);
 
-  // Handle demo mode
-  const handleStartDemo = useCallback(() => {
+  // Handle demo mode — lazy-load demo data only when triggered
+  const handleStartDemo = useCallback(async () => {
+    const { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } = await import('@/data/demo-audit');
     setIsDemoMode(true);
     setUploadedImages([{
       base64: DEMO_SCREENSHOT_FALLBACK,
@@ -155,7 +155,6 @@ export default function AuditClient() {
           <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-clip relative">
             {/* Grid Pattern on Canvas */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:12px_12px]" />
 
             {/* Center Upload / Image Display */}
             <CenterUpload

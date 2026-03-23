@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import {
   ChatBubbleLeftRightIcon,
   DocumentMagnifyingGlassIcon,
@@ -43,39 +42,29 @@ export function SocialProof() {
             {/* Feature Chips */}
             <div className="flex flex-wrap gap-3">
               {FEATURES.map((feature, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
                   className="flex items-center gap-2 px-4 py-2 rounded-full border border-border-primary bg-background-secondary text-sm text-text-secondary hover:border-accent-primary hover:text-accent-primary transition-colors cursor-default"
                 >
                   <feature.icon className="w-4 h-4" />
                   {feature.label}
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
 
           {/* Right: Showcase Image - Smaller, subtle */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="relative max-w-xs mx-auto"
-          >
+          <div className="relative max-w-xs mx-auto">
             <div className="rounded-xl overflow-hidden shadow-lg">
               <Image
-                src="/images/audit/daniel-korpai-mxPiMiz7KCo-unsplash.jpg"
+                src="/images/audit/daniel-korpai-optimized.jpg"
                 alt="Designer reviewing AI interface on mobile and desktop"
                 width={280}
                 height={350}
                 className="object-cover"
               />
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
@@ -111,13 +100,7 @@ export function SocialProof() {
               {/* Grid of Use Case Cards */}
               <div className="grid grid-cols-2 gap-4">
                 {/* Large card - spans 2 rows */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4 }}
-                  viewport={{ once: true }}
-                  className="row-span-2 rounded-2xl overflow-hidden border border-border-primary bg-background-primary shadow-card"
-                >
+                <div className="row-span-2 rounded-2xl overflow-hidden border border-border-primary/50 bg-background-primary">
                   <div className="p-4 h-full flex flex-col">
                     <div className="flex-1 bg-background-tertiary rounded-xl flex items-center justify-center min-h-[220px]">
                       <div className="text-center p-6">
@@ -132,16 +115,10 @@ export function SocialProof() {
                       <span className="text-sm text-text-secondary">ChatGPT, Claude, Gemini...</span>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Smaller cards */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.1 }}
-                  viewport={{ once: true }}
-                  className="rounded-2xl overflow-hidden border border-border-primary bg-background-primary shadow-card"
-                >
+                <div className="rounded-2xl overflow-hidden border border-border-primary/50 bg-background-primary">
                   <div className="p-4">
                     <div className="bg-background-tertiary rounded-xl flex items-center justify-center h-[100px]">
                       <div className="text-center">
@@ -152,15 +129,9 @@ export function SocialProof() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.15 }}
-                  viewport={{ once: true }}
-                  className="rounded-2xl overflow-hidden border border-border-primary bg-background-primary shadow-card"
-                >
+                <div className="rounded-2xl overflow-hidden border border-border-primary/50 bg-background-primary">
                   <div className="p-4">
                     <div className="bg-background-tertiary rounded-xl flex items-center justify-center h-[100px]">
                       <div className="text-center">
@@ -171,15 +142,9 @@ export function SocialProof() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.2 }}
-                  viewport={{ once: true }}
-                  className="rounded-2xl overflow-hidden border border-border-primary bg-background-primary shadow-card"
-                >
+                <div className="rounded-2xl overflow-hidden border border-border-primary/50 bg-background-primary">
                   <div className="p-4">
                     <div className="bg-background-tertiary rounded-xl flex items-center justify-center h-[100px]">
                       <div className="text-center">
@@ -190,15 +155,9 @@ export function SocialProof() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.25 }}
-                  viewport={{ once: true }}
-                  className="rounded-2xl overflow-hidden border border-border-primary bg-background-primary shadow-card"
-                >
+                <div className="rounded-2xl overflow-hidden border border-border-primary/50 bg-background-primary">
                   <div className="p-4">
                     <div className="bg-background-tertiary rounded-xl flex items-center justify-center h-[100px]">
                       <div className="text-center">
@@ -209,7 +168,7 @@ export function SocialProof() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               </div>
 
               {/* Feature pills below grid */}
@@ -217,7 +176,7 @@ export function SocialProof() {
                 {['Mobile & Desktop', 'Figma Exports', 'Screenshots'].map((label, i) => (
                   <span
                     key={i}
-                    className="px-4 py-2 rounded-full border border-border-primary bg-background-primary text-sm text-text-secondary"
+                    className="px-4 py-2 rounded-full bg-background-primary/60 text-sm text-text-tertiary"
                   >
                     {label}
                   </span>

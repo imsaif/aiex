@@ -75,9 +75,9 @@ export default function RootLayout({
                   })(window,document,"clarity","script","vj7nlmybbm");
                 }
                 if ('requestIdleCallback' in window) {
-                  requestIdleCallback(init, { timeout: 5000 });
+                  requestIdleCallback(init, { timeout: 2500 });
                 } else {
-                  setTimeout(init, 4000);
+                  setTimeout(init, 1500);
                 }
               })();
             `,
