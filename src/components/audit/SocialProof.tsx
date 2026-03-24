@@ -6,16 +6,10 @@ import {
   LightBulbIcon,
   BoltIcon,
   SparklesIcon,
+  ArrowUpTrayIcon,
+  MagnifyingGlassCircleIcon,
+  EyeIcon,
 } from '@heroicons/react/24/outline';
-import Image from 'next/image';
-
-const FEATURES = [
-  { label: 'Pattern Detection', icon: DocumentMagnifyingGlassIcon },
-  { label: 'Instant Scoring', icon: BoltIcon },
-  { label: 'AI Chat Mentor', icon: ChatBubbleLeftRightIcon },
-  { label: 'Fix Suggestions', icon: LightBulbIcon },
-  { label: 'Figma Prompts', icon: SparklesIcon },
-];
 
 const TRUST_POINTS = [
   'Screenshots never stored',
@@ -26,44 +20,62 @@ const TRUST_POINTS = [
 export function SocialProof() {
   return (
     <div className="bg-background-primary border-t border-border-primary">
-      {/* Feature Showcase Section - Like the reference */}
+      {/* What is an AI UX audit — SEO content, visually enhanced */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16 lg:py-24">
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-          {/* Left: Content */}
-          <div>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4" style={{ color: 'var(--text-hero)' }}>
-              AI UX Pattern Audit
-            </h2>
-            <p className="text-base text-text-secondary leading-relaxed mb-8">
-              Upload any AI interface screenshot and get instant feedback on UX patterns.
-              Powered by 36 research-backed patterns for AI products.
+        {/* Heading + description */}
+        <div className="max-w-3xl mb-12">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-5" style={{ color: 'var(--text-hero)' }}>
+            What is an AI UX audit?
+          </h2>
+          <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+            An AI UX audit evaluates your interface against proven design patterns to identify usability strengths and gaps.
+            This tool scores your design against 36 patterns specifically researched for AI products.
+            Upload a screenshot of any AI interface like a chatbot, code assistant, dashboard, or content generator and get instant, actionable feedback.
+          </p>
+        </div>
+
+        {/* Pattern pills — non-linked labels, +32 more links to patterns page */}
+        <div className="flex flex-wrap gap-2 mb-14">
+          <span className="text-sm text-text-tertiary py-1">Patterns tested:</span>
+          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Progressive Disclosure</span>
+          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Confidence Visualization</span>
+          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Error Recovery</span>
+          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Contextual Assistance</span>
+          <a href="/" className="px-3 py-1 rounded-full text-sm text-accent-primary hover:underline transition-colors">+32 more</a>
+        </div>
+
+        {/* How it works — 3 cards with icons */}
+        <h3 className="text-xl font-bold text-text-primary mb-6">How it works</h3>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="rounded-2xl border border-border-primary bg-background-secondary p-6">
+            <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
+              <ArrowUpTrayIcon className="w-6 h-6 text-accent-primary" />
+            </div>
+            <p className="text-sm font-semibold text-accent-primary mb-1">Step 1</p>
+            <p className="text-base font-semibold text-text-primary mb-2">Upload</p>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Drop a screenshot of your AI interface. Supports desktop, mobile, and tablet designs.
             </p>
-
-            {/* Feature Chips */}
-            <div className="flex flex-wrap gap-3">
-              {FEATURES.map((feature, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-border-primary bg-background-secondary text-sm text-text-secondary hover:border-accent-primary hover:text-accent-primary transition-colors cursor-default"
-                >
-                  <feature.icon className="w-4 h-4" />
-                  {feature.label}
-                </div>
-              ))}
-            </div>
           </div>
-
-          {/* Right: Showcase Image - Smaller, subtle */}
-          <div className="relative max-w-xs mx-auto">
-            <div className="rounded-xl overflow-hidden shadow-lg">
-              <Image
-                src="/images/audit/daniel-korpai-optimized.jpg"
-                alt="Designer reviewing AI interface on mobile and desktop"
-                width={280}
-                height={350}
-                className="object-cover"
-              />
+          <div className="rounded-2xl border border-border-primary bg-background-secondary p-6">
+            <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
+              <MagnifyingGlassCircleIcon className="w-6 h-6 text-accent-primary" />
             </div>
+            <p className="text-sm font-semibold text-accent-primary mb-1">Step 2</p>
+            <p className="text-base font-semibold text-text-primary mb-2">Analyze</p>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              Scored against 36 AI UX patterns used by ChatGPT, GitHub Copilot, and Notion.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-border-primary bg-background-secondary p-6">
+            <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
+              <ChatBubbleLeftRightIcon className="w-6 h-6 text-accent-primary" />
+            </div>
+            <p className="text-sm font-semibold text-accent-primary mb-1">Step 3</p>
+            <p className="text-base font-semibold text-text-primary mb-2">Get Insights</p>
+            <p className="text-sm text-text-secondary leading-relaxed">
+              See which patterns are strong, weak, or missing, then chat with an AI design mentor.
+            </p>
           </div>
         </div>
       </div>

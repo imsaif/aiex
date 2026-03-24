@@ -2,12 +2,6 @@
 
 import { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { ShieldCheckIcon } from '@heroicons/react/24/solid';
-import {
-  PhotoIcon,
-  MagnifyingGlassCircleIcon,
-  ChatBubbleLeftRightIcon,
-} from '@heroicons/react/24/outline';
 import { CenterUpload } from '@/components/audit/CenterUpload';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { FloatingResultsSidebar } from '@/components/audit/FloatingResultsSidebar';
@@ -169,52 +163,26 @@ export default function AuditClient() {
               showDeviceFrame={showDeviceFrame}
               onToggleFrame={() => setShowDeviceFrame(!showDeviceFrame)}
               sidebarOpen={hasResults}
-            >
-              {/* Marketing pitch — visible only before upload */}
-              <div className="mt-6 w-full max-w-3xl space-y-4">
-                {/* Trust badge */}
-                <div className="flex items-center justify-center">
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-background-secondary/80">
-                    <ShieldCheckIcon className="w-5 h-5 text-text-primary dark:text-white" />
-                    <span className="text-base text-text-secondary">
-                      <span className="font-semibold text-text-primary dark:text-white">36 patterns</span> from{' '}
-                      <span className="font-semibold text-text-primary dark:text-white">50+ products</span>
-                    </span>
+              header={
+                <div className="w-full max-w-3xl text-center mb-10">
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-5" style={{ color: 'var(--text-hero)' }}>
+                    Free AI UX Audit Tool
+                  </h1>
+                  <p className="text-lg md:text-xl text-text-secondary mb-8">
+                    Upload a screenshot. Get instant feedback against 36 research-backed AI UX patterns.
+                  </p>
+                  <div className="overflow-hidden">
+                    <CompanyLogoCarousel
+                      companies={companyLogos}
+                      size="sm"
+                      duration={80}
+                      gap="lg"
+                      className="py-2"
+                    />
                   </div>
                 </div>
-
-                {/* Logo Carousel — prominent, right after heading */}
-                <div className="overflow-hidden">
-                  <CompanyLogoCarousel
-                    companies={companyLogos}
-                    size="sm"
-                    duration={80}
-                    gap="lg"
-                    className="py-2"
-                  />
-                </div>
-
-                {/* How It Works steps */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 !mt-8">
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-background-secondary/60">
-                    <PhotoIcon className="w-5 h-5 text-accent-primary" />
-                    <span className="text-sm font-medium text-text-primary">Upload</span>
-                  </div>
-                  <span className="text-text-tertiary hidden sm:inline">→</span>
-                  <span className="text-text-tertiary sm:hidden">↓</span>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-background-secondary/60">
-                    <MagnifyingGlassCircleIcon className="w-5 h-5 text-accent-primary" />
-                    <span className="text-sm font-medium text-text-primary">Analyze</span>
-                  </div>
-                  <span className="text-text-tertiary hidden sm:inline">→</span>
-                  <span className="text-text-tertiary sm:hidden">↓</span>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-background-secondary/60">
-                    <ChatBubbleLeftRightIcon className="w-5 h-5 text-accent-primary" />
-                    <span className="text-sm font-medium text-text-primary">Get Insights</span>
-                  </div>
-                </div>
-              </div>
-            </CenterUpload>
+              }
+            />
 
             {/* Floating Results Sidebar */}
             <FloatingResultsSidebar isVisible={hasResults} expandTrigger={chatTrigger}>

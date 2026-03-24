@@ -65,6 +65,14 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
+                      href="/audit"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      AI UX Audit
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="/agent-readability-audit-kit"
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >

@@ -3,8 +3,6 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
-  ArrowUpTrayIcon,
-  ComputerDesktopIcon,
   PhotoIcon,
   DevicePhoneMobileIcon,
   ChevronLeftIcon,
@@ -16,8 +14,6 @@ import {
 } from '@heroicons/react/24/outline';
 import { DeviceFrame } from './DeviceFrame';
 import { detectDeviceType, type DeviceType } from '@/utils/imageDetection';
-
-type TabType = 'upload' | 'demo';
 
 const MAX_IMAGES = 4;
 
@@ -44,6 +40,8 @@ interface CenterUploadProps {
   hasResults?: boolean;
   showDeviceFrame?: boolean;
   onToggleFrame?: () => void;
+  /** Content rendered above the upload card */
+  header?: React.ReactNode;
   children?: React.ReactNode;
   /** When true, shifts content left to make room for floating sidebar */
   sidebarOpen?: boolean;
@@ -60,10 +58,10 @@ export function CenterUpload({
   hasResults = false,
   showDeviceFrame = true,
   onToggleFrame,
+  header,
   children,
   sidebarOpen = false,
 }: CenterUploadProps) {
-  const [activeTab, setActiveTab] = useState<TabType>('upload');
   const [isDetecting, setIsDetecting] = useState(false);
   const [usage, setUsage] = useState<UsageInfo | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -335,86 +333,45 @@ export function CenterUpload({
     <div className="absolute inset-0 flex flex-col items-center p-8 overflow-y-auto">
       {/* Spacer to vertically center when content fits */}
       <div className="flex-1 min-h-0" />
+      {/* Header content above upload card */}
+      {header}
       {/* Upload Card */}
-      <div className="relative w-full max-w-sm z-10">
+      <div className="relative w-full max-w-md z-10">
         <div
           {...getRootProps()}
           className="relative bg-background-primary rounded-3xl shadow-xl p-5"
         >
           <input {...getInputProps()} />
 
-          {/* Minimal Tabs */}
-          <div className="flex justify-center gap-1 mb-4">
-            <button
-              type="button"
-              onClick={() => setActiveTab('upload')}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
-                ${activeTab === 'upload'
-                  ? 'bg-background-secondary text-text-primary'
-                  : 'text-text-tertiary hover:text-text-primary'
-                }
-              `}
-            >
-              <ArrowUpTrayIcon className="w-4 h-4" />
-              Select
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('demo')}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all
-                ${activeTab === 'demo'
-                  ? 'bg-background-secondary text-text-primary'
-                  : 'text-text-tertiary hover:text-text-primary'
-                }
-              `}
-            >
-              <ComputerDesktopIcon className="w-4 h-4" />
-              Demo
-            </button>
+          {/* Drop Zone */}
+          <div
+            onClick={open}
+            className={`
+              p-8 border-2 border-dashed rounded-xl text-center cursor-pointer transition-all
+              ${isDragActive
+                ? 'border-accent-primary bg-accent-subtle'
+                : 'border-border-primary hover:border-accent-primary'
+              }
+            `}
+          >
+            <PhotoIcon className="w-10 h-10 mx-auto mb-2 text-text-tertiary" />
+            <p className="text-sm font-medium text-text-primary">
+              {isDragActive ? 'Drop them here!' : 'Drop any AI interface screenshot'}
+            </p>
+            <p className="text-xs text-text-tertiary mt-1">PNG, JPG, or WebP · up to {MAX_IMAGES} images</p>
           </div>
 
-          {activeTab === 'upload' && (
-            <>
-              {/* Drop Zone */}
-              <div
-                onClick={open}
-                className={`
-                  p-8 border-2 border-dashed rounded-xl text-center cursor-pointer transition-all
-                  ${isDragActive
-                    ? 'border-accent-primary bg-accent-subtle'
-                    : 'border-border-primary hover:border-accent-primary'
-                  }
-                `}
-              >
-                <PhotoIcon className="w-10 h-10 mx-auto mb-2 text-text-tertiary" />
-                <p className="text-sm font-medium text-text-primary">
-                  {isDragActive ? 'Drop them here!' : 'Drop your screenshots here'}
-                </p>
-                <p className="text-xs text-text-tertiary mt-1">or click to browse · up to {MAX_IMAGES} images</p>
-              </div>
-
-            </>
-          )}
-
-          {activeTab === 'demo' && (
-            <div className="text-center py-6">
-              <ComputerDesktopIcon className="w-10 h-10 mx-auto mb-3 text-accent-primary" />
-              <h3 className="text-base font-semibold text-text-primary mb-2">
-                See a Sample Analysis
-              </h3>
-              <p className="text-sm text-text-secondary mb-4 px-4">
-                Preview what an AI UX audit looks like with our demo analysis of a chat interface.
-              </p>
+          {/* Demo link */}
+          {onStartDemo && (
+            <p className="text-center mt-4">
               <button
                 type="button"
                 onClick={onStartDemo}
-                className="px-6 py-2.5 bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold rounded-full hover:bg-accent-hover transition-colors cursor-pointer"
+                className="text-sm text-accent-primary hover:underline cursor-pointer"
               >
-                View Demo Results
+                or try a demo analysis
               </button>
-            </div>
+            </p>
           )}
         </div>
 

@@ -5,6 +5,7 @@ import { Pattern, PatternSummary } from '@/types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+import { InlineAuditCTA } from '@/components/audit/InlineAuditCTA';
 
 // Lazy load heavy components to reduce initial bundle size
 const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
@@ -209,6 +210,11 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Audit CTA */}
+        <section>
+          <InlineAuditCTA variant="pattern-detail" />
         </section>
 
         {/* Related Patterns - Rich Cards (moved above newsletter for better engagement) */}

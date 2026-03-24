@@ -87,40 +87,6 @@ export default function AuditPage() {
       <Navbar />
       <AuditClient />
 
-      {/* Server-rendered SEO content — visible to Google, below the interactive canvas */}
-      <section className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold text-text-primary mb-6">
-          Free AI UX Audit Tool
-        </h1>
-        <p className="text-text-secondary leading-relaxed mb-8">
-          An AI UX audit evaluates your AI interface against proven design patterns to identify usability strengths and gaps.
-          Instead of relying on general UX heuristics, this tool scores your design against 36 patterns specifically researched
-          for AI products — from <a href="/patterns/progressive-disclosure" className="text-accent-primary hover:underline">progressive disclosure</a> and <a href="/patterns/confidence-visualization" className="text-accent-primary hover:underline">confidence visualization</a> to <a href="/patterns/error-recovery" className="text-accent-primary hover:underline">error recovery</a> and <a href="/patterns/contextual-assistance" className="text-accent-primary hover:underline">contextual assistance</a>.
-          Upload a screenshot of any AI interface (chatbot, code assistant, AI dashboard, or content generator) and get instant,
-          actionable feedback on what to improve.
-        </p>
-
-        <h2 className="text-2xl font-bold text-text-primary mb-6">
-          How it works
-        </h2>
-        <ol className="list-decimal list-inside text-text-secondary leading-relaxed space-y-3 mb-8">
-          <li><strong className="text-text-primary">Upload</strong> a screenshot of your AI interface — supports desktop, mobile, and tablet designs</li>
-          <li><strong className="text-text-primary">Analyze</strong> — the tool scores your design against 36 AI UX patterns used by products like ChatGPT, GitHub Copilot, and Notion</li>
-          <li><strong className="text-text-primary">Get Insights</strong> — see which patterns are strong, weak, or missing, then chat with an AI design mentor for deeper guidance</li>
-        </ol>
-
-        <h2 className="text-2xl font-bold text-text-primary mb-6">
-          What types of AI interfaces can you audit?
-        </h2>
-        <ul className="list-disc list-inside text-text-secondary leading-relaxed space-y-2 mb-8">
-          <li><a href="/patterns/conversational-ui" className="text-accent-primary hover:underline">Chatbot and conversational AI</a> interfaces (ChatGPT, Claude, Gemini)</li>
-          <li>Code assistants and AI coding tools (GitHub Copilot, Cursor, Replit)</li>
-          <li>AI-powered dashboards and analytics tools</li>
-          <li>Content generation and creative AI tools</li>
-          <li>AI agents and automation interfaces</li>
-        </ul>
-      </section>
-
       <Footer />
     </>
   );

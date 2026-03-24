@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-24 19:38 (MacBook)
+- **Pattern:** Audit Page UX Improvement
+- **Status:** ✅ Completed
+- **Files Changed:** 7
+- **Tests Added/Modified:** 0
+- **Notes:** Redesigned audit page for better engagement and visibility. Hero: added h1 headline + subheadline + logo carousel above widened upload card, removed tab UI and surfaced demo as inline link. Below-fold: replaced feature showcase with visually enhanced "What is an AI UX audit?" section (pattern pills, 3-step icon cards), kept original gallery + sidebar. Cross-promotion: new InlineAuditCTA component on pattern detail pages, audit link added to footer. Consolidated heading hierarchy to single h1.
+
 ### Session 2026-03-23 22:00 (MacBook)
 - **Pattern:** Audit Page Performance & SEO
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Overhauled Autonomy Spectrum pattern: removed Tesla example, kept 3 coding-tool examples (Claude Code, Cursor, GitHub Copilot Workspace) with tightened descriptions. Added Cursor to product-logos.ts for Used By icons. Rebuilt interactive demo from email agent to coding agent context with two-panel layout (permissions + live activity feed), brand-compliant design tokens (no colored buttons), Heroicons instead of emojis, dead-click prevention, and full-width layout.
 
 ### Session 2026-03-17 18:38 (MacBook)
-- **Pattern:** Social Post Generation Upgrade
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Overhauled X post generation from newsletter-summary teasers to opinion-first threaded format (hook tweet + one opinionated take per story + closing tweet with link). Added emojis to X prompt. Added Reddit post generation (title + markdown body, copy-paste workflow). Restructured social admin layout: newsletter selector full-width on top, 3 post cards (X, LinkedIn, Reddit) in horizontal columns, utilities row below.
-
-### Session 2026-03-12 21:52 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
