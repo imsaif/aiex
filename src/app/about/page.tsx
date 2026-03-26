@@ -7,9 +7,23 @@ import { AboutNewsletter } from './about-newsletter';
 export const metadata: Metadata = {
   title: 'What is AIUX? | AI UX Design Patterns Framework – aiuxdesign.guide',
   description: 'AIUX is a framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products like ChatGPT, Claude, and GitHub Copilot. The practical reference for designing AI-powered experiences.',
+  keywords: ['AI UX framework', 'AI design patterns', 'AIUX', 'AI UX design guide', 'AI product design', 'UX patterns for AI'],
   openGraph: {
     title: 'What is AIUX? | AI UX Design Patterns Framework',
-    description: 'AIUX is a framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products. Learn how the best AI products are designed.',
+    description: 'A framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products. Learn how the best AI products are designed.',
+    url: 'https://www.aiuxdesign.guide/about',
+    siteName: 'AI UX Design Guide',
+    type: 'website',
+    images: [{ url: '/images/og/og-home.png', width: 1200, height: 630, alt: 'AIUX — AI UX Design Patterns Framework' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'What is AIUX? | AI UX Design Patterns Framework',
+    description: 'A framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products.',
+    images: ['/images/og/og-home.png'],
+  },
+  alternates: {
+    canonical: 'https://www.aiuxdesign.guide/about',
   },
 };
 

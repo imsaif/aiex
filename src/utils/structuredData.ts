@@ -1,4 +1,4 @@
-import { Pattern } from '@/types';
+import { Pattern, Guide } from '@/types';
 
 /**
  * Generate JSON-LD structured data for Article schema
@@ -162,4 +162,120 @@ export function generatePatternStructuredData(pattern: Pattern) {
   ].filter(Boolean); // Remove null values
 
   return schemas;
+}
+
+// --- Guide structured data ---
+
+/**
+ * Generate Course JSON-LD for guide pages
+ * Helps Google show course rich results
+ */
+export function generateGuideCourseSchema(guide: Guide) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: guide.title,
+    description: guide.excerpt || guide.description,
+    provider: {
+      '@type': 'Organization',
+      name: 'AI UX Design Guide',
+      url: 'https://aiuxdesign.guide',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      category: 'Free',
+    },
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'Online',
+      courseWorkload: `PT${guide.readTime}M`,
+    },
+    educationalLevel: guide.skillLevel,
+    about: {
+      '@type': 'Thing',
+      name: guide.tool,
+    },
+    url: `https://aiuxdesign.guide/guides/${guide.slug}`,
+    datePublished: guide.publishedDate,
+    dateModified: guide.lastUpdatedDate || guide.publishedDate,
+  };
+
+  return schema;
+}
+
+/**
+ * Generate Breadcrumb JSON-LD for guide pages
+ */
+export function generateGuideBreadcrumbSchema(guide: Guide) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: 'https://aiuxdesign.guide',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Guides',
+        item: 'https://aiuxdesign.guide/guides',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: guide.title,
+        item: `https://aiuxdesign.guide/guides/${guide.slug}`,
+      },
+    ],
+  };
+}
+
+/**
+ * Generate Article JSON-LD for guide pages
+ */
+export function generateGuideArticleSchema(guide: Guide) {
+  const url = `https://aiuxdesign.guide/guides/${guide.slug}`;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: guide.title,
+    description: guide.excerpt || guide.description,
+    image: guide.thumbnail ? (guide.thumbnail.startsWith('http') ? guide.thumbnail : `https://aiuxdesign.guide${guide.thumbnail}`) : undefined,
+    author: {
+      '@type': 'Person',
+      name: 'Imran Mohammed',
+      url: 'https://aiuxdesign.guide',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'AI Design Patterns',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://aiuxdesign.guide/logo.png',
+      },
+    },
+    datePublished: guide.publishedDate,
+    dateModified: guide.lastUpdatedDate || guide.publishedDate,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    keywords: guide.tags?.join(', '),
+  };
+
+  return JSON.parse(JSON.stringify(schema));
+}
+
+/**
+ * Generate complete structured data for a guide page
+ */
+export function generateGuideStructuredData(guide: Guide) {
+  return [
+    generateGuideArticleSchema(guide),
+    generateGuideBreadcrumbSchema(guide),
+    generateGuideCourseSchema(guide),
+  ];
 }

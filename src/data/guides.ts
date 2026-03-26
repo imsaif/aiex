@@ -5344,6 +5344,567 @@ export const guides: Guide[] = [
     `,
     relatedPatterns: ['Collaborative AI', 'Contextual Assistance'],
   },
+  {
+    id: 'conversational-ui-guide',
+    slug: 'conversational-ui-guide',
+    title: 'Build a Conversational UI - Complete Design & Implementation Guide',
+    description:
+      'Learn how to design and build conversational interfaces - from chat message bubbles and typing indicators to voice interaction, context management, and suggested prompts.',
+    excerpt:
+      'A practical guide to building conversational UIs: 11 lessons covering chat interfaces, voice assistants, streaming responses, conversation context, error recovery, agentic AI patterns, and accessibility. Includes code examples in React and design patterns used by ChatGPT, Claude, Slack, and Siri.',
+    tool: 'Other' as const,
+    useCase: 'Learning Path',
+    skillLevel: 'Intermediate' as const,
+    designDomain: 'UX Design',
+    readTime: 39,
+    author: 'Design Team',
+    publishedDate: '2026-03-26',
+    status: 'ready' as const,
+    thumbnail: '/images/og/og-pattern-default.png',
+    tags: [
+      'conversational-ui',
+      'chat-interface',
+      'chatbot-design',
+      'voice-assistant',
+      'conversational-interface',
+      'react-chat',
+      'ai-chat',
+      'conversational-ux',
+      'learning-path',
+    ],
+    relatedPatterns: ['conversational-ui', 'contextual-assistance', 'progressive-disclosure', 'graceful-handoff', 'context-switching', 'multimodal-interaction'],
+    lessons: [
+      // Module 1: Foundations
+      {
+        id: 'lesson-1',
+        title: 'What Is Conversational UI? (And What It Isn\'t)',
+        duration: 3,
+        order: 1,
+        module: 'foundations',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Before building a conversational interface, you need to understand the landscape. Not every chat widget is a conversational UI, and not every conversational UI is a chatbot. This lesson defines the spectrum and helps you pick the right approach for your product.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Conversational UI Spectrum',
+          },
+          {
+            type: 'text',
+            content: 'Conversational interfaces exist on a spectrum from scripted to free-form:\n\nScripted chatbots follow predefined flows - decision trees with buttons and quick replies. Think customer support bots that ask "What can I help you with?" and give you 4 options. These are reliable but rigid.\n\nAI-powered conversational UI accepts free-form natural language input. Users type or speak whatever they want, and the AI interprets intent. ChatGPT, Claude, and Google Gemini are examples. These are flexible but require careful error handling.\n\nHybrid interfaces combine both - free-form input with suggested prompts, buttons for common actions, and structured cards within the chat flow. This is where most modern AI products land, and it\'s the approach this guide focuses on.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Conversational UI vs Traditional UI - When to Use Which',
+          },
+          {
+            type: 'text',
+            content: 'Use conversational UI when:\n• The user\'s task is hard to express through forms and menus (e.g., "summarize this document focusing on the financial impact")\n• The interaction benefits from back-and-forth refinement (e.g., writing, brainstorming, debugging)\n• Users have varying levels of expertise and need different interaction depths\n• The system needs to ask clarifying questions before acting\n\nStick with traditional UI when:\n• The task has a fixed, predictable structure (e.g., filling out a shipping address)\n• Speed matters more than flexibility (e.g., toggling a setting)\n• The action space is small and well-defined (e.g., sorting a list)',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Text vs Voice vs Multimodal',
+          },
+          {
+            type: 'text',
+            content: 'Text interfaces (ChatGPT, Claude, Slack AI) are best when:\n• Users need to input complex, specific requests\n• The output includes code, tables, or formatted content\n• Users want to review and edit the conversation\n\nVoice interfaces (Siri, Alexa, Gemini Voice) work best when:\n• Users\' hands or eyes are occupied (driving, cooking)\n• The interaction is quick and action-oriented ("set a timer")\n• The user is on a mobile device in a casual context\n\nMultimodal (Gemini, GPT-4V) combine text, voice, images, and structured UI - this is where the industry is heading. Design for one modality first, then expand.',
+          },
+          {
+            type: 'callout',
+            variant: 'tip',
+            content: 'Don\'t start by choosing a technology - start by understanding what your users need to accomplish and how they naturally describe those tasks. Watch 5 users try to use your product and note what they type or say. That tells you whether conversational UI is the right pattern.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-2',
+        title: 'Anatomy of a Chat Interface',
+        duration: 4,
+        order: 2,
+        module: 'foundations',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Every great conversational UI shares the same building blocks. This lesson breaks down the anatomy of a chat interface - the message area, input bar, status indicators, and metadata - with design decisions behind each element.',
+            icon: 'layout',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Core Components',
+          },
+          {
+            type: 'text',
+            content: 'A chat interface has 5 essential components:\n\n1. Message area - The scrollable container showing the conversation history. User messages align right, AI messages align left. Each message has a bubble, optional avatar, and timestamp.\n\n2. Input bar - Where users type their message. Includes a text field, send button, and optionally: file upload, voice input toggle, and character count.\n\n3. Suggested prompts - Clickable chips or buttons showing example queries. These appear in the empty state (to help users start) and after AI responses (as follow-up suggestions).\n\n4. Status indicators - Typing dots, "thinking" spinners, or streaming text that show the AI is processing. Critical for perceived responsiveness.\n\n5. Header/toolbar - Shows the AI\'s name/avatar, conversation title, and actions (new chat, settings, history).',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Message Bubble Design',
+          },
+          {
+            type: 'text',
+            content: 'Message bubbles are the visual backbone of your chat UI. Key decisions:\n\nAlignment: User messages right-aligned, AI messages left-aligned. This is a universal convention - don\'t break it.\n\nColor: User messages get the primary/accent color (filled). AI messages get a neutral background (white/gray or surface color). This creates instant visual scanning.\n\nWidth: Messages should have a max-width (60-75% of container). Full-width messages are hard to read. On mobile, allow up to 85%.\n\nRich content: AI responses often include code blocks, tables, lists, images, and buttons. Design these as first-class elements within the bubble - not as plain text dumped into a container.\n\nSpacing: 8-12px between messages from the same sender, 16-20px between sender changes. This creates natural visual grouping.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Empty State',
+          },
+          {
+            type: 'text',
+            content: 'The empty state (first visit, no messages) is the most important screen in your conversational UI. Users who don\'t know what to type will leave.\n\nInclude:\n• A welcome message explaining what the AI can do (1-2 sentences, not a paragraph)\n• 3-4 suggested prompts relevant to common use cases\n• A subtle capability list or examples section\n\nReal-world examples:\n• ChatGPT shows "How can I help you?" with prompt suggestions organized by capability\n• Claude shows a clean input with suggested starters\n• Perplexity shows trending topics and example queries',
+          },
+          {
+            type: 'callout',
+            variant: 'warning',
+            content: 'Don\'t overload the empty state with features, tutorials, or marketing. Users came to chat - get them typing within 3 seconds of landing on the page.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-3',
+        title: 'Building Message Bubbles in React',
+        duration: 4,
+        order: 3,
+        module: 'building',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Now let\'s build. This lesson walks through implementing a message list with properly styled bubbles, auto-scrolling, timestamps, and avatar indicators - the foundation of any chat UI.',
+            icon: 'code',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Data Model',
+          },
+          {
+            type: 'text',
+            content: 'Start with a clean message type:\n\n```typescript\ninterface Message {\n  id: string;\n  role: \'user\' | \'assistant\';\n  content: string;\n  timestamp: Date;\n  status?: \'sending\' | \'sent\' | \'error\';\n}\n```\n\nKeep the model simple. You can extend it later with `attachments`, `metadata`, or `citations`, but the core is: who said what, and when.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Message Component',
+          },
+          {
+            type: 'text',
+            content: 'Each message is a flex container with conditional alignment:\n\n```tsx\nfunction ChatMessage({ message }: { message: Message }) {\n  const isUser = message.role === \'user\';\n  \n  return (\n    <div className={`flex gap-2 ${isUser ? \'justify-end\' : \'justify-start\'}`}>\n      {!isUser && <Avatar role="assistant" />}\n      <div className={`max-w-[75%] rounded-2xl px-4 py-2 ${\n        isUser \n          ? \'bg-blue-500 text-white\' \n          : \'bg-gray-100 text-gray-900\'\n      }`}>\n        <div className="text-sm whitespace-pre-wrap">{message.content}</div>\n        <time className={`text-xs mt-1 block ${\n          isUser ? \'text-blue-200\' : \'text-gray-400\'\n        }`}>\n          {formatTime(message.timestamp)}\n        </time>\n      </div>\n      {isUser && <Avatar role="user" />}\n    </div>\n  );\n}\n```\n\nKey details: `max-w-[75%]` prevents full-width blobs, `rounded-2xl` gives modern bubble shape, `whitespace-pre-wrap` preserves AI formatting.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Auto-Scrolling',
+          },
+          {
+            type: 'text',
+            content: 'Chat interfaces must auto-scroll to the latest message - but only when the user is already at the bottom. If they\'ve scrolled up to read history, don\'t yank them down.\n\n```tsx\nconst messagesEndRef = useRef<HTMLDivElement>(null);\nconst containerRef = useRef<HTMLDivElement>(null);\n\nconst isNearBottom = () => {\n  const el = containerRef.current;\n  if (!el) return true;\n  return el.scrollHeight - el.scrollTop - el.clientHeight < 100;\n};\n\nuseEffect(() => {\n  if (isNearBottom()) {\n    messagesEndRef.current?.scrollIntoView({ behavior: \'smooth\' });\n  }\n}, [messages]);\n```\n\nThe `< 100` threshold gives a small buffer - users scrolled up slightly still get auto-scroll.',
+          },
+          {
+            type: 'callout',
+            variant: 'tip',
+            content: 'Test auto-scroll on mobile especially. Touch scrolling has momentum - users may still be "scrolling" when a new message arrives. Use `behavior: \'smooth\'` to avoid jarring jumps.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-4',
+        title: 'Typing Indicators & Streaming Responses',
+        duration: 4,
+        order: 4,
+        module: 'building',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Nothing kills a conversational experience like a blank screen while waiting. This lesson covers typing indicators (the "three dots"), streaming text (word-by-word display), and status states that keep users engaged during AI processing.',
+            icon: 'loading',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Three Response Patterns',
+          },
+          {
+            type: 'text',
+            content: '1. Typing indicator (three bouncing dots)\nUse for short waits (< 3 seconds). Shows "the AI is thinking" without committing to a response format. This is what Slack and iMessage use. Build it with three small circles using animate-bounce with staggered delays.\n\n2. Streaming text\nThe modern standard for AI chat. Tokens appear as they\'re generated, giving users something to read immediately. ChatGPT and Claude both use this. You consume a Server-Sent Events (SSE) stream and append tokens to the message.\n\n3. Status phases\nFor complex tasks, show distinct phases: "Searching..." then "Reading 3 documents..." then "Writing response..." This is what Perplexity and research-focused AIs use. Each phase reassures the user that progress is happening.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Implementing Streaming',
+          },
+          {
+            type: 'text',
+            content: 'Most AI APIs (OpenAI, Anthropic, Google) support streaming via Server-Sent Events. Here\'s the pattern:\n\n```tsx\nasync function streamResponse(userMessage: string, onToken: (token: string) => void) {\n  const response = await fetch(\'/api/chat\', {\n    method: \'POST\',\n    body: JSON.stringify({ message: userMessage }),\n  });\n\n  const reader = response.body?.getReader();\n  const decoder = new TextDecoder();\n\n  while (reader) {\n    const { done, value } = await reader.read();\n    if (done) break;\n    const text = decoder.decode(value);\n    onToken(text);\n  }\n}\n```\n\nIn your component, create a "streaming" message and append tokens to it:\n\n```tsx\nconst [streamingContent, setStreamingContent] = useState(\'\');\n\nawait streamResponse(input, (token) => {\n  setStreamingContent(prev => prev + token);\n});\n```\n\nThe message bubble shows `streamingContent` with a blinking cursor at the end.',
+          },
+          {
+            type: 'callout',
+            variant: 'tip',
+            content: 'Add a subtle blinking cursor (▊) at the end of streaming text. It signals "more is coming" and prevents users from thinking the response is done mid-sentence.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-5',
+        title: 'Suggested Prompts & Conversation Starters',
+        duration: 3,
+        order: 5,
+        module: 'building',
+        sections: [
+          {
+            type: 'intro',
+            content: 'The biggest usability problem in conversational UI is the blank input field. Users don\'t know what to type. Suggested prompts solve this - and done well, they become a core navigation mechanism, not just training wheels.',
+            icon: 'lightbulb',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Three Types of Prompts',
+          },
+          {
+            type: 'text',
+            content: '1. Conversation starters (empty state)\nShown when the chat is empty. These should showcase the AI\'s range of capabilities:\n• "Summarize this document" (demonstrates analysis)\n• "Help me write an email to my team" (demonstrates creation)\n• "What are the pros and cons of..." (demonstrates reasoning)\n\nLimit to 3-4 starters. More creates decision paralysis.\n\n2. Follow-up suggestions (after AI responds)\nShown after each AI message. These should be contextual - based on what was just discussed:\n• After a code explanation: "Show me an example", "What about edge cases?"\n• After a summary: "Go deeper on point 3", "Turn this into bullet points"\n\n3. Quick actions (persistent)\nAlways-visible buttons for common tasks: "New conversation", "Upload file", "Switch mode". These are traditional UI elements embedded in the conversational flow.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Dynamic Prompt Generation',
+          },
+          {
+            type: 'text',
+            content: 'Static prompts get stale. The best conversational UIs update suggestions based on context:\n\n```tsx\nfunction getSuggestions(lastAiMessage: string, conversationTopic: string): string[] {\n  // After a code response, suggest code-related follow-ups\n  if (lastAiMessage.includes(\'```\')) {\n    return ["Explain this code", "Optimize this", "Add error handling"];\n  }\n  // After a list, suggest drilling deeper\n  if (lastAiMessage.includes(\'1.\') || lastAiMessage.includes(\'•\')) {\n    return ["Tell me more about #1", "Compare these options", "Which do you recommend?"];\n  }\n  // Default follow-ups\n  return ["Can you elaborate?", "Give me an example", "What should I do next?"];\n}\n```\n\nMore sophisticated approaches: send the conversation to your AI with a meta-prompt asking it to generate 3 relevant follow-up questions.',
+          },
+          {
+            type: 'callout',
+            variant: 'tip',
+            content: 'Place suggested prompts directly above the input bar, not below the AI\'s response. Users\' eyes naturally move from reading the response down to the input - prompts in that path get clicked 3-4x more than prompts near the message.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-6',
+        title: 'Managing Conversation Context',
+        duration: 4,
+        order: 6,
+        module: 'advanced',
+        sections: [
+          {
+            type: 'intro',
+            content: 'The difference between a good and great conversational UI is context. Users expect the AI to remember what was said 5 messages ago. This lesson covers context window management, conversation memory, and multi-turn design patterns.',
+            icon: 'brain',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'How AI Context Windows Work',
+          },
+          {
+            type: 'text',
+            content: 'Every AI model has a context window - the maximum amount of text it can "see" at once. GPT-4 handles ~128K tokens, Claude handles ~200K tokens. But larger context doesn\'t mean you should dump everything in.\n\nThe context management pattern:\n1. Keep the system prompt (personality, instructions) - always included\n2. Include the last N messages verbatim - recent context\n3. Summarize older messages - compressed history\n4. Inject relevant retrieved context - RAG/search results\n\nThis sliding window approach keeps responses relevant without hitting token limits or increasing latency.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Designing for Multi-Turn Conversations',
+          },
+          {
+            type: 'text',
+            content: 'Users expect conversational AI to handle:\n\nPronoun resolution: "Write a function to sort a list" → "Now make it handle duplicates" - the AI must know "it" refers to the sorting function.\n\nTopic branching: A user discusses topic A, switches to topic B, then says "going back to what we were discussing before" - the AI should recall topic A.\n\nCorrection: "Actually, I meant Python not JavaScript" - the AI should reinterpret the previous request without re-asking for all the other details.\n\nDesign your context passing to preserve these conversation dynamics. The simplest approach: always send the full conversation history (up to the context limit) as the messages array to the API.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Conversation History UX',
+          },
+          {
+            type: 'text',
+            content: 'For products with persistent conversations, design the history experience:\n\nSidebar list: Show past conversations with auto-generated titles (ChatGPT pattern). The title should be derived from the first user message or the conversation topic, not "Conversation 1, Conversation 2."\n\nSearch: Let users search across all conversations. This is table stakes for any product where users will accumulate 50+ conversations.\n\nBranching: Some products (like ChatGPT) allow editing a previous message and regenerating from that point, creating a conversation branch. This is powerful but adds UI complexity - start without it.',
+          },
+          {
+            type: 'text',
+            content: 'Related AIUX patterns: The [Context Switching](/patterns/context-switching) pattern covers how to help users move between multiple AI conversations without losing state. [Selective Memory](/patterns/selective-memory) addresses giving users control over what the AI remembers across sessions. For preventing quality degradation in long conversations, see [Session Degradation Prevention](/patterns/session-degradation-prevention).',
+          },
+        ],
+      },
+      {
+        id: 'lesson-7',
+        title: 'Error Handling & Fallback Design',
+        duration: 3,
+        order: 7,
+        module: 'advanced',
+        sections: [
+          {
+            type: 'intro',
+            content: 'AI will fail. Responses will be wrong, the API will time out, and users will ask things the AI can\'t handle. This lesson covers designing graceful failures that keep the conversation productive.',
+            icon: 'shield',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Four Failure Modes',
+          },
+          {
+            type: 'text',
+            content: '1. "I don\'t understand" - The AI can\'t interpret the user\'s request.\n→ Ask a specific clarifying question: "I\'m not sure what you mean. Are you asking about X or Y?"\n→ Never show a generic "I didn\'t understand that" without a next step.\n\n2. "I can\'t do that" - The request is outside the AI\'s capabilities.\n→ Be honest and specific: "I can\'t access your calendar, but I can help you draft the meeting invite."\n→ Suggest an alternative that IS possible.\n\n3. "Something went wrong" - API error, timeout, rate limit.\n→ Show a retry button with the original message pre-filled.\n→ If persistent, suggest: "Try again in a moment" with a countdown.\n→ Never lose the user\'s message - save it in the input field.\n\n4. "The response is wrong" - AI hallucination or incorrect answer.\n→ Make it easy to regenerate: a "try again" button on every AI message.\n→ Add feedback buttons (thumbs up/down) so users can flag bad responses.\n→ If your product supports it, offer "edit and resend" on user messages.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Designing the Retry Pattern',
+          },
+          {
+            type: 'text',
+            content: '```tsx\nfunction ErrorMessage({ error, onRetry, originalMessage }: {\n  error: string;\n  onRetry: () => void;\n  originalMessage: string;\n}) {\n  return (\n    <div className="flex gap-2 items-start">\n      <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 max-w-[75%]">\n        <p className="text-sm text-red-800">{error}</p>\n        <button\n          onClick={onRetry}\n          className="mt-2 text-sm text-red-600 hover:underline"\n        >\n          ↻ Try again\n        </button>\n      </div>\n    </div>\n  );\n}\n```\n\nThe key UX principle: errors should feel like a natural part of the conversation, not a system crash. Style them as messages, not modal dialogs.',
+          },
+          {
+            type: 'callout',
+            variant: 'warning',
+            content: 'Never silently swallow errors. A message that disappears into a void with no response is the worst user experience. Even "Something went wrong - click to retry" is infinitely better than silence.',
+          },
+          {
+            type: 'text',
+            content: 'Related AIUX patterns: The [Error Recovery](/patterns/error-recovery) pattern covers graceful failure strategies in depth - including undo, retry, and fallback mechanisms with examples from ChatGPT, GitHub Copilot, and more. For situations where the AI should hand off to a human, see [Graceful Handoff](/patterns/graceful-handoff) and [Escalation Pathways](/patterns/escalation-pathways).',
+          },
+        ],
+      },
+      {
+        id: 'lesson-8',
+        title: 'Voice Interface Design Patterns',
+        duration: 4,
+        order: 8,
+        module: 'advanced',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Voice interfaces are a different beast from text chat. Response length, feedback mechanisms, error handling, and interaction flow all change when users can\'t see a text bubble. This lesson covers the design patterns unique to voice conversational UI.',
+            icon: 'microphone',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Voice-Specific Design Principles',
+          },
+          {
+            type: 'text',
+            content: 'Keep responses short. Text responses can be 500 words with headers and lists. Voice responses should be 2-3 sentences max. If the answer is complex, break it into chunks: "Here\'s a quick answer. Want me to go deeper?"\n\nConfirm before acting. In text chat, users can re-read and correct before sending. In voice, the AI hears what it hears. For destructive or important actions: "I\'ll delete the Monday meeting. Should I go ahead?"\n\nHandle interruptions. Users will cut the AI off mid-sentence. The interface should stop immediately and listen - not finish its response first.\n\nProvide visual feedback. Even voice-first interfaces need visual cues: a pulsing orb while listening, a spinner while processing, text transcription of what was heard. Siri, Alexa, and Google Assistant all show visual state.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Voice Interaction Loop',
+          },
+          {
+            type: 'text',
+            content: 'Every voice interaction follows this cycle:\n\n1. Wake/trigger - User activates voice input (button press, wake word, or always-on)\n2. Listening - Show visual feedback (pulsing animation, waveform). Capture audio.\n3. Transcription - Show the transcribed text so users can verify what was heard.\n4. Processing - Show "thinking" state. Keep it short - voice users are less patient than text users.\n5. Response - Speak the response + show visual companion (text, card, image).\n6. Follow-up - Offer next actions or stay in listening mode for follow-up.\n\nDesign each state explicitly. The transition between listening → processing → responding should feel smooth, not jarring.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'When Voice Needs a Visual Companion',
+          },
+          {
+            type: 'text',
+            content: 'Some information doesn\'t work in voice-only:\n• Lists longer than 3 items ("Here are the 7 restaurants near you..." - no one remembers all 7)\n• Anything with numbers, URLs, or code\n• Comparisons ("Option A costs $45/month with 10GB, Option B costs...")\n\nFor these, the voice says a summary and the visual shows the detail: "I found 7 restaurants nearby. Here they are on your screen." This is the pattern Siri and Google Assistant use - voice for the headline, screen for the data.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-9',
+        title: 'Accessibility in Conversational UI',
+        duration: 3,
+        order: 9,
+        module: 'polish',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Conversational interfaces have unique accessibility challenges - live-updating content, keyboard-only navigation, screen reader announcements, and high-contrast readability. This lesson covers how to make your chat UI work for everyone.',
+            icon: 'accessibility',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Screen Reader Support',
+          },
+          {
+            type: 'text',
+            content: 'Chat interfaces are dynamic - messages appear, typing indicators pulse, and content streams in. Screen readers need explicit guidance:\n\nUse ARIA live regions for new messages:\n```html\n<div role="log" aria-live="polite" aria-label="Chat messages">\n  {messages.map(msg => <ChatMessage key={msg.id} ... />)}\n</div>\n```\n\n`role="log"` tells screen readers this is a chronological message list. `aria-live="polite"` announces new messages without interrupting current reading.\n\nLabel message roles clearly:\n```html\n<div aria-label={`${message.role === \'user\' ? \'You\' : \'AI Assistant\'} said`}>\n  {message.content}\n</div>\n```\n\nAnnounce status changes:\n```html\n<div role="status" aria-live="assertive">\n  {isTyping ? \'AI is typing...\' : \'\'}\n</div>\n```',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Keyboard Navigation',
+          },
+          {
+            type: 'text',
+            content: 'Input focus: The text input should be focusable and auto-focused on page load. After sending a message, focus returns to the input.\n\nMessage navigation: Let users Tab to messages for copy/action access. Arrow keys to navigate between messages.\n\nSuggested prompts: Make prompt chips keyboard-navigable with arrow keys and Enter to select.\n\nSend on Enter: Standard convention. Shift+Enter for newline. Make this configurable - some users prefer the opposite.\n\n```tsx\nconst handleKeyDown = (e: React.KeyboardEvent) => {\n  if (e.key === \'Enter\' && !e.shiftKey) {\n    e.preventDefault();\n    handleSend();\n  }\n};\n```',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Visual Accessibility',
+          },
+          {
+            type: 'text',
+            content: 'Contrast: User and AI message bubbles must meet WCAG AA contrast ratios (4.5:1 for text). White text on light blue fails - use dark text on light backgrounds or ensure your accent color is dark enough.\n\nDon\'t rely on color alone: Message role (user vs AI) should be distinguished by position (left/right), avatar, and label - not just color. Color-blind users may not see the difference between blue and gray bubbles.\n\nReadable font sizes: Chat text should be at least 14px. Timestamps and metadata can be 12px. Never go below 11px for any text in the conversation.\n\nMotion sensitivity: If you use animations (message slide-in, typing dots bounce), respect `prefers-reduced-motion` and provide static alternatives.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-10',
+        title: 'Putting It All Together - Architecture Checklist',
+        duration: 3,
+        order: 10,
+        module: 'polish',
+        sections: [
+          {
+            type: 'intro',
+            content: 'You now have all the pieces. This final lesson gives you a checklist for building a production-ready conversational UI, covering architecture decisions, component structure, and the patterns that separate polished products from prototypes.',
+            icon: 'checklist',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Component Architecture',
+          },
+          {
+            type: 'text',
+            content: 'Organize your chat UI into these components:\n\n```\n<ChatContainer>\n  <ChatHeader />           // Title, avatar, actions\n  <MessageList>            // Scrollable message area\n    <ChatMessage />        // Individual message bubble\n    <TypingIndicator />    // Three dots or streaming cursor\n  </MessageList>\n  <SuggestedPrompts />     // Contextual prompt chips\n  <ChatInput />            // Text field + send button\n</ChatContainer>\n```\n\nKeep state in `ChatContainer`. Messages, loading state, and suggestions flow down as props. User actions (send, retry, select prompt) flow up as callbacks.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Production Checklist',
+          },
+          {
+            type: 'text',
+            content: 'Core functionality:\n☐ Message sending and receiving\n☐ Streaming/typing indicator\n☐ Auto-scroll (respecting user scroll position)\n☐ Suggested prompts (empty state + contextual)\n☐ Error handling with retry\n☐ Conversation history (if multi-session)\n\nPolish:\n☐ Keyboard shortcuts (Enter to send, Shift+Enter for newline)\n☐ Message copy button\n☐ Regenerate response button\n☐ Mobile responsive layout\n☐ Dark mode support\n☐ Loading skeleton on initial load\n\nAccessibility:\n☐ ARIA live regions for new messages\n☐ Screen reader labels for message roles\n☐ Keyboard navigation for all interactive elements\n☐ WCAG AA contrast on message bubbles\n☐ Reduced motion support\n\nPerformance:\n☐ Virtualized message list for long conversations (react-window)\n☐ Debounced input for "user is typing" indicators\n☐ Lazy load conversation history\n☐ Optimistic UI for sent messages',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What to Build Next',
+          },
+          {
+            type: 'text',
+            content: 'Once your core chat UI is solid, these AIUX design patterns will take it to the next level. Each one is a documented pattern with real-world examples, code demos, and implementation guidelines:\n\n[Multimodal Interaction](/patterns/multimodal-interaction) - Let users drag images, PDFs, or code files into the chat. Design for voice + text + visual input simultaneously.\n\n[Graceful Handoff](/patterns/graceful-handoff) - When the AI can\'t help, transfer to a human agent with full conversation context preserved. Critical for customer support.\n\n[Progressive Disclosure](/patterns/progressive-disclosure) - Start with a simple chat, then reveal advanced features (system prompts, temperature controls, model selection) as users become power users.\n\n[Context Switching](/patterns/context-switching) - Help users manage multiple conversations and switch between them without losing context.\n\n[Confidence Visualization](/patterns/confidence-visualization) - Show users how confident the AI is in its response. Especially important for high-stakes domains like healthcare or finance.\n\n[Feedback Loops](/patterns/feedback-loops) - Add thumbs up/down, regenerate, and edit mechanisms that help users correct the AI and improve responses over time.\n\nWant to see how your conversational UI stacks up? Use the free [AI UX Audit Tool](/audit) to score your interface against all 36 patterns.',
+          },
+          {
+            type: 'callout',
+            variant: 'tip',
+            content: 'Ship the simplest version first: message bubbles, input, send, streaming response, and 4 suggested prompts. Every feature after that should be validated by watching real users interact with your chat UI.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-11',
+        title: 'Agentic Conversational UI - When AI Takes Actions',
+        duration: 4,
+        order: 11,
+        module: 'polish',
+        sections: [
+          {
+            type: 'intro',
+            content: 'The next frontier for conversational UI is agentic AI - systems that don\'t just answer questions but take actions on the user\'s behalf. This changes the design fundamentally. When an AI can book meetings, write code, or modify files, the conversational interface needs new patterns for trust, transparency, and control.',
+            icon: 'robot',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What Makes Agentic UI Different',
+          },
+          {
+            type: 'text',
+            content: 'A regular chatbot generates text. An agentic AI generates text AND takes actions - sending emails, running code, making API calls, modifying documents. This creates new UX challenges:\n\n• Irreversibility - A wrong text response can be regenerated. A wrong email sent to your boss can\'t be unsent.\n• Trust calibration - Users need to know when to trust the AI\'s judgment and when to verify.\n• Transparency - Users need to see what the AI is doing, not just what it says.\n• Control spectrum - Some users want full autonomy, others want approval on every action.\n\nThese aren\'t abstract concerns - they\'re the design challenges facing every AI coding assistant (Cursor, GitHub Copilot), AI email tool (Superhuman, Spark), and AI agent platform (ChatGPT with plugins, Claude with tools).',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Five Agentic Design Patterns',
+          },
+          {
+            type: 'text',
+            content: 'These patterns from the AIUX framework are essential for agentic conversational UIs:\n\n1. [Intent Preview](/patterns/intent-preview) - Before the AI acts, show what it plans to do and let the user approve. "I\'m going to send this email to Sarah with the Q3 report attached. Should I proceed?" This is the most critical pattern for building trust.\n\n2. [Plan Summary](/patterns/plan-summary) - For multi-step tasks, show the full plan upfront. "To refactor this module, I\'ll: 1) Extract the helper functions, 2) Update the imports, 3) Add tests. Here\'s the breakdown." Users can approve, modify, or reject the plan before execution begins.\n\n3. [Agent Status Monitoring](/patterns/agent-status-monitoring) - While the AI works on a multi-step task, show real-time progress. Step indicators, current action, time estimates, and the ability to pause or cancel. GitHub Actions and Zapier are good models.\n\n4. [Escalation Pathways](/patterns/escalation-pathways) - Define when the AI should stop acting autonomously and ask for human input. High-stakes decisions, ambiguous requests, and unfamiliar territory should all trigger escalation rather than guessing.\n\n5. [Trust Calibration](/patterns/trust-calibration) - Gradually increase the AI\'s autonomy as users build trust. Start with "ask before every action" and let users unlock "act then notify" for routine tasks they\'ve approved before.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Designing the Action Confirmation Flow',
+          },
+          {
+            type: 'text',
+            content: 'The most common agentic pattern in conversational UI is the confirmation flow:\n\n```\nUser: "Schedule a meeting with Sarah for next Tuesday"\n\nAI: [Intent Preview Card]\n    📅 Create Meeting\n    • With: Sarah Johnson\n    • Date: Tuesday, April 1 at 10:00 AM\n    • Duration: 30 minutes\n    • Location: Google Meet\n    \n    [Confirm]  [Edit]  [Cancel]\n```\n\nThis is a structured card within the conversation flow - not a modal dialog. The user can confirm with one click, edit details inline, or cancel and rephrase.\n\nFor multi-step plans:\n\n```\nAI: [Plan Summary]\n    I\'ll refactor the auth module in 3 steps:\n    \n    ☐ Step 1: Extract token validation into utils/auth.ts\n    ☐ Step 2: Update 12 import statements\n    ☐ Step 3: Add unit tests for the new module\n    \n    Estimated time: ~2 minutes\n    \n    [Start]  [Modify Plan]  [Cancel]\n```\n\nAs steps complete, checkboxes fill in and the current step highlights - giving users real-time visibility into agent progress.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Action Audit Trail',
+          },
+          {
+            type: 'text',
+            content: 'Every action the AI takes should be logged and reviewable. The [Action Audit Trail](/patterns/action-audit-trail) pattern shows users exactly what happened:\n\n• What action was taken\n• When it happened\n• What data was affected\n• How to undo it (if possible)\n\nIn a conversational UI, this can be a collapsible section under each AI action message: "View details" expands to show the full action log. For products with many automated actions, consider a dedicated activity feed or history panel.',
+          },
+          {
+            type: 'callout',
+            variant: 'tip',
+            content: 'The golden rule of agentic conversational UI: the AI should never take an irreversible action without explicit user confirmation. For reversible actions (like drafting text), act first and let users undo. For irreversible actions (like sending an email), always preview and confirm.',
+          },
+          {
+            type: 'text',
+            content: 'Test your conversational UI: Use the free [AI UX Audit Tool](/audit) to score your interface against all 36 AIUX design patterns - including the agentic patterns covered in this lesson. Upload a screenshot and get instant feedback on which patterns are strong, weak, or missing.',
+          },
+        ],
+      },
+    ],
+    content: `
+      <div class="prose max-w-none">
+        <section class="mb-8">
+          <h2 class="text-2xl font-bold mb-4">Build a Conversational UI - From Chat Bubbles to Production</h2>
+          <p class="text-gray-700 mb-4">
+            This guide teaches you how to design and build conversational interfaces step by step - the same patterns used by ChatGPT, Claude, Slack AI, and Siri. Whether you're building a customer support chatbot, an AI coding assistant, or a voice-enabled product, you'll learn the design decisions and implementation techniques that make conversational UIs feel natural.
+          </p>
+          <p class="text-gray-700 mb-4">
+            Across 11 lessons, you'll cover: the conversational UI spectrum (scripted vs AI-powered vs hybrid), chat interface anatomy, message bubbles in React, typing indicators and streaming responses, suggested prompts, conversation context management, error handling, voice interface patterns, accessibility, agentic AI patterns (intent preview, plan summary, agent monitoring), and a production-ready architecture checklist.
+          </p>
+        </section>
+
+        <section class="mb-8">
+          <h3 class="text-xl font-bold mb-3">Who Is This Guide For?</h3>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Product designers</strong> building chat or voice interfaces for AI products</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Frontend developers</strong> implementing conversational UIs in React, Vue, or similar frameworks</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Product managers</strong> specifying requirements for AI chat features</p>
+          </div>
+        </section>
+
+        <section class="mb-8">
+          <h3 class="text-xl font-bold mb-3">How to Use This Guide</h3>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Designing a chat UI?</strong> Start with Lessons 1-2 (foundations) then jump to Lesson 5 (suggested prompts) and 7 (error handling).</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Building in React?</strong> Start at Lesson 3 and follow through sequentially to Lesson 10.</p>
+          </div>
+          <div class="bg-white p-4 rounded-lg border border-gray-200 mb-3">
+            <p class="text-gray-700">• <strong>Adding voice?</strong> Read Lesson 1 for context, then skip to Lesson 8 (voice patterns).</p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-600 mt-6">
+            <h3 class="font-bold mb-2">Ready to Build?</h3>
+            <p class="text-gray-700">Start with Module 1 below to understand the conversational UI landscape, then dive into building.</p>
+          </div>
+        </section>
+      </div>
+    `,
+  },
 ];
 
 /**

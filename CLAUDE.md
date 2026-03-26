@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-26 21:32 (MacBook)
+- **Pattern:** SEO Optimization + Conversational UI Content
+- **Status:** ✅ Completed
+- **Files Changed:** 13
+- **Tests Added/Modified:** 0
+- **Notes:** Comprehensive SEO overhaul driven by Google Search Console data analysis. Audit page: made SocialProof SSR (was ssr:false, invisible to Google), added WebApplication + BreadcrumbList JSON-LD, expanded keywords from actual GSC queries. All 36 patterns: custom meta titles/descriptions (was only 10), targeting high-impression low-CTR queries. Guide pages: full OG/Twitter/canonical + Article/Breadcrumb/Course JSON-LD schemas. About page: complete metadata. Fixed sitemap/robots conflict (/search). Conversational UI pattern: expanded content from 68 to 134-word intro, 6 product examples (was 3), added ChatGPT/Claude/Gemini. New standalone guide: "Build a Conversational UI" (11 lessons covering chat anatomy, streaming, prompts, context, errors, voice, agentic patterns, accessibility). Built interactive guided chatbot demo with conversation tree, simulated streaming responses, typing indicators, contextual follow-ups, and resource links to all site content (patterns, guides, toolkit, audit, PDFs).
+
 ### Session 2026-03-26 16:27 (MacBook)
 - **Pattern:** Audit Flow Redesign — Context-First
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Simplified audit page from two-panel (ResizablePanels + WelcomePanel) to single full-width canvas with floating results sidebar overlay. Added multi-image support (up to 4 screenshots) with carousel navigation, page indicators, and combined analysis. Moved marketing pitch (trust badge, logo carousel, how-it-works) inline below upload card. Added floating bottom toolbar under device frame with contextual actions: pre-analysis (Analyze, Add More, Clear, Hide Frame) and post-analysis (New Audit, Chat with Design Mentor, Add More, Hide Frame). Chat trigger from toolbar opens sidebar and switches to chat mode. Removed duplicate New Audit/Chat buttons from ResultsPanel. API route updated to send multiple images to Claude with cross-screen context prompt. Rate limit bumped to 20 for testing (MUST revert before deploy).
 
 ### Session 2026-03-18 15:10 (MacBook)
-- **Pattern:** Agentic Pattern Demos Overhaul
-- **Status:** ✅ Completed
-- **Files Changed:** 22
-- **Tests Added/Modified:** 0
-- **Notes:** Overhauled 5 agentic pattern demos (Intent Preview, Plan Summary, Autonomy Spectrum, Action Audit Trail, Escalation Pathways) from static to interactive with idle→running→review→done phases, user-triggered start, animated step reveals, and replay buttons. Swapped developer-centric contexts to designer-friendly scenarios (design system tokens, accessibility checks, brand guidelines). Replaced pattern page "Back to All Patterns" nav with Previous/Next pattern links. Removed "View All Patterns" center button from bottom nav. Added real-world example images for Plan Summary (ChatGPT, GitHub Copilot Workspace, Gemini), Action Audit Trail (GitHub Actions, Zapier, Claude Code), and Escalation Pathways (Notion AI, Claude). Added Zapier logo to product-logos.ts. Converted 4 new GIFs to MP4 for performance. Fixed Carousel to use object-cover. Added data-clarity-region and cursor-pointer across all demos. Stripped non-brand colors from Escalation Pathways demo.
-
-### Session 2026-03-17 22:16 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

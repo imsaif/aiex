@@ -1,19 +1,33 @@
 import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { SocialProof } from '@/components/audit/SocialProof';
 import AuditClient from './audit-client';
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Free AI UX Audit Tool — Screenshot to Actionable Feedback | AIUX',
-  description: 'Upload your AI interface screenshot and get instant UX feedback. Scores your design against 36 proven AI UX patterns used by ChatGPT, GitHub Copilot, and Notion. Free, no signup required.',
-  keywords: ['ai ux audit', 'ai ux audit tool', 'ai ux review', 'ux audit tool', 'ai interface review', 'ai-powered ux audit'],
+  title: 'Free AI UX Audit Tool — Score Your AI Interface Design | AIUX',
+  description: 'Free AI UX audit tool — upload a screenshot of your chatbot, AI agent, or dashboard and get instant feedback. Scores against 36 proven design patterns from ChatGPT, Copilot, and Notion. No signup required.',
+  keywords: [
+    'ai ux audit',
+    'ai ux audit tool',
+    'ai ux review',
+    'ux audit tool',
+    'ai interface review',
+    'ai-powered ux audit',
+    'ai ux evaluation',
+    'ux audit ai',
+    'website ux audit ai',
+    'free ai ux evaluation',
+    'ai design review',
+    'ai interface design audit',
+  ],
   alternates: {
     canonical: 'https://www.aiuxdesign.guide/audit',
   },
   openGraph: {
-    title: 'Free AI UX Audit Tool — Screenshot to Actionable Feedback',
+    title: 'Free AI UX Audit Tool — Score Your AI Interface Design',
     description: 'Upload your AI interface screenshot and get instant UX feedback scored against 36 proven design patterns. Free, no signup.',
     url: 'https://www.aiuxdesign.guide/audit',
     siteName: 'AI UX Design Guide',
@@ -29,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free AI UX Audit Tool — Screenshot to Actionable Feedback',
+    title: 'Free AI UX Audit Tool — Score Your AI Interface Design',
     description: 'Upload your AI interface screenshot and get instant UX feedback scored against 36 proven design patterns. Free, no signup.',
     images: ['/images/og/og-pattern-default.png'],
     creator: '@aiuxdesignguide',
@@ -76,17 +90,76 @@ const faqJsonLd = {
   ],
 };
 
+// WebApplication structured data for tool rich results
+const webAppJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'AI UX Audit Tool',
+  url: 'https://www.aiuxdesign.guide/audit',
+  description: 'Free tool that scores AI interface designs against 36 proven UX patterns. Upload a screenshot, get instant feedback on usability strengths and gaps.',
+  applicationCategory: 'DesignApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  featureList: [
+    'Screenshot-based AI interface analysis',
+    'Scores against 36 AI UX design patterns',
+    'Pattern-by-pattern breakdown with recommendations',
+    'AI design mentor chat for deeper insights',
+    'Support for desktop and mobile screenshots',
+  ],
+  creator: {
+    '@type': 'Organization',
+    name: 'AI UX Design Guide',
+    url: 'https://www.aiuxdesign.guide',
+  },
+};
+
+// Breadcrumb structured data
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: 'https://www.aiuxdesign.guide',
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'AI UX Audit Tool',
+      item: 'https://www.aiuxdesign.guide/audit',
+    },
+  ],
+};
+
 export default function AuditPage() {
   return (
     <>
-      {/* FAQ structured data */}
+      {/* Structured data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <Navbar />
       <AuditClient />
-
+      {/* Server-rendered SEO content — visible during intake flow, hidden via JS during results */}
+      <div id="audit-social-proof">
+        <SocialProof />
+      </div>
       <Footer />
     </>
   );

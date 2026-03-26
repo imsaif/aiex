@@ -67,6 +67,12 @@ const ConversationalUiDemo = dynamic(
   }
 );
 
+// Dynamically import the guided chatbot
+const ConversationalUIGuidedBot = dynamic(
+  () => import('@/components/guides/ConversationalUIBot').then(mod => ({ default: mod.ConversationalUIBot })),
+  { ssr: false, loading: () => <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div></div> }
+);
+
 // Dynamically import the ConfidenceIndicator component with interactive analysis
 const ConfidenceIndicatorDemo = dynamic(
   () => import('@/components/examples/TransparentFeedbackDemo'),
@@ -544,6 +550,8 @@ export default function CodeExampleBlock({
         return <ProgressiveDisclosureEmailDemo />;
       case 'conversational-ui-bot':
         return <ConversationalUiDemo />;
+      case 'conversational-ui-guided':
+        return <ConversationalUIGuidedBot />;
       case 'confidence-indicator':
         return <ConfidenceIndicatorDemo />;
       case 'adaptive-dashboard':
@@ -702,7 +710,7 @@ export default function CodeExampleBlock({
           <div className="p-6 flex justify-center min-h-[400px]">
             <div className={`w-full ${
               // Components that need full width (max-w-6xl)
-              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo', 'autonomy-spectrum-demo'].includes(componentId)
+              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo', 'autonomy-spectrum-demo', 'conversational-ui-guided'].includes(componentId)
                 ? 'max-w-6xl'
                 // Components that need large width (max-w-4xl)
                 : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo'].includes(componentId)

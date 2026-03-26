@@ -12,6 +12,12 @@ import IntroductionSection from '@/components/ui/IntroductionSection';
 import ModuleSection from '@/components/ui/ModuleSection';
 import ProgressBar from '@/components/ui/ProgressBar';
 
+// Lazy-load the conversational UI guide chatbot
+const ConversationalUIBot = dynamic(
+  () => import('@/components/guides/ConversationalUIBot').then(mod => ({ default: mod.ConversationalUIBot })),
+  { ssr: false, loading: () => <div className="h-[520px] rounded-2xl border border-gray-200 dark:border-gray-700 animate-pulse bg-gray-50 dark:bg-gray-800" /> }
+);
+
 // Lazy-load heavy components
 const DownloadPDFModal = dynamic(() => import('@/components/ui/DownloadPDFModal'), {
   ssr: false,
@@ -170,6 +176,26 @@ export default function GuideClient({
                 title: 'Figma ↔ Code',
                 description: 'Design-to-code and code-to-design with Figma MCP',
                 icon: 'monitor',
+              },
+              foundations: {
+                title: 'Foundations',
+                description: 'Understand conversational UI types, anatomy, and when to use them',
+                icon: 'info',
+              },
+              building: {
+                title: 'Building',
+                description: 'Implement message bubbles, streaming, and suggested prompts',
+                icon: 'code',
+              },
+              advanced: {
+                title: 'Advanced Patterns',
+                description: 'Context management, error handling, and voice design',
+                icon: 'cog',
+              },
+              polish: {
+                title: 'Ship It',
+                description: 'Accessibility, agentic patterns, and production checklist',
+                icon: 'check',
               },
             };
 

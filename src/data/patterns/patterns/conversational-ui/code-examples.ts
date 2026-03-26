@@ -2,176 +2,115 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Simple Conversational Bot Interface",
-    description: "A clean, minimal chat interface demonstrating conversational UI patterns with user and bot message bubbles.",
+    title: "Guided Learning Chatbot",
+    description: "An interactive chatbot that teaches you conversational UI patterns while demonstrating them: suggested prompts, typing indicators, contextual follow-ups, and resource links. Try it to learn how to build chat interfaces.",
     language: "tsx",
-    componentId: "conversational-ui-bot",
-    code: `import React, { useState, useRef, useEffect } from 'react';
+    componentId: "conversational-ui-guided",
+    code: `import React, { useState, useRef, useCallback } from 'react';
 
-interface Message {
+// Guided chatbot with conversation tree, contextual follow-ups, and resource links.
+// Demonstrates: suggested prompts, typing indicator, rich content, and fallback handling.
+
+interface BotMessage {
   id: string;
-  content: string;
   role: 'user' | 'bot';
+  content: string;
+  links?: Array<{ label: string; href: string }>;
 }
 
-// Simple bot responses
-const getBotResponse = (message: string): string => {
-  const lower = message.toLowerCase();
+interface ConversationNode {
+  response: string;
+  links?: Array<{ label: string; href: string }>;
+  followUps: string[];
+}
 
-  if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
-    return "Hello! I'm here to help. What can I do for you?";
-  }
-
-  if (lower.includes('help')) {
-    return "I can assist you with questions, provide information, or just chat. What would you like to know?";
-  }
-
-  if (lower.includes('thanks') || lower.includes('thank')) {
-    return "You're welcome! Anything else I can help with?";
-  }
-
-  if (lower.includes('bye') || lower.includes('goodbye')) {
-    return "Goodbye! Feel free to come back anytime.";
-  }
-
-  return "I understand. Could you tell me more about what you need help with?";
+// Define the conversation tree - each key is a user prompt, value is the bot's response
+const CONVERSATION: Record<string, ConversationNode> = {
+  'What can you help with?': {
+    response: 'I can teach you about building chat interfaces: message bubbles, ' +
+      'typing indicators, suggested prompts, context management, and error handling.',
+    links: [{ label: 'Full guide', href: '/guides/conversational-ui-guide' }],
+    followUps: ['Tell me about message bubbles', 'How do typing indicators work?'],
+  },
+  'Tell me about message bubbles': {
+    response: 'Message bubbles need: right-alignment for user, left for AI, ' +
+      'max-width of 60-75%, distinct colors, and 8-12px spacing between messages.',
+    followUps: ['How do typing indicators work?', 'What can you help with?'],
+  },
+  'How do typing indicators work?': {
+    response: 'Three patterns: bouncing dots for short waits, streaming text ' +
+      'for AI responses, and status phases for complex tasks.',
+    followUps: ['What can you help with?'],
+  },
 };
 
-export default function ConversationalUiDemo() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: "Hi! I'm your AI assistant. How can I help you today?",
-      role: 'bot'
-    }
+const INITIAL_PROMPTS = ['What can you help with?', 'Tell me about message bubbles'];
+
+export default function GuidedChatbot() {
+  const [messages, setMessages] = useState<BotMessage[]>([
+    { id: '0', role: 'bot', content: 'Hi! Ask me about building chat interfaces.' },
   ]);
-  const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [suggestions, setSuggestions] = useState(INITIAL_PROMPTS);
+  const endRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll only when sending messages
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!inputValue.trim() || isTyping) return;
-
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputValue,
-      role: 'user'
-    };
-
-    setMessages(prev => [...prev, userMessage]);
-    const userInput = inputValue;
-    setInputValue('');
+  const send = useCallback((text: string) => {
+    if (isTyping) return;
+    setMessages(prev => [...prev, { id: Date.now().toString(), role: 'user', content: text }]);
+    setSuggestions([]);
     setIsTyping(true);
 
-    // Scroll after user message
-    setTimeout(scrollToBottom, 100);
+    const node = CONVERSATION[text] || {
+      response: 'I work best with the suggested prompts. Try one below!',
+      followUps: INITIAL_PROMPTS,
+    };
 
-    // Simulate bot thinking delay
     setTimeout(() => {
-      const botMessage: Message = {
+      setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
-        content: getBotResponse(userInput),
-        role: 'bot'
-      };
-
-      setMessages(prev => [...prev, botMessage]);
+        role: 'bot',
+        content: node.response,
+        links: node.links,
+      }]);
       setIsTyping(false);
-
-      // Scroll after bot message
-      setTimeout(scrollToBottom, 100);
-    }, 600);
-  };
+      setSuggestions(node.followUps);
+      endRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 700);
+  }, [isTyping]);
 
   return (
-    <div className="flex flex-col h-[500px] border border-gray-300 rounded-lg bg-white shadow-sm">
-      {/* Header */}
-      <div className="bg-blue-600 px-4 py-3 rounded-t-lg flex items-center">
-        <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3 text-2xl">
-          🤖
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold text-white">AI Assistant</h3>
-          <p className="text-sm text-blue-100">Online</p>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-3">
-        {messages.map(message => (
-          <div
-            key={message.id}
-            className={\`flex items-end gap-2 \${message.role === 'user' ? 'justify-end' : 'justify-start'}\`}
-          >
-            {message.role === 'bot' && (
-              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-lg flex-shrink-0">
-                🤖
-              </div>
-            )}
-            <div
-              className={\`rounded-lg py-2 px-4 max-w-xs \${
-                message.role === 'user'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white border border-gray-200 text-gray-800'
-              }\`}
-            >
-              {message.content}
+    <div className="flex flex-col h-[400px] border rounded-lg bg-white">
+      <div className="flex-1 p-4 overflow-y-auto space-y-3">
+        {messages.map(msg => (
+          <div key={msg.id} className={\\\`flex \\\${msg.role === 'user' ? 'justify-end' : ''}\\\`}>
+            <div className={\\\`max-w-[75%] rounded-xl px-3 py-2 text-sm \\\${
+              msg.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100'
+            }\\\`}>
+              {msg.content}
             </div>
-            {message.role === 'user' && (
-              <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-lg flex-shrink-0">
-                👤
-              </div>
-            )}
           </div>
         ))}
-
         {isTyping && (
-          <div className="flex items-end gap-2">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-lg flex-shrink-0">
-              🤖
-            </div>
-            <div className="bg-white border border-gray-200 rounded-lg py-2 px-4">
-              <div className="flex gap-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
-              </div>
-            </div>
+          <div className="flex gap-1 px-3 py-2 bg-gray-100 rounded-xl w-fit">
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
           </div>
         )}
-
-        <div ref={messagesEndRef} />
+        <div ref={endRef} />
       </div>
-
-      {/* Input */}
-      <form onSubmit={handleSendMessage} className="border-t border-gray-200 p-4 bg-white rounded-b-lg">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1 border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={isTyping}
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!inputValue.trim() || isTyping}
-          >
-            Send
-          </button>
+      {suggestions.length > 0 && (
+        <div className="px-3 py-2 border-t flex gap-2">
+          {suggestions.map((s, i) => (
+            <button key={i} onClick={() => send(s)}
+              className="text-xs px-3 py-1.5 rounded-full border text-blue-600 hover:bg-blue-50">
+              {s}
+            </button>
+          ))}
         </div>
-      </form>
+      )}
     </div>
   );
 }`
   }
-]; 
+];

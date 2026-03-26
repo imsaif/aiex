@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { CenterUpload } from '@/components/audit/CenterUpload';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
@@ -12,13 +12,6 @@ import type { AnalysisResults, AuditStep, ProductType } from '@/types/audit';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 
 // Lazy load heavy components that aren't needed on initial paint
-const SocialProof = dynamic(
-  () => import('@/components/audit/SocialProof').then(mod => ({ default: mod.SocialProof })),
-  {
-    ssr: false,
-    loading: () => <div className="h-64 bg-background-primary" />,
-  }
-);
 
 const ResultsPanel = dynamic(
   () => import('@/components/audit/ResultsPanel').then(mod => ({ default: mod.ResultsPanel })),
@@ -210,8 +203,14 @@ export default function AuditClient() {
   // Determine if we're in the intake flow (steps 1-3) or results view
   const isIntakeFlow = step !== 'results';
 
+  // Hide server-rendered SocialProof during results view (full-screen canvas)
+  useEffect(() => {
+    const el = document.getElementById('audit-social-proof');
+    if (el) el.style.display = isIntakeFlow ? '' : 'none';
+  }, [isIntakeFlow]);
+
   return (
-    <div className="min-h-screen">
+    <div className={isIntakeFlow ? '' : 'min-h-screen'}>
       {/* Rate Limit Modal */}
       {rateLimitError && (
         <UsageLimitModal
@@ -240,7 +239,7 @@ export default function AuditClient() {
                       Free AI UX Audit Tool
                     </h1>
                     <p className="text-lg md:text-xl text-text-secondary mb-12">
-                      Select your product type to get started.
+                      Score your AI interface against 36 proven design patterns. Select your product type to get started.
                     </p>
 
                     {/* Product type cards */}
@@ -287,8 +286,7 @@ export default function AuditClient() {
             </div>
           </section>
 
-          {/* Social Proof below intake */}
-          <SocialProof />
+          {/* Social Proof rendered server-side in page.tsx for SEO */}
         </>
       ) : (
         /* RESULTS VIEW — Full-screen canvas with dark gradient */
