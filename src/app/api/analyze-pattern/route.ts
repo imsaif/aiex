@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { buildContextAwarePrompt } from '@/lib/patterns/detection-prompts';
+import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
-import type { ContextData, AnalysisResults, DeviceType } from '@/types/audit';
+import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -52,16 +53,20 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, imageBase64, images, deviceType } = body as {
+    const { context, imageBase64, images, deviceType, productType, productDescription, aiRole } = body as {
       context: ContextData;
       imageBase64: string;
       images?: Array<{ base64: string; deviceType: DeviceType }>;
       deviceType?: DeviceType;
+      // New context-first fields
+      productType?: ProductType;
+      productDescription?: string;
+      aiRole?: string[];
     };
 
-    if (!context || !imageBase64) {
+    if (!imageBase64) {
       return NextResponse.json(
-        { error: 'Missing required fields: context and imageBase64' },
+        { error: 'Missing required field: imageBase64' },
         { status: 400 }
       );
     }
@@ -73,11 +78,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build the context-aware prompt with device type context
-    const basePrompt = buildContextAwarePrompt(context);
-    const deviceContext = deviceType === 'mobile'
-      ? '\n\nIMPORTANT: This is a MOBILE interface screenshot. Consider mobile-specific patterns like touch targets, thumb zones, mobile navigation patterns, and responsive design. Mobile interfaces have different UX considerations than desktop.'
-      : '\n\nIMPORTANT: This is a DESKTOP interface screenshot. Consider desktop-specific patterns like hover states, keyboard navigation, larger information density, and multi-panel layouts.';
+    // Determine if this is a context-first request (new flow) or legacy request
+    const isContextFirst = !!(productType && productDescription);
 
     // Build image content blocks
     const imageList = images && images.length > 1 ? images : [{ base64: imageBase64, deviceType: deviceType || 'desktop' as DeviceType }];
@@ -94,14 +96,30 @@ export async function POST(request: NextRequest) {
       ? `\n\nYou are analyzing ${imageList.length} screenshots of the same product/flow. Consider all images together to get a complete picture of the user experience. Look for patterns across screens — continuity, consistency, flow progression, and cross-screen UX patterns.`
       : '';
 
-    const prompt = basePrompt + deviceContext + multiImageContext;
+    const deviceContext = deviceType === 'mobile'
+      ? '\n\nIMPORTANT: This is a MOBILE interface screenshot. Consider mobile-specific patterns like touch targets, thumb zones, mobile navigation patterns, and responsive design. Mobile interfaces have different UX considerations than desktop.'
+      : '\n\nIMPORTANT: This is a DESKTOP interface screenshot. Consider desktop-specific patterns like hover states, keyboard navigation, larger information density, and multi-panel layouts.';
 
-    console.log('[Pattern Audit] Analyzing with context:', context.interfaceType, 'Device:', deviceType || 'unknown', 'Images:', imageList.length);
+    let systemPrompt: string | undefined;
+    let userPrompt: string;
+
+    if (isContextFirst) {
+      // New context-first flow — use product-aware prompts
+      systemPrompt = buildSystemPrompt(productType!);
+      userPrompt = buildUserPrompt(productDescription!, aiRole || [], productType!) + deviceContext + multiImageContext;
+      console.log('[Pattern Audit] Context-first analysis:', productType, '|', productDescription, '| Device:', deviceType || 'unknown', '| Images:', imageList.length);
+    } else {
+      // Legacy flow — use component-detection prompts
+      const basePrompt = buildContextAwarePrompt(context);
+      userPrompt = basePrompt + deviceContext + multiImageContext;
+      console.log('[Pattern Audit] Legacy analysis:', context?.interfaceType, '| Device:', deviceType || 'unknown', '| Images:', imageList.length);
+    }
 
     // Call Claude Vision API
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
+      ...(systemPrompt ? { system: systemPrompt } : {}),
       messages: [
         {
           role: 'user',
@@ -109,7 +127,7 @@ export async function POST(request: NextRequest) {
             ...imageBlocks,
             {
               type: 'text',
-              text: prompt,
+              text: userPrompt,
             },
           ],
         },
@@ -139,7 +157,45 @@ export async function POST(request: NextRequest) {
     // Generate a unique ID for this analysis
     const id = `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    // Create the analysis results with new context-aware fields
+    if (isContextFirst) {
+      // Return context-aware results format
+      const results = {
+        id,
+        score: analysisData.score || 0,
+        maxScore: analysisData.maxScore || 36,
+        productTypeSummary: analysisData.productTypeSummary || '',
+        topGaps: analysisData.topGaps || [],
+        quickWins: analysisData.quickWins || [],
+        chatContext: analysisData.chatContext || '',
+        productContext: {
+          productType: productType!,
+          productDescription: productDescription!,
+          aiRole: aiRole || [],
+        },
+        // Also include legacy fields for backward compat with ResultsPanel
+        context: context || { interfaceType: 'other', mainConcern: 'usability', userGoal: 'exploring-options', deviceType },
+        detectedComponent: analysisData.detectedComponent || productType || 'unknown',
+        componentDescription: analysisData.productTypeSummary || productDescription || '',
+        patterns: analysisData.patterns || {},
+        summary: analysisData.chatContext || analysisData.summary || '',
+        criticalMissing: (analysisData.topGaps || [])
+          .filter((g: { status: string }) => g.status === 'missing')
+          .map((g: { pattern: string }) => g.pattern),
+        timestamp: new Date().toISOString(),
+      };
+
+      console.log('[Pattern Audit] Context-first analysis complete. Score:', results.score, '/', results.maxScore);
+
+      return NextResponse.json(results, {
+        headers: {
+          'X-RateLimit-Limit': rateLimit.limit.toString(),
+          'X-RateLimit-Remaining': rateLimit.remaining.toString(),
+          'X-RateLimit-Reset': rateLimit.resetAt.toString(),
+        }
+      });
+    }
+
+    // Legacy results format
     const results: AnalysisResults = {
       id,
       context,
@@ -153,7 +209,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     };
 
-    console.log('[Pattern Audit] Analysis complete. Score:', results.score);
+    console.log('[Pattern Audit] Legacy analysis complete. Score:', results.score);
 
     return NextResponse.json(results, {
       headers: {

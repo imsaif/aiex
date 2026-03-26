@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { checkChatRateLimit } from '@/lib/rate-limit';
-import type { PatternResult } from '@/types/audit';
+import type { PatternResult, ProductContext, TopGap } from '@/types/audit';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -23,7 +23,7 @@ interface AnalysisContext {
   criticalMissing: string[];
 }
 
-function buildSystemPrompt(context: AnalysisContext): string {
+function buildLegacySystemPrompt(context: AnalysisContext): string {
   // Format pattern results for context
   const patternSummary = Object.entries(context.patterns)
     .filter(([, p]) => p.status !== 'not-applicable')
@@ -49,7 +49,73 @@ function buildSystemPrompt(context: AnalysisContext): string {
 ${patternSummary}
 ${criticalIssues}
 
-## CRITICAL: Response Formatting Rules
+${FORMATTING_RULES}`;
+}
+
+function buildContextFirstSystemPrompt(
+  context: AnalysisContext,
+  productContext: ProductContext,
+  topGaps?: TopGap[],
+  quickWins?: string[]
+): string {
+  const gapsSummary = topGaps
+    ? topGaps
+        .filter(g => g.status !== 'good')
+        .map(g => `✗ ${g.pattern} (${g.status}): ${g.finding}`)
+        .join('\n')
+    : '';
+
+  const goodPatterns = topGaps
+    ? topGaps
+        .filter(g => g.status === 'good')
+        .map(g => `✓ ${g.pattern}: ${g.finding}`)
+        .join('\n')
+    : '';
+
+  return `You are an AI UX design mentor with deep expertise in the aiuxdesign.guide pattern library.
+
+You are helping a designer fix specific gaps found in their product.
+
+## Product context
+- Product: ${productContext.productDescription}
+- Type: ${productContext.productType}
+- AI decision points: ${productContext.aiRole.join(', ')}
+
+## Audit findings
+Score: ${context.score}/${context.maxScore}
+
+**Gaps found:**
+${gapsSummary}
+
+**Working well:**
+${goodPatterns}
+
+${quickWins && quickWins.length > 0 ? `**Quick wins identified:** ${quickWins.join('; ')}` : ''}
+
+## Your role
+- Give specific, actionable design guidance — not pattern definitions
+- Reference the actual product ("For your ${productContext.productDescription}...") when making suggestions
+- Surface relevant resources from aiuxdesign.guide at the right moment
+- If a gap relates to agentic patterns, link the Permission Boundary Worksheet
+- If a gap relates to component design, link the AI Interaction Toolkit
+- Don't repeat what the audit already said — go deeper
+
+## Resources you can surface
+- Permission Boundary Worksheet: aiuxdesign.guide/downloads/permission-boundary-worksheet.pdf
+- Agentic UX Checklist: aiuxdesign.guide/agentic-ux-checklist
+- Agent Readability Audit: aiuxdesign.guide/agent-readability-audit-kit
+- AI Interaction Toolkit: aiuxdesign.guide/toolkit
+- AIUX Design Checklist: aiuxdesign.guide/handbook
+- Figma Make Prompts: aiuxdesign.guide/prompts
+- Designer's Guide: aiuxdesign.guide/guides
+- Pattern library: aiuxdesign.guide/patterns/[pattern-slug]
+
+Surface the right resource at the moment it's relevant. Don't list them all upfront.
+
+${FORMATTING_RULES}`;
+}
+
+const FORMATTING_RULES = `## CRITICAL: Response Formatting Rules
 
 You MUST format responses for easy scanning. Designers need visual hierarchy.
 
@@ -76,33 +142,20 @@ You MUST format responses for easy scanning. Designers need visual hierarchy.
 7. Never write paragraphs - only bullets and short sentences
 8. Max 100 words total
 
-**Example good response:**
-
-Your main interface has strong foundations.
-
-**What's Working**
-• **Adaptive Interfaces** - Good touch targets
-• **Multimodal** - Voice, text, camera options
-
-**Priority Fix**
-Add contextual suggestions when health topics detected - users typing "diabetic" should see nutrition tools.
-
-**Quick Win**
-Show relevant capability buttons based on input content.
-
----
-
 Now respond to the user's question using this format.`;
-}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { message, messages, analysisContext, sessionId } = body as {
+    const { message, messages, analysisContext, sessionId, productContext, topGaps, quickWins } = body as {
       message: string;
       messages: ChatMessage[];
       analysisContext: AnalysisContext;
       sessionId?: string;
+      // Context-first fields
+      productContext?: ProductContext;
+      topGaps?: TopGap[];
+      quickWins?: string[];
     };
 
     if (!message || !analysisContext) {
@@ -140,8 +193,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build system prompt with analysis context
-    const systemPrompt = buildSystemPrompt(analysisContext);
+    // Build system prompt — context-first or legacy
+    const systemPrompt = productContext
+      ? buildContextFirstSystemPrompt(analysisContext, productContext, topGaps, quickWins)
+      : buildLegacySystemPrompt(analysisContext);
 
     // Build conversation history
     const claudeMessages: Anthropic.MessageParam[] = messages.map((msg) => ({

@@ -16,9 +16,18 @@ import {
 } from '@heroicons/react/24/outline';
 import { CheckBadgeIcon, SparklesIcon } from '@heroicons/react/24/solid';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import type { AnalysisResults, PatternResult } from '@/types/audit';
+import type { AnalysisResults, PatternResult, TopGap, ProductContext } from '@/types/audit';
 import { PatternModal } from './PatternModal';
 import { EmailReportModal } from './EmailReportModal';
+
+// Extended results type that includes context-first fields when available
+interface ExtendedResults extends AnalysisResults {
+  topGaps?: TopGap[];
+  quickWins?: string[];
+  chatContext?: string;
+  productContext?: ProductContext;
+  productTypeSummary?: string;
+}
 
 // Designer-friendly analysis messages
 const ANALYSIS_MESSAGES = [
@@ -41,7 +50,7 @@ const SUGGESTIONS = [
 ];
 
 interface ResultsPanelProps {
-  results: AnalysisResults | null;
+  results: ExtendedResults | null;
   onNewAudit: () => void;
   isAnalyzing?: boolean;
   isDemoMode?: boolean;
@@ -264,7 +273,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
         body: JSON.stringify({
           message: content.trim(),
           messages: [...messages, userMessage],
-          sessionId: results.id, // Use analysis ID as session ID for rate limiting
+          sessionId: results.id,
           analysisContext: {
             detectedComponent: results.detectedComponent,
             componentDescription: results.componentDescription,
@@ -274,6 +283,12 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
             summary: results.summary,
             criticalMissing: results.criticalMissing,
           },
+          // Context-first fields (when available)
+          ...(results.productContext && {
+            productContext: results.productContext,
+            topGaps: results.topGaps,
+            quickWins: results.quickWins,
+          }),
         }),
       });
 
@@ -493,7 +508,10 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
     );
   }
 
-  // Get top 3 priorities for the hero section
+  // Determine if this is a context-first result
+  const hasContextFirstData = !!(results.topGaps && results.topGaps.length > 0);
+
+  // Get top 3 priorities for the hero section (legacy mode)
   const topPriorities = getTopPriorities(missingPatterns, weakPatterns);
   const remainingPatternCount = allPatterns.length - topPriorities.length;
 
@@ -513,6 +531,11 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
         </div>
       </div>
 
+      {/* Product Summary (context-first) */}
+      {results.productTypeSummary && (
+        <p className="text-sm text-text-secondary mb-4 -mt-2">{results.productTypeSummary}</p>
+      )}
+
       {/* Demo mode subtle hint */}
       {isDemoMode && (
         <p className="text-xs text-text-tertiary text-center mb-4">
@@ -522,8 +545,138 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto min-h-0">
-        {/* TOP 3 PRIORITIES - Hero Section */}
-        {topPriorities.length > 0 ? (
+
+        {/* CONTEXT-FIRST: Top Gaps Section */}
+        {hasContextFirstData ? (
+          <div className="mb-6">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-5">
+              <div className="p-2.5 rounded-xl bg-accent-subtle">
+                <SparklesIcon className="w-6 h-6 text-accent-primary" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-text-primary">Top Gaps Found</h2>
+                <p className="text-sm text-text-tertiary">
+                  {results.topGaps!.filter(g => g.status === 'missing').length} missing,{' '}
+                  {results.topGaps!.filter(g => g.status === 'needs-improvement').length} need improvement
+                </p>
+              </div>
+            </div>
+
+            {/* Gap Cards */}
+            <div className="space-y-3">
+              {results.topGaps!
+                .filter(g => g.status !== 'good')
+                .slice(0, 5)
+                .map((gap, index) => (
+                <div
+                  key={gap.pattern}
+                  className="p-4 rounded-xl border border-border-primary bg-background-secondary/50"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent-primary text-white dark:text-gray-900 flex items-center justify-center text-sm font-bold">
+                      {index + 1}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+                        <span className="font-semibold text-text-primary">{gap.pattern}</span>
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+                          gap.status === 'missing'
+                            ? 'bg-status-error/10 text-status-error'
+                            : 'bg-status-warning/10 text-status-warning'
+                        }`}>
+                          {gap.status === 'missing' ? (
+                            <><XCircleIcon className="w-3 h-3" /> Missing</>
+                          ) : (
+                            <><ExclamationTriangleIcon className="w-3 h-3" /> Improve</>
+                          )}
+                        </span>
+                      </div>
+                      <p className="text-sm text-text-secondary leading-relaxed mb-2">{gap.finding}</p>
+                      <p className="text-sm text-text-primary leading-relaxed">
+                        <strong>Fix:</strong> {gap.recommendation}
+                      </p>
+                      {gap.resource && (
+                        <a
+                          href={gap.resource.startsWith('http') ? gap.resource : `https://${gap.resource}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block mt-2 text-xs text-accent-primary hover:underline"
+                        >
+                          Learn more &rarr;
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Quick Wins */}
+            {results.quickWins && results.quickWins.length > 0 && (
+              <div className="mt-5 p-4 rounded-xl border border-border-primary bg-status-success/5">
+                <h3 className="text-sm font-semibold text-status-success mb-2 flex items-center gap-2">
+                  <CheckCircleIcon className="w-4 h-4" />
+                  Quick Wins
+                </h3>
+                <ul className="space-y-1.5">
+                  {results.quickWins.map((win, i) => (
+                    <li key={i} className="text-sm text-text-secondary flex gap-2">
+                      <span className="text-status-success mt-0.5">•</span>
+                      {win}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Primary CTA */}
+            <button
+              type="button"
+              onClick={() => {
+                setChatMode(true);
+                const firstGap = results.topGaps!.find(g => g.status === 'missing') || results.topGaps![0];
+                setTimeout(() => sendMessage(`Help me fix ${firstGap.pattern}. Give me specific steps for my ${results.productContext?.productDescription || 'product'}.`), 100);
+              }}
+              className="w-full mt-5 flex items-center justify-center gap-2 px-5 py-4 bg-accent-primary text-white dark:text-gray-900 rounded-xl text-base font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
+            >
+              <ChatBubbleLeftRightIcon className="w-5 h-5" />
+              Get Help Fixing These
+            </button>
+
+            {/* Email Report Button */}
+            <button
+              type="button"
+              onClick={() => setShowEmailModal(true)}
+              className="w-full mt-3 flex items-center justify-center gap-2 px-5 py-3 border border-border-primary text-text-secondary rounded-xl text-base font-medium hover:bg-background-secondary hover:text-text-primary transition-colors"
+            >
+              <EnvelopeIcon className="w-5 h-5" />
+              Email This Report
+            </button>
+
+            {/* Good patterns collapsed */}
+            {results.topGaps!.filter(g => g.status === 'good').length > 0 && (
+              <details className="mt-4 group">
+                <summary className="flex items-center gap-2 cursor-pointer text-sm text-text-secondary hover:text-text-primary py-2">
+                  <ChevronDownIcon className="w-4 h-4 transition-transform group-open:rotate-180" />
+                  Well Implemented ({results.topGaps!.filter(g => g.status === 'good').length} patterns)
+                </summary>
+                <div className="pt-3 space-y-2">
+                  {results.topGaps!.filter(g => g.status === 'good').map(gap => (
+                    <div key={gap.pattern} className="p-3 rounded-lg border border-border-primary bg-background-secondary/30">
+                      <div className="flex items-center gap-2 mb-1">
+                        <CheckCircleIcon className="w-4 h-4 text-status-success" />
+                        <span className="text-sm font-medium text-text-primary">{gap.pattern}</span>
+                      </div>
+                      <p className="text-xs text-text-tertiary ml-6">{gap.finding}</p>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+          </div>
+        ) : topPriorities.length > 0 ? (
+          /* LEGACY: TOP 3 PRIORITIES - Hero Section */
           <div className="mb-6">
             {/* Hero Header */}
             <div className="flex items-center gap-3 mb-5">

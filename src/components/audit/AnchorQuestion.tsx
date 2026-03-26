@@ -1,0 +1,54 @@
+'use client';
+
+import type { ProductType } from '@/types/audit';
+import { trackAuditEvent } from '@/lib/audit/analytics';
+import {
+  ChatBubbleLeftRightIcon,
+  CpuChipIcon,
+  SparklesIcon,
+  DocumentTextIcon,
+  CubeTransparentIcon,
+} from '@heroicons/react/24/outline';
+import type { ComponentType, SVGProps } from 'react';
+
+const productOptions: { id: ProductType; label: string; desc: string; icon: ComponentType<SVGProps<SVGSVGElement>> }[] = [
+  { id: 'chat-interface', label: 'Chat interface', desc: 'Conversational AI, support bots, assistants', icon: ChatBubbleLeftRightIcon },
+  { id: 'ai-agent', label: 'AI agent or workflow', desc: 'Takes actions, multi-step tasks, automation', icon: CpuChipIcon },
+  { id: 'recommendation-system', label: 'Recommendations', desc: 'Surfaces content, ranks options, predicts', icon: SparklesIcon },
+  { id: 'content-generation', label: 'Content generation', desc: 'Writes, designs, codes, or creates', icon: DocumentTextIcon },
+  { id: 'other', label: 'Something else', desc: 'Other AI-powered product', icon: CubeTransparentIcon },
+];
+
+interface AnchorQuestionProps {
+  onSelect: (productType: ProductType) => void;
+}
+
+export function AnchorQuestion({ onSelect }: AnchorQuestionProps) {
+  return (
+    <div className="w-full max-w-3xl mx-auto">
+      <div className="grid grid-cols-3 gap-4">
+        {productOptions.map((option) => {
+          const Icon = option.icon;
+          return (
+            <button
+              key={option.id}
+              onClick={() => {
+                trackAuditEvent('audit_product_type_selected', { productType: option.id });
+                onSelect(option.id);
+              }}
+              className="flex flex-col items-center text-center gap-3 p-5 border border-border-primary rounded-xl bg-background-primary shadow-card hover:bg-accent-subtle hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-accent-subtle flex items-center justify-center">
+                <Icon className="w-6 h-6 text-accent-primary" />
+              </div>
+              <div>
+                <div className="font-semibold text-text-primary">{option.label}</div>
+                <div className="text-sm text-text-secondary mt-1 leading-relaxed">{option.desc}</div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

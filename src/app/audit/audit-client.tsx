@@ -5,9 +5,11 @@ import dynamic from 'next/dynamic';
 import { CenterUpload } from '@/components/audit/CenterUpload';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { FloatingResultsSidebar } from '@/components/audit/FloatingResultsSidebar';
-import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
-import { companyLogos } from '@/data/company-logos';
-import type { AnalysisResults } from '@/types/audit';
+import { AnchorQuestion } from '@/components/audit/AnchorQuestion';
+import { BranchedFollowUp } from '@/components/audit/BranchedFollowUp';
+import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
+import type { AnalysisResults, AuditStep, ProductType } from '@/types/audit';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 // Lazy load heavy components that aren't needed on initial paint
 const SocialProof = dynamic(
@@ -36,7 +38,13 @@ const UsageLimitModal = dynamic(
 );
 
 export default function AuditClient() {
-  // State
+  // Multi-step flow state
+  const [step, setStep] = useState<AuditStep>('product-type');
+  const [productType, setProductType] = useState<ProductType | null>(null);
+  const [productDescription, setProductDescription] = useState('');
+  const [aiRole, setAiRole] = useState<string[]>([]);
+
+  // Existing state
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
@@ -45,13 +53,13 @@ export default function AuditClient() {
   const [showDeviceFrame, setShowDeviceFrame] = useState(true);
   const [chatTrigger, setSidebarExpandTrigger] = useState(0);
 
-  const hasImages = uploadedImages.length > 0;
   const hasResults = !!(isAnalyzing || analysisResults);
 
   // Handle demo mode — lazy-load demo data only when triggered
   const handleStartDemo = useCallback(async () => {
     const { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } = await import('@/data/demo-audit');
     setIsDemoMode(true);
+    setStep('results');
     setUploadedImages([{
       base64: DEMO_SCREENSHOT_FALLBACK,
       fileName: 'demo-chat-interface.png',
@@ -60,13 +68,77 @@ export default function AuditClient() {
     setAnalysisResults(DEMO_ANALYSIS_RESULTS);
   }, []);
 
-  // Handle images upload — just stage them, no analysis yet
+  // Handle analyze from ScreenshotUpload — user clicked "Analyze"
+  const handleScreenshotUpload = useCallback(async (images: UploadedImage[]) => {
+    setUploadedImages(images);
+    setShowDeviceFrame(true);
+    setStep('results');
+    setIsAnalyzing(true);
+    setRateLimitError(null);
+
+    try {
+      const primaryDeviceType = images[0].deviceType;
+
+      const context = {
+        interfaceType: 'other' as const,
+        mainConcern: 'usability' as const,
+        userGoal: 'exploring-options' as const,
+        deviceType: primaryDeviceType,
+      };
+
+      const imagesPayload = images.map(img => ({
+        base64: img.base64.split(',')[1],
+        deviceType: img.deviceType,
+      }));
+
+      const response = await fetch('/api/analyze-pattern', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          context,
+          imageBase64: imagesPayload[0].base64,
+          images: imagesPayload,
+          deviceType: primaryDeviceType,
+          productType,
+          productDescription,
+          aiRole,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 429) {
+        setRateLimitError(data.message || "You've used all your free analyses for today. Come back tomorrow!");
+        setUploadedImages([]);
+        setStep('screenshot');
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Analysis failed');
+      }
+
+      setAnalysisResults(data as AnalysisResults);
+      trackAuditEvent('audit_session_completed', {
+        score: data.score,
+        productType,
+        gapsFound: data.topGaps?.length || 0,
+      });
+    } catch (error) {
+      console.error('Analysis error:', error);
+      setStep('screenshot');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [productType, productDescription, aiRole]);
+
+  // Handle images upload from CenterUpload (results view — adding more images)
   const handleImagesUpload = useCallback((images: UploadedImage[]) => {
     setUploadedImages(images);
     setShowDeviceFrame(true);
   }, []);
 
-  // Start analysis — triggered by user clicking "Analyze"
+  // Start analysis — triggered by user clicking "Analyze" in results view
   const handleStartAnalysis = useCallback(async () => {
     if (uploadedImages.length === 0) return;
 
@@ -96,6 +168,9 @@ export default function AuditClient() {
           imageBase64: imagesPayload[0].base64,
           images: imagesPayload,
           deviceType: primaryDeviceType,
+          productType,
+          productDescription,
+          aiRole,
         }),
       });
 
@@ -117,89 +192,144 @@ export default function AuditClient() {
     } finally {
       setIsAnalyzing(false);
     }
-  }, [uploadedImages]);
+  }, [uploadedImages, productType, productDescription, aiRole]);
 
-  // Handle clear/reset
+  // Handle clear/reset — go back to step 1
   const handleClear = useCallback(() => {
     setUploadedImages([]);
     setAnalysisResults(null);
     setIsAnalyzing(false);
     setIsDemoMode(false);
     setShowDeviceFrame(true);
+    setStep('product-type');
+    setProductType(null);
+    setProductDescription('');
+    setAiRole([]);
   }, []);
+
+  // Determine if we're in the intake flow (steps 1-3) or results view
+  const isIntakeFlow = step !== 'results';
 
   return (
     <div className="min-h-screen">
-      {/* Full-Page Canvas */}
-      {/* dvh accounts for Chrome's dynamic address bar; vh is the fallback */}
-      <div className="relative h-[calc(100vh-64px)] h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] overflow-hidden">
-        {/* Dark Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
+      {/* Rate Limit Modal */}
+      {rateLimitError && (
+        <UsageLimitModal
+          message={rateLimitError}
+          onClose={() => setRateLimitError(null)}
+        />
+      )}
 
-        {/* Rate Limit Modal */}
-        {rateLimitError && (
-          <UsageLimitModal
-            message={rateLimitError}
-            onClose={() => setRateLimitError(null)}
-          />
-        )}
+      {isIntakeFlow ? (
+        <>
+          {/* INTAKE FLOW — Standard site hero layout */}
+          <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="text-center max-w-4xl mx-auto">
+                {/* Step 1: Hero with product type selection */}
+                {step === 'product-type' && (
+                  <>
+                    {/* Info chip */}
+                    <div className="flex items-center justify-center gap-2 mb-6">
+                      <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
+                        Free AI UX Audit
+                      </span>
+                    </div>
 
-        {/* Canvas Area */}
-        <div className="relative z-10 h-full p-4 xl:p-6">
-          <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-clip relative">
-            {/* Grid Pattern on Canvas */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6" style={{ color: 'var(--text-hero)' }}>
+                      Free AI UX Audit Tool
+                    </h1>
+                    <p className="text-lg md:text-xl text-text-secondary mb-12">
+                      Select your product type to get started.
+                    </p>
 
-            {/* Center Upload / Image Display */}
-            <CenterUpload
-              onImagesUpload={handleImagesUpload}
-              onStartAnalysis={handleStartAnalysis}
-              onOpenChat={() => setSidebarExpandTrigger(t => t + 1)}
-              onClear={handleClear}
-              onStartDemo={handleStartDemo}
-              uploadedImages={uploadedImages}
-              isAnalyzing={isAnalyzing}
-              hasResults={hasResults}
-              showDeviceFrame={showDeviceFrame}
-              onToggleFrame={() => setShowDeviceFrame(!showDeviceFrame)}
-              sidebarOpen={hasResults}
-              header={
-                <div className="w-full max-w-3xl text-center mb-10">
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-5" style={{ color: 'var(--text-hero)' }}>
-                    Free AI UX Audit Tool
-                  </h1>
-                  <p className="text-lg md:text-xl text-text-secondary mb-8">
-                    Upload a screenshot. Get instant feedback against 36 research-backed AI UX patterns.
-                  </p>
-                  <div className="overflow-hidden">
-                    <CompanyLogoCarousel
-                      companies={companyLogos}
-                      size="sm"
-                      duration={80}
-                      gap="lg"
-                      className="py-2"
+                    {/* Product type cards */}
+                    <AnchorQuestion
+                      onSelect={(type) => {
+                        setProductType(type);
+                        setStep('product-detail');
+                      }}
                     />
-                  </div>
-                </div>
-              }
-            />
 
-            {/* Floating Results Sidebar */}
-            <FloatingResultsSidebar isVisible={hasResults} expandTrigger={chatTrigger}>
-              <ResultsPanel
-                results={analysisResults}
-                onNewAudit={handleClear}
+                    {/* Demo link */}
+                    <p className="mt-10 text-sm text-text-tertiary">
+                      Just exploring?{' '}
+                      <button onClick={handleStartDemo} className="underline hover:text-text-secondary transition-colors cursor-pointer">
+                        Try the demo
+                      </button>
+                    </p>
+                  </>
+                )}
+
+                {/* Step 2: Product details */}
+                {step === 'product-detail' && productType && (
+                  <BranchedFollowUp
+                    productType={productType}
+                    onBack={() => setStep('product-type')}
+                    onContinue={(desc, roles) => {
+                      setProductDescription(desc);
+                      setAiRole(roles);
+                      setStep('screenshot');
+                    }}
+                  />
+                )}
+
+                {/* Step 3: Screenshot upload */}
+                {step === 'screenshot' && productType && (
+                  <ScreenshotUpload
+                    productType={productType}
+                    productDescription={productDescription}
+                    onBack={() => setStep('product-detail')}
+                    onAnalyze={handleScreenshotUpload}
+                  />
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Social Proof below intake */}
+          <SocialProof />
+        </>
+      ) : (
+        /* RESULTS VIEW — Full-screen canvas with dark gradient */
+        <div className="relative h-[calc(100vh-64px)] h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] overflow-hidden">
+          {/* Dark Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
+
+          {/* Canvas Area */}
+          <div className="relative z-10 h-full p-4 xl:p-6">
+            <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-clip relative">
+              {/* Grid Pattern on Canvas */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />
+
+              <CenterUpload
+                onImagesUpload={handleImagesUpload}
+                onStartAnalysis={handleStartAnalysis}
+                onOpenChat={() => setSidebarExpandTrigger(t => t + 1)}
+                onClear={handleClear}
+                onStartDemo={handleStartDemo}
+                uploadedImages={uploadedImages}
                 isAnalyzing={isAnalyzing}
-                isDemoMode={isDemoMode}
-                chatTrigger={chatTrigger}
+                hasResults={hasResults}
+                showDeviceFrame={showDeviceFrame}
+                onToggleFrame={() => setShowDeviceFrame(!showDeviceFrame)}
+                sidebarOpen={hasResults}
               />
-            </FloatingResultsSidebar>
+
+              {/* Floating Results Sidebar */}
+              <FloatingResultsSidebar isVisible={hasResults} expandTrigger={chatTrigger}>
+                <ResultsPanel
+                  results={analysisResults}
+                  onNewAudit={handleClear}
+                  isAnalyzing={isAnalyzing}
+                  isDemoMode={isDemoMode}
+                  chatTrigger={chatTrigger}
+                />
+              </FloatingResultsSidebar>
+            </div>
           </div>
         </div>
-      </div>
-
-      {/* Social Proof & Promotions */}
-      <SocialProof />
+      )}
     </div>
   );
 }

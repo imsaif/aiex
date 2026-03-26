@@ -89,3 +89,40 @@ export interface ConcernOption {
   label: string;
   icon: string;
 }
+
+// --- Context-First Audit Flow Types ---
+
+export type ProductType =
+  | 'chat-interface'
+  | 'ai-agent'
+  | 'recommendation-system'
+  | 'content-generation'
+  | 'other';
+
+export type AuditStep = 'product-type' | 'product-detail' | 'screenshot' | 'results';
+
+export interface ProductContext {
+  productType: ProductType;
+  productDescription: string;
+  aiRole: string[];
+}
+
+export interface TopGap {
+  pattern: string;
+  status: 'missing' | 'needs-improvement' | 'good';
+  finding: string;
+  recommendation: string;
+  resource: string | null;
+}
+
+export interface ContextAwareResults {
+  id: string;
+  score: number;
+  maxScore: number;
+  productTypeSummary: string;
+  topGaps: TopGap[];
+  quickWins: string[];
+  chatContext: string;
+  productContext: ProductContext;
+  timestamp: string;
+}
