@@ -123,14 +123,12 @@ export default function AdminNewsletterClient({
     }
   };
 
-  // Set active draft based on selectedId or first pending draft
+  // Only auto-load a draft if selectedId is provided via URL (e.g. from admin notification email)
   useEffect(() => {
-    if (drafts.length === 0) return;
-    const targetId = selectedId || drafts.find((d) => d.status === 'pending_review')?.id || drafts[0]?.id;
-    if (targetId && targetId !== activeDraft?.id) {
-      fetchFullDraft(targetId);
+    if (selectedId && selectedId !== activeDraft?.id) {
+      fetchFullDraft(selectedId);
     }
-  }, [drafts, selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
