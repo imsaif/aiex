@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-27 15:47 (MacBook)
+- **Pattern:** Newsletter Cron Reliability
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed recurring newsletter cron timeout — cron-job.org free tier has 30s max timeout, but newsletter generation takes 30-60s. Used Next.js `after()` to respond instantly and run generation in background within Vercel's 60s window. Added failure alert emails with error details + manual trigger command when background generation fails. Admin dashboard: paginated drafts API (lightweight list without content/sources), full content fetched on-demand when draft selected. Sidebar defaults to pending_review only with "Show all" toggle. Drafts no longer auto-selected — content loads only when clicked from sidebar (or via URL from admin notification email).
+
 ### Session 2026-03-26 21:32 (MacBook)
 - **Pattern:** SEO Optimization + Conversational UI Content
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed critical INP (1.1s→expected <200ms) for Chrome users (65.5% of traffic). Phase 1: Removed dead mouse-tracking code from Hero.tsx (unused mouseX/mouseY/spring animations causing layout thrashing), throttled ScrollToTop scroll listener with RAF + passive, replaced JS onMouseEnter/Leave inline style mutations with Tailwind CSS hover: classes in pattern-grid.tsx and ProductsSection.tsx (CSS-only tooltips). Phase 2: Switched Clarity loading from fixed 3s setTimeout to requestIdleCallback, removed redundant SpeedInsights (Clarity already tracks Core Web Vitals). Net: -141 lines, +32 lines across 5 files.
 
 ### Session 2026-03-18 19:17 (MacBook)
-- **Pattern:** Audit Page Simplification
-- **Status:** ✅ Completed
-- **Files Changed:** 23
-- **Tests Added/Modified:** 0
-- **Notes:** Simplified audit page from two-panel (ResizablePanels + WelcomePanel) to single full-width canvas with floating results sidebar overlay. Added multi-image support (up to 4 screenshots) with carousel navigation, page indicators, and combined analysis. Moved marketing pitch (trust badge, logo carousel, how-it-works) inline below upload card. Added floating bottom toolbar under device frame with contextual actions: pre-analysis (Analyze, Add More, Clear, Hide Frame) and post-analysis (New Audit, Chat with Design Mentor, Add More, Hide Frame). Chat trigger from toolbar opens sidebar and switches to chat mode. Removed duplicate New Audit/Chat buttons from ResultsPanel. API route updated to send multiple images to Claude with cross-screen context prompt. Rate limit bumped to 20 for testing (MUST revert before deploy).
-
-### Session 2026-03-18 15:10 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
