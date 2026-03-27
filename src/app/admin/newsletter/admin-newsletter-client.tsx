@@ -69,6 +69,7 @@ export default function AdminNewsletterClient({
     try {
       const status = all ? 'all' : 'pending_review';
       const res = await fetch(`/api/newsletter/drafts?status=${status}&page=${page}&limit=20`);
+      if (!res.ok) return;
       const data = await res.json();
       if (data.drafts) {
         setDrafts(prev => append ? [...prev, ...data.drafts] : data.drafts);
@@ -107,6 +108,7 @@ export default function AdminNewsletterClient({
     setIsLoadingDraft(true);
     try {
       const res = await fetch(`/api/newsletter/drafts?id=${id}`);
+      if (!res.ok) return;
       const data = await res.json();
       if (data && data.id) {
         setActiveDraft(data);
