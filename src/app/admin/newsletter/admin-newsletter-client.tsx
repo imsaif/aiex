@@ -50,6 +50,7 @@ export default function AdminNewsletterClient({
   const [showDraftList, setShowDraftList] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showAll, setShowAll] = useState(false);
 
   // Sanitize HTML content for preview to prevent XSS and make links open in new tab
   const sanitizedPreviewContent = useMemo(() => {
@@ -62,11 +63,12 @@ export default function AdminNewsletterClient({
     return sanitized.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
   }, [editedContent]);
 
-  // Fetch drafts after authentication (paginated)
-  const fetchDrafts = async (page: number, append = false) => {
+  // Fetch drafts after authentication (pending_review by default)
+  const fetchDrafts = async (page: number, all = false, append = false) => {
     setIsLoadingDrafts(true);
     try {
-      const res = await fetch(`/api/newsletter/drafts?page=${page}&limit=20`);
+      const status = all ? 'all' : 'pending_review';
+      const res = await fetch(`/api/newsletter/drafts?status=${status}&page=${page}&limit=20`);
       const data = await res.json();
       if (data.drafts) {
         setDrafts(prev => append ? [...prev, ...data.drafts] : data.drafts);
@@ -81,10 +83,10 @@ export default function AdminNewsletterClient({
   };
 
   useEffect(() => {
-    if (isAuthenticated && drafts.length === 0) {
-      fetchDrafts(1);
+    if (isAuthenticated) {
+      fetchDrafts(1, showAll);
     }
-  }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, showAll]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch subscriber count
   useEffect(() => {
@@ -396,8 +398,14 @@ export default function AdminNewsletterClient({
           {/* Draft List Sidebar - Hidden on mobile */}
           <div className="hidden md:block md:col-span-3">
             <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary">
-              <div className="p-4 border-b border-border-primary">
-                <h2 className="font-semibold text-text-primary">Drafts</h2>
+              <div className="p-4 border-b border-border-primary flex items-center justify-between">
+                <h2 className="font-semibold text-text-primary">{showAll ? 'All Drafts' : 'Pending Review'}</h2>
+                <button
+                  onClick={() => setShowAll(!showAll)}
+                  className="text-xs text-accent-primary hover:underline"
+                >
+                  {showAll ? 'Pending only' : 'Show all'}
+                </button>
               </div>
               <div className="divide-y divide-border-secondary">
                 {isLoadingDrafts ? (

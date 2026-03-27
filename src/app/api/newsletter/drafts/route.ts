@@ -21,13 +21,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(draft);
     }
 
-    // Paginated list — lightweight (no content/sources/structuredData)
+    // Filter by status (default: pending_review only)
+    const status = searchParams.get('status') || 'pending_review';
+    const showAll = status === 'all';
+
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
     const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '20', 10)));
     const skip = (page - 1) * limit;
 
+    const where = showAll ? {} : { status };
+
     const [drafts, total] = await Promise.all([
       prisma.newsletterDraft.findMany({
+        where,
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
@@ -43,7 +49,7 @@ export async function GET(request: NextRequest) {
           publishDate: true,
         },
       }),
-      prisma.newsletterDraft.count(),
+      prisma.newsletterDraft.count({ where }),
     ]);
 
     return NextResponse.json({
