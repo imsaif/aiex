@@ -161,7 +161,7 @@ export default function IntelligentCachingDemo() {
               key={option.id}
               onClick={() => handleQuery(option.query)}
               disabled={isLoading}
-              className="p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-500 transition-colors disabled:opacity-50 text-left"
+              className="p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-200 text-left"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >

@@ -105,7 +105,7 @@ export default function MixedInitiativeControlDemo() {
                     {section.owner !== 'human' && !section.agentTyping && (
                       <button
                         onClick={() => handoff(section.id, 'human')}
-                        className="text-[10px] px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                        className="text-[10px] px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-full hover:bg-blue-200 dark:hover:bg-blue-900/50 active:scale-95 transition-all"
                       >
                         Edit myself
                       </button>
@@ -113,7 +113,7 @@ export default function MixedInitiativeControlDemo() {
                     {section.owner !== 'agent' && (
                       <button
                         onClick={() => handoff(section.id, 'agent')}
-                        className="text-[10px] px-2 py-1 bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 rounded-full hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+                        className="text-[10px] px-2 py-1 bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 rounded-full hover:bg-purple-200 dark:hover:bg-purple-900/50 active:scale-95 transition-all"
                       >
                         Hand to agent
                       </button>

@@ -130,7 +130,7 @@ export default function AgentStatusMonitoringDemo() {
         {/* Badge / header */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full px-4 py-3 flex items-center justify-between hover:bg-surface-secondary transition-colors"
+          className="w-full px-4 py-3 flex items-center justify-between hover:bg-surface-secondary active:bg-surface-tertiary transition-colors"
         >
           <div className="flex items-center gap-3">
             <div className="relative">

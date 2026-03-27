@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-27 17:55 (MacBook)
+- **Pattern:** Dead Click & Rage Click Audit
+- **Status:** ✅ Completed
+- **Files Changed:** 17
+- **Tests Added/Modified:** 0
+- **Notes:** Comprehensive dead click / rage click audit across all 36 pattern pages to protect SEO from Clarity/Google flagging. Phase 1: Removed misleading `cursor-pointer` from non-interactive product logos (ProductsSection) and tool logos (FigmaPromptCard), converted static category badge to `<Link>`. Phase 2: Added `active:scale-95` press feedback to demo buttons with delayed/missing visual response (IntentPreview, MixedInitiativeControl, PlanSummary, ProgressiveDisclosure, AgentStatusMonitoring, AdaptiveDashboard, AdaptiveLearning). Phase 3: Added `disabled:cursor-not-allowed` to disabled query buttons (ProgressiveEnhancement, IntelligentCaching). Phase 4: Added press/hover feedback to toggle buttons and expandable cards (ExplainableAi, ResponsibleAiDesign, TransparentFeedback, VulnerableUserProtection, SafeExploration).
+
 ### Session 2026-03-27 15:47 (MacBook)
 - **Pattern:** Newsletter Cron Reliability
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed audit page Chrome visibility: replaced 100vh with dvh (dynamic viewport height) for canvas, bottom sheet, and image sizing. Capped sidebar width with min(420px,45vw) to prevent overflow at 1024-1200px. Fixed mobile navbar horizontal overflow (gap-1/px-2 on small screens). Added Playwright viewport screenshot tests across 8 screen sizes (375-1920px). Made How It Works steps vertical on mobile. SEO Phase 1: Added server-rendered content, FAQ JSON-LD schema, and improved meta targeting "ai ux audit tool" queries (pos 7.5). SEO Phase 2: Added custom meta titles/descriptions for top 10 pattern pages by impressions (progressive-disclosure, conversational-ui, privacy-first-design, confidence-visualization, adaptive-interfaces, context-switching, multimodal-interaction, feedback-loops, error-recovery, contextual-assistance).
 
 ### Session 2026-03-19 14:57 (MacBook)
-- **Pattern:** Chrome INP Performance Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 5
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed critical INP (1.1s→expected <200ms) for Chrome users (65.5% of traffic). Phase 1: Removed dead mouse-tracking code from Hero.tsx (unused mouseX/mouseY/spring animations causing layout thrashing), throttled ScrollToTop scroll listener with RAF + passive, replaced JS onMouseEnter/Leave inline style mutations with Tailwind CSS hover: classes in pattern-grid.tsx and ProductsSection.tsx (CSS-only tooltips). Phase 2: Switched Clarity loading from fixed 3s setTimeout to requestIdleCallback, removed redundant SpeedInsights (Clarity already tracks Core Web Vitals). Net: -141 lines, +32 lines across 5 files.
-
-### Session 2026-03-18 19:17 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

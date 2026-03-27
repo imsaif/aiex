@@ -172,7 +172,7 @@ export default function AdaptiveDashboardDemo() {
             className={`px-4 py-2 text-base font-medium rounded-lg transition-colors ${
               isSimulating
                 ? 'bg-accent-primary/50 text-white cursor-not-allowed'
-                : 'bg-accent-primary text-white hover:bg-accent-primary/90'
+                : 'bg-accent-primary text-white hover:bg-accent-primary/90 active:scale-95'
             }`}
           >
             {isSimulating ? 'Simulating...' : 'Simulate Usage'}
@@ -206,7 +206,7 @@ export default function AdaptiveDashboardDemo() {
           {/* Reset Button */}
           <button
             onClick={resetDemo}
-            className="px-4 py-2 text-base text-text-secondary hover:text-text-primary border border-secondary rounded-lg hover:border-primary transition-colors"
+            className="px-4 py-2 text-base text-text-secondary hover:text-text-primary border border-secondary rounded-lg hover:border-primary active:scale-95 transition-all"
           >
             Reset
           </button>
@@ -221,7 +221,7 @@ export default function AdaptiveDashboardDemo() {
               key={item.id}
               onClick={() => handleItemClick(item.id)}
               data-clarity-region="demo-button"
-              className={`bg-surface-secondary hover:bg-surface-elevated border p-6 rounded-xl text-center transition-all relative cursor-pointer ${
+              className={`bg-surface-secondary hover:bg-surface-elevated border p-6 rounded-xl text-center transition-all relative cursor-pointer active:scale-95 ${
                 highlightedItem === item.id
                   ? 'border-accent-primary ring-2 ring-accent-primary/30 scale-[1.02]'
                   : 'border-secondary hover:border-primary'

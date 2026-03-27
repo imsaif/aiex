@@ -469,7 +469,7 @@ export default function SafeExplorationDemo() {
                     <div
                       key={guard.id}
                       onClick={() => setExpandedGuard(expandedGuard === guard.id ? null : guard.id)}
-                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${getSafetyGuardColor(guard.level)} hover:shadow-lg hover:-translate-y-0.5`}
+                      className={`p-4 rounded-lg border-2 cursor-pointer transition-all active:scale-[0.98] ${getSafetyGuardColor(guard.level)} hover:shadow-lg hover:-translate-y-0.5`}
                     >
                       <div className="flex items-start space-x-3">
                         <span className="text-2xl flex-shrink-0 mt-1">{getSafetyGuardIcon(guard.type)}</span>

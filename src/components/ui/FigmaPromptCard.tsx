@@ -36,7 +36,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                   alt="Figma"
                   width={20}
                   height={20}
-                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                   Figma
@@ -50,7 +50,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                   alt="Uizard"
                   width={20}
                   height={20}
-                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity rounded cursor-pointer"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity rounded"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                   Uizard
@@ -64,7 +64,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                   alt="Cursor"
                   width={20}
                   height={20}
-                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                   Cursor
@@ -78,7 +78,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                   alt="Claude"
                   width={20}
                   height={20}
-                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                   Claude
@@ -92,7 +92,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
                   alt="Gemini"
                   width={20}
                   height={20}
-                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0 cursor-pointer"
+                  className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity invert dark:invert-0"
                 />
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
                   Gemini
@@ -101,7 +101,7 @@ export default function FigmaPromptCard({ figmaPrompt }: FigmaPromptCardProps) {
               </div>
               {/* Galileo AI */}
               <div className="group relative">
-                <div className="w-5 h-5 rounded opacity-80 group-hover:opacity-100 transition-opacity bg-indigo-500 flex items-center justify-center cursor-pointer">
+                <div className="w-5 h-5 rounded opacity-80 group-hover:opacity-100 transition-opacity bg-indigo-500 flex items-center justify-center">
                   <span className="text-[10px] font-bold text-white">G</span>
                 </div>
                 <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">

@@ -269,10 +269,10 @@ export default function IntentPreviewDemo() {
                 Replay
               </button>
               <div className="flex items-center gap-2">
-                <button onClick={rejectAll} className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-red-600 transition-colors cursor-pointer" disabled={pendingActions.length === 0}>
+                <button onClick={rejectAll} className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-red-600 active:scale-95 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:text-text-secondary" disabled={pendingActions.length === 0}>
                   Reject All
                 </button>
-                <button onClick={approveAll} className="px-4 py-2 text-sm font-medium bg-text-primary text-white rounded-lg hover:opacity-90 transition-opacity cursor-pointer" disabled={pendingActions.length === 0}>
+                <button onClick={approveAll} className="px-4 py-2 text-sm font-medium bg-text-primary text-white rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" disabled={pendingActions.length === 0}>
                   Approve {pendingActions.length} Actions
                 </button>
               </div>

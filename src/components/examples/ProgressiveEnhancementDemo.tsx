@@ -103,7 +103,7 @@ export default function ProgressiveEnhancementDemo() {
             key={idx}
             onClick={() => handleQuery(q)}
             disabled={isEnhancing}
-            className="w-full p-3 text-left bg-white border border-gray-200 rounded-lg hover:border-blue-500 transition-colors disabled:opacity-50"
+            className="w-full p-3 text-left bg-white border border-gray-200 rounded-lg hover:border-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-200"
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
           >

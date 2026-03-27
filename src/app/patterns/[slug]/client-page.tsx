@@ -86,9 +86,12 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
       <div className="mb-10">
         <div className="mb-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getCategoryClasses(categories.find(c => c.title === pattern.category)?.color)}`}>
+            <Link
+              href={`/patterns?category=${categories.find(c => c.title === pattern.category)?.slug || ''}`}
+              className={`inline-block px-3 py-1 rounded-full text-sm font-medium hover:opacity-80 transition-opacity ${getCategoryClasses(categories.find(c => c.title === pattern.category)?.color)}`}
+            >
               {pattern.category}
-            </span>
+            </Link>
           </div>
         </div>
         <h1 className="text-5xl font-bold mt-6 mb-4 text-text-primary">{pattern.title}</h1>

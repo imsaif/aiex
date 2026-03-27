@@ -286,7 +286,7 @@ export default function ExplainableAiDemo() {
             {/* Explanation Toggle */}
             <button
               onClick={() => setShowDetails(!showDetails)}
-              className="flex items-center gap-2 text-text-secondary hover:text-text-primary font-medium transition cursor-pointer"
+              className="flex items-center gap-2 text-text-secondary hover:text-text-primary font-medium transition-all active:scale-95 cursor-pointer"
             >
               <svg
                 className={`w-5 h-5 transform transition-transform ${showDetails ? 'rotate-90' : ''}`}

@@ -232,7 +232,7 @@ export const AITransparencyDemo: React.FC = () => {
                   <h4 className="text-sm font-semibold text-gray-700">Understanding AI Confidence</h4>
                   <button 
                     onClick={() => setShowExplanation(!showExplanation)}
-                    className="text-xs text-blue-600 hover:text-blue-800"
+                    className="text-xs text-blue-600 hover:text-blue-800 hover:underline active:scale-95 transition-all"
                   >
                     {showExplanation ? 'Hide explanation' : 'Learn more'}
                   </button>

@@ -60,7 +60,7 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
 
   return (
     <div
-      className="relative group/logo cursor-pointer"
+      className="relative group/logo"
     >
       {/* Logo Image with Grayscale */}
       <img

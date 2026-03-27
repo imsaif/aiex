@@ -162,7 +162,7 @@ export default function AdaptiveLearningDemo() {
         </div>
         <button 
           onClick={() => setShowSettings(!showSettings)} 
-          className="rounded-full bg-white bg-opacity-20 p-2"
+          className="rounded-full bg-white bg-opacity-20 p-2 hover:bg-opacity-30 active:scale-95 transition-all"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
@@ -180,17 +180,17 @@ export default function AdaptiveLearningDemo() {
             <label htmlFor="adaptive-mode" className="text-sm text-gray-600">
               Adaptive Mode (adjusts to your performance)
             </label>
-            <div className="relative inline-block w-10 mr-2 align-middle select-none">
-              <input 
-                type="checkbox" 
-                id="adaptive-mode" 
+            <label htmlFor="adaptive-mode" className="relative inline-block w-10 mr-2 align-middle select-none cursor-pointer">
+              <input
+                type="checkbox"
+                id="adaptive-mode"
                 className="sr-only"
                 checked={adaptiveMode}
                 onChange={toggleAdaptiveMode}
               />
               <div className={`block h-6 rounded-full w-10 ${adaptiveMode ? 'bg-green-400' : 'bg-gray-300'}`}></div>
               <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform transform ${adaptiveMode ? 'translate-x-4' : ''}`}></div>
-            </div>
+            </label>
           </div>
           
           {!adaptiveMode && (
@@ -199,19 +199,19 @@ export default function AdaptiveLearningDemo() {
               <div className="flex space-x-2">
                 <button 
                   onClick={() => changeDifficulty('easy')} 
-                  className={`px-3 py-1 rounded text-xs font-medium ${currentDifficulty === 'easy' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  className={`px-3 py-1 rounded text-xs font-medium active:scale-95 transition-all ${currentDifficulty === 'easy' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                 >
                   Easy
                 </button>
-                <button 
-                  onClick={() => changeDifficulty('medium')} 
-                  className={`px-3 py-1 rounded text-xs font-medium ${currentDifficulty === 'medium' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                <button
+                  onClick={() => changeDifficulty('medium')}
+                  className={`px-3 py-1 rounded text-xs font-medium active:scale-95 transition-all ${currentDifficulty === 'medium' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                 >
                   Medium
                 </button>
-                <button 
-                  onClick={() => changeDifficulty('hard')} 
-                  className={`px-3 py-1 rounded text-xs font-medium ${currentDifficulty === 'hard' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'}`}
+                <button
+                  onClick={() => changeDifficulty('hard')}
+                  className={`px-3 py-1 rounded text-xs font-medium active:scale-95 transition-all ${currentDifficulty === 'hard' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                 >
                   Hard
                 </button>
@@ -270,9 +270,9 @@ export default function AdaptiveLearningDemo() {
               <button
                 onClick={checkAnswer}
                 disabled={!userAnswer.trim()}
-                className={`w-full py-3 rounded-md font-medium ${
-                  userAnswer.trim() 
-                    ? 'bg-green-500 text-white' 
+                className={`w-full py-3 rounded-md font-medium transition-all ${
+                  userAnswer.trim()
+                    ? 'bg-green-500 text-white hover:bg-green-600 active:scale-95'
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 }`}
               >
@@ -281,7 +281,7 @@ export default function AdaptiveLearningDemo() {
             ) : (
               <button
                 onClick={nextQuestion}
-                className="w-full py-3 rounded-md font-medium bg-green-500 text-white"
+                className="w-full py-3 rounded-md font-medium bg-green-500 text-white hover:bg-green-600 active:scale-95 transition-all"
               >
                 Continue
               </button>

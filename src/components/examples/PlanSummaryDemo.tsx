@@ -144,7 +144,7 @@ export default function PlanSummaryDemo() {
 
         {/* Strategy (collapsible) */}
         <div className="px-6 py-3 border-b border-primary">
-          <button onClick={() => setShowStrategy(!showStrategy)} className="flex items-center gap-2 text-sm font-medium text-text-primary w-full cursor-pointer">
+          <button onClick={() => setShowStrategy(!showStrategy)} className="flex items-center gap-2 text-sm font-medium text-text-primary w-full cursor-pointer rounded-lg py-1 -my-1 hover:bg-surface-secondary active:bg-surface-tertiary transition-colors">
             <svg className={`w-4 h-4 transition-transform ${showStrategy ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
             Strategy
           </button>

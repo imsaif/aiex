@@ -165,7 +165,7 @@ export default function VulnerableUserProtectionDemo() {
             <h3 className="text-lg font-semibold text-text-primary">Live Conversation</h3>
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className={`text-xs px-3 py-1 rounded transition-colors ${
+              className={`text-xs px-3 py-1 rounded transition-all active:scale-95 ${
                 isPlaying
                   ? 'bg-background-secondary text-text-primary border border-primary'
                   : 'bg-background-tertiary text-text-tertiary border border-background-tertiary hover:text-text-secondary'
