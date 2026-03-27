@@ -3,21 +3,25 @@
 import { useState, useEffect, useMemo } from 'react';
 import DOMPurify from 'dompurify';
 
-interface NewsletterDraft {
+interface NewsletterDraftSummary {
   id: string;
   title: string;
   slug: string;
   summary: string;
-  content: string;
-  publishDate: Date;
   status: string;
-  sources: unknown;
+  type: string;
+  publishDate: Date;
   createdAt: Date;
   updatedAt: Date;
 }
 
+interface NewsletterDraft extends NewsletterDraftSummary {
+  content: string;
+  sources: unknown;
+}
+
 interface AdminNewsletterClientProps {
-  drafts: NewsletterDraft[];
+  drafts: NewsletterDraftSummary[];
   selectedId?: string;
   initialAuth?: boolean;
 }
@@ -28,7 +32,7 @@ export default function AdminNewsletterClient({
   initialAuth = false,
 }: AdminNewsletterClientProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(initialAuth);
-  const [drafts, setDrafts] = useState<NewsletterDraft[]>(initialDrafts);
+  const [drafts, setDrafts] = useState<NewsletterDraftSummary[]>(initialDrafts);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
   const [activeDraft, setActiveDraft] = useState<NewsletterDraft | null>(null);
@@ -38,11 +42,14 @@ export default function AdminNewsletterClient({
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(false);
+  const [isLoadingDraft, setIsLoadingDraft] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [sendToSubscribers, setSendToSubscribers] = useState(false);
   const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
   const [isSendingTest, setIsSendingTest] = useState(false);
   const [showDraftList, setShowDraftList] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Sanitize HTML content for preview to prevent XSS and make links open in new tab
   const sanitizedPreviewContent = useMemo(() => {
@@ -55,21 +62,29 @@ export default function AdminNewsletterClient({
     return sanitized.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ');
   }, [editedContent]);
 
-  // Fetch drafts after authentication
+  // Fetch drafts after authentication (paginated)
+  const fetchDrafts = async (page: number, append = false) => {
+    setIsLoadingDrafts(true);
+    try {
+      const res = await fetch(`/api/newsletter/drafts?page=${page}&limit=20`);
+      const data = await res.json();
+      if (data.drafts) {
+        setDrafts(prev => append ? [...prev, ...data.drafts] : data.drafts);
+        setHasMore(data.pagination?.hasMore ?? false);
+        setCurrentPage(page);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoadingDrafts(false);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated && drafts.length === 0) {
-      setIsLoadingDrafts(true);
-      fetch('/api/newsletter/drafts')
-        .then((res) => res.json())
-        .then((data) => {
-          if (Array.isArray(data)) {
-            setDrafts(data);
-          }
-        })
-        .catch(console.error)
-        .finally(() => setIsLoadingDrafts(false));
+      fetchDrafts(1);
     }
-  }, [isAuthenticated, drafts.length]);
+  }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch subscriber count
   useEffect(() => {
@@ -85,26 +100,33 @@ export default function AdminNewsletterClient({
     }
   }, [isAuthenticated]);
 
+  // Fetch full draft content by ID
+  const fetchFullDraft = async (id: string) => {
+    setIsLoadingDraft(true);
+    try {
+      const res = await fetch(`/api/newsletter/drafts?id=${id}`);
+      const data = await res.json();
+      if (data && data.id) {
+        setActiveDraft(data);
+        setEditedContent(data.content);
+        setEditedTitle(data.title);
+        setEditedSummary(data.summary);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoadingDraft(false);
+    }
+  };
+
   // Set active draft based on selectedId or first pending draft
   useEffect(() => {
-    if (selectedId) {
-      const draft = drafts.find((d) => d.id === selectedId);
-      if (draft) {
-        setActiveDraft(draft);
-        setEditedContent(draft.content);
-        setEditedTitle(draft.title);
-        setEditedSummary(draft.summary);
-      }
-    } else {
-      const pendingDraft = drafts.find((d) => d.status === 'pending_review');
-      if (pendingDraft) {
-        setActiveDraft(pendingDraft);
-        setEditedContent(pendingDraft.content);
-        setEditedTitle(pendingDraft.title);
-        setEditedSummary(pendingDraft.summary);
-      }
+    if (drafts.length === 0) return;
+    const targetId = selectedId || drafts.find((d) => d.status === 'pending_review')?.id || drafts[0]?.id;
+    if (targetId && targetId !== activeDraft?.id) {
+      fetchFullDraft(targetId);
     }
-  }, [drafts, selectedId]);
+  }, [drafts, selectedId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -130,13 +152,10 @@ export default function AdminNewsletterClient({
     }
   };
 
-  const selectDraft = (draft: NewsletterDraft) => {
-    setActiveDraft(draft);
-    setEditedContent(draft.content);
-    setEditedTitle(draft.title);
-    setEditedSummary(draft.summary);
+  const selectDraft = (draft: NewsletterDraftSummary) => {
     setMessage(null);
-    setShowDraftList(false); // Close draft list on mobile
+    setShowDraftList(false);
+    fetchFullDraft(draft.id);
   };
 
   const saveDraft = async () => {
@@ -358,6 +377,15 @@ export default function AdminNewsletterClient({
                     </div>
                   </button>
                 ))}
+                {hasMore && (
+                  <button
+                    onClick={() => fetchDrafts(currentPage + 1, true)}
+                    disabled={isLoadingDrafts}
+                    className="w-full p-3 text-sm text-accent-primary hover:bg-background-secondary transition-colors"
+                  >
+                    {isLoadingDrafts ? 'Loading...' : 'Load more'}
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -377,33 +405,44 @@ export default function AdminNewsletterClient({
                 ) : drafts.length === 0 ? (
                   <p className="p-4 text-text-tertiary text-sm">No drafts found</p>
                 ) : (
-                  drafts.map((draft) => (
-                    <button
-                      key={draft.id}
-                      onClick={() => selectDraft(draft)}
-                      className={`w-full text-left p-4 hover:bg-background-secondary transition-colors ${
-                        activeDraft?.id === draft.id ? 'bg-accent-primary/10 border-l-2 border-accent-primary' : ''
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        <span
-                          className={`inline-block px-2 py-0.5 text-xs rounded-full ${
-                            draft.status === 'pending_review'
-                              ? 'bg-status-warning/20 text-status-warning'
-                              : draft.status === 'published'
-                                ? 'bg-status-success/20 text-status-success'
-                                : 'bg-background-secondary text-text-tertiary'
-                          }`}
-                        >
-                          {draft.status.replace('_', ' ')}
-                        </span>
-                      </div>
-                      <p className="font-medium text-text-primary text-sm truncate">{draft.title}</p>
-                      <p className="text-xs text-text-tertiary mt-1">
-                        {new Date(draft.createdAt).toLocaleDateString()}
-                      </p>
-                    </button>
-                  ))
+                  <>
+                    {drafts.map((draft) => (
+                      <button
+                        key={draft.id}
+                        onClick={() => selectDraft(draft)}
+                        className={`w-full text-left p-4 hover:bg-background-secondary transition-colors ${
+                          activeDraft?.id === draft.id ? 'bg-accent-primary/10 border-l-2 border-accent-primary' : ''
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span
+                            className={`inline-block px-2 py-0.5 text-xs rounded-full ${
+                              draft.status === 'pending_review'
+                                ? 'bg-status-warning/20 text-status-warning'
+                                : draft.status === 'published'
+                                  ? 'bg-status-success/20 text-status-success'
+                                  : 'bg-background-secondary text-text-tertiary'
+                            }`}
+                          >
+                            {draft.status.replace('_', ' ')}
+                          </span>
+                        </div>
+                        <p className="font-medium text-text-primary text-sm truncate">{draft.title}</p>
+                        <p className="text-xs text-text-tertiary mt-1">
+                          {new Date(draft.createdAt).toLocaleDateString()}
+                        </p>
+                      </button>
+                    ))}
+                    {hasMore && (
+                      <button
+                        onClick={() => fetchDrafts(currentPage + 1, true)}
+                        disabled={isLoadingDrafts}
+                        className="w-full p-3 text-sm text-accent-primary hover:bg-background-secondary transition-colors"
+                      >
+                        {isLoadingDrafts ? 'Loading...' : 'Load more'}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -411,7 +450,11 @@ export default function AdminNewsletterClient({
 
           {/* Main Content Area */}
           <div className="col-span-1 md:col-span-9">
-            {activeDraft ? (
+            {isLoadingDraft ? (
+              <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-8 text-center">
+                <p className="text-text-tertiary">Loading draft...</p>
+              </div>
+            ) : activeDraft ? (
               <div className="space-y-4">
                 {/* Action Bar - Mobile optimized */}
                 <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-3 md:p-4">

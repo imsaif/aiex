@@ -2,17 +2,60 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 
-// GET - List all drafts (requires admin auth)
+// GET - List drafts with pagination (requires admin auth)
 export async function GET(request: NextRequest) {
   if (!(await isAdminAuthenticated(request))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const drafts = await prisma.newsletterDraft.findMany({
-      orderBy: { createdAt: 'desc' },
+    const { searchParams } = new URL(request.url);
+
+    // Single draft by ID — returns full content
+    const id = searchParams.get('id');
+    if (id) {
+      const draft = await prisma.newsletterDraft.findUnique({ where: { id } });
+      if (!draft) {
+        return NextResponse.json({ error: 'Draft not found' }, { status: 404 });
+      }
+      return NextResponse.json(draft);
+    }
+
+    // Paginated list — lightweight (no content/sources/structuredData)
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '20', 10)));
+    const skip = (page - 1) * limit;
+
+    const [drafts, total] = await Promise.all([
+      prisma.newsletterDraft.findMany({
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          summary: true,
+          status: true,
+          type: true,
+          createdAt: true,
+          updatedAt: true,
+          publishDate: true,
+        },
+      }),
+      prisma.newsletterDraft.count(),
+    ]);
+
+    return NextResponse.json({
+      drafts,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasMore: skip + limit < total,
+      },
     });
-    return NextResponse.json(drafts);
   } catch (error) {
     console.error('Failed to fetch drafts:', error);
     return NextResponse.json({ error: 'Failed to fetch drafts' }, { status: 500 });
