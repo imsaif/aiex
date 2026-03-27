@@ -19,6 +19,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import type { AnalysisResults, PatternResult, TopGap, ProductContext } from '@/types/audit';
 import { PatternModal } from './PatternModal';
 import { EmailReportModal } from './EmailReportModal';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 // Extended results type that includes context-first fields when available
 interface ExtendedResults extends AnalysisResults {
@@ -307,6 +308,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
 
       const assistantMessage: ChatMessage = { role: 'assistant', content: data.response };
       setMessages((prev) => [...prev, assistantMessage]);
+      trackAuditEvent('audit_chat_message_sent', { messageCount: messages.length + 2 });
     } catch (error) {
       console.error('Chat error:', error);
       setMessages((prev) => [
@@ -602,6 +604,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-block mt-2 text-xs text-accent-primary hover:underline"
+                          onClick={() => trackAuditEvent('audit_resource_clicked', { resource: gap.resource, pattern: gap.pattern })}
                         >
                           Learn more &rarr;
                         </a>
@@ -931,6 +934,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
         isOpen={showEmailModal}
         onClose={() => setShowEmailModal(false)}
         results={results}
+        productContext={results.productContext}
       />
     </aside>
   );

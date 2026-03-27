@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-27 21:12 (MacBook)
+- **Pattern:** Audit Page UX + Phase 4 Instrumentation
+- **Status:** ✅ Completed
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Audit hero cards layout: changed from 3+2 grid to single-row 5-column layout (grid-cols-5, max-w-5xl), evened out card text lengths. Wired all 8 audit analytics events to Microsoft Clarity custom events (was console.log only). Added 5 missing event calls: audit_gap_found, audit_resource_clicked, audit_chat_message_sent, audit_step_completed (screenshot), audit_email_report_sent. Updated email report: added product context section (type + AI capabilities), fixed CTA "28→36 patterns". Documented Phase 4 monetization strategy in memory with decision checklist (50+ sessions before any gating).
+
 ### Session 2026-03-27 17:55 (MacBook)
 - **Pattern:** Dead Click & Rage Click Audit
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Added click-through hooks to FAQ JSON-LD schema answers in structuredData.ts. FAQ answers now end with dynamic product names and value props ("See real-world examples from..., interactive demos, and implementation guidelines") to encourage clicks from featured snippets instead of zero-click answers. Addresses GSC queries ranking pos 1-5 with 0 clicks (e.g. "what design pattern involves gradually revealing information" at pos 1.53).
 
 ### Session 2026-03-19 20:19 (MacBook)
-- **Pattern:** Audit Page Chrome Fix + SEO
-- **Status:** ✅ Completed
-- **Files Changed:** 9
-- **Tests Added/Modified:** 1
-- **Notes:** Fixed audit page Chrome visibility: replaced 100vh with dvh (dynamic viewport height) for canvas, bottom sheet, and image sizing. Capped sidebar width with min(420px,45vw) to prevent overflow at 1024-1200px. Fixed mobile navbar horizontal overflow (gap-1/px-2 on small screens). Added Playwright viewport screenshot tests across 8 screen sizes (375-1920px). Made How It Works steps vertical on mobile. SEO Phase 1: Added server-rendered content, FAQ JSON-LD schema, and improved meta targeting "ai ux audit tool" queries (pos 7.5). SEO Phase 2: Added custom meta titles/descriptions for top 10 pattern pages by impressions (progressive-disclosure, conversational-ui, privacy-first-design, confidence-visualization, adaptive-interfaces, context-switching, multimodal-interaction, feedback-loops, error-recovery, contextual-assistance).
-
-### Session 2026-03-19 14:57 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

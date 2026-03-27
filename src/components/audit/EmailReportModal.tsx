@@ -2,15 +2,17 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { XMarkIcon, EnvelopeIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import type { AnalysisResults } from '@/types/audit';
+import type { AnalysisResults, ProductContext } from '@/types/audit';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 interface EmailReportModalProps {
   isOpen: boolean;
   onClose: () => void;
   results: AnalysisResults;
+  productContext?: ProductContext;
 }
 
-export function EmailReportModal({ isOpen, onClose, results }: EmailReportModalProps) {
+export function EmailReportModal({ isOpen, onClose, results, productContext }: EmailReportModalProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export function EmailReportModal({ isOpen, onClose, results }: EmailReportModalP
       const response = await fetch('/api/audit/send-report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, results, website_url: '' }),
+        body: JSON.stringify({ email, results, productContext, website_url: '' }),
       });
 
       const data = await response.json();
@@ -63,6 +65,7 @@ export function EmailReportModal({ isOpen, onClose, results }: EmailReportModalP
       }
 
       setSuccess(true);
+      trackAuditEvent('audit_email_report_sent', { score: results.score, maxScore: results.maxScore });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send report');
     } finally {

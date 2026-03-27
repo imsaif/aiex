@@ -117,6 +117,17 @@ export default function AuditClient() {
         productType,
         gapsFound: data.topGaps?.length || 0,
       });
+
+      // Track individual gaps found
+      if (data.topGaps) {
+        for (const gap of data.topGaps) {
+          trackAuditEvent('audit_gap_found', {
+            pattern: gap.pattern,
+            status: gap.status,
+            productType,
+          });
+        }
+      }
     } catch (error) {
       console.error('Analysis error:', error);
       setStep('screenshot');
@@ -224,7 +235,7 @@ export default function AuditClient() {
           {/* INTAKE FLOW — Standard site hero layout */}
           <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
             <div className="max-w-7xl mx-auto px-6">
-              <div className="text-center max-w-4xl mx-auto">
+              <div className="text-center max-w-5xl mx-auto">
                 {/* Step 1: Hero with product type selection */}
                 {step === 'product-type' && (
                   <>
@@ -269,6 +280,7 @@ export default function AuditClient() {
                       setProductDescription(desc);
                       setAiRole(roles);
                       setStep('screenshot');
+                      trackAuditEvent('audit_step_completed', { step: 'screenshot', productType });
                     }}
                   />
                 )}

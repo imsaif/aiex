@@ -12,11 +12,11 @@ import {
 import type { ComponentType, SVGProps } from 'react';
 
 const productOptions: { id: ProductType; label: string; desc: string; icon: ComponentType<SVGProps<SVGSVGElement>> }[] = [
-  { id: 'chat-interface', label: 'Chat interface', desc: 'Conversational AI, support bots, assistants', icon: ChatBubbleLeftRightIcon },
-  { id: 'ai-agent', label: 'AI agent or workflow', desc: 'Takes actions, multi-step tasks, automation', icon: CpuChipIcon },
-  { id: 'recommendation-system', label: 'Recommendations', desc: 'Surfaces content, ranks options, predicts', icon: SparklesIcon },
-  { id: 'content-generation', label: 'Content generation', desc: 'Writes, designs, codes, or creates', icon: DocumentTextIcon },
-  { id: 'other', label: 'Something else', desc: 'Other AI-powered product', icon: CubeTransparentIcon },
+  { id: 'chat-interface', label: 'Chat interface', desc: 'Conversational AI, bots, assistants', icon: ChatBubbleLeftRightIcon },
+  { id: 'ai-agent', label: 'AI agent', desc: 'Multi-step tasks, automation, actions', icon: CpuChipIcon },
+  { id: 'recommendation-system', label: 'Recommendations', desc: 'Content surfacing, ranking, predictions', icon: SparklesIcon },
+  { id: 'content-generation', label: 'Content generation', desc: 'Writing, design, code, creation', icon: DocumentTextIcon },
+  { id: 'other', label: 'Something else', desc: 'Other AI-powered products', icon: CubeTransparentIcon },
 ];
 
 interface AnchorQuestionProps {
@@ -25,8 +25,8 @@ interface AnchorQuestionProps {
 
 export function AnchorQuestion({ onSelect }: AnchorQuestionProps) {
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <div className="grid grid-cols-3 gap-4">
+    <div className="w-full max-w-5xl mx-auto">
+      <div className="grid grid-cols-5 gap-4">
         {productOptions.map((option) => {
           const Icon = option.icon;
           return (

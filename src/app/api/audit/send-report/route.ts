@@ -9,8 +9,15 @@ import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
 
 // Request validation schema
+const productContextSchema = z.object({
+  productType: z.string(),
+  productDescription: z.string(),
+  aiRole: z.array(z.string()),
+}).optional();
+
 const sendReportSchema = z.object({
   email: z.string().email('Invalid email address'),
+  productContext: productContextSchema,
   results: z.object({
     id: z.string(),
     score: z.number(),
@@ -67,7 +74,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { email, results } = sendReportSchema.parse(body);
+    const { email, results, productContext } = sendReportSchema.parse(body);
 
     // Bot protection: honeypot + disposable email check
     const securityError = validateEmailSecurity(email, body);
@@ -76,7 +83,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate and send the email
-    const emailHtml = generateAuditReportEmail(results as AnalysisResults);
+    const emailHtml = generateAuditReportEmail(results as AnalysisResults, productContext);
 
     await resend.emails.send({
       from: 'AI UX Patterns <imran@aiuxdesign.guide>',
@@ -165,7 +172,18 @@ function generatePatternListHtml(patterns: PatternResult[], color: string): stri
   }).join('');
 }
 
-function generateAuditReportEmail(results: AnalysisResults): string {
+function formatProductType(type: string): string {
+  const labels: Record<string, string> = {
+    'chat-interface': 'Chat Interface',
+    'ai-agent': 'AI Agent / Workflow',
+    'recommendation-system': 'Recommendation System',
+    'content-generation': 'Content Generation',
+    'other': 'AI Product',
+  };
+  return labels[type] || type;
+}
+
+function generateAuditReportEmail(results: AnalysisResults, productContext?: { productType: string; productDescription: string; aiRole: string[] }): string {
   const allPatterns = Object.values(results.patterns);
   const goodPatterns = allPatterns.filter(p => p.status === 'well-implemented');
   const weakPatterns = allPatterns.filter(p => p.status === 'weak');
@@ -227,8 +245,30 @@ function generateAuditReportEmail(results: AnalysisResults): string {
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 32px 24px; text-align: center; border-radius: 12px 12px 0 0;">
           <h1 style="color: #ffffff; margin: 0 0 8px 0; font-size: 24px; font-weight: 700;">Your AI UX Audit Report</h1>
-          <p style="color: #94a3b8; margin: 0; font-size: 14px;">${results.detectedComponent || 'AI Interface'}</p>
+          <p style="color: #94a3b8; margin: 0; font-size: 14px;">${productContext?.productDescription || results.detectedComponent || 'AI Interface'}</p>
         </div>
+
+        ${productContext ? `
+        <!-- Product Context -->
+        <div style="background: #f8fafc; padding: 20px 24px; border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td style="padding: 4px 0;">
+                <span style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Product Type</span>
+                <p style="margin: 2px 0 0 0; font-size: 14px; font-weight: 600; color: #1a1a1a;">${formatProductType(productContext.productType)}</p>
+              </td>
+            </tr>
+            ${productContext.aiRole.length > 0 ? `
+            <tr>
+              <td style="padding: 8px 0 0 0;">
+                <span style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">AI Capabilities</span>
+                <p style="margin: 2px 0 0 0; font-size: 14px; color: #1a1a1a;">${productContext.aiRole.join(' · ')}</p>
+              </td>
+            </tr>
+            ` : ''}
+          </table>
+        </div>
+        ` : ''}
 
         <!-- Score Section -->
         <div style="background: #ffffff; padding: 32px 24px; border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb;">
@@ -333,7 +373,7 @@ function generateAuditReportEmail(results: AnalysisResults): string {
           <p style="margin: 0 0 16px 0; color: #6b7280; font-size: 14px;">Learn how to implement these patterns:</p>
           <a href="https://www.aiuxdesign.guide"
              style="display: inline-block; background: #000; color: #fff; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-            Explore All 28 Patterns
+            Explore All 36 Patterns
           </a>
         </div>
 
