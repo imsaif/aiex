@@ -563,9 +563,10 @@ This section documents issues we've encountered and their solutions, so Claude r
 
 | Issue | Date | Solution |
 |-------|------|----------|
-| **Vercel Hobby cron doesn't execute** | Jan 2026 | Vercel free/hobby tier cron jobs are configured in `vercel.json` but don't reliably trigger. Use **cron-job.org** (free) as external trigger instead. |
-| **cron-job.org timeout kills newsletter generation** | Mar 2026 | Newsletter route fetches RSS + calls Claude API (~30-60s). cron-job.org default timeout is 30s — too short. **Fix: increase cron-job.org timeout to 60s.** Symptom: "Failed (timeout)" in cron-job.org dashboard. Side effects: weekly timeout causes daily to run instead (no weekly found to skip), or no newsletter created at all. **This is a recurring issue — check timeout first before investigating code.** |
-| **Duplicate cron runs from dual triggers** | Mar 2026 | If both Vercel crons (`vercel.json`) and cron-job.org are active, the endpoint gets hit twice. Only use ONE trigger system. Vercel hobby is unreliable, so prefer cron-job.org and remove/ignore `crons` in `vercel.json`. |
+| **Vercel Hobby cron doesn't execute** | Jan 2026 | Vercel free/hobby tier cron jobs don't reliably trigger. Use **cron-job.org** (free) as external trigger instead. `vercel.json` must NOT have `crons` — removed Mar 29 2026. |
+| **cron-job.org timeout kills newsletter generation** | Mar 2026 | Newsletter route fetches RSS + calls Claude API. **Fix (Mar 29):** switched Claude model from Sonnet to Haiku (5-10x faster), reduced RSS timeouts from 5s to 3s. Generation now fits well within 60s. Uses `after()` to respond instantly to cron-job.org while running generation in background. |
+| **Duplicate cron runs from dual triggers** | Mar 2026 | **Root cause of "every other day" failures.** Vercel Hobby crons in `vercel.json` fired ~50% of days, racing with cron-job.org and causing silent failures via the `after()` race window. **Fix (Mar 29):** removed `crons` from `vercel.json` entirely — cron-job.org is the SOLE trigger. Also added duplicate re-check before DB insert as safety net. **DO NOT re-add crons to vercel.json.** |
+| **Vercel 60s function timeout** | Mar 2026 | Vercel Hobby max function duration is 60s (set in `vercel.json`). Newsletter generation must complete within this. If timeouts recur: (1) check Claude model is Haiku not Sonnet, (2) check RSS timeout is 3s not 5s, (3) consider reducing RSS_SOURCES count (currently 20). |
 
 **cron-job.org Setup:**
 - Daily newsletter: `0 3 * * *` (3 AM UTC / 8:30 AM IST) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
@@ -609,6 +610,8 @@ When newsletter doesn't run or emails don't send:
 7. **Common issues:**
    - 401 Unauthorized → Wrong CRON_SECRET in cron-job.org
    - No newsletter created → Check if "quiet day" (no news) or duplicate prevention blocked it
+   - Vercel Runtime Timeout → Claude model must be Haiku (not Sonnet), RSS timeout must be 3s. Check `route.ts` lines ~20 and ~1034
+   - "Every other day" failures → Someone re-added `crons` to `vercel.json`. Remove them — cron-job.org is the sole trigger
    - Transactional emails not sent → Check RESEND_API_KEY is valid
    - Subscriber not synced to Beehiiv → Check BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID
 
