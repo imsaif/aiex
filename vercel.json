@@ -4,15 +4,5 @@
     "src/app/api/cron/generate-newsletter/route.ts": {
       "maxDuration": 60
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/generate-newsletter",
-      "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/cron/generate-newsletter?type=weekly",
-      "schedule": "0 2 * * 1"
-    }
-  ]
+  }
 }

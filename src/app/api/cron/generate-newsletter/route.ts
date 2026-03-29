@@ -1063,8 +1063,20 @@ async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean
       structuredData = dailyData;
     }
 
-    // Save draft
+    // Save draft (re-check for duplicates to guard against race conditions from concurrent triggers)
     const slug = generateSlug(title, type);
+    const duplicateCheck = await prisma.newsletterDraft.findFirst({
+      where: {
+        type,
+        createdAt: { gte: todayStart, lt: tomorrowStart },
+        status: { in: ['published', 'pending_review'] },
+      },
+    });
+    if (duplicateCheck) {
+      console.log(`[newsletter] Skipped: ${type} newsletter was created by a concurrent request (${duplicateCheck.id})`);
+      return;
+    }
+
     const draft = await prisma.newsletterDraft.create({
       data: {
         title,
