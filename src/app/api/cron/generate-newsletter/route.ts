@@ -17,7 +17,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
 
 const parser = new Parser({
-  timeout: 5000,
+  timeout: 3000,
   headers: {
     'User-Agent': 'AIUX-Newsletter-Bot/1.0',
   },
@@ -62,7 +62,7 @@ const RSS_SOURCES = [
 async function scrapeAnthropicNews(): Promise<NewsItem[]> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
     const response = await fetch('https://www.anthropic.com/news', {
       headers: { 'User-Agent': 'AIUX-Newsletter-Bot/1.0' },
       signal: controller.signal,
@@ -1031,7 +1031,7 @@ async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean
     }
 
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: type === 'weekly' ? 4096 : 2048,
       messages: [{ role: 'user', content: prompt }],
     });
