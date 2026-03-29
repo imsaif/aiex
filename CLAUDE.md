@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-29 10:15 (MacBook)
+- **Pattern:** Newsletter Cron Dual-Trigger Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed recurring every-other-day newsletter failures. Root cause: `vercel.json` still had active `crons` entries alongside cron-job.org, causing dual triggers. Vercel Hobby crons fire ~50% of the time, creating race conditions with cron-job.org via the `after()` background callback. Fix: removed crons from vercel.json (cron-job.org is sole trigger), added duplicate re-check before DB insert as race condition safety net. Manually triggered today's missed newsletter.
+
 ### Session 2026-03-27 21:12 (MacBook)
 - **Pattern:** Audit Page UX + Phase 4 Instrumentation
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Investigated newsletter cron failures. Discovered Vercel's internal crons were successfully generating weeklies (Mar 2, 9, 16) while cron-job.org was newly added and timing out at 30s. Attempted background processing refactors (next/server after(), @vercel/functions waitUntil, two-step split) — all failed due to Vercel hobby 60s cap. Reverted to original synchronous handler which works with Vercel's internal cron. Generated today's weekly locally. Root cause of duplicate dailies: both Vercel and cron-job.org firing simultaneously. Fix: deleted weekly cron from cron-job.org, staggered daily to 10 min after Vercel. Created comprehensive memory records to prevent re-investigation.
 
 ### Session 2026-03-19 20:31 (MacBook)
-- **Pattern:** SEO Phase 3 — Featured Snippet Optimization
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Added click-through hooks to FAQ JSON-LD schema answers in structuredData.ts. FAQ answers now end with dynamic product names and value props ("See real-world examples from..., interactive demos, and implementation guidelines") to encourage clicks from featured snippets instead of zero-click answers. Addresses GSC queries ranking pos 1-5 with 0 clicks (e.g. "what design pattern involves gradually revealing information" at pos 1.53).
-
-### Session 2026-03-19 20:19 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
