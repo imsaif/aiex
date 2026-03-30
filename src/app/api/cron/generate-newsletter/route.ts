@@ -1110,14 +1110,33 @@ async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean
 
   try {
     await runGeneration(type, lookbackHours, deduplicationDays, todayStart, tomorrowStart);
+    await pingHealthcheck(type);
   } catch (error) {
     console.error('[newsletter] Full generation failed, retrying in lite mode:', error);
     try {
       await runGeneration(type, lookbackHours, deduplicationDays, todayStart, tomorrowStart, true);
+      await pingHealthcheck(type);
     } catch (retryError) {
       console.error('[newsletter] Lite retry also failed:', retryError);
+      await pingHealthcheck(type, true);
       await sendFailureAlert(type, retryError);
     }
+  }
+}
+
+// Ping Healthchecks.io dead man's switch after newsletter generation.
+// If the ping doesn't arrive on schedule, Healthchecks sends an alert.
+// Set HEALTHCHECK_PING_URL_DAILY and HEALTHCHECK_PING_URL_WEEKLY in env.
+async function pingHealthcheck(type: NewsletterType, failed = false) {
+  const envKey = type === 'weekly' ? 'HEALTHCHECK_PING_URL_WEEKLY' : 'HEALTHCHECK_PING_URL_DAILY';
+  const pingUrl = process.env[envKey];
+  if (!pingUrl) return;
+
+  try {
+    await fetch(failed ? `${pingUrl}/fail` : pingUrl, { method: 'GET' });
+  } catch (err) {
+    // Non-critical — don't let monitoring failure break newsletter generation
+    console.error('[newsletter] Healthcheck ping failed:', err);
   }
 }
 
@@ -1129,9 +1148,15 @@ export async function GET(request: NextRequest) {
   }
 
   const url = new URL(request.url);
-  const type = (url.searchParams.get('type') || 'daily') as NewsletterType;
+  const requestedType = url.searchParams.get('type') as NewsletterType | null;
   const forceRegenerate = url.searchParams.get('force') === 'true';
   const customLookbackHours = url.searchParams.get('lookbackHours');
+
+  // Auto-detect Monday: always generate weekly on Mondays, regardless of query param.
+  // This prevents the recurring issue where cron-job.org's weekly job fails to fire
+  // and the daily job generates a daily newsletter instead of the expected weekly.
+  const isMonday = new Date().getUTCDay() === 1;
+  const type: NewsletterType = requestedType || (isMonday ? 'weekly' : 'daily');
 
   // For daily: Skip if a weekly was already published today (quick DB check before responding)
   if (type === 'daily') {
