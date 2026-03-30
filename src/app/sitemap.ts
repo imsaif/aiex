@@ -69,6 +69,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     // /search excluded — blocked in robots.txt
+    {
+      url: `${baseUrl}/aiuxdesign.gist.design`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
   ];
 
   // Pattern pages - 24 AI design patterns
