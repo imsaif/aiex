@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-30 13:56 (MacBook)
+- **Pattern:** Newsletter Cron Fix + gist.design Dogfooding
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed 4th newsletter cron failure in 8 days — Monday weekly not generating (daily generated instead). Added Monday auto-detect (`getUTCDay() === 1`) to auto-promote to weekly regardless of cron-job.org params. Added Healthchecks.io dead man's switch integration (ping on success, `/fail` on failure) with `HEALTHCHECK_PING_URL_DAILY`/`HEALTHCHECK_PING_URL_WEEKLY` env vars. Created `public/aiuxdesign.gist.design` — dogfooding the gist.design format on aiuxdesign.guide itself. Ran "before" measurement: LLMs get pattern count wrong (28 vs 36), miss interactive demos entirely, conflate with competitor sites (aiuxpatterns.com, shapeof.ai), and describe audit tool generically. The .gist.design file fixes all these. Added `<link rel="gist-design">` in layout.tsx head for crawler discovery. Created memory record tracking all 4 newsletter cron incidents for future sessions.
+
 ### Session 2026-03-29 10:15 (MacBook)
 - **Pattern:** Newsletter Cron Dual-Trigger Fix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Changed newsletter email header "AI UX Design Guide" link from homepage to the specific newsletter page (`/news/[slug]`), matching the "View in browser" link. Also created comprehensive memory records documenting newsletter cron anti-patterns (after, waitUntil, two-step split, 2048 tokens) to prevent repeating failed approaches.
 
 ### Session 2026-03-23 20:21 (MacBook)
-- **Pattern:** Newsletter Cron Investigation & Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Investigated newsletter cron failures. Discovered Vercel's internal crons were successfully generating weeklies (Mar 2, 9, 16) while cron-job.org was newly added and timing out at 30s. Attempted background processing refactors (next/server after(), @vercel/functions waitUntil, two-step split) — all failed due to Vercel hobby 60s cap. Reverted to original synchronous handler which works with Vercel's internal cron. Generated today's weekly locally. Root cause of duplicate dailies: both Vercel and cron-job.org firing simultaneously. Fix: deleted weekly cron from cron-job.org, staggered daily to 10 min after Vercel. Created comprehensive memory records to prevent re-investigation.
-
-### Session 2026-03-19 20:31 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

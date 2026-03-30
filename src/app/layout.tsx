@@ -45,6 +45,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={satoshi.variable}>
       <head>
+        {/* Machine-readable product design decisions for AI tools and LLMs */}
+        <link rel="gist-design" href="/aiuxdesign.gist.design" type="text/markdown" />
         {/* ChunkLoadError recovery — auto-reload on stale chunk after deploy */}
         <script
           dangerouslySetInnerHTML={{
