@@ -19,6 +19,17 @@ export default function Footer() {
               <p className="text-text-secondary text-base leading-relaxed">
                 AI UX patterns from shipped products. Demos, code, and real examples.
               </p>
+              <a
+                href="https://aiuxdesign.featurebase.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-4 px-4 py-2 text-sm font-medium text-text-secondary border border-primary rounded-lg hover:text-accent-primary hover:border-accent-primary transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" width="16" height="16">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                Have an idea? Share feedback
+              </a>
             </div>
 
             {/* Right Section: Footer Columns */}
@@ -111,14 +122,6 @@ export default function Footer() {
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       Designer Guides
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="mailto:imranrizom@gmail.com"
-                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
-                    >
-                      Submit Feedback
                     </a>
                   </li>
                   <li>
