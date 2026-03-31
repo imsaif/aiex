@@ -88,12 +88,10 @@ export default function SocialAccountsClient({
   const fetchNewsletters = async () => {
     setIsLoadingNewsletters(true);
     try {
-      const res = await fetch('/api/newsletter/drafts');
+      const res = await fetch('/api/newsletter/drafts?status=published');
       const data = await res.json();
-      if (Array.isArray(data)) {
-        // Only show published newsletters
-        const published = data.filter((n: Newsletter) => n.status === 'published');
-        setNewsletters(published);
+      if (data.drafts && Array.isArray(data.drafts)) {
+        setNewsletters(data.drafts);
       }
     } catch (error) {
       console.error('Failed to fetch newsletters:', error);

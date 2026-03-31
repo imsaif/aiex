@@ -17,6 +17,7 @@ export default function PublishClient() {
   const [newsletters, setNewsletters] = useState<Newsletter[]>([]);
   const [selectedNewsletter, setSelectedNewsletter] = useState<Newsletter | null>(null);
   const [isLoadingNewsletters, setIsLoadingNewsletters] = useState(false);
+  const [isLoadingContent, setIsLoadingContent] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   useEffect(() => {
@@ -26,11 +27,10 @@ export default function PublishClient() {
   const fetchNewsletters = async () => {
     setIsLoadingNewsletters(true);
     try {
-      const res = await fetch('/api/newsletter/drafts');
+      const res = await fetch('/api/newsletter/drafts?status=published');
       const data = await res.json();
-      if (Array.isArray(data)) {
-        const published = data.filter((n: Newsletter) => n.status === 'published');
-        setNewsletters(published);
+      if (data.drafts && Array.isArray(data.drafts)) {
+        setNewsletters(data.drafts);
       }
     } catch (error) {
       console.error('Failed to fetch newsletters:', error);
@@ -78,10 +78,25 @@ export default function PublishClient() {
             </label>
             <select
               value={selectedNewsletter?.id || ''}
-              onChange={(e) => {
+              onChange={async (e) => {
                 const nl = newsletters.find((n) => n.id === e.target.value);
-                setSelectedNewsletter(nl || null);
                 setCopiedField(null);
+                if (!nl) {
+                  setSelectedNewsletter(null);
+                  return;
+                }
+                setIsLoadingContent(true);
+                try {
+                  const res = await fetch(`/api/newsletter/drafts?id=${nl.id}`);
+                  const full = await res.json();
+                  if (full && full.id) {
+                    setSelectedNewsletter(full);
+                  }
+                } catch {
+                  setSelectedNewsletter(nl as Newsletter);
+                } finally {
+                  setIsLoadingContent(false);
+                }
               }}
               className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-md text-text-primary focus:ring-2 focus:ring-accent-primary focus:border-accent-primary"
               disabled={isLoadingNewsletters}
@@ -149,7 +164,13 @@ export default function PublishClient() {
 
         {/* RIGHT MAIN: Newsletter Preview */}
         <div className="md:col-span-8 space-y-6">
-          {!selectedNewsletter ? (
+          {isLoadingContent ? (
+            <div className="bg-surface-primary rounded-lg border border-border-primary p-6">
+              <div className="text-center py-8">
+                <p className="text-text-tertiary">Loading newsletter...</p>
+              </div>
+            </div>
+          ) : !selectedNewsletter ? (
             <div className="bg-surface-primary rounded-lg border border-border-primary p-6">
               <div className="text-center py-8">
                 <p className="text-text-tertiary">Select a newsletter to preview and copy to Beehiiv</p>
