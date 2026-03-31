@@ -7,7 +7,7 @@
 
 // Rate limit configuration
 export const RATE_LIMITS = {
-  ANALYSES_PER_DAY: 3,      // 3 analyses per day per IP
+  ANALYSES_PER_DAY: 10,     // Server-side safety net (client-side localStorage paywall is primary gate at 3)
   CHATS_PER_SESSION: 5,     // 5 chat messages per analysis session
 } as const;
 

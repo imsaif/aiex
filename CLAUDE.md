@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-03-31 19:48 (MacBook)
+- **Pattern:** Fake-Door Paywall for Audit Tool
+- **Status:** ✅ Completed
+- **Files Changed:** 10
+- **Tests Added/Modified:** 0
+- **Notes:** Implemented fake-door paywall monetization strategy for audit tool. localStorage-based lifetime audit counter (3 free). Progressive funnel: info chip shows remaining audits, amber "1 remaining" banner at audit 2, full paywall modal with 3-tier pricing display + "Join Early Access List" email capture at audit 4. Waitlist API syncs to Beehiiv with `paywall-waitlist` utm_source tag for segmentation. SaveReportNudge prompts email save after 2nd audit. Server-side rate limit bumped to 10/day as safety net (localStorage is primary gate). No Stripe, no auth — validation gate is 10+ waitlist signups before building payments.
+
 ### Session 2026-03-30 13:56 (MacBook)
 - **Pattern:** Newsletter Cron Fix + gist.design Dogfooding
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Performance optimization pass across site and audit page. Simplified grain SVG (numOctaves 4→2), reduced Clarity fallback timeout (4s→1.5s). Audit page: compressed SocialProof image (1.6MB→59KB), removed framer-motion from SocialProof (8 motion.divs→plain divs), removed radial gradient from canvas, lazy-loaded demo data. SEO: added OG image, Twitter card, canonical URL, H1 tag, ISR revalidate, FAQ click-through hooks, internal links to pattern pages. Dead clicks: removed shadow-card from use case cards, de-styled feature pills.
 
 ### Session 2026-03-23 20:28 (MacBook)
-- **Pattern:** Newsletter Email Header Link Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** Changed newsletter email header "AI UX Design Guide" link from homepage to the specific newsletter page (`/news/[slug]`), matching the "View in browser" link. Also created comprehensive memory records documenting newsletter cron anti-patterns (after, waitUntil, two-step split, 2048 tokens) to prevent repeating failed approaches.
-
-### Session 2026-03-23 20:21 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

@@ -10,7 +10,11 @@ type AuditEvent =
   | 'audit_resource_clicked'
   | 'audit_chat_message_sent'
   | 'audit_session_completed'
-  | 'audit_email_report_sent';
+  | 'audit_email_report_sent'
+  | 'audit_paywall_shown'
+  | 'audit_paywall_waitlist_signup'
+  | 'audit_remaining_banner_shown'
+  | 'audit_save_nudge_shown';
 
 declare global {
   interface Window {

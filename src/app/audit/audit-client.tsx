@@ -8,6 +8,9 @@ import { FloatingResultsSidebar } from '@/components/audit/FloatingResultsSideba
 import { AnchorQuestion } from '@/components/audit/AnchorQuestion';
 import { BranchedFollowUp } from '@/components/audit/BranchedFollowUp';
 import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
+import { SaveReportNudge } from '@/components/audit/SaveReportNudge';
+import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
+import { useAuditCount } from '@/hooks/useAuditCount';
 import type { AnalysisResults, AuditStep, ProductType } from '@/types/audit';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 
@@ -30,6 +33,11 @@ const UsageLimitModal = dynamic(
   { ssr: false }
 );
 
+const PaywallModal = dynamic(
+  () => import('@/components/audit/PaywallModal').then(mod => ({ default: mod.PaywallModal })),
+  { ssr: false }
+);
+
 export default function AuditClient() {
   // Multi-step flow state
   const [step, setStep] = useState<AuditStep>('product-type');
@@ -46,6 +54,11 @@ export default function AuditClient() {
   const [showDeviceFrame, setShowDeviceFrame] = useState(true);
   const [chatTrigger, setSidebarExpandTrigger] = useState(0);
 
+  // Paywall state
+  const { auditCount, incrementAuditCount, isPaywalled, auditsRemaining } = useAuditCount();
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [emailReportTrigger, setEmailReportTrigger] = useState(0);
+
   const hasResults = !!(isAnalyzing || analysisResults);
 
   // Handle demo mode — lazy-load demo data only when triggered
@@ -61,11 +74,8 @@ export default function AuditClient() {
     setAnalysisResults(DEMO_ANALYSIS_RESULTS);
   }, []);
 
-  // Handle analyze from ScreenshotUpload — user clicked "Analyze"
-  const handleScreenshotUpload = useCallback(async (images: UploadedImage[]) => {
-    setUploadedImages(images);
-    setShowDeviceFrame(true);
-    setStep('results');
+  // Run analysis against the API
+  const runAnalysis = useCallback(async (images: UploadedImage[]) => {
     setIsAnalyzing(true);
     setRateLimitError(null);
 
@@ -112,6 +122,7 @@ export default function AuditClient() {
       }
 
       setAnalysisResults(data as AnalysisResults);
+      incrementAuditCount();
       trackAuditEvent('audit_session_completed', {
         score: data.score,
         productType,
@@ -134,7 +145,21 @@ export default function AuditClient() {
     } finally {
       setIsAnalyzing(false);
     }
-  }, [productType, productDescription, aiRole]);
+  }, [productType, productDescription, aiRole, incrementAuditCount]);
+
+  // Handle analyze from ScreenshotUpload — user clicked "Analyze"
+  const handleScreenshotUpload = useCallback(async (images: UploadedImage[]) => {
+    // Check paywall before running analysis
+    if (isPaywalled) {
+      setShowPaywall(true);
+      return;
+    }
+
+    setUploadedImages(images);
+    setShowDeviceFrame(true);
+    setStep('results');
+    await runAnalysis(images);
+  }, [isPaywalled, runAnalysis]);
 
   // Handle images upload from CenterUpload (results view — adding more images)
   const handleImagesUpload = useCallback((images: UploadedImage[]) => {
@@ -146,57 +171,14 @@ export default function AuditClient() {
   const handleStartAnalysis = useCallback(async () => {
     if (uploadedImages.length === 0) return;
 
-    setIsAnalyzing(true);
-    setRateLimitError(null);
-
-    try {
-      const primaryDeviceType = uploadedImages[0].deviceType;
-
-      const context = {
-        interfaceType: 'other' as const,
-        mainConcern: 'usability' as const,
-        userGoal: 'exploring-options' as const,
-        deviceType: primaryDeviceType,
-      };
-
-      const imagesPayload = uploadedImages.map(img => ({
-        base64: img.base64.split(',')[1],
-        deviceType: img.deviceType,
-      }));
-
-      const response = await fetch('/api/analyze-pattern', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          context,
-          imageBase64: imagesPayload[0].base64,
-          images: imagesPayload,
-          deviceType: primaryDeviceType,
-          productType,
-          productDescription,
-          aiRole,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 429) {
-        setRateLimitError(data.message || "You've used all your free analyses for today. Come back tomorrow!");
-        setUploadedImages([]);
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Analysis failed');
-      }
-
-      setAnalysisResults(data as AnalysisResults);
-    } catch (error) {
-      console.error('Analysis error:', error);
-    } finally {
-      setIsAnalyzing(false);
+    // Check paywall before running analysis
+    if (isPaywalled) {
+      setShowPaywall(true);
+      return;
     }
-  }, [uploadedImages, productType, productDescription, aiRole]);
+
+    await runAnalysis(uploadedImages);
+  }, [uploadedImages, isPaywalled, runAnalysis]);
 
   // Handle clear/reset — go back to step 1
   const handleClear = useCallback(() => {
@@ -220,6 +202,14 @@ export default function AuditClient() {
     if (el) el.style.display = isIntakeFlow ? '' : 'none';
   }, [isIntakeFlow]);
 
+  // Show nudge/banner conditions (only for real audits, not demos)
+  // Save nudge: show in results view after 2nd audit completes (auditCount === 2)
+  const showSaveNudge = !isDemoMode && analysisResults && auditCount === 2;
+  // Remaining banner: show in results view after 2nd audit (1 remaining before paywall)
+  const showRemainingBanner = !isDemoMode && analysisResults && auditCount === 2;
+  // Intake banner: show "1 free audit remaining" in intake flow when user has used 2
+  const showIntakeBanner = auditCount === 2 && isIntakeFlow;
+
   return (
     <div className={isIntakeFlow ? '' : 'min-h-screen'}>
       {/* Rate Limit Modal */}
@@ -230,19 +220,31 @@ export default function AuditClient() {
         />
       )}
 
+      {/* Paywall Modal */}
+      {showPaywall && (
+        <PaywallModal onClose={() => setShowPaywall(false)} />
+      )}
+
       {isIntakeFlow ? (
         <>
           {/* INTAKE FLOW — Standard site hero layout */}
           <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
             <div className="max-w-7xl mx-auto px-6">
               <div className="text-center max-w-5xl mx-auto">
+                {/* "1 remaining" banner in intake flow */}
+                {showIntakeBanner && (
+                  <div className="mb-6 max-w-lg mx-auto">
+                    <RemainingAuditsBanner auditsRemaining={auditsRemaining} />
+                  </div>
+                )}
+
                 {/* Step 1: Hero with product type selection */}
                 {step === 'product-type' && (
                   <>
                     {/* Info chip */}
                     <div className="flex items-center justify-center gap-2 mb-6">
                       <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
-                        Free AI UX Audit
+                        {auditCount > 0 ? `${auditsRemaining} of 3 free audits remaining` : '3 free audits included'}
                       </span>
                     </div>
 
@@ -328,12 +330,24 @@ export default function AuditClient() {
 
               {/* Floating Results Sidebar */}
               <FloatingResultsSidebar isVisible={hasResults} expandTrigger={chatTrigger}>
+                {/* Nudge/Banner above results */}
+                {(showSaveNudge || showRemainingBanner) && (
+                  <div className="px-4 pt-4 space-y-2">
+                    {showRemainingBanner && (
+                      <RemainingAuditsBanner auditsRemaining={auditsRemaining} />
+                    )}
+                    {showSaveNudge && (
+                      <SaveReportNudge onSaveReport={() => setEmailReportTrigger(t => t + 1)} />
+                    )}
+                  </div>
+                )}
                 <ResultsPanel
                   results={analysisResults}
                   onNewAudit={handleClear}
                   isAnalyzing={isAnalyzing}
                   isDemoMode={isDemoMode}
                   chatTrigger={chatTrigger}
+                  emailReportTrigger={emailReportTrigger}
                 />
               </FloatingResultsSidebar>
             </div>

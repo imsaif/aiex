@@ -6,7 +6,11 @@
  * Transactional emails (welcome, audit reports, etc.) still use Resend.
  */
 
-export async function addSubscriberToBeehiiv(email: string): Promise<void> {
+interface BeehiivOptions {
+  utmSource?: string;
+}
+
+export async function addSubscriberToBeehiiv(email: string, options?: BeehiivOptions): Promise<void> {
   const apiKey = process.env.BEEHIIV_API_KEY;
   const pubId = process.env.BEEHIIV_PUBLICATION_ID;
 
@@ -28,7 +32,7 @@ export async function addSubscriberToBeehiiv(email: string): Promise<void> {
           email,
           reactivate_existing: false,
           send_welcome_email: false, // We send our own via Resend
-          utm_source: 'website',
+          utm_source: options?.utmSource || 'website',
         }),
       }
     );

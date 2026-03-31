@@ -57,6 +57,8 @@ interface ResultsPanelProps {
   isDemoMode?: boolean;
   /** Increment to trigger chat mode from outside */
   chatTrigger?: number;
+  /** Increment to trigger email report modal from outside */
+  emailReportTrigger?: number;
 }
 
 interface ChatMessage {
@@ -229,7 +231,7 @@ function generateResultsSummary(
   return lines.join('\n');
 }
 
-export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoMode = false, chatTrigger = 0 }: ResultsPanelProps) {
+export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoMode = false, chatTrigger = 0, emailReportTrigger = 0 }: ResultsPanelProps) {
   const [chatMode, setChatMode] = useState(false); // false = analysis view, true = chat view
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -244,6 +246,11 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
   useEffect(() => {
     if (chatTrigger > 0) setChatMode(true);
   }, [chatTrigger]);
+
+  // Open email report modal when triggered externally
+  useEffect(() => {
+    if (emailReportTrigger > 0) setShowEmailModal(true);
+  }, [emailReportTrigger]);
 
   // Rotate through analysis messages
   useEffect(() => {
