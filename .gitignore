@@ -1,6 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.*
@@ -10,116 +8,94 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
-/coverage
-
-# next.js
+# Next.js
 /.next/
 /out/
-
-# production
 /build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
 next-env.d.ts
 
-# Added by Claude Task Master
-# Logs
-logs
-*.log
-dev-debug.log
-# Dependency directories
-node_modules/
-# Environment variables
+# Environment
 .env
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-# OS specific
-.DS_Store
+.env*.local
+.env.vercel
 
-# Backup files
-*.bak
-*.backup
-*.backup-*
-*.tsx.backup-*
+# TypeScript
+*.tsbuildinfo
 
-# One-off test scripts in root
-create-test-*.js
-test-*.js
-
-# Task files
-tasks.json
-tasks/
-
-# Testing artifacts (keep tests locally but not in repo)
+# Testing
+/coverage
 **/__tests__/
 **/*.test.*
 **/*.spec.*
 **/*.snap
-coverage/
-*.coverage
 jest.setup.js
 jest.config.js
-
-# Development tools
-.agent-context/
-.taskmaster/
-.ai-tools/
-scripts/fix-*.js
-scripts/*-agent.js
-scripts/generate-*.js
-scripts/debug.js
-
-# IDE and workspace files
-.cursor/
-*.code-workspace
-.husky/
-
-# Documentation drafts
-docs/status.md
-docs/*-agent.md
-
-# Build and cache
-.next/
-.vercel/
-.swc/
-build-metrics.json
-
-# Generated files and reports
-perf-audit-log.json
-consistency-report.json
-lint_output.txt
-*.log
-set-env.ps1
-
-# Test configs (if regenerated)
 tsconfig.test.json
+
+# Generated
 /src/generated/prisma
 
 # Database
 prisma/dev.db
 prisma/dev.db-journal
-.env*.local
+
+# Build & cache
+.swc/
+.vercel/
+build-metrics.json
+perf-audit-log.json
+consistency-report.json
+
+# Debug & logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+logs
+lint_output.txt
+
+# OS
+.DS_Store
+
+# IDE
+.idea
+.vscode
+.cursor/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.code-workspace
+
+# Secrets & keys
+*.pem
+
+# Backup files
+*.bak
+*.backup
+*.backup-*
+
+# Development tools
+.agent-context/
+.taskmaster/
+.ai-tools/
+.husky/
+
+# Scripts (generated/one-off)
+scripts/fix-*.js
+scripts/*-agent.js
+scripts/generate-*.js
+scripts/debug.js
+create-test-*.js
+test-*.js
+set-env.ps1
+
+# Task files
+tasks.json
+tasks/
+
+# Documentation drafts
+docs/status.md
+docs/*-agent.md

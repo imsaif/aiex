@@ -1,1 +1,0 @@
-export { SmartHandbookPrompt } from './SmartHandbookPrompt';

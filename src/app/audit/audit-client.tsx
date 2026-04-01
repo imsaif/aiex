@@ -94,7 +94,7 @@ export default function AuditClient() {
         deviceType: img.deviceType,
       }));
 
-      const response = await fetch('/api/analyze-pattern', {
+      const response = await fetch('/api/patterns/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

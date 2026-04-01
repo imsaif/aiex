@@ -49,7 +49,7 @@ export default function AnalyzePage() {
 
   const analyzePattern = async (context: ContextData, imageBase64: string) => {
     try {
-      const response = await fetch('/api/analyze-pattern', {
+      const response = await fetch('/api/patterns/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

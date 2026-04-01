@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
-  const ogImageUrl = `${siteUrl}/api/og/newsletter?slug=${newsletter.slug}`;
+  const ogImageUrl = `${siteUrl}/api/newsletter/og?slug=${newsletter.slug}`;
 
   return {
     title: `${newsletter.title} | AI UX Newsletter`,

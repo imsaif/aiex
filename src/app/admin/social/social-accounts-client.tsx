@@ -843,7 +843,7 @@ export default function SocialAccountsClient({
                   <p className="text-sm font-medium text-text-primary">Share Image</p>
                   <button
                     onClick={() => {
-                      const url = `${window.location.origin}/api/og/newsletter?id=${selectedNewsletter.id}`;
+                      const url = `${window.location.origin}/api/newsletter/og?id=${selectedNewsletter.id}`;
                       navigator.clipboard.writeText(url);
                       setSocialMessage({ type: 'success', text: 'Image URL copied to clipboard!' });
                       setTimeout(() => setSocialMessage(null), 3000);
@@ -855,7 +855,7 @@ export default function SocialAccountsClient({
                 </div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`/api/og/newsletter?id=${selectedNewsletter.id}`}
+                  src={`/api/newsletter/og?id=${selectedNewsletter.id}`}
                   alt={`Social share image for ${selectedNewsletter.title}`}
                   className="w-full rounded-md border border-border-primary"
                 />

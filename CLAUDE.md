@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-01 18:16 (MacBook)
+- **Pattern:** Repo Organization & Cleanup
+- **Status:** ✅ Completed
+- **Files Changed:** 80
+- **Tests Added/Modified:** 11
+- **Notes:** Major repo cleanup and reorganization. Removed dead code (archive/simulator, removed-features, .roo Cline config, unused HandbookModal & SmartHandbookPrompt components). Rewrote README (28→36 patterns, added features/tech tables, removed project structure duplication). Moved 3 analysis docs to docs/analysis/, cleaned .gitignore. Moved ResourcesGrid to sections/. Consolidated API routes: analyze-pattern→patterns/analyze, og/newsletter→newsletter/og. Reorganized 20 scripts into 5 subdirs (generators/, newsletter/, analysis/, agents/, assets/), fixed all __dirname paths, removed 14 dead package.json entries pointing to non-existent scripts, deleted 2 dead scripts (cline-integration, inject-contextual-assistance-code). Build verified clean.
+
 ### Session 2026-04-01 15:29 (MacBook)
 - **Pattern:** Audit Email Report Redesign
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Audit hero cards layout: changed from 3+2 grid to single-row 5-column layout (grid-cols-5, max-w-5xl), evened out card text lengths. Wired all 8 audit analytics events to Microsoft Clarity custom events (was console.log only). Added 5 missing event calls: audit_gap_found, audit_resource_clicked, audit_chat_message_sent, audit_step_completed (screenshot), audit_email_report_sent. Updated email report: added product context section (type + AI capabilities), fixed CTA "28→36 patterns". Documented Phase 4 monetization strategy in memory with decision checklist (50+ sessions before any gating).
 
 ### Session 2026-03-27 17:55 (MacBook)
-- **Pattern:** Dead Click & Rage Click Audit
-- **Status:** ✅ Completed
-- **Files Changed:** 17
-- **Tests Added/Modified:** 0
-- **Notes:** Comprehensive dead click / rage click audit across all 36 pattern pages to protect SEO from Clarity/Google flagging. Phase 1: Removed misleading `cursor-pointer` from non-interactive product logos (ProductsSection) and tool logos (FigmaPromptCard), converted static category badge to `<Link>`. Phase 2: Added `active:scale-95` press feedback to demo buttons with delayed/missing visual response (IntentPreview, MixedInitiativeControl, PlanSummary, ProgressiveDisclosure, AgentStatusMonitoring, AdaptiveDashboard, AdaptiveLearning). Phase 3: Added `disabled:cursor-not-allowed` to disabled query buttons (ProgressiveEnhancement, IntelligentCaching). Phase 4: Added press/hover feedback to toggle buttons and expandable cards (ExplainableAi, ResponsibleAiDesign, TransparentFeedback, VulnerableUserProtection, SafeExploration).
-
-### Session 2026-03-27 15:47 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

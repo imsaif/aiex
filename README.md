@@ -1,167 +1,79 @@
-# AI Design Patterns
+# AI UX Design Patterns
 
-A comprehensive collection of AI design patterns and best practices for creating intuitive, ethical, and effective AI-powered user interfaces.
+**[aiuxdesign.guide](https://aiuxdesign.guide)** — A comprehensive reference of 36 AI design patterns for building intuitive, ethical, and effective AI-powered interfaces.
 
-## Project Overview
+## What's Inside
 
-This project provides a complete implementation of **28 AI design patterns across 8 categories**, featuring interactive demos, comprehensive documentation, and code examples for building modern AI-powered applications.
+- **36 AI design patterns** across 8 categories, each with interactive demos, code examples, and design guidance
+- **AI UX Audit Tool** — upload screenshots and get pattern-based feedback on your AI product's UX
+- **Designer Guides** — structured learning paths for AI UX topics
+- **Prompt Library** — reusable prompts for AI-powered design workflows
+- **Weekly Newsletter** — curated AI UX news delivered to subscribers
 
-### Key Features
+## Pattern Categories
 
-- **28 fully implemented AI design patterns** across 8 categories with interactive demos
-- **Modern tech stack**: Next.js 15, React 19, TypeScript, Tailwind CSS v4
-- **Responsive design** with dark mode support
-- **Optimized performance** with image optimization and code splitting
-
-### Pattern Categories (28 Total)
-
-#### Accessibility & Inclusion (1 pattern)
-- Universal Access Patterns
-
-#### Adaptive & Intelligent Systems (4 patterns)
-- Adaptive Interfaces
-- Ambient Intelligence
-- Guided Learning
-- Predictive Anticipation
-
-#### Human-AI Collaboration (6 patterns)
-- Augmented Creation
-- Collaborative AI
-- Contextual Assistance
-- Feedback Loops
-- Graceful Handoff
-- Human-in-the-Loop
-
-#### Natural Interaction (4 patterns)
-- Context Switching
-- Conversational UI
-- Multimodal Interaction
-- Progressive Disclosure
-
-#### Performance & Efficiency (2 patterns)
-- Intelligent Caching
-- Progressive Enhancement
-
-#### Privacy & Control (2 patterns)
-- Privacy-First Design
-- Selective Memory
-
-#### Safety & Harm Prevention (4 patterns)
-- Anti-Manipulation Safeguards
-- Crisis Detection & Escalation
-- Session Degradation Prevention
-- Vulnerable User Protection
-
-#### Trustworthy & Reliable AI (5 patterns)
-- Confidence Visualization
-- Error Recovery
-- Explainable AI
-- Responsible AI Design
-- Safe Exploration
-
-[View live demo](https://aiuxdesign.guide)
+| Category | Patterns | Examples |
+|----------|----------|----------|
+| Human-AI Collaboration | 10 | Autonomy Spectrum, Intent Preview, Human-in-the-Loop |
+| Trustworthy & Reliable AI | 8 | Trust Calibration, Explainable AI, Safe Exploration |
+| Adaptive & Intelligent Systems | 4 | Adaptive Interfaces, Ambient Intelligence |
+| Natural Interaction | 4 | Conversational UI, Progressive Disclosure |
+| Safety & Harm Prevention | 4 | Crisis Detection, Vulnerable User Protection |
+| Performance & Efficiency | 3 | Intelligent Caching, Agent Status Monitoring |
+| Privacy & Control | 2 | Privacy-First Design, Selective Memory |
+| Accessibility & Inclusion | 1 | Universal Access Patterns |
 
 ## Tech Stack
 
-- **Framework**: [Next.js 15](https://nextjs.org) with App Router
-- **UI**: [React 19](https://react.dev) with TypeScript
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) with custom design system
-- **Performance**: Image optimization, code splitting, lazy loading
-- **Deployment**: Vercel with automatic CI/CD
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 15 (App Router) |
+| UI | React 19, TypeScript |
+| Styling | Tailwind CSS v4 |
+| Database | PostgreSQL (Prisma ORM) |
+| AI | Claude API (Anthropic SDK) |
+| Email | Resend + Beehiiv |
+| Deployment | Vercel |
 
 ## Getting Started
 
-### Prerequisites
-
-- Node.js 18+
-- npm, yarn, pnpm, or bun
-
-### Installation
-
-1. Clone the repository:
 ```bash
 git clone https://github.com/imsaif/aiex.git
 cd aiex
-```
-
-2. Install dependencies:
-```bash
 npm install
-```
-
-3. Run the development server:
-```bash
+cp .env.example .env.local  # configure environment variables
+npx prisma generate
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Commands
+### Environment Variables
+
+See `.env.example` for required variables. At minimum you need:
+- `DATABASE_URL` — PostgreSQL connection string
+- `ANTHROPIC_API_KEY` — for AI-powered features (audit, mentor)
+- `RESEND_API_KEY` — for email/newsletter functionality
+
+## Development
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm start        # Start production server
-npm run lint     # Run ESLint
-npm test         # Run tests
+npm run dev          # Dev server (Turbopack)
+npm run build        # Production build
+npm run lint         # ESLint
+npm test             # Run tests
+npm run test:coverage # Tests with coverage report
 ```
-
-## Project Structure
-
-```
-aiex/
-├── src/
-│   ├── app/                    # Next.js app router pages
-│   ├── components/             # React components
-│   ├── data/patterns/          # Pattern implementations
-│   ├── hooks/                  # Custom React hooks
-│   └── utils/                  # Utility functions
-├── public/images/              # Optimized images and assets
-├── docs/                       # Documentation
-└── prisma/                     # Database schema
-```
-
-## Deployment
-
-### Vercel (Recommended)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/imsaif/aiex)
-
-The project is optimized for Vercel deployment with:
-- Automatic CI/CD pipeline
-- Edge functions support
-- Analytics and performance monitoring
-- Image optimization CDN
-
-## Documentation
-
-- [Contributing Guidelines](./CONTRIBUTING.md) - How to contribute
-- [Pattern Guide](./docs/patterns-guide.md) - Pattern development guide
-- [Brand Guidelines](./docs/BRAND_GUIDELINES.md) - Design system reference
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests (`npm test`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+We welcome contributions from designers, developers, and writers. Whether it's submitting a new pattern, improving an existing one, fixing bugs, or writing docs — see [CONTRIBUTING.md](./CONTRIBUTING.md) for how to get started.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+MIT — see [LICENSE](./LICENSE).
 
 ## Contact
 
-- GitHub: [@imsaif](https://github.com/imsaif)
 - Website: [aiuxdesign.guide](https://aiuxdesign.guide)
-
----
-
-Built with Next.js, React, and TypeScript
+- GitHub: [@imsaif](https://github.com/imsaif)
