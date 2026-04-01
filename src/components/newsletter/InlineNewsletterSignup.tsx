@@ -201,7 +201,7 @@ export function InlineNewsletterSignup({
           {/* Trust Badge */}
           {(isHero || isPatternDetail || isNews) && (
             <p className={`text-xs mt-4 ${isNews ? '' : 'text-center'} ${darkBackground ? 'text-gray-400' : 'text-text-secondary'}`}>
-              {customSubheading ? 'Free. No spam. Unsubscribe anytime.' : 'One-page PDF for design reviews + daily AI/UX news. Unsubscribe anytime.'}
+              {customSubheading !== undefined ? 'Daily AIUX news. Unsubscribe anytime.' : 'One-page PDF for design reviews + daily AI/UX news. Unsubscribe anytime.'}
             </p>
           )}
         </form>

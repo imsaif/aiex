@@ -34,7 +34,8 @@ async function getPublishedDrafts(): Promise<Newsletter[]> {
       content: draft.content,
       publishedAt: draft.publishDate.toISOString().split('T')[0],
       published: true,
-      tags: defaultTags.filter((t) => t.slug === 'ai-design' || t.slug === 'ux-patterns'), // Default tags
+      tags: [], // Auto-generated newsletters don't have curated tags
+      type: (draft.type as 'daily' | 'weekly') || 'daily',
     }));
   } catch {
     // If database is not available, return empty array

@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-01 13:55 (MacBook)
+- **Pattern:** News Page Enhancements
+- **Status:** ✅ Completed
+- **Files Changed:** 4
+- **Tests Added/Modified:** 0
+- **Notes:** Enhanced news listing page with 5 improvements: weekly badge pills on roundup issues, summary subtitle under each title (line-clamped), reading time estimates, "Today" indicator with accent highlight on current day's issue, and sticky newsletter signup bar on scroll with inline single-line layout (title + email + button + disclosure). Widened container from max-w-4xl to max-w-5xl, bumped font sizes for accessibility (title now text-lg font-semibold, summary text-base text-secondary). Added `type` field to Newsletter interface and passed from DB. Removed hardcoded default tags from auto-generated newsletters (were showing same "AI Design" + "UX Patterns" on every post). Trust badge text in newsletter component now context-aware.
+
 ### Session 2026-04-01 13:28 (MacBook)
 - **Pattern:** Homepage Hero Audit CTA + Screenshot Paste Support
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Comprehensive SEO overhaul driven by Google Search Console data analysis. Audit page: made SocialProof SSR (was ssr:false, invisible to Google), added WebApplication + BreadcrumbList JSON-LD, expanded keywords from actual GSC queries. All 36 patterns: custom meta titles/descriptions (was only 10), targeting high-impression low-CTR queries. Guide pages: full OG/Twitter/canonical + Article/Breadcrumb/Course JSON-LD schemas. About page: complete metadata. Fixed sitemap/robots conflict (/search). Conversational UI pattern: expanded content from 68 to 134-word intro, 6 product examples (was 3), added ChatGPT/Claude/Gemini. New standalone guide: "Build a Conversational UI" (11 lessons covering chat anatomy, streaming, prompts, context, errors, voice, agentic patterns, accessibility). Built interactive guided chatbot demo with conversation tree, simulated streaming responses, typing indicators, contextual follow-ups, and resource links to all site content (patterns, guides, toolkit, audit, PDFs).
 
 ### Session 2026-03-26 16:27 (MacBook)
-- **Pattern:** Audit Flow Redesign — Context-First
-- **Status:** ✅ Completed
-- **Files Changed:** 12
-- **Tests Added/Modified:** 0
-- **Notes:** Redesigned audit page from screenshot-first to context-first flow. New 3-step intake: product type selection (5 cards with icons) → branched follow-up questions (per product type) → screenshot upload with staging/review. Hero section now uses standard site pattern (grain bg, info chip, centered layout) instead of dark canvas. Context-aware analysis API: new prompts.ts with buildSystemPrompt/buildUserPrompt encoding all 36 patterns + agentic patterns. API route accepts productType/productDescription/aiRole, returns topGaps/quickWins/chatContext. ResultsPanel shows context-first gaps with findings+recommendations+resource links. Chat API seeded with product context and resource library. Analytics tracking across flow. SocialProof reorganized: removed gallery section, community card now 3-column grid (share/resources/connect).
-
-### Session 2026-03-24 19:38 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
