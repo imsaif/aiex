@@ -3,6 +3,9 @@
   "functions": {
     "src/app/api/cron/generate-newsletter/route.ts": {
       "maxDuration": 60
+    },
+    "src/app/api/cron/newsletter-watchdog/route.ts": {
+      "maxDuration": 60
     }
   }
 }
