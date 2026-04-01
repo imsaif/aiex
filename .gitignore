@@ -96,6 +96,9 @@ set-env.ps1
 tasks.json
 tasks/
 
+# Test results
+test-results/
+
 # Documentation drafts
 docs/status.md
 docs/*-agent.md
