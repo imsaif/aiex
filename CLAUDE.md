@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-01 12:18 (MacBook)
+- **Pattern:** Newsletter Cron Reliability — Defense in Depth
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** 7 hardening fixes to newsletter cron generation after 5th recurring failure (Apr 1). Added 25s AbortController timeout on Claude API call (was unlimited), try-catch around JSON.parse with response preview in error, weekly 0-items now throws instead of silent return (triggers retry + failure alert), RSS feed failures now logged with source name + summary count, fixed UTC timezone inconsistency (setHours→setUTCHours) in date boundaries, added startup config validation log for env var presence, healthcheck ping on "already exists" skip path. All changes in route.ts — every code path now either succeeds visibly or fails loudly.
+
 ### Session 2026-03-31 19:48 (MacBook)
 - **Pattern:** Fake-Door Paywall for Audit Tool
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Redesigned audit page for better engagement and visibility. Hero: added h1 headline + subheadline + logo carousel above widened upload card, removed tab UI and surfaced demo as inline link. Below-fold: replaced feature showcase with visually enhanced "What is an AI UX audit?" section (pattern pills, 3-step icon cards), kept original gallery + sidebar. Cross-promotion: new InlineAuditCTA component on pattern detail pages, audit link added to footer. Consolidated heading hierarchy to single h1.
 
 ### Session 2026-03-23 22:00 (MacBook)
-- **Pattern:** Audit Page Performance & SEO
-- **Status:** ✅ Completed
-- **Files Changed:** 6
-- **Tests Added/Modified:** 0
-- **Notes:** Performance optimization pass across site and audit page. Simplified grain SVG (numOctaves 4→2), reduced Clarity fallback timeout (4s→1.5s). Audit page: compressed SocialProof image (1.6MB→59KB), removed framer-motion from SocialProof (8 motion.divs→plain divs), removed radial gradient from canvas, lazy-loaded demo data. SEO: added OG image, Twitter card, canonical URL, H1 tag, ISR revalidate, FAQ click-through hooks, internal links to pattern pages. Dead clicks: removed shadow-card from use case cards, de-styled feature pills.
-
-### Session 2026-03-23 20:28 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

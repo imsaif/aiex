@@ -469,7 +469,8 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7, { lite =
               pubDate: item.pubDate || item.isoDate || new Date().toISOString(),
               relevanceScore: scoreRelevance(item, source.name),
             }));
-        } catch {
+        } catch (err) {
+          console.warn(`[newsletter] RSS fetch failed for ${source.name}: ${(err as Error).message}`);
           return [];
         }
       })
@@ -477,11 +478,16 @@ async function aggregateNews(lookbackHours = 24, deduplicationDays = 7, { lite =
     lite ? Promise.resolve([]) : scrapeAnthropicNews(),
   ]);
 
+  const succeededFeeds = rssResults.filter(r => r.status === 'fulfilled').length;
+  const failedFeeds = rssResults.filter(r => r.status === 'rejected').length;
+
   for (const result of rssResults) {
     if (result.status === 'fulfilled') {
       allItems.push(...result.value);
     }
   }
+
+  console.log(`[newsletter] RSS results: ${succeededFeeds}/${sources.length} succeeded, ${failedFeeds} rejected, ${allItems.length} items after RSS`);
 
   // Add Anthropic news from scraper (their site doesn't have RSS)
   const cutoff = new Date(Date.now() - lookbackHours * 60 * 60 * 1000);
@@ -950,7 +956,7 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
   if (newsItems.length === 0) {
     if (type === 'weekly') {
       console.log('[newsletter] No news items found for weekly newsletter');
-      return;
+      throw new Error('Weekly newsletter had 0 news items — neither RSS feeds nor daily compilation produced content');
     }
 
     const quietDayMessages = [
@@ -1007,11 +1013,18 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
     prompt = buildPrompt(newsItems, recentHeadlines);
   }
 
-  const response = await anthropic.messages.create({
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: type === 'weekly' ? 4096 : 2048,
-    messages: [{ role: 'user', content: prompt }],
-  });
+  const claudeController = new AbortController();
+  const claudeTimeout = setTimeout(() => claudeController.abort(), 25000);
+  let response;
+  try {
+    response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: type === 'weekly' ? 4096 : 2048,
+      messages: [{ role: 'user', content: prompt }],
+    }, { signal: claudeController.signal });
+  } finally {
+    clearTimeout(claudeTimeout);
+  }
 
   const responseText =
     response.content[0].type === 'text' ? response.content[0].text : '';
@@ -1021,10 +1034,15 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
   let title: string;
   let summary: string;
 
-  const jsonMatch =
-    responseText.match(/```json\s*([\s\S]*?)\s*```/) ||
-    responseText.match(/```\s*([\s\S]*?)\s*```/) || [null, responseText];
-  const parsedData = JSON.parse(jsonMatch[1] || responseText);
+  let parsedData;
+  try {
+    const jsonMatch =
+      responseText.match(/```json\s*([\s\S]*?)\s*```/) ||
+      responseText.match(/```\s*([\s\S]*?)\s*```/) || [null, responseText];
+    parsedData = JSON.parse(jsonMatch[1] || responseText);
+  } catch (parseError) {
+    throw new Error(`Failed to parse Claude response as JSON: ${(parseError as Error).message}\nResponse preview: ${responseText.slice(0, 200)}`);
+  }
 
   if (type === 'weekly') {
     const weeklyData = parsedData as WeeklyNewsletterData;
@@ -1081,10 +1099,12 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
 
 // Background generation logic — runs inside after() so the HTTP response is sent immediately
 async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean, customLookbackHours: string | null) {
+  console.log(`[newsletter] Config: ANTHROPIC_API_KEY=${!!process.env.ANTHROPIC_API_KEY}, RESEND_API_KEY=${!!process.env.RESEND_API_KEY}, HEALTHCHECK_DAILY=${!!process.env.HEALTHCHECK_PING_URL_DAILY}, HEALTHCHECK_WEEKLY=${!!process.env.HEALTHCHECK_PING_URL_WEEKLY}`);
+
   const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
+  todayStart.setUTCHours(0, 0, 0, 0);
   const tomorrowStart = new Date(todayStart);
-  tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+  tomorrowStart.setUTCDate(tomorrowStart.getUTCDate() + 1);
 
   const existingNewsletter = await prisma.newsletterDraft.findFirst({
     where: {
@@ -1099,6 +1119,7 @@ async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean
       await prisma.newsletterDraft.delete({ where: { id: existingNewsletter.id } });
     } else {
       console.log(`[newsletter] Skipped: ${type} newsletter already exists for today (${existingNewsletter.id})`);
+      await pingHealthcheck(type);
       return;
     }
   }
@@ -1161,9 +1182,9 @@ export async function GET(request: NextRequest) {
   // For daily: Skip if a weekly was already published today (quick DB check before responding)
   if (type === 'daily') {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    today.setUTCHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
 
     const weeklyToday = await prisma.newsletterDraft.findFirst({
       where: {
