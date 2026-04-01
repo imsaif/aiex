@@ -130,6 +130,21 @@ export function CenterUpload({
     noClick: true,
   });
 
+  // Paste support — Cmd+V / Ctrl+V anywhere on the page
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const files = e.clipboardData?.files;
+      if (!files || files.length === 0) return;
+      const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+      if (imageFiles.length === 0) return;
+      e.preventDefault();
+      const remaining = MAX_IMAGES - uploadedImages.length;
+      processFiles(imageFiles.slice(0, Math.max(remaining, 1)));
+    };
+    document.addEventListener('paste', handlePaste);
+    return () => document.removeEventListener('paste', handlePaste);
+  }, [processFiles, uploadedImages.length]);
+
   const hasImages = uploadedImages.length > 0;
   const currentImage = uploadedImages[currentIndex];
   const isMultiple = uploadedImages.length > 1;

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { generateHomeMetadata } from '@/utils/metadata';
 import Navbar from '@/components/layout/Navbar';
+import HeroAuditCTA from '@/components/audit/HeroAuditCTA';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
@@ -52,22 +53,22 @@ export default function Home() {
             </p>
 
             {/* Company Logo Carousel - Social Proof Before CTA */}
-            <div className="mb-16">
+            <div className="mb-12">
               <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                 Patterns used by leading companies
               </p>
               <CompanyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
             </div>
 
-            {/* Inline Newsletter Signup */}
+            {/* Audit CTA - Primary action (tracked via Clarity) */}
             <div className="animate-fade-in">
-              <InlineNewsletterSignup variant="hero" />
+              <HeroAuditCTA />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Intro Paragraph - Server-rendered */}
+      {/* Intro Paragraph */}
       <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
         <p className="text-base md:text-lg text-text-secondary text-center leading-relaxed">
           The AI UX design pattern library for product designers and teams building AI-powered experiences. Each pattern is documented from 3+ real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, and Notion, with examples, code demos, and research-backed guidance you can apply today.
@@ -81,6 +82,17 @@ export default function Home() {
         allProducts={allProducts}
         allIndustries={allIndustries}
       />
+
+      {/* Newsletter Signup - After patterns, before footer */}
+      <div className="max-w-lg mx-auto px-6 py-16 md:py-20">
+        <InlineNewsletterSignup
+          variant="hero"
+          customHeading="Stay up to date with AI UX"
+          customSubheading="Daily AI/UX news and pattern insights. Unsubscribe anytime."
+          customButtonText="Subscribe"
+          source="homepage"
+        />
+      </div>
 
       {/* Scroll to Top Button */}
       <ScrollToTop />

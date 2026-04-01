@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-01 13:28 (MacBook)
+- **Pattern:** Homepage Hero Audit CTA + Screenshot Paste Support
+- **Status:** ✅ Completed
+- **Files Changed:** 6
+- **Tests Added/Modified:** 0
+- **Notes:** Replaced homepage hero CTA from email checklist signup to audit tool ("See how your AI product's UX compares to the best" → "Audit Your Interface Free"). Newsletter signup moved below pattern grid with clean copy. Added Clarity tracking event `audit_hero_cta_clicked` for full funnel measurement (hero → audit completion). Added clipboard paste support (Cmd+V) for screenshot upload on both ScreenshotUpload and CenterUpload components. Added 4-image limit feedback (4/4 max indicator + amber flash message). Increased thumbnail size from 112px to 144px. Analyze button restyled to pill shape matching site design system. Newsletter component updated to support custom heading for all variants and dynamic trust badge text.
+
 ### Session 2026-04-01 12:18 (MacBook)
 - **Pattern:** Newsletter Cron Reliability — Defense in Depth
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Redesigned audit page from screenshot-first to context-first flow. New 3-step intake: product type selection (5 cards with icons) → branched follow-up questions (per product type) → screenshot upload with staging/review. Hero section now uses standard site pattern (grain bg, info chip, centered layout) instead of dark canvas. Context-aware analysis API: new prompts.ts with buildSystemPrompt/buildUserPrompt encoding all 36 patterns + agentic patterns. API route accepts productType/productDescription/aiRole, returns topGaps/quickWins/chatContext. ResultsPanel shows context-first gaps with findings+recommendations+resource links. Chat API seeded with product context and resource library. Analytics tracking across flow. SocialProof reorganized: removed gallery section, community card now 3-column grid (share/resources/connect).
 
 ### Session 2026-03-24 19:38 (MacBook)
-- **Pattern:** Audit Page UX Improvement
-- **Status:** ✅ Completed
-- **Files Changed:** 7
-- **Tests Added/Modified:** 0
-- **Notes:** Redesigned audit page for better engagement and visibility. Hero: added h1 headline + subheadline + logo carousel above widened upload card, removed tab UI and surfaced demo as inline link. Below-fold: replaced feature showcase with visually enhanced "What is an AI UX audit?" section (pattern pills, 3-step icon cards), kept original gallery + sidebar. Cross-promotion: new InlineAuditCTA component on pattern detail pages, audit link added to footer. Consolidated heading hierarchy to single h1.
-
-### Session 2026-03-23 22:00 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

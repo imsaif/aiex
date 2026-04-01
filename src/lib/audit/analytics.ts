@@ -4,6 +4,7 @@
  */
 
 type AuditEvent =
+  | 'audit_hero_cta_clicked'
   | 'audit_product_type_selected'
   | 'audit_step_completed'
   | 'audit_gap_found'

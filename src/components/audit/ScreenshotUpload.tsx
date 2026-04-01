@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ProductType } from '@/types/audit';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { ArrowLeftIcon, ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
@@ -29,15 +29,18 @@ function detectDeviceType(width: number, height: number): 'mobile' | 'desktop' {
 export function ScreenshotUpload({ productType, productDescription, onBack, onAnalyze }: ScreenshotUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [stagedImages, setStagedImages] = useState<UploadedImage[]>([]);
+  const [limitMessage, setLimitMessage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const showLimitMessage = useCallback(() => {
+    setLimitMessage(true);
+    setTimeout(() => setLimitMessage(false), 2500);
+  }, []);
 
   const processFiles = useCallback((files: FileList | null) => {
     if (!files || files.length === 0) return;
 
-    const validFiles = Array.from(files)
-      .filter((f) => f.type.startsWith('image/'))
-      .slice(0, 4 - stagedImages.length); // Respect 4 image max
-
+    const validFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
     if (validFiles.length === 0) return;
 
     const promises = validFiles.map(
@@ -61,9 +64,13 @@ export function ScreenshotUpload({ productType, productDescription, onBack, onAn
     );
 
     Promise.all(promises).then((newImages) => {
-      setStagedImages((prev) => [...prev, ...newImages].slice(0, 4));
+      setStagedImages((prev) => {
+        const merged = [...prev, ...newImages].slice(0, 4);
+        if (prev.length >= 4) showLimitMessage();
+        return merged;
+      });
     });
-  }, [stagedImages.length]);
+  }, [showLimitMessage]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -77,6 +84,20 @@ export function ScreenshotUpload({ productType, productDescription, onBack, onAn
   const removeImage = (index: number) => {
     setStagedImages((prev) => prev.filter((_, i) => i !== index));
   };
+
+  // Listen for paste events on the document so Cmd+V works anywhere on this step
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const files = e.clipboardData?.files;
+      if (!files || files.length === 0) return;
+      const hasImages = Array.from(files).some(f => f.type.startsWith('image/'));
+      if (!hasImages) return;
+      e.preventDefault();
+      processFiles(files);
+    };
+    document.addEventListener('paste', handlePaste);
+    return () => document.removeEventListener('paste', handlePaste);
+  }, [processFiles]);
 
   const hasImages = stagedImages.length > 0;
   const canAddMore = stagedImages.length < 4;
@@ -99,37 +120,50 @@ export function ScreenshotUpload({ productType, productDescription, onBack, onAn
 
       {/* Staged image previews */}
       {hasImages && (
-        <div className="flex flex-wrap gap-3 justify-center mb-6">
-          {stagedImages.map((img, index) => (
-            <div key={index} className="relative group">
-              <img
-                src={img.base64}
-                alt={img.fileName}
-                className="w-28 h-28 object-cover rounded-xl border-2 border-border-primary"
-              />
-              <button
-                onClick={() => removeImage(index)}
-                className="absolute -top-2 -right-2 w-6 h-6 bg-status-error text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-              >
-                <XMarkIcon className="w-4 h-4" />
-              </button>
-              <span className="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/60 text-white text-[10px] rounded-md capitalize">
-                {img.deviceType}
-              </span>
-            </div>
-          ))}
+        <>
+          <div className="flex flex-wrap gap-3 justify-center mb-6">
+            {stagedImages.map((img, index) => (
+              <div key={index} className="relative group">
+                <img
+                  src={img.base64}
+                  alt={img.fileName}
+                  className="w-36 h-36 object-cover rounded-xl border-2 border-border-primary"
+                />
+                <button
+                  onClick={() => removeImage(index)}
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-status-error text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                </button>
+                <span className="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/60 text-white text-[10px] rounded-md capitalize">
+                  {img.deviceType}
+                </span>
+              </div>
+            ))}
 
-          {/* Add more button */}
-          {canAddMore && (
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="w-28 h-28 border-2 border-dashed border-border-primary rounded-xl flex flex-col items-center justify-center gap-1 hover:border-accent-primary hover:bg-accent-primary/5 transition-all cursor-pointer"
-            >
-              <PlusIcon className="w-6 h-6 text-text-tertiary" />
-              <span className="text-xs text-text-tertiary">Add more</span>
-            </button>
+            {/* Add more button or limit reached */}
+            {canAddMore ? (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-36 h-36 border-2 border-dashed border-border-primary rounded-xl flex flex-col items-center justify-center gap-1 hover:border-accent-primary hover:bg-accent-primary/5 transition-all cursor-pointer"
+              >
+                <PlusIcon className="w-6 h-6 text-text-tertiary" />
+                <span className="text-xs text-text-tertiary">Add more</span>
+              </button>
+            ) : (
+              <div className="w-36 h-36 border-2 border-dashed border-border-primary/50 rounded-xl flex flex-col items-center justify-center gap-1 opacity-50">
+                <span className="text-xs text-text-tertiary">4/4 max</span>
+              </div>
+            )}
+          </div>
+
+          {/* Flash message when user tries to add beyond limit */}
+          {limitMessage && (
+            <p className="text-sm text-amber-600 dark:text-amber-400 animate-fade-in mb-2">
+              Maximum 4 screenshots reached. Remove one to add another.
+            </p>
           )}
-        </div>
+        </>
       )}
 
       {/* Drop zone — show full size when no images, compact when images staged */}
@@ -159,9 +193,9 @@ export function ScreenshotUpload({ productType, productDescription, onBack, onAn
               <p className="font-semibold text-text-primary text-base">
                 {isDragOver ? 'Drop to upload' : 'Drop your screenshot here'}
               </p>
-              <p className="text-sm text-text-secondary mt-1">or click to browse</p>
+              <p className="text-sm text-text-secondary mt-1">or click to browse or paste from clipboard</p>
             </div>
-            <p className="text-xs text-text-tertiary">PNG, JPG, or WebP &middot; up to 4 images</p>
+            <p className="text-xs text-text-tertiary">PNG, JPG, or WebP &middot; up to 4 images &middot; Ctrl+V to paste</p>
           </div>
         </div>
       )}
@@ -184,7 +218,7 @@ export function ScreenshotUpload({ productType, productDescription, onBack, onAn
       {hasImages && (
         <button
           onClick={() => onAnalyze(stagedImages)}
-          className="w-full mt-6 flex items-center justify-center gap-2 bg-accent-primary text-white dark:text-gray-900 py-4 rounded-xl font-semibold text-base hover:opacity-90 transition-opacity cursor-pointer"
+          className="mt-6 inline-flex items-center gap-2 px-8 py-3 bg-accent-primary text-white rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
         >
           <SparklesIcon className="w-5 h-5" />
           Analyze {stagedImages.length} {stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}
