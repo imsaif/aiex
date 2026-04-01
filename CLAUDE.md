@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-01 19:59 (MacBook)
+- **Pattern:** Newsletter Publish Beehiiv Improvements
+- **Status:** ✅ Completed
+- **Files Changed:** 1
+- **Tests Added/Modified:** 0
+- **Notes:** Improved Beehiiv publish page: removed duplicate description from title preview header (already in content body), stripped leading summary paragraph from copied Content HTML (already copied as Subtitle), added DM Sans font-family wrapper to copied HTML and preview for Beehiiv email/web compatibility.
+
 ### Session 2026-04-01 18:16 (MacBook)
 - **Pattern:** Repo Organization & Cleanup
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed recurring every-other-day newsletter failures. Root cause: `vercel.json` still had active `crons` entries alongside cron-job.org, causing dual triggers. Vercel Hobby crons fire ~50% of the time, creating race conditions with cron-job.org via the `after()` background callback. Fix: removed crons from vercel.json (cron-job.org is sole trigger), added duplicate re-check before DB insert as race condition safety net. Manually triggered today's missed newsletter.
 
 ### Session 2026-03-27 21:12 (MacBook)
-- **Pattern:** Audit Page UX + Phase 4 Instrumentation
-- **Status:** ✅ Completed
-- **Files Changed:** 6
-- **Tests Added/Modified:** 0
-- **Notes:** Audit hero cards layout: changed from 3+2 grid to single-row 5-column layout (grid-cols-5, max-w-5xl), evened out card text lengths. Wired all 8 audit analytics events to Microsoft Clarity custom events (was console.log only). Added 5 missing event calls: audit_gap_found, audit_resource_clicked, audit_chat_message_sent, audit_step_completed (screenshot), audit_email_report_sent. Updated email report: added product context section (type + AI capabilities), fixed CTA "28→36 patterns". Documented Phase 4 monetization strategy in memory with decision checklist (50+ sessions before any gating).
-
-### Session 2026-03-27 17:55 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

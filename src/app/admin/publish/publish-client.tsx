@@ -138,7 +138,12 @@ export default function PublishClient() {
                 </button>
 
                 <button
-                  onClick={() => copyToClipboard(selectedNewsletter.content, 'html')}
+                  onClick={() => {
+                    // Strip the leading summary paragraph since it's already the subtitle
+                    const contentWithoutSummary = selectedNewsletter.content.replace(/^\s*<p[^>]*>.*?<\/p>\s*/, '');
+                    const wrappedContent = `<div style="font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">${contentWithoutSummary}</div>`;
+                    copyToClipboard(wrappedContent, 'html');
+                  }}
                   className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
                     copiedField === 'html'
                       ? 'bg-status-success/10 text-status-success'
@@ -180,13 +185,11 @@ export default function PublishClient() {
             <div className="bg-surface-primary rounded-lg border border-border-primary overflow-hidden">
               <div className="bg-background-secondary p-4 border-b border-border-primary">
                 <h2 className="text-lg font-semibold text-text-primary">{selectedNewsletter.title}</h2>
-                {selectedNewsletter.summary && (
-                  <p className="text-sm text-text-secondary mt-1">{selectedNewsletter.summary}</p>
-                )}
               </div>
               <div className="p-4">
                 <div
                   className="prose prose-sm max-w-none text-text-primary prose-headings:text-text-primary prose-a:text-accent-primary"
+                  style={{ fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" }}
                   dangerouslySetInnerHTML={{ __html: selectedNewsletter.content }}
                 />
               </div>
