@@ -28,6 +28,12 @@ export const mockPrismaClient = {
     update: jest.fn<() => Promise<Subscriber>>().mockResolvedValue(defaultSubscriber),
     delete: jest.fn<() => Promise<Subscriber>>().mockResolvedValue(defaultSubscriber),
   },
+  newsletterDraft: {
+    findFirst: jest.fn().mockResolvedValue(null),
+    findMany: jest.fn().mockResolvedValue([]),
+    create: jest.fn().mockResolvedValue(null),
+    delete: jest.fn().mockResolvedValue(null),
+  },
 };
 
 export const prisma = mockPrismaClient;
