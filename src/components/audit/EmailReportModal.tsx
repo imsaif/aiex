@@ -66,6 +66,13 @@ export function EmailReportModal({ isOpen, onClose, results, productContext }: E
 
       setSuccess(true);
       trackAuditEvent('audit_email_report_sent', { score: results.score, maxScore: results.maxScore });
+
+      // Also subscribe to newsletter (fire-and-forget)
+      fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'audit-report', website_url: '' }),
+      }).catch(() => {});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to send report');
     } finally {

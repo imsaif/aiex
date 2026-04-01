@@ -83,6 +83,13 @@ export function PaywallModal({ onClose }: PaywallModalProps) {
 
       setSuccess(true);
       trackAuditEvent('audit_paywall_waitlist_signup');
+
+      // Also subscribe to newsletter with waitlist tag (fire-and-forget)
+      fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'audit-waitlist', website_url: '' }),
+      }).catch(() => {});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -231,7 +238,7 @@ export function PaywallModal({ onClose }: PaywallModalProps) {
                     )}
 
                     <p className="mt-3 text-xs text-text-tertiary text-center">
-                      No credit card required. We&apos;ll notify you when early access opens.
+                      No credit card required. We&apos;ll notify you when early access opens. You&apos;ll also receive daily AI UX news.
                     </p>
                   </form>
                 </>

@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-01 14:23 (MacBook)
+- **Pattern:** Audit Email Capture → Subscriber List
+- **Status:** ✅ Completed
+- **Files Changed:** 3
+- **Tests Added/Modified:** 0
+- **Notes:** Wired audit email capture points to newsletter subscriber list. EmailReportModal now fire-and-forget subscribes with `source: 'audit-report'` on successful report send. PaywallModal waitlist signup now also subscribes with `source: 'audit-waitlist'` (willingness-to-pay signal for segmentation). Added both new sources to NEWSLETTER_SOURCES type. Disclosure text added to PaywallModal informing users they'll receive daily AI UX news.
+
 ### Session 2026-04-01 13:55 (MacBook)
 - **Pattern:** News Page Enhancements
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed recurring newsletter cron timeout — cron-job.org free tier has 30s max timeout, but newsletter generation takes 30-60s. Used Next.js `after()` to respond instantly and run generation in background within Vercel's 60s window. Added failure alert emails with error details + manual trigger command when background generation fails. Admin dashboard: paginated drafts API (lightweight list without content/sources), full content fetched on-demand when draft selected. Sidebar defaults to pending_review only with "Show all" toggle. Drafts no longer auto-selected — content loads only when clicked from sidebar (or via URL from admin notification email).
 
 ### Session 2026-03-26 21:32 (MacBook)
-- **Pattern:** SEO Optimization + Conversational UI Content
-- **Status:** ✅ Completed
-- **Files Changed:** 13
-- **Tests Added/Modified:** 0
-- **Notes:** Comprehensive SEO overhaul driven by Google Search Console data analysis. Audit page: made SocialProof SSR (was ssr:false, invisible to Google), added WebApplication + BreadcrumbList JSON-LD, expanded keywords from actual GSC queries. All 36 patterns: custom meta titles/descriptions (was only 10), targeting high-impression low-CTR queries. Guide pages: full OG/Twitter/canonical + Article/Breadcrumb/Course JSON-LD schemas. About page: complete metadata. Fixed sitemap/robots conflict (/search). Conversational UI pattern: expanded content from 68 to 134-word intro, 6 product examples (was 3), added ChatGPT/Claude/Gemini. New standalone guide: "Build a Conversational UI" (11 lessons covering chat anatomy, streaming, prompts, context, errors, voice, agentic patterns, accessibility). Built interactive guided chatbot demo with conversation tree, simulated streaming responses, typing indicators, contextual follow-ups, and resource links to all site content (patterns, guides, toolkit, audit, PDFs).
-
-### Session 2026-03-26 16:27 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

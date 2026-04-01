@@ -13,6 +13,8 @@ export const NEWSLETTER_SOURCES = [
   'toolkit',
   'audit',
   'audit-kit',
+  'audit-report',
+  'audit-waitlist',
   'agentic-checklist',
 ] as const;
 
