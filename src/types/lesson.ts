@@ -11,6 +11,7 @@ export type LessonSectionType =
   | 'callout'
   | 'steps'
   | 'code'
+  | 'code-preview'
   | 'image'
   | 'completion';
 
@@ -97,6 +98,15 @@ export interface CompletionSection {
   message: string;
 }
 
+export interface CodePreviewSection {
+  type: 'code-preview';
+  code: string;
+  language?: string;
+  label?: string;
+  /** Maps to a specific preview component */
+  previewId: string;
+}
+
 export type LessonSection =
   | IntroSection
   | HeadingSection
@@ -105,6 +115,7 @@ export type LessonSection =
   | CalloutSection
   | StepsSection
   | CodeSection
+  | CodePreviewSection
   | ImageSection
   | CompletionSection;
 

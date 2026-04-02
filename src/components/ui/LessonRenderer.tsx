@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   InformationCircleIcon,
   ExclamationTriangleIcon,
@@ -18,6 +18,7 @@ import {
   Cog6ToothIcon,
   LightBulbIcon,
   StarIcon,
+  EyeIcon,
 } from '@heroicons/react/24/outline';
 import {
   LessonSection,
@@ -26,6 +27,7 @@ import {
 import {
   Github,
 } from '@lobehub/icons'; // For GitHub logo icon
+import { getPreviewComponent } from '@/components/guides/chat-previews';
 
 interface LessonRendererProps {
   sections: LessonSection[];
@@ -114,6 +116,69 @@ const getCalloutIconColor = (calloutType: 'info' | 'warning' | 'success' | 'erro
       return 'text-blue-500';
   }
 };
+
+function CodePreviewBlock({ section }: { section: { code: string; language?: string; label?: string; previewId: string } }) {
+  const [showCode, setShowCode] = useState(false);
+  const PreviewComponent = getPreviewComponent(section.previewId);
+
+  return (
+    <div className="mb-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      {/* Toggle header */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
+        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          {section.label || 'Example'}
+        </span>
+        <div className="inline-flex rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 p-0.5">
+          <button
+            onClick={() => setShowCode(false)}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-all cursor-pointer ${
+              !showCode
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            <EyeIcon className="w-3.5 h-3.5" />
+            Preview
+          </button>
+          <button
+            onClick={() => setShowCode(true)}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-all cursor-pointer ${
+              showCode
+                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            <CodeBracketIcon className="w-3.5 h-3.5" />
+            Code
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      {showCode ? (
+        <div className="relative">
+          <pre className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-4 m-0 overflow-auto font-mono text-sm max-h-[500px]">
+            <code>{section.code}</code>
+          </pre>
+          <button
+            onClick={() => navigator.clipboard.writeText(section.code)}
+            className="absolute top-3 right-3 bg-gray-800/80 dark:bg-gray-700/80 border border-gray-700 dark:border-gray-600 text-white px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all hover:bg-gray-800 dark:hover:bg-gray-700"
+          >
+            Copy
+          </button>
+        </div>
+      ) : (
+        <div className="p-4 bg-gray-50/50 dark:bg-gray-900/30">
+          {PreviewComponent ? (
+            <PreviewComponent />
+          ) : (
+            <div className="text-center py-8 text-gray-400 text-sm">Preview not available</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 const renderSection = (section: LessonSection, index: number) => {
   switch (section.type) {
@@ -256,6 +321,9 @@ const renderSection = (section: LessonSection, index: number) => {
           </div>
         </div>
       );
+
+    case 'code-preview':
+      return <CodePreviewBlock key={index} section={section} />;
 
     case 'image':
       return (

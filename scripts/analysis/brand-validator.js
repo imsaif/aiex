@@ -103,6 +103,8 @@ const allowedPatterns = [
   /border-purple-/,      // Agent/AI borders
   /bg-indigo-/,          // Category indicators
   /text-indigo-/,        // Category text
+  // Code example strings in guide data — contain TSX class names as content, not rendered styles
+  /^\s+code:/,
 ];
 
 /**
@@ -212,6 +214,9 @@ function validateFile(filePath) {
 
   // Skip code-examples.ts files - they contain TSX code as strings, not actual component code
   if (filePath.endsWith('code-examples.ts')) return;
+
+  // Skip guide preview components - they render realistic chat UIs with intentional hardcoded colors
+  if (filePath.includes('guides/chat-previews')) return;
 
   const content = fs.readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');

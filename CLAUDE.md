@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-02 22:20 (MacBook)
+- **Pattern:** Conversational UI Guide Overhaul
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Major overhaul of Conversational UI guide for designers. Fixed 8 broken callouts (variant→calloutType). Extracted ~10 inline code fences into proper `type: 'code'` sections with syntax highlighting. Converted numbered lists to `type: 'steps'` cards and bullet lists to `type: 'list'`. Added new `code-preview` lesson section type with Preview/Code toggle — 8 interactive mini-demos (chat bubbles, typing indicator, streaming text, suggested prompts, error retry, accessibility annotations, intent preview card, plan summary). All demo content uses designer-friendly language (color palettes, onboarding flows, empty states) instead of developer jargon. Fixed content HTML to use design tokens for dark mode. Removed Download PDF button/modal from guide pages. Added lastUpdatedDate metadata.
+
 ### Session 2026-04-02 21:44 (MacBook)
 - **Pattern:** Audit Page Mobile Responsiveness
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Implemented fake-door paywall monetization strategy for audit tool. localStorage-based lifetime audit counter (3 free). Progressive funnel: info chip shows remaining audits, amber "1 remaining" banner at audit 2, full paywall modal with 3-tier pricing display + "Join Early Access List" email capture at audit 4. Waitlist API syncs to Beehiiv with `paywall-waitlist` utm_source tag for segmentation. SaveReportNudge prompts email save after 2nd audit. Server-side rate limit bumped to 10/day as safety net (localStorage is primary gate). No Stripe, no auth — validation gate is 10+ waitlist signups before building payments.
 
 ### Session 2026-03-30 13:56 (MacBook)
-- **Pattern:** Newsletter Cron Fix + gist.design Dogfooding
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed 4th newsletter cron failure in 8 days — Monday weekly not generating (daily generated instead). Added Monday auto-detect (`getUTCDay() === 1`) to auto-promote to weekly regardless of cron-job.org params. Added Healthchecks.io dead man's switch integration (ping on success, `/fail` on failure) with `HEALTHCHECK_PING_URL_DAILY`/`HEALTHCHECK_PING_URL_WEEKLY` env vars. Created `public/aiuxdesign.gist.design` — dogfooding the gist.design format on aiuxdesign.guide itself. Ran "before" measurement: LLMs get pattern count wrong (28 vs 36), miss interactive demos entirely, conflate with competitor sites (aiuxpatterns.com, shapeof.ai), and describe audit tool generically. The .gist.design file fixes all these. Added `<link rel="gist-design">` in layout.tsx head for crawler discovery. Created memory record tracking all 4 newsletter cron incidents for future sessions.
-
-### Session 2026-03-29 10:15 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

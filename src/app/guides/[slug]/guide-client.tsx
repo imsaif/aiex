@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftIcon, ArrowRightIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { Guide } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
 import CopyButton from '@/components/ui/CopyButton';
@@ -17,11 +17,6 @@ const ConversationalUIBot = dynamic(
   () => import('@/components/guides/ConversationalUIBot').then(mod => ({ default: mod.ConversationalUIBot })),
   { ssr: false, loading: () => <div className="h-[520px] rounded-2xl border border-gray-200 dark:border-gray-700 animate-pulse bg-gray-50 dark:bg-gray-800" /> }
 );
-
-// Lazy-load heavy components
-const DownloadPDFModal = dynamic(() => import('@/components/ui/DownloadPDFModal'), {
-  ssr: false,
-});
 
 // Lazy-load @lobehub/icons — only loaded when the component renders
 const LazyGuideIcon = dynamic(() => import('./guide-icon'), {
@@ -45,8 +40,6 @@ export default function GuideClient({
     getLessonProgress,
     getGuideStatus,
   } = useGuideProgress();
-  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
-
   // Calculate lesson progress
   const hasLessons = guide.lessons && guide.lessons.length > 0;
   const totalLessons = guide.lessons?.length || 0;
@@ -114,15 +107,6 @@ export default function GuideClient({
                 {guide.skillLevel}
               </span>
 
-              {/* Download PDF Button */}
-              <button
-                type="button"
-                onClick={() => setIsDownloadModalOpen(true)}
-                className="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-secondary border border-gray-200 dark:border-gray-700 text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors font-medium text-sm"
-              >
-                <DocumentArrowDownIcon className="w-4 h-4" />
-                Download PDF
-              </button>
             </div>
           </header>
 
@@ -289,15 +273,6 @@ export default function GuideClient({
         </div>
       </div>
 
-      {/* Download PDF Modal - lazy loaded */}
-      {isDownloadModalOpen && (
-        <DownloadPDFModal
-          isOpen={isDownloadModalOpen}
-          onClose={() => setIsDownloadModalOpen(false)}
-          guideTitle={guide.title}
-          guideSlug={guide.slug}
-        />
-      )}
     </div>
   );
 }
