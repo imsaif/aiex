@@ -173,7 +173,7 @@ export function ScreenshotUpload({ productType, productDescription, onBack, onAn
           onDragLeave={() => setIsDragOver(false)}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={`border-2 border-dashed rounded-xl p-16 cursor-pointer transition-all ${
+          className={`border-2 border-dashed rounded-xl p-8 sm:p-16 cursor-pointer transition-all ${
             isDragOver
               ? 'border-accent-primary bg-accent-primary/5 shadow-md'
               : 'border-border-primary bg-background-primary hover:border-accent-primary/50 hover:shadow-md'

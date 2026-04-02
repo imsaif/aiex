@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-02 21:44 (MacBook)
+- **Pattern:** Audit Page Mobile Responsiveness
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed audit page mobile layout across 5 components. AnchorQuestion grid from fixed 5-col to responsive 2→3→5 columns with last card spanning full width on mobile. BranchedFollowUp choices stack single-column on small screens. ScreenshotUpload drop zone padding reduced on mobile. CenterUpload toolbar wraps with shorter labels and hidden divider on small screens. Hero section text sizes, spacing, and padding all reduced for mobile viewports.
+
 ### Session 2026-04-01 19:59 (MacBook)
 - **Pattern:** Newsletter Publish Beehiiv Improvements
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Fixed 4th newsletter cron failure in 8 days — Monday weekly not generating (daily generated instead). Added Monday auto-detect (`getUTCDay() === 1`) to auto-promote to weekly regardless of cron-job.org params. Added Healthchecks.io dead man's switch integration (ping on success, `/fail` on failure) with `HEALTHCHECK_PING_URL_DAILY`/`HEALTHCHECK_PING_URL_WEEKLY` env vars. Created `public/aiuxdesign.gist.design` — dogfooding the gist.design format on aiuxdesign.guide itself. Ran "before" measurement: LLMs get pattern count wrong (28 vs 36), miss interactive demos entirely, conflate with competitor sites (aiuxpatterns.com, shapeof.ai), and describe audit tool generically. The .gist.design file fixes all these. Added `<link rel="gist-design">` in layout.tsx head for crawler discovery. Created memory record tracking all 4 newsletter cron incidents for future sessions.
 
 ### Session 2026-03-29 10:15 (MacBook)
-- **Pattern:** Newsletter Cron Dual-Trigger Fix
-- **Status:** ✅ Completed
-- **Files Changed:** 2
-- **Tests Added/Modified:** 0
-- **Notes:** Fixed recurring every-other-day newsletter failures. Root cause: `vercel.json` still had active `crons` entries alongside cron-job.org, causing dual triggers. Vercel Hobby crons fire ~50% of the time, creating race conditions with cron-job.org via the `after()` background callback. Fix: removed crons from vercel.json (cron-job.org is sole trigger), added duplicate re-check before DB insert as race condition safety net. Manually triggered today's missed newsletter.
-
-### Session 2026-03-27 21:12 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

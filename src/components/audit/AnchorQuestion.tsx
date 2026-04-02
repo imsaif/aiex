@@ -26,9 +26,10 @@ interface AnchorQuestionProps {
 export function AnchorQuestion({ onSelect }: AnchorQuestionProps) {
   return (
     <div className="w-full max-w-5xl mx-auto">
-      <div className="grid grid-cols-5 gap-4">
-        {productOptions.map((option) => {
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        {productOptions.map((option, index) => {
           const Icon = option.icon;
+          const isLast = index === productOptions.length - 1;
           return (
             <button
               key={option.id}
@@ -36,7 +37,7 @@ export function AnchorQuestion({ onSelect }: AnchorQuestionProps) {
                 trackAuditEvent('audit_product_type_selected', { productType: option.id });
                 onSelect(option.id);
               }}
-              className="flex flex-col items-center text-center gap-3 p-5 border border-border-primary rounded-xl bg-background-primary shadow-card hover:bg-accent-subtle hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+              className={`flex flex-col items-center text-center gap-3 p-4 sm:p-5 border border-border-primary rounded-xl bg-background-primary shadow-card hover:bg-accent-subtle hover:-translate-y-0.5 hover:shadow-lg transition-all duration-200 cursor-pointer group ${isLast ? 'col-span-2 sm:col-span-1' : ''}`}
             >
               <div className="w-12 h-12 rounded-xl bg-accent-subtle flex items-center justify-center">
                 <Icon className="w-6 h-6 text-accent-primary" />

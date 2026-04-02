@@ -228,8 +228,8 @@ export default function AuditClient() {
       {isIntakeFlow ? (
         <>
           {/* INTAKE FLOW — Standard site hero layout */}
-          <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-            <div className="max-w-7xl mx-auto px-6">
+          <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
               <div className="text-center max-w-5xl mx-auto">
                 {/* "1 remaining" banner in intake flow */}
                 {showIntakeBanner && (
@@ -248,10 +248,10 @@ export default function AuditClient() {
                       </span>
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6" style={{ color: 'var(--text-hero)' }}>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6" style={{ color: 'var(--text-hero)' }}>
                       Free AI UX Audit Tool
                     </h1>
-                    <p className="text-lg md:text-xl text-text-secondary mb-12">
+                    <p className="text-base sm:text-lg md:text-xl text-text-secondary mb-8 sm:mb-12">
                       Score your AI interface against 36 proven design patterns. Select your product type to get started.
                     </p>
 
@@ -309,7 +309,7 @@ export default function AuditClient() {
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
 
           {/* Canvas Area */}
-          <div className="relative z-10 h-full p-4 xl:p-6">
+          <div className="relative z-10 h-full p-2 sm:p-4 xl:p-6">
             <div className="h-full bg-background-primary rounded-2xl shadow-2xl overflow-clip relative">
               {/* Grid Pattern on Canvas */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:24px_24px]" />

@@ -109,7 +109,7 @@ export function BranchedFollowUp({ productType, onBack, onContinue }: BranchedFo
       {/* Branched multi-select */}
       <div className="mb-10 text-left">
         <label className="block text-base font-semibold mb-4 text-text-primary">{branch.question}</label>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {branch.choices.map((option) => {
             const isSelected = selectedRoles.includes(option);
             return (

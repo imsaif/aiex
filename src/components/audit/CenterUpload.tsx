@@ -241,7 +241,7 @@ export function CenterUpload({
 
           {/* Toolbar — flows below the device frame */}
           {!isAnalyzing && (
-            <div className="mt-4 flex items-center gap-2 px-4 py-2 bg-background-primary/90 backdrop-blur-sm rounded-full shadow-sm border border-border-primary/30">
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-background-primary/90 backdrop-blur-sm rounded-2xl sm:rounded-full shadow-sm border border-border-primary/30">
               {/* Analyze or New Audit — primary CTA */}
               {!hasResults && onStartAnalysis ? (
                 <button
@@ -271,7 +271,8 @@ export function CenterUpload({
                   className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-background-secondary transition-colors cursor-pointer"
                 >
                   <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                  Chat with Design Mentor
+                  <span className="hidden sm:inline">Chat with Design Mentor</span>
+                  <span className="sm:hidden">Chat</span>
                 </button>
               )}
 
@@ -287,7 +288,7 @@ export function CenterUpload({
                 </button>
               )}
 
-              <div className="w-px h-5 bg-border-primary/50" />
+              <div className="hidden sm:block w-px h-5 bg-border-primary/50" />
 
               {/* Frame toggle */}
               {onToggleFrame && (
