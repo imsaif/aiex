@@ -37,8 +37,8 @@ async function getPublishedDrafts(): Promise<Newsletter[]> {
       tags: [], // Auto-generated newsletters don't have curated tags
       type: (draft.type as 'daily' | 'weekly') || 'daily',
     }));
-  } catch {
-    // If database is not available, return empty array
+  } catch (error) {
+    console.error('[News] Failed to fetch published drafts from database:', error);
     return [];
   }
 }

@@ -41,7 +41,13 @@ function isNew(date: string | Date): boolean {
 
 export default function NewsClient({ initialNewsletters }: NewsClientProps) {
   const [filterQuery, setFilterQuery] = useState('');
-  const [showAll, setShowAll] = useState(false);
+  const hasRecentNewsletters = useMemo(() => {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    return initialNewsletters.some((n) => new Date(n.publishedAt) >= thirtyDaysAgo);
+  }, [initialNewsletters]);
+
+  const [showAll, setShowAll] = useState(!hasRecentNewsletters && initialNewsletters.length > 0);
   const [showStickySignup, setShowStickySignup] = useState(false);
   const [stickyEmail, setStickyEmail] = useState('');
   const [stickyStatus, setStickyStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
