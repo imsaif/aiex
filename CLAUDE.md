@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-03 15:32 (MacBook)
+- **Pattern:** News Filters, Deep Dives & Guides Card Fix
+- **Status:** ✅ Completed
+- **Files Changed:** 8
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed empty news page (auto-show all when 30-day window empty, added DB error logging). Added filter bar to news page with Type (All/Daily/Weekly) and Product pill chips with self-hosted icons (ChatGPT, Claude, Gemini, Cursor, etc.). Added "Deep Dives" section below news feed with 6 Medium articles as cards. Added product extraction server-side from newsletter titles/summaries. Fixed Conversational UI guide card on guides listing — added guideData entry (tagline, highlights, modules) and chat bubble icon. Restructured guides page: featured section now 2-column grid with both Claude Code and Conversational UI as recommended; More Guides section uses matching 2-column card layout with consistent CTA buttons. Downloaded 3 new simple-icons (cursor, meta, v0).
+
 ### Session 2026-04-02 22:20 (MacBook)
 - **Pattern:** Conversational UI Guide Overhaul
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** 7 hardening fixes to newsletter cron generation after 5th recurring failure (Apr 1). Added 25s AbortController timeout on Claude API call (was unlimited), try-catch around JSON.parse with response preview in error, weekly 0-items now throws instead of silent return (triggers retry + failure alert), RSS feed failures now logged with source name + summary count, fixed UTC timezone inconsistency (setHours→setUTCHours) in date boundaries, added startup config validation log for env var presence, healthcheck ping on "already exists" skip path. All changes in route.ts — every code path now either succeeds visibly or fails loudly.
 
 ### Session 2026-03-31 19:48 (MacBook)
-- **Pattern:** Fake-Door Paywall for Audit Tool
-- **Status:** ✅ Completed
-- **Files Changed:** 10
-- **Tests Added/Modified:** 0
-- **Notes:** Implemented fake-door paywall monetization strategy for audit tool. localStorage-based lifetime audit counter (3 free). Progressive funnel: info chip shows remaining audits, amber "1 remaining" banner at audit 2, full paywall modal with 3-tier pricing display + "Join Early Access List" email capture at audit 4. Waitlist API syncs to Beehiiv with `paywall-waitlist` utm_source tag for segmentation. SaveReportNudge prompts email save after 2nd audit. Server-side rate limit bumped to 10/day as safety net (localStorage is primary gate). No Stripe, no auth — validation gate is 10+ waitlist signups before building payments.
-
-### Session 2026-03-30 13:56 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

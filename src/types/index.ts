@@ -356,6 +356,7 @@ export interface Newsletter {
   published: boolean;
   tags: NewsletterTag[];
   type?: 'daily' | 'weekly';
+  products?: string[];
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }

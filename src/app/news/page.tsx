@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getNewsletters, getAllTags, tags as defaultTags } from '@/data/newsletters';
+import { getNewsletters, getAllTags } from '@/data/newsletters';
 import { prisma } from '@/lib/prisma';
 import NewsClient from './news-client';
 import type { Newsletter } from '@/types';
@@ -17,6 +17,29 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 3600; // ISR: revalidate every hour
+
+const PRODUCT_KEYWORDS: Record<string, string[]> = {
+  'ChatGPT': ['ChatGPT'],
+  'Claude': ['Claude', 'Anthropic'],
+  'Gemini': ['Gemini'],
+  'Cursor': ['Cursor'],
+  'Copilot': ['Copilot'],
+  'Perplexity': ['Perplexity'],
+  'Midjourney': ['Midjourney'],
+  'Figma': ['Figma'],
+  'v0': ['v0 '],
+  'OpenAI': ['OpenAI'],
+  'Google': ['Google AI', 'Google DeepMind'],
+  'Meta': ['Meta AI', 'Llama'],
+  'Apple': ['Apple Intelligence'],
+};
+
+function extractProducts(title: string, summary: string): string[] {
+  const text = `${title} ${summary}`;
+  return Object.entries(PRODUCT_KEYWORDS)
+    .filter(([, keywords]) => keywords.some((kw) => text.includes(kw)))
+    .map(([product]) => product);
+}
 
 async function getPublishedDrafts(): Promise<Newsletter[]> {
   try {
@@ -54,12 +77,14 @@ export default async function NewsPage() {
   const staticSlugs = new Set(staticNewsletters.map((n) => n.slug));
   const uniqueDbNewsletters = dbNewsletters.filter((n) => !staticSlugs.has(n.slug));
 
-  // Combine and sort by date (newest first)
-  const allNewsletters = [...staticNewsletters, ...uniqueDbNewsletters].sort((a, b) => {
-    const dateA = new Date(a.publishedAt);
-    const dateB = new Date(b.publishedAt);
-    return dateB.getTime() - dateA.getTime();
-  });
+  // Combine, enrich with products, and sort by date (newest first)
+  const allNewsletters = [...staticNewsletters, ...uniqueDbNewsletters]
+    .map((n) => ({ ...n, products: extractProducts(n.title, n.summary) }))
+    .sort((a, b) => {
+      const dateA = new Date(a.publishedAt);
+      const dateB = new Date(b.publishedAt);
+      return dateB.getTime() - dateA.getTime();
+    });
 
   const tags = getAllTags();
 

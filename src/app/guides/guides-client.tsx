@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import { Claude, Cursor, Github, Copilot } from '@lobehub/icons';
-import { ClockIcon, BookOpenIcon, FolderIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, BookOpenIcon, FolderIcon, ArrowRightIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -31,6 +31,11 @@ const guideData: Record<string, { tagline: string; highlights: string[]; modules
     highlights: ['Version control basics', 'Pull requests & code review', 'Team collaboration workflows'],
     modules: ['Setup', 'Core Features', 'Collaboration', 'Best Practices'],
   },
+  'conversational-ui-guide': {
+    tagline: 'Design & implementation guide',
+    highlights: ['Chat bubbles, streaming & typing indicators', 'Context management & error recovery', 'Agentic AI patterns & accessibility'],
+    modules: ['Foundations', 'Building', 'Advanced Patterns', 'Ship It'],
+  },
 };
 
 // Get icon component for a guide
@@ -38,7 +43,7 @@ function GuideIcon({ tool, size = 40 }: { tool: string; size?: number }) {
   const iconProps = { size };
   switch (tool?.toLowerCase()) {
     case 'claude code':
-      return <div style={{ color: '#D97757' }}><Claude {...iconProps} /></div>;
+      return <div className="text-[--claude-brand]" style={{ '--claude-brand': '#D97757' } as React.CSSProperties}><Claude {...iconProps} /></div>;
     case 'cursor':
       return <div className="text-gray-900 dark:text-gray-100"><Cursor {...iconProps} /></div>;
     case 'github':
@@ -46,14 +51,14 @@ function GuideIcon({ tool, size = 40 }: { tool: string; size?: number }) {
     case 'github copilot':
       return <Copilot.Color {...iconProps} />;
     default:
-      return null;
+      return <div className="text-accent-primary"><ChatBubbleLeftRightIcon style={{ width: size, height: size }} /></div>;
   }
 }
 
 export default function GuidesClient() {
-  // Get featured guide (Claude Code) and other guides
-  const featuredGuide = useMemo(() => guides.find(g => g.slug === 'claude-code-learning-path'), []);
-  const otherGuides = useMemo(() => guides.filter(g => g.slug !== 'claude-code-learning-path'), []);
+  const featuredSlugs = ['claude-code-learning-path', 'conversational-ui-guide'];
+  const featuredGuides = useMemo(() => guides.filter(g => featuredSlugs.includes(g.slug)), []);
+  const otherGuides = useMemo(() => guides.filter(g => !featuredSlugs.includes(g.slug)), []);
 
   // Get metadata for a guide
   const getGuideMeta = (guide: any) => {
@@ -67,9 +72,6 @@ export default function GuidesClient() {
       readTime: guide.readTime || 0,
     };
   };
-
-  const featuredMeta = featuredGuide ? getGuideMeta(featuredGuide) : { lessons: 0, moduleCount: 0, readTime: 0 };
-  const featuredData = guideData['claude-code-learning-path'];
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -89,9 +91,9 @@ export default function GuidesClient() {
         </div>
       </section>
 
-      {/* Featured Guide Section */}
-      {featuredGuide && (
-        <section className="py-12 md:py-16 border-b border-gray-200 dark:border-gray-800">
+      {/* Recommended Start Section */}
+      {featuredGuides.length > 0 && (
+        <section className="py-12 md:py-16 border-b border-border-secondary">
           <div className="max-w-7xl mx-auto px-6">
             {/* Section Label */}
             <div className="flex items-center gap-2 mb-6">
@@ -100,77 +102,92 @@ export default function GuidesClient() {
               </span>
             </div>
 
-            {/* Featured Card */}
-            <Link href={`/guides/${featuredGuide.slug}`} className="block group">
-              <div className="bg-surface-secondary rounded-3xl border border-gray-200 dark:border-gray-700 p-8 md:p-10 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-lg">
-                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
-                  {/* Left: Icon & Title */}
-                  <div className="flex-1">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-14 h-14 rounded-2xl bg-orange-500/10 dark:bg-orange-500/20 flex items-center justify-center">
-                        <GuideIcon tool="claude code" size={36} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-accent-primary mb-1">
-                          {featuredData.tagline}
-                        </p>
-                        <h2 className="text-2xl md:text-3xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
-                          {featuredGuide.title}
-                        </h2>
-                      </div>
-                    </div>
+            {/* Featured Cards */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {featuredGuides.map((guide) => {
+                const meta = getGuideMeta(guide);
+                const data = guideData[guide.slug] || { tagline: '', highlights: [], modules: [] };
 
-                    <p className="text-text-secondary text-lg mb-6 max-w-2xl">
-                      {featuredGuide.description}
-                    </p>
-
-                    {/* Metadata */}
-                    <div className="flex flex-wrap items-center gap-6 text-sm text-text-secondary mb-6">
-                      <div className="flex items-center gap-2">
-                        <ClockIcon className="w-4 h-4" />
-                        <span>{featuredMeta.readTime} min</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <BookOpenIcon className="w-4 h-4" />
-                        <span>{featuredMeta.lessons} lessons</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <FolderIcon className="w-4 h-4" />
-                        <span>{featuredMeta.moduleCount} modules</span>
-                      </div>
-                    </div>
-
-                    {/* CTA */}
-                    <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium group-hover:bg-accent-hover transition-colors">
-                      Start Learning
-                      <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
-
-                  {/* Right: Module List */}
-                  <div className="lg:w-72 w-full">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-3">
-                      What you'll learn
-                    </p>
-                    <div className="space-y-2">
-                      {featuredData.modules.map((module, i) => (
-                        <div
-                          key={module}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
-                        >
-                          <span className="w-6 h-6 rounded-full bg-accent-subtle text-accent-primary text-xs font-bold flex items-center justify-center">
-                            {i + 1}
-                          </span>
-                          <span className="text-sm font-medium text-text-primary">
-                            {module}
-                          </span>
+                return (
+                  <Link key={guide.id} href={`/guides/${guide.slug}`} className="block group">
+                    <div className="h-full bg-surface-secondary rounded-3xl border border-gray-200 dark:border-gray-700 p-8 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-lg">
+                      {/* Icon & Title */}
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-accent-subtle flex items-center justify-center flex-shrink-0">
+                          <GuideIcon tool={guide.tool} size={28} />
                         </div>
-                      ))}
+                        <div>
+                          <p className="text-sm font-medium text-accent-primary mb-0.5">
+                            {data.tagline}
+                          </p>
+                          <h2 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
+                            {guide.title}
+                          </h2>
+                        </div>
+                      </div>
+
+                      {/* Highlights */}
+                      {data.highlights.length > 0 && (
+                        <ul className="space-y-2 mb-5">
+                          {data.highlights.map((highlight, i) => (
+                            <li key={i} className="flex items-center gap-2 text-sm text-text-secondary">
+                              <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
+                              {highlight}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {/* Metadata */}
+                      <div className="flex flex-wrap items-center gap-5 text-sm text-text-secondary mb-6">
+                        <div className="flex items-center gap-2">
+                          <ClockIcon className="w-4 h-4" />
+                          <span>{meta.readTime} min</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <BookOpenIcon className="w-4 h-4" />
+                          <span>{meta.lessons} lessons</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <FolderIcon className="w-4 h-4" />
+                          <span>{meta.moduleCount} modules</span>
+                        </div>
+                      </div>
+
+                      {/* Modules */}
+                      {data.modules.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-3">
+                            Modules
+                          </p>
+                          <div className="space-y-2">
+                            {data.modules.map((module, i) => (
+                              <div
+                                key={module}
+                                className="flex items-center gap-3 p-2.5 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                              >
+                                <span className="w-6 h-6 rounded-full bg-accent-subtle text-accent-primary text-xs font-bold flex items-center justify-center">
+                                  {i + 1}
+                                </span>
+                                <span className="text-sm font-medium text-text-primary">
+                                  {module}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* CTA */}
+                      <div className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium group-hover:bg-accent-hover transition-colors">
+                        Start Learning
+                        <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </section>
       )}
@@ -187,87 +204,62 @@ export default function GuidesClient() {
               </p>
             </div>
 
-            {/* Guides List - Horizontal Cards */}
-            <div className="space-y-6">
+            {/* Guides Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {otherGuides.map((guide) => {
                 const meta = getGuideMeta(guide);
                 const data = guideData[guide.slug] || { tagline: '', highlights: [], modules: [] };
 
                 return (
                   <Link key={guide.id} href={`/guides/${guide.slug}`} className="block group">
-                    <div className="bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 p-6 md:p-8 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-lg">
-                      <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
-                        {/* Left: Icon & Title */}
-                        <div className="flex-1">
-                          <div className="flex items-center gap-4 mb-4">
-                            <div className="w-14 h-14 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                              <GuideIcon tool={guide.tool} size={32} />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium text-accent-primary mb-1">
-                                {data.tagline}
-                              </p>
-                              <h3 className="text-2xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
-                                {guide.title}
-                              </h3>
-                            </div>
-                          </div>
-
-                          {/* Highlights */}
-                          {data.highlights.length > 0 && (
-                            <ul className="space-y-2 mb-5">
-                              {data.highlights.map((highlight, i) => (
-                                <li key={i} className="flex items-center gap-2 text-base text-text-secondary">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
-                                  {highlight}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-
-                          {/* Metadata */}
-                          <div className="flex flex-wrap items-center gap-5 text-sm text-text-secondary">
-                            <div className="flex items-center gap-2">
-                              <ClockIcon className="w-4 h-4" />
-                              <span>{meta.readTime} min</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <BookOpenIcon className="w-4 h-4" />
-                              <span>{meta.lessons} lessons</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <FolderIcon className="w-4 h-4" />
-                              <span>{meta.moduleCount} modules</span>
-                            </div>
-                          </div>
+                    <div className="h-full bg-surface-primary rounded-2xl border border-gray-200 dark:border-gray-700 p-8 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-lg flex flex-col">
+                      {/* Icon & Title */}
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                          <GuideIcon tool={guide.tool} size={28} />
                         </div>
-
-                        {/* Right: Modules */}
-                        <div className="lg:w-64 w-full">
-                          <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-3">
-                            Modules
+                        <div>
+                          <p className="text-sm font-medium text-accent-primary mb-0.5">
+                            {data.tagline}
                           </p>
-                          <div className="space-y-2">
-                            {data.modules.map((module, i) => (
-                              <div
-                                key={module}
-                                className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50"
-                              >
-                                <span className="w-6 h-6 rounded-full bg-accent-subtle text-accent-primary text-xs font-bold flex items-center justify-center">
-                                  {i + 1}
-                                </span>
-                                <span className="text-sm font-medium text-text-primary">
-                                  {module}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
+                          <h3 className="text-xl font-bold text-text-primary group-hover:text-accent-primary transition-colors">
+                            {guide.title}
+                          </h3>
                         </div>
+                      </div>
 
-                        {/* CTA Arrow */}
-                        <div className="hidden lg:flex items-center self-center">
-                          <ArrowRightIcon className="w-6 h-6 text-text-secondary group-hover:text-accent-primary group-hover:translate-x-1 transition-all" />
+                      {/* Highlights */}
+                      {data.highlights.length > 0 && (
+                        <ul className="space-y-2 mb-5">
+                          {data.highlights.map((highlight, i) => (
+                            <li key={i} className="flex items-center gap-2 text-sm text-text-secondary">
+                              <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
+                              {highlight}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {/* Metadata */}
+                      <div className="flex flex-wrap items-center gap-5 text-sm text-text-secondary mt-auto mb-6">
+                        <div className="flex items-center gap-2">
+                          <ClockIcon className="w-4 h-4" />
+                          <span>{meta.readTime} min</span>
                         </div>
+                        <div className="flex items-center gap-2">
+                          <BookOpenIcon className="w-4 h-4" />
+                          <span>{meta.lessons} lessons</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <FolderIcon className="w-4 h-4" />
+                          <span>{meta.moduleCount} modules</span>
+                        </div>
+                      </div>
+
+                      {/* CTA */}
+                      <div className="self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium group-hover:bg-accent-hover transition-colors">
+                        Start Learning
+                        <ArrowRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>
                   </Link>
