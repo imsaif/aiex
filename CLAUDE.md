@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-06 14:58 (MacBook)
+- **Pattern:** Newsletter Cron Fix, Performance & News Page Enhancements
+- **Status:** ✅ Completed
+- **Files Changed:** 5
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed weekly newsletter cron (2 bugs: 0-RSS-items threw before daily compilation, 25s Claude timeout too short for weekly — bumped to 45s). Added revalidatePath on publish/generate so news page cache updates immediately. Fixed LCP regression (6.7s→expected ~2-3s): lazy-load CompanyLogoCarousel via dynamic import, removed hero animation. Fixed React hydration error #418 in news page (deferred date checks). News page: multi-select product filters, Deep Dives clap/comment counts with grayscaled emoji, social proof line "46,000+ reads · 50+ products analyzed daily" below subscribe CTA.
+
 ### Session 2026-04-03 15:32 (MacBook)
 - **Pattern:** News Filters, Deep Dives & Guides Card Fix
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Replaced homepage hero CTA from email checklist signup to audit tool ("See how your AI product's UX compares to the best" → "Audit Your Interface Free"). Newsletter signup moved below pattern grid with clean copy. Added Clarity tracking event `audit_hero_cta_clicked` for full funnel measurement (hero → audit completion). Added clipboard paste support (Cmd+V) for screenshot upload on both ScreenshotUpload and CenterUpload components. Added 4-image limit feedback (4/4 max indicator + amber flash message). Increased thumbnail size from 112px to 144px. Analyze button restyled to pill shape matching site design system. Newsletter component updated to support custom heading for all variants and dynamic trust badge text.
 
 ### Session 2026-04-01 12:18 (MacBook)
-- **Pattern:** Newsletter Cron Reliability — Defense in Depth
-- **Status:** ✅ Completed
-- **Files Changed:** 1
-- **Tests Added/Modified:** 0
-- **Notes:** 7 hardening fixes to newsletter cron generation after 5th recurring failure (Apr 1). Added 25s AbortController timeout on Claude API call (was unlimited), try-catch around JSON.parse with response preview in error, weekly 0-items now throws instead of silent return (triggers retry + failure alert), RSS feed failures now logged with source name + summary count, fixed UTC timezone inconsistency (setHours→setUTCHours) in date boundaries, added startup config validation log for env var presence, healthcheck ping on "already exists" skip path. All changes in route.ts — every code path now either succeeds visibly or fails loudly.
-
-### Session 2026-03-31 19:48 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

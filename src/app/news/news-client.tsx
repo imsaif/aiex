@@ -59,7 +59,7 @@ function isNew(date: string | Date): boolean {
 export default function NewsClient({ initialNewsletters }: NewsClientProps) {
   const [filterQuery, setFilterQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<'all' | 'daily' | 'weekly'>('all');
-  const [productFilter, setProductFilter] = useState<string | null>(null);
+  const [productFilters, setProductFilters] = useState<string[]>([]);
   // Track hydration to avoid server/client mismatch with date-dependent rendering
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
@@ -140,8 +140,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
     }
 
     // Product filter
-    if (productFilter) {
-      results = results.filter((n) => n.products?.includes(productFilter));
+    if (productFilters.length > 0) {
+      results = results.filter((n) => productFilters.some((p) => n.products?.includes(p)));
     }
 
     // Text search
@@ -156,9 +156,9 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
     }
 
     return results;
-  }, [displayedNewsletters, typeFilter, productFilter, filterQuery]);
+  }, [displayedNewsletters, typeFilter, productFilters, filterQuery]);
 
-  const hasActiveFilters = typeFilter !== 'all' || productFilter !== null || filterQuery !== '';
+  const hasActiveFilters = typeFilter !== 'all' || productFilters.length > 0 || filterQuery !== '';
 
   const formatDate = (date: string | Date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -211,6 +211,9 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 customSuccessMessage="You're in! Watch for our next issue."
                 stacked
               />
+              <p className="text-base font-medium text-text-secondary mt-4">
+                46,000+ reads · 50+ products analyzed daily
+              </p>
             </div>
           </div>
         </div>
@@ -277,28 +280,33 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
             <div className="flex items-start gap-4">
               <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-16 flex-shrink-0 mt-3">Product</span>
               <div className="flex items-center gap-3 flex-wrap">
-                {allProducts.map((product) => (
-                  <button
-                    key={product}
-                    onClick={() => setProductFilter(productFilter === product ? null : product)}
-                    className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
-                      productFilter === product
-                        ? 'bg-accent-primary text-white'
-                        : 'bg-surface-secondary text-text-secondary hover:bg-surface-tertiary'
-                    }`}
-                  >
-                    {PRODUCT_ICONS[product] && (
-                      <Image
-                        src={PRODUCT_ICONS[product]}
-                        alt=""
-                        width={16}
-                        height={16}
-                        className={`flex-shrink-0 ${productFilter === product ? 'brightness-0 invert' : 'opacity-60 dark:invert'}`}
-                      />
-                    )}
-                    {product}
-                  </button>
-                ))}
+                {allProducts.map((product) => {
+                  const isSelected = productFilters.includes(product);
+                  return (
+                    <button
+                      key={product}
+                      onClick={() => setProductFilters((prev) =>
+                        isSelected ? prev.filter((p) => p !== product) : [...prev, product]
+                      )}
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
+                        isSelected
+                          ? 'bg-accent-primary text-white'
+                          : 'bg-surface-secondary text-text-secondary hover:bg-surface-tertiary'
+                      }`}
+                    >
+                      {PRODUCT_ICONS[product] && (
+                        <Image
+                          src={PRODUCT_ICONS[product]}
+                          alt=""
+                          width={16}
+                          height={16}
+                          className={`flex-shrink-0 ${isSelected ? 'brightness-0 invert' : 'opacity-60 dark:invert'}`}
+                        />
+                      )}
+                      {product}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -312,7 +320,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
               <button
                 onClick={() => {
                   setTypeFilter('all');
-                  setProductFilter(null);
+                  setProductFilters([]);
                   setFilterQuery('');
                 }}
                 className="text-sm text-accent-primary hover:underline font-medium"
@@ -461,6 +469,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 summary: 'Two AI products read my data this week. One told me. The other assumed I\'d figure it out.',
                 readTime: '18 min',
                 date: 'Mar 30, 2026',
+                claps: 206,
+                comments: 7,
                 url: 'https://medium.com/design-bootcamp/ai-learned-to-shut-up-it-forgot-to-say-what-it-was-doing-91df21ad2742',
               },
               {
@@ -468,6 +478,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 summary: 'I mapped the permission decisions in 12 AI products. The gap in the middle is the design problem.',
                 readTime: '19 min',
                 date: 'Feb 24, 2026',
+                claps: 132,
+                comments: 4,
                 url: 'https://medium.com/design-bootcamp/who-is-designing-the-boundary-for-ai-3a51b18b5fc7',
               },
               {
@@ -475,6 +487,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 summary: 'When AI agents can\'t read your product, they borrow your competitor\'s words instead.',
                 readTime: '15 min',
                 date: 'Feb 10, 2026',
+                claps: 114,
+                comments: 2,
                 url: 'https://medium.com/design-bootcamp/ai-cant-see-your-design-so-it-guesses-c50e3695f01a',
               },
               {
@@ -482,6 +496,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 summary: 'One-click actions, ambient context, and a framework for deciding when AI should talk and when it shouldn\'t.',
                 readTime: '14 min',
                 date: 'Jan 29, 2026',
+                claps: 290,
+                comments: 10,
                 url: 'https://medium.com/design-bootcamp/ai-is-finally-learning-to-shut-up-62af1d2c01c8',
               },
               {
@@ -489,6 +505,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 summary: 'Interface design is necessary for AI products. It\'s just not sufficient.',
                 readTime: '11 min',
                 date: 'Dec 23, 2025',
+                claps: 34,
+                comments: 0,
                 url: 'https://medium.com/design-bootcamp/stop-designing-ai-interfaces-start-designing-ai-relationships-ab99228a796c',
               },
               {
@@ -496,6 +514,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 summary: 'We were given the most transformative technology in decades and we turned it into a fancier text box.',
                 readTime: '10 min',
                 date: 'Dec 12, 2025',
+                claps: 214,
+                comments: 2,
                 url: 'https://medium.com/design-bootcamp/most-aiux-is-just-search-with-extra-steps-3faaae035ab8',
               },
             ].map((article) => (
@@ -514,9 +534,19 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 <h3 className="text-lg md:text-xl font-semibold text-text-primary group-hover:text-accent-primary transition-colors leading-snug mb-3">
                   {article.title}
                 </h3>
-                <p className="text-base text-text-secondary leading-relaxed mb-5">
+                <p className="text-base text-text-secondary leading-relaxed mb-4">
                   {article.summary}
                 </p>
+                <div className="flex items-center gap-4 mb-5 text-sm text-text-tertiary">
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-base grayscale">👏</span>
+                    {article.claps}
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <span className="text-base grayscale">💬</span>
+                    {article.comments}
+                  </span>
+                </div>
                 <span className="inline-flex items-center gap-1.5 text-base font-medium text-accent-primary">
                   Read on Medium
                   <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
