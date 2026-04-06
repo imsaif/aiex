@@ -4,8 +4,8 @@ import Navbar from '@/components/layout/Navbar';
 import HeroAuditCTA from '@/components/audit/HeroAuditCTA';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
 import PatternGrid from './pattern-grid';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
@@ -57,13 +57,11 @@ export default function Home() {
               <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                 Patterns used by leading companies
               </p>
-              <CompanyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
+              <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
             </div>
 
             {/* Audit CTA - Primary action (tracked via Clarity) */}
-            <div className="animate-fade-in">
-              <HeroAuditCTA />
-            </div>
+            <HeroAuditCTA />
           </div>
         </div>
       </section>
