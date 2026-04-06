@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { timingSafeEqual } from 'crypto';
@@ -255,6 +256,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidatePath('/news');
+    revalidatePath(`/news/${draft.slug}`);
+
     let emailResult = null;
     if (sendEmail) {
       emailResult = await sendNewsletterToSubscribers({
@@ -384,6 +388,9 @@ export async function GET(request: NextRequest) {
         publishDate: new Date(),
       },
     });
+
+    revalidatePath('/news');
+    revalidatePath(`/news/${draft.slug}`);
 
     // Send to subscribers if requested
     if (shouldSend) {

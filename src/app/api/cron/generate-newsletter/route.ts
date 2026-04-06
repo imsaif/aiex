@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { after } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import Anthropic from '@anthropic-ai/sdk';
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
@@ -1094,6 +1095,8 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
     console.error('Admin notification failed:', err)
   );
 
+  revalidatePath('/news');
+  revalidatePath(`/news/${draft.slug}`);
   console.log(`[newsletter] Generated ${type} newsletter: "${draft.title}" (${draft.id})`);
 }
 
