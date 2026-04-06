@@ -77,12 +77,12 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'Learn progressive disclosure for AI interfaces: gradually reveal complexity to reduce cognitive load. Real examples from ChatGPT, Claude, and Notion with interactive demos and implementation guidelines.',
   },
   'conversational-ui': {
-    title: 'Conversational UI Design — Build Chat & Voice Interfaces (Examples & Patterns)',
-    description: 'Complete guide to conversational UI and conversational interfaces. Design patterns for chatbots, voice assistants, and natural language interfaces with examples from ChatGPT, Slack, and Siri.',
+    title: 'Conversational UI — Design Patterns for Chat Interfaces & Conversational UX',
+    description: 'What is conversational UI? A complete guide to designing chat interfaces, voice assistants, and conversational user interfaces. Examples from ChatGPT, Slack, and Siri with interactive demos.',
   },
   'privacy-first-design': {
-    title: 'Privacy-First AI Design — Build Trust with Data Minimization & User Controls',
-    description: 'Privacy-first design patterns for AI products. Local-first processing, transparent consent, data minimization, and privacy controls. Real examples from Apple, Signal, and DuckDuckGo.',
+    title: 'Privacy-First AI Design — Local Processing, Data Minimization & Consent UX',
+    description: 'How to design AI products that protect user privacy. Patterns for local-first processing, transparent data consent, and privacy controls with real examples from Apple, Signal, and DuckDuckGo.',
   },
   'confidence-visualization': {
     title: 'AI Confidence Scores UX — How to Show Confidence Levels to Users',
@@ -97,37 +97,37 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'How to handle context switching in AI chatbots and tools. Patterns for preserving state, managing multiple conversations, and reducing cognitive load across projects.',
   },
   'multimodal-interaction': {
-    title: 'Multimodal Interaction Design — Voice, Touch, Gesture & Text Patterns',
-    description: 'Design multimodal AI interfaces combining voice, touch, gesture, and text. What multimodal interaction means, real examples from Siri, Google Lens, and GPT-4V, with implementation guidelines.',
+    title: 'Multimodal Interaction — What It Means & How to Design Voice, Touch & Text UX',
+    description: 'What is multimodal interaction? Design patterns for combining voice, touch, gesture, and text in AI interfaces. Real examples from Siri, Google Lens, and GPT-4V with interactive demos.',
   },
   'feedback-loops': {
-    title: 'AI Feedback Loops — How to Design Continuous Learning from User Input',
-    description: 'Design effective AI feedback loops that learn from user corrections. Thumbs up/down, implicit signals, corrective feedback diagrams, and real examples from ChatGPT, Midjourney, and Notion.',
+    title: 'AI Feedback Loops — Diagrams, Examples & How to Design Continuous Learning',
+    description: 'How AI feedback loops work, with diagrams. Design thumbs up/down, implicit signals, and corrective feedback that drives continuous learning. Real examples from ChatGPT, Midjourney, and Notion.',
   },
   'error-recovery': {
     title: 'Graceful Error Recovery in AI — Helping Users Recover from AI Mistakes',
     description: 'Design graceful error recovery for AI products. Patterns for handling wrong predictions, failed generations, and AI hallucinations with undo, retry, and fallback strategies.',
   },
   'contextual-assistance': {
-    title: 'Contextual Assistance — Proactive AI Help Based on User Behavior',
-    description: 'Design AI that offers help at the right moment without interrupting. Patterns for contextual suggestions, smart tooltips, and proactive assistance from Gmail, Notion, and GitHub Copilot.',
+    title: 'Contextual Assistance & Contextual Help UX — Proactive AI That Helps at the Right Moment',
+    description: 'Design contextual help and in-app assistance that appears at the right moment. Patterns for smart tooltips, contextual suggestions, and proactive AI help. Examples from Gmail, Notion, and Copilot.',
   },
   // --- Medium-impression patterns (500-1000+ impressions) ---
   'collaborative-ai': {
-    title: 'Collaborative AI — Design Human-AI Teamwork That Amplifies Creativity',
-    description: 'Patterns for human-AI collaboration in creative and professional tools. Real examples from Figma AI, Google Docs, and GitHub Copilot. Learn how to design AI that collaborates, not replaces.',
+    title: 'Collaborative AI — What It Is & How to Design Human-AI Collaboration',
+    description: 'What is collaborative AI? Design patterns for human-AI teamwork in creative and professional tools. Real examples from Figma AI, Google Docs, and GitHub Copilot with code demos.',
   },
   'ambient-intelligence': {
     title: 'Ambient Intelligence — Designing AI That Works Quietly in the Background',
     description: 'Ambient AI design patterns for invisible, context-aware assistance. Smart environments that anticipate needs without explicit commands. Examples from Apple, Nest, and Tesla.',
   },
   'intelligent-caching': {
-    title: 'Intelligent Caching — Smart Caching Strategies for AI-Powered Products',
-    description: 'Design intelligent caching for AI applications. Predictive prefetching, context-aware cache invalidation, and smart storage strategies. Reduce latency and improve UX in AI products.',
+    title: 'Intelligent Caching & Smart Caching — Predictive Strategies for AI Products',
+    description: 'Intelligent caching and smart caching patterns for AI applications. Predictive prefetching, context-aware invalidation, and storage strategies that reduce latency. Real examples and code demos.',
   },
   'escalation-pathways': {
-    title: 'Escalation Pathways — When AI Should Hand Off to Humans (Design Pattern)',
-    description: 'Design clear escalation pathways from AI to human support. Patterns for crisis detection, agent handoff, and human escalation with examples from Intercom, Zendesk, and healthcare AI.',
+    title: 'Escalation Pathways — When & How AI Should Hand Off to Humans',
+    description: 'Design escalation pathways from AI agents to human support. Patterns for agent handoff, crisis detection, and human escalation with real examples from Intercom, Zendesk, and healthcare AI.',
   },
   'progressive-enhancement': {
     title: 'Progressive Enhancement for AI — Graceful Degradation & Fallback Design',
@@ -139,8 +139,8 @@ const customPatternMetadata: Record<string, { title: string; description: string
   },
   // --- Patterns ranking near page 1 (position 5-15) ---
   'trust-calibration': {
-    title: 'Trust Calibration — Help Users Build Appropriate Trust in AI Systems',
-    description: 'Design AI interfaces that calibrate user trust accurately. Patterns for showing reliability, managing expectations, and preventing over-reliance or under-trust in AI predictions.',
+    title: 'Trust Calibration in AI — What It Means & How to Design for Appropriate Trust',
+    description: 'What is trust calibration? Design AI interfaces that help users trust AI accurately — not too much, not too little. Patterns for reliability signals, expectations, and preventing over-reliance.',
   },
   'explainable-ai': {
     title: 'Explainable AI (XAI) UX — Make AI Decisions Transparent & Understandable',
@@ -171,12 +171,12 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'Design AI products responsibly. Patterns for fairness, accountability, bias detection, and ethical AI decision-making with real-world examples and implementation guidelines.',
   },
   'anti-manipulation-safeguards': {
-    title: 'Anti-Manipulation Safeguards — Protecting Users from Dark Patterns in AI',
-    description: 'Design AI interfaces that resist manipulation. Patterns for preventing dark patterns, protecting against persuasive AI, and ensuring user autonomy in AI-powered products.',
+    title: 'Anti-Manipulation Safeguards — Prevent Dark Patterns & Protect Users in AI',
+    description: 'How to prevent dark patterns in AI interfaces. Anti-manipulation design patterns that protect user autonomy, prevent persuasive AI abuse, and ensure ethical interaction design.',
   },
   'selective-memory': {
-    title: 'Selective Memory — Give Users Control Over What AI Remembers',
-    description: 'Design AI memory controls that let users decide what the system remembers and forgets. Privacy-respecting patterns for persistent context and data management.',
+    title: 'Selective Memory in AI — Let Users Control What AI Remembers & Forgets',
+    description: 'What does selective memory mean in AI? Design patterns for memory controls, data deletion, and persistent context management. Give users control over what AI remembers.',
   },
   // --- Remaining patterns for complete coverage ---
   'agent-status-monitoring': {

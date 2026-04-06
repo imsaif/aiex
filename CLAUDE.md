@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-06 20:08 (MacBook)
+- **Pattern:** SEO CTR Optimization & Homepage CTA
+- **Status:** ✅ Completed
+- **Files Changed:** 2
+- **Tests Added/Modified:** 0
+- **Notes:** Analyzed GSC data (last 3 months) and rewrote meta titles/descriptions for 11 low-CTR pattern pages (worst: Privacy-First 0.09% on 3,388 impressions, Conversational UI 0.26% on 5,484). Matched meta to actual search queries (added "What is..." hooks, definitional triggers, exact query terms like "smart caching", "contextual help UX"). Added shadow to homepage "Audit Your Interface Free" CTA button for prominence.
+
 ### Session 2026-04-06 14:58 (MacBook)
 - **Pattern:** Newsletter Cron Fix, Performance & News Page Enhancements
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Enhanced news listing page with 5 improvements: weekly badge pills on roundup issues, summary subtitle under each title (line-clamped), reading time estimates, "Today" indicator with accent highlight on current day's issue, and sticky newsletter signup bar on scroll with inline single-line layout (title + email + button + disclosure). Widened container from max-w-4xl to max-w-5xl, bumped font sizes for accessibility (title now text-lg font-semibold, summary text-base text-secondary). Added `type` field to Newsletter interface and passed from DB. Removed hardcoded default tags from auto-generated newsletters (were showing same "AI Design" + "UX Patterns" on every post). Trust badge text in newsletter component now context-aware.
 
 ### Session 2026-04-01 13:28 (MacBook)
-- **Pattern:** Homepage Hero Audit CTA + Screenshot Paste Support
-- **Status:** ✅ Completed
-- **Files Changed:** 6
-- **Tests Added/Modified:** 0
-- **Notes:** Replaced homepage hero CTA from email checklist signup to audit tool ("See how your AI product's UX compares to the best" → "Audit Your Interface Free"). Newsletter signup moved below pattern grid with clean copy. Added Clarity tracking event `audit_hero_cta_clicked` for full funnel measurement (hero → audit completion). Added clipboard paste support (Cmd+V) for screenshot upload on both ScreenshotUpload and CenterUpload components. Added 4-image limit feedback (4/4 max indicator + amber flash message). Increased thumbnail size from 112px to 144px. Analyze button restyled to pill shape matching site design system. Newsletter component updated to support custom heading for all variants and dynamic trust badge text.
-
-### Session 2026-04-01 12:18 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
