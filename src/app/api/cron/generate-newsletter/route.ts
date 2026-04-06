@@ -952,13 +952,8 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
   // Step 1: Aggregate news
   const newsItems = await aggregateNews(lookbackHours, deduplicationDays, { lite });
 
-  // Handle quiet days (only for daily)
-  if (newsItems.length === 0) {
-    if (type === 'weekly') {
-      console.log('[newsletter] No news items found for weekly newsletter');
-      throw new Error('Weekly newsletter had 0 news items — neither RSS feeds nor daily compilation produced content');
-    }
-
+  // Handle quiet days (only for daily — weekly falls through to daily compilation)
+  if (newsItems.length === 0 && type === 'daily') {
     const quietDayMessages = [
       { title: 'A Quiet Day in AI', message: 'No major AI updates today. Perfect time to explore a new pattern or refine your designs.' },
       { title: 'The AI World Takes a Breath', message: 'Nothing groundbreaking today. Why not revisit a pattern you haven\'t explored yet?' },
@@ -1004,10 +999,14 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
   if (type === 'weekly') {
     const dailyItems = await getDailyNewsletterItems(7);
     if (dailyItems.length >= 3) {
+      console.log(`[newsletter] Weekly: compiling from ${dailyItems.length} daily items`);
       prompt = buildWeeklyCompilationPrompt(dailyItems);
       dailyItemsUsed = dailyItems;
-    } else {
+    } else if (newsItems.length > 0) {
+      console.log(`[newsletter] Weekly: only ${dailyItems.length} daily items, using ${newsItems.length} RSS items instead`);
       prompt = buildWeeklyPrompt(newsItems, recentHeadlines);
+    } else {
+      throw new Error(`Weekly newsletter had 0 usable content — ${dailyItems.length} daily items (need 3+), 0 RSS items`);
     }
   } else {
     prompt = buildPrompt(newsItems, recentHeadlines);
