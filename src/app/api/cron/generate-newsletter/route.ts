@@ -1013,7 +1013,8 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
   }
 
   const claudeController = new AbortController();
-  const claudeTimeout = setTimeout(() => claudeController.abort(), 25000);
+  const claudeTimeoutMs = type === 'weekly' ? 45000 : 25000;
+  const claudeTimeout = setTimeout(() => claudeController.abort(), claudeTimeoutMs);
   let response;
   try {
     response = await anthropic.messages.create({
