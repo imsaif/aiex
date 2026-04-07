@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-07 13:07 (MacBook)
+- **Pattern:** Performance & Dark Mode Fixes
+- **Status:** ✅ Completed
+- **Files Changed:** 11
+- **Tests Added/Modified:** 0
+- **Notes:** Fixed LCP regression (6.6s→~2.5s): changed font display from "optional" to "swap", added explicit font preload links for satoshi-400/700, re-enabled SSR on logo carousel. Fixed dark mode across 11 files: `bg-accent-primary text-white` invisible buttons (accent-primary is #fff in dark mode) — added `dark:text-gray-900` to news filters, hero CTA, subscribe button, 404 page, unsubscribe page, download page, guides bot, mentor upgrade, screenshot upload. Fixed non-existent `surface-tertiary` token on news filter pills and category nav. Fixed product icon visibility on selected pills with `dark:invert-0`. Updated news hero chip text.
+
 ### Session 2026-04-06 20:08 (MacBook)
 - **Pattern:** SEO CTR Optimization & Homepage CTA
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Wired audit email capture points to newsletter subscriber list. EmailReportModal now fire-and-forget subscribes with `source: 'audit-report'` on successful report send. PaywallModal waitlist signup now also subscribes with `source: 'audit-waitlist'` (willingness-to-pay signal for segmentation). Added both new sources to NEWSLETTER_SOURCES type. Disclosure text added to PaywallModal informing users they'll receive daily AI UX news.
 
 ### Session 2026-04-01 13:55 (MacBook)
-- **Pattern:** News Page Enhancements
-- **Status:** ✅ Completed
-- **Files Changed:** 4
-- **Tests Added/Modified:** 0
-- **Notes:** Enhanced news listing page with 5 improvements: weekly badge pills on roundup issues, summary subtitle under each title (line-clamped), reading time estimates, "Today" indicator with accent highlight on current day's issue, and sticky newsletter signup bar on scroll with inline single-line layout (title + email + button + disclosure). Widened container from max-w-4xl to max-w-5xl, bumped font sizes for accessibility (title now text-lg font-semibold, summary text-base text-secondary). Added `type` field to Newsletter interface and passed from DB. Removed hardcoded default tags from auto-generated newsletters (were showing same "AI Design" + "UX Patterns" on every post). Trust badge text in newsletter component now context-aware.
-
-### Session 2026-04-01 13:28 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture

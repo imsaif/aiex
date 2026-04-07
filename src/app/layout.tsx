@@ -11,7 +11,7 @@ const satoshi = localFont({
     { path: "../../public/fonts/satoshi-700.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-satoshi",
-  display: "optional",
+  display: "swap",
   preload: true,
   adjustFontFallback: false,
 });
@@ -45,6 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={satoshi.variable}>
       <head>
+        {/* Preload critical font weights for fast LCP */}
+        <link rel="preload" as="font" href="/fonts/satoshi-400.woff2" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" as="font" href="/fonts/satoshi-700.woff2" type="font/woff2" crossOrigin="anonymous" />
         {/* Machine-readable product design decisions for AI tools and LLMs */}
         <link rel="gist-design" href="/aiuxdesign.gist.design" type="text/markdown" />
         {/* ChunkLoadError recovery — auto-reload on stale chunk after deploy */}

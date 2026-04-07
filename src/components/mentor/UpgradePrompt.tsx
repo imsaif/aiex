@@ -130,7 +130,7 @@ export function UpgradePrompt({
       <button
         type="button"
         onClick={onUpgrade}
-        className="w-full py-3 px-4 bg-accent-primary text-white font-semibold rounded-xl hover:bg-accent-hover transition-all hover:scale-[1.02] shadow-md"
+        className="w-full py-3 px-4 bg-accent-primary text-white dark:text-gray-900 font-semibold rounded-xl hover:bg-accent-hover transition-all hover:scale-[1.02] shadow-md"
       >
         {content.action}
       </button>

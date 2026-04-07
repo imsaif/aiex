@@ -215,7 +215,7 @@ export default function UnsubscribeClient() {
           </p>
           <Link
             href="/"
-            className="inline-block px-6 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
+            className="inline-block px-6 py-2 bg-accent-primary text-white dark:text-gray-900 rounded-md hover:bg-accent-primary/90 transition-colors"
           >
             Return to Homepage
           </Link>
@@ -233,7 +233,7 @@ export default function UnsubscribeClient() {
           <p className="text-text-secondary mb-6">{errorMessage}</p>
           <Link
             href="/"
-            className="inline-block px-6 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
+            className="inline-block px-6 py-2 bg-accent-primary text-white dark:text-gray-900 rounded-md hover:bg-accent-primary/90 transition-colors"
           >
             Return to Homepage
           </Link>
@@ -259,7 +259,7 @@ export default function UnsubscribeClient() {
           </p>
           <Link
             href="/"
-            className="inline-block px-6 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
+            className="inline-block px-6 py-2 bg-accent-primary text-white dark:text-gray-900 rounded-md hover:bg-accent-primary/90 transition-colors"
           >
             Return to AI UX Patterns
           </Link>
@@ -328,7 +328,7 @@ export default function UnsubscribeClient() {
                 <button
                   onClick={handleSubmitFeedback}
                   disabled={!selectedReason || isSubmitting}
-                  className="flex-1 px-4 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 bg-accent-primary text-white dark:text-gray-900 rounded-md hover:bg-accent-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
                 </button>

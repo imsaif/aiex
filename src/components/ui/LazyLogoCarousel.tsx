@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import type { CompanyLogo } from '@/data/company-logos';
 
 const CompanyLogoCarousel = dynamic(() => import('./CompanyLogoCarousel'), {
-  ssr: false,
+  ssr: true,
   loading: () => <div className="h-10" />,
 });
 

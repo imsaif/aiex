@@ -621,7 +621,7 @@ export function ConversationalUIBot() {
           <button
             type="submit"
             disabled={isBusy}
-            className="bg-accent-primary text-white px-5 py-2.5 rounded-xl text-[15px] font-medium hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
+            className="bg-accent-primary text-white dark:text-gray-900 px-5 py-2.5 rounded-xl text-[15px] font-medium hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
           >
             Send
           </button>

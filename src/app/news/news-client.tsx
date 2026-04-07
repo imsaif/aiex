@@ -190,7 +190,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
             {/* Info Chip */}
             <div className="flex items-center justify-center gap-2 mb-6">
               <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
-                Daily AI Design Updates
+                Daily AI Product Design Updates
               </span>
             </div>
 
@@ -266,8 +266,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                     onClick={() => setTypeFilter(type)}
                     className={`px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
                       typeFilter === type
-                        ? 'bg-accent-primary text-white'
-                        : 'bg-surface-secondary text-text-secondary hover:bg-surface-tertiary'
+                        ? 'bg-accent-primary text-white dark:text-gray-900'
+                        : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'
                     }`}
                   >
                     {type === 'all' ? 'All' : type === 'daily' ? 'Daily' : 'Weekly'}
@@ -290,8 +290,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                       )}
                       className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
                         isSelected
-                          ? 'bg-accent-primary text-white'
-                          : 'bg-surface-secondary text-text-secondary hover:bg-surface-tertiary'
+                          ? 'bg-accent-primary text-white dark:text-gray-900'
+                          : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'
                       }`}
                     >
                       {PRODUCT_ICONS[product] && (
@@ -300,7 +300,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                           alt=""
                           width={16}
                           height={16}
-                          className={`flex-shrink-0 ${isSelected ? 'brightness-0 invert' : 'opacity-60 dark:invert'}`}
+                          className={`flex-shrink-0 ${isSelected ? 'brightness-0 invert dark:invert-0' : 'opacity-60 dark:invert'}`}
                         />
                       )}
                       {product}
@@ -577,12 +577,12 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                     onChange={(e) => setStickyEmail(e.target.value)}
                     placeholder="your@email.com"
                     required
-                    className="flex-1 max-w-sm px-5 py-3 text-base rounded-full border border-border-secondary bg-white dark:bg-gray-800 text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent-primary"
+                    className="flex-1 max-w-sm px-5 py-3 text-base rounded-full border border-border-secondary bg-surface-primary text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent-primary"
                   />
                   <button
                     type="submit"
                     disabled={stickyStatus === 'loading'}
-                    className="px-6 py-3 text-base font-semibold rounded-full bg-accent-primary text-white hover:bg-accent-hover transition-colors disabled:opacity-50 whitespace-nowrap cursor-pointer"
+                    className="px-6 py-3 text-base font-semibold rounded-full bg-accent-primary text-white dark:text-gray-900 hover:bg-accent-hover transition-colors disabled:opacity-50 whitespace-nowrap cursor-pointer"
                   >
                     {stickyStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
                   </button>

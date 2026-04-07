@@ -218,7 +218,7 @@ export function ScreenshotUpload({ productType, productDescription, onBack, onAn
       {hasImages && (
         <button
           onClick={() => onAnalyze(stagedImages)}
-          className="mt-6 inline-flex items-center gap-2 px-8 py-3 bg-accent-primary text-white rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
+          className="mt-6 inline-flex items-center gap-2 px-8 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
         >
           <SparklesIcon className="w-5 h-5" />
           Analyze {stagedImages.length} {stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}

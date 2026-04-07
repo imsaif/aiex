@@ -90,7 +90,7 @@ export default function CategoryNavigation({
               className={`text-sm px-4 py-2 rounded-full transition-colors duration-200
                 ${activeCategoryId === category.id && activeCategoryType === currentCategoryType
                   ? 'bg-accent-primary text-white shadow-md'
-                  : 'bg-surface-secondary text-text-secondary hover:bg-surface-tertiary hover:text-text-primary'}`}
+                  : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary hover:text-text-primary'}`}
             >
               {category.title}
             </button>
