@@ -251,6 +251,13 @@ When working on a pattern, ensure ALL of these are completed:
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-04-10 15:57 (MacBook)
+- **Pattern:** Real-user LCP/CLS Fixes & Dev Clarity Pollution
+- **Status:** ✅ Completed
+- **Files Changed:** 14
+- **Tests Added/Modified:** 0
+- **Notes:** Investigated Clarity field data showing pattern page LCP 17-20s and /audit CLS 0.186 despite Apr 7 Lighthouse "fix" landing homepage at 98-100. Root cause: Apr 7 fix targeted homepage only; pattern pages were loading 4-16MB videos as eager LCP element in the Carousel (`priority={current === 0}`). Shrunk 10 oversized MP4s + 1 animated webp used in pattern carousels (ffmpeg `scale=1200 CRF 30 -an`, sharp `quality 75`): total ~75MB→~9MB, biggest wins azure-responsible-ai-compute 16M→679K, notion-collaborative-ai 14.7M→883K. Dropped `priority` on carousel first slide (carousel is below fold — mis-promoted to LCP candidate). Added `preload="metadata"` to `<video>` in OptimizedMedia so browser fetches only container metadata until autoplay. Fixed CLS: flipped `adjustFontFallback: false` → `'Arial'` in layout.tsx so next/font generates size-adjusted fallback metrics matching Satoshi (eliminates reflow on font swap — site-wide CLS win, not just /audit). Removed manual `<link rel="preload">` for satoshi-400/700 (next/font preload:true already emits scoped preloads — manual ones caused "preloaded but not used" console warnings). Gated Clarity tag on `NODE_ENV === 'production'` with belt-and-braces hostname check excluding localhost/127.0.0.1/*.local/*.vercel.app so dev and preview deploys stop polluting Clarity metrics. Two commits: 0a217a0 (media + carousel) and 4cbb5d6 (layout.tsx font/preload/Clarity). Build verified clean (`npm run build` → 7.1s, no warnings). Expected field LCP recovery to ~4-6s on pattern pages once deployed; re-check Clarity URL performance CSV in 3-5 days. Untouched (Phase 3 follow-up): audit-kit 106s LCP and news-detail 18.7s LCP both need SSR hero extraction out of their client components.
+
 ### Session 2026-04-07 13:07 (MacBook)
 - **Pattern:** Performance & Dark Mode Fixes
 - **Status:** ✅ Completed
@@ -315,13 +322,6 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - **Notes:** Complete redesign of audit report email template. Restructured as consultant report: navy-branded header, "What we analyzed" section showing real user inputs (removed fake Goal/Concern fields), executive summary leading over score, strengths with evidence, top 3 actions with evidence + improvement + product-specific CTAs ("See how ChatGPT, Cursor handle this"), product benchmark per type ("Chat interfaces typically score 14-20/36"), "If you fix one thing" callout after actions, compact full breakdown, unsubscribe link. Widened from 600px to 680px. Made subscriber upsert non-blocking so DB failures don't prevent email delivery. Added PATTERN_PRODUCTS map (36 patterns) for social proof in action CTAs.
 
 ### Session 2026-04-01 14:23 (MacBook)
-- **Pattern:** Audit Email Capture → Subscriber List
-- **Status:** ✅ Completed
-- **Files Changed:** 3
-- **Tests Added/Modified:** 0
-- **Notes:** Wired audit email capture points to newsletter subscriber list. EmailReportModal now fire-and-forget subscribes with `source: 'audit-report'` on successful report send. PaywallModal waitlist signup now also subscribes with `source: 'audit-waitlist'` (willingness-to-pay signal for segmentation). Added both new sources to NEWSLETTER_SOURCES type. Disclosure text added to PaywallModal informing users they'll receive daily AI UX news.
-
-### Session 2026-04-01 13:55 (MacBook)
 ## Architecture Overview
 
 ### Core Architecture
