@@ -1,0 +1,26 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "https://www.aiuxdesign.guide/",
+        "https://www.aiuxdesign.guide/audit",
+        "https://www.aiuxdesign.guide/news",
+        "https://www.aiuxdesign.guide/agent-readability-audit-kit",
+        "https://www.aiuxdesign.guide/patterns/conversational-ui",
+        "https://www.aiuxdesign.guide/patterns/graceful-handoff",
+        "https://www.aiuxdesign.guide/patterns/explainable-ai",
+        "https://www.aiuxdesign.guide/patterns/progressive-disclosure"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "desktop"
+      }
+    },
+    "assert": {
+      "budgetsFile": "./budget.json"
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}

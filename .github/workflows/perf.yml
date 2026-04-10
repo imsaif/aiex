@@ -1,0 +1,48 @@
+name: Performance
+
+on:
+  schedule:
+    - cron: '0 4 * * *'   # 04:00 UTC daily (after newsletter cron at 03:00)
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'next.config.*'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'lighthouserc.json'
+      - 'budget.json'
+      - '.github/workflows/perf.yml'
+  workflow_dispatch:
+
+jobs:
+  lhci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run Lighthouse CI
+        id: lhci
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: './lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+      - name: Open issue on regression
+        if: failure() && github.event_name == 'schedule'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[Perf] LHCI regression detected — run ${{ github.run_id }}"
+          content-filepath: ./.github/perf-issue-template.md
+          labels: |
+            performance
+            automated

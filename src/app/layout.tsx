@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { defaultMetadata, siteConfig } from "@/config/seo";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const satoshi = localFont({
   src: [
@@ -98,6 +99,7 @@ export default function RootLayout({
       <body className="bg-background-primary text-text-primary antialiased font-sans min-h-screen">
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
