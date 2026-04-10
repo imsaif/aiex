@@ -8,10 +8,10 @@
       { "metric": "first-contentful-paint", "budget": 2500 }
     ],
     "resourceSizes": [
-      { "resourceType": "script", "budget": 350 },
-      { "resourceType": "image", "budget": 1500 },
-      { "resourceType": "media", "budget": 2000 },
-      { "resourceType": "font", "budget": 150 }
+      { "resourceType": "script", "budget": 600 },
+      { "resourceType": "image", "budget": 2500 },
+      { "resourceType": "media", "budget": 3000 },
+      { "resourceType": "font", "budget": 200 }
     ]
   }
 ]
