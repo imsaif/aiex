@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
 import { siteConfig } from '@/config/seo';
@@ -313,7 +312,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </section>
 
         {/* Back to all patterns */}
-        <section className="max-w-5xl mx-auto px-6 pb-12 text-center">
+        <section className="max-w-5xl mx-auto px-6 pb-16 text-center">
           <Link
             href="/patterns"
             className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary"
@@ -321,17 +320,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             ← Browse all 36 AI UX patterns
           </Link>
         </section>
-
-        {/* Newsletter CTA */}
-        <div className="max-w-lg mx-auto px-6 py-16">
-          <InlineNewsletterSignup
-            variant="hero"
-            customHeading="Get new patterns as they're added"
-            customSubheading="Free. Weekly. Unsubscribe anytime."
-            customButtonText="Subscribe"
-            source={`category-${slug}`}
-          />
-        </div>
 
         <Footer />
         <ScrollToTop />

@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { guides } from '@/data/guides';
 import { siteConfig } from '@/config/seo';
 
@@ -413,17 +412,6 @@ export default function GuidesPage() {
             </div>
           </div>
         </section>
-
-        {/* Newsletter CTA */}
-        <div className="max-w-lg mx-auto px-6 pb-16 md:pb-20">
-          <InlineNewsletterSignup
-            variant="hero"
-            customHeading="Get new guides as they're published"
-            customSubheading="Free. Unsubscribe anytime."
-            customButtonText="Subscribe"
-            source="guides-index"
-          />
-        </div>
 
         <Footer />
         <ScrollToTop />

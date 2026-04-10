@@ -7,7 +7,6 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import LessonRenderer from '@/components/ui/LessonRenderer';
 import GuideSidebar from '@/components/guides/GuideSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { siteConfig } from '@/config/seo';
 import { LessonSection } from '@/types/lesson';
 import {
@@ -21,20 +20,25 @@ import { extractHeadings } from '@/lib/guides/headings';
 // ISR so the first request is cached and Googlebot hits warm HTML
 export const revalidate = 3600;
 
-// Pre-render every lesson at build time
+// Pre-render every lesson at build time. Next.js requires the param keys here
+// to match the file-system segment names (`[slug]/[lesson]`), so we remap the
+// internal {course, lesson} pairs from the helper.
 export async function generateStaticParams() {
-  return getAllLessonParams();
+  return getAllLessonParams().map(({ course, lesson }) => ({
+    slug: course,
+    lesson,
+  }));
 }
 
 interface LessonPageProps {
-  params: Promise<{ course: string; lesson: string }>;
+  params: Promise<{ slug: string; lesson: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: LessonPageProps): Promise<Metadata> {
-  const { course, lesson } = await params;
-  const resolved = getLessonBySlug(course, lesson);
+  const { slug: courseSlug, lesson: lessonParam } = await params;
+  const resolved = getLessonBySlug(courseSlug, lessonParam);
   if (!resolved) {
     return { title: 'Lesson Not Found' };
   }
@@ -56,7 +60,7 @@ export async function generateMetadata({
       ? String(firstProse.content).replace(/<[^>]+>/g, '').slice(0, 160)
       : fallbackDescription.slice(0, 160);
 
-  const pageUrl = `${siteConfig.url}/guides/${guide.slug}/${lesson}`;
+  const pageUrl = `${siteConfig.url}/guides/${guide.slug}/${lessonParam}`;
   const ogImage = guide.thumbnail?.startsWith('http')
     ? guide.thumbnail
     : `${siteConfig.url}${guide.thumbnail || siteConfig.ogImage}`;
@@ -160,14 +164,14 @@ function buildLessonStructuredData(
 }
 
 export default async function LessonPage({ params }: LessonPageProps) {
-  const { course, lesson: lessonParam } = await params;
-  const resolved = getLessonBySlug(course, lessonParam);
+  const { slug: courseSlug, lesson: lessonParam } = await params;
+  const resolved = getLessonBySlug(courseSlug, lessonParam);
   if (!resolved) {
     notFound();
   }
   const { guide, lesson, lessonSlug, lessonIndex } = resolved;
-  const allLessons = getLessonsForCourse(course);
-  const { previous, next } = getLessonNeighbors(course, lessonIndex);
+  const allLessons = getLessonsForCourse(courseSlug);
+  const { previous, next } = getLessonNeighbors(courseSlug, lessonIndex);
 
   const sections = (lesson.sections as LessonSection[] | undefined) || [];
   const firstProse = sections.find((s) => s.type === 'intro' || s.type === 'text');
@@ -177,7 +181,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       : guide.excerpt || guide.description;
 
   const structuredData = buildLessonStructuredData(
-    course,
+    courseSlug,
     lessonSlug,
     lesson.title,
     lessonDescription,
@@ -185,13 +189,6 @@ export default async function LessonPage({ params }: LessonPageProps) {
     guide.publishedDate,
     guide.lastUpdatedDate
   );
-
-  // Roughly split the lesson so we can slot a newsletter CTA ~60% down when the
-  // lesson is long enough to warrant it. Short lessons keep just the bottom CTA.
-  const splitAt =
-    sections.length >= 6 ? Math.ceil(sections.length * 0.6) : sections.length;
-  const firstHalf = sections.slice(0, splitAt);
-  const secondHalf = sections.slice(splitAt);
 
   const headings = extractHeadings(sections);
 
@@ -285,34 +282,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
               {/* Lesson body — fully expanded, server-rendered for crawlers */}
               <div className="mb-12">
-                <LessonRenderer sections={firstHalf} />
+                <LessonRenderer sections={sections} />
               </div>
-
-              {/* Inline newsletter CTA in the middle of long lessons */}
-              {secondHalf.length > 0 && (
-                <>
-                  <aside className="my-12 bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-6 md:p-8 shadow-card">
-                    <InlineNewsletterSignup
-                      variant="pattern-detail"
-                      customHeading={`Getting value from this ${guide.tool} guide?`}
-                      customSubheading="Get a new AI UX pattern + daily news in your inbox. Free, unsubscribe anytime."
-                    />
-                  </aside>
-
-                  <div className="mb-12">
-                    <LessonRenderer sections={secondHalf} />
-                  </div>
-                </>
-              )}
-
-              {/* Bottom newsletter CTA — always present */}
-              <aside className="my-12 bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-6 md:p-8 shadow-card">
-                <InlineNewsletterSignup
-                  variant="pattern-detail"
-                  customHeading="Want more guides like this?"
-                  customSubheading="Get a new AI UX pattern + daily news in your inbox. Free, unsubscribe anytime."
-                />
-              </aside>
 
               {/* Previous / next lesson */}
               <nav

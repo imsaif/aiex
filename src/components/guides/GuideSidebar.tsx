@@ -6,10 +6,11 @@ interface GuideSidebarProps {
   guide: Guide;
   /** Slug of the currently-open lesson so we can highlight it. */
   currentLessonSlug?: string;
+  /** True when rendered on the course overview page — highlights the "Overview" item. */
+  currentIsOverview?: boolean;
 }
 
-// Human-friendly titles for the module keys used in the guides data. Keep in
-// sync with the moduleConfig in guides/[slug]/guide-client.tsx.
+// Human-friendly titles for the module keys used in the guides data.
 const MODULE_TITLES: Record<string, string> = {
   setup: 'Setup',
   features: 'Core Features',
@@ -26,14 +27,15 @@ const MODULE_TITLES: Record<string, string> = {
 };
 
 /**
- * Left sidebar shown on lesson pages (≥lg breakpoint). Lists every lesson in
- * the course, grouped by module, with the current lesson highlighted. Server
- * component — every link is a real `<a>` so crawlers can follow the whole
- * course structure from any lesson page.
+ * Left sidebar shown on course overview + lesson pages (≥lg breakpoint).
+ * Lists every lesson in the course, grouped by module, with the current
+ * lesson (or Overview) highlighted. Server component — every link is a real
+ * `<a>` so crawlers can walk the entire course structure from any page.
  */
 export default function GuideSidebar({
   guide,
   currentLessonSlug,
+  currentIsOverview,
 }: GuideSidebarProps) {
   const lessonLinks = getLessonsForCourse(guide.slug);
 
@@ -58,7 +60,12 @@ export default function GuideSidebar({
       <div>
         <Link
           href={`/guides/${guide.slug}`}
-          className="block font-semibold text-text-primary hover:text-accent-primary transition-colors"
+          aria-current={currentIsOverview ? 'page' : undefined}
+          className={`block font-semibold transition-colors ${
+            currentIsOverview
+              ? 'text-accent-primary'
+              : 'text-text-primary hover:text-accent-primary'
+          }`}
         >
           Overview
         </Link>

@@ -1,15 +1,12 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
-import PatternGrid from '../pattern-grid';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
-import { getAllProducts, getProductsForPattern } from '@/data/utils/product-utils';
-import { getAllIndustries, getIndustriesForPattern } from '@/data/utils/industry-utils';
 import { siteConfig } from '@/config/seo';
-import { PatternSummary } from '@/types';
 
 // ISR so Googlebot hits the warm edge cache
 export const revalidate = 3600;
@@ -61,27 +58,14 @@ export const metadata: Metadata = {
   },
 };
 
-// Reuse the same summary shape the homepage passes to PatternGrid
-const patternSummaries: PatternSummary[] = patterns.map((p) => ({
-  id: p.id,
-  title: p.title,
-  slug: p.slug,
-  description: p.description,
-  category: p.category,
-  tags: p.tags,
-  thumbnail: p.thumbnail,
-  products: getProductsForPattern(p),
-  industries: getIndustriesForPattern(p),
-}));
-
-const allProducts = getAllProducts(patterns);
-const allIndustries = getAllIndustries(patterns);
-
-// Group patterns by category for the SEO-focused category-grouped listing
-// (below the interactive filterable grid)
+// Group patterns by category for the SEO-focused category-grouped listing.
+// This is the core crawlable surface of the page — 36 real links grouped by
+// their category so Google can index them and users can scan the library.
+// The interactive filterable grid lives on the homepage (/) to avoid
+// duplicating the same interface on two routes.
 const patternsByCategory = categories.map((cat) => ({
   category: cat,
-  patterns: patternSummaries.filter((p) => p.category === cat.title),
+  patterns: patterns.filter((p) => p.category === cat.title),
 }));
 
 function buildStructuredData() {
@@ -143,8 +127,7 @@ export default function PatternsIndexPage() {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
-        {/* Hero — server-rendered H1 + intro prose for SEO.
-            Deliberately no framer-motion / no client-only widgets on first paint. */}
+        {/* Hero — server-rendered H1 + intro prose for SEO. */}
         <section className="pt-20 md:pt-28 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <p className="text-sm font-semibold uppercase tracking-wide text-accent-primary mb-4">
@@ -162,14 +145,18 @@ export default function PatternsIndexPage() {
               AI products. Each pattern has real examples, code demos, and
               research-backed guidance you can apply today.
             </p>
-            <p className="text-base text-text-secondary leading-relaxed">
-              Browse by category, search by product, or filter by industry
-              below.
-            </p>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors"
+            >
+              Browse and filter all {patterns.length} patterns
+              <ArrowRightIcon className="w-4 h-4" />
+            </Link>
           </div>
         </section>
 
-        {/* Category summary — indexable, link-rich, server-rendered */}
+        {/* Category summary — indexable, link-rich, server-rendered.
+            This is the primary crawlable surface of the page. */}
         <section className="max-w-7xl mx-auto px-6 py-12 md:py-16">
           <h2 className="text-2xl md:text-3xl font-bold mb-8 text-text-primary">
             Browse all {patterns.length} patterns by category
@@ -178,7 +165,12 @@ export default function PatternsIndexPage() {
             {patternsByCategory.map(({ category, patterns: catPatterns }) => (
               <div key={category.slug}>
                 <h3 className="text-lg font-semibold mb-3 text-text-primary">
-                  {category.title}
+                  <Link
+                    href={`/patterns/category/${category.slug}`}
+                    className="hover:text-accent-primary transition-colors"
+                  >
+                    {category.title}
+                  </Link>
                   <span className="ml-2 text-sm font-normal text-text-secondary">
                     ({catPatterns.length})
                   </span>
@@ -189,12 +181,12 @@ export default function PatternsIndexPage() {
                 <ul className="space-y-1.5">
                   {catPatterns.map((p) => (
                     <li key={p.slug}>
-                      <a
+                      <Link
                         href={`/patterns/${p.slug}`}
                         className="text-sm text-text-secondary hover:text-accent-primary hover:underline transition-colors"
                       >
                         {p.title}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -202,25 +194,6 @@ export default function PatternsIndexPage() {
             ))}
           </div>
         </section>
-
-        {/* Interactive filterable grid — the same one the homepage uses */}
-        <PatternGrid
-          patterns={patternSummaries}
-          categories={categories}
-          allProducts={allProducts}
-          allIndustries={allIndustries}
-        />
-
-        {/* Newsletter CTA */}
-        <div className="max-w-lg mx-auto px-6 py-16 md:py-20">
-          <InlineNewsletterSignup
-            variant="hero"
-            customHeading="Get new patterns as they're added"
-            customSubheading="Free. Weekly. Unsubscribe anytime."
-            customButtonText="Subscribe"
-            source="patterns-index"
-          />
-        </div>
 
         <Footer />
         <ScrollToTop />
