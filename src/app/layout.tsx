@@ -13,7 +13,9 @@ const satoshi = localFont({
   variable: "--font-satoshi",
   display: "swap",
   preload: true,
-  adjustFontFallback: false,
+  // Use size-adjusted fallback so fallback font metrics match Satoshi —
+  // eliminates layout shift when Satoshi swaps in (fixes CLS on audit/pattern pages).
+  adjustFontFallback: "Arial",
 });
 
 export const metadata: Metadata = {
@@ -45,9 +47,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={satoshi.variable}>
       <head>
-        {/* Preload critical font weights for fast LCP */}
-        <link rel="preload" as="font" href="/fonts/satoshi-400.woff2" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" as="font" href="/fonts/satoshi-700.woff2" type="font/woff2" crossOrigin="anonymous" />
         {/* Machine-readable product design decisions for AI tools and LLMs */}
         <link rel="gist-design" href="/aiuxdesign.gist.design" type="text/markdown" />
         {/* ChunkLoadError recovery — auto-reload on stale chunk after deploy */}
@@ -67,27 +66,34 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Microsoft Clarity — deferred to idle time to avoid blocking interactions */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function loadClarity() {
-                function init() {
-                  (function(c,l,a,r,i,t,y){
-                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-                  })(window,document,"clarity","script","vj7nlmybbm");
-                }
-                if ('requestIdleCallback' in window) {
-                  requestIdleCallback(init, { timeout: 2500 });
-                } else {
-                  setTimeout(init, 1500);
-                }
-              })();
-            `,
-          }}
-        />
+        {/* Microsoft Clarity — deferred to idle time to avoid blocking interactions.
+            Only loaded in production builds AND only on the production host, so dev
+            and preview deploys don't pollute Clarity metrics. */}
+        {process.env.NODE_ENV === 'production' && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function loadClarity() {
+                  // Belt-and-braces: skip on localhost/preview even if NODE_ENV is production
+                  var h = location.hostname;
+                  if (h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local') || h.endsWith('.vercel.app')) return;
+                  function init() {
+                    (function(c,l,a,r,i,t,y){
+                      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                    })(window,document,"clarity","script","vj7nlmybbm");
+                  }
+                  if ('requestIdleCallback' in window) {
+                    requestIdleCallback(init, { timeout: 2500 });
+                  } else {
+                    setTimeout(init, 1500);
+                  }
+                })();
+              `,
+            }}
+          />
+        )}
       </head>
       <body className="bg-background-primary text-text-primary antialiased font-sans min-h-screen">
         {children}
