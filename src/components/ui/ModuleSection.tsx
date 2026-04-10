@@ -23,8 +23,13 @@ interface ModuleSectionProps {
   lessons: GuideLesson[];
   startLessonNumber: number;
   guideId: string;
-  guideTitle: string;
   moduleIcon?: string;
+  /**
+   * Map of lesson.id → dedicated lesson page URL. Every lesson in the course
+   * has its own indexable page; the card navigates there on click so the
+   * content is crawlable at its own URL.
+   */
+  lessonHrefs: Record<string, string>;
 }
 
 const getModuleIcon = (moduleTitle: string, iconType?: string) => {
@@ -44,7 +49,7 @@ const getModuleIcon = (moduleTitle: string, iconType?: string) => {
       case 'user':
         return <UserGroupIcon {...iconProps} />;
       case 'github':
-        return <Github size={20} style={{ color: '#525252' }} />;
+        return <Github size={20} style={iconProps.style} />;
       case 'check':
         return <CheckIcon {...iconProps} />;
       default:
@@ -58,7 +63,7 @@ const getModuleIcon = (moduleTitle: string, iconType?: string) => {
   } else if (moduleTitle.includes('Prototype')) {
     return <LightBulbIcon {...iconProps} />;
   } else if (moduleTitle.includes('GitHub') || moduleTitle.includes('Git')) {
-    return <Github size={20} style={{ color: '#525252' }} />;
+    return <Github size={20} style={iconProps.style} />;
   } else if (moduleTitle.includes('Best Practices') || moduleTitle.includes('Practices')) {
     return <StarIcon {...iconProps} />;
   }
@@ -71,10 +76,12 @@ export default function ModuleSection({
   lessons,
   startLessonNumber,
   guideId,
-  guideTitle,
   moduleIcon,
+  lessonHrefs,
 }: ModuleSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  // Default to expanded so the lesson TOC renders server-side and crawlers
+  // can follow every lesson link. Users can still collapse if they want.
+  const [isExpanded, setIsExpanded] = useState(true);
   const {
     getLessonProgress,
   } = useGuideProgress();
@@ -175,6 +182,7 @@ export default function ModuleSection({
                 lessonNumber={startLessonNumber + index}
                 guideId={guideId}
                 totalLessons={totalLessons}
+                href={lessonHrefs[lesson.id] || `/guides`}
               />
             ))}
           </motion.div>

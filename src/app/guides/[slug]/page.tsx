@@ -1,12 +1,20 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getGuideBySlug, getPreviousGuide, getNextGuide } from '@/data/guides';
+import { guides, getGuideBySlug, getPreviousGuide, getNextGuide } from '@/data/guides';
 import { generateGuideStructuredData } from '@/utils/structuredData';
 import { siteConfig } from '@/config/seo';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import GuideClient from './guide-client';
+
+// ISR + static params so course overviews are pre-built and cached — previously
+// every request cold-started a serverless function (flagged in the SEO audit).
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  return guides.map((guide) => ({ slug: guide.slug }));
+}
 
 interface GuidePageProps {
   params: Promise<{
@@ -29,20 +37,30 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     ? guide.thumbnail
     : `${siteConfig.url}${guide.thumbnail || siteConfig.ogImage}`;
 
+  // Keep titles inside Google's ~60-65 char display window. Previously this
+  // template produced 95+ char double-suffixed titles (audit #4).
+  // `title.absolute` skips the layout's "%s | AI Design Patterns" template.
+  const lessonCount = guide.lessons?.length ?? 0;
+  const titleSuffix = lessonCount > 0 ? ` (${lessonCount} Lessons)` : '';
+  const absoluteTitle = `${guide.tool} for Designers — Free Course${titleSuffix}`;
+  const ogTitle = `${guide.tool} for Designers — Free Course`;
+
   return {
-    title: `${guide.title} — Free ${guide.tool} Course for Designers | AIUX`,
+    title: { absolute: absoluteTitle },
     description: guide.excerpt || guide.description,
     keywords: [
       guide.tool.toLowerCase(),
       `${guide.tool.toLowerCase()} for designers`,
       `${guide.tool.toLowerCase()} guide`,
+      `${guide.tool.toLowerCase()} tutorial`,
+      `${guide.tool.toLowerCase()} course`,
       `${guide.tool.toLowerCase()} learning path`,
       ...(guide.tags || []),
       'AI tools for designers',
       'design with AI',
     ],
     openGraph: {
-      title: `${guide.title} — Free ${guide.tool} Course for Designers`,
+      title: ogTitle,
       description: guide.excerpt || guide.description,
       url: pageUrl,
       siteName: siteConfig.name,
@@ -53,7 +71,7 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${guide.title} — Free ${guide.tool} Course for Designers`,
+      title: ogTitle,
       description: guide.excerpt || guide.description,
       images: [ogImage],
       creator: siteConfig.creator.twitter,

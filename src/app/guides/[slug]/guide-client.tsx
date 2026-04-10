@@ -3,14 +3,14 @@
 import { useMemo } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { Guide } from '@/types';
 import { useGuideProgress } from '@/hooks/useGuideProgress';
-import CopyButton from '@/components/ui/CopyButton';
 import IntroductionSection from '@/components/ui/IntroductionSection';
 import ModuleSection from '@/components/ui/ModuleSection';
 import ProgressBar from '@/components/ui/ProgressBar';
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 
 // Lazy-load the conversational UI guide chatbot
 const ConversationalUIBot = dynamic(
@@ -35,11 +35,27 @@ export default function GuideClient({
   previousGuide,
   nextGuide,
 }: GuideClientProps) {
-  const router = useRouter();
   const {
     getLessonProgress,
     getGuideStatus,
   } = useGuideProgress();
+
+  // Build lesson.id → dedicated lesson URL map so each lesson card can link
+  // to its own indexable page. Relies on the canonical slug logic from
+  // src/lib/guides/lesson-urls.ts so the URLs here match generateStaticParams
+  // and the sitemap entries exactly.
+  const lessonHrefs = useMemo(() => {
+    const map: Record<string, string> = {};
+    if (!guide.lessons || guide.lessons.length === 0) return map;
+    const lessonLinks = getLessonsForCourse(guide.slug);
+    // Lessons are returned in the same order they appear in the guide data, so
+    // we can zip them by index.
+    guide.lessons.forEach((lesson, idx) => {
+      const link = lessonLinks[idx];
+      if (link) map[lesson.id] = link.url;
+    });
+    return map;
+  }, [guide]);
   // Calculate lesson progress
   const hasLessons = guide.lessons && guide.lessons.length > 0;
   const totalLessons = guide.lessons?.length || 0;
@@ -59,18 +75,14 @@ export default function GuideClient({
       {/* Main Content */}
       <div className="pt-12 md:pt-16 pb-12 md:pb-16">
         <div className="max-w-5xl mx-auto px-6">
-          {/* Back Link */}
-          <button
-            type="button"
-            onClick={() => {
-              router.push('/guides');
-            }}
-            className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-hover hover:underline mb-6 transition-colors cursor-pointer bg-transparent border-none p-2 -ml-2 focus:outline-none active:opacity-80 relative z-10 font-medium"
-            tabIndex={0}
+          {/* Back Link — real <Link> so crawlers can follow it */}
+          <Link
+            href="/guides"
+            className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-hover hover:underline mb-6 transition-colors font-medium"
           >
             <ArrowLeftIcon className="w-5 h-5" />
             Back to Guides
-          </button>
+          </Link>
 
           {/* Header */}
           <header className="mb-12">
@@ -219,7 +231,7 @@ export default function GuideClient({
                       lessons={moduleLessons}
                       startLessonNumber={moduleStartLessonNumber}
                       guideId={guide.id}
-                      guideTitle={guide.title}
+                      lessonHrefs={lessonHrefs}
                     />
                   );
                 })}
@@ -244,16 +256,12 @@ export default function GuideClient({
               <div className="flex-1" />
             )}
 
-            <button
-              type="button"
-              onClick={() => {
-                router.push('/guides');
-              }}
-              className="px-6 py-2 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0 cursor-pointer focus:outline-none"
-              tabIndex={0}
+            <Link
+              href="/guides"
+              className="px-6 py-2 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all flex-shrink-0"
             >
               View All Guides
-            </button>
+            </Link>
 
             {nextGuide ? (
               <Link

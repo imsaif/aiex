@@ -28,6 +28,7 @@ import {
   Github,
 } from '@lobehub/icons'; // For GitHub logo icon
 import { getPreviewComponent } from '@/components/guides/chat-previews';
+import { slugifyHeading } from '@/lib/guides/headings';
 
 interface LessonRendererProps {
   sections: LessonSection[];
@@ -180,7 +181,31 @@ function CodePreviewBlock({ section }: { section: { code: string; language?: str
   );
 }
 
-const renderSection = (section: LessonSection, index: number) => {
+/**
+ * Build an index → slug-id map for every heading in the sections list so
+ * the lesson page anchor links (right-sidebar TOC) hit the same ids the
+ * renderer emits. Disambiguates duplicate headings within a lesson.
+ */
+function buildHeadingIdMap(sections: LessonSection[]): Map<number, string> {
+  const map = new Map<number, string>();
+  const seen = new Map<string, number>();
+  sections.forEach((section, idx) => {
+    if (section.type !== 'heading') return;
+    const base = slugifyHeading(section.content);
+    if (!base) return;
+    const count = seen.get(base) || 0;
+    const id = count === 0 ? base : `${base}-${count + 1}`;
+    seen.set(base, count + 1);
+    map.set(idx, id);
+  });
+  return map;
+}
+
+const renderSection = (
+  section: LessonSection,
+  index: number,
+  headingIds: Map<number, string>
+) => {
   switch (section.type) {
     case 'intro':
       return (
@@ -195,13 +220,15 @@ const renderSection = (section: LessonSection, index: number) => {
         </div>
       );
 
-    case 'heading':
+    case 'heading': {
+      const id = headingIds.get(index);
       if (section.level === 'h2') {
         const icon = getHeadingIcon(section.content);
         return (
           <h2
             key={index}
-            className="text-[1.75rem] font-bold text-gray-900 dark:text-gray-100 mt-0 mb-6 flex justify-between items-center gap-4 pb-4 border-b-2 border-gray-200 dark:border-gray-700"
+            id={id}
+            className="scroll-mt-24 text-[1.75rem] font-bold text-gray-900 dark:text-gray-100 mt-0 mb-6 flex justify-between items-center gap-4 pb-4 border-b-2 border-gray-200 dark:border-gray-700"
           >
             <span>{section.content}</span>
             {icon && <div className="flex-shrink-0 flex items-center">{icon}</div>}
@@ -212,7 +239,8 @@ const renderSection = (section: LessonSection, index: number) => {
         return (
           <h3
             key={index}
-            className="text-[1.375rem] font-bold text-gray-900 dark:text-gray-100 mt-10 mb-5"
+            id={id}
+            className="scroll-mt-24 text-[1.375rem] font-bold text-gray-900 dark:text-gray-100 mt-10 mb-5"
           >
             {section.content}
           </h3>
@@ -222,13 +250,15 @@ const renderSection = (section: LessonSection, index: number) => {
         return (
           <h4
             key={index}
-            className="text-[1.125rem] font-semibold text-text-secondary mt-8 mb-4"
+            id={id}
+            className="scroll-mt-24 text-[1.125rem] font-semibold text-text-secondary mt-8 mb-4"
           >
             {section.content}
           </h4>
         );
       }
       return null;
+    }
 
     case 'text':
       return (
@@ -385,5 +415,10 @@ const renderSection = (section: LessonSection, index: number) => {
 };
 
 export default function LessonRenderer({ sections }: LessonRendererProps) {
-  return <div className="space-y-6">{sections.map((section, index) => renderSection(section, index))}</div>;
+  const headingIds = buildHeadingIdMap(sections);
+  return (
+    <div className="space-y-6">
+      {sections.map((section, index) => renderSection(section, index, headingIds))}
+    </div>
+  );
 }

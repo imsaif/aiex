@@ -1,4 +1,5 @@
 import { Pattern, Guide } from '@/types';
+import categories from '@/data/categories';
 
 /**
  * Generate JSON-LD structured data for Article schema
@@ -85,9 +86,30 @@ export function generateFAQSchema(pattern: Pattern) {
 
 /**
  * Generate JSON-LD structured data for BreadcrumbList schema
- * Helps search engines understand site navigation structure
+ * Helps search engines understand site navigation structure.
+ *
+ * All four positions now point to real URLs:
+ *   Home → /patterns → /patterns/category/{slug} → /patterns/{slug}
+ *
+ * The category position resolves via the `pattern.category` title matched
+ * against categories.ts. If for any reason the category can't be resolved
+ * (bad data), the schema still emits a text-only entry so it remains valid.
  */
 export function generateBreadcrumbSchema(pattern: Pattern) {
+  const category = categories.find((c) => c.title === pattern.category);
+  const categoryItem = category
+    ? {
+        '@type': 'ListItem',
+        position: 3,
+        name: category.title,
+        item: `https://aiuxdesign.guide/patterns/category/${category.slug}`,
+      }
+    : {
+        '@type': 'ListItem',
+        position: 3,
+        name: pattern.category,
+      };
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -96,27 +118,22 @@ export function generateBreadcrumbSchema(pattern: Pattern) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://aiuxdesign.guide'
+        item: 'https://aiuxdesign.guide',
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Patterns',
-        item: 'https://aiuxdesign.guide/#patterns'
+        item: 'https://aiuxdesign.guide/patterns',
       },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: pattern.category,
-        item: `https://aiuxdesign.guide/#${pattern.category.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`
-      },
+      categoryItem,
       {
         '@type': 'ListItem',
         position: 4,
         name: pattern.title,
-        item: `https://aiuxdesign.guide/patterns/${pattern.slug}`
-      }
-    ]
+        item: `https://aiuxdesign.guide/patterns/${pattern.slug}`,
+      },
+    ],
   };
 
   return schema;

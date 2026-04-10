@@ -7,7 +7,15 @@ import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { InlineAuditCTA } from '@/components/audit/InlineAuditCTA';
 
-// Lazy load heavy components to reduce initial bundle size
+// Lazy load heavy components to reduce initial bundle size.
+//
+// Previously ProductsSection, CodeExampleBlock, and FigmaPromptCard used
+// `ssr: false`, which meant their content (product names, code, Figma prompts)
+// was absent from the HTML Googlebot crawls — identified as SEO issue #3 in
+// the Apr 2026 patterns audit. Removed `ssr: false` on those three so their
+// keyword-rich content lands in the initial server-rendered HTML.
+// Carousel stays `ssr: false` because it contains autoplay videos which would
+// otherwise get promoted to LCP candidates on first paint.
 const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
   loading: () => <div className="animate-pulse bg-background-secondary h-64 rounded-lg"></div>,
   ssr: false
@@ -15,17 +23,14 @@ const Carousel = dynamic(() => import('@/components/ui/Carousel'), {
 
 const CodeExampleBlock = dynamic(() => import('@/components/ui/CodeExampleBlock'), {
   loading: () => <div className="animate-pulse bg-background-secondary h-40 rounded-lg"></div>,
-  ssr: false
 });
 
 const FigmaPromptCard = dynamic(() => import('@/components/ui/FigmaPromptCard'), {
   loading: () => <div className="animate-pulse bg-background-secondary h-64 rounded-lg"></div>,
-  ssr: false
 });
 
 const ProductsSection = dynamic(() => import('@/components/sections/ProductsSection'), {
   loading: () => <div className="animate-pulse bg-background-secondary h-32 rounded-lg"></div>,
-  ssr: false
 });
 
 interface ClientPageProps {
@@ -211,6 +216,44 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ — visible on page to match the FAQ JSON-LD in the server
+            wrapper. Google's Aug 2023 FAQ policy effectively requires the
+            content to be visibly rendered, not only structured data. These
+            three Q&As mirror generateFAQSchema() in utils/structuredData.ts. */}
+        <section>
+          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-6">
+            {pattern.introduction && (
+              <div>
+                <h3 className="text-lg font-semibold text-text-primary mb-2">
+                  What is {pattern.title}?
+                </h3>
+                <p className="text-text-secondary leading-relaxed">
+                  {pattern.introduction}
+                </p>
+              </div>
+            )}
+            <div>
+              <h3 className="text-lg font-semibold text-text-primary mb-2">
+                When should I use {pattern.title}?
+              </h3>
+              <p className="text-text-secondary leading-relaxed">
+                {pattern.content.solution}
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-text-primary mb-2">
+                What problem does {pattern.title} solve?
+              </h3>
+              <p className="text-text-secondary leading-relaxed">
+                {pattern.content.problem}
+              </p>
             </div>
           </div>
         </section>

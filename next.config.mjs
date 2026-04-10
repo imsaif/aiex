@@ -177,12 +177,6 @@ const nextConfig = {
         destination: '/guides/claude-code-learning-path',
         permanent: true,
       },
-      // /patterns index → homepage (homepage has the pattern grid)
-      {
-        source: '/patterns',
-        destination: '/',
-        permanent: true,
-      },
       // /favorites → homepage (favorites feature removed)
       {
         source: '/favorites',
