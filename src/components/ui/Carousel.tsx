@@ -30,7 +30,6 @@ export default function Carousel({ examples }: { examples: Example[] }) {
                 className="w-full h-full object-cover"
                 width={800}
                 height={600}
-                priority={current === 0} // Only prioritize the first image
               />
             </div>
           )}

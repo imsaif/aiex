@@ -98,6 +98,7 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
       loop
       muted
       playsInline
+      preload="metadata"
       className={`${objectFitClass} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 w-full h-full ${fill ? 'absolute inset-0' : ''}`}
       onLoadedData={handleLoadComplete}
       onError={() => {
