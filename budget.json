@@ -4,7 +4,6 @@
     "timings": [
       { "metric": "largest-contentful-paint", "budget": 4500 },
       { "metric": "cumulative-layout-shift", "budget": 0.1 },
-      { "metric": "interaction-to-next-paint", "budget": 400 },
       { "metric": "total-blocking-time", "budget": 500 },
       { "metric": "first-contentful-paint", "budget": 2500 }
     ],

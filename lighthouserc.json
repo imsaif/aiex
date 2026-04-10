@@ -25,7 +25,10 @@
       }
     },
     "assert": {
-      "budgetsFile": "./budget.json"
+      "budgetsFile": "./budget.json",
+      "assertions": {
+        "interaction-to-next-paint": ["error", { "maxNumericValue": 400 }]
+      }
     },
     "upload": {
       "target": "temporary-public-storage"
