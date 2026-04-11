@@ -438,6 +438,41 @@ async function getRecentlyUsedTitles(deduplicationDays = 7, excludeWeekly = true
   return usedTitles;
 }
 
+// Detect a pool dominated by a single RSS source. Returns the dominant source if
+// its share of the pool exceeds `threshold` AND the pool has at least `minPoolSize`
+// items (small pools are noisy and handled by the existing quiet-day path).
+//
+// We key on `item.source` (the RSS feed name like "OpenAI" or "Cursor") rather
+// than URL hostname because Google News search feeds all return news.google.com
+// URLs but represent distinct product searches (Cursor, Notion, Linear, etc.) —
+// so URL-parsing would falsely flag a healthy diverse pool as single-source.
+//
+// Real-world trigger (Apr 11 2026): OpenAI Academy launch caused the OpenAI RSS
+// feed to dump 27 sub-pages into a 29-item pool (93% from one source), producing
+// a newsletter where 5/5 items linked to openai.com. We'd rather skip the day.
+function findDominantSource(
+  items: NewsItem[],
+  threshold = 0.7,
+  minPoolSize = 5,
+): { source: string; count: number; share: number } | null {
+  if (items.length < minPoolSize) return null;
+  const counts = new Map<string, number>();
+  for (const item of items) {
+    if (!item.source) continue;
+    counts.set(item.source, (counts.get(item.source) || 0) + 1);
+  }
+  let topSource = '';
+  let topCount = 0;
+  counts.forEach((count, source) => {
+    if (count > topCount) {
+      topCount = count;
+      topSource = source;
+    }
+  });
+  const share = topCount / items.length;
+  return share > threshold ? { source: topSource, count: topCount, share } : null;
+}
+
 async function aggregateNews(lookbackHours = 24, deduplicationDays = 7, { lite = false }: { lite?: boolean } = {}): Promise<NewsItem[]> {
   const allItems: NewsItem[] = [];
   const sources = lite ? RSS_SOURCES_LITE : RSS_SOURCES;
@@ -666,6 +701,13 @@ ${patternList}
 
 YOUR TASK:
 1. Select 4-6 items most relevant to UX/product designers (prioritize AI product updates, design tools, and developer tools that affect design workflows)
+
+   DIVERSITY RULES (strict — these override relevance scoring):
+   - Pick items from at least 3 DIFFERENT companies/products. A newsletter where every item is from one company is not useful.
+   - Maximum 2 items from any single company or domain. If you have 4 strong OpenAI items and 1 mediocre Figma item, pick 2 OpenAI + 1 Figma rather than 4 OpenAI.
+   - If multiple items in the input come from the same product LAUNCH (e.g., 10 sub-pages of one announcement, or 5 lessons of a new course), TREAT THEM AS A SINGLE STORY. Pick the most representative one and skip the rest — do not pad the newsletter with sub-pages of the same launch.
+   - If after applying these rules you have fewer than 3 items left, return only what survives. A short honest newsletter is better than a padded one.
+
 2. For each selected item:
    - Write a short description of what happened
    - Write a "Designer's Takeaway" - actionable insight for UX/product designers (1-2 sentences starting with a verb like "Consider...", "Notice how...", "Apply this by...")
@@ -721,6 +763,13 @@ ${patternList}
 
 YOUR TASK:
 1. Select the 5-8 most UX-significant items from this week's news
+
+   DIVERSITY RULES (strict — these override relevance scoring):
+   - Pick items from at least 4 DIFFERENT companies/products across the week.
+   - Maximum 2 items from any single company or domain.
+   - If multiple items come from the same product LAUNCH (e.g., several sub-pages of one announcement), TREAT THEM AS A SINGLE STORY and pick the most representative one.
+   - Better to ship 5 diverse items than 8 lopsided ones.
+
 2. For each selected item:
    - Write a description of what happened
    - Write a "Designer's Takeaway" - actionable insight for UX/product designers
@@ -987,6 +1036,42 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
     });
     console.log('[newsletter] Quiet day entry created and published');
     return;
+  }
+
+  // Lopsided-pool guard (daily only): if one source dominates the candidate pool,
+  // skip rather than ship a newsletter where every item links to the same publisher.
+  // Weekly compiles from already-curated daily items, so this guard doesn't apply.
+  if (type === 'daily') {
+    const dominant = findDominantSource(newsItems);
+    if (dominant) {
+      console.warn(
+        `[newsletter] Lopsided pool detected: ${dominant.count}/${newsItems.length} items (${Math.round(dominant.share * 100)}%) from ${dominant.source}. Skipping rather than shipping single-source coverage.`,
+      );
+
+      const date = new Date();
+      const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-single-source-day`;
+
+      const existingSkip = await prisma.newsletterDraft.findFirst({ where: { slug } });
+      if (existingSkip) {
+        console.log('[newsletter] Single-source-day entry already exists for today');
+        return;
+      }
+
+      await prisma.newsletterDraft.create({
+        data: {
+          title: 'AI UX Daily: Single-Source Day',
+          slug,
+          summary: `Today's news pool was dominated by a single source (${dominant.source}). Rather than ship lopsided coverage, we're sitting this one out. Back tomorrow with broader updates.`,
+          content: '',
+          publishDate: new Date(),
+          status: 'published',
+          sources: newsItems.map((item) => item.link),
+        },
+      });
+      console.log('[newsletter] Single-source-day entry created and published');
+      return;
+    }
   }
 
   // Step 2: Fetch recently used headlines for deduplication
