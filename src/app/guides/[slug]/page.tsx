@@ -12,6 +12,7 @@ import GuideSidebar from '@/components/guides/GuideSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import type { LessonHeading } from '@/lib/guides/headings';
+import { MODULE_TITLES, MODULE_DESCRIPTIONS } from '@/lib/guides/modules';
 
 // ISR + static params so course overviews are pre-built and cached — previously
 // every request cold-started a serverless function (flagged in the SEO audit).
@@ -86,38 +87,6 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
     },
   };
 }
-
-// Human-friendly titles for the module keys, shared with the sidebar.
-const MODULE_TITLES: Record<string, string> = {
-  setup: 'Setup',
-  features: 'Core Features',
-  prototype: 'Prototype',
-  prototyping: 'Prototyping Workflows',
-  collaboration: 'Developer Collaboration',
-  github: 'GitHub',
-  practices: 'Best Practices',
-  figma: 'Figma ↔ Code',
-  foundations: 'Foundations',
-  building: 'Building',
-  advanced: 'Advanced Patterns',
-  polish: 'Ship It',
-};
-
-// Short per-module "what you'll learn" descriptions used in the middle column.
-const MODULE_DESCRIPTIONS: Record<string, string> = {
-  setup: 'Get your environment ready and install the tools.',
-  features: 'Master the main features and capabilities.',
-  prototype: 'Build and test your first real project.',
-  prototyping: 'Create interactive prototypes from your designs.',
-  collaboration: 'Work effectively with your development team.',
-  github: 'Manage your work with version control.',
-  practices: 'Learn the patterns that make work ship reliably.',
-  figma: 'Move work between Figma and code in both directions.',
-  foundations: 'Understand the primitives before you build.',
-  building: 'Implement the core parts of your interface.',
-  advanced: 'Handle edge cases, errors, and complex flows.',
-  polish: 'Accessibility, agentic patterns, and a production checklist.',
-};
 
 export default async function GuidePage({ params }: GuidePageProps) {
   const { slug } = await params;
@@ -201,50 +170,88 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 </ol>
               </nav>
 
-              {/* Hero */}
-              <header className="mb-10">
-                <p className="text-sm font-medium text-accent-primary uppercase tracking-wide mb-2">
-                  {guide.tool} Course
-                </p>
-                <h1 className="text-4xl md:text-5xl font-semibold mb-4 leading-tight">
-                  {guide.title}
-                </h1>
-                <p className="text-lg text-text-secondary mb-6 leading-relaxed">
-                  {guide.excerpt || guide.description}
-                </p>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
-                  <span>{totalLessons} lessons</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{totalMinutes} min total</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{guide.skillLevel}</span>
-                  {guide.lastUpdatedDate && (
-                    <>
-                      <span aria-hidden="true">·</span>
-                      <span>
+              {/* Hero card — bordered two-column container.
+                  Left: kicker + title + excerpt + meta chips + primary CTA.
+                  Right: 2x2 stat tile grid (hidden on mobile to keep the
+                  hero compact on small screens). */}
+              <header className="mb-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary p-6 md:p-10 grid md:grid-cols-[1fr_220px] gap-8 md:gap-10 items-start">
+                <div>
+                  <p className="text-xs font-semibold text-accent-primary uppercase tracking-wider mb-3">
+                    {guide.tool} Course
+                  </p>
+                  <h1 className="text-4xl md:text-5xl font-semibold mb-4 leading-tight">
+                    {guide.title}
+                  </h1>
+                  <p className="text-lg text-text-secondary mb-6 leading-relaxed">
+                    {guide.excerpt || guide.description}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 mb-8">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
+                      {totalLessons} lessons
+                    </span>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
+                      {totalMinutes} min total
+                    </span>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
+                      {guide.skillLevel}
+                    </span>
+                    {guide.lastUpdatedDate && (
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
                         Updated{' '}
                         {new Date(guide.lastUpdatedDate).toLocaleDateString(
                           'en-US',
                           { year: 'numeric', month: 'short', day: 'numeric' }
                         )}
                       </span>
-                    </>
+                    )}
+                  </div>
+                  {firstLesson && (
+                    <Link
+                      href={firstLesson.url}
+                      className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors"
+                    >
+                      Start Learning: {firstLesson.title}
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </Link>
                   )}
                 </div>
-              </header>
 
-              {/* Primary CTA — start the course */}
-              {firstLesson && (
-                <div className="mb-12">
-                  <Link
-                    href={firstLesson.url}
-                    className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors"
-                  >
-                    Start Learning: {firstLesson.title}
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
+                {/* 2x2 stat tile grid — typographic only, no icon library */}
+                <div className="hidden md:grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
+                    <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
+                      {totalLessons}
+                    </div>
+                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
+                      Lessons
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
+                    <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
+                      {totalMinutes}
+                    </div>
+                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
+                      Minutes
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
+                    <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
+                      {moduleOrder.length}
+                    </div>
+                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
+                      Modules
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
+                    <div className="text-base font-semibold text-text-primary leading-tight">
+                      {guide.skillLevel}
+                    </div>
+                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
+                      Level
+                    </div>
+                  </div>
                 </div>
-              )}
+              </header>
 
               {/* About this course */}
               <section className="mb-12">
@@ -293,7 +300,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 </ul>
               </section>
 
-              {/* All lessons — compact list grouped by module */}
+              {/* All lessons — bordered module cards with hoverable lesson rows */}
               <section className="mb-12">
                 <h2
                   id="all-lessons"
@@ -301,33 +308,58 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 >
                   All lessons
                 </h2>
-                <div className="space-y-8">
+                <div className="space-y-6">
                   {moduleOrder.map((moduleKey) => {
                     const title = MODULE_TITLES[moduleKey] || moduleKey;
+                    const desc = MODULE_DESCRIPTIONS[moduleKey];
                     const lessons = lessonsByModule.get(moduleKey) || [];
+                    const moduleMinutes = lessons.reduce(
+                      (sum, l) => sum + (l.duration || 0),
+                      0
+                    );
                     return (
-                      <div key={moduleKey}>
-                        <h3 className="text-sm font-semibold uppercase tracking-wide text-text-secondary mb-3">
-                          {title}
-                        </h3>
-                        <ol className="space-y-2">
+                      <div
+                        key={moduleKey}
+                        className="rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-primary overflow-hidden"
+                      >
+                        {/* Module header */}
+                        <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 bg-background-primary">
+                          <div className="flex flex-wrap items-baseline justify-between gap-2">
+                            <h3 className="text-base font-semibold text-text-primary">
+                              {title}
+                            </h3>
+                            <span className="text-xs text-text-secondary tabular-nums">
+                              {lessons.length}{' '}
+                              {lessons.length === 1 ? 'lesson' : 'lessons'} ·{' '}
+                              {moduleMinutes} min
+                            </span>
+                          </div>
+                          {desc && (
+                            <p className="text-sm text-text-secondary mt-1">
+                              {desc}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Lesson rows */}
+                        <ol className="divide-y divide-gray-200 dark:divide-gray-700">
                           {lessons.map((lesson, i) => (
-                            <li
-                              key={lesson.url}
-                              className="flex items-baseline gap-4"
-                            >
-                              <span className="text-xs text-text-secondary tabular-nums w-6 flex-shrink-0">
-                                {String(i + 1).padStart(2, '0')}
-                              </span>
+                            <li key={lesson.url}>
                               <Link
                                 href={lesson.url}
-                                className="text-text-primary hover:text-accent-primary transition-colors flex-1"
+                                className="flex items-center gap-4 px-5 py-3 hover:bg-background-primary transition-colors group"
                               >
-                                {lesson.title}
+                                <span className="text-xs text-text-secondary tabular-nums w-6 flex-shrink-0">
+                                  {String(i + 1).padStart(2, '0')}
+                                </span>
+                                <span className="flex-1 text-sm text-text-primary group-hover:text-accent-primary font-medium transition-colors">
+                                  {lesson.title}
+                                </span>
+                                <span className="text-xs text-text-secondary tabular-nums flex-shrink-0">
+                                  {lesson.duration} min
+                                </span>
+                                <ArrowRightIcon className="w-4 h-4 text-text-secondary group-hover:text-accent-primary flex-shrink-0 transition-colors" />
                               </Link>
-                              <span className="text-xs text-text-secondary flex-shrink-0">
-                                {lesson.duration} min
-                              </span>
                             </li>
                           ))}
                         </ol>

@@ -81,6 +81,16 @@ export const guides: Guide[] = [
               'Your API key is like a password. Never share it with anyone, post it in Slack/email/public docs, commit it to GitHub, or store it in plain text files in your projects.',
             icon: 'warning',
           },
+          {
+            type: 'completion',
+            title: 'API key ready',
+            items: [
+              'Created an Anthropic Console account',
+              'Generated and copied your first API key',
+              'Stored it somewhere safe and out of any code files',
+            ],
+            message: 'Next up: getting Node.js running so Claude Code has somewhere to live.',
+          },
         ],
       },
       {
@@ -91,8 +101,9 @@ export const guides: Guide[] = [
         module: 'setup',
         sections: [
           {
-            type: 'text',
-            content: 'Node.js is software that lets you run JavaScript code on your computer. You need it to use Claude Code.',
+            type: 'intro',
+            content: 'Node.js is what lets your computer actually run Claude Code. If you\'ve never installed it before, that\'s fine — most designers haven\'t. You\'ll either confirm it\'s already there or grab it in two minutes.',
+            icon: 'download',
           },
           {
             type: 'heading',
@@ -159,11 +170,14 @@ export const guides: Guide[] = [
             ],
           },
           {
-            type: 'callout',
-            calloutType: 'success',
-            title: 'Ready to Continue',
-            content: 'Once you see a version number, you have Node.js installed and can move on to the next step!',
-            icon: 'success',
+            type: 'completion',
+            title: 'Node.js is in place',
+            items: [
+              'Checked whether Node.js was already installed',
+              'Downloaded the LTS version from nodejs.org if needed',
+              'Verified the install with node --version',
+            ],
+            message: 'One more install and your environment is ready. Next: Claude Code itself.',
           },
         ],
       },
@@ -175,8 +189,9 @@ export const guides: Guide[] = [
         module: 'setup',
         sections: [
           {
-            type: 'text',
-            content: 'Now that you have Node.js, installing Claude Code is one command away.',
+            type: 'intro',
+            content: 'Now that Node.js is in place, getting Claude Code is a single command. By the end of this lesson the CLI will be installed, verified, and waiting for your first prompt.',
+            icon: 'terminal',
           },
           {
             type: 'heading',
@@ -366,6 +381,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'Claude Code should respond listing Figma-related tools like reading files, getting design data, and extracting components.',
           },
+          {
+            type: 'completion',
+            title: 'Figma MCP connected',
+            items: [
+              'Enabled the desktop MCP server in Figma\'s Dev Mode',
+              'Added the figma-desktop transport to Claude Code',
+              'Verified the connection by listing the available Figma tools',
+            ],
+            message: 'Claude Code can now read your actual Figma files. Next: turning a selected frame into working code.',
+          },
         ],
       },
       {
@@ -464,6 +489,16 @@ export const guides: Guide[] = [
             content: 'Begin with a single component (a button, a card) before asking Claude Code to implement an entire page. This helps you learn the workflow and check the output quality.',
             icon: 'info',
           },
+          {
+            type: 'completion',
+            title: 'Frame to code, working',
+            items: [
+              'Selected a frame in Figma and asked Claude Code to implement it',
+              'Saw how Claude Code reads layout, colors, type, spacing, and components',
+              'Started small with a single component before scaling up to a full page',
+            ],
+            message: 'Selecting frames is the fast path. Next: when to use Figma URLs in your prompts instead.',
+          },
         ],
       },
       {
@@ -546,6 +581,16 @@ export const guides: Guide[] = [
               'Use links when working with the remote MCP server (no desktop app)',
               'Use links when referencing multiple frames or states in one prompt',
             ],
+          },
+          {
+            type: 'completion',
+            title: 'Sharing frames with links',
+            items: [
+              'Copied a Figma URL straight to a specific frame or layer',
+              'Pasted multiple links in one prompt to show responsive states',
+              'Learned when links beat selection (complex files, remote MCP, multi-frame references)',
+            ],
+            message: 'Two ways to point Claude Code at a frame. Next: tips for getting cleaner output from both.',
           },
         ],
       },
@@ -647,6 +692,17 @@ export const guides: Guide[] = [
             title: 'Design System Consistency',
             content: 'Code Connect ensures that a "Primary Button" in Figma maps to your team\'s actual <Button variant="primary" /> component — not a generic button with hardcoded styles.',
             icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'Cleaner prompts, cleaner output',
+            items: [
+              'Organized Figma files (Auto Layout, named layers, variables) for better code',
+              'Wrote specific prompts that describe exact framework, colors, and interactions',
+              'Set up the Figma → code → review → refine loop as a working rhythm',
+              'Learned how Code Connect maps Figma components to your real component library',
+            ],
+            message: 'You know the moves now. Last lesson in this module: closing the loop by bringing code back to Figma.',
           },
         ],
       },
@@ -811,6 +867,11 @@ export const guides: Guide[] = [
         module: 'prototype',
         sections: [
           {
+            type: 'intro',
+            content: 'Time to actually launch Claude Code. You\'ll open a terminal, run one command, paste your API key, and pick a model. Three minutes from here to a working session.',
+            icon: 'terminal',
+          },
+          {
             type: 'heading',
             level: 'h2',
             content: 'Start Your First Claude Code Session',
@@ -866,6 +927,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'Claude Code will ask which model you want. Choose Claude 3.5 Sonnet—it\'s the best balance of speed and power for designers.',
           },
+          {
+            type: 'completion',
+            title: 'You\'re inside Claude Code',
+            items: [
+              'Opened a terminal session',
+              'Launched Claude Code with the claude command',
+              'Pasted your API key and picked a model',
+            ],
+            message: 'Next: giving Claude Code a project folder to work in so your files don\'t end up scattered.',
+          },
         ],
       },
       {
@@ -875,6 +946,11 @@ export const guides: Guide[] = [
         order: 10,
         module: 'prototype',
         sections: [
+          {
+            type: 'intro',
+            content: 'Every project Claude Code touches lives in a folder. You\'ll create one, step into it, and re-launch Claude Code so it knows where home is for the rest of this lesson.',
+            icon: 'cog',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -933,6 +1009,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'Paste your API key again. Now you\'re inside Claude Code, with your project as the working folder.',
           },
+          {
+            type: 'completion',
+            title: 'Project folder ready',
+            items: [
+              'Created a my-first-prototype folder with mkdir',
+              'Stepped into it with cd',
+              'Re-launched Claude Code so it\'s scoped to your new project',
+            ],
+            message: 'You have an empty project. Time to ask Claude Code to fill it.',
+          },
         ],
       },
       {
@@ -942,6 +1028,11 @@ export const guides: Guide[] = [
         order: 11,
         module: 'prototype',
         sections: [
+          {
+            type: 'intro',
+            content: 'This is the moment Claude Code earns its keep. You\'ll write a single sentence describing what you want, hit Enter, and watch a working component appear in your project folder.',
+            icon: 'code',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -994,6 +1085,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'Claude Code will update the files immediately!',
           },
+          {
+            type: 'completion',
+            title: 'First prototype generated',
+            items: [
+              'Wrote a specific prompt describing the component you wanted',
+              'Watched Claude Code create the actual files',
+              'Asked for a follow-up change and saw the files update in place',
+            ],
+            message: 'The files exist. Next: actually rendering them in a browser so you can see what you built.',
+          },
         ],
       },
       {
@@ -1003,6 +1104,11 @@ export const guides: Guide[] = [
         order: 12,
         module: 'prototype',
         sections: [
+          {
+            type: 'intro',
+            content: 'Code without a preview is just text. You\'ll spin up a local dev server, open localhost:3000 in your browser, and see your prototype rendered in real-time — refreshing automatically every time Claude Code makes a change.',
+            icon: 'monitor',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1064,6 +1170,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'When Claude Code makes changes, your browser automatically updates. No manual refresh needed!',
           },
+          {
+            type: 'completion',
+            title: 'Live preview running',
+            items: [
+              'Set up the React project structure with create-react-app',
+              'Started the dev server with npm start',
+              'Confirmed the prototype renders at localhost:3000 with live reload',
+            ],
+            message: 'Two windows, one workflow. Last lesson in this module: keeping the dev server running while you keep editing.',
+          },
         ],
       },
       {
@@ -1073,6 +1189,11 @@ export const guides: Guide[] = [
         order: 13,
         module: 'prototype',
         sections: [
+          {
+            type: 'intro',
+            content: 'Your dev server needs its own terminal to keep running. The fix is simple: open a second terminal and put Claude Code there. From now on, the loop is "edit in one window, watch the browser update from the other."',
+            icon: 'terminal',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1157,6 +1278,11 @@ export const guides: Guide[] = [
         module: 'github',
         sections: [
           {
+            type: 'intro',
+            content: 'GitHub is where your code lives in the cloud — backup, history, and collaboration in one place. If you don\'t already have an account, this lesson is sixty seconds of clicking. If you do, skip ahead to the next one.',
+            icon: 'github',
+          },
+          {
             type: 'heading',
             level: 'h2',
             content: 'Create a GitHub Account',
@@ -1199,6 +1325,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'GitHub account created. Let\'s connect your prototype.',
           },
+          {
+            type: 'completion',
+            title: 'GitHub account ready',
+            items: [
+              'Created a github.com account',
+              'Verified your email',
+              'Understood why GitHub matters: backup, history, collaboration, portfolio',
+            ],
+            message: 'An account is just an empty room. Next: creating a repository to store your prototype.',
+          },
         ],
       },
       {
@@ -1208,6 +1344,11 @@ export const guides: Guide[] = [
         order: 15,
         module: 'github',
         sections: [
+          {
+            type: 'intro',
+            content: 'A repository is a project folder that lives on GitHub. You\'ll create one with the same name as your local prototype folder, then keep the setup page open — you\'ll need its commands in the next lesson.',
+            icon: 'github',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1239,6 +1380,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'GitHub will show you commands. Keep this page open—you\'ll need the commands soon!',
           },
+          {
+            type: 'completion',
+            title: 'Empty repo, waiting',
+            items: [
+              'Created a new repo named my-first-prototype',
+              'Added a one-line description',
+              'Kept the setup page open with the connection commands',
+            ],
+            message: 'The cloud side is set up. Next: connecting your local project to it.',
+          },
         ],
       },
       {
@@ -1248,6 +1399,11 @@ export const guides: Guide[] = [
         order: 16,
         module: 'github',
         sections: [
+          {
+            type: 'intro',
+            content: 'Three git commands to initialize your folder, three more to push it to GitHub. Follow them in order and your prototype will be in the cloud by the end of the lesson.',
+            icon: 'terminal',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1311,6 +1467,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'Refresh your GitHub repo page. Your files should now be there!',
           },
+          {
+            type: 'completion',
+            title: 'Local project linked to GitHub',
+            items: [
+              'Initialized git in your project folder',
+              'Made your first commit',
+              'Connected the local repo to your GitHub remote and pushed',
+            ],
+            message: 'Your prototype is in the cloud. Next: how to keep it there as you make changes.',
+          },
         ],
       },
       {
@@ -1320,6 +1486,11 @@ export const guides: Guide[] = [
         order: 17,
         module: 'github',
         sections: [
+          {
+            type: 'intro',
+            content: 'Connecting once isn\'t enough — every meaningful change needs a commit and a push. You\'ll learn the four-step save loop and how to write commit messages your future self will actually thank you for.',
+            icon: 'check',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1365,6 +1536,16 @@ export const guides: Guide[] = [
             type: 'text',
             content: 'Good messages help you remember what you did and help teammates understand changes.',
           },
+          {
+            type: 'completion',
+            title: 'Save loop, internalized',
+            items: [
+              'Learned the add → commit → push loop for every meaningful change',
+              'Practiced writing commit messages that describe what changed, not just "stuff"',
+              'Treated commits as documentation, not paperwork',
+            ],
+            message: 'Manual saves work, but Claude Code can handle most of this for you. Last lesson: the /save command.',
+          },
         ],
       },
       {
@@ -1374,6 +1555,11 @@ export const guides: Guide[] = [
         order: 18,
         module: 'github',
         sections: [
+          {
+            type: 'intro',
+            content: 'You don\'t actually have to remember the four-step git loop every time. Claude Code\'s /save command does it for you, and your repo URL is the only thing you need to share work with anyone.',
+            icon: 'github',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1449,6 +1635,11 @@ export const guides: Guide[] = [
         module: 'practices',
         sections: [
           {
+            type: 'intro',
+            content: 'The single biggest factor in code quality is how you describe what you want. Vague prompts get vague output. This lesson teaches you the level of detail Claude Code actually needs — colors, sizes, interactions, framework — and what to leave out.',
+            icon: 'info',
+          },
+          {
             type: 'heading',
             level: 'h2',
             content: 'How to Describe Your Design to Claude Code',
@@ -1507,6 +1698,16 @@ export const guides: Guide[] = [
               'Design a navigation bar with a logo on the left and 4 menu items on the right. Make it sticky (stays at top when scrolling).',
             ],
           },
+          {
+            type: 'completion',
+            title: 'Specific beats vague, every time',
+            items: [
+              'Replaced "nice button" with concrete colors, sizes, and interactions',
+              'Always specified the framework (React + Tailwind)',
+              'Built a mental template for prompts: structure → colors → sizes → interactions → responsiveness',
+            ],
+            message: 'Better prompts in. Better code out. Next: testing whether the code actually does what you wanted.',
+          },
         ],
       },
       {
@@ -1516,6 +1717,11 @@ export const guides: Guide[] = [
         order: 20,
         module: 'practices',
         sections: [
+          {
+            type: 'intro',
+            content: 'Looking good in one browser doesn\'t mean it works for everyone. You\'ll learn the three things to check before sharing a prototype: cross-browser rendering, basic accessibility, and whether the interactions actually feel right.',
+            icon: 'monitor',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1564,6 +1770,16 @@ export const guides: Guide[] = [
               'Try animations—are they fast enough? Too slow?',
             ],
           },
+          {
+            type: 'completion',
+            title: 'Tested across the basics',
+            items: [
+              'Checked the prototype in multiple browsers',
+              'Ran a basic accessibility pass: keyboard, contrast, small screens',
+              'Felt the interactions yourself instead of trusting the screenshot',
+            ],
+            message: 'Working prototype, real feedback coming. Next: how to ask for changes without rewriting from scratch.',
+          },
         ],
       },
       {
@@ -1573,6 +1789,11 @@ export const guides: Guide[] = [
         order: 21,
         module: 'practices',
         sections: [
+          {
+            type: 'intro',
+            content: 'Saying "redo it" gets you a different version of the same problem. Saying "make the button taller and add more space between the inputs" gets you exactly what you wanted. This lesson is about that difference, plus using git to safely try things you might want to undo.',
+            icon: 'cog',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1627,6 +1848,16 @@ export const guides: Guide[] = [
               'Document design decisions in code comments',
             ],
           },
+          {
+            type: 'completion',
+            title: 'Iteration as a habit',
+            items: [
+              'Made small surgical changes instead of asking for full rewrites',
+              'Used git history as a safety net for risky experiments',
+              'Showed work early and asked specific questions instead of "what do you think?"',
+            ],
+            message: 'You can refine. Now the question is how to hand it off cleanly. Next lesson.',
+          },
         ],
       },
       {
@@ -1636,6 +1867,11 @@ export const guides: Guide[] = [
         order: 22,
         module: 'practices',
         sections: [
+          {
+            type: 'intro',
+            content: 'A prototype that ships well to a developer is a prototype that gets built. You\'ll learn what to put on GitHub, what belongs in a README, and how to use Figma MCP so the handoff conversation is about decisions, not pixel pushing.',
+            icon: 'user',
+          },
           {
             type: 'heading',
             level: 'h2',
@@ -1707,6 +1943,16 @@ export const guides: Guide[] = [
               'Design tokens and variables from Figma carry over to code automatically',
             ],
           },
+          {
+            type: 'completion',
+            title: 'Handoff, ready',
+            items: [
+              'Prepared the repo with comments, a README, and a recent push',
+              'Documented design intent so developers know the why, not just the what',
+              'Used Figma MCP to short-circuit the "the padding looks off" loop',
+            ],
+            message: 'Last lesson coming up. Things will go wrong eventually — knowing how to fix them keeps the workflow running.',
+          },
         ],
       },
       {
@@ -1716,6 +1962,11 @@ export const guides: Guide[] = [
         order: 23,
         module: 'practices',
         sections: [
+          {
+            type: 'intro',
+            content: 'Three things break most often: Claude Code refusing to start, the dev server failing to launch, and git getting confused. Here are the fixes for each — bookmark this lesson, you\'ll come back to it.',
+            icon: 'warning',
+          },
           {
             type: 'heading',
             level: 'h2',

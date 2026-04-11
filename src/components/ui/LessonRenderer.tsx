@@ -24,9 +24,6 @@ import {
   LessonSection,
   IconType,
 } from '@/types/lesson';
-import {
-  Github,
-} from '@lobehub/icons'; // For GitHub logo icon
 import { getPreviewComponent } from '@/components/guides/chat-previews';
 import { slugifyHeading } from '@/lib/guides/headings';
 
@@ -42,7 +39,7 @@ const getHeadingIcon = (headingText: string) => {
   } else if (headingText.includes('Prototype')) {
     return <LightBulbIcon className={iconClass} />;
   } else if (headingText.includes('GitHub') || headingText.includes('Git')) {
-    return <Github size={28} className="text-gray-600 dark:text-gray-400" />;
+    return <CodeBracketIcon className={iconClass} />;
   } else if (headingText.includes('Best Practices') || headingText.includes('Practices')) {
     return <StarIcon className={iconClass} />;
   }
@@ -117,6 +114,62 @@ const getCalloutIconColor = (calloutType: 'info' | 'warning' | 'success' | 'erro
       return 'text-blue-500';
   }
 };
+
+/**
+ * Copy-to-clipboard button used by `code` sections.
+ * Owns its own `copied` state so each code block confirms its own click,
+ * and falls back to `document.execCommand('copy')` when the async Clipboard
+ * API is unavailable (insecure context, permissions, older browsers).
+ */
+function CopyButton({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    let ok = false;
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+        ok = true;
+      } else if (typeof document !== 'undefined') {
+        // Legacy fallback — works on http:// dev servers without HTTPS
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+    } catch (err) {
+      console.error('[CopyButton] copy failed:', err);
+      ok = false;
+    }
+    if (ok) {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      aria-label={copied ? 'Copied to clipboard' : 'Copy code to clipboard'}
+      className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all border bg-gray-800/90 dark:bg-gray-700/90 text-white border-gray-700 dark:border-gray-600 hover:bg-gray-800 dark:hover:bg-gray-700"
+    >
+      {copied ? (
+        <>
+          <CheckIcon className="w-3.5 h-3.5" aria-hidden="true" />
+          Copied
+        </>
+      ) : (
+        'Copy'
+      )}
+    </button>
+  );
+}
 
 function CodePreviewBlock({ section }: { section: { code: string; language?: string; label?: string; previewId: string } }) {
   const [showCode, setShowCode] = useState(false);
@@ -262,7 +315,7 @@ const renderSection = (
 
     case 'text':
       return (
-        <p key={index} className="text-gray-500 dark:text-gray-400 mb-4 leading-relaxed text-base">
+        <p key={index} className="text-text-secondary mb-4 leading-relaxed text-base">
           {section.content}
         </p>
       );
@@ -340,14 +393,7 @@ const renderSection = (
             <pre className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-4 m-0 rounded-b-lg border border-gray-200 dark:border-gray-700 border-t-0 overflow-auto font-mono text-sm">
               <code>{section.code}</code>
             </pre>
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(section.code);
-              }}
-              className="absolute top-3 right-3 bg-gray-800/80 dark:bg-gray-700/80 border border-gray-700 dark:border-gray-600 text-white px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all hover:bg-gray-800 dark:hover:bg-gray-700"
-            >
-              Copy
-            </button>
+            <CopyButton code={section.code} />
           </div>
         </div>
       );

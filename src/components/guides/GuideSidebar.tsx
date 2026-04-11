@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Guide } from '@/types';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
+import { getModuleTitle } from '@/lib/guides/modules';
 
 interface GuideSidebarProps {
   guide: Guide;
@@ -9,22 +10,6 @@ interface GuideSidebarProps {
   /** True when rendered on the course overview page — highlights the "Overview" item. */
   currentIsOverview?: boolean;
 }
-
-// Human-friendly titles for the module keys used in the guides data.
-const MODULE_TITLES: Record<string, string> = {
-  setup: 'Setup',
-  features: 'Core Features',
-  prototype: 'Prototype',
-  prototyping: 'Prototyping Workflows',
-  collaboration: 'Developer Collaboration',
-  github: 'GitHub',
-  practices: 'Best Practices',
-  figma: 'Figma ↔ Code',
-  foundations: 'Foundations',
-  building: 'Building',
-  advanced: 'Advanced Patterns',
-  polish: 'Ship It',
-};
 
 /**
  * Left sidebar shown on course overview + lesson pages (≥lg breakpoint).
@@ -74,9 +59,7 @@ export default function GuideSidebar({
       {/* Module → lesson list */}
       {moduleOrder.map((moduleKey) => {
         const lessons = lessonsByModule.get(moduleKey) || [];
-        const moduleTitle =
-          MODULE_TITLES[moduleKey] ||
-          moduleKey.charAt(0).toUpperCase() + moduleKey.slice(1);
+        const moduleTitle = getModuleTitle(moduleKey);
         return (
           <div key={moduleKey}>
             <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-2">

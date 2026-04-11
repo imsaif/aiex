@@ -1,6 +1,11 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import {
+  ClockIcon,
+  BookOpenIcon,
+  ArrowPathIcon,
+} from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -16,6 +21,7 @@ import {
   getLessonsForCourse,
 } from '@/lib/guides/lesson-urls';
 import { extractHeadings } from '@/lib/guides/headings';
+import { MODULE_TITLES } from '@/lib/guides/modules';
 
 // ISR so the first request is cached and Googlebot hits warm HTML
 export const revalidate = 3600;
@@ -248,34 +254,51 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </ol>
               </nav>
 
-              {/* Lesson header */}
+              {/* Lesson header — accent divider, module + lesson counter chips,
+                  H1, and iconified meta pill row */}
               <header className="mb-10">
-                <p className="text-sm font-medium text-accent-primary uppercase tracking-wide mb-2">
-                  Lesson {lessonIndex + 1} of {allLessons.length}
-                  {lesson.module ? ` · ${lesson.module}` : ''}
-                </p>
-                <h1 className="text-4xl md:text-5xl font-semibold mb-4 leading-tight">
+                <div
+                  className="border-t-2 border-accent-primary/30 w-12 mb-6"
+                  aria-hidden="true"
+                />
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  {lesson.module && (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-accent-primary/10 text-accent-primary text-xs font-semibold uppercase tracking-wide">
+                      {MODULE_TITLES[lesson.module] || lesson.module}
+                    </span>
+                  )}
+                  <span className="text-xs text-text-secondary tabular-nums">
+                    Lesson {lessonIndex + 1} of {allLessons.length}
+                  </span>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-semibold mb-5 leading-tight">
                   {lesson.title}
                 </h1>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
-                  <span>{lesson.duration} min read</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{guide.tool} for Designers</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
+                    <ClockIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                    {lesson.duration} min read
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
+                    <BookOpenIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                    {guide.tool} for Designers
+                  </span>
                   {guide.lastUpdatedDate && (
-                    <>
-                      <span aria-hidden="true">·</span>
-                      <span>
-                        Updated{' '}
-                        {new Date(guide.lastUpdatedDate).toLocaleDateString(
-                          'en-US',
-                          {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          }
-                        )}
-                      </span>
-                    </>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
+                      <ArrowPathIcon
+                        className="w-3.5 h-3.5"
+                        aria-hidden="true"
+                      />
+                      Updated{' '}
+                      {new Date(guide.lastUpdatedDate).toLocaleDateString(
+                        'en-US',
+                        {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        }
+                      )}
+                    </span>
                   )}
                 </div>
               </header>
