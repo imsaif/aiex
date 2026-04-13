@@ -17,6 +17,7 @@ export const NEWSLETTER_SOURCES = [
   'audit-waitlist',
   'agentic-checklist',
   'design-with-claude',
+  'guides',
 ] as const;
 
 export type NewsletterSource = (typeof NEWSLETTER_SOURCES)[number];

@@ -9,6 +9,8 @@ import {
   CheckIcon,
   ComputerDesktopIcon,
   ArrowDownTrayIcon,
+  ArrowTopRightOnSquareIcon,
+  BookOpenIcon,
   LockClosedIcon,
   UserIcon,
   KeyIcon,
@@ -77,8 +79,30 @@ const getIcon = (iconType: IconType) => {
       return <DocumentIcon className={iconClass} />;
     case 'cog':
       return <Cog6ToothIcon className={iconClass} />;
+    case 'tip':
+      return <LightBulbIcon className={iconClass} />;
     default:
       return null;
+  }
+};
+
+/** Default icon for each callout type when section.icon isn't explicitly set.
+ *  Keeps the visual rhythm consistent — every callout gets an icon tile. */
+const getDefaultCalloutIcon = (
+  calloutType: 'info' | 'warning' | 'success' | 'error' | 'tip'
+): IconType => {
+  switch (calloutType) {
+    case 'warning':
+      return 'warning';
+    case 'success':
+      return 'success';
+    case 'error':
+      return 'error';
+    case 'tip':
+      return 'tip';
+    case 'info':
+    default:
+      return 'info';
   }
 };
 
@@ -254,6 +278,133 @@ function buildHeadingIdMap(sections: LessonSection[]): Map<number, string> {
   return map;
 }
 
+/**
+ * Render a `text` section's raw string into structured paragraphs and lists.
+ *
+ * Lesson `text` content is authored as a single string with `\n\n` between
+ * blocks and `•` / `-` / `*` / `1.` prefixes for list items. Without parsing,
+ * those characters appear inline as plain text and the lesson reads as a wall
+ * of text. This helper:
+ *   - Splits on blank lines into blocks
+ *   - Detects bulleted and numbered lists (with optional intro line)
+ *   - Coalesces consecutive same-type list blocks into a single list
+ *   - Falls back to a paragraph with `whitespace-pre-line` so single newlines
+ *     still render as soft breaks for definition-style lines.
+ */
+const BULLET_RE = /^[•\-*]\s+/;
+const NUMBER_RE = /^\d+[.)]\s+/;
+
+type TextBlock =
+  | { kind: 'p'; text: string }
+  | { kind: 'ul'; intro?: string; items: string[] }
+  | { kind: 'ol'; intro?: string; items: string[] };
+
+function classifyTextBlocks(content: string): TextBlock[] {
+  const rawBlocks = content
+    .split(/\n\n+/)
+    .map((b) => b.trim())
+    .filter((b) => b.length > 0);
+
+  const classified: TextBlock[] = rawBlocks.map((block) => {
+    const lines = block
+      .split('\n')
+      .map((l) => l.trim())
+      .filter((l) => l.length > 0);
+
+    const bulletStart = lines.findIndex((l) => BULLET_RE.test(l));
+    if (
+      bulletStart >= 0 &&
+      lines.slice(bulletStart).every((l) => BULLET_RE.test(l))
+    ) {
+      return {
+        kind: 'ul',
+        intro:
+          bulletStart > 0
+            ? lines.slice(0, bulletStart).join(' ')
+            : undefined,
+        items: lines.slice(bulletStart).map((l) => l.replace(BULLET_RE, '')),
+      };
+    }
+
+    const numberStart = lines.findIndex((l) => NUMBER_RE.test(l));
+    if (
+      numberStart >= 0 &&
+      lines.slice(numberStart).every((l) => NUMBER_RE.test(l))
+    ) {
+      return {
+        kind: 'ol',
+        intro:
+          numberStart > 0
+            ? lines.slice(0, numberStart).join(' ')
+            : undefined,
+        items: lines.slice(numberStart).map((l) => l.replace(NUMBER_RE, '')),
+      };
+    }
+
+    return { kind: 'p', text: block };
+  });
+
+  // Coalesce adjacent same-kind list blocks (only when the next block has no
+  // intro of its own — that would imply a fresh logical list).
+  const merged: TextBlock[] = [];
+  for (const block of classified) {
+    const last = merged[merged.length - 1];
+    if (
+      last &&
+      (block.kind === 'ul' || block.kind === 'ol') &&
+      last.kind === block.kind &&
+      !block.intro
+    ) {
+      last.items.push(...block.items);
+    } else {
+      merged.push(block);
+    }
+  }
+  return merged;
+}
+
+function renderRichText(content: string, indexKey: number): React.ReactNode {
+  const blocks = classifyTextBlocks(content);
+  return (
+    <React.Fragment key={indexKey}>
+      {blocks.map((block, i) => {
+        const key = `${indexKey}-${i}`;
+        if (block.kind === 'p') {
+          return (
+            <p
+              key={key}
+              className="mb-4 text-text-secondary leading-relaxed text-base whitespace-pre-line"
+            >
+              {block.text}
+            </p>
+          );
+        }
+        const ListTag = block.kind === 'ul' ? 'ul' : 'ol';
+        const listClass =
+          block.kind === 'ul'
+            ? 'mb-6 ml-6 text-text-secondary list-disc space-y-2'
+            : 'mb-6 ml-6 text-text-secondary list-decimal space-y-2';
+        return (
+          <div key={key} className="mb-4">
+            {block.intro && (
+              <p className="mb-3 text-text-secondary leading-relaxed text-base">
+                {block.intro}
+              </p>
+            )}
+            <ListTag className={listClass}>
+              {block.items.map((item, j) => (
+                <li key={j} className="leading-relaxed">
+                  {item}
+                </li>
+              ))}
+            </ListTag>
+          </div>
+        );
+      })}
+    </React.Fragment>
+  );
+}
+
 const renderSection = (
   section: LessonSection,
   index: number,
@@ -314,11 +465,7 @@ const renderSection = (
     }
 
     case 'text':
-      return (
-        <p key={index} className="text-text-secondary mb-4 leading-relaxed text-base">
-          {section.content}
-        </p>
-      );
+      return renderRichText(section.content, index);
 
     case 'list':
       return (
@@ -334,20 +481,37 @@ const renderSection = (
         </ul>
       );
 
-    case 'callout':
+    case 'callout': {
+      // Neutral brand card — same shell across all callout types. A relevant
+      // icon (auto-picked from calloutType when not overridden) sits in a
+      // tinted tile to give scannable type cues without colored backgrounds.
+      const iconType =
+        section.icon && section.icon !== 'none'
+          ? section.icon
+          : getDefaultCalloutIcon(section.calloutType);
       return (
-        <div key={index} className="mb-6 flex gap-3">
-          {section.icon && section.icon !== 'none' && (
-            <div className={`flex-shrink-0 ${getCalloutIconColor(section.calloutType)}`}>
-              {getIcon(section.icon)}
+        <div
+          key={index}
+          className="mb-6 p-5 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-primary"
+        >
+          <div className="flex items-start gap-4">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-primary border border-gray-200 dark:border-gray-700 text-text-primary flex-shrink-0">
+              {getIcon(iconType)}
             </div>
-          )}
-          <div className={getCalloutClasses(section.calloutType)}>
-            {section.title && <strong className="block mb-2">{section.title}</strong>}
-            <div>{section.content}</div>
+            <div className="flex-1 min-w-0">
+              {section.title && (
+                <strong className="block mb-2 text-text-primary text-base">
+                  {section.title}
+                </strong>
+              )}
+              <div className="text-text-secondary">
+                {renderRichText(section.content, index)}
+              </div>
+            </div>
           </div>
         </div>
       );
+    }
 
     case 'steps':
       return (
@@ -378,6 +542,86 @@ const renderSection = (
               )}
             </div>
           ))}
+        </div>
+      );
+
+    case 'table':
+      // Definition-list rendered as a 2-col grid: label on the left,
+      // description on the right. Stacks single-column on mobile.
+      // Bordered container + row dividers gives the table feel without
+      // forcing a real <table> element (better responsive behavior).
+      return (
+        <dl
+          key={index}
+          className="mb-8 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700"
+        >
+          {section.rows.map((row, i) => (
+            <div
+              key={i}
+              className="grid grid-cols-1 md:grid-cols-[minmax(180px,2fr)_minmax(0,3fr)] gap-2 md:gap-6 px-5 py-4"
+            >
+              <dt className="font-semibold text-text-primary text-base">
+                {row.label}
+              </dt>
+              <dd className="m-0 text-text-secondary leading-relaxed">
+                {row.content}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      );
+
+    case 'further-reading':
+      // Bordered container with a header row + clickable resource cards
+      // (one per link). External-link affordance and `target="_blank"` so
+      // readers don't lose their place in the lesson.
+      return (
+        <div
+          key={index}
+          className="mb-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-primary overflow-hidden"
+        >
+          <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
+            <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-background-primary border border-gray-200 dark:border-gray-700 text-text-primary flex-shrink-0">
+              <BookOpenIcon className="w-5 h-5" />
+            </div>
+            <strong className="text-text-primary text-base">
+              {section.title || 'Further reading'}
+            </strong>
+          </div>
+          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+            {section.links.map((link, i) => (
+              <li key={i}>
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-4 px-5 py-4 hover:bg-background-primary transition-colors group"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-baseline gap-x-2">
+                      <span className="text-sm md:text-base font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
+                        {link.title}
+                      </span>
+                      {link.source && (
+                        <span className="text-xs text-text-secondary">
+                          · {link.source}
+                        </span>
+                      )}
+                    </div>
+                    {link.description && (
+                      <p className="m-0 mt-1 text-sm text-text-secondary leading-relaxed">
+                        {link.description}
+                      </p>
+                    )}
+                  </div>
+                  <ArrowTopRightOnSquareIcon
+                    className="w-4 h-4 mt-1 text-text-secondary group-hover:text-accent-primary flex-shrink-0 transition-colors"
+                    aria-hidden="true"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       );
 

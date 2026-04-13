@@ -1,10 +1,70 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
+import {
+  AcademicCapIcon,
+  BookmarkIcon,
+  ChatBubbleLeftRightIcon,
+  ClockIcon,
+} from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { guides } from '@/data/guides';
 import { siteConfig } from '@/config/seo';
+
+// Per-guide visual anchor — brand logo where available, generic chat icon for
+// the conversational UI guide. Drops into the card header so the grid reads
+// as an icon-led list rather than five identical text blocks.
+type GuideIconConfig =
+  | { src: string; alt: string }
+  | { component: typeof ChatBubbleLeftRightIcon; alt: string };
+
+const GUIDE_ICONS: Record<string, GuideIconConfig> = {
+  'claude-code-learning-path': {
+    src: '/images/logos/simple-icons/anthropic.svg',
+    alt: 'Claude',
+  },
+  'cursor-learning-path': {
+    src: '/images/logos/simple-icons/cursor.svg',
+    alt: 'Cursor',
+  },
+  'github-copilot-learning-path': {
+    src: '/images/logos/simple-icons/githubcopilot.svg',
+    alt: 'GitHub Copilot',
+  },
+  'github-learning-path': {
+    src: '/images/logos/simple-icons/github.svg',
+    alt: 'GitHub',
+  },
+  'conversational-ui-guide': {
+    component: ChatBubbleLeftRightIcon,
+    alt: 'Conversational UI',
+  },
+};
+
+function GuideIconTile({ slug }: { slug: string }) {
+  const meta = GUIDE_ICONS[slug];
+  if (!meta) return null;
+  return (
+    <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+      {'component' in meta ? (
+        <meta.component
+          className="w-6 h-6 text-text-primary"
+          aria-hidden="true"
+        />
+      ) : (
+        <Image
+          src={meta.src}
+          alt=""
+          width={28}
+          height={28}
+          className="dark:invert"
+        />
+      )}
+    </div>
+  );
+}
 
 export const revalidate = 3600;
 
@@ -221,17 +281,21 @@ export default function GuidesPage() {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
-        {/* Hero — server-rendered H1 + intro prose */}
-        <section className="pt-20 md:pt-28 pb-8 md:pb-12 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-          <div className="max-w-4xl mx-auto px-6">
-            <div className="text-center">
+        {/* Hero — server-rendered. Typography + spacing scaled to match the
+            homepage hero hierarchy (H1, subtitle, padding, margins). */}
+        <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center max-w-4xl mx-auto">
               <p className="text-sm font-semibold uppercase tracking-wide text-accent-primary mb-4">
                 Free Learning Paths
               </p>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              <h1
+                className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9"
+                style={{ color: 'var(--text-hero)' }}
+              >
                 AI Tool Guides for Designers
               </h1>
-              <p className="text-xl text-text-secondary mb-4 leading-relaxed">
+              <p className="text-2xl md:text-3xl text-text-secondary mb-12">
                 Free step-by-step courses on Claude Code, Cursor, GitHub
                 Copilot, GitHub, and conversational UI. No coding experience
                 needed.
@@ -241,29 +305,6 @@ export default function GuidesPage() {
                 All free, no signup required
               </p>
             </div>
-          </div>
-        </section>
-
-        {/* Intro prose — SEO content block */}
-        <section className="max-w-3xl mx-auto px-6 pt-12 md:pt-16 pb-6">
-          <div className="prose prose-lg dark:prose-invert max-w-none text-text-secondary leading-relaxed">
-            <p>
-              The line between designer and developer is dissolving. Not
-              because designers are learning to code in the traditional sense,
-              but because AI has changed what &ldquo;building software&rdquo;
-              means. You no longer need to memorize syntax, master APIs, or
-              spend years on computer science fundamentals before you can ship
-              something real.
-            </p>
-            <p>
-              These guides teach you the tools that make that possible. Each
-              course is structured as a sequential learning path — start at
-              lesson 1, work through to the end, and you&rsquo;ll go from
-              &ldquo;I don&rsquo;t write code&rdquo; to &ldquo;I just shipped
-              a working prototype&rdquo; in a few hours. Every lesson has its
-              own page so you can bookmark, share, and return to specific
-              steps whenever you need them.
-            </p>
           </div>
         </section>
 
@@ -282,6 +323,7 @@ export default function GuidesPage() {
                   href={`/guides/${card.slug}`}
                   className="block p-8 rounded-3xl border border-gray-200 dark:border-gray-700 bg-surface-secondary hover:border-accent-primary/40 hover:shadow-lg transition-all"
                 >
+                  <GuideIconTile slug={card.slug} />
                   <p className="text-sm font-medium text-accent-primary mb-1">
                     {card.tagline}
                   </p>
@@ -334,6 +376,7 @@ export default function GuidesPage() {
                   href={`/guides/${card.slug}`}
                   className="block p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary hover:border-accent-primary/40 hover:shadow-lg transition-all"
                 >
+                  <GuideIconTile slug={card.slug} />
                   <p className="text-sm font-medium text-accent-primary mb-1">
                     {card.tagline}
                   </p>
@@ -368,47 +411,142 @@ export default function GuidesPage() {
           </section>
         )}
 
-        {/* FAQ — visible counterpart to the FAQPage JSON-LD above */}
-        <section className="max-w-3xl mx-auto px-6 py-12 md:py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-8">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-lg font-semibold text-text-primary mb-2">
-                Which AI tool should designers learn first?
-              </h3>
-              <p className="text-text-secondary leading-relaxed">
-                Start with Claude Code. It has the most forgiving learning
-                curve, works with Figma via MCP for design-to-code workflows,
-                and lets you describe what you want in plain English instead
-                of memorizing syntax. Cursor is great if you already know a
-                bit of code. GitHub Copilot is best for people already using
-                VS Code.
+        {/* Intro prose — SEO content block, placed below the cards as
+            supporting content so the hero-to-cards flow matches /patterns.
+            Outer max-w-7xl matches the cards container above; inner max-w-3xl
+            stays narrow for readability and is left-aligned so it lines up
+            with the cards' left edge instead of floating mid-viewport. */}
+        <section className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-6 md:pb-8">
+          <div className="max-w-3xl mx-auto">
+            <h2
+              id="why-guides"
+              className="scroll-mt-24 text-2xl md:text-3xl font-bold text-text-primary mb-6"
+            >
+              Why guides
+            </h2>
+            <div className="prose prose-lg dark:prose-invert max-w-none text-text-secondary leading-relaxed space-y-4">
+              <p>
+                The line between designer and developer is dissolving. Not
+                because designers are learning to code in the traditional
+                sense, but because AI has changed what &ldquo;building
+                software&rdquo; means. You no longer need to memorize syntax,
+                master APIs, or spend years on computer science fundamentals
+                to participate in how your product actually gets built.
+              </p>
+              <p>
+                These guides teach you the tools that make that possible —
+                whether you want cleaner handoffs with engineers, faster
+                prototypes, a clearer mental model of the technical decisions
+                shaping your product, or just the confidence to make changes
+                yourself. Each course is a sequential learning path you can
+                work through end-to-end, and every lesson has its own page so
+                you can bookmark, share, and return to specific steps
+                whenever you need them.
               </p>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-text-primary mb-2">
-                Do I need to know how to code to use these guides?
-              </h3>
-              <p className="text-text-secondary leading-relaxed">
-                No. Every guide is written for designers with zero coding
-                background. We cover everything from terminal basics to
-                version control to shipping real prototypes. You describe
-                what you want to build; the AI handles the implementation
-                details.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-text-primary mb-2">
-                Are these guides really free?
-              </h3>
-              <p className="text-text-secondary leading-relaxed">
-                Yes, all guides are free. No email required to read them. The
-                tools themselves (Claude Code, Cursor, GitHub Copilot) have
-                free tiers — we recommend starting with those and upgrading
-                only when you hit limits.
-              </p>
+
+            {/* 3-up benefit row — visual reinforcement of the three claims
+                in the prose above. Centered cells, icon-tile design language
+                shared with the guide cards so the page reads as one system. */}
+            <ul className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <li className="flex flex-col items-center text-center">
+                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+                  <AcademicCapIcon
+                    className="w-6 h-6 text-text-primary"
+                    aria-hidden="true"
+                  />
+                </div>
+                <h3 className="text-base font-semibold text-text-primary mb-2">
+                  Built for designers
+                </h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  No coding background required. Each guide assumes a
+                  designer starting point and lets the AI handle the syntax.
+                </p>
+              </li>
+              <li className="flex flex-col items-center text-center">
+                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+                  <ClockIcon
+                    className="w-6 h-6 text-text-primary"
+                    aria-hidden="true"
+                  />
+                </div>
+                <h3 className="text-base font-semibold text-text-primary mb-2">
+                  Hours, not weeks
+                </h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  Each course is a focused path you can work through in an
+                  afternoon — no semester-long commitment to get fluent.
+                </p>
+              </li>
+              <li className="flex flex-col items-center text-center">
+                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+                  <BookmarkIcon
+                    className="w-6 h-6 text-text-primary"
+                    aria-hidden="true"
+                  />
+                </div>
+                <h3 className="text-base font-semibold text-text-primary mb-2">
+                  Bookmark any lesson
+                </h3>
+                <p className="text-sm text-text-secondary leading-relaxed">
+                  Every lesson has its own URL — save, share, or return to
+                  the exact step you need without scrolling through a course.
+                </p>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        {/* FAQ — visible counterpart to the FAQPage JSON-LD above. Same
+            container pattern as the intro: max-w-7xl outer, max-w-3xl inner
+            left-aligned. Question h3s and answer p sizes bumped for
+            readability and stronger hierarchy. */}
+        <section className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+          <div className="max-w-3xl mx-auto">
+            <h2
+              id="faq"
+              className="scroll-mt-24 text-2xl md:text-3xl font-bold text-text-primary mb-8"
+            >
+              Frequently Asked Questions
+            </h2>
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                  Which AI tool should designers learn first?
+                </h3>
+                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                  Start with Claude Code. It has the most forgiving learning
+                  curve, works with Figma via MCP for design-to-code
+                  workflows, and lets you describe what you want in plain
+                  English instead of memorizing syntax. Cursor is great if
+                  you already know a bit of code. GitHub Copilot is best for
+                  people already using VS Code.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                  Do I need to know how to code to use these guides?
+                </h3>
+                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                  No. Every guide is written for designers with zero coding
+                  background. We cover everything from terminal basics to
+                  version control to shipping real prototypes. You describe
+                  what you want to build; the AI handles the implementation
+                  details.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                  Are these guides really free?
+                </h3>
+                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                  Yes, all guides are free. No email required to read them.
+                  The tools themselves (Claude Code, Cursor, GitHub Copilot)
+                  have free tiers — we recommend starting with those and
+                  upgrading only when you hit limits.
+                </p>
+              </div>
             </div>
           </div>
         </section>

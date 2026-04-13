@@ -5598,12 +5598,12 @@ export const guides: Guide[] = [
   {
     id: 'conversational-ui-guide',
     slug: 'conversational-ui-guide',
-    title: 'Build a Conversational UI - Complete Design & Implementation Guide',
+    title: 'Build a Conversational UI',
     description:
       'Learn how to design and build conversational interfaces - from chat message bubbles and typing indicators to voice interaction, context management, and suggested prompts.',
     excerpt:
       'A practical guide to building conversational UIs: 11 lessons covering chat interfaces, voice assistants, streaming responses, conversation context, error recovery, agentic AI patterns, and accessibility. Includes code examples in React and design patterns used by ChatGPT, Claude, Slack, and Siri.',
-    tool: 'Other' as const,
+    tool: 'Conversational UI' as const,
     useCase: 'Learning Path',
     skillLevel: 'Intermediate' as const,
     designDomain: 'UX Design',
@@ -5630,14 +5630,23 @@ export const guides: Guide[] = [
       {
         id: 'lesson-1',
         title: 'What Is Conversational UI? (And What It Isn\'t)',
-        duration: 3,
+        duration: 6,
         order: 1,
         module: 'foundations',
         sections: [
           {
             type: 'intro',
-            content: 'Before building a conversational interface, you need to understand the landscape. Not every chat widget is a conversational UI, and not every conversational UI is a chatbot. This lesson defines the spectrum and helps you pick the right approach for your product.',
+            content: 'Before building a conversational interface, you need to understand the landscape. Not every chat widget is a conversational UI, and not every conversational UI is a chatbot. This lesson defines the spectrum, the decision framework, and the anti-patterns that quietly ruin AI products.',
             icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Conversation is overhead, not value',
+          },
+          {
+            type: 'text',
+            content: 'Before getting into how to build chat interfaces, here\'s a reframe worth keeping underneath every decision in this guide: conversation is overhead, not value. Every word a user types or reads is friction between their intent and the outcome they actually want. Chat is one tool — sometimes the right one — but never the goal.\n\nMost modern AI products are quietly moving away from chat-as-default. Vercel applies code suggestions with one click instead of a dialogue. GitHub Copilot offers slash commands like /fix and /explain. Google\'s Personal Intelligence works ambiently across Gmail and Photos without a chat surface at all. The lesson: the best AI experiences often eliminate the conversation entirely.',
           },
           {
             type: 'heading',
@@ -5660,6 +5669,70 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
+            content: 'The Intent-Clarity Spectrum',
+          },
+          {
+            type: 'text',
+            content: 'When intent is clear, conversation gets in the way. When intent is ambiguous, conversation is essential. This spectrum maps the four interaction models you should reach for, from least to most conversational. Reach for chat last, not first — most product moments live on the left side of this spectrum.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'One-click actions',
+                content: 'Clear intent, single action. Vercel\'s "Apply" button on AI code suggestions is the canonical example — the user\'s intent is "fix this", there\'s nothing to discuss.',
+              },
+              {
+                label: 'Structured commands',
+                content: 'Clear intent, variable parameters. GitHub Copilot\'s /fix, /explain, /test. The user names the operation; the AI executes within scope.',
+              },
+              {
+                label: 'Guided prompts',
+                content: 'Clear intent, complex execution. Wizard-style flows where AI walks the user through structured choices. Better than open chat when there\'s a known shape to the work.',
+              },
+              {
+                label: 'Open chat',
+                content: 'Ambiguous or exploratory intent — brainstorming, writing, debugging, learning. This is where conversational UI genuinely earns its place.',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Should this even be conversational?',
+          },
+          {
+            type: 'text',
+            content: 'Five questions to ask before defaulting to chat. If three or more answers point away from chat, design something else.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Can intent be inferred from context?',
+                content: 'If the AI already knows what the user is trying to do, asking is overhead.',
+              },
+              {
+                label: 'Is this a repeated or one-time interaction?',
+                content: 'Repeated interactions reward shortcuts; one-offs can tolerate dialogue.',
+              },
+              {
+                label: 'Must users understand the AI\'s reasoning?',
+                content: 'If yes, surface explanation. If no, deliver the outcome.',
+              },
+              {
+                label: 'How high are the stakes of failure?',
+                content: 'High stakes call for reversible actions or explicit confirmation, not silent assumptions.',
+              },
+              {
+                label: 'Is the context already available to the AI?',
+                content: 'If you\'re asking the user to type information the AI could read from the surrounding app, you\'ve designed the wrong interface.',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
             content: 'Text vs Voice vs Multimodal',
           },
           {
@@ -5668,21 +5741,39 @@ export const guides: Guide[] = [
           },
           {
             type: 'callout',
+            calloutType: 'warning',
+            title: 'Three patterns that quietly ruin conversational UX',
+            content: 'The accordion effect — users iterate prompts repeatedly to coax the right output, each cycle adding cognitive cost without proportional value.\n\nThe articulation barrier — the gap between what users want and the language they need to ask for it. Suggested prompts and structured commands exist to bridge this gap.\n\nThe context-switching tax — moving from app to chat and back drops productivity by up to 40% and takes around 23 minutes to refocus. Embedded AI beats destination AI almost every time.',
+          },
+          {
+            type: 'callout',
             calloutType: 'tip',
             content: 'Don\'t start by choosing a technology - start by understanding what your users need to accomplish and how they naturally describe those tasks. Watch 5 users try to use your product and note what they type or say. That tells you whether conversational UI is the right pattern.',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'AI is finally learning to shut up',
+                url: 'https://medium.com/design-bootcamp/ai-is-finally-learning-to-shut-up-62af1d2c01c8',
+                source: 'Medium',
+                description:
+                  'Why the best AI products often eliminate chat — the full argument behind the Intent-Clarity Spectrum and the cost-of-conversation framing.',
+              },
+            ],
           },
         ],
       },
       {
         id: 'lesson-2',
         title: 'Anatomy of a Chat Interface',
-        duration: 4,
+        duration: 5,
         order: 2,
         module: 'foundations',
         sections: [
           {
             type: 'intro',
-            content: 'Every great conversational UI shares the same building blocks. This lesson breaks down the anatomy of a chat interface - the message area, input bar, status indicators, and metadata - with design decisions behind each element.',
+            content: 'Every great conversational UI shares the same building blocks. This lesson breaks down the anatomy of a chat interface - the message area, input bar, status indicators, metadata, and disclosure surfaces - with the design decisions behind each element.',
             icon: 'layout',
           },
           {
@@ -5692,7 +5783,36 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'A chat interface has 5 essential components:\n\n1. Message area - The scrollable container showing the conversation history. User messages align right, AI messages align left. Each message has a bubble, optional avatar, and timestamp.\n\n2. Input bar - Where users type their message. Includes a text field, send button, and optionally: file upload, voice input toggle, and character count.\n\n3. Suggested prompts - Clickable chips or buttons showing example queries. These appear in the empty state (to help users start) and after AI responses (as follow-up suggestions).\n\n4. Status indicators - Typing dots, "thinking" spinners, or streaming text that show the AI is processing. Critical for perceived responsiveness.\n\n5. Header/toolbar - Shows the AI\'s name/avatar, conversation title, and actions (new chat, settings, history).',
+            content: 'A chat interface has six essential components. The first five are the chat shell most teams already build; the sixth — the disclosure surface — is where most products quietly fail.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Message area',
+                content: 'The scrollable container showing the conversation history. User messages align right, AI messages align left. Each message has a bubble, optional avatar, and timestamp.',
+              },
+              {
+                label: 'Input bar',
+                content: 'Where users type their message. Includes a text field, send button, and optionally: file upload, voice input toggle, and character count.',
+              },
+              {
+                label: 'Suggested prompts',
+                content: 'Clickable chips or buttons showing example queries. These appear in the empty state (to help users start) and after AI responses (as follow-up suggestions).',
+              },
+              {
+                label: 'Status indicators',
+                content: 'Typing dots, "thinking" spinners, or streaming text that show the AI is processing. Critical for perceived responsiveness.',
+              },
+              {
+                label: 'Header / toolbar',
+                content: 'Shows the AI\'s name/avatar, conversation title, and actions (new chat, settings, history).',
+              },
+              {
+                label: 'Disclosure surface',
+                content: 'The always-visible signals that tell the user what the AI is, what it can see right now, and what it\'s authorized to do. Identity badge in the header, context indicators in the input bar, and an audit trail under each AI action. Without this surface, users feel surveilled rather than helped — and the product gets pulled.',
+              },
+            ],
           },
           {
             type: 'heading',
@@ -5716,6 +5836,18 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'warning',
             content: 'Don\'t overload the empty state with features, tutorials, or marketing. Users came to chat - get them typing within 3 seconds of landing on the page.',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'AI learned to shut up. It forgot to say what it was doing.',
+                url: 'https://medium.com/p/91df21ad2742',
+                source: 'Medium',
+                description:
+                  'Why disclosure is a first-class component of chat anatomy — and what happens to products that skip it (Microsoft Copilot, Meta internal agent, Deutsche Telekom + ElevenLabs).',
+              },
+            ],
           },
         ],
       },
@@ -5884,7 +6016,7 @@ export const guides: Guide[] = [
       {
         id: 'lesson-5',
         title: 'Suggested Prompts & Conversation Starters',
-        duration: 3,
+        duration: 4,
         order: 5,
         module: 'building',
         sections: [
@@ -5892,6 +6024,15 @@ export const guides: Guide[] = [
             type: 'intro',
             content: 'The biggest usability problem in conversational UI is the blank input field. Users don\'t know what to type. Suggested prompts solve this - and done well, they become a core navigation mechanism, not just training wheels.',
             icon: 'lightbulb',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Prompts as articulation bridge',
+          },
+          {
+            type: 'text',
+            content: 'There\'s a gap users run into with every free-form AI interface — they know what they want, but not the exact words that will produce it. The "articulation barrier" is the cognitive distance between intent and prompt language, and it\'s the single biggest reason new users churn on chat-first products.\n\nSuggested prompts exist to close that gap. They show the vocabulary, the shape, and the granularity of a well-formed request — not by teaching it, but by offering it inline. The best prompt sets feel less like tutorials and more like visible commands: scannable options that turn an open text field into a guided surface without removing the user\'s freedom to type anything else.\n\nStructured commands like /fix and /explain are the precise end of this spectrum. They give power users a low-ambiguity shortcut once they\'ve figured out the articulation.',
           },
           {
             type: 'heading',
@@ -5953,12 +6094,24 @@ export const guides: Guide[] = [
             calloutType: 'tip',
             content: 'Place suggested prompts directly above the input bar, not below the AI\'s response. Users\' eyes naturally move from reading the response down to the input - prompts in that path get clicked 3-4x more than prompts near the message.',
           },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'AI is finally learning to shut up',
+                url: 'https://medium.com/design-bootcamp/ai-is-finally-learning-to-shut-up-62af1d2c01c8',
+                source: 'Medium',
+                description:
+                  'The articulation barrier in depth — and why structured commands like /fix often outperform open prompts for repeat users.',
+              },
+            ],
+          },
         ],
       },
       {
         id: 'lesson-6',
         title: 'Managing Conversation Context',
-        duration: 4,
+        duration: 5,
         order: 6,
         module: 'advanced',
         sections: [
@@ -6024,15 +6177,59 @@ export const guides: Guide[] = [
             content: 'For products with persistent conversations, design the history experience:\n\nSidebar list: Show past conversations with auto-generated titles (ChatGPT pattern). The title should be derived from the first user message or the conversation topic, not "Conversation 1, Conversation 2."\n\nSearch: Let users search across all conversations. This is table stakes for any product where users will accumulate 50+ conversations.\n\nBranching: Some products (like ChatGPT) allow editing a previous message and regenerating from that point, creating a conversation branch. This is powerful but adds UI complexity - start without it.',
           },
           {
+            type: 'heading',
+            level: 'h3',
+            content: 'Selective memory — make what you retain visible',
+          },
+          {
+            type: 'text',
+            content: 'Context is a system-design concern. Memory is a UX concern. Users must always be able to answer three questions about the AI in front of them: what can it see right now, what is it retaining for later, and how do I see or change that?\n\nWhen products get this wrong, the failure mode isn\'t usually "the AI remembered something it shouldn\'t" — it\'s "the AI retained state and never surfaced it." Users feel watched rather than helped, and the product gets pulled from the default surface. A well-designed conversational UI makes memory legible, not silent.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Notion AI Meeting Notes',
+                content: 'Sees audio + transcript during the session. Retains session-scoped context only. Shows a real-time waveform while listening, and a post-session panel with full transcript + conclusions + sources. Disclosure is continuous, not upfront.',
+              },
+              {
+                label: 'Microsoft Copilot (screen AI)',
+                content: 'Sees the current screen and voice input. Retains context across sessions. Only reveals context during active conversation — when the chat closes, the retention becomes invisible. This is the gap that led to the March 2026 feature rollback.',
+              },
+              {
+                label: 'Meta internal agent',
+                content: 'Saw engineer data beyond authorized scope. Retained indefinitely. Provided no visible permission boundary. An extreme case, but a useful contrast: when the disclosure surface is missing entirely, "capability" becomes surveillance.',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Anti-pattern: Silent Context Retention',
+            content: 'If the AI remembers something between turns or between sessions, say so — in the UI, not in the terms of service. Every retention you don\'t surface becomes a trust debt, and users cannot tell the difference between "remembers helpfully" and "watches quietly" without a visible signal.',
+          },
+          {
             type: 'text',
             content: 'Related AIUX patterns: The [Context Switching](/patterns/context-switching) pattern covers how to help users move between multiple AI conversations without losing state. [Selective Memory](/patterns/selective-memory) addresses giving users control over what the AI remembers across sessions. For preventing quality degradation in long conversations, see [Session Degradation Prevention](/patterns/session-degradation-prevention).',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'AI learned to shut up. It forgot to say what it was doing.',
+                url: 'https://medium.com/p/91df21ad2742',
+                source: 'Medium',
+                description:
+                  'The disclosure layer framework (Before / During / Controls / After), with side-by-side product teardowns showing where memory visibility lives in the UI.',
+              },
+            ],
           },
         ],
       },
       {
         id: 'lesson-7',
         title: 'Error Handling & Fallback Design',
-        duration: 3,
+        duration: 4,
         order: 7,
         module: 'advanced',
         sections: [
@@ -6111,8 +6308,52 @@ export const guides: Guide[] = [
             content: 'Never silently swallow errors. A message that disappears into a void with no response is the worst user experience. Even "Something went wrong - click to retry" is infinitely better than silence.',
           },
           {
+            type: 'heading',
+            level: 'h3',
+            content: 'When the AI doesn\'t know what it doesn\'t know',
+          },
+          {
+            type: 'text',
+            content: 'The four failure modes above assume the AI knows it failed. A harder class of error is when the AI gives a confident-sounding answer that happens to be wrong. These are the worst errors for conversational UI because users have no visible signal to distrust them — and the same interface used for correct answers is used for the confident-wrong ones.\n\nThree specific sub-patterns are worth naming:',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Competitor blending',
+                content: 'When the AI can\'t read your product\'s content, it fills the gap with a rival\'s methodology, presented as if it were yours. No disclosure that content was substituted.',
+              },
+              {
+                label: 'Narrative recycling',
+                content: 'The AI surfaces outdated content (old blog posts, stale LinkedIn posts, prior-year pricing) as current. The timestamp is usually available but doesn\'t make it into the response.',
+              },
+              {
+                label: 'Confident falsification',
+                content: 'The AI generates plausible-looking but incorrect details (fake API endpoints, fabricated citations, invented features) with the same tone and confidence as accurate ones.',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Pattern: Honest Uncertainty',
+            content: 'Claude\'s approach to these failures is the design target: state access limits explicitly ("I can\'t read that page — paste the content and I\'ll help"), cite sources when available, and prefer a shorter honest answer over a longer fabricated one. In conversational UX: surface uncertainty as a first-class message element, not a disclaimer. A visible "I\'m inferring this from..." line is worth more than 400 confidently wrong words.',
+          },
+          {
             type: 'text',
             content: 'Related AIUX patterns: The [Error Recovery](/patterns/error-recovery) pattern covers graceful failure strategies in depth - including undo, retry, and fallback mechanisms with examples from ChatGPT, GitHub Copilot, and more. For situations where the AI should hand off to a human, see [Graceful Handoff](/patterns/graceful-handoff) and [Escalation Pathways](/patterns/escalation-pathways).',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'Your design is invisible now',
+                url: 'https://medium.com/p/c50e3695f01a',
+                source: 'Medium',
+                description:
+                  'How AI agents fill content gaps by blending competitors, why "honest uncertainty" beats confident wrongness, and what designing for dual audiences (humans + agents) actually means.',
+              },
+            ],
           },
         ],
       },
@@ -6307,7 +6548,7 @@ export const guides: Guide[] = [
       {
         id: 'lesson-10',
         title: 'Putting It All Together - Architecture Checklist',
-        duration: 3,
+        duration: 5,
         order: 10,
         module: 'polish',
         sections: [
@@ -6411,16 +6652,71 @@ export const guides: Guide[] = [
             content: 'Once your core chat UI is solid, these AIUX design patterns will take it to the next level. Each one is a documented pattern with real-world examples, code demos, and implementation guidelines:\n\n[Multimodal Interaction](/patterns/multimodal-interaction) - Let users drag images, PDFs, or code files into the chat. Design for voice + text + visual input simultaneously.\n\n[Graceful Handoff](/patterns/graceful-handoff) - When the AI can\'t help, transfer to a human agent with full conversation context preserved. Critical for customer support.\n\n[Progressive Disclosure](/patterns/progressive-disclosure) - Start with a simple chat, then reveal advanced features (system prompts, temperature controls, model selection) as users become power users.\n\n[Context Switching](/patterns/context-switching) - Help users manage multiple conversations and switch between them without losing context.\n\n[Confidence Visualization](/patterns/confidence-visualization) - Show users how confident the AI is in its response. Especially important for high-stakes domains like healthcare or finance.\n\n[Feedback Loops](/patterns/feedback-loops) - Add thumbs up/down, regenerate, and edit mechanisms that help users correct the AI and improve responses over time.\n\nWant to see how your conversational UI stacks up? Use the free [AI UX Audit Tool](/audit) to score your interface against all 36 patterns.',
           },
           {
+            type: 'heading',
+            level: 'h3',
+            content: 'Pre-launch questions',
+          },
+          {
+            type: 'text',
+            content: 'Before you ship, walk through these two checklists. The first covers boundary design (what the AI can and can\'t do). The second covers disclosure design (what the user knows about the AI). Most AI products that fail post-launch fail one of these, not the core capability.',
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'Boundary design',
+          },
+          {
+            type: 'list',
+            items: [
+              'Where on the permission spectrum does this sit — human decides, shared decision, or AI decides? Map it in the actual interface, not the spec doc.',
+              'Is the boundary designed or patched? If the "Cancel" button was added after a review raised concerns, it\'s patched.',
+              'Who else does this affect? If the AI acts on behalf of one user but touches another user\'s data, consent design extends beyond the invoking user.',
+              'What happens at 15x? If the AI gets faster or runs more often, does the human review step still work, or does it become rubber-stamping?',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h4',
+            content: 'Disclosure design',
+          },
+          {
+            type: 'list',
+            items: [
+              'Does the user know the AI is present? Not in the terms of service — at the moment of use, every time.',
+              'Does the user know what context the AI accesses? What data is being read, why, and for how long?',
+              'Does the user know what the AI is authorized to do? What actions can it take, on whose behalf, within what boundaries?',
+            ],
+          },
+          {
             type: 'callout',
             calloutType: 'tip',
             content: 'Ship the simplest version first: message bubbles, input, send, streaming response, and 4 suggested prompts. Every feature after that should be validated by watching real users interact with your chat UI.',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'Who is designing the boundary for AI?',
+                url: 'https://medium.com/p/3a51b18b5fc7',
+                source: 'Medium',
+                description:
+                  'The permission spectrum in detail, the three conditions for safe autonomy (scope / stakes / reversibility), and why designed boundaries outperform patched ones.',
+              },
+              {
+                title: 'AI learned to shut up. It forgot to say what it was doing.',
+                url: 'https://medium.com/p/91df21ad2742',
+                source: 'Medium',
+                description:
+                  'The Disclosure Layer Framework (Before / During / Controls / After) with the Notion Meeting Notes worked example that the disclosure checklist above is derived from.',
+              },
+            ],
           },
         ],
       },
       {
         id: 'lesson-11',
         title: 'Agentic Conversational UI - When AI Takes Actions',
-        duration: 4,
+        duration: 8,
         order: 11,
         module: 'polish',
         sections: [
@@ -6450,6 +6746,138 @@ export const guides: Guide[] = [
           {
             type: 'text',
             content: 'These aren\'t abstract concerns - they\'re the design challenges facing every AI coding assistant (Cursor, GitHub Copilot), AI email tool (Superhuman, Spark), and AI agent platform (ChatGPT with plugins, Claude with tools).',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Destination AI vs Ambient AI',
+          },
+          {
+            type: 'text',
+            content: 'The first design decision is not what the agent does — it\'s where it lives. A destination AI is a place users go to get help. An ambient AI is present where the work is already happening, and surfaces only when it\'s useful. Most agentic products work better ambient than destination, because the context-switching tax of "go to AI → get help → come back" eats into the productivity gain the agent was supposed to provide.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Destination AI',
+                content: 'A dedicated surface the user visits ("open ChatGPT", "go to the chat tab"). Good for exploratory tasks, brainstorming, and long sessions. Costly for repetitive actions embedded in daily workflows.',
+              },
+              {
+                label: 'Ambient AI',
+                content: 'The agent lives inside the tools the user is already in — Google Personal Intelligence across Gmail/Photos, Figma\'s Make embeds inline with designs, Vercel\'s apply-fix button inside the editor. Lower interaction cost, but demands stronger disclosure because users haven\'t "summoned" the AI.',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Permission Spectrum',
+          },
+          {
+            type: 'text',
+            content: 'Every agentic feature sits somewhere on a spectrum from "human decides" to "AI decides." Your job as a designer is to know where on the spectrum the feature lives, and whether the interface reflects that honestly. The most common failure is shipping something on the right end of the spectrum with an interface that implies the middle.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Human decides',
+                content: 'The user makes the call; the AI proposes or ranks. Perplexity Model Council (3 responses, user picks), Google Photos "Ask" suggestions, Gemini Deep Think research summaries. Safest default, lowest velocity.',
+              },
+              {
+                label: 'Shared decision',
+                content: 'The AI drafts, the user reviews before execution. Uber Eats cart assistant, Vercel feature flags, Figma Claude-produced code that designers keep or reject. This is the middle of the spectrum — and in practice, the middle is nearly empty. Most products skip straight from "AI suggests" to "AI acts."',
+              },
+              {
+                label: 'AI decides',
+                content: 'The agent acts inside a defined scope without per-action approval. Cursor autonomous coding agents, GitHub Agentic Workflows, Codex-Spark 15x code generation. Needs strong boundaries, strong disclosure, and genuine reversibility to be safe.',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Three conditions for safe autonomy',
+          },
+          {
+            type: 'text',
+            content: 'When you move a feature toward the right end of the spectrum, the three conditions below are what make autonomy safe rather than reckless. If any one of them breaks, pull the feature back toward "shared decision" before ship.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Scope',
+                content: 'Is the boundary of what the agent can touch explicit and visible to the user? Safe: "this agent can only modify files inside this repository." Unsafe: "this agent can read anything the logged-in user can read."',
+              },
+              {
+                label: 'Stakes',
+                content: 'Does the user understand the consequences of a wrong action at this point? Safe: a documentation update the agent can revert. Unsafe: sending an email, spending money, or modifying shared state without a preview.',
+              },
+              {
+                label: 'Reversibility',
+                content: 'Can the action be undone, and does the UI surface the undo? Safe: git revert, draft-that-never-sent, one-click rollback. Unsafe: data shared externally, message posted to a channel, payment processed.',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Designed boundaries vs patched boundaries',
+          },
+          {
+            type: 'text',
+            content: 'The most important design decision on any agentic feature is what the AI shouldn\'t do. If you find yourself adding confirmation dialogs after a review meeting flagged the risk, you\'re patching boundaries rather than designing them — and users can feel the difference.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Designed boundary',
+                content: 'Built in from the start. The boundary is the feature. "The repository boundary is the permission — the agent can\'t reach outside it, but inside that boundary it acts without asking." Feels integral, not additive.',
+              },
+              {
+                label: 'Patched boundary',
+                content: 'Added after the capability shipped (or after a review surfaced a concern). Confirmation modals, warning banners, off-by-default toggles. Feels like a speed bump, not a feature — and users learn to click through them.',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The Disclosure Layer Framework',
+          },
+          {
+            type: 'text',
+            content: 'When the agent is ambient and partially autonomous, a single "consent event" at the start is not enough. Disclosure has to happen at four moments — before, during, controls, and after — and the design job is to make sure each moment has a real UI surface, not a buried settings toggle.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Before',
+                content: 'What will the AI do? What will it access? Named action + consent confirmation at the point of use, not in the onboarding flow. Notion AI Meeting Notes asks "Record this meeting?" each time, not once at account creation.',
+              },
+              {
+                label: 'During',
+                content: 'Persistent visible signal of active operation. Pulsing waveform while listening, real-time transcript, "AI is working" badge on the cursor. The user should never wonder whether the agent is active right now.',
+              },
+              {
+                label: 'Controls',
+                content: 'User visibility into — and adjustment of — what the agent can see and do. Consent toggles per data source, per mode, or per session. Cursor context retention visible from the sidebar, not buried under Settings > Advanced.',
+              },
+              {
+                label: 'After',
+                content: 'A structured record of what was used, what was produced, and how to undo. Notion\'s post-session panel shows the source transcript, the extracted conclusions, and the follow-up actions the agent took. This is where audit trail and reversibility meet disclosure.',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Anti-pattern: Consent Theater',
+            content: 'A terms-of-service checkbox is not consent design. Consent needs to match the actual scope of the action, and it needs to extend to people other than the invoking user when their data or attention is affected. Meta\'s smart-glasses name tag feature was a textbook case: the wearer opted in; the people being identified didn\'t. If your AI\'s actions reach beyond the person in front of it, the disclosure design has to reach there too.',
           },
           {
             type: 'heading',
@@ -6551,6 +6979,32 @@ export const guides: Guide[] = [
           {
             type: 'text',
             content: 'Test your conversational UI: Use the free [AI UX Audit Tool](/audit) to score your interface against all 36 AIUX design patterns - including the agentic patterns covered in this lesson. Upload a screenshot and get instant feedback on which patterns are strong, weak, or missing.',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'Who is designing the boundary for AI?',
+                url: 'https://medium.com/p/3a51b18b5fc7',
+                source: 'Medium',
+                description:
+                  'The permission spectrum mapped against 12 real products, the three conditions for safe autonomy, and why patched boundaries keep failing.',
+              },
+              {
+                title: 'AI learned to shut up. It forgot to say what it was doing.',
+                url: 'https://medium.com/p/91df21ad2742',
+                source: 'Medium',
+                description:
+                  'The four disclosure moments (Before / During / Controls / After) with Notion Meeting Notes as the worked example and Microsoft Copilot as the failure case study.',
+              },
+              {
+                title: 'AI is finally learning to shut up',
+                url: 'https://medium.com/design-bootcamp/ai-is-finally-learning-to-shut-up-62af1d2c01c8',
+                source: 'Medium',
+                description:
+                  'Why ambient AI beats destination AI for most agentic tasks — the context-switching tax and the economics of interaction cost.',
+              },
+            ],
           },
         ],
       },

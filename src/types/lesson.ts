@@ -10,6 +10,8 @@ export type LessonSectionType =
   | 'list'
   | 'callout'
   | 'steps'
+  | 'table'
+  | 'further-reading'
   | 'code'
   | 'code-preview'
   | 'image'
@@ -30,6 +32,7 @@ export type IconType =
   | 'code'
   | 'github'
   | 'cog'
+  | 'tip'
   | 'none';
 
 export type CalloutType = 'info' | 'warning' | 'success' | 'error' | 'tip';
@@ -77,6 +80,35 @@ export interface StepsSection {
   steps: StepItem[];
 }
 
+export interface TableRow {
+  label: string;
+  content: string;
+}
+
+/** Two-column label/description list — visual table for things like
+ *  spectrums, decision frameworks, comparison rows. Renders responsive:
+ *  stacks single-column on mobile, side-by-side on md+. */
+export interface TableSection {
+  type: 'table';
+  rows: TableRow[];
+}
+
+export interface ResourceLink {
+  title: string;
+  url: string;
+  source?: string;        // e.g., "Medium", "Smashing Magazine"
+  description?: string;   // one-line summary shown under the title
+}
+
+/** Clickable resource cards — the visual end-state for "further reading"
+ *  blocks. Each link renders as a bordered card with title + source +
+ *  optional description + external-link affordance. */
+export interface FurtherReadingSection {
+  type: 'further-reading';
+  title?: string;         // defaults to "Further reading"
+  links: ResourceLink[];
+}
+
 export interface CodeSection {
   type: 'code';
   code: string;
@@ -114,6 +146,8 @@ export type LessonSection =
   | ListSection
   | CalloutSection
   | StepsSection
+  | TableSection
+  | FurtherReadingSection
   | CodeSection
   | CodePreviewSection
   | ImageSection

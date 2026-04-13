@@ -12,6 +12,7 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import LessonRenderer from '@/components/ui/LessonRenderer';
 import GuideSidebar from '@/components/guides/GuideSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { siteConfig } from '@/config/seo';
 import { LessonSection } from '@/types/lesson';
 import {
@@ -307,6 +308,23 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <div className="mb-12">
                 <LessonRenderer sections={sections} />
               </div>
+
+              {/* Newsletter signup — only on the last lesson of each course.
+                  Peak-affinity moment: the reader just finished a 10-23 lesson
+                  course. One ask per course (5 total across the site), auto-
+                  hidden after first subscribe via localStorage. */}
+              {!next && (
+                <div className="mb-12 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary">
+                  <InlineNewsletterSignup
+                    variant="pattern-detail"
+                    source="guides"
+                    customHeading={`You finished ${guide.tool}.`}
+                    customSubheading="Get new guides and daily AI UX patterns in your inbox. No spam, unsubscribe anytime."
+                    customButtonText="Subscribe"
+                    customSuccessMessage="Subscribed! Watch for the next issue."
+                  />
+                </div>
+              )}
 
               {/* Previous / next lesson */}
               <nav

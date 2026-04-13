@@ -10,6 +10,7 @@ import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import GuideSidebar from '@/components/guides/GuideSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import type { LessonHeading } from '@/lib/guides/headings';
 import { MODULE_TITLES, MODULE_DESCRIPTIONS } from '@/lib/guides/modules';
@@ -174,15 +175,21 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   Left: kicker + title + excerpt + meta chips + primary CTA.
                   Right: 2x2 stat tile grid (hidden on mobile to keep the
                   hero compact on small screens). */}
-              <header className="mb-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary p-6 md:p-10 grid md:grid-cols-[1fr_220px] gap-8 md:gap-10 items-start">
+              {/* 2-col split only kicks in at lg+; at md the stat tiles stack
+                  below so the title has the full width and isn't squeezed
+                  into a 400px column that forces long titles to wrap 4 lines. */}
+              <header className="mb-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary p-6 md:p-10 grid lg:grid-cols-[1fr_220px] gap-8 lg:gap-10 items-start">
                 <div>
                   <p className="text-xs font-semibold text-accent-primary uppercase tracking-wider mb-3">
                     {guide.tool} Course
                   </p>
-                  <h1 className="text-4xl md:text-5xl font-semibold mb-4 leading-tight">
+                  <h1
+                    className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-5 leading-[1.1]"
+                    style={{ textWrap: 'balance' }}
+                  >
                     {guide.title}
                   </h1>
-                  <p className="text-lg text-text-secondary mb-6 leading-relaxed">
+                  <p className="text-lg md:text-xl text-text-secondary mb-6 leading-relaxed">
                     {guide.excerpt || guide.description}
                   </p>
                   <div className="flex flex-wrap items-center gap-2 mb-8">
@@ -208,16 +215,19 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   {firstLesson && (
                     <Link
                       href={firstLesson.url}
-                      className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors"
+                      className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors whitespace-nowrap"
                     >
-                      Start Learning: {firstLesson.title}
+                      Start Learning
                       <ArrowRightIcon className="w-4 h-4" />
                     </Link>
                   )}
                 </div>
 
-                {/* 2x2 stat tile grid — typographic only, no icon library */}
-                <div className="hidden md:grid grid-cols-2 gap-3">
+                {/* Stat tile grid — numeric stats only. Skill level moved to
+                    the meta chip row below the excerpt so the tiles can stay
+                    typographically uniform (2xl tabular numbers) without long
+                    strings like "Intermediate" overflowing narrow cells. */}
+                <div className="hidden lg:grid grid-cols-2 gap-3">
                   <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
                     <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
                       {totalLessons}
@@ -234,20 +244,12 @@ export default async function GuidePage({ params }: GuidePageProps) {
                       Minutes
                     </div>
                   </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
+                  <div className="col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
                     <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
                       {moduleOrder.length}
                     </div>
                     <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
-                      Modules
-                    </div>
-                  </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
-                    <div className="text-base font-semibold text-text-primary leading-tight">
-                      {guide.skillLevel}
-                    </div>
-                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
-                      Level
+                      {moduleOrder.length === 1 ? 'Module' : 'Modules'}
                     </div>
                   </div>
                 </div>
@@ -381,6 +383,21 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   </Link>
                 </div>
               )}
+
+              {/* Newsletter signup — positioned after the Start CTA so it
+                  catches readers who browsed the full course and didn't click
+                  Start. Wrapped in its own bordered card so it reads as a
+                  distinct alternative path, not as copy attached to the CTA. */}
+              <div className="mt-24 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary">
+                <InlineNewsletterSignup
+                  variant="pattern-detail"
+                  source="guides"
+                  customHeading="Not ready to start?"
+                  customSubheading="Get daily AI UX patterns and new guides as we ship them. No spam, unsubscribe anytime."
+                  customButtonText="Subscribe"
+                  customSuccessMessage="Subscribed! Watch for the next issue."
+                />
+              </div>
             </article>
 
             {/* RIGHT SIDEBAR — on this page (xl+ only) */}
