@@ -71,9 +71,12 @@ export async function POST(request: NextRequest) {
       await prisma.subscriber.create({ data: { email } });
     }
 
-    // Sync to Beehiiv (fire-and-forget). Beehiiv Automations — keyed on
-    // signup_source — handle the welcome email.
-    addSubscriberToBeehiiv(email, { utmSource: source, signupSource: source }).catch(() => {});
+    // Sync to Beehiiv synchronously — guarantees the sync completes before the
+    // HTTP response returns (fire-and-forget gets cancelled when Vercel
+    // suspends the function, causing silent data loss). Beehiiv handles the
+    // welcome email via publication-level welcome + optional Automations
+    // keyed on signup_source.
+    await addSubscriberToBeehiiv(email, { utmSource: source, signupSource: source });
 
     const message = isPdfFlow
       ? 'Your download is ready!'

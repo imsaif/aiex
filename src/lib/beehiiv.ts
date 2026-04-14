@@ -26,13 +26,15 @@ export async function addSubscriberToBeehiiv(email: string, options?: BeehiivOpt
   const pubId = process.env.BEEHIIV_PUBLICATION_ID;
 
   if (!apiKey || !pubId) {
-    console.warn('Beehiiv not configured — skipping subscriber sync');
+    console.warn('[beehiiv] not configured — skipping subscriber sync', { hasKey: !!apiKey, hasPubId: !!pubId });
     return;
   }
 
   const customFields = options?.signupSource
     ? [{ name: 'signup_source', value: options.signupSource }]
     : undefined;
+
+  console.log('[beehiiv] syncing subscriber', { email: email.replace(/^(.{2}).*(@.*)$/, '$1***$2'), signupSource: options?.signupSource });
 
   try {
     const response = await fetch(
@@ -53,11 +55,13 @@ export async function addSubscriberToBeehiiv(email: string, options?: BeehiivOpt
       }
     );
 
+    const body = await response.text();
     if (!response.ok) {
-      const body = await response.text();
-      console.error('Beehiiv API error:', { status: response.status, body });
+      console.error('[beehiiv] API error', { status: response.status, body });
+      return;
     }
+    console.log('[beehiiv] sync ok', { status: response.status, bodyPreview: body.slice(0, 200) });
   } catch (error) {
-    console.error('Failed to sync subscriber to Beehiiv:', error instanceof Error ? error.message : error);
+    console.error('[beehiiv] fetch failed:', error instanceof Error ? error.message : error);
   }
 }

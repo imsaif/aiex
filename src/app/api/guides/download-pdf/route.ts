@@ -59,7 +59,12 @@ export async function POST(request: NextRequest) {
       await prisma.subscriber.create({ data: { email } });
     }
 
-    addSubscriberToBeehiiv(email, { signupSource: 'guides', utmSource: 'guides' }).catch(() => {});
+    // Await so the Beehiiv sync completes before the HTTP response returns.
+    try {
+      await addSubscriberToBeehiiv(email, { signupSource: 'guides', utmSource: 'guides' });
+    } catch (err) {
+      console.error('[guides/download-pdf] Beehiiv sync failed:', err);
+    }
 
     const token = generateGuideToken(email, guideSlug);
     const downloadUrl = `${getBaseUrl(request)}/api/guides/download?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;

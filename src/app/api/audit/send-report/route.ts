@@ -108,8 +108,15 @@ export async function POST(request: NextRequest) {
       // DB unreachable — email already sent, subscriber sync is best-effort
     }
 
-    // Sync to Beehiiv (fire-and-forget)
-    addSubscriberToBeehiiv(email, { signupSource: 'audit', utmSource: 'audit' }).catch(() => {});
+    // Sync to Beehiiv — await so the call completes before the HTTP response
+    // returns (fire-and-forget gets cancelled by Vercel function suspension).
+    // Wrapped in try/catch so a Beehiiv failure doesn't fail the whole request —
+    // the audit report email already went out via Resend.
+    try {
+      await addSubscriberToBeehiiv(email, { signupSource: 'audit', utmSource: 'audit' });
+    } catch (err) {
+      console.error('[audit/send-report] Beehiiv sync failed:', err);
+    }
 
     return NextResponse.json(
       { message: 'Report sent successfully! Check your inbox.' },
