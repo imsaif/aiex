@@ -13,6 +13,7 @@ type AuditEvent =
   | 'audit_session_completed'
   | 'audit_email_report_sent'
   | 'audit_paywall_shown'
+  | 'audit_paywall_dismissed'
   | 'audit_paywall_waitlist_signup'
   | 'audit_remaining_banner_shown'
   | 'audit_save_nudge_shown';

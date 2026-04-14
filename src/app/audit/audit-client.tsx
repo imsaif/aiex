@@ -11,6 +11,7 @@ import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
 import { SaveReportNudge } from '@/components/audit/SaveReportNudge';
 import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
 import { useAuditCount } from '@/hooks/useAuditCount';
+import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
 import type { AnalysisResults, AuditStep, ProductType } from '@/types/audit';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 
@@ -212,19 +213,20 @@ export default function AuditClient() {
   useEffect(() => {
     const chipEl = document.getElementById('audit-intake-chip');
     if (!chipEl) return;
+    const limitLabel = `${FREE_AUDIT_LIMIT} free audit${FREE_AUDIT_LIMIT === 1 ? '' : 's'}`;
+    const remainingLabel = `audit${auditsRemaining === 1 ? '' : 's'} remaining`;
     chipEl.textContent =
       auditCount > 0
-        ? `${auditsRemaining} of 3 free audits remaining`
-        : '3 free audits included';
+        ? `${auditsRemaining} of ${FREE_AUDIT_LIMIT} free ${remainingLabel}`
+        : `${limitLabel} included`;
   }, [auditCount, auditsRemaining]);
 
   // Show nudge/banner conditions (only for real audits, not demos)
-  // Save nudge: show in results view after 2nd audit completes (auditCount === 2)
-  const showSaveNudge = !isDemoMode && analysisResults && auditCount === 2;
-  // Remaining banner: show in results view after 2nd audit (1 remaining before paywall)
-  const showRemainingBanner = !isDemoMode && analysisResults && auditCount === 2;
-  // Intake banner: show "1 free audit remaining" in intake flow when user has used 2
-  const showIntakeBanner = auditCount === 2 && isIntakeFlow;
+  // "1 remaining" state only exists when there's more than one free audit; at threshold=1 the paywall is the nudge.
+  const oneRemaining = FREE_AUDIT_LIMIT > 1 && auditCount === FREE_AUDIT_LIMIT - 1;
+  const showSaveNudge = !isDemoMode && analysisResults && oneRemaining;
+  const showRemainingBanner = !isDemoMode && analysisResults && oneRemaining;
+  const showIntakeBanner = oneRemaining && isIntakeFlow;
 
   return (
     <div className={isIntakeFlow ? '' : 'min-h-screen'}>
@@ -238,7 +240,10 @@ export default function AuditClient() {
 
       {/* Paywall Modal */}
       {showPaywall && (
-        <PaywallModal onClose={() => setShowPaywall(false)} />
+        <PaywallModal
+          auditCountAtTrigger={auditCount}
+          onClose={() => setShowPaywall(false)}
+        />
       )}
 
       {isIntakeFlow ? (

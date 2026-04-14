@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
+
+export { FREE_AUDIT_LIMIT };
 
 const STORAGE_KEY = 'aiux_audit_count';
-const FREE_AUDIT_LIMIT = 3;
 
 function getStoredCount(): number {
   if (typeof window === 'undefined') return 0;

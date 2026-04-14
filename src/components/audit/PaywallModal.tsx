@@ -3,9 +3,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { XMarkIcon, CheckIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
 
 interface PaywallModalProps {
   onClose: () => void;
+  auditCountAtTrigger?: number;
 }
 
 const TIERS = [
@@ -13,7 +15,7 @@ const TIERS = [
     name: 'Free',
     price: '$0',
     period: '',
-    description: '3 lifetime audits',
+    description: `${FREE_AUDIT_LIMIT} lifetime audit${FREE_AUDIT_LIMIT === 1 ? '' : 's'}`,
     features: ['AI UX pattern scoring', 'Top gaps & quick wins', 'Chat follow-up (5 messages)'],
     current: true,
   },
@@ -35,21 +37,26 @@ const TIERS = [
   },
 ];
 
-export function PaywallModal({ onClose }: PaywallModalProps) {
+export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    trackAuditEvent('audit_paywall_shown');
+    trackAuditEvent('audit_paywall_shown', { audit_count_at_trigger: auditCountAtTrigger });
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
-  }, []);
+  }, [auditCountAtTrigger]);
+
+  const handleDismiss = useCallback(() => {
+    if (!success) trackAuditEvent('audit_paywall_dismissed');
+    onClose();
+  }, [success, onClose]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Escape') onClose();
-  }, [onClose]);
+    if (e.key === 'Escape') handleDismiss();
+  }, [handleDismiss]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -99,7 +106,7 @@ export function PaywallModal({ onClose }: PaywallModalProps) {
 
   return (
     <div className="fixed inset-0 z-50">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleDismiss} />
 
       <div className="absolute inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
@@ -110,7 +117,7 @@ export function PaywallModal({ onClose }: PaywallModalProps) {
             {/* Close button */}
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleDismiss}
               className="absolute top-4 right-4 p-2 text-text-tertiary hover:text-text-primary hover:bg-background-secondary rounded-lg transition-colors z-10"
             >
               <XMarkIcon className="w-5 h-5" />
@@ -146,7 +153,7 @@ export function PaywallModal({ onClose }: PaywallModalProps) {
                       Free audits used
                     </div>
                     <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-2">
-                      You&apos;ve used your 3 free audits
+                      You&apos;ve used all your free audits
                     </h2>
                     <p className="text-text-secondary">
                       Unlimited audits are coming soon. Join the early access list to lock in the lowest price.

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { SocialProof } from '@/components/audit/SocialProof';
+import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
 import AuditClient from './audit-client';
 
 export const revalidate = 3600;
@@ -84,7 +85,7 @@ const faqJsonLd = {
       name: 'Is the AI UX audit tool free?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes, the AI UX audit tool is completely free with a daily limit of 3 analyses. No signup or account is required. Your screenshots are never stored. Get started at aiuxdesign.guide/audit.',
+        text: 'Yes, the AI UX audit tool is completely free and includes a small number of free audits. No signup or account is required. Your screenshots are never stored. Get started at aiuxdesign.guide/audit.',
       },
     },
   ],
@@ -167,7 +168,7 @@ export default function AuditPage() {
                 id="audit-intake-chip"
                 className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info"
               >
-                3 free audits included
+                {FREE_AUDIT_LIMIT} free audit{FREE_AUDIT_LIMIT === 1 ? '' : 's'} included
               </span>
             </div>
             <h1
