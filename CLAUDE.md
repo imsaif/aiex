@@ -161,9 +161,10 @@ This is a Next.js 15 application showcasing AI design patterns with TypeScript, 
 - `npm run fix-patterns` - Fix pattern data structure issues
 
 ### Newsletter & Email Management
-- `npm run send-newsletter` - Send pattern update emails to subscribers (interactive mode)
-- Newsletter delivery via **Resend** batch API (transactional + newsletters)
-- **Beehiiv** subscriber sync on signup for future migration
+- `npm run send-newsletter` — generate a pattern-update HTML blob that admin pastes into a new Beehiiv post
+- Newsletter broadcasts via **Beehiiv (manual compose)**: admin clicks Publish in our admin UI → post goes live on /news → admin clicks "Copy HTML" → pastes into a new Beehiiv post → Beehiiv sends to subscribers. Beehiiv free/Launch tier has no Posts API, so delivery is intentionally manual.
+- Welcome emails via **Beehiiv Automations** (keyed on `signup_source` custom field, triggered by subscriber sync).
+- Transactional emails (audit reports, admin watchdog alerts, cron failure alerts) via **Resend free tier** — ~150 emails/month, well under the 3,000/month cap.
 - See [Newsletter Documentation](docs/NEWSLETTER.md) for complete setup and usage guide
 
 ## My Development Workflow
@@ -371,13 +372,13 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 - Development helpers for detailed error reporting
 
 #### 6. Newsletter Subscription System
-- **Prisma ORM** with SQLite database for subscriber management (source of truth)
-- **Resend** for all email sending (transactional + newsletter delivery via batch API)
-- **Beehiiv** subscriber sync on signup (dual-write, fire-and-forget) for future migration when needed
-- **Dual-write** on subscribe: saves to Prisma DB + syncs to Beehiiv via API
-- **API Routes** for subscribe, unsubscribe, publish (with send-to-subscribers option)
+- **Prisma ORM** (Postgres on Neon) for subscriber management (local source of truth, mirrored to Beehiiv)
+- **Beehiiv free tier** for subscriber sync + welcome emails (via Automations keyed on `signup_source` custom field) + newsletter delivery (admin composes in Beehiiv dashboard by pasting HTML from our admin UI — Beehiiv Posts API is Enterprise-only)
+- **Resend free tier** for transactional emails — audit reports (per-user HTML), admin watchdog alerts, cron failure alerts, "newsletter draft ready" admin pings. ~150 emails/month, well under the 3,000/month cap.
+- **No direct transactional sends to subscribers**: every subscriber-facing email is a Beehiiv Automation welcome or a Beehiiv-delivered broadcast. Tokenized PDF downloads happen on-page (no email link).
+- **API Routes**: `/api/newsletter/subscribe` (Prisma + Beehiiv sync + `signup_source` custom field), `/api/newsletter/publish` (marks as published + revalidates — admin then copies HTML into Beehiiv), `/api/newsletter/send-update` (returns pattern-update HTML for manual Beehiiv paste), `/api/newsletter/unsubscribe`
 - **Soft Delete** active/inactive subscriber management
-- **Unsubscribe Tokens** for one-click unsubscribe functionality
+- **Unsubscribe Tokens** for one-click unsubscribe functionality on our own `/unsubscribe` page; Beehiiv posts use Beehiiv's native unsubscribe footer
 - **See** [Newsletter Documentation](docs/NEWSLETTER.md) for complete guide
 
 ### Directory Structure
@@ -603,17 +604,19 @@ When newsletter doesn't run or emails don't send:
      "https://www.aiuxdesign.guide/api/cron/generate-newsletter"
    ```
 
-5. **Check Resend dashboard** for transactional email logs: https://resend.com/emails
+5. **Check Resend dashboard** for transactional email logs (audit reports, admin alerts): https://resend.com/emails
 
-6. **Check Beehiiv dashboard** for newsletter delivery: https://app.beehiiv.com
+6. **Check Beehiiv dashboard** for subscriber sync + newsletter delivery: https://app.beehiiv.com
 
 7. **Common issues:**
    - 401 Unauthorized → Wrong CRON_SECRET in cron-job.org
    - No newsletter created → Check if "quiet day" (no news) or duplicate prevention blocked it
    - Vercel Runtime Timeout → Claude model must be Haiku (not Sonnet), RSS timeout must be 3s. Check `route.ts` lines ~20 and ~1034
    - "Every other day" failures → Someone re-added `crons` to `vercel.json`. Remove them — cron-job.org is the sole trigger
-   - Transactional emails not sent → Check RESEND_API_KEY is valid
+   - Transactional emails not sent → Check `RESEND_API_KEY` is set + valid. Resend free tier caps at 100/day + 3,000/month — at normal volumes we use ~5%.
    - Subscriber not synced to Beehiiv → Check BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID
+   - Admin clicks Publish but newsletter doesn't email subscribers → That's expected. Admin must click "Copy HTML" then paste into a new Beehiiv post and send from Beehiiv. Beehiiv free tier has no Posts API for automation.
+   - Welcome email not arriving after signup → Beehiiv publication-level welcome emails must be enabled + Automations keyed on `signup_source` custom field must be configured (values: `direct`, `handbook`, `audit`, `audit-kit`, `news`, `guides`, `agentic-checklist`).
 
 ### Deployment & Infrastructure
 

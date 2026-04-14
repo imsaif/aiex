@@ -124,7 +124,7 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
                 </div>
                 <h3 className="text-lg font-semibold text-text-primary mb-2">Your PDF is ready!</h3>
                 <p className="text-text-secondary mb-4">
-                  We've also sent a download link to <strong>{email}</strong>
+                  Click below to download. <strong>{email}</strong> has been added to our newsletter.
                 </p>
                 {downloadUrl && (
                   <a

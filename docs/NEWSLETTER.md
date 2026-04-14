@@ -1,6 +1,6 @@
 # Newsletter Subscription System
 
-Complete newsletter subscription system for AI UX Patterns, built with Prisma, Resend, and Next.js API routes.
+Complete newsletter subscription system for AI UX Patterns. Subscriber list + draft newsletters live in Prisma/Postgres. Welcome emails and newsletter delivery go through **Beehiiv (free tier)** — admin publishes a draft in our admin UI, then copies the HTML into a new Beehiiv post to send. Transactional emails (audit reports, admin alerts) go through **Resend (free tier)** — ~150 emails/month, well under the 3,000/month cap.
 
 ## Features
 
@@ -17,9 +17,9 @@ Complete newsletter subscription system for AI UX Patterns, built with Prisma, R
 ### 1. Install Dependencies
 
 Dependencies are already installed:
-- `prisma` - ORM for database management
-- `@prisma/client` - Prisma client for database queries
-- `resend` - Email delivery service
+- `prisma` / `@prisma/client` — ORM for subscriber + draft storage
+- `resend` — transactional email (audit reports, admin alerts)
+- Beehiiv is used via direct `fetch` calls — no SDK required
 
 ### 2. Database Setup
 
@@ -47,23 +47,35 @@ npx prisma studio
 Copy `.env.example` to `.env.local` and configure:
 
 ```bash
-# Get your Resend API key from: https://resend.com/api-keys
+# Resend — transactional email (audit reports, admin alerts)
 RESEND_API_KEY=re_your_actual_api_key_here
 
-# Generate a secure API key for newsletter updates
-# Run: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+# Beehiiv — newsletter delivery + subscriber sync + welcome automations
+BEEHIIV_API_KEY=your_beehiiv_api_key
+BEEHIIV_PUBLICATION_ID=pub_xxx
+
+# Admin API key (for /api/newsletter/send-update)
+# Generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 NEWSLETTER_API_KEY=your_secure_random_key_here
 
-# Site URL (use production URL in production)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-### 4. Get Resend API Key
+### 4. Provision Resend (free tier)
 
-1. Sign up at [resend.com](https://resend.com)
-2. Verify your domain (or use their test domain for development)
-3. Generate an API key
-4. Add it to `.env.local`
+1. Sign up at [resend.com](https://resend.com).
+2. Verify your sending domain (`aiuxdesign.guide`) — add DKIM CNAMEs to DNS.
+3. Generate an API key and add it to `.env.local` + Vercel production env.
+4. Free tier caps: **100 emails/day, 3,000/month, 30-day log retention**. At normal volumes (audit reports + admin pings) we use ~5% of that cap.
+
+### 5. Provision Beehiiv (free tier)
+
+1. Create a Beehiiv publication (or use existing) — free plan is fine.
+2. Generate an API key under Settings → API.
+3. In Subscribers → Custom Fields, add a string field named `signup_source`.
+4. Turn on publication-level welcome emails.
+5. Create Automations keyed on the `signup_source` custom field for: `direct`, `handbook`, `audit`, `audit-kit`, `news`, `guides`, `agentic-checklist`. Each Automation sends its own welcome email variant.
+6. Broadcast delivery: admin publishes a draft in our admin UI, clicks "Copy HTML", and pastes into a new Beehiiv post to send. The Beehiiv Posts API is Enterprise-only, so delivery is intentionally manual on the free tier.
 
 ## Usage
 
@@ -208,14 +220,9 @@ model Subscriber {
 
 ## Email Configuration
 
-Emails are sent from: `AI UX Patterns <noreply@aiuxdesign.guide>`
-
-To customize:
-1. Edit sender in API route files:
-   - `src/app/api/newsletter/subscribe/route.ts`
-   - `src/app/api/newsletter/send-update/route.ts`
-2. Verify your domain in Resend dashboard
-3. Update `from` field in email sending functions
+Senders:
+- **Beehiiv emails** (welcome automations + newsletter broadcasts) — configured in Beehiiv publication settings.
+- **Resend transactional** — `from:` is hard-coded per route (e.g. `AI UX Patterns <imran@aiuxdesign.guide>`). Verify the sending domain in Resend before using a new `from` address.
 
 ## Testing
 
@@ -261,6 +268,8 @@ This opens a web interface to view/edit subscribers.
 Set in production (Vercel):
 ```
 RESEND_API_KEY=re_your_production_key
+BEEHIIV_API_KEY=your_beehiiv_production_key
+BEEHIIV_PUBLICATION_ID=pub_xxx
 NEWSLETTER_API_KEY=your_secure_production_key
 NEXT_PUBLIC_SITE_URL=https://www.aiuxdesign.guide
 DATABASE_URL=<Vercel provides this automatically>
@@ -291,24 +300,26 @@ npx prisma migrate deploy
 ## Troubleshooting
 
 ### "RESEND_API_KEY is not defined"
-- Check `.env.local` file exists
-- Ensure API key is set correctly
+- Check `.env.local` (dev) and Vercel env (prod) have `RESEND_API_KEY` set
 - Restart dev server after adding
 
 ### "NEWSLETTER_API_KEY is not configured"
 - Generate secure key: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 - Add to `.env.local`
 
-### "Make sure your dev server is running"
-- Start server: `npm run dev`
-- Ensure running on port 3000
-- Check for TypeScript errors
+### Transactional emails not arriving
+- Check the [Resend dashboard](https://resend.com/emails) for per-email delivery status + bounce reports
+- Confirm the sending domain is verified in Resend → Domains
+- Free tier caps: 100/day, 3,000/month. If you're hitting limits, that's visible in the Resend dashboard.
 
-### Emails not sending
-- Verify Resend API key is valid
-- Check Resend dashboard for errors
-- Ensure domain is verified (or use test domain)
-- Check server logs for errors
+### Welcome email not arriving after signup
+- Beehiiv publication-level welcome emails must be enabled (Settings → Emails)
+- Check the subscriber appears in Beehiiv with the correct `signup_source` custom field
+- Verify the matching Beehiiv Automation is Active and keyed on the right `signup_source` value
+
+### Newsletter published on-site but subscribers didn't receive it
+- That's expected. Admin must click "Copy HTML" in `/admin/newsletter` then paste into a new Beehiiv post and send from Beehiiv dashboard.
+- Beehiiv free tier has no Posts API, so automatic delivery isn't available.
 
 ## Maintenance
 

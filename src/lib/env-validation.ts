@@ -17,8 +17,8 @@ const envVars: EnvVar[] = [
 
   // External APIs
   { name: 'ANTHROPIC_API_KEY', required: false, description: 'Anthropic API key for AI features' },
-  { name: 'RESEND_API_KEY', required: false, description: 'Resend API key for transactional emails' },
-  { name: 'BEEHIIV_API_KEY', required: false, description: 'Beehiiv API key for newsletter subscriber sync' },
+  { name: 'RESEND_API_KEY', required: false, description: 'Resend API key for transactional emails (audit reports, admin alerts)' },
+  { name: 'BEEHIIV_API_KEY', required: false, description: 'Beehiiv API key for subscriber sync + welcome automations' },
   { name: 'BEEHIIV_PUBLICATION_ID', required: false, description: 'Beehiiv publication ID' },
 
   // Admin & Security
@@ -57,7 +57,10 @@ export function validateEnv(): { valid: boolean; errors: string[] } {
       errors.push('ANTHROPIC_API_KEY is recommended in production for AI features');
     }
     if (!process.env.RESEND_API_KEY) {
-      errors.push('RESEND_API_KEY is recommended in production for email features');
+      errors.push('RESEND_API_KEY is recommended in production for transactional email (audit reports, admin alerts)');
+    }
+    if (!process.env.BEEHIIV_API_KEY || !process.env.BEEHIIV_PUBLICATION_ID) {
+      errors.push('BEEHIIV_API_KEY and BEEHIIV_PUBLICATION_ID are recommended in production for subscriber sync + welcome automations');
     }
   }
 

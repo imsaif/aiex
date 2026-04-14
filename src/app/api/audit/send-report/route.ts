@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Sync to Beehiiv (fire-and-forget)
-    addSubscriberToBeehiiv(email).catch(() => {});
+    addSubscriberToBeehiiv(email, { signupSource: 'audit', utmSource: 'audit' }).catch(() => {});
 
     return NextResponse.json(
       { message: 'Report sent successfully! Check your inbox.' },

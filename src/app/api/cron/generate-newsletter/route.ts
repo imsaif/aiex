@@ -951,7 +951,7 @@ async function sendAdminNotification(
             <a href="${approveUrl}" style="display: inline-block; padding: 12px 24px; background: #10b981; color: #fff; text-decoration: none; border-radius: 6px;">Quick Approve</a>
           </div>
 
-          <p style="color: #94a3b8; font-size: 14px;">This draft will not be published until you approve it.</p>
+          <p style="color: #94a3b8; font-size: 14px;">Approving publishes on-site. You'll then copy the HTML from the admin dashboard and paste it into Beehiiv to send.</p>
         </div>
       `,
     });
@@ -1187,7 +1187,7 @@ async function runGeneration(type: NewsletterType, lookbackHours: number, dedupl
 
 // Background generation logic — runs inside after() so the HTTP response is sent immediately
 async function generateNewsletter(type: NewsletterType, forceRegenerate: boolean, customLookbackHours: string | null) {
-  console.log(`[newsletter] Config: ANTHROPIC_API_KEY=${!!process.env.ANTHROPIC_API_KEY}, RESEND_API_KEY=${!!process.env.RESEND_API_KEY}, HEALTHCHECK_DAILY=${!!process.env.HEALTHCHECK_PING_URL_DAILY}, HEALTHCHECK_WEEKLY=${!!process.env.HEALTHCHECK_PING_URL_WEEKLY}`);
+  console.log(`[newsletter] Config: ANTHROPIC_API_KEY=${!!process.env.ANTHROPIC_API_KEY}, RESEND_API_KEY=${!!process.env.RESEND_API_KEY}, BEEHIIV=${!!process.env.BEEHIIV_API_KEY}, HEALTHCHECK_DAILY=${!!process.env.HEALTHCHECK_PING_URL_DAILY}, HEALTHCHECK_WEEKLY=${!!process.env.HEALTHCHECK_PING_URL_WEEKLY}`);
 
   const todayStart = new Date();
   todayStart.setUTCHours(0, 0, 0, 0);

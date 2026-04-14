@@ -44,9 +44,8 @@ export default function AdminNewsletterClient({
   const [isLoadingDrafts, setIsLoadingDrafts] = useState(false);
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [sendToSubscribers, setSendToSubscribers] = useState(false);
-  const [subscriberCount, setSubscriberCount] = useState<number | null>(null);
-  const [isSendingTest, setIsSendingTest] = useState(false);
+  const [publishedAt, setPublishedAt] = useState<string | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
   const [showDraftList, setShowDraftList] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -88,20 +87,6 @@ export default function AdminNewsletterClient({
       fetchDrafts(1, showAll);
     }
   }, [isAuthenticated, showAll]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Fetch subscriber count
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetch('/api/newsletter/subscribers/count')
-        .then((res) => res.json())
-        .then((data) => {
-          if (typeof data.count === 'number') {
-            setSubscriberCount(data.count);
-          }
-        })
-        .catch(console.error);
-    }
-  }, [isAuthenticated]);
 
   // Fetch full draft content by ID
   const fetchFullDraft = async (id: string) => {
@@ -203,31 +188,17 @@ export default function AdminNewsletterClient({
           title: editedTitle,
           summary: editedSummary,
           content: editedContent,
-          sendEmail: sendToSubscribers,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        let successMsg = 'Newsletter published successfully!';
-        let msgType: 'success' | 'error' = 'success';
-        let hasFailures = false;
-
-        if (sendToSubscribers && data.emailResult) {
-          const { successCount, failureCount, totalSubscribers } = data.emailResult;
-          hasFailures = failureCount > 0;
-          if (hasFailures) {
-            successMsg = `Newsletter published. Sent to ${successCount}/${totalSubscribers} subscribers (${failureCount} failed)`;
-            msgType = 'error'; // Show as warning
-          } else {
-            successMsg = `Newsletter published and sent to ${successCount} subscribers!`;
-          }
-        }
-
-        setMessage({ type: msgType, text: successMsg });
-        // Refresh page to update draft list (longer delay if failures so user can see message)
-        setTimeout(() => window.location.reload(), hasFailures ? 3000 : 1500);
+        setPublishedAt(new Date().toISOString());
+        setMessage({
+          type: 'success',
+          text: data.message || 'Published to /news. Now copy the HTML and paste into Beehiiv.',
+        });
       } else {
         throw new Error('Failed to publish');
       }
@@ -238,35 +209,13 @@ export default function AdminNewsletterClient({
     }
   };
 
-  const sendTestEmail = async () => {
-    if (!activeDraft) return;
-    setIsSendingTest(true);
-    setMessage(null);
-
+  const copyHtmlToClipboard = async () => {
     try {
-      const response = await fetch('/api/newsletter/publish', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: activeDraft.id,
-          title: editedTitle,
-          summary: editedSummary,
-          content: editedContent,
-          sendTest: true,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setMessage({ type: 'success', text: data.message });
-      } else {
-        throw new Error(data.message || 'Failed to send test');
-      }
-    } catch (error) {
-      setMessage({ type: 'error', text: `Failed to send test email: ${error}` });
-    } finally {
-      setIsSendingTest(false);
+      await navigator.clipboard.writeText(editedContent);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch {
+      setMessage({ type: 'error', text: 'Clipboard access denied — select and copy manually from preview' });
     }
   };
 
@@ -467,7 +416,7 @@ export default function AdminNewsletterClient({
                 {/* Action Bar - Mobile optimized */}
                 <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-3 md:p-4">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                    {/* Save / Test / Reject */}
+                    {/* Save / Reject */}
                     <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
                       <button
                         onClick={saveDraft}
@@ -475,13 +424,6 @@ export default function AdminNewsletterClient({
                         className="px-3 md:px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
                       >
                         {isSaving ? 'Saving...' : 'Save'}
-                      </button>
-                      <button
-                        onClick={sendTestEmail}
-                        disabled={isSendingTest}
-                        className="px-3 md:px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors disabled:opacity-50 text-xs md:text-sm font-medium whitespace-nowrap"
-                      >
-                        {isSendingTest ? 'Sending...' : 'Test'}
                       </button>
                       <button
                         onClick={() => {
@@ -495,25 +437,32 @@ export default function AdminNewsletterClient({
                       </button>
                     </div>
 
-                    {/* Publish */}
-                    <div className="flex items-center justify-between gap-2 md:gap-3">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={sendToSubscribers}
-                          onChange={(e) => setSendToSubscribers(e.target.checked)}
-                          className="w-4 h-4 rounded border-border-primary text-accent-primary focus:ring-accent-primary"
-                        />
-                        <span className="text-xs md:text-sm text-text-secondary">
-                          <span className="hidden md:inline">Send to </span>{subscriberCount ?? '...'} subs
-                        </span>
-                      </label>
+                    {/* Publish + post-publish actions */}
+                    <div className="flex items-center justify-end gap-2 md:gap-3 flex-wrap">
+                      {publishedAt && (
+                        <>
+                          <button
+                            onClick={copyHtmlToClipboard}
+                            className="px-3 md:px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors text-xs md:text-sm font-medium whitespace-nowrap"
+                          >
+                            {isCopied ? 'Copied ✓' : 'Copy HTML'}
+                          </button>
+                          <a
+                            href="https://app.beehiiv.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 md:px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors text-xs md:text-sm font-medium whitespace-nowrap"
+                          >
+                            Open Beehiiv ↗
+                          </a>
+                        </>
+                      )}
                       <button
                         onClick={publishDraft}
-                        disabled={isPublishing}
-                        className="px-4 md:px-5 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50 text-sm font-medium"
+                        disabled={isPublishing || !!publishedAt}
+                        className="px-4 md:px-5 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50 text-sm font-medium whitespace-nowrap"
                       >
-                        {isPublishing ? 'Publishing...' : sendToSubscribers ? 'Publish & Send' : 'Publish'}
+                        {isPublishing ? 'Publishing...' : publishedAt ? 'Published ✓' : 'Publish'}
                       </button>
                     </div>
                   </div>

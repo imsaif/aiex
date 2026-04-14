@@ -86,7 +86,7 @@ export default function PrivacyPage() {
               </p>
               <ul className="space-y-2 text-text-secondary ml-6 list-disc">
                 <li><strong className="text-text-primary">Storage:</strong> Email addresses are stored in a secure SQLite database managed through Prisma ORM</li>
-                <li><strong className="text-text-primary">Email Service:</strong> We use Resend, a trusted email service provider, to send newsletter emails</li>
+                <li><strong className="text-text-primary">Email Services:</strong> We use Beehiiv for newsletter delivery and welcome emails, and Resend for transactional emails (such as audit reports you request)</li>
                 <li><strong className="text-text-primary">Access Control:</strong> Only authorized personnel have access to subscriber data</li>
                 <li><strong className="text-text-primary">Encryption:</strong> Data transmission is encrypted using HTTPS</li>
                 <li><strong className="text-text-primary">Retention:</strong> We retain your email address until you unsubscribe or request deletion</li>
@@ -101,7 +101,8 @@ export default function PrivacyPage() {
               </p>
               <ul className="space-y-2 text-text-secondary ml-6 list-disc">
                 <li><strong className="text-text-primary">Vercel:</strong> Hosting and analytics (privacy policy: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">vercel.com/legal/privacy-policy</a>)</li>
-                <li><strong className="text-text-primary">Resend:</strong> Email delivery service (privacy policy: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">resend.com/legal/privacy-policy</a>)</li>
+                <li><strong className="text-text-primary">Beehiiv:</strong> Newsletter delivery and subscriber management (privacy policy: <a href="https://www.beehiiv.com/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">beehiiv.com/privacy</a>)</li>
+                <li><strong className="text-text-primary">Resend:</strong> Transactional email delivery (privacy policy: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">resend.com/legal/privacy-policy</a>)</li>
               </ul>
             </div>
 

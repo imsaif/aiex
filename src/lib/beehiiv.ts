@@ -1,13 +1,24 @@
 /**
  * Beehiiv API Integration
  *
- * Used for syncing subscribers to Beehiiv for newsletter delivery.
- * Newsletters are sent via Beehiiv dashboard (free tier doesn't support Send API).
- * Transactional emails (welcome, audit reports, etc.) still use Resend.
+ * Syncs subscribers to Beehiiv on signup. Beehiiv handles the welcome email
+ * (via publication-level welcome emails + source-keyed Automations).
+ *
+ * Newsletter broadcast delivery: admin publishes a draft in /admin/newsletter,
+ * then copies the HTML into a new Beehiiv post manually (Beehiiv Posts API is
+ * Enterprise-only — not available on free/Launch tier).
+ *
+ * Transactional email (audit reports, admin watchdog alerts): see `src/lib/resend.ts`.
  */
 
 interface BeehiivOptions {
   utmSource?: string;
+  /**
+   * Value for the `signup_source` custom field in Beehiiv. Used by Automation
+   * branches to pick the right welcome email per signup surface (handbook,
+   * audit-kit, news, direct, etc.).
+   */
+  signupSource?: string;
 }
 
 export async function addSubscriberToBeehiiv(email: string, options?: BeehiivOptions): Promise<void> {
@@ -18,6 +29,10 @@ export async function addSubscriberToBeehiiv(email: string, options?: BeehiivOpt
     console.warn('Beehiiv not configured — skipping subscriber sync');
     return;
   }
+
+  const customFields = options?.signupSource
+    ? [{ name: 'signup_source', value: options.signupSource }]
+    : undefined;
 
   try {
     const response = await fetch(
@@ -30,9 +45,10 @@ export async function addSubscriberToBeehiiv(email: string, options?: BeehiivOpt
         },
         body: JSON.stringify({
           email,
-          reactivate_existing: false,
-          send_welcome_email: false, // We send our own via Resend
+          reactivate_existing: true,
+          send_welcome_email: true,
           utm_source: options?.utmSource || 'website',
+          ...(customFields && { custom_fields: customFields }),
         }),
       }
     );

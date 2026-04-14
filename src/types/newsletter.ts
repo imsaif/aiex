@@ -1,7 +1,8 @@
 /**
  * Single source of truth for newsletter subscription sources.
- * Used by: API route (Zod schema), InlineNewsletterSignup (prop type),
- * sendWelcomeEmail, and any landing page with email capture.
+ * Used by: /api/newsletter/subscribe (Zod schema), InlineNewsletterSignup
+ * (prop type), Beehiiv `signup_source` custom field, and any landing page
+ * with email capture.
  *
  * To add a new source: add it here → everything else picks it up.
  */

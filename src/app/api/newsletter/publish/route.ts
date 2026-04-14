@@ -3,206 +3,11 @@ import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { timingSafeEqual } from 'crypto';
-import { resend } from '@/lib/resend';
 
-// Send newsletter to subscribers based on type and frequency preferences
-async function sendNewsletterToSubscribers(
-  newsletter: { title: string; summary: string; content: string; slug: string; type: string }
-): Promise<{ successCount: number; failureCount: number; totalSubscribers: number; failedEmails: string[] }> {
-  // Filter subscribers based on newsletter type and their frequency preference
-  // - Daily newsletters: only send to subscribers with 'all' frequency
-  // - Weekly newsletters: send to subscribers with 'all' or 'weekly' frequency
-  const isWeeklyNewsletter = newsletter.type === 'weekly';
-
-  const subscribers = await prisma.subscriber.findMany({
-    where: {
-      active: true,
-      emailFrequency: isWeeklyNewsletter
-        ? { in: ['all', 'weekly'] }  // Weekly: send to 'all' and 'weekly-only' subscribers
-        : 'all',                      // Daily: only send to 'all' subscribers
-    },
-  });
-
-  if (subscribers.length === 0) {
-    return { successCount: 0, failureCount: 0, totalSubscribers: 0, failedEmails: [] };
-  }
-
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
-  const isWeekly = newsletter.type === 'weekly';
-  const subjectPrefix = isWeekly ? '📬' : '📰';
-  const viewOnlineUrl = `${baseUrl}/news/${newsletter.slug}`;
-
-  // Use Resend's batch API - much faster than individual sends
-  // Batch API supports up to 100 emails per request
-  const batchSize = 100;
-  let successCount = 0;
-  let failureCount = 0;
-  const failedEmails: string[] = [];
-
-  for (let i = 0; i < subscribers.length; i += batchSize) {
-    const batch = subscribers.slice(i, i + batchSize);
-
-    // Prepare batch emails
-    const emails = batch.map((subscriber) => {
-      // Point to the new unsubscribe page instead of the API
-      const unsubscribeUrl = `${baseUrl}/unsubscribe?token=${subscriber.unsubscribeToken}`;
-      return {
-        from: 'AI UX Design Guide <imran@aiuxdesign.guide>',
-        replyTo: 'imranrizom@gmail.com',
-        to: subscriber.email,
-        subject: `${subjectPrefix} ${newsletter.title}`,
-        html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl, newsletter.title),
-      };
-    });
-
-    try {
-      // Use batch send - single API call for up to 100 emails
-      const result = await resend.batch.send(emails);
-
-      // Count successes and failures from batch result
-      // Resend batch returns { data: { data: [{ id: string }] } }
-      const batchResults = result.data?.data;
-      if (batchResults && Array.isArray(batchResults)) {
-        for (let j = 0; j < batchResults.length; j++) {
-          const emailResult = batchResults[j];
-          if (emailResult.id) {
-            successCount++;
-          } else {
-            failureCount++;
-            failedEmails.push(batch[j].email);
-          }
-        }
-      } else if (result.data && !result.error) {
-        // If we got data but not in expected format, assume success for the batch
-        successCount += batch.length;
-      }
-
-      if (result.error) {
-        console.error('Batch send error:', result.error);
-        // If entire batch failed, count all as failures
-        failureCount += batch.length;
-        failedEmails.push(...batch.map(s => s.email));
-      }
-    } catch (error) {
-      console.error('Failed to send batch:', error);
-      failureCount += batch.length;
-      failedEmails.push(...batch.map(s => s.email));
-    }
-
-    // Small delay between batches if there are more
-    if (i + batchSize < subscribers.length) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-  }
-
-  console.log(`Newsletter sent: ${successCount} success, ${failureCount} failed out of ${subscribers.length} total`);
-  if (failedEmails.length > 0) {
-    console.log('Failed emails:', failedEmails.join(', '));
-  }
-
-  return { successCount, failureCount, totalSubscribers: subscribers.length, failedEmails };
-}
-
-// Wrap newsletter HTML content for email delivery
-function wrapNewsletterForEmail(content: string, unsubscribeUrl: string, viewOnlineUrl: string, title?: string): string {
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
-  return `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-      <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f1f5f9;">
-        <div style="max-width: 780px; margin: 0 auto; padding: 24px 16px;">
-
-          <!-- View in browser -->
-          <p style="text-align: center; font-size: 12px; color: #94a3b8; margin: 0 0 16px;">
-            <a href="${viewOnlineUrl}" style="color: #94a3b8; text-decoration: none;">View in browser</a>
-          </p>
-
-          <!-- Header -->
-          <div style="background-color: #0f172a; padding: 28px 32px; border-radius: 12px 12px 0 0; text-align: center;">
-            <a href="${viewOnlineUrl}" style="text-decoration: none;">
-              <h1 style="margin: 0; font-size: 20px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">AI UX Design Guide</h1>
-            </a>
-          </div>
-
-          <!-- Content -->
-          <div style="background-color: #ffffff; padding: 40px 48px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
-            ${content}
-          </div>
-
-          <!-- Share -->
-          <div style="background-color: #ffffff; padding: 24px 48px 28px; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">
-            <table width="100%" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="border-top: 1px solid #e2e8f0; padding-top: 24px; text-align: center;">
-                  <p style="margin: 0 0 12px; font-size: 13px; font-weight: 600; color: #334155; letter-spacing: -0.01em;">Enjoyed this? Share it with your network</p>
-                  <table cellpadding="0" cellspacing="0" border="0" align="center">
-                    <tr>
-                      <td style="padding: 0 4px;">
-                        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent((title || 'AI UX Newsletter') + ' — via @aiuxdesign')}&url=${encodeURIComponent(viewOnlineUrl)}" style="display: inline-block; padding: 8px 16px; background-color: #0f172a; color: #ffffff; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 6px; letter-spacing: -0.01em;">Share on X</a>
-                      </td>
-                      <td style="padding: 0 4px;">
-                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(viewOnlineUrl)}" style="display: inline-block; padding: 8px 16px; background-color: #0f172a; color: #ffffff; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 6px; letter-spacing: -0.01em;">Share on LinkedIn</a>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <!-- Footer -->
-          <div style="background-color: #f8fafc; padding: 24px 32px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px; text-align: center;">
-            <p style="margin: 0 0 8px; font-size: 13px; color: #64748b;">
-              <a href="${SITE_URL}" style="color: #64748b; text-decoration: none; font-weight: 500;">aiuxdesign.guide</a>
-            </p>
-            <p style="margin: 0; font-size: 12px; color: #94a3b8;">
-              <a href="${unsubscribeUrl}" style="color: #94a3b8; text-decoration: underline;">Unsubscribe</a>
-            </p>
-          </div>
-
-        </div>
-      </body>
-    </html>
-  `;
-}
-
-// Send a single test email to admin
-async function sendTestEmail(
-  newsletter: { title: string; summary: string; content: string; slug: string; type: string }
-): Promise<{ success: boolean; error?: string }> {
-  const adminEmail = process.env.ADMIN_EMAIL;
-  if (!adminEmail) {
-    return { success: false, error: 'ADMIN_EMAIL not configured' };
-  }
-
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
-  const isWeekly = newsletter.type === 'weekly';
-  const subjectPrefix = isWeekly ? '📬' : '📰';
-  const viewOnlineUrl = `${baseUrl}/news/${newsletter.slug}`;
-  const unsubscribeUrl = `${baseUrl}/api/newsletter/unsubscribe?token=test-preview`;
-
-  try {
-    await resend.emails.send({
-      from: 'AI UX Design Guide <imran@aiuxdesign.guide>',
-      replyTo: 'imranrizom@gmail.com',
-      to: adminEmail,
-      subject: `[TEST] ${subjectPrefix} ${newsletter.title}`,
-      html: wrapNewsletterForEmail(newsletter.content, unsubscribeUrl, viewOnlineUrl, newsletter.title),
-    });
-    return { success: true };
-  } catch (error) {
-    console.error('Failed to send test email:', error);
-    return { success: false, error: String(error) };
-  }
-}
-
-// POST - Publish a draft (requires admin auth)
-// Pass sendEmail=true to also send to subscribers
-// Pass sendTest=true to send a test email to admin first
+// POST — publish a draft (admin only). Marks the draft as published in our DB
+// and revalidates the public /news pages. Admin copies the HTML from the admin
+// UI and pastes into a new Beehiiv post to actually email subscribers
+// (Beehiiv free/Launch tier has no Posts API).
 export async function POST(request: NextRequest) {
   if (!(await isAdminAuthenticated(request))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -210,41 +15,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, title, summary, content, sendEmail = false, sendTest = false } = body;
+    const { id, title, summary, content } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'Draft ID is required' }, { status: 400 });
     }
 
-    // If sendTest, just send test email without publishing
-    if (sendTest) {
-      // Get current draft (with any pending edits)
-      const currentDraft = await prisma.newsletterDraft.findUnique({
-        where: { id },
-      });
-
-      if (!currentDraft) {
-        return NextResponse.json({ error: 'Draft not found' }, { status: 404 });
-      }
-
-      const testResult = await sendTestEmail({
-        title: title || currentDraft.title,
-        summary: summary || currentDraft.summary,
-        content: content || currentDraft.content,
-        slug: currentDraft.slug,
-        type: currentDraft.type,
-      });
-
-      return NextResponse.json({
-        success: testResult.success,
-        message: testResult.success
-          ? `Test email sent to ${process.env.ADMIN_EMAIL}`
-          : `Failed to send test email: ${testResult.error}`,
-        testEmail: process.env.ADMIN_EMAIL,
-      });
-    }
-
-    // Update the draft with any final edits and mark as published
     const draft = await prisma.newsletterDraft.update({
       where: { id },
       data: {
@@ -259,24 +35,10 @@ export async function POST(request: NextRequest) {
     revalidatePath('/news');
     revalidatePath(`/news/${draft.slug}`);
 
-    let emailResult = null;
-    if (sendEmail) {
-      emailResult = await sendNewsletterToSubscribers({
-        title: draft.title,
-        summary: draft.summary,
-        content: draft.content,
-        slug: draft.slug,
-        type: draft.type,
-      });
-    }
-
     return NextResponse.json({
       success: true,
       draft,
-      message: sendEmail
-        ? `Newsletter published and sent to ${emailResult?.successCount}/${emailResult?.totalSubscribers} subscribers${emailResult?.failureCount ? ` (${emailResult.failureCount} failed)` : ''}`
-        : 'Newsletter published successfully',
-      emailResult,
+      message: 'Published to /news. Now copy the HTML and paste into Beehiiv to send.',
     });
   } catch (error) {
     console.error('Failed to publish newsletter:', error);
@@ -284,29 +46,24 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Timing-safe secret comparison
 function secureCompareSecret(provided: string, expected: string): boolean {
   if (provided.length !== expected.length) {
-    // Still do a comparison to prevent timing attacks revealing length mismatch
     timingSafeEqual(Buffer.from(provided), Buffer.from(expected.padEnd(provided.length, '0').slice(0, provided.length)));
     return false;
   }
   return timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
 }
 
-// GET - Quick approve via email link (with secret token)
-// Shows confirmation page to prevent email client link prefetching from auto-approving
-// Add &confirm=true to actually approve (user clicks button on confirmation page)
+// GET — quick approve via email link. Shows confirmation page to prevent email
+// client prefetching from auto-approving. Add &confirm=true to actually approve.
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
   const secret = searchParams.get('secret');
-  const shouldSend = searchParams.get('send') === 'true';
   const confirmed = searchParams.get('confirm') === 'true';
 
   const adminSecret = process.env.ADMIN_APPROVE_SECRET;
 
-  // Validate secret using timing-safe comparison
   if (!secret || !adminSecret || !secureCompareSecret(secret, adminSecret)) {
     return NextResponse.json({ error: 'Invalid or missing secret' }, { status: 401 });
   }
@@ -317,7 +74,6 @@ export async function GET(request: NextRequest) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-  // If not confirmed, show confirmation page (prevents email client prefetch from auto-approving)
   if (!confirmed) {
     try {
       const draft = await prisma.newsletterDraft.findUnique({
@@ -333,9 +89,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(`${siteUrl}/news/${draft.slug}?already_published=true`);
       }
 
-      // Return confirmation page
       const confirmUrl = `${siteUrl}/api/newsletter/publish?id=${id}&secret=${secret}&confirm=true`;
-      const confirmAndSendUrl = `${siteUrl}/api/newsletter/publish?id=${id}&secret=${secret}&confirm=true&send=true`;
       const previewUrl = `${siteUrl}/admin/newsletter?id=${id}`;
 
       return new NextResponse(
@@ -351,7 +105,6 @@ export async function GET(request: NextRequest) {
             .card { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; }
             .btn { display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 5px; font-weight: 500; }
             .btn-primary { background: #10b981; color: white; }
-            .btn-secondary { background: #0f172a; color: white; }
             .btn-outline { background: white; color: #0f172a; border: 1px solid #e2e8f0; }
             .note { color: #64748b; font-size: 14px; margin-top: 20px; }
           </style>
@@ -362,10 +115,9 @@ export async function GET(request: NextRequest) {
             <h2 style="margin: 0 0 10px;">${draft.title}</h2>
             <p style="margin: 0; color: #64748b;">${draft.summary}</p>
           </div>
-          <p>Click a button below to publish this newsletter:</p>
+          <p>Approving publishes the post on-site. To email subscribers, open the admin dashboard after approving, copy the HTML, and paste into a new Beehiiv post.</p>
           <div>
-            <a href="${confirmUrl}" class="btn btn-primary">Publish Only</a>
-            <a href="${confirmAndSendUrl}" class="btn btn-secondary">Publish & Send to Subscribers</a>
+            <a href="${confirmUrl}" class="btn btn-primary">Publish</a>
             <a href="${previewUrl}" class="btn btn-outline">Preview First</a>
           </div>
           <p class="note">This page prevents accidental approval from email client link scanning.</p>
@@ -379,7 +131,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Confirmed - actually publish
   try {
     const draft = await prisma.newsletterDraft.update({
       where: { id },
@@ -392,20 +143,7 @@ export async function GET(request: NextRequest) {
     revalidatePath('/news');
     revalidatePath(`/news/${draft.slug}`);
 
-    // Send to subscribers if requested
-    if (shouldSend) {
-      await sendNewsletterToSubscribers({
-        title: draft.title,
-        summary: draft.summary,
-        content: draft.content,
-        slug: draft.slug,
-        type: draft.type,
-      });
-    }
-
-    // Redirect to the published newsletter
-    const sentParam = shouldSend ? '&sent=true' : '';
-    return NextResponse.redirect(`${siteUrl}/news/${draft.slug}?published=true${sentParam}`);
+    return NextResponse.redirect(`${siteUrl}/news/${draft.slug}?published=true`);
   } catch (error) {
     console.error('Failed to quick-approve newsletter:', error);
     return NextResponse.json({ error: 'Failed to publish newsletter' }, { status: 500 });
