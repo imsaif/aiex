@@ -202,6 +202,22 @@ export default function AuditClient() {
     if (el) el.style.display = isIntakeFlow ? '' : 'none';
   }, [isIntakeFlow]);
 
+  // Hide server-rendered intake hero once user advances past product-type step
+  useEffect(() => {
+    const el = document.getElementById('audit-intake-hero');
+    if (el) el.style.display = step === 'product-type' ? '' : 'none';
+  }, [step]);
+
+  // Update server-rendered chip text once localStorage-backed count is known
+  useEffect(() => {
+    const chipEl = document.getElementById('audit-intake-chip');
+    if (!chipEl) return;
+    chipEl.textContent =
+      auditCount > 0
+        ? `${auditsRemaining} of 3 free audits remaining`
+        : '3 free audits included';
+  }, [auditCount, auditsRemaining]);
+
   // Show nudge/banner conditions (only for real audits, not demos)
   // Save nudge: show in results view after 2nd audit completes (auditCount === 2)
   const showSaveNudge = !isDemoMode && analysisResults && auditCount === 2;
@@ -227,8 +243,14 @@ export default function AuditClient() {
 
       {isIntakeFlow ? (
         <>
-          {/* INTAKE FLOW — Standard site hero layout */}
-          <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+          {/* INTAKE FLOW — cards + dynamic steps. Hero chip/H1/subtitle rendered server-side in page.tsx. */}
+          <section
+            className={`${
+              step === 'product-type'
+                ? 'pt-4 sm:pt-6 md:pt-8'
+                : 'pt-8 sm:pt-12 md:pt-16'
+            } pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain`}
+          >
             <div className="max-w-7xl mx-auto px-4 sm:px-6">
               <div className="text-center max-w-5xl mx-auto">
                 {/* "1 remaining" banner in intake flow */}
@@ -238,24 +260,9 @@ export default function AuditClient() {
                   </div>
                 )}
 
-                {/* Step 1: Hero with product type selection */}
+                {/* Step 1: Product type selection (hero above is server-rendered) */}
                 {step === 'product-type' && (
                   <>
-                    {/* Info chip */}
-                    <div className="flex items-center justify-center gap-2 mb-6">
-                      <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
-                        {auditCount > 0 ? `${auditsRemaining} of 3 free audits remaining` : '3 free audits included'}
-                      </span>
-                    </div>
-
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6" style={{ color: 'var(--text-hero)' }}>
-                      Free AI UX Audit Tool
-                    </h1>
-                    <p className="text-base sm:text-lg md:text-xl text-text-secondary mb-8 sm:mb-12">
-                      Score your AI interface against 36 proven design patterns. Select your product type to get started.
-                    </p>
-
-                    {/* Product type cards */}
                     <AnchorQuestion
                       onSelect={(type) => {
                         setProductType(type);

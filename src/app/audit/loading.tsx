@@ -16,55 +16,51 @@ export default function AuditLoading() {
         </div>
       </nav>
 
-      {/* Audit tool layout skeleton */}
-      <div className="relative min-h-[500px] md:min-h-[600px] lg:h-[calc(100vh-64px)] flex flex-col md:flex-row overflow-hidden">
-        {/* Dark gradient background matching the actual page */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900" />
+      {/* Intake hero skeleton — matches the actual initial paint */}
+      <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-5xl mx-auto">
+            {/* Chip */}
+            <div className="flex items-center justify-center mb-6">
+              <div className="h-6 w-40 rounded-full bg-background-tertiary animate-pulse" />
+            </div>
 
-        <div className="flex-1 relative z-10 p-4 xl:p-6 flex gap-4">
-          {/* Left panel - Upload area skeleton */}
-          <div className="flex-1 bg-background-primary/90 rounded-2xl shadow-2xl overflow-hidden relative flex flex-col items-center justify-center gap-6 p-8">
-            {/* Upload icon placeholder */}
-            <div className="w-16 h-16 rounded-2xl bg-background-tertiary animate-pulse" />
+            {/* H1 */}
+            <div className="flex flex-col items-center gap-3 mb-6">
+              <div className="h-10 sm:h-12 md:h-14 w-full max-w-xl rounded bg-background-tertiary animate-pulse" />
+            </div>
 
-            {/* Title placeholder */}
-            <div className="h-7 w-64 rounded bg-background-tertiary animate-pulse" />
+            {/* Subtitle */}
+            <div className="flex flex-col items-center gap-2 mb-10 sm:mb-12">
+              <div className="h-5 w-full max-w-lg rounded bg-background-secondary animate-pulse" />
+              <div className="h-5 w-3/4 max-w-md rounded bg-background-secondary animate-pulse" />
+            </div>
 
-            {/* Subtitle placeholder */}
-            <div className="h-5 w-80 rounded bg-background-secondary animate-pulse" />
-
-            {/* Upload button placeholder */}
-            <div className="h-12 w-48 rounded-xl bg-background-tertiary animate-pulse mt-2" />
-
-            {/* Format text placeholder */}
-            <div className="h-4 w-56 rounded bg-background-secondary animate-pulse" />
-          </div>
-
-          {/* Right panel - Welcome/Results skeleton (desktop only) */}
-          <div className="hidden lg:flex w-[380px] flex-shrink-0 bg-background-primary/90 rounded-2xl shadow-2xl flex-col p-6 gap-4">
-            {/* Title */}
-            <div className="h-6 w-40 rounded bg-background-tertiary animate-pulse" />
-
-            {/* Description lines */}
-            <div className="h-4 w-full rounded bg-background-secondary animate-pulse" />
-            <div className="h-4 w-5/6 rounded bg-background-secondary animate-pulse" />
-
-            {/* Feature cards */}
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-background-secondary rounded-lg p-4 animate-pulse"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-8 h-8 rounded-lg bg-background-tertiary" />
-                  <div className="h-5 w-32 rounded bg-background-tertiary" />
+            {/* Product type card grid — 5 items, 2 cols on mobile, 5 on lg */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`flex flex-col items-center gap-3 p-4 sm:p-5 border border-border-primary rounded-xl bg-background-primary shadow-card ${
+                    i === 4 ? 'col-span-2 sm:col-span-1' : ''
+                  }`}
+                >
+                  <div className="w-12 h-12 rounded-xl bg-background-tertiary animate-pulse" />
+                  <div className="flex flex-col items-center gap-2 w-full">
+                    <div className="h-4 w-24 rounded bg-background-tertiary animate-pulse" />
+                    <div className="h-3 w-full rounded bg-background-secondary animate-pulse" />
+                  </div>
                 </div>
-                <div className="h-4 w-full rounded bg-background-tertiary/50" />
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Demo link */}
+            <div className="flex justify-center mt-10">
+              <div className="h-4 w-32 rounded bg-background-secondary animate-pulse" />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
