@@ -88,7 +88,8 @@ export default function Home() {
           customHeading="Stay up to date with AI UX"
           customSubheading="Daily AI/UX news and pattern insights. Unsubscribe anytime."
           customButtonText="Subscribe"
-          source="homepage"
+          customSuccessMessage="You're in! Check your inbox for a welcome email."
+          source="direct"
         />
       </div>
 

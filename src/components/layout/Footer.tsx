@@ -1,3 +1,5 @@
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+
 export default function Footer() {
   return (
     <footer className="bg-background-secondary border-t border-primary">
@@ -30,6 +32,20 @@ export default function Footer() {
                 </svg>
                 Have an idea? Share feedback
               </a>
+
+              {/* Newsletter signup — compact, site-wide */}
+              <div id="newsletter" className="mt-6 scroll-mt-24">
+                <p className="text-sm font-medium text-text-primary mb-2">
+                  Get daily AI UX news
+                </p>
+                <InlineNewsletterSignup
+                  variant="footer"
+                  source="footer"
+                  stacked
+                  customButtonText="Subscribe"
+                  customSuccessMessage="You're in! Check your inbox."
+                />
+              </div>
             </div>
 
             {/* Right Section: Footer Columns */}

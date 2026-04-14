@@ -323,8 +323,11 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
           <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 shadow-card animate-fade-in">
             <InlineNewsletterSignup
               variant="pattern-detail"
+              source="direct"
               customHeading="Want More Patterns Like This?"
-              customSubheading="Score your AI interface against 28 proven UX patterns (free PDF) + daily AI/UX news"
+              customSubheading="Daily AI UX news and new pattern breakdowns, straight to your inbox. Unsubscribe anytime."
+              customButtonText="Subscribe"
+              customSuccessMessage="You're in! Check your inbox for a welcome email."
             />
           </div>
         </section>

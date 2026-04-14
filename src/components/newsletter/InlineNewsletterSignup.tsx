@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { NewsletterSource } from '@/types/newsletter';
 
 interface InlineNewsletterSignupProps {
@@ -30,15 +30,6 @@ export function InlineNewsletterSignup({
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isHidden, setIsHidden] = useState(false);
-
-  // Check localStorage on mount to hide if already subscribed
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hasSubscribed = localStorage.getItem('newsletter_subscribed') === 'true';
-      setIsHidden(hasSubscribed);
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,11 +59,7 @@ export function InlineNewsletterSignup({
       if (response.ok) {
         setStatus('success');
         setEmail('');
-        // Set localStorage to hide component on future page loads
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('newsletter_subscribed', 'true');
-        }
-        // Reset to idle after 5 seconds
+        // Reset to idle after 5 seconds — form shows again for further use
         setTimeout(() => setStatus('idle'), 5000);
       } else {
         setStatus('error');
@@ -88,11 +75,6 @@ export function InlineNewsletterSignup({
   const isPatternDetail = variant === 'pattern-detail';
   const isNews = variant === 'news';
 
-  // Hide component if user has already subscribed
-  if (isHidden) {
-    return null;
-  }
-
   return (
     <div className={className}>
       {status === 'success' ? (
@@ -104,7 +86,7 @@ export function InlineNewsletterSignup({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
             <span className="text-sm font-medium text-text-primary">
-              {customSuccessMessage || 'Success! Check your email for the checklist PDF 🎉'}
+              {customSuccessMessage || "You're in! Check your inbox for a welcome email."}
             </span>
           </div>
         </div>
@@ -123,7 +105,7 @@ export function InlineNewsletterSignup({
           {/* Value Proposition / Subheading */}
           {(isHero || ((isPatternDetail || isNews) && customSubheading)) && (
             <p className={`text-text-secondary mb-4 font-medium ${isNews ? 'text-sm' : 'text-base text-center'}`}>
-              {customSubheading || 'Score your AI interface against 28 proven UX patterns'}
+              {customSubheading || 'Daily AI UX news and pattern insights, straight to your inbox.'}
             </p>
           )}
 
@@ -186,7 +168,7 @@ export function InlineNewsletterSignup({
                   Subscribing...
                 </span>
               ) : (
-                customButtonText || 'Get the Checklist →'
+                customButtonText || 'Subscribe'
               )}
             </button>
           </div>
@@ -201,7 +183,7 @@ export function InlineNewsletterSignup({
           {/* Trust Badge */}
           {(isHero || isPatternDetail || isNews) && (
             <p className={`text-xs mt-4 ${isNews ? '' : 'text-center'} ${darkBackground ? 'text-gray-400' : 'text-text-secondary'}`}>
-              {customSubheading !== undefined ? 'Daily AIUX news. Unsubscribe anytime.' : 'One-page PDF for design reviews + daily AI/UX news. Unsubscribe anytime.'}
+              Daily AIUX news. Unsubscribe anytime.
             </p>
           )}
         </form>
