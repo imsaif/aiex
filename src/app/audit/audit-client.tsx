@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { CenterUpload } from '@/components/audit/CenterUpload';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
@@ -59,6 +59,7 @@ export default function AuditClient() {
   const { auditCount, incrementAuditCount, isPaywalled, auditsRemaining } = useAuditCount();
   const [showPaywall, setShowPaywall] = useState(false);
   const [emailReportTrigger, setEmailReportTrigger] = useState(0);
+  const hasAutoOpenedPaywallRef = useRef(false);
 
   const hasResults = !!(isAnalyzing || analysisResults);
 
@@ -209,16 +210,40 @@ export default function AuditClient() {
     if (el) el.style.display = step === 'product-type' ? '' : 'none';
   }, [step]);
 
-  // Update server-rendered chip text once localStorage-backed count is known
+  // Auto-open the paywall modal once per mount for returning exhausted users,
+  // so they don't waste time on the intake flow only to hit the wall at Analyze.
+  // Dismiss is free (X/backdrop/Escape); after dismissal the user can browse
+  // the site normally — we don't re-open on step changes within the same mount.
+  useEffect(() => {
+    if (
+      !hasAutoOpenedPaywallRef.current &&
+      isPaywalled &&
+      step === 'product-type' &&
+      !isDemoMode
+    ) {
+      hasAutoOpenedPaywallRef.current = true;
+      setShowPaywall(true);
+    }
+  }, [isPaywalled, step, isDemoMode]);
+
+  // Keep the server-rendered chip in sync with localStorage-backed count.
+  // Three states: pre-audit (claim copy), partially used (N left), exhausted (hide).
   useEffect(() => {
     const chipEl = document.getElementById('audit-intake-chip');
     if (!chipEl) return;
-    const limitLabel = `${FREE_AUDIT_LIMIT} free audit${FREE_AUDIT_LIMIT === 1 ? '' : 's'}`;
-    const remainingLabel = `audit${auditsRemaining === 1 ? '' : 's'} remaining`;
-    chipEl.textContent =
-      auditCount > 0
-        ? `${auditsRemaining} of ${FREE_AUDIT_LIMIT} free ${remainingLabel}`
-        : `${limitLabel} included`;
+    if (auditCount >= FREE_AUDIT_LIMIT) {
+      chipEl.style.display = 'none';
+      return;
+    }
+    chipEl.style.display = '';
+    if (auditCount === 0) {
+      chipEl.textContent =
+        FREE_AUDIT_LIMIT === 1
+          ? 'Claim your free audit'
+          : `Claim your ${FREE_AUDIT_LIMIT} free audits`;
+    } else {
+      chipEl.textContent = `${auditsRemaining} free audit${auditsRemaining === 1 ? '' : 's'} left`;
+    }
   }, [auditCount, auditsRemaining]);
 
   // Show nudge/banner conditions (only for real audits, not demos)

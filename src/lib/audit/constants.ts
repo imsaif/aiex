@@ -1,1 +1,1 @@
-export const FREE_AUDIT_LIMIT: number = 3;
+export const FREE_AUDIT_LIMIT: number = 1;

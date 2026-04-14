@@ -140,6 +140,11 @@ const breadcrumbJsonLd = {
 };
 
 export default function AuditPage() {
+  const chipDefaultLabel =
+    FREE_AUDIT_LIMIT === 1
+      ? 'Claim your free audit'
+      : `Claim your ${FREE_AUDIT_LIMIT} free audits`;
+
   return (
     <>
       {/* Structured data */}
@@ -168,7 +173,7 @@ export default function AuditPage() {
                 id="audit-intake-chip"
                 className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info"
               >
-                {FREE_AUDIT_LIMIT} free audit{FREE_AUDIT_LIMIT === 1 ? '' : 's'} included
+                {chipDefaultLabel}
               </span>
             </div>
             <h1
