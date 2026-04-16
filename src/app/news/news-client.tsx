@@ -28,8 +28,7 @@ const PRODUCT_ICONS: Record<string, string> = {
 const InlineNewsletterSignup = dynamic(
   () => import('@/components/newsletter/InlineNewsletterSignup').then(mod => ({ default: mod.InlineNewsletterSignup })),
   {
-    ssr: false,
-    loading: () => <div className="h-12 bg-background-secondary rounded-lg animate-pulse" />,
+    loading: () => <div className="h-[152px] bg-background-secondary rounded-lg animate-pulse" />,
   }
 );
 
@@ -46,13 +45,16 @@ function getReadingTime(content: string): number {
 function isToday(date: string | Date): boolean {
   const d = new Date(date);
   const now = new Date();
-  return d.toDateString() === now.toDateString();
+  return d.getUTCFullYear() === now.getUTCFullYear() &&
+    d.getUTCMonth() === now.getUTCMonth() &&
+    d.getUTCDate() === now.getUTCDate();
 }
 
 function isNew(date: string | Date): boolean {
   const d = new Date(date);
   const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  twoDaysAgo.setUTCDate(twoDaysAgo.getUTCDate() - 2);
+  twoDaysAgo.setUTCHours(0, 0, 0, 0);
   return d >= twoDaysAgo;
 }
 
@@ -60,9 +62,6 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
   const [filterQuery, setFilterQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<'all' | 'daily' | 'weekly'>('all');
   const [productFilters, setProductFilters] = useState<string[]>([]);
-  // Track hydration to avoid server/client mismatch with date-dependent rendering
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => setHydrated(true), []);
   const hasRecentNewsletters = useMemo(() => {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -111,8 +110,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
     const d = new Date();
     d.setDate(d.getDate() - 30);
     return d;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated]);
+  }, []);
 
   const recentNewsletters = useMemo(() => {
     return initialNewsletters.filter(
@@ -337,8 +335,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
             // Quiet day entries have empty content - show inline without link
             const isQuietDay = !newsletter.content || newsletter.content.trim() === '';
             const isWeekly = newsletter.type === 'weekly' || newsletter.title.startsWith('This Week in');
-            const itemIsNew = hydrated && isNew(newsletter.publishedAt);
-            const itemIsToday = hydrated && isToday(newsletter.publishedAt);
+            const itemIsNew = isNew(newsletter.publishedAt);
+            const itemIsToday = isToday(newsletter.publishedAt);
             const readingTime = !isQuietDay ? getReadingTime(newsletter.content) : 0;
 
             return (
@@ -442,7 +440,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
             <button
               onClick={() => {
                 setTypeFilter('all');
-                setProductFilter(null);
+                setProductFilters([]);
                 setFilterQuery('');
               }}
               className="text-accent-primary hover:underline text-sm"

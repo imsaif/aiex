@@ -53,24 +53,24 @@ export default function Home() {
             </p>
 
             {/* Company Logo Carousel - Social Proof Before CTA */}
-            <div className="mb-12">
+            <div className="mb-16">
               <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                 Patterns used by leading companies
               </p>
               <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
             </div>
 
-            {/* Audit CTA - Primary action (tracked via Clarity) */}
-            <HeroAuditCTA />
+            {/* Newsletter Signup - Primary CTA */}
+            <div className="animate-fade-in">
+              <InlineNewsletterSignup variant="hero" source="direct" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Intro Paragraph */}
-      <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
-        <p className="text-base md:text-lg text-text-secondary text-center leading-relaxed">
-          The AI UX design pattern library for product designers and teams building AI-powered experiences. Each pattern is documented from 3+ real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, and Notion, with examples, code demos, and research-backed guidance you can apply today.
-        </p>
+      {/* Audit Tool — secondary CTA */}
+      <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 text-center">
+        <HeroAuditCTA />
       </div>
 
       {/* Interactive Pattern Grid - Client component */}
@@ -81,16 +81,11 @@ export default function Home() {
         allIndustries={allIndustries}
       />
 
-      {/* Newsletter Signup - After patterns, before footer */}
-      <div className="max-w-lg mx-auto px-6 py-16 md:py-20">
-        <InlineNewsletterSignup
-          variant="hero"
-          customHeading="Stay up to date with AI UX"
-          customSubheading="Daily AI/UX news and pattern insights. Unsubscribe anytime."
-          customButtonText="Subscribe"
-          customSuccessMessage="You're in! Check your inbox for a welcome email."
-          source="direct"
-        />
+      {/* SEO — keyword-rich server-rendered text for Googlebot */}
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+        <p className="text-base md:text-lg text-text-secondary text-center leading-relaxed">
+          The AI UX design pattern library for product designers and teams building AI-powered experiences. Each pattern is documented from 3+ real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, and Notion, with examples, code demos, and research-backed guidance you can apply today.
+        </p>
       </div>
 
       {/* Scroll to Top Button */}
