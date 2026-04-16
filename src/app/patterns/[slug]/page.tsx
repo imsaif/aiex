@@ -9,9 +9,13 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { PatternSummary } from '@/types';
+import { guides } from '@/data/guides';
+import { getGuidesForPattern } from '@/lib/cross-links';
 
 // ISR: revalidate every hour to avoid cold function execution on every request
 export const revalidate = 3600;
+// Only allow slugs from generateStaticParams — unknown slugs return 404
+export const dynamicParams = false;
 
 // Generate static params for all patterns at build time
 export async function generateStaticParams() {
@@ -96,6 +100,17 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
       industries: [],
     }));
 
+  // Guides that teach this pattern in practice (cross-link for SEO)
+  const relatedGuideData = getGuidesForPattern(pattern.slug)
+    .map(slug => guides.find(g => g.slug === slug))
+    .filter((g): g is typeof guides[number] => g != null)
+    .map(g => ({
+      slug: g.slug,
+      title: g.title,
+      tool: g.tool,
+      lessonCount: g.lessons?.length ?? g.lessonCount ?? 0,
+    }));
+
   // Generate structured data for SEO
   const structuredData = generatePatternStructuredData(pattern);
 
@@ -118,6 +133,7 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
           nextPattern={nextPattern}
           relatedPatterns={relatedSummaries}
           categoryPatterns={categoryPatterns}
+          relatedGuides={relatedGuideData}
         />
         <Footer />
         <ScrollToTop />

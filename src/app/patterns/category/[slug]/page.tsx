@@ -10,6 +10,7 @@ import { siteConfig } from '@/config/seo';
 import type { Category } from '@/types';
 
 export const revalidate = 3600;
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return categories.map((c) => ({ slug: c.slug }));

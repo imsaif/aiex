@@ -22,18 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.6,
     },
-    {
-      url: `${baseUrl}/privacy`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/terms`,
-      lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.5,
-    },
+    // /privacy and /terms removed — noindexed thin utility pages, frees crawl budget
     {
       url: `${baseUrl}/news`,
       lastModified: new Date(),
@@ -85,12 +74,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     // /search excluded — blocked in robots.txt
-    {
-      url: `${baseUrl}/aiuxdesign.gist.design`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
+    // /aiuxdesign.gist.design removed — static file, not an indexable page
   ];
 
   // Pattern category index pages - 8 categories at /patterns/category/[slug]

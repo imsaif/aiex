@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Terms of Service | aiux - AI Design Patterns',
   description: 'Terms of Service for aiux - Read the terms and conditions for using our AI design patterns resource.',
+  robots: 'noindex, follow',
 };
 
 export default function TermsPage() {

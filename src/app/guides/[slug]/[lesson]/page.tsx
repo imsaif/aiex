@@ -23,9 +23,12 @@ import {
 } from '@/lib/guides/lesson-urls';
 import { extractHeadings } from '@/lib/guides/headings';
 import { MODULE_TITLES } from '@/lib/guides/modules';
+import { getPatternsForGuide } from '@/lib/cross-links';
+import patterns from '@/data/patterns';
 
 // ISR so the first request is cached and Googlebot hits warm HTML
 export const revalidate = 3600;
+export const dynamicParams = false;
 
 // Pre-render every lesson at build time. Next.js requires the param keys here
 // to match the file-system segment names (`[slug]/[lesson]`), so we remap the
@@ -308,6 +311,39 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <div className="mb-12">
                 <LessonRenderer sections={sections} />
               </div>
+
+              {/* Related Patterns — cross-link to pattern pages for SEO */}
+              {(() => {
+                const patternSlugs = getPatternsForGuide(guide.slug);
+                const relatedPatternData = patternSlugs
+                  .map(s => patterns.find(p => p.slug === s))
+                  .filter((p): p is typeof patterns[number] => p != null)
+                  .slice(0, 3);
+                if (relatedPatternData.length === 0) return null;
+                return (
+                  <div className="mb-12 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary">
+                    <h2 className="text-lg font-semibold text-text-primary mb-4">
+                      Related AI Design Patterns
+                    </h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {relatedPatternData.map((p) => (
+                        <Link
+                          key={p.slug}
+                          href={`/patterns/${p.slug}`}
+                          className="group block p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-accent-primary/40 transition-colors"
+                        >
+                          <span className="block text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors">
+                            {p.title}
+                          </span>
+                          <span className="block text-xs text-text-secondary mt-1 line-clamp-2">
+                            {p.description}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* Newsletter signup — only on the last lesson of each course.
                   Peak-affinity moment: the reader just finished a 10-23 lesson

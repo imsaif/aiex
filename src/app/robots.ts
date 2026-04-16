@@ -24,9 +24,15 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 0.5,
       },
       {
-        // Block low-value utility pages from indexing
+        // Block low-value utility pages and session-dependent routes from indexing
         userAgent: '*',
-        disallow: ['/search', '/favorites'],
+        disallow: [
+          '/search',
+          '/favorites',
+          '/audit/results/',
+          '/handbook/preview',
+          '/download/',
+        ],
       },
     ],
     // Primary sitemap reference

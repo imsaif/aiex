@@ -33,15 +33,23 @@ const ProductsSection = dynamic(() => import('@/components/sections/ProductsSect
   loading: () => <div className="animate-pulse bg-background-secondary h-32 rounded-lg"></div>,
 });
 
+interface GuideSummary {
+  slug: string;
+  title: string;
+  tool: string;
+  lessonCount: number;
+}
+
 interface ClientPageProps {
   pattern: Pattern;
   previousPattern: Pattern | null;
   nextPattern: Pattern | null;
   relatedPatterns: PatternSummary[];
   categoryPatterns: PatternSummary[];
+  relatedGuides?: GuideSummary[];
 }
 
-export default function ClientPage({ pattern, previousPattern, nextPattern, relatedPatterns, categoryPatterns }: ClientPageProps) {
+export default function ClientPage({ pattern, previousPattern, nextPattern, relatedPatterns, categoryPatterns, relatedGuides = [] }: ClientPageProps) {
   // Get category badge classes - safer approach for Tailwind JIT
   const getCategoryClasses = (color: string = 'blue') => {
     const colorMap: Record<string, string> = {
@@ -310,6 +318,36 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
                     </h3>
                     <p className="text-sm text-text-secondary leading-relaxed line-clamp-2 flex-grow">
                       {catPattern.description}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Practice in Guides — cross-link to guide courses for SEO */}
+        {relatedGuides.length > 0 && (
+          <section>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+              Practice in Guides
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {relatedGuides.map((guide) => (
+                <Link
+                  key={guide.slug}
+                  href={`/guides/${guide.slug}`}
+                  className="group block"
+                >
+                  <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
+                    <span className="inline-block self-start px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary mb-3">
+                      {guide.tool}
+                    </span>
+                    <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
+                      {guide.title}
+                    </h3>
+                    <p className="text-sm text-text-secondary mt-auto">
+                      {guide.lessonCount} lessons — free course
                     </p>
                   </div>
                 </Link>

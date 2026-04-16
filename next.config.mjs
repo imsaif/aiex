@@ -183,6 +183,22 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Deleted audit sub-routes (legacy multi-step flow removed Apr 2026)
+      {
+        source: '/audit/context',
+        destination: '/audit',
+        permanent: true,
+      },
+      {
+        source: '/audit/upload',
+        destination: '/audit',
+        permanent: true,
+      },
+      {
+        source: '/audit/analyze',
+        destination: '/audit',
+        permanent: true,
+      },
     ];
   },
 

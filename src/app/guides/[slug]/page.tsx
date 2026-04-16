@@ -18,6 +18,7 @@ import { MODULE_TITLES, MODULE_DESCRIPTIONS } from '@/lib/guides/modules';
 // ISR + static params so course overviews are pre-built and cached — previously
 // every request cold-started a serverless function (flagged in the SEO audit).
 export const revalidate = 3600;
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return guides.map((guide) => ({ slug: guide.slug }));

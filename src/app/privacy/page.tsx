@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Privacy Policy | aiux - AI Design Patterns',
   description: 'Privacy Policy for aiux - Learn how we collect, use, and protect your personal information.',
+  robots: 'noindex, follow',
 };
 
 export default function PrivacyPage() {
