@@ -1,0 +1,90 @@
+# aiuxdesign.guide
+
+> AI UX Design Patterns — how the world's best AI products design their experiences, documented, analyzed, and continuously updated.
+
+The AI UX design pattern library for product designers and teams building AI-powered experiences. 36 patterns across 8 categories, each documented from 3+ real implementations with examples, interactive demos, and code.
+
+## Patterns
+
+36 AI UX design patterns organized by category:
+
+### Adaptive & Intelligent Systems
+- [Adaptive Interfaces](https://www.aiuxdesign.guide/patterns/adaptive-interfaces): Interfaces that learn user behavior and automatically adjust layout and functionality
+- [Ambient Intelligence](https://www.aiuxdesign.guide/patterns/ambient-intelligence): AI that works quietly in the background, anticipating needs without explicit commands
+- [Guided Learning](https://www.aiuxdesign.guide/patterns/guided-learning): AI that teaches users how to use the system through step-by-step guidance
+- [Predictive Anticipation](https://www.aiuxdesign.guide/patterns/predictive-anticipation): AI that suggests before you ask, offering proactive recommendations
+
+### Human-AI Collaboration
+- [Augmented Creation](https://www.aiuxdesign.guide/patterns/augmented-creation): AI as creative partner, enhancing human creativity rather than replacing it
+- [Collaborative AI](https://www.aiuxdesign.guide/patterns/collaborative-ai): Design patterns for human-AI teamwork in creative and professional tools
+- [Contextual Assistance](https://www.aiuxdesign.guide/patterns/contextual-assistance): Proactive AI help that appears at the right moment based on context
+- [Feedback Loops](https://www.aiuxdesign.guide/patterns/feedback-loops): Continuous learning through user signals — thumbs up/down, corrections, implicit behavior
+- [Graceful Handoff](https://www.aiuxdesign.guide/patterns/graceful-handoff): Seamless transitions between AI and human agents
+- [Human-in-the-Loop](https://www.aiuxdesign.guide/patterns/human-in-the-loop): Keeping humans in control of high-stakes AI decisions
+- [Autonomy Spectrum](https://www.aiuxdesign.guide/patterns/autonomy-spectrum): Letting users control how independently AI acts
+- [Intent Preview](https://www.aiuxdesign.guide/patterns/intent-preview): Showing users what AI plans to do before executing
+- [Escalation Pathways](https://www.aiuxdesign.guide/patterns/escalation-pathways): When and how AI should hand off to humans
+- [Mixed-Initiative Control](https://www.aiuxdesign.guide/patterns/mixed-initiative-control): Shared control between human and AI
+
+### Trustworthy & Reliable AI
+- [Confidence Visualization](https://www.aiuxdesign.guide/patterns/confidence-visualization): How to display AI confidence scores and uncertainty to users
+- [Error Recovery](https://www.aiuxdesign.guide/patterns/error-recovery): Helping users recover from AI mistakes with undo, retry, and fallbacks
+- [Explainable AI](https://www.aiuxdesign.guide/patterns/explainable-ai): Making AI decisions transparent and understandable
+- [Responsible AI Design](https://www.aiuxdesign.guide/patterns/responsible-ai-design): Ethical patterns for fairness, accountability, and bias detection
+- [Safe Exploration](https://www.aiuxdesign.guide/patterns/safe-exploration): Sandbox environments for risk-free AI experimentation
+- [Plan Summary](https://www.aiuxdesign.guide/patterns/plan-summary): Helping users understand complex AI action plans
+- [Action Audit Trail](https://www.aiuxdesign.guide/patterns/action-audit-trail): Tracking and reviewing every AI decision
+- [Trust Calibration](https://www.aiuxdesign.guide/patterns/trust-calibration): Helping users trust AI accurately — not too much, not too little
+
+### Natural Interaction
+- [Context Switching](https://www.aiuxdesign.guide/patterns/context-switching): Helping users switch between AI tasks and projects seamlessly
+- [Conversational UI](https://www.aiuxdesign.guide/patterns/conversational-ui): Design patterns for chat interfaces, voice assistants, and conversational UX
+- [Multimodal Interaction](https://www.aiuxdesign.guide/patterns/multimodal-interaction): Combining voice, touch, gesture, and text in AI interfaces
+- [Progressive Disclosure](https://www.aiuxdesign.guide/patterns/progressive-disclosure): Gradually revealing complexity to reduce cognitive load
+
+### Performance & Efficiency
+- [Intelligent Caching](https://www.aiuxdesign.guide/patterns/intelligent-caching): Smart caching strategies for AI-powered products
+- [Progressive Enhancement](https://www.aiuxdesign.guide/patterns/progressive-enhancement): Graceful degradation when AI fails or is unavailable
+- [Agent Status Monitoring](https://www.aiuxdesign.guide/patterns/agent-status-monitoring): Real-time tracking of what AI agents are doing
+
+### Privacy & Control
+- [Privacy-First Design](https://www.aiuxdesign.guide/patterns/privacy-first-design): On-device processing, data minimization, and transparent consent
+- [Selective Memory](https://www.aiuxdesign.guide/patterns/selective-memory): Letting users control what AI remembers and forgets
+
+### Safety & Harm Prevention
+- [Anti-Manipulation Safeguards](https://www.aiuxdesign.guide/patterns/anti-manipulation-safeguards): Preventing dark patterns and protecting user autonomy in AI
+- [Crisis Detection & Escalation](https://www.aiuxdesign.guide/patterns/crisis-detection-escalation): AI safety for sensitive and high-risk situations
+- [Session Degradation Prevention](https://www.aiuxdesign.guide/patterns/session-degradation-prevention): Keeping AI conversations productive over time
+- [Vulnerable User Protection](https://www.aiuxdesign.guide/patterns/vulnerable-user-protection): AI safety for at-risk populations
+
+### Accessibility & Inclusion
+- [Universal Access Patterns](https://www.aiuxdesign.guide/patterns/universal-access-patterns): Making AI interfaces accessible to everyone
+
+## Guides
+
+Free learning paths for designers using AI tools:
+
+- [Claude Code for Designers](https://www.aiuxdesign.guide/guides/claude-code-learning-path): 23 lessons on using Claude Code for design-to-code workflows
+- [Cursor for Designers](https://www.aiuxdesign.guide/guides/cursor-learning-path): AI-powered code editor guide for designers
+- [GitHub Copilot for Designers](https://www.aiuxdesign.guide/guides/github-copilot-learning-path): Code suggestions and AI pair programming for designers
+- [GitHub for Designers](https://www.aiuxdesign.guide/guides/github-learning-path): Version control and collaboration for design teams
+- [Build a Conversational UI](https://www.aiuxdesign.guide/guides/conversational-ui-guide): Complete design and implementation guide for conversational interfaces
+
+## Tools
+
+- [Free AI UX Audit](https://www.aiuxdesign.guide/audit): Score your AI interface against 36 design patterns. Personalized gaps and fixes in 2 minutes.
+
+## Resources
+
+- [AI UX Design Handbook (PDF)](https://www.aiuxdesign.guide/handbook): Comprehensive reference guide
+- [Agentic UX Checklist](https://www.aiuxdesign.guide/agentic-ux-checklist): Checklist for designing AI agent experiences
+- [Agent Readability Audit Kit](https://www.aiuxdesign.guide/agent-readability-audit-kit): Audit your product's readability for AI agents
+- [AIUX News](https://www.aiuxdesign.guide/news): Daily AI product design updates and pattern analysis
+
+## About
+
+Created by Imran Mohammed. Each pattern is documented from real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, Notion, Figma, and more.
+
+- Website: https://www.aiuxdesign.guide
+- Newsletter: Daily AI UX news and pattern insights
+- Sitemap: https://www.aiuxdesign.guide/sitemap.xml
