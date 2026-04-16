@@ -169,40 +169,6 @@ const PRODUCT_COLORS: Record<string, string> = {
   'Ars Technica': '#ff4e00',
 };
 
-function getProductColor(productName: string): string {
-  for (const [key, color] of Object.entries(PRODUCT_COLORS)) {
-    if (productName.toLowerCase().includes(key.toLowerCase())) {
-      return color;
-    }
-  }
-  return '#64748b';
-}
-
-function getPatternBgColor(productColor: string): string {
-  const colorMap: Record<string, string> = {
-    '#10a37f': '#ecfdf5', // OpenAI green
-    '#d97706': '#fef3c7', // Anthropic amber
-    '#4285f4': '#eff6ff', // Google blue
-    '#00a4ef': '#e0f2fe', // Microsoft blue
-    '#f24e1e': '#fef2f2', // Figma red
-    '#7c3aed': '#f3e8ff', // Cursor purple
-    '#000000': '#f8fafc', // Black (Vercel, Notion)
-    '#333333': '#f1f5f9', // GitHub gray
-    '#3ecf8e': '#ecfdf5', // Supabase green
-    '#f26207': '#fff7ed', // Replit orange
-    '#09b6a2': '#ecfdf5', // Codeium teal
-    '#5e6ad2': '#eef2ff', // Linear indigo
-    '#20808d': '#ecfeff', // Perplexity cyan
-    '#0055ff': '#eff6ff', // Framer blue
-    '#c41230': '#fef2f2', // NN Group red
-    '#e85c41': '#fff7ed', // Smashing orange
-    '#e5127d': '#fdf2f8', // The Verge pink
-    '#0a9e01': '#ecfdf5', // TechCrunch green
-    '#ff4e00': '#fff7ed', // Ars Technica orange
-  };
-  return colorMap[productColor] || '#f8fafc';
-}
-
 function getPatternTitle(slug: string): string {
   const pattern = patterns.find((p) => p.slug === slug);
   return pattern ? pattern.title : slug;
@@ -212,8 +178,6 @@ function getPatternTitle(slug: string): string {
 const EMAIL_IMG_BASE = `${SITE_URL}/images/email`;
 
 const ICON_NEWSPAPER = `<img src="${EMAIL_IMG_BASE}/icon-newspaper.png" alt="" width="18" height="18" style="width: 18px; height: 18px; display: inline; vertical-align: -3px; margin-right: 6px;" />`;
-const ICON_CURSOR_CLICK = `<img src="${EMAIL_IMG_BASE}/icon-cursor-click.png" alt="" width="18" height="18" style="width: 18px; height: 18px; display: inline; vertical-align: -3px; margin-right: 6px;" />`;
-const ICON_ACADEMIC_CAP = `<img src="${EMAIL_IMG_BASE}/icon-academic-cap.png" alt="" width="18" height="18" style="width: 18px; height: 18px; display: inline; vertical-align: -3px; margin-right: 6px;" />`;
 
 // Product logo image names (match filenames in /public/images/email/)
 const PRODUCT_ICON_NAMES: string[] = [
@@ -809,96 +773,194 @@ RESPOND IN THIS EXACT JSON FORMAT:
 }`;
 }
 
-function generateHTML(data: NewsletterData): string {
-  const itemsHTML = data.items
-    .map((item) => {
-      return `
-<div style="margin: 0 0 40px; padding: 0 0 32px 0; border-bottom: 1px solid #e2e8f0;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 6px;"><tr>
-    <td style="font-size: 11px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${getProductIconImg(item.product)}${item.product}</td>
-    <td align="right" style="font-size: 14px; color: #475569;">${item.date}</td>
-  </tr></table>
-  <p style="margin: 0 0 20px; font-size: 20px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
-  <p style="margin: 0 0 12px; font-size: 16px; line-height: 1.75; color: #334155;">${item.description} <a href="${item.sourceUrl}" style="color: #475569; font-size: 14px; text-decoration: none; margin-left: 4px;">Source →</a></p>
-  <div style="margin: 28px 0 24px 0;">
-    <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #334155;"><strong>Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
-  </div>
-  <p style="margin: 20px 0 0 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: #f1f5f9; color: #0f172a; padding: 3px 10px; border-radius: 4px; font-size: 14px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
-</div>`;
-    })
-    .join('\n');
+// ============================================================
+// Email HTML rendering helpers
+// ============================================================
+
+const EMAIL_FONT_STACK = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`;
+// Brand palette (mirrors tokens in src/app/globals.css :root)
+const EMAIL_INK = '#162036';       // --text-primary / --accent-primary (brand navy)
+const EMAIL_TEXT = '#20294C';      // --text-secondary (navy-slate body)
+const EMAIL_MUTED = '#64748b';     // --text-tertiary (slate-500)
+const EMAIL_SUBTLE = '#475569';    // slate-600, sits between body and muted
+const EMAIL_HAIRLINE = '#e5e7eb';  // --border-primary (gray-200)
+const DARK_CANVAS = '#162036';     // brand navy as dark surface
+const DARK_TEXT = '#cbd5e1';       // slate-300 on navy (WCAG AA)
+const DARK_STRONG = '#ffffff';
+const DARK_LINK = '#93c5fd';       // blue-300 on navy (WCAG AA)
+
+function formatIssueDate(type: NewsletterType): string {
+  const date = new Date();
+  if (type === 'weekly') {
+    return `Week of ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
+  }
+  return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function renderMasthead(type: NewsletterType, itemCount: number): string {
+  const wordmark = type === 'weekly' ? 'AI UX WEEKLY' : 'AI UX DAILY';
+  const dateStr = formatIssueDate(type);
+  const itemLabel = itemCount === 1 ? 'story' : 'stories';
 
   return `
-<p style="margin: 0 0 40px; font-size: 17px; line-height: 1.7; color: #334155;">${data.summary}</p>
+<div style="padding: 0 0 28px 0; margin: 0 0 36px 0; border-bottom: 1px solid ${EMAIL_HAIRLINE};">
+  <p style="margin: 0 0 10px; font-size: 12px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">${wordmark}</p>
+  <p style="margin: 0 0 4px; font-size: 15px; font-weight: 600; color: ${EMAIL_INK}; letter-spacing: -0.1px;">${dateStr}</p>
+  <p style="margin: 0; font-size: 13px; color: ${EMAIL_MUTED};">${itemCount} ${itemLabel} · curated for designers</p>
+</div>`.trim();
+}
 
-<div style="border-top: 1px solid #e2e8f0; margin-bottom: 40px;"></div>
+function renderSectionHeader(kicker: string, title: string): string {
+  return `
+<p style="margin: 0 0 10px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">${kicker}</p>
+<h2 style="margin: 0 0 40px; font-size: 26px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.4px; line-height: 1.25;">${ICON_NEWSPAPER}${title}</h2>`.trim();
+}
 
-<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">${ICON_NEWSPAPER}Today in AI Products</h2>
+function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
+  const separator = isLast
+    ? ''
+    : `\n<div style="text-align: center; margin: 40px 0; color: #64748b; letter-spacing: 12px; font-size: 18px;">· · ·</div>`;
 
-${itemsHTML}
+  return `
+<div style="margin: 0; padding: 0;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;"><tr>
+    <td style="font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${getProductIconImg(item.product)}${item.product}</td>
+    <td align="right" style="font-size: 13px; color: ${EMAIL_MUTED};">${item.date}</td>
+  </tr></table>
+  <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${item.headline}</h3>
+  <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${item.description}</p>
+  <p style="margin: 0 0 24px;"><a href="${item.sourceUrl}" target="_blank" rel="noopener" style="display: inline-block; font-size: 13px; color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read the source →</a></p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 24px;">
+    <tr>
+      <td valign="top" style="width: 32px; padding: 0; font-size: 40px; line-height: 1; color: ${EMAIL_INK}; font-weight: 700; font-family: Georgia, 'Times New Roman', serif;">&ldquo;</td>
+      <td valign="top" style="padding: 2px 0 0 4px;">
+        <p style="margin: 0 0 8px; font-size: 16px; line-height: 1.6; color: ${EMAIL_INK}; font-style: italic;">${item.designerTakeaway}</p>
+        <p style="margin: 0; font-size: 11px; font-weight: 600; color: ${EMAIL_SUBTLE}; letter-spacing: 0.8px; text-transform: uppercase;">— Designer's Takeaway</p>
+      </td>
+    </tr>
+  </table>
+  <p style="margin: 0;"><a href="${SITE_URL}/patterns/${item.patternSlug}" target="_blank" rel="noopener" style="display: inline-block; background-color: transparent; color: ${EMAIL_INK}; padding: 8px 14px; border: 1px solid ${EMAIL_HAIRLINE}; border-radius: 999px; font-size: 12px; font-weight: 500; text-decoration: none; letter-spacing: 0.2px;"><span style="color: ${EMAIL_MUTED}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; font-size: 10px; margin-right: 6px;">Pattern</span>${getPatternTitle(item.patternSlug)} →</a></p>
+</div>${separator}`.trim();
+}
 
-<div style="background-color: #1e293b; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">${ICON_CURSOR_CLICK}Today's Takeaway</h2>
-  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #f1f5f9;"><strong style="color: #f8fafc;">${data.takeaway.title}</strong></p>
-  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #f1f5f9;">${data.takeaway.body}</p>
+function renderDarkCallout(opts: {
+  kicker: string;
+  title: string;
+  body: string;
+  subBody?: string;
+  cta?: { label: string; href: string };
+}): string {
+  const subBodyHTML = opts.subBody
+    ? `\n  <p style="margin: 16px 0 0; font-size: 16px; line-height: 1.7; color: ${DARK_TEXT};"><strong style="color: ${DARK_STRONG};">When to use it:</strong> ${opts.subBody}</p>`
+    : '';
+  const ctaHTML = opts.cta
+    ? `\n  <p style="margin: 20px 0 0;"><a href="${opts.cta.href}" target="_blank" rel="noopener" style="color: ${DARK_LINK}; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 500;">${opts.cta.label} →</a></p>`
+    : '';
+
+  return `
+<div style="background-color: ${DARK_CANVAS}; padding: 32px; border-radius: 16px; margin: 0 0 32px;">
+  <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, 0.6); letter-spacing: 2px; text-transform: uppercase;">${opts.kicker}</p>
+  <h2 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: ${DARK_STRONG}; letter-spacing: -0.3px; line-height: 1.3;">${opts.title}</h2>
+  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: ${DARK_TEXT};">${opts.body}</p>${subBodyHTML}${ctaHTML}
+</div>`.trim();
+}
+
+function renderFooterCTA(type: NewsletterType): string {
+  const n = patterns.length;
+  const wordmark = type === 'weekly' ? 'AI UX WEEKLY' : 'AI UX DAILY';
+  return `
+<div style="text-align: center; padding: 24px 0 0;">
+  <p style="margin: 0 0 10px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Keep exploring</p>
+  <h3 style="margin: 0 0 24px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.2px; line-height: 1.3;">All ${n} AI UX patterns in one place</h3>
+  <a href="${SITE_URL}/patterns" target="_blank" rel="noopener" style="display: inline-block; padding: 14px 28px; background-color: ${EMAIL_INK}; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; letter-spacing: 0.2px;">Explore the pattern library →</a>
 </div>
 
-<div style="text-align: center; padding: 24px 0;">
-  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want to learn more about the patterns mentioned today?</p>
-  <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
-</div>
+<div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
+  <p style="margin: 0 0 6px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">${wordmark}</p>
+  <p style="margin: 0 0 10px; font-size: 14px; color: ${EMAIL_MUTED};">Curated by Imran at aiuxdesign.guide</p>
+  <p style="margin: 0; font-size: 13px;"><a href="${SITE_URL}/news" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read past issues →</a></p>
+</div>`.trim();
+}
+
+function wrapEmailShell(inner: string): string {
+  return `<div style="font-family: ${EMAIL_FONT_STACK}; color: ${EMAIL_INK}; max-width: 640px; margin: 0 auto; padding: 0 8px;">
+${inner}
+</div>`.trim();
+}
+
+function generateHTML(data: NewsletterData): string {
+  const items = data.items
+    .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
+    .join('\n\n');
+
+  const takeaway = renderDarkCallout({
+    kicker: "Today's Idea",
+    title: data.takeaway.title,
+    body: data.takeaway.body,
+  });
+
+  const body = `
+${renderMasthead('daily', data.items.length)}
+
+<p style="margin: 0 0 48px; font-size: 17px; line-height: 1.7; color: ${EMAIL_TEXT};">${data.summary}</p>
+
+${renderSectionHeader('The stories', 'Today in AI Products')}
+
+${items}
+
+<div style="height: 56px; line-height: 56px; font-size: 1px;">&nbsp;</div>
+
+${takeaway}
+
+${renderFooterCTA('daily')}
   `.trim();
+
+  return wrapEmailShell(body);
 }
 
 function generateWeeklyHTML(data: WeeklyNewsletterData): string {
-  const itemsHTML = data.items
-    .map((item) => {
-      return `
-<div style="margin: 0 0 40px; padding: 0 0 32px 0; border-bottom: 1px solid #e2e8f0;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 6px;"><tr>
-    <td style="font-size: 11px; color: #475569; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${getProductIconImg(item.product)}${item.product}</td>
-    <td align="right" style="font-size: 14px; color: #475569;">${item.date}</td>
-  </tr></table>
-  <p style="margin: 0 0 20px; font-size: 20px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
-  <p style="margin: 0 0 12px; font-size: 16px; line-height: 1.75; color: #334155;">${item.description} <a href="${item.sourceUrl}" style="color: #475569; font-size: 14px; text-decoration: none; margin-left: 4px;">Source →</a></p>
-  <div style="margin: 28px 0 24px 0;">
-    <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #334155;"><strong>Designer's Takeaway:</strong> ${item.designerTakeaway}</p>
-  </div>
-  <p style="margin: 20px 0 0 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE_URL}/patterns/${item.patternSlug}" style="background: #f1f5f9; color: #0f172a; padding: 3px 10px; border-radius: 4px; font-size: 14px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
-</div>`;
-    })
-    .join('\n');
+  const items = data.items
+    .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
+    .join('\n\n');
 
-  return `
-<p style="margin: 0 0 20px; font-size: 17px; line-height: 1.7; color: #334155;">${data.summary}</p>
+  const stealThis = renderDarkCallout({
+    kicker: 'Steal this week',
+    title: `${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}`,
+    body: data.stealThisWeek.insight,
+  });
 
-<p style="margin: 0 0 40px; font-size: 17px; line-height: 1.7; color: #334155;">${data.weeklyTakeaway}</p>
+  const patternToKnow = renderDarkCallout({
+    kicker: 'Pattern deep-dive',
+    title: getPatternTitle(data.patternToKnow.patternSlug),
+    body: data.patternToKnow.explanation,
+    subBody: data.patternToKnow.whenToUse,
+    cta: {
+      label: `Deep dive on ${getPatternTitle(data.patternToKnow.patternSlug)}`,
+      href: `${SITE_URL}/patterns/${data.patternToKnow.patternSlug}`,
+    },
+  });
 
-<div style="border-top: 1px solid #e2e8f0; margin-bottom: 40px;"></div>
+  const body = `
+${renderMasthead('weekly', data.items.length)}
 
-<h2 style="margin: 0 0 32px; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">${ICON_NEWSPAPER}This Week in AI Products</h2>
+<p style="margin: 0 0 20px; font-size: 17px; line-height: 1.7; color: ${EMAIL_TEXT};">${data.summary}</p>
 
-${itemsHTML}
+<p style="margin: 0 0 48px; font-size: 17px; line-height: 1.7; color: ${EMAIL_TEXT};">${data.weeklyTakeaway}</p>
 
-<div style="background-color: #1e293b; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">${ICON_CURSOR_CLICK}Steal This Week</h2>
-  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #f1f5f9;"><strong style="color: #f8fafc;">${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}</strong></p>
-  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #f1f5f9;">${data.stealThisWeek.insight}</p>
-</div>
+${renderSectionHeader('The stories', 'This Week in AI Products')}
 
-<div style="background-color: #0f172a; padding: 32px; border-radius: 12px; margin-bottom: 32px;">
-  <h2 style="margin: 0 0 20px; font-size: 22px; font-weight: 700; color: #f8fafc; letter-spacing: -0.3px;">${ICON_ACADEMIC_CAP}Pattern to Know</h2>
-  <h3 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #f8fafc;">${getPatternTitle(data.patternToKnow.patternSlug)}</h3>
-  <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.7; color: #f1f5f9;">${data.patternToKnow.explanation}</p>
-  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.7; color: #f1f5f9;"><strong style="color: #f8fafc;">When to use it:</strong> ${data.patternToKnow.whenToUse}</p>
-  <p style="margin: 0;"><a href="${SITE_URL}/patterns/${data.patternToKnow.patternSlug}" style="color: #2563eb; text-decoration: none; font-size: 15px; font-weight: 500;">Deep dive on ${getPatternTitle(data.patternToKnow.patternSlug)} →</a></p>
-</div>
+${items}
 
-<div style="text-align: center; padding: 24px 0;">
-  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want the full breakdown on any pattern mentioned above?</p>
-  <a href="${SITE_URL}/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
-</div>
+<div style="height: 56px; line-height: 56px; font-size: 1px;">&nbsp;</div>
+
+${stealThis}
+
+${patternToKnow}
+
+${renderFooterCTA('weekly')}
   `.trim();
+
+  return wrapEmailShell(body);
 }
 
 function generateSlug(title: string, type: NewsletterType = 'daily'): string {

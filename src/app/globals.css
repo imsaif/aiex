@@ -394,20 +394,27 @@ html[data-theme="dark"] .newsletter-content div[style*="border-top"] {
   border-color: #475569 !important;
 }
 
-/* Pattern badge links */
-html[data-theme="dark"] .newsletter-content a[href^="/patterns"] {
-  background: rgba(255, 255, 255, 0.15) !important;
+/* Pattern badge links (outlined chip) — invert border + text for dark canvas */
+html[data-theme="dark"] .newsletter-content a[href*="/patterns/"] {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #f1f5f9 !important;
+  background: transparent !important;
 }
 
-/* Source links */
-html[data-theme="dark"] .newsletter-content a[style*="color: #94a3b8"] {
+/* Inline links using brand ink (source links, footer links) */
+html[data-theme="dark"] .newsletter-content a[style*="color: #162036"] {
+  color: #93c5fd !important;
+}
+
+/* Table cells (product names, dates) */
+html[data-theme="dark"] .newsletter-content td[style] {
   color: #94a3b8 !important;
 }
 
 /* CTA button - invert for visibility */
-html[data-theme="dark"] .newsletter-content a[style*="background-color: #0f172a"] {
+html[data-theme="dark"] .newsletter-content a[style*="background-color: #162036"] {
   background-color: #f1f5f9 !important;
-  color: #0f172a !important;
+  color: #162036 !important;
 }
 
 /* Media query fallback for system dark mode */
@@ -433,12 +440,22 @@ html[data-theme="dark"] .newsletter-content a[style*="background-color: #0f172a"
     border-color: #475569 !important;
   }
 
-  .newsletter-content a[href^="/patterns"] {
-    background: rgba(255, 255, 255, 0.15) !important;
+  .newsletter-content a[href*="/patterns/"] {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    color: #f1f5f9 !important;
+    background: transparent !important;
   }
 
-  .newsletter-content a[style*="background-color: #0f172a"] {
+  .newsletter-content a[style*="color: #162036"] {
+    color: #93c5fd !important;
+  }
+
+  .newsletter-content td[style] {
+    color: #94a3b8 !important;
+  }
+
+  .newsletter-content a[style*="background-color: #162036"] {
     background-color: #f1f5f9 !important;
-    color: #0f172a !important;
+    color: #162036 !important;
   }
 }
