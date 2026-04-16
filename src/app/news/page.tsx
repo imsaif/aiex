@@ -13,6 +13,7 @@ export const metadata: Metadata = {
     description:
       'Track what\'s happening in AI products daily. UX-focused updates on ChatGPT, Claude, Gemini, Cursor and more.',
     type: 'website',
+    images: [{ url: '/api/og/page?slug=news', width: 1200, height: 630 }],
   },
 };
 

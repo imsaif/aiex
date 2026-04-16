@@ -253,10 +253,8 @@ export function generatePatternMetadata({
   const pageDescription = customMetadata?.description ||
     (description.length > 160 ? `${description.substring(0, 157)}...` : description);
 
-  // Use pattern thumbnail as OG image if available, otherwise use default
-  const ogImage = thumbnail && thumbnail.startsWith('/images/')
-    ? thumbnail
-    : '/images/og/og-pattern-default.png';
+  // Dynamic OG image — branded 1200x630 card generated per pattern
+  const ogImage = `/api/og/patterns?slug=${slug}`;
 
   // Generate keywords from tags and category
   const keywords = [

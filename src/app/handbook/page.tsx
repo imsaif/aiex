@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     description: '28 AI UX patterns across 7 categories in a printable audit checklist. Score your AI product during design reviews.',
     type: 'website',
     url: 'https://aiuxdesign.guide/handbook',
+    images: [{ url: '/api/og/page?slug=handbook', width: 1200, height: 630 }],
   },
 };
 

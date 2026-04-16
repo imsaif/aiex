@@ -41,9 +41,8 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
   }
 
   const pageUrl = `${siteConfig.url}/guides/${slug}`;
-  const ogImage = guide.thumbnail?.startsWith('http')
-    ? guide.thumbnail
-    : `${siteConfig.url}${guide.thumbnail || siteConfig.ogImage}`;
+  // Dynamic OG image — branded 1200x630 card generated per guide
+  const ogImage = `${siteConfig.url}/api/og/guides?slug=${slug}`;
 
   // Keep titles inside Google's ~60-65 char display window. Previously this
   // template produced 95+ char double-suffixed titles (audit #4).

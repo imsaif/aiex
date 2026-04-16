@@ -10,6 +10,7 @@ export const metadata: Metadata = {
     title: '36 Figma Make Prompts for AI Patterns | Copy-Paste Ready',
     description: 'Copy-paste ready Figma Make prompts for 36 AI design patterns. Generate ChatGPT interfaces, feedback loops, error states, and more.',
     type: 'website',
+    images: [{ url: '/api/og/page?slug=prompts', width: 1200, height: 630 }],
   },
 };
 
