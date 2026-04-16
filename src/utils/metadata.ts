@@ -73,28 +73,28 @@ export function generateMetadata({
 const customPatternMetadata: Record<string, { title: string; description: string }> = {
   // --- High-impression patterns (top 10 by GSC data) ---
   'progressive-disclosure': {
-    title: 'Progressive Disclosure in AI — Pattern, Examples & Best Practices',
-    description: 'Learn progressive disclosure for AI interfaces: gradually reveal complexity to reduce cognitive load. Real examples from ChatGPT, Claude, and Notion with interactive demos and implementation guidelines.',
+    title: 'Progressive Disclosure in AI — How to Gradually Reveal Complexity',
+    description: 'Progressive disclosure for AI interfaces: show only what users need, when they need it. Reduce cognitive overload in AI agents, chatbots, and dashboards. Examples from ChatGPT, Claude, and Notion.',
   },
   'conversational-ui': {
     title: 'Conversational UI — Design Patterns for Chat Interfaces & Conversational UX',
     description: 'What is conversational UI? A complete guide to designing chat interfaces, voice assistants, and conversational user interfaces. Examples from ChatGPT, Slack, and Siri with interactive demos.',
   },
   'privacy-first-design': {
-    title: 'Privacy-First AI Design — Local Processing, Data Minimization & Consent UX',
-    description: 'How to design AI products that protect user privacy. Patterns for local-first processing, transparent data consent, and privacy controls with real examples from Apple, Signal, and DuckDuckGo.',
+    title: 'Privacy-First AI — Design Patterns for Data Protection & User Consent',
+    description: 'Privacy-first AI design: on-device processing, data minimization, and transparent consent UX. How Apple, Signal, and DuckDuckGo protect user data in AI products. Interactive demos and code.',
   },
   'confidence-visualization': {
     title: 'AI Confidence Scores UX — How to Show Confidence Levels to Users',
     description: 'How to display AI confidence scores and uncertainty to users. Patterns for confidence gauges, probability indicators, and trust signals with examples from GitHub Copilot and medical AI.',
   },
   'adaptive-interfaces': {
-    title: 'Adaptive Interfaces — AI-Powered UX That Learns User Behavior',
-    description: 'Design interfaces that adapt to individual users. AI-driven layout changes, smart defaults, and personalized workflows with examples from Spotify, Netflix, and Notion.',
+    title: 'Adaptive Interfaces — AI UX That Learns and Adapts to Each User',
+    description: 'What are adaptive interfaces? AI-powered layouts that learn user behavior and adjust automatically. Smart defaults, personalized workflows, and adaptive UI examples from Spotify, Netflix, and Notion.',
   },
   'context-switching': {
-    title: 'Context Switching in AI — Helping Users Switch Between Tasks Seamlessly',
-    description: 'How to handle context switching in AI chatbots and tools. Patterns for preserving state, managing multiple conversations, and reducing cognitive load across projects.',
+    title: 'How AI Handles Context Switching Between Projects — Design Patterns',
+    description: 'How does AI handle context switching between different projects? Patterns for preserving state, managing multiple conversations, and seamless task switching in chatbots and AI tools.',
   },
   'multimodal-interaction': {
     title: 'Multimodal Interaction — What It Means & How to Design Voice, Touch & Text UX',
@@ -105,12 +105,12 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'How AI feedback loops work, with diagrams. Design thumbs up/down, implicit signals, and corrective feedback that drives continuous learning. Real examples from ChatGPT, Midjourney, and Notion.',
   },
   'error-recovery': {
-    title: 'Graceful Error Recovery in AI — Helping Users Recover from AI Mistakes',
-    description: 'Design graceful error recovery for AI products. Patterns for handling wrong predictions, failed generations, and AI hallucinations with undo, retry, and fallback strategies.',
+    title: 'AI Error Recovery — How to Design Graceful Fallbacks When AI Fails',
+    description: 'AI error recovery patterns: help users recover from wrong predictions, hallucinations, and failed generations. Undo, retry, and fallback strategies with examples from ChatGPT and Copilot.',
   },
   'contextual-assistance': {
-    title: 'Contextual Assistance & Contextual Help UX — Proactive AI That Helps at the Right Moment',
-    description: 'Design contextual help and in-app assistance that appears at the right moment. Patterns for smart tooltips, contextual suggestions, and proactive AI help. Examples from Gmail, Notion, and Copilot.',
+    title: 'Contextual Help UX — Design In-App AI Assistance That Appears at the Right Moment',
+    description: 'Contextual assistance patterns: smart tooltips, proactive suggestions, and in-app help that knows when users need it. How Gmail, Notion, and Copilot design contextual AI help.',
   },
   // --- Medium-impression patterns (500-1000+ impressions) ---
   'collaborative-ai': {
@@ -122,12 +122,12 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'Ambient AI design patterns for invisible, context-aware assistance. Smart environments that anticipate needs without explicit commands. Examples from Apple, Nest, and Tesla.',
   },
   'intelligent-caching': {
-    title: 'Intelligent Caching & Smart Caching — Predictive Strategies for AI Products',
-    description: 'Intelligent caching and smart caching patterns for AI applications. Predictive prefetching, context-aware invalidation, and storage strategies that reduce latency. Real examples and code demos.',
+    title: 'Intelligent Caching — Smart Caching Strategies for AI-Powered Products',
+    description: 'What is intelligent caching? Predictive prefetching, context-aware invalidation, and smart caching strategies that make AI products feel instant. Real-world examples and code demos.',
   },
   'escalation-pathways': {
-    title: 'Escalation Pathways — When & How AI Should Hand Off to Humans',
-    description: 'Design escalation pathways from AI agents to human support. Patterns for agent handoff, crisis detection, and human escalation with real examples from Intercom, Zendesk, and healthcare AI.',
+    title: 'Escalation Pathways in AI — When and How to Hand Off to Humans',
+    description: 'Design escalation pathways for AI agents. When should AI hand off to a human? Patterns for agent-to-human handoff, crisis escalation, and support routing. Examples from Intercom and healthcare AI.',
   },
   'progressive-enhancement': {
     title: 'Progressive Enhancement for AI — Graceful Degradation & Fallback Design',
