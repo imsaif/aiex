@@ -108,6 +108,98 @@ export const DEMO_ANALYSIS_RESULTS: AnalysisResults = {
   summary: 'This AI chat interface demonstrates strong conversational design fundamentals but has opportunities to build more user trust through confidence visualization and better error handling. The interface excels at natural interaction patterns.',
   criticalMissing: ['Confidence Visualization', 'Human-in-the-Loop'],
   timestamp: new Date().toISOString(),
+
+  // Context-first fields for FullPageResults
+  productTypeSummary: 'A conversational AI assistant with message input, response display, and conversation history.',
+  topGaps: [
+    {
+      pattern: 'Confidence Visualization',
+      status: 'missing' as const,
+      finding: 'No visible confidence indicators for AI responses. Users cannot gauge the reliability of information provided.',
+      recommendation: 'Add confidence scores or uncertainty indicators next to responses. Use visual cues like color or icons to show reliability levels.',
+      resource: 'https://aiuxdesign.guide/patterns/confidence-visualization',
+    },
+    {
+      pattern: 'Human-in-the-Loop',
+      status: 'missing' as const,
+      finding: 'No option to escalate to human support or request human review of AI responses.',
+      recommendation: 'Add a "Talk to a human" option for complex queries. Allow users to flag responses that need human review.',
+      resource: 'https://aiuxdesign.guide/patterns/human-in-the-loop',
+    },
+    {
+      pattern: 'Error Recovery',
+      status: 'needs-improvement' as const,
+      finding: 'Basic error messages are shown but there is no clear recovery path or retry mechanism visible.',
+      recommendation: 'Add retry buttons and specific error explanations. Offer alternative actions when errors occur.',
+      resource: 'https://aiuxdesign.guide/patterns/error-recovery',
+    },
+    {
+      pattern: 'Explainable AI',
+      status: 'needs-improvement' as const,
+      finding: 'Limited explanation of how responses are generated. No source citations visible.',
+      recommendation: 'Add "Show sources" or "Why this response?" options. Provide transparency into AI reasoning.',
+      resource: 'https://aiuxdesign.guide/patterns/explainable-ai',
+    },
+    {
+      pattern: 'Selective Memory',
+      status: 'needs-improvement' as const,
+      finding: 'Conversation history is visible but there is no clear way to manage what the AI remembers.',
+      recommendation: 'Add memory management UI. Let users choose what context to include in future conversations.',
+      resource: 'https://aiuxdesign.guide/patterns/selective-memory',
+    },
+    {
+      pattern: 'Conversational UI',
+      status: 'good' as const,
+      finding: 'Clear chat bubble design with distinct user/AI message styling. Natural conversation flow with proper turn-taking indicators.',
+      recommendation: '',
+      resource: 'https://aiuxdesign.guide/patterns/conversational-ui',
+    },
+    {
+      pattern: 'Progressive Disclosure',
+      status: 'good' as const,
+      finding: 'Interface reveals complexity gradually. Advanced options hidden behind expandable sections.',
+      recommendation: '',
+      resource: 'https://aiuxdesign.guide/patterns/progressive-disclosure',
+    },
+    {
+      pattern: 'Feedback Loops',
+      status: 'good' as const,
+      finding: 'Thumbs up/down buttons visible for response rating. Copy and share options available.',
+      recommendation: '',
+      resource: 'https://aiuxdesign.guide/patterns/feedback-loops',
+    },
+    {
+      pattern: 'Safe Exploration',
+      status: 'good' as const,
+      finding: 'Users can freely explore without fear of breaking things. Clear "New Chat" option to start fresh.',
+      recommendation: '',
+      resource: 'https://aiuxdesign.guide/patterns/safe-exploration',
+    },
+    {
+      pattern: 'Contextual Assistance',
+      status: 'good' as const,
+      finding: 'Suggested prompts shown based on conversation context. Help tooltips visible.',
+      recommendation: '',
+      resource: 'https://aiuxdesign.guide/patterns/contextual-assistance',
+    },
+  ],
+  quickWins: [
+    'Add a confidence badge (high/medium/low) next to each AI response',
+    'Add a "Show sources" link below responses that cites relevant knowledge',
+    'Add a "Talk to a human" button in the header for complex queries',
+  ],
+  chatContext: 'This AI chat interface has strong conversational fundamentals but lacks trust signals. The top priorities are adding confidence visualization and human escalation paths. Quick wins include confidence badges and source citations.',
+  productContext: {
+    productType: 'chat-interface' as const,
+    productDescription: '',
+    aiRole: [],
+  },
+} as AnalysisResults & {
+  productTypeSummary: string;
+  topGaps: Array<{ pattern: string; status: 'missing' | 'needs-improvement' | 'good'; finding: string; recommendation: string; resource: string | null }>;
+  quickWins: string[];
+  chatContext: string;
+  productContext: { productType: string; productDescription: string; aiRole: string[] };
 };
 
 // Demo screenshot path (we'll use a public image or placeholder)

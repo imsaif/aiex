@@ -262,7 +262,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                   <button
                     key={type}
                     onClick={() => setTypeFilter(type)}
-                    className={`px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
+                    className={`px-5 py-2.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                       typeFilter === type
                         ? 'bg-accent-primary text-white dark:text-gray-900'
                         : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'
@@ -286,7 +286,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                       onClick={() => setProductFilters((prev) =>
                         isSelected ? prev.filter((p) => p !== product) : [...prev, product]
                       )}
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                         isSelected
                           ? 'bg-accent-primary text-white dark:text-gray-900'
                           : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'

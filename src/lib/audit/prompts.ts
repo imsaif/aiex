@@ -97,25 +97,32 @@ IMPORTANT RULES:
 }
 
 /**
- * Build a user prompt that provides specific product context
- * and instructs Claude to weight analysis appropriately.
+ * Build a user prompt based on product type.
+ * Claude infers product details from the screenshot itself.
  */
-export function buildUserPrompt(
-  productDescription: string,
-  aiRole: string[],
-  productType: ProductType
-): string {
-  return `Analyze this screenshot of: "${productDescription}"
+export function buildUserPrompt(productType: ProductType): string {
+  const productTypeLabels: Record<ProductType, string> = {
+    'chat-interface': 'conversational AI / chat interface',
+    'ai-agent': 'AI agent / autonomous workflow',
+    'recommendation-system': 'recommendation system',
+    'content-generation': 'content generation tool',
+    other: 'AI-powered product',
+  };
 
-Product type: ${productType}
-AI decision points: ${aiRole.join(', ')}
+  const typeSpecific =
+    productType === 'ai-agent'
+      ? 'For this agentic product, lead with autonomy spectrum, intent preview, action audit trail, and escalation pathway patterns.'
+      : productType === 'chat-interface'
+        ? 'For this chat interface, lead with human-in-the-loop, confidence visualization, error recovery, and graceful handoff patterns.'
+        : productType === 'recommendation-system'
+          ? 'For this recommendation system, lead with explainable AI, feedback loops, confidence visualization, and progressive disclosure patterns.'
+          : productType === 'content-generation'
+            ? 'For this content generation tool, lead with confidence visualization, human-in-the-loop, augmented creation, and safe exploration patterns.'
+            : '';
 
-Check this interface against the full pattern library. Weight your analysis toward patterns most critical for this product type.
+  return `Analyze this screenshot of a ${productTypeLabels[productType]}. Identify what the product does from the screenshot and check it against the full pattern library. Weight your analysis toward patterns most critical for this product type.
 
-${productType === 'ai-agent' ? 'For this agentic product, lead with autonomy spectrum, intent preview, action audit trail, and escalation pathway patterns.' : ''}
-${productType === 'chat-interface' ? 'For this chat interface, lead with human-in-the-loop, confidence visualization, error recovery, and graceful handoff patterns.' : ''}
-${productType === 'recommendation-system' ? 'For this recommendation system, lead with explainable AI, feedback loops, confidence visualization, and progressive disclosure patterns.' : ''}
-${productType === 'content-generation' ? 'For this content generation tool, lead with confidence visualization, human-in-the-loop, augmented creation, and safe exploration patterns.' : ''}
+${typeSpecific}
 
 Return strict JSON only. No preamble.`;
 }

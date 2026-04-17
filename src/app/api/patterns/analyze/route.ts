@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Determine if this is a context-first request (new flow) or legacy request
-    const isContextFirst = !!(productType && productDescription);
+    const isContextFirst = !!productType;
 
     // Build image content blocks
     const imageList = images && images.length > 1 ? images : [{ base64: imageBase64, deviceType: deviceType || 'desktop' as DeviceType }];
@@ -106,8 +106,8 @@ export async function POST(request: NextRequest) {
     if (isContextFirst) {
       // New context-first flow — use product-aware prompts
       systemPrompt = buildSystemPrompt(productType!);
-      userPrompt = buildUserPrompt(productDescription!, aiRole || [], productType!) + deviceContext + multiImageContext;
-      console.log('[Pattern Audit] Context-first analysis:', productType, '|', productDescription, '| Device:', deviceType || 'unknown', '| Images:', imageList.length);
+      userPrompt = buildUserPrompt(productType!) + deviceContext + multiImageContext;
+      console.log('[Pattern Audit] Context-first analysis:', productType, '| Device:', deviceType || 'unknown', '| Images:', imageList.length);
     } else {
       // Legacy flow — use component-detection prompts
       const basePrompt = buildContextAwarePrompt(context);

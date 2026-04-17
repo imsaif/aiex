@@ -1,46 +1,32 @@
 # Start Work Session
-Pull latest changes and load project context before starting work.
+Pull latest changes and check the project board for today's priorities.
 
 ## Steps:
-1. Check if we're in a git repository
-2. Run: `git fetch origin`
-3. Run: `git pull`
-4. Show: `git status`
-5. Summarize what changed since last session
+1. Run: `git fetch origin && git pull`
+2. Show: `git status` (brief — just note if there are uncommitted changes or unpushed commits)
 
-## Load Project Context:
-6. Read and display the "Current Work Session" section from CLAUDE.md:
-   - Active pattern being worked on
-   - Pattern checklist progress
-   - Session notes
-7. Read and display the "Recent Sessions" section from CLAUDE.md:
-   - Show last 2-3 sessions from other machines
-   - Highlight what was accomplished
-8. Display current priorities:
-   - Pattern completion status (10/24 fully updated)
-   - Test coverage status
-   - Next patterns in queue
+## Check GitHub Project Board:
+3. Run: `gh project item-list 4 --owner $(gh repo view --json owner -q '.owner.login') --format json`
+4. Parse and display items grouped by status, with priority levels
+5. Suggest what to focus on today based on priority (P0/P1 first)
 
 ## Summary Format:
-Present the information clearly:
 ```
-🔄 Git Status:
-   [Git pull summary and changes]
+🔄 Git: [pulled/up-to-date, any uncommitted changes]
 
-📋 CURRENT WORK:
-   Pattern: [Active Pattern Name] ([Status])
-   Progress: [X/10 checklist items complete]
+📋 PROJECT BOARD:
+   🔴 Needs Attention (P0/P1):
+      - [item] (status)
+      - [item] (status)
 
-   Checklist:
-   ✓ [Completed items]
-   ⏳ [Remaining items]
+   🟡 In Progress:
+      - [item] (priority)
 
-📊 PROJECT STATUS:
-   Patterns: 10/24 fully updated (14 need updates)
-   Tests: 481 tests, 48% coverage
+   📝 Todo:
+      - [item] (priority)
 
-📝 RECENT ACTIVITY (Other Machines):
-   [Summary of last 2-3 sessions]
+   ✅ Done (recent):
+      - [item]
 
-✨ You're ready to continue working on [Pattern Name]!
+✨ Suggested focus: [highest priority actionable item]
 ```
