@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600; // ISR: revalidate every hour
+export const dynamic = 'force-dynamic'; // Always fetch latest published drafts so newly-approved newsletters appear immediately
 
 const PRODUCT_KEYWORDS: Record<string, string[]> = {
   'ChatGPT': ['ChatGPT'],
@@ -62,7 +62,7 @@ async function getPublishedDrafts(): Promise<Newsletter[]> {
       type: (draft.type as 'daily' | 'weekly') || 'daily',
     }));
   } catch (error) {
-    console.error('[News] Failed to fetch published drafts from database:', error);
+    console.error('[News] CRITICAL: Failed to fetch published drafts — /news will render stale static fallback only.', error);
     return [];
   }
 }
