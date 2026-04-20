@@ -452,14 +452,34 @@ function normalizeTitle(title: string): string {
     .trim();
 }
 
+// Generic announcement verbs and filler words that inflate dedup overlap
+// without carrying topic meaning. Without this stoplist, "Introducing Claude
+// Design by Anthropic Labs" matches "Claude introduces scheduled tasks
+// feature" at 40% overlap (claud + introduc) because both stem to the same
+// shared words. Strip them so dedup only counts content terms.
+const DEDUP_STOPWORDS_STEMMED: ReadonlySet<string> = new Set([
+  // Announcement verbs (stemmed forms)
+  'introduc', 'introducing', 'launch', 'launches', 'launching', 'announc', 'announces', 'announcing',
+  'release', 'releases', 'releasing', 'unveil', 'unveils', 'unveiling', 'reveal', 'reveals',
+  'add', 'adds', 'adding', 'bring', 'brings', 'bringing', 'roll', 'rolls', 'rolling',
+  'ship', 'ships', 'shipping', 'debut', 'debuts', 'debuting', 'arrive', 'arrives', 'arriving',
+  'available', 'avail', 'now', 'today', 'this', 'week', 'this',
+  // Generic action verbs
+  'get', 'gets', 'getting', 'use', 'uses', 'using', 'make', 'makes', 'making',
+  'start', 'starts', 'starting', 'help', 'helps', 'helping',
+  // Filler
+  'new', 'first', 'next', 'just', 'how', 'why', 'what', 'with', 'for', 'and', 'the',
+  'into', 'from', 'over', 'under', 'after', 'before',
+]);
+
 // Get stemmed word set from a title for comparison
 function getStemmedWords(title: string): Set<string> {
-  return new Set(
-    normalizeTitle(title)
-      .split(' ')
-      .filter(w => w.length > 2)
-      .map(stemWord)
-  );
+  const stems = normalizeTitle(title)
+    .split(' ')
+    .filter(w => w.length > 2)
+    .map(stemWord)
+    .filter(s => !DEDUP_STOPWORDS_STEMMED.has(s));
+  return new Set(stems);
 }
 
 // Known product/brand names for entity-aware deduplication
@@ -668,14 +688,26 @@ async function aggregateNews(
 
   console.log(`[newsletter] RSS results: ${succeededFeeds}/${sources.length} succeeded, ${failedFeeds} rejected, ${allItems.length} items after RSS`);
 
-  // Add Anthropic news from scraper (their site doesn't have RSS)
+  // Add Anthropic news from scraper (their site doesn't have RSS).
+  //
+  // First-party Anthropic launches (Claude Design, Claude Opus N) often get
+  // covered by third parties first, which then poisons our title-similarity
+  // dedup pool. By the time the authoritative Anthropic post is scraped,
+  // dedup blocks it as a "duplicate" of the third-party coverage. Skip the
+  // title-similarity check for Anthropic items — the URL-based dedup still
+  // catches exact repeats, and Claude's prompt rule caps Anthropic at 2
+  // selected items so we won't flood. Documented tradeoff: Anthropic posts
+  // get a slight bypass advantage as authoritative source.
   const cutoff = new Date(Date.now() - lookbackHours * 60 * 60 * 1000);
+  let anthropicAdded = 0;
   for (const item of anthropicNews) {
     const itemDate = new Date(item.pubDate);
-    if (itemDate >= cutoff && !usedUrls.has(item.link) && !isTitleAlreadyUsed(item.title)) {
+    if (itemDate >= cutoff && !usedUrls.has(item.link)) {
       allItems.push(item);
+      anthropicAdded += 1;
     }
   }
+  console.log(`[newsletter] Anthropic items added to pool: ${anthropicAdded}/${anthropicNews.length}`);
 
   // Sort by relevance score first, then by date
   const sorted = allItems.sort((a, b) => {
