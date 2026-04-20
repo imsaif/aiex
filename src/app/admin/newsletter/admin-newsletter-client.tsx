@@ -15,9 +15,18 @@ interface NewsletterDraftSummary {
   updatedAt: Date;
 }
 
+interface NewsletterQA {
+  sourceCounts?: Record<string, number>;
+  designNativeCount?: number;
+  designLightWarning?: boolean;
+  poolSize?: number;
+  duplicateSourceClipped?: string[];
+}
+
 interface NewsletterDraft extends NewsletterDraftSummary {
   content: string;
   sources: unknown;
+  structuredData?: { qa?: NewsletterQA } | null;
 }
 
 interface AdminNewsletterClientProps {
@@ -478,6 +487,46 @@ export default function AdminNewsletterClient({
                     </div>
                   )}
                 </div>
+
+                {/* QA Telemetry Strip — surfaced from structuredData.qa, written
+                    by the cron generator. Helps the reviewer spot dev-bias or
+                    source-clustering before clicking Publish. */}
+                {activeDraft?.structuredData?.qa && (() => {
+                  const qa = activeDraft.structuredData!.qa!;
+                  const sortedSources = Object.entries(qa.sourceCounts || {})
+                    .sort(([, a], [, b]) => b - a);
+                  const totalSelected = sortedSources.reduce((sum, [, count]) => sum + count, 0);
+                  return (
+                    <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-3 md:p-4">
+                      {qa.designLightWarning && (
+                        <div className="mb-3 p-2.5 rounded-md bg-status-warning/10 text-status-warning text-xs md:text-sm font-medium">
+                          ⚠ Design-light: 0 design-native items in this selection. Review carefully before publishing.
+                        </div>
+                      )}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                        <div className="text-xs font-semibold text-text-secondary uppercase tracking-wide">
+                          Source mix &middot; {qa.designNativeCount ?? 0}/{totalSelected} design-native &middot; pool of {qa.poolSize ?? '?'}
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {sortedSources.map(([source, count]) => (
+                          <span
+                            key={source}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-background-secondary text-text-primary border border-border-primary"
+                          >
+                            {source}
+                            {count > 1 && <span className="font-mono text-text-tertiary">×{count}</span>}
+                          </span>
+                        ))}
+                      </div>
+                      {qa.duplicateSourceClipped && qa.duplicateSourceClipped.length > 0 && (
+                        <div className="mt-2 text-xs text-text-tertiary">
+                          Pool cap clipped extras from: {qa.duplicateSourceClipped.join(', ')}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
 
                 {/* Content Card */}
                 <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary">
