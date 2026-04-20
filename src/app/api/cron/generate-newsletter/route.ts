@@ -1148,10 +1148,13 @@ function generateHTML(data: NewsletterData): string {
     body: data.takeaway.body,
   });
 
+  // Note: data.summary is intentionally NOT rendered in the email body. It
+  // already lives in the page <title>/meta description, the email subject
+  // line preview, and the admin review header — repeating it as the lead
+  // paragraph was redundant. The "Today's Idea" callout at the bottom
+  // (data.takeaway) carries the editorial framing instead.
   const body = `
 ${renderMasthead('daily', data.items.length)}
-
-<p style="margin: 0 0 48px; font-size: 17px; line-height: 1.7; color: ${EMAIL_TEXT};">${data.summary}</p>
 
 ${renderSectionHeader('The stories', 'Today in AI Products')}
 
@@ -1189,10 +1192,12 @@ function generateWeeklyHTML(data: WeeklyNewsletterData): string {
     },
   });
 
+  // Note: data.summary is intentionally NOT rendered in the email body. It
+  // already lives in the page <title>/meta description, the email subject
+  // line preview, and the admin review header. data.weeklyTakeaway carries
+  // the editorial framing of the week and stays as the lead paragraph.
   const body = `
 ${renderMasthead('weekly', data.items.length)}
-
-<p style="margin: 0 0 20px; font-size: 17px; line-height: 1.7; color: ${EMAIL_TEXT};">${data.summary}</p>
 
 <p style="margin: 0 0 48px; font-size: 17px; line-height: 1.7; color: ${EMAIL_TEXT};">${data.weeklyTakeaway}</p>
 
