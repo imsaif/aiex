@@ -119,13 +119,16 @@ const RSS_SOURCES_LITE: RssSource[] = RSS_SOURCES.filter((s) =>
    'TLDR Design', 'Figma', 'OpenAI', 'Google AI'].includes(s.name)
 );
 
-// Scrape Anthropic news (no RSS feed available)
+// Scrape Anthropic news (no RSS feed available). Anthropic posts first-party
+// product launches here (e.g. "Claude Design by Anthropic Labs" Apr 17 2026,
+// "Claude Opus 4.7" Apr 16 2026) — they're high signal for designers but used
+// to sink to the bottom of the pool because they had no tier and no score.
 async function scrapeAnthropicNews(): Promise<NewsItem[]> {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 3000);
     const response = await fetch('https://www.anthropic.com/news', {
-      headers: { 'User-Agent': 'AIUX-Newsletter-Bot/1.0' },
+      headers: { 'User-Agent': FEED_USER_AGENT },
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
@@ -138,18 +141,36 @@ async function scrapeAnthropicNews(): Promise<NewsItem[]> {
     for (const match of matches) {
       const pubDate = match[1];
       const slug = match[2];
-      // Convert slug to title (e.g., "claude-opus-4-5" -> "Claude Opus 4 5")
-      const title = slug.split('-').map(word =>
+      // Convert slug to title (e.g., "claude-opus-4-5" -> "Claude Opus 4 5",
+      // "claude-design-anthropic-labs" -> "Claude Design Anthropic Labs")
+      const title = slug.split('-').map((word: string) =>
         word.charAt(0).toUpperCase() + word.slice(1)
       ).join(' ');
+
+      // Use the slug as a synthetic description so scoreRelevance has more
+      // surface area for keyword matching ("design", "claude", etc.). Better
+      // than the empty string we used to ship.
+      const synthDescription = slug.replace(/-/g, ' ');
+
+      // Score using the same scoring fn as RSS items, with the ai-lab tier
+      // baseline. This puts Anthropic launches on equal footing with OpenAI
+      // and Google AI, instead of sinking to score 0.
+      const fakeRssItem = {
+        title,
+        contentSnippet: synthDescription,
+        content: synthDescription,
+      } as Parser.Item;
+      const relevanceScore = scoreRelevance(fakeRssItem, 'ai-lab');
 
       items.push({
         source: 'Anthropic',
         sourceColor: '#d97706',
+        sourceTier: 'ai-lab',
         title,
-        description: '', // We don't have description from this extraction
+        description: synthDescription,
         link: `https://www.anthropic.com/news/${slug}`,
         pubDate,
+        relevanceScore,
       });
     }
 
