@@ -121,8 +121,13 @@ const RSS_SOURCES_LITE: RssSource[] = RSS_SOURCES.filter((s) =>
 
 // Scrape Anthropic news (no RSS feed available). Anthropic posts first-party
 // product launches here (e.g. "Claude Design by Anthropic Labs" Apr 17 2026,
-// "Claude Opus 4.7" Apr 16 2026) — they're high signal for designers but used
-// to sink to the bottom of the pool because they had no tier and no score.
+// "Claude Opus 4.7" Apr 16 2026) — high signal for designers.
+//
+// Anthropic moved away from the embedded Sanity JSON (which our old regex
+// targeted) to plain server-rendered HTML in 2026. Each news card is now an
+// <a href="/news/SLUG"> wrapping a title, a <time> with text like
+// "Apr 17, 2026", and a body <p>. We parse those directly. If the structure
+// changes again the loop returns whatever it could parse rather than crashing.
 async function scrapeAnthropicNews(): Promise<NewsItem[]> {
   try {
     const controller = new AbortController();
@@ -134,31 +139,51 @@ async function scrapeAnthropicNews(): Promise<NewsItem[]> {
     clearTimeout(timeoutId);
     const html = await response.text();
 
-    // Extract JSON data embedded in the page
-    const matches = [...html.matchAll(/publishedOn":"([^"]+)","slug":\{"_type":"slug","current":"([^"]+)"/g)];
+    // Match each <a href="/news/SLUG" ...>...</a> card. Lazy match on </a>.
+    const cardRe = /<a href="\/news\/([a-z0-9-]+)"[^>]*>([\s\S]*?)<\/a>/g;
     const items: NewsItem[] = [];
+    const seenSlugs = new Set<string>();
 
-    for (const match of matches) {
-      const pubDate = match[1];
-      const slug = match[2];
-      // Convert slug to title (e.g., "claude-opus-4-5" -> "Claude Opus 4 5",
-      // "claude-design-anthropic-labs" -> "Claude Design Anthropic Labs")
-      const title = slug.split('-').map((word: string) =>
-        word.charAt(0).toUpperCase() + word.slice(1)
-      ).join(' ');
+    let cardMatch: RegExpExecArray | null;
+    while ((cardMatch = cardRe.exec(html)) !== null) {
+      const slug = cardMatch[1];
+      const inner = cardMatch[2];
+      // Same slug appears multiple times on the page (featured + grid). Keep
+      // the first occurrence with the richest inner content; skip dupes.
+      if (seenSlugs.has(slug)) continue;
 
-      // Use the slug as a synthetic description so scoreRelevance has more
-      // surface area for keyword matching ("design", "claude", etc.). Better
-      // than the empty string we used to ship.
-      const synthDescription = slug.replace(/-/g, ' ');
+      // Title: try h2/h3/h4 in order. Strip any nested tags.
+      const titleMatch =
+        inner.match(/<h2[^>]*>([\s\S]*?)<\/h2>/) ||
+        inner.match(/<h3[^>]*>([\s\S]*?)<\/h3>/) ||
+        inner.match(/<h4[^>]*>([\s\S]*?)<\/h4>/);
+      const realTitle = titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : null;
 
-      // Score using the same scoring fn as RSS items, with the ai-lab tier
-      // baseline. This puts Anthropic launches on equal footing with OpenAI
-      // and Google AI, instead of sinking to score 0.
+      // Date: text content of <time>...</time>, e.g. "Apr 17, 2026"
+      const dateMatch = inner.match(/<time[^>]*>([^<]+)<\/time>/);
+      const dateText = dateMatch ? dateMatch[1].trim() : null;
+      const parsedDate = dateText ? new Date(dateText) : null;
+      const pubDate = parsedDate && !isNaN(parsedDate.getTime())
+        ? parsedDate.toISOString()
+        : new Date().toISOString();
+
+      // Description: first <p>...</p> inside the card
+      const descMatch = inner.match(/<p[^>]*>([\s\S]*?)<\/p>/);
+      const description = descMatch
+        ? descMatch[1].replace(/<[^>]+>/g, '').replace(/&#x27;/g, "'").replace(/&amp;/g, '&').trim().slice(0, 500)
+        : '';
+
+      // Fall back to slug-derived title if we couldn't find a real one
+      // (happens for the featured-card variant where the title sits outside
+      // the <a> tag in some layouts).
+      const title = realTitle || slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+      // Score with the ai-lab tier baseline so Anthropic launches sort
+      // alongside OpenAI/Google AI items rather than landing at score 0.
       const fakeRssItem = {
         title,
-        contentSnippet: synthDescription,
-        content: synthDescription,
+        contentSnippet: description || slug.replace(/-/g, ' '),
+        content: description || slug.replace(/-/g, ' '),
       } as Parser.Item;
       const relevanceScore = scoreRelevance(fakeRssItem, 'ai-lab');
 
@@ -167,13 +192,15 @@ async function scrapeAnthropicNews(): Promise<NewsItem[]> {
         sourceColor: '#d97706',
         sourceTier: 'ai-lab',
         title,
-        description: synthDescription,
+        description,
         link: `https://www.anthropic.com/news/${slug}`,
         pubDate,
         relevanceScore,
       });
+      seenSlugs.add(slug);
     }
 
+    console.log(`[newsletter] Anthropic scraper extracted ${items.length} items`);
     return items;
   } catch (error) {
     console.error('Failed to scrape Anthropic news:', error);
