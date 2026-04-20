@@ -32,13 +32,14 @@ const parser = new Parser({
 // Source tiers drive the relevance baseline (see SOURCE_TIER_BASELINE below).
 // Adding a new tier? Update the baseline map AND the DESIGN_NATIVE_TIERS list.
 type SourceTier =
-  | 'design-pub'    // editorial design publications (NN/g, Smashing, etc.)
-  | 'design-tool'   // companies whose product IS the designer's tool (Figma, Framer)
-  | 'ai-lab'        // AI model/product companies (OpenAI, Anthropic, Google AI)
-  | 'curator'       // synthesis/aggregator newsletters (Latent Space)
-  | 'community'     // user-voice forums (Reddit subs)
-  | 'dev-platform'  // infra/devtool companies (Vercel, GitHub, Supabase)
-  | 'tech-news';    // generic tech news (The Verge, TechCrunch, etc.)
+  | 'design-pub'      // research / news / case studies (NN/g, Smashing, A List Apart, TLDR Design)
+  | 'design-opinion'  // think-piece / opinion essays (UX Collective, UX Planet, Lenny's). Worth less per item — see prompt cap.
+  | 'design-tool'     // companies whose product IS the designer's tool (Figma, Framer)
+  | 'ai-lab'          // AI model/product companies (OpenAI, Anthropic, Google AI)
+  | 'curator'         // synthesis/aggregator newsletters (Latent Space)
+  | 'community'       // user-voice forums (Reddit subs)
+  | 'dev-platform'    // infra/devtool companies (Vercel, GitHub, Supabase)
+  | 'tech-news';      // generic tech news (The Verge, TechCrunch, etc.)
 
 interface RssSource {
   name: string;
@@ -51,14 +52,20 @@ interface RssSource {
 // fit well within the 25s Claude window via Promise.allSettled. Don't 5x this
 // list without re-checking timing.
 const RSS_SOURCES: RssSource[] = [
-  // Design publications (URLs verified against rss-parser locally Apr 20 2026)
+  // Design publications — research / news / case studies (URLs verified against
+  // rss-parser locally Apr 20 2026). These get the +50 baseline because their
+  // items are concrete and actionable.
   { name: 'Nielsen Norman Group', url: 'https://www.nngroup.com/feed/rss/', color: '#ffcc02', tier: 'design-pub' },
   { name: 'Smashing Magazine', url: 'https://www.smashingmagazine.com/feed/', color: '#d33a2c', tier: 'design-pub' },
-  { name: 'UX Collective', url: 'https://uxdesign.cc/feed', color: '#000000', tier: 'design-pub' },
   { name: 'A List Apart', url: 'https://alistapart.com/main/feed/', color: '#bf3f3f', tier: 'design-pub' },
-  { name: 'UX Planet', url: 'https://uxplanet.org/feed', color: '#0066cc', tier: 'design-pub' },
   { name: 'TLDR Design', url: 'https://tldr.tech/api/rss/design', color: '#1a73e8', tier: 'design-pub' },
-  { name: "Lenny's Newsletter", url: 'https://www.lennysnewsletter.com/feed', color: '#ff6900', tier: 'design-pub' },
+
+  // Design opinion — Medium-style think-pieces and strategy essays. Lower
+  // baseline (+28) and capped to 1-2 per issue via the prompt: opinion is
+  // valuable but should not crowd out concrete news.
+  { name: 'UX Collective', url: 'https://uxdesign.cc/feed', color: '#000000', tier: 'design-opinion' },
+  { name: 'UX Planet', url: 'https://uxplanet.org/feed', color: '#0066cc', tier: 'design-opinion' },
+  { name: "Lenny's Newsletter", url: 'https://www.lennysnewsletter.com/feed', color: '#ff6900', tier: 'design-opinion' },
 
   // Design tools
   // NOTE: Framer has no public RSS feed at any of the standard paths
@@ -253,10 +260,11 @@ function getProductIconImg(productName: string): string {
 // out lower ones for a given keyword profile, so the gaps matter as much as
 // the absolute values.
 const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
-  'design-pub': 50,
-  'design-tool': 40,
-  'ai-lab': 30,
-  curator: 25,
+  'design-pub': 50,        // research/news/case studies — top priority
+  'design-tool': 40,       // first-party design product news
+  'ai-lab': 30,            // concrete AI product launches
+  'design-opinion': 28,    // think-pieces — useful but capped to 1-2 per issue via prompt
+  curator: 25,             // syntheses
   community: 25,
   'dev-platform': 20,
   'tech-news': 0,
@@ -339,7 +347,7 @@ function isRelevant(item: Parser.Item, sourceTier?: SourceTier): boolean {
 // design keywords in title+description (covers cross-cutting stories from
 // AI labs / community feeds).
 function isDesignNativeItem(item: NewsItem, tier?: SourceTier): boolean {
-  if (tier === 'design-pub' || tier === 'design-tool') return true;
+  if (tier === 'design-pub' || tier === 'design-tool' || tier === 'design-opinion') return true;
   const text = `${item.title} ${item.description}`.toLowerCase();
   const keywords = Array.from(DESIGN_KEYWORDS_SET);
   let hits = 0;
@@ -748,6 +756,7 @@ YOUR TASK:
 
    AUDIENCE FILTER (strict):
    - If a daily item turned out to be a pure infrastructure / deployment / devops story (regardless of how it was framed in the daily Designer's Takeaway), DROP IT from the weekly. The weekly is the chance to re-curate, not to compound prior bias. A leaner roundup of 5 design-relevant items beats 8 mixed ones.
+   - Prefer concrete news (product launches, feature releases, research findings) over opinion essays and think-pieces. Items originally sourced from uxdesign.cc, uxplanet.org, or lennysnewsletter.com are usually opinion. Include AT MOST 2 opinion pieces in the weekly, and ONLY when each introduces a genuinely new framework or insight that would change how a designer works.
    - Maximum 2 items from any single company or domain. The same source domain (vercel.com, openai.com) counts as one source even if items are attributed to different products.
 
 2. Keep the original descriptions but you may slightly enhance them for the weekly context.
@@ -818,8 +827,8 @@ YOUR TASK:
 
    AUDIENCE FILTER (strict — this overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not write a strained Designer's Takeaway to bolt design relevance onto a dev story. Returning 3 strong design-relevant items is better than 5 mixed items.
-   - Prefer items from design publications (Nielsen Norman, Smashing Magazine, UX Collective, A List Apart, UX Planet, TLDR Design, Lenny's Newsletter) and design tools (Figma, Framer) over items from dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
-   - Reddit/community items can be excellent designer voice — include them when the discussion has a clear takeaway.
+   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), and Lenny's Newsletter are usually opinion. Include AT MOST 1 opinion piece per issue, and ONLY when it introduces a genuinely new framework or insight that would change how a designer works in the next month. If you cannot point to that specific change, drop the opinion piece.
+   - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    DIVERSITY RULES (strict — these override relevance scoring):
    - Pick items from at least 3 DIFFERENT companies/products. A newsletter where every item is from one company is not useful.
@@ -885,7 +894,8 @@ YOUR TASK:
 
    AUDIENCE FILTER (strict — overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not bolt design relevance onto a dev story with a strained Designer's Takeaway. A leaner roundup of 5 strong design stories beats 8 mixed ones.
-   - Prefer items from design publications (Nielsen Norman, Smashing Magazine, UX Collective, A List Apart, UX Planet, TLDR Design, Lenny's Newsletter) and design tools (Figma, Framer) over items from dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
+   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), and Lenny's Newsletter are usually opinion. Include AT MOST 2 opinion pieces in a weekly roundup, and ONLY when each introduces a genuinely new framework or insight that would change how a designer works. If you cannot point to that specific change, drop the opinion piece.
+   - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    DIVERSITY RULES (strict — these override relevance scoring):
    - Pick items from at least 4 DIFFERENT companies/products across the week.
@@ -1231,16 +1241,40 @@ function buildQABlock(
   pool: NewsItem[],
   clippedSources: string[],
 ): NewsletterQA {
-  // Index the pool by link so we can map Claude's selection back to source/tier.
+  // Index the pool by link AND by hostname. The hostname index handles cases
+  // where Claude's reproduced sourceUrl doesn't byte-match the pool link
+  // (tracking params, redirect URLs, trailing slashes) — without it we miss
+  // most non-AI-lab items and undercount design-native.
   const poolByLink = new Map<string, NewsItem>();
+  const poolByHost = new Map<string, NewsItem>();
   for (const item of pool) {
-    if (item.link) poolByLink.set(item.link, item);
+    if (item.link) {
+      poolByLink.set(item.link, item);
+      try {
+        const host = new URL(item.link).hostname;
+        // Don't overwrite a richer match — first item per host wins for the
+        // fallback. Real per-source tier is uniform within a feed anyway.
+        if (!poolByHost.has(host)) poolByHost.set(host, item);
+      } catch {
+        // ignore malformed URLs
+      }
+    }
   }
+
+  const resolveOriginal = (sourceUrl: string): NewsItem | undefined => {
+    const direct = poolByLink.get(sourceUrl);
+    if (direct) return direct;
+    try {
+      return poolByHost.get(new URL(sourceUrl).hostname);
+    } catch {
+      return undefined;
+    }
+  };
 
   const sourceCounts: Record<string, number> = {};
   let designNativeCount = 0;
   for (const sel of selectedItems) {
-    const original = poolByLink.get(sel.sourceUrl);
+    const original = resolveOriginal(sel.sourceUrl);
     // Prefer the upstream RSS source name; fall back to Claude's product label
     // when we can't resolve back (e.g. compilation path from daily items).
     const sourceLabel = original?.source || sel.product || 'Unknown';
