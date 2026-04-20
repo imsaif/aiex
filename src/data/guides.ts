@@ -5636,7 +5636,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Before building a conversational interface, you need to understand the landscape. Not every chat widget is a conversational UI, and not every conversational UI is a chatbot. This lesson defines the spectrum, the decision framework, and the anti-patterns that quietly ruin AI products.',
+            content: 'A conversational UI is any interface where users shape outcomes through natural-language turns — typing, speaking, or gesturing back and forth with a system. Not every chat widget qualifies, and most product moments are better served by a button or command than by chat at all.',
             icon: 'info',
           },
           {
@@ -5773,7 +5773,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Every great conversational UI shares the same building blocks. This lesson breaks down the anatomy of a chat interface - the message area, input bar, status indicators, metadata, and disclosure surfaces - with the design decisions behind each element.',
+            content: 'A chat interface is six stacked components: message area, input bar, suggested prompts, status indicators, header, and a disclosure surface for sources and context. The first five are the shell every team builds. The sixth is where most AI products quietly fail.',
             icon: 'layout',
           },
           {
@@ -5860,7 +5860,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Now let\'s build. This lesson walks through implementing a message list with properly styled bubbles, auto-scrolling, timestamps, and avatar indicators - the foundation of any chat UI.',
+            content: 'A message bubble in React is a styled div inside a scrollable list, rendered from a { role, content, timestamp } data shape. This lesson builds one from scratch with auto-scroll, avatars, and status states — the foundation under every chat UI.',
             icon: 'code',
           },
           {
@@ -5941,7 +5941,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Nothing kills a conversational experience like a blank screen while waiting. This lesson covers typing indicators (the "three dots"), streaming text (word-by-word display), and status states that keep users engaged during AI processing.',
+            content: 'Typing indicators and streaming responses solve the same problem: never make a user stare at a blank screen while the AI works. Indicators are right for waits under three seconds; streaming is the modern default everywhere else. This lesson covers both, with code.',
             icon: 'loading',
           },
           {
@@ -6022,7 +6022,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'The biggest usability problem in conversational UI is the blank input field. Users don\'t know what to type. Suggested prompts solve this - and done well, they become a core navigation mechanism, not just training wheels.',
+            content: 'A blank input field is the biggest usability problem in conversational UI — users know what they want but not the words that produce it. Suggested prompts close that gap by offering the vocabulary inline. Done well, they become a navigation mechanism, not training wheels.',
             icon: 'lightbulb',
           },
           {
@@ -6117,7 +6117,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'The difference between a good and great conversational UI is context. Users expect the AI to remember what was said 5 messages ago. This lesson covers context window management, conversation memory, and multi-turn design patterns.',
+            content: 'Context management is how a chat remembers what was said five messages ago. Every AI model has a context window — GPT-4 holds ~128K tokens, Claude ~200K — but the design work is deciding what to keep verbatim, summarize, or drop without users noticing.',
             icon: 'brain',
           },
           {
@@ -6235,7 +6235,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'AI will fail. Responses will be wrong, the API will time out, and users will ask things the AI can\'t handle. This lesson covers designing graceful failures that keep the conversation productive.',
+            content: 'AI will fail. Responses come back wrong, APIs time out, and users ask for things the model can\'t do. This lesson walks through the four failure modes — misunderstanding, refusal, timeout, hallucination — and how to design each one so the conversation stays productive.',
             icon: 'shield',
           },
           {
@@ -6366,7 +6366,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Voice interfaces are a different beast from text chat. Response length, feedback mechanisms, error handling, and interaction flow all change when users can\'t see a text bubble. This lesson covers the design patterns unique to voice conversational UI.',
+            content: 'Voice interfaces break most of the assumptions text chat makes. Responses need to be two or three sentences, not paragraphs; users will interrupt mid-reply; and screen-based feedback shifts to audio cues plus a pulsing-orb affordance. This lesson covers the patterns unique to voice.',
             icon: 'microphone',
           },
           {
@@ -6459,7 +6459,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Conversational interfaces have unique accessibility challenges - live-updating content, keyboard-only navigation, screen reader announcements, and high-contrast readability. This lesson covers how to make your chat UI work for everyone.',
+            content: 'Accessibility in chat UI comes down to four things: ARIA live regions so screen readers announce new messages, keyboard paths into every control (including prompt chips), focus management after sending, and WCAG AA contrast on bubble colors. This lesson covers each.',
             icon: 'accessibility',
           },
           {
@@ -6554,7 +6554,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'You now have all the pieces. This final lesson gives you a checklist for building a production-ready conversational UI, covering architecture decisions, component structure, and the patterns that separate polished products from prototypes.',
+            content: 'A production-ready chat UI is eight components, three runtime concerns, and a short list of decisions you make before writing any code. This lesson lays out the component tree, architecture trade-offs, and the checklist that separates shipped prototypes from polished products.',
             icon: 'checklist',
           },
           {
@@ -6722,7 +6722,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'The next frontier for conversational UI is agentic AI - systems that don\'t just answer questions but take actions on the user\'s behalf. This changes the design fundamentally. When an AI can book meetings, write code, or modify files, the conversational interface needs new patterns for trust, transparency, and control.',
+            content: 'An agentic chat doesn\'t just answer — it sends emails, runs code, or modifies files on the user\'s behalf. That changes the interface fundamentally: irreversibility, trust calibration, and consent all become design problems. This lesson covers the patterns that make agentic AI safe to use.',
             icon: 'robot',
           },
           {

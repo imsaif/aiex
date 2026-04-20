@@ -376,7 +376,7 @@ export function ConversationalUIBot() {
       id: '0',
       role: 'bot',
       content:
-        'Hi! I\'m a guided chatbot built to teach you how to build conversational UIs. I\'m also a live demo of the patterns I teach: suggested prompts, typing indicators, contextual follow-ups, and resource links.\n\nWhat would you like to learn?',
+        'Hi! I\'m a scripted demo of the conversational UI patterns you\'re here to read about — suggested prompts, typing indicators, contextual follow-ups, resource links. I only answer the topics below (no real model), so pick one to see the patterns working live.',
       links: [
         { label: 'Conversational UI pattern', href: '/patterns/conversational-ui' },
         { label: 'Full 11-lesson guide', href: '/guides/conversational-ui-guide' },
@@ -428,7 +428,11 @@ export function ConversationalUIBot() {
     const node = CONVERSATION[text];
     const fallback: ConversationNode = {
       response:
-        'I\'m a guided chatbot, so I work best with the suggested prompts. Pick a topic below and I\'ll walk you through it with links to patterns, tools, and resources.',
+        'Good question. I\'m a scripted demo — I don\'t talk to a real model — so I can only walk you through topics I\'ve prepared. For open-ended conversations, the Audit tool actually hits Claude and will answer questions like yours.\n\nIf it\'s about building a chat UI, pick a topic below.',
+      links: [
+        { label: 'Open the Audit tool (real AI)', href: '/audit' },
+        { label: 'Full 11-lesson guide', href: '/guides/conversational-ui-guide' },
+      ],
       followUps: INITIAL_SUGGESTIONS,
     };
     const match = node || fallback;
@@ -613,7 +617,7 @@ export function ConversationalUIBot() {
             ref={inputRef}
             name="msg"
             type="text"
-            placeholder="Ask about building a chat UI..."
+            placeholder="Type or pick a topic below (scripted demo)"
             className="flex-1 bg-background-secondary border border-border-primary rounded-xl py-2.5 px-4 text-[15px] text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary"
             disabled={isBusy}
             autoComplete="off"
