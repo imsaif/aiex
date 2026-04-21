@@ -25,6 +25,10 @@ const GUIDE_ICONS: Record<string, GuideIconConfig> = {
     src: '/images/logos/simple-icons/anthropic.svg',
     alt: 'Claude',
   },
+  'claude-design-learning-path': {
+    src: '/images/logos/simple-icons/claude-design.svg',
+    alt: 'Claude Design',
+  },
   'cursor-learning-path': {
     src: '/images/logos/simple-icons/cursor.svg',
     alt: 'Cursor',
@@ -141,6 +145,14 @@ const guideMeta: Record<
       'Version control basics',
     ],
   },
+  'claude-design-learning-path': {
+    tagline: 'Prompt to prototype',
+    highlights: [
+      'Prompts → clickable HTML prototypes',
+      'Design system extracted from your codebase',
+      'Handoff to Claude Code for implementation',
+    ],
+  },
   'cursor-learning-path': {
     tagline: 'AI-native code editor',
     highlights: [
@@ -177,6 +189,8 @@ const guideMeta: Record<
 
 const featuredSlugs = new Set([
   'claude-code-learning-path',
+  'claude-design-learning-path',
+  'github-learning-path',
   'conversational-ui-guide',
 ]);
 

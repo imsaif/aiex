@@ -7053,6 +7053,1237 @@ export const guides: Guide[] = [
       </div>
     `,
   },
+  {
+    id: 'claude-design-course',
+    slug: 'claude-design-learning-path',
+    title: 'Claude Design Guide for Designers',
+    description:
+      "Anthropic's AI design collaborator for prototypes, decks, and interactive work. Learn the four-part prompt framework, iterate via chat, inline comments and custom sliders, set up an organization-wide design system, and hand off to Claude Code.",
+    excerpt:
+      "A practical 12-lesson path through Claude Design, from your first prompt to design system integration, team rollout, and production handoff. Sourced from Anthropic's official docs and hands-on accounts from designers who've spent real time in the tool.",
+    tool: 'Claude Design',
+    useCase: 'Learning Path',
+    skillLevel: 'Beginner',
+    designDomain: 'UX Design',
+    readTime: 30,
+    author: 'Design Team',
+    publishedDate: '2026-04-21',
+    lastUpdatedDate: '2026-04-21',
+    status: 'work-in-progress',
+    thumbnail: '/images/guides/claude-design-learning-path/thumbnail.svg',
+    tags: ['claude-design', 'anthropic', 'learning-path', 'ai-design-tool', 'prototyping', 'design-systems', 'opus-4-7'],
+    lessons: [
+      {
+        id: 'lesson-1',
+        title: 'What Claude Design Is (and Isn\'t)',
+        duration: 2,
+        order: 1,
+        module: 'setup',
+        sections: [
+          {
+            type: 'intro',
+            content: "Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups. You describe what you need; Claude builds a first version in its canvas, and you refine it together through chat, inline comments, or direct edits. It's powered by Claude Opus 4.7 and currently in research preview.",
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: "What it's good at",
+          },
+          {
+            type: 'list',
+            items: [
+              'Turning a rough idea into a clickable HTML prototype without writing code',
+              'Producing on-brand pitch decks from a bulleted outline',
+              'Exploring three layout directions before you commit to one',
+              'Converting a written spec into a shareable mockup',
+              'Extracting your existing design system from code or Figma so every new project matches',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: "What it isn't",
+          },
+          {
+            type: 'list',
+            items: [
+              "A replacement for Figma's multi-file collaboration or advanced vector editing",
+              "A general-purpose AI chatbot, it's scoped to visual and design work",
+              'A finished-design generator, outputs are first drafts meant for refinement',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Who can use it today',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Claude Pro', content: 'Included, with monthly usage limits.' },
+              { label: 'Claude Max', content: 'Included, with higher limits.' },
+              { label: 'Claude Team', content: 'Included, designers can set up an organization-wide design system that every project inherits.' },
+              { label: 'Claude Enterprise', content: 'Off by default. An organization admin enables it in Organization settings → Capabilities → Anthropic Labs.' },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Research preview, not GA',
+            content: 'Features, limits, and availability can change. Anthropic has called out some known gaps: comment persistence issues, save errors in compact view (switch to full view), lag with very large repositories, and no data residency or audit log support yet.',
+            icon: 'info',
+          },
+          {
+            type: 'further-reading',
+            title: 'Primary sources',
+            links: [
+              { title: 'Introducing Claude Design by Anthropic Labs', url: 'https://www.anthropic.com/news/claude-design-anthropic-labs', source: 'Anthropic' },
+              { title: 'Get started with Claude Design', url: 'https://support.claude.com/en/articles/14604416-get-started-with-claude-design', source: 'Claude Help Center' },
+              { title: 'Claude Design is here — everything you need to know', url: 'https://departmentofproduct.substack.com/p/claude-design-is-here-everything', source: 'Department of Product' },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You know what Claude Design is for',
+            items: [
+              'Understood the scope, design-focused, not a general AI chat',
+              'Checked which plan tier gives you access',
+              'Noted the research-preview caveats',
+            ],
+            message: 'Next up: writing your first prompt so the first output is actually useful.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-2',
+        title: 'Your First Prompt: The Four-Part Framework',
+        duration: 3,
+        order: 2,
+        module: 'setup',
+        sections: [
+          {
+            type: 'intro',
+            content: 'A good Claude Design prompt tells the model four things: the goal (what you\'re making), the layout (how it should be arranged), the content (what info goes in), and the audience (who will see it). Skip any one of these and the first draft wanders.',
+            icon: 'tip',
+          },
+          {
+            type: 'text',
+            content: "Here's the exact sequence we captured building Lineup, the kanban board used throughout this guide. Claude asks a short round of clarifying questions first, confirms direction, then generates the full board in one pass.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-2/cdlineup1.mp4',
+            alt: 'Claude Design responding to the Lineup prompt with an initial round of clarifying questions about product type, audience, and visual direction',
+            label: 'Step 1. Claude asks clarifying questions before generating the canvas.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-2/cdlineup2.mp4',
+            alt: 'Follow-up clarification round. Claude confirms decisions and starts staging the kanban board on the canvas',
+            label: 'Step 2. After answering, Claude confirms direction and begins laying out the board.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-2/cdlineup3.mp4',
+            alt: 'The Lineup kanban board fully rendered on the Claude Design canvas with 4 columns and ~12 populated cards',
+            label: 'Step 3. The board renders end-to-end in one pass, ready to iterate on.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The four parts',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Goal, what are you making and why',
+                content: [
+                  "State the artifact and its purpose in one sentence.",
+                  "Examples: 'a product landing page for a Series A launch', 'a 6-slide pitch deck for a design-ops proposal', 'a prototype of a settings page with a dark-mode toggle'.",
+                ],
+                icon: 'check',
+              },
+              {
+                number: 2,
+                title: 'Layout, how should it be arranged',
+                content: [
+                  'Describe structure in plain language, you handle the skeleton, Claude handles the polish.',
+                  "Example: 'Hero on top, three feature cards in a row, a testimonial block, FAQ at the bottom.'",
+                ],
+                icon: 'monitor',
+              },
+              {
+                number: 3,
+                title: 'Content, what actually goes in',
+                content: [
+                  "Paste the real copy, bullet points, or key numbers. Don't write lorem-ipsum-style filler. Claude will produce something generic.",
+                  'Real words in = real-looking output out.',
+                ],
+                icon: 'code',
+              },
+              {
+                number: 4,
+                title: 'Audience, who sees this',
+                content: [
+                  "Naming the audience changes the design. 'Enterprise CISOs' produces a very different page than 'indie developers on Reddit'.",
+                  'One sentence is enough, just enough for Claude to calibrate tone.',
+                ],
+                icon: 'user',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Prompt example',
+          },
+          {
+            type: 'code',
+            language: 'text',
+            label: 'A working four-part prompt',
+            code: `Goal: A web-based kanban board called Lineup, a lightweight
+Trello alternative for small product teams (5-15 people).
+
+Layout:
+- Top navbar: "Lineup" wordmark on the left, current project name in
+  the center ("Q2 Product Launch"), user avatar + notifications bell
+  on the right.
+- Main area: 4-column kanban board. Backlog, To Do, In Progress, Done.
+- Each column header: column name, card count pill, "+ Add card" button.
+- Cards: title, 1-line description, 0-2 colored labels, up to 3 stacked
+  assignee avatars, and a small icon row for comments/attachments.
+
+Content:
+- ~12 sample cards distributed across the columns, realistic SaaS
+  product work:
+  Backlog: "Research competitor pricing pages", "Interview 5 lapsed
+  users", "Audit onboarding email sequence"
+  To Do: "Finalize Q2 launch copy", "Design dark mode toggle",
+  "Spec A/B test for pricing hero"
+  In Progress: "Ship mobile signup flow", "Rebuild settings page",
+  "Migrate analytics to PostHog"
+  Done: "Kill off legacy admin panel", "Update terms of service",
+  "Post-mortem on Feb incident"
+- Labels visible on some cards: "design", "bug", "copy", "infra" ,
+  distinct soft colors.
+
+Audience: Product designers, PMs, and engineering leads at early-stage
+SaaS startups. They find Asana too heavy and Trello too simple. They
+want speed and keyboard-shortcut focus, not enterprise controls.`,
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'First pass is a draft, not a deliverable',
+            content: "Expect 3-5 rounds of iteration before a prototype is ready to share. Designers who try to one-shot a finished output end up fighting the model; designers who accept the first pass is rough get to polish faster.",
+            icon: 'tip',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: "Heads up, research-preview navigation bug",
+            content: "In our own testing we hit a recurring issue: while you're in a project with the canvas open, clicking around the UI can unexpectedly snap you back to the Claude Design home screen. Your work isn't lost, the project is saved and you can re-open it from the project picker. Just be aware it can happen and don't panic if it does. Expect this to get fixed as the product moves out of research preview.",
+            icon: 'warning',
+          },
+          {
+            type: 'completion',
+            title: 'Your first prompt shipped',
+            items: [
+              'Wrote a goal + layout + content + audience prompt',
+              'Submitted it and saw the canvas render',
+              'Saw the first draft ready for iteration',
+            ],
+            message: 'Next: how to add references so Claude starts closer to what you actually want.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-3',
+        title: 'Importing Assets: Screenshots, Docs, and Codebases',
+        duration: 3,
+        order: 3,
+        module: 'setup',
+        sections: [
+          {
+            type: 'intro',
+            content: 'The fastest way to get Claude Design producing on-brand work is to show it what you already have. Import reference material at prompt time and every output is visually grounded in your product, not in generic AI aesthetic defaults.',
+            icon: 'download',
+          },
+          {
+            type: 'text',
+            content: "Here's the web capture tool in action, one of the less obvious import paths. It grabs live elements directly from any website, so prototypes feel like the real product instead of a sketch of it.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-3/web-capture.mp4',
+            alt: 'Claude Design web capture tool in action, grabbing live elements from a website directly into the project as a reference asset',
+            label: 'Web capture tool, pulling real elements from a live site into the prompt context.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What you can import',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Screenshots & images', content: 'PNG, JPG, GIF, WebP. Your current product, competitor products, inspiration references.' },
+              { label: 'Documents', content: 'DOCX, PPTX, XLSX. Great for turning a written spec or an old deck into an updated visual.' },
+              { label: 'Code repositories', content: 'Point Claude at a GitHub repo or local codebase. Claude reads your component architecture and CSS to inform the output.' },
+              { label: 'Design system files', content: 'Figma files and design tokens. Claude extracts colors, typography, spacing, and reusable components automatically.' },
+              { label: 'Web capture', content: 'A built-in tool that grabs elements directly from any live website. Pull real buttons, headers, or sections from your deployed product.' },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'When to use which',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'New project from scratch',
+                content: 'Start with 1-2 reference screenshots of products you admire + a color palette. Claude picks up tone without copying.',
+                icon: 'check',
+              },
+              {
+                number: 2,
+                title: 'Iterating on an existing product',
+                content: "Upload current product screenshots first. Claude matches your existing style by default, so new work looks like the same product.",
+                icon: 'check',
+              },
+              {
+                number: 3,
+                title: 'Building on your codebase',
+                content: "Link the repo. Claude generates designs that use your actual components, much closer to what you'd hand to a developer.",
+                icon: 'code',
+              },
+              {
+                number: 4,
+                title: 'Redesigning from a spec',
+                content: 'Upload the PRD as DOCX or PDF. Claude reads the requirements and produces designs that honor the constraints.',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'The web capture tool is underrated',
+            content: "If your product is live, use it to pull in your actual header, nav, and footer. Prototypes feel like the real thing instead of a sketch of it.",
+            icon: 'tip',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: "Don't over-stuff the first prompt",
+            content: '2-3 focused references beat 15 loosely related ones. One source gets you started; multiple give Claude more to work with, but there is a point of diminishing returns.',
+            icon: 'warning',
+          },
+          {
+            type: 'further-reading',
+            title: 'Designers showing real imports',
+            links: [
+              { title: 'How to Actually Use Claude Design', url: 'https://aifordevelopers.substack.com/p/how-to-actually-use-claude-design', source: 'AI For Developers (Substack)', description: 'Practical walkthrough of what to attach before your first prompt.' },
+              { title: 'Getting Started with Claude Design', url: 'https://muz.li/blog/getting-started-with-claude-design-a-collaborator-for-your-design-workflow/', source: 'Muz.li', description: "Muzli's take, aimed at designers who live in Figma." },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You can import context',
+            items: [
+              'Know the supported file types',
+              'Know which source to use when',
+              'Can use the web capture tool for live-product references',
+            ],
+            message: "Module 2 is about iteration, turning the first draft into something shippable.",
+          },
+        ],
+      },
+      {
+        id: 'lesson-4',
+        title: 'Iterating via Conversation',
+        duration: 2,
+        order: 4,
+        module: 'iteration',
+        sections: [
+          {
+            type: 'intro',
+            content: "Chat is the primary way to steer Claude Design. You're not prompting once and done, you're having a design review, in writing, with an AI that can make changes in seconds. The patterns that work in a real design critique work here too.",
+            icon: 'info',
+          },
+          {
+            type: 'text',
+            content: "Here's an iteration pass on Lineup, asking Claude to add a sidebar to the kanban board we generated in the previous lesson. Watch how Claude reads the existing canvas, proposes the sidebar structure, and drops it in without disturbing the column layout.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-4/cdlineup6.webp',
+            alt: 'Chat iteration on the Lineup kanban board: Claude Design adds a left-hand sidebar with navigation and filters while preserving the existing column layout',
+            label: 'Iterating via chat. One message, one sidebar, existing layout untouched.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What chat is best for',
+          },
+          {
+            type: 'list',
+            items: [
+              "Broad changes: 'Make the color scheme warmer' or 'Swap the hero and pricing sections'",
+              "Structural moves: 'Add a testimonial block between features and footer'",
+              "Alternative directions: 'Show me three layouts for the hero, centered, split, and full-bleed'",
+              "Content-level edits: 'Rewrite the headline to emphasize speed instead of accuracy'",
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What chat is slower for',
+          },
+          {
+            type: 'list',
+            items: [
+              'Changing one specific element (use inline comments, next lesson)',
+              'Micro-adjustments to spacing or color values (direct canvas edits)',
+              'Producing variations (ask for sliders, lesson 6)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'How to structure iteration messages',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: "State what's working",
+                content: "Tell Claude what to keep. 'The hero layout is right; keep the three-column feature grid.' This prevents Claude from re-doing things you liked.",
+                icon: 'check',
+              },
+              {
+                number: 2,
+                title: "State what's not working",
+                content: "Be specific. 'The pricing cards feel cramped, too much text per card.' Much better than 'pricing looks bad.'",
+                icon: 'warning',
+              },
+              {
+                number: 3,
+                title: 'State what to change it to',
+                content: "Give direction, not just a problem. 'Reduce pricing cards to three bullet points each and use a lighter-weight body font.'",
+                icon: 'tip',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Opus 4.7 is the vision model behind it',
+            content: "Claude Design uses Claude Opus 4.7, Anthropic's most capable vision model. It reasons about your current canvas while processing your message, so references like 'the second feature card' work without extra context.",
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'You can iterate via chat',
+            items: [
+              'Know what to ask chat vs. other tools',
+              'Can frame changes with keep-fix-direction',
+              'Aware of Opus 4.7 vision context',
+            ],
+            message: 'Next: targeting specific canvas elements with inline comments.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-5',
+        title: 'Inline Comments and Direct Edits',
+        duration: 2,
+        order: 5,
+        module: 'iteration',
+        sections: [
+          {
+            type: 'intro',
+            content: 'When you need to change one specific element, this button, that heading, this spacing, chat is the wrong tool. Inline comments let you click anywhere on the canvas and describe a targeted change. Claude changes only what you pointed at.',
+            icon: 'tip',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'How to leave an inline comment',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Click the element',
+                content: 'Click directly on the component you want to change, a button, a card, a headline.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Describe the change',
+                content: "Type the specific request. 'Make this button bigger and change the label to Start for free.'",
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Submit',
+                content: "Claude makes the targeted change without touching the rest of the canvas.",
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What inline comments are best for',
+          },
+          {
+            type: 'list',
+            items: [
+              'Component-level refinements (button styles, card borders)',
+              'Spacing adjustments (gap between items, padding inside a section)',
+              'Element type changes (swap a dropdown for a radio group)',
+              'Specific copy edits (headline wording, CTA label)',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Known quirk',
+            content: 'Anthropic has documented that comment persistence can occasionally fail. If a comment disappears on reload, paste the same request into chat instead, same result, different path.',
+            icon: 'warning',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Direct canvas edits',
+          },
+          {
+            type: 'text',
+            content: "You can also edit text directly on the canvas, click a heading, change the words, press Enter. This is faster than describing the change in a comment for simple copy edits. Claude picks up the edit and preserves the design around it.",
+          },
+          {
+            type: 'image',
+            alt: 'Inline comment popover anchored to a button on the Claude Design canvas with a change request typed inside',
+            label: 'Inline comment on a specific canvas element',
+          },
+          {
+            type: 'further-reading',
+            title: 'Hands-on perspectives',
+            links: [
+              { title: 'How To Use Claude Design: The Non-Designer\'s Walkthrough', url: 'https://medium.com/@0xmega/how-to-use-claude-design-the-non-designers-walkthrough-2adc18053a5c', source: 'Medium', description: 'Cursor-style element selection explained: click, edit, watch it update live.' },
+              { title: "Claude Design Review: I Spent a Day With It", url: 'https://medium.com/pen-with-paper/claude-design-review-i-spent-a-day-with-it-heres-what-actually-happens-441922202ef2', source: 'Medium (Pen With Paper)', description: 'Honest account of using all four iteration channels in a real project.' },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You can target specific elements',
+            items: [
+              'Can drop an inline comment on any element',
+              'Know which changes belong as comments vs. chat',
+              'Can direct-edit text on the canvas',
+            ],
+            message: 'Next: custom sliders, a trick that makes design exploration actually fast.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-6',
+        title: 'Custom Sliders for Design Exploration',
+        duration: 3,
+        order: 6,
+        module: 'iteration',
+        sections: [
+          {
+            type: 'intro',
+            content: "One of Claude Design's less obvious but most useful features: Claude can build you custom sliders to explore variations. Ask for a slider that controls visual density, color temperature, typography scale, or any dimension you want to explore. Claude wires it up to the canvas and you drag to see live variants.",
+            icon: 'tip',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'When to ask for a slider',
+          },
+          {
+            type: 'list',
+            items: [
+              "You're exploring color directions and want to try 20 options fast",
+              "You're testing spacing density (compact vs. airy)",
+              "You're comparing typography scale ratios (1.25×, 1.333×, 1.5×)",
+              "You're debating button size or visual weight",
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'How to ask',
+          },
+          {
+            type: 'code',
+            language: 'text',
+            label: 'Slider request prompt',
+            code: `Build me a slider that controls the color temperature of this design, cool (blue/violet) on the left, warm (orange/red) on the right. Show the canvas updating live as I drag.`,
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Sliders are prompt-generated UI',
+            content: "They're not pre-built controls. Claude builds a slider for the exact dimension you ask for. Get specific: 'density from compact to airy' produces a better slider than 'change spacing'.",
+            icon: 'tip',
+          },
+          {
+            type: 'image',
+            alt: 'Custom slider control above the canvas controlling a visual dimension, with the canvas re-rendering as the slider drags',
+            label: 'Custom slider wired to a live canvas re-render',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What sliders replace',
+          },
+          {
+            type: 'list',
+            items: [
+              'Manually generating 5 separate mockups to compare',
+              'Back-and-forth with chat to try each variant',
+              'Screenshotting each state for a team review',
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You can explore variations fast',
+            items: [
+              'Know what a custom slider is',
+              'Can ask Claude to build one for a specific dimension',
+              'Know when sliders beat repeated prompts',
+            ],
+            message: "Module 3 next: teaching Claude your design system so every project matches your brand by default.",
+          },
+        ],
+      },
+      {
+        id: 'lesson-7',
+        title: 'Extracting Your Design System',
+        duration: 3,
+        order: 7,
+        module: 'design-system',
+        sections: [
+          {
+            type: 'intro',
+            content: "If your organization has a real design system, tokens, components, typography, brand colors, you can teach Claude Design to respect it. After setup, every new project automatically uses your colors, typography, and components. No more prompts about brand.",
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What Claude extracts',
+          },
+          {
+            type: 'list',
+            items: [
+              'Color palettes (primary, secondary, accent, semantic)',
+              'Typography (font families, sizes, weights, line heights)',
+              'Reusable components (buttons, cards, navigation, forms)',
+              'Layout patterns (spacing, grids, common page structures)',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What you can feed it',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Code repository', content: 'A React component library, Tailwind config, or design-system codebase. Most accurate source.' },
+              { label: 'Figma file', content: 'Your design-system file with components and tokens published. Good alternative when code isn\'t available.' },
+              { label: 'Visual references', content: 'Screenshots of your live product, existing flows. Claude infers a system from them.' },
+              { label: 'Brand documents', content: 'Brand guidelines PDFs, slide decks showing your visual language.' },
+              { label: 'Individual assets', content: 'Logos, color palette files, typography specimens, lowest fidelity but a starting point.' },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'One source works; more is better',
+            content: 'You only need one source to get started, but providing multiple gives Claude more to work with. A codebase + a brand deck + 2-3 product screenshots produces the most accurate extraction.',
+            icon: 'info',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Start closest to production',
+            content: "Anthropic's recommendation: pick the source that's closest to shipped code. Code > Figma > screenshots > brand guidelines. The closer to production, the less Claude has to guess.",
+            icon: 'tip',
+          },
+          {
+            type: 'image',
+            alt: 'Design system onboarding screen in Claude Design with upload zones for repositories, Figma files, and brand assets',
+            label: 'Design system setup, onboarding screen',
+          },
+          {
+            type: 'completion',
+            title: 'Claude has your design system',
+            items: [
+              'Picked a source (code, Figma, or brand assets)',
+              'Uploaded it to the organization design system',
+              'Reviewed the extracted palette, type, and components',
+            ],
+            message: 'Next: publishing the system so new projects inherit it automatically.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-8',
+        title: 'Publishing and Applying Your Design System',
+        duration: 2,
+        order: 8,
+        module: 'design-system',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Once the design system is set up and published, every new Claude Design project created from the homescreen automatically inherits it. No re-uploading brand assets, no repeating brand prompts in every project. Claude just knows.',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'How to publish the system',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open organization settings',
+                content: "In the project picker, find your organization name in the lower-left corner. Click into organization settings.",
+                icon: 'cog',
+              },
+              {
+                number: 2,
+                title: 'Open the design system',
+                content: "Click 'Open' next to your design system entry.",
+                icon: 'monitor',
+              },
+              {
+                number: 3,
+                title: 'Toggle Published on',
+                content: "Switch the 'Published' toggle to ON. Projects created from this point forward inherit the system by default.",
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'How to update it later',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open the system',
+                content: 'Back to org settings → design system → Open.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Click Remix',
+                content: "Use the 'Remix' button to modify via chat. 'Add a dark-mode variant of the primary palette.' 'Add an error state for buttons.'",
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Republish',
+                content: 'Re-toggle Published so teams get the updated version.',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Validate before you rely on it',
+            content: "Create a test project with a prompt representative of what your team builds. If the test output doesn't feel on-brand, your design system source wasn't rich enough, go back to Lesson 7 and add more sources.",
+            icon: 'warning',
+          },
+          {
+            type: 'image',
+            alt: 'Organization settings panel showing the design system section with a Published toggle and Remix button',
+            label: 'Org settings with published design system + Remix option',
+          },
+          {
+            type: 'further-reading',
+            title: 'Set-up reference',
+            links: [
+              { title: 'Set up your design system in Claude Design', url: 'https://support.claude.com/en/articles/14604397-set-up-your-design-system-in-claude-design', source: 'Claude Help Center' },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'Your team inherits the system',
+            items: [
+              'Published the system',
+              'Know how to Remix it later',
+              'Validated with a test project',
+            ],
+            message: 'Last design-system lesson: team and enterprise setup for admins.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-9',
+        title: 'Team & Enterprise Setup',
+        duration: 3,
+        order: 9,
+        module: 'design-system',
+        sections: [
+          {
+            type: 'intro',
+            content: "If you're on a Team or Enterprise plan, Claude Design supports org-wide rollout with role-based access. This lesson is for admins, the people who decide who gets Claude Design access and who can edit the design system.",
+            icon: 'lock',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Enabling Claude Design (Enterprise)',
+          },
+          {
+            type: 'text',
+            content: "On Enterprise plans, Claude Design is off by default. An organization admin has to enable it: Organization settings → Capabilities → toggle Claude Design on under the Anthropic Labs section.",
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Access control',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'General Claude Design access', content: 'Granted to all users by default once the capability is enabled. Users can create projects, iterate, and export.' },
+              { label: 'Design system editing', content: 'Controlled separately via custom roles. Typically granted to 2-4 senior designers so the system stays consistent.' },
+              { label: 'Department scoping', content: 'Admins can restrict Claude Design to specific departments via RBAC instead of enabling org-wide.' },
+              { label: 'Multiple design systems', content: 'Large orgs can maintain separate systems for different brands or sub-teams under one organization.' },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Recommended rollout (4 phases)',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Phase 1. Seed team (2-4 designers)',
+                content: 'Create and validate the initial design system. Iterate until test projects feel on-brand.',
+                icon: 'user',
+              },
+              {
+                number: 2,
+                title: 'Phase 2. Full design team',
+                content: 'Build familiarity. Stress-test the system on real project work. Log what\'s missing.',
+                icon: 'user',
+              },
+              {
+                number: 3,
+                title: 'Phase 3. Product and UX roles',
+                content: "Add PMs and UX researchers. They'll start producing their own prototypes for meetings. Keep design-system editing scoped to the core design team.",
+                icon: 'user',
+              },
+              {
+                number: 4,
+                title: 'Phase 4. Broader organization',
+                content: "Enable for engineering, marketing, or the whole org depending on comfort level. This is where the productivity gains show up.",
+                icon: 'user',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Known enterprise gaps (as of April 2026)',
+            content: "Claude Design doesn't yet support data residency requirements, audit logs, or usage tracking. If you have regulated-industry or compliance requirements, check with Anthropic before org-wide rollout.",
+            icon: 'warning',
+          },
+          {
+            type: 'further-reading',
+            title: 'Admin reference',
+            links: [
+              { title: 'Claude Design admin guide for Team and Enterprise plans', url: 'https://support.claude.com/en/articles/14604406-claude-design-admin-guide-for-team-and-enterprise-plans', source: 'Claude Help Center' },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'Your org is set up',
+            items: [
+              'Enabled the capability on Enterprise if needed',
+              'Scoped editing access via custom roles',
+              'Picked a rollout phase that fits',
+            ],
+            message: 'Module 4 next: production workflows, prompt to prototype, prompt to deck, handoff to code.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-10',
+        title: 'Prompt to Interactive Prototype',
+        duration: 3,
+        order: 10,
+        module: 'workflows',
+        sections: [
+          {
+            type: 'intro',
+            content: "A prototype in Claude Design isn't a mockup with Figma-style hotspots, it's actual HTML that responds to clicks, renders hover states, and flows between pages. This lesson is the end-to-end: from prompt to exportable clickable prototype.",
+            icon: 'code',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The prototype-specific prompt',
+          },
+          {
+            type: 'text',
+            content: 'Prototypes have state, flow, and interaction. Your prompt should include the normal four parts (goal, layout, content, audience) plus two extras: flow and interaction.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Goal',
+                content: "'A settings page prototype for a SaaS product.'",
+                icon: 'check',
+              },
+              {
+                number: 2,
+                title: 'Layout',
+                content: 'Sidebar nav on the left, content area on the right.',
+                icon: 'monitor',
+              },
+              {
+                number: 3,
+                title: 'Content',
+                content: 'Sections for Profile, Notifications, Billing, Team. Three items per section.',
+                icon: 'code',
+              },
+              {
+                number: 4,
+                title: 'Audience',
+                content: 'SMB customers, not power users.',
+                icon: 'user',
+              },
+              {
+                number: 5,
+                title: 'Flow',
+                content: "Clicking a sidebar item swaps the content area. Billing changes route to a confirmation step before saving.",
+                icon: 'tip',
+              },
+              {
+                number: 6,
+                title: 'Interaction',
+                content: "Hover states on all buttons, toggles animate smoothly, save button shows a loading spinner for 1 second before a success toast.",
+                icon: 'tip',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Validating the prototype',
+          },
+          {
+            type: 'list',
+            items: [
+              'Click through every flow you specified, does each one actually work?',
+              'Test with real content, not the default. Paste your actual copy and see if layouts still hold.',
+              'Try the prototype on a mobile viewport. Claude usually gets desktop right but mobile needs inline comments.',
+              'Share a view-only link with a PM or researcher before export.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Sharing before export',
+          },
+          {
+            type: 'text',
+            content: "Claude Design supports organization-scoped view-only, comment, and edit links. Share the view-only link for approval conversations; avoid exporting until feedback is in. Export last.",
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'User testing unlock',
+            content: "Export as standalone HTML (see Lesson 12) and host on Vercel or Netlify. Testers get a real URL that behaves like production. This is the biggest single unlock for anyone doing research without engineering bandwidth.",
+            icon: 'tip',
+          },
+          {
+            type: 'further-reading',
+            title: 'Real prototypes built in Claude Design',
+            links: [
+              { title: 'Claude Design: Building a 3D Helix Portfolio (Prompts to Replicate Inside)', url: 'https://ileanamarcut.substack.com/p/claude-design', source: 'Ileana Marcut (Substack)', description: 'Real project walkthrough with the prompts used at each step.' },
+              { title: 'Claude Design: Everything You Can Build in 16 Minutes', url: 'https://creatoreconomy.so/p/claude-design-everything-you-can-build', source: 'Creator Economy', description: '5 use cases, 16 minutes each. Great for seeing range.' },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You shipped an interactive prototype',
+            items: [
+              'Wrote a prompt with flow and interaction',
+              'Validated all flows',
+              'Shared a link before exporting',
+            ],
+            message: 'Next: same engine, very different output, pitch decks.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-11',
+        title: 'Prompt to Pitch Deck',
+        duration: 2,
+        order: 11,
+        module: 'workflows',
+        sections: [
+          {
+            type: 'intro',
+            content: "Claude Design handles decks as well as product screens. The mental model is the same, goal, layout, content, audience, but the content block does more work. Feed it the full narrative (bullets per slide) and Claude produces an on-brand deck in minutes.",
+            icon: 'tip',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Deck-specific prompt structure',
+          },
+          {
+            type: 'code',
+            language: 'text',
+            label: 'A working deck prompt',
+            code: `Goal: A 6-slide pitch deck for our Series A announcement.
+Layout: Title slide, problem, solution, traction, team, ask. One section per slide.
+Content:
+  Slide 1: "AI UX Design, built by designers" + company logo
+  Slide 2: Problem. 72% of product designers say AI tools don't fit existing workflows
+  Slide 3: Solution, curated pattern library + interactive demos + designer-ready briefs
+  Slide 4: Traction. 25K monthly visitors, 1,400 newsletter subscribers, 36 patterns shipped
+  Slide 5: Team, founder + advisors
+  Slide 6: Ask, $2M seed, 18-month runway, growth and senior eng hires
+Audience: Early-stage VCs in the design-tools space.`,
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Iterating on a deck',
+          },
+          {
+            type: 'list',
+            items: [
+              "'Tighten slide 2, one headline stat, not three'",
+              "'Swap slide 4\\'s bar chart for a line graph showing growth over time'",
+              "'Add a speaker-notes section to every slide'",
+              "'Make the title slide darker, more gravitas, less startup bounce'",
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Export paths',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'PPTX', content: 'Editable in PowerPoint or Keynote. Best when stakeholders want to tweak wording.' },
+              { label: 'PDF', content: 'Locked layout. Best for email attachments and investor data rooms.' },
+              { label: 'Canva', content: 'Send to Canva for social-media variants or on-brand versioning with a team.' },
+              { label: 'Standalone HTML', content: 'Browser-based deck. Best for animated presentations or screen-share demos.' },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Dial down the visual weight for exec audiences',
+            content: "Claude's deck output tends to over-design. If your audience is investors or execs, ask for 'understated corporate, lots of whitespace, one visual per slide, no icons'. Over-designed decks look like startup pitches; understated decks look like Series C.",
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'You can ship a deck in under an hour',
+            items: [
+              'Wrote a per-slide content block',
+              'Iterated on tone + visual weight',
+              'Exported to the right format for the audience',
+            ],
+            message: 'Last lesson: handoff to Claude Code for implementation.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-12',
+        title: 'Handoff to Claude Code for Implementation',
+        duration: 3,
+        order: 12,
+        module: 'workflows',
+        sections: [
+          {
+            type: 'intro',
+            content: "The handoff problem, designer produces a mockup, engineer rebuilds it in code, fidelity drops somewhere, is well-known. Claude Design plus Claude Code is Anthropic's answer: the prototype you built in Claude Design becomes the starting point for real code.",
+            icon: 'code',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Two handoff paths',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Handoff bundle', content: "Export a ZIP with the generated HTML, CSS, and assets. Drop it into a Claude Code session with a prompt like 'Port this to our Next.js codebase using our existing component library'." },
+              { label: 'Direct to Claude Code', content: "Built-in integration, send the project straight to Claude Code (local agent or web). Claude Code opens with the design context pre-loaded and starts scaffolding the implementation." },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Before you hand off',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Freeze the design',
+                content: "Make sure you're happy with the prototype. Changes during handoff are expensive.",
+                icon: 'check',
+              },
+              {
+                number: 2,
+                title: 'Write a handoff prompt',
+                content: "A short spec for Claude Code: target framework (Next.js, Vue, etc.), existing component library to reuse, file structure conventions, what's in-scope vs. out-of-scope.",
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Review the first PR',
+                content: "Claude Code produces a first implementation. Review it the way you'd review any contractor's first PR, tight feedback, specific comments, no wholesale rewrites.",
+                icon: 'github',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Where this shines',
+          },
+          {
+            type: 'list',
+            items: [
+              'Small internal tools, admin panels, dashboards, config UIs',
+              'Landing pages, marketing sites, docs homepages',
+              'Prototypes becoming the real thing, you built it for user testing, now ship it',
+              'Component-level additions, one new screen for an existing product',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Where to be careful',
+          },
+          {
+            type: 'list',
+            items: [
+              "Complex state management. Claude Code's first pass may be naive",
+              'Accessibility, always verify keyboard nav, screen-reader labels, and color contrast',
+              'Performance, bundle sizes, image optimization, and runtime performance need a human pass',
+              'Security, any auth or payment flows generated by AI need a security review',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Pair this with our Claude Code guide',
+            content: "If you're serious about the Claude Design → Claude Code workflow, pair this with our Claude Code Guide for Designers, it covers the code side of the handoff in depth.",
+            icon: 'tip',
+          },
+          {
+            type: 'further-reading',
+            title: 'Primary sources + community perspectives',
+            links: [
+              { title: 'Get started with Claude Design', url: 'https://support.claude.com/en/articles/14604416-get-started-with-claude-design', source: 'Claude Help Center' },
+              { title: 'Set up your design system in Claude Design', url: 'https://support.claude.com/en/articles/14604397-set-up-your-design-system-in-claude-design', source: 'Claude Help Center' },
+              { title: 'Claude Design admin guide (Team and Enterprise)', url: 'https://support.claude.com/en/articles/14604406-claude-design-admin-guide-for-team-and-enterprise-plans', source: 'Claude Help Center' },
+              { title: 'Introducing Claude Design', url: 'https://www.anthropic.com/news/claude-design-anthropic-labs', source: 'Anthropic' },
+              { title: "Claude Design just dropped — how it completes the Designer's AI Stack", url: 'https://nervegna.substack.com/p/claude-design-just-dropped-heres', source: 'nervegna (Substack)', description: "Designer's take on where Claude Design fits alongside Figma, Claude Code, and the existing stack." },
+              { title: 'Claude Design Came for the First Three Rounds. Not the Designers.', url: 'https://medium.com/@ant_95138/claude-design-for-designers-what-anthropics-new-ai-tool-means-for-the-craft-f1e5378fcb50', source: 'Medium', description: 'Craft-perspective reaction piece on what Claude Design does and does not replace.' },
+              { title: 'Claude Design Complete Guide: Figma to Frontend', url: 'https://medium.com/design-bootcamp/claude-design-complete-guide-figma-to-frontend-d94dcc06320c', source: 'Medium (Design Bootcamp)', description: 'End-to-end workflow walkthrough with a task-manager app example.' },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You completed the Claude Design Guide',
+            items: [
+              'Learned the four-part prompt framework',
+              'Mastered iteration via chat, inline comments, and custom sliders',
+              'Set up and published a design system for your org',
+              'Shipped prototypes, decks, and handed off to code',
+            ],
+            message: "You're ready to ship real design work with Claude Design.",
+          },
+        ],
+      },
+    ],
+    content: `
+      <div class="prose prose-lg max-w-none">
+        <p class="text-lg text-gray-700 mb-6">
+          Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups.
+          You describe what you need; Claude builds a first version, and you refine it together through chat,
+          inline comments, direct edits, or custom sliders.
+        </p>
+
+        <figure class="my-8">
+          <img
+            src="/images/guides/claude-design-learning-path/overview-hero.webp"
+            alt="Claude Design canvas rendering a kanban board (Lineup project task tracker) on the right, with the prompt that produced it visible in the chat panel on the left"
+            width="1600"
+            height="886"
+            loading="lazy"
+            class="w-full h-auto rounded-lg border border-gray-200"
+          />
+          <figcaption class="text-sm text-gray-500 mt-2 text-center">Lineup, a kanban board built in Claude Design from the prompt in this guide.</figcaption>
+        </figure>
+
+        <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">What you'll learn</h2>
+        <ul class="space-y-3 mb-8">
+          <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Module 1. Setup & First Project:</strong> What Claude Design is, the four-part prompt framework, and how to import screenshots, docs, and codebases.</li>
+          <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Module 2. Iteration:</strong> Chat, inline comments, direct canvas edits, and custom sliders for fast design exploration.</li>
+          <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Module 3. Design Systems:</strong> Extract and publish an org-wide design system so every new project matches your brand.</li>
+          <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Module 4. Workflows:</strong> Prompt-to-prototype, prompt-to-deck, and handoff to Claude Code for implementation.</li>
+        </ul>
+
+        <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Who this is for</h2>
+        <p class="text-gray-700 mb-4">
+          Designers, PMs, and founders who want to use Claude Design seriously, not as a novelty. The guide
+          assumes you have a Claude Pro, Max, Team, or Enterprise plan and access to Claude Design in research preview.
+        </p>
+
+        <div class="p-6 bg-gray-900 text-white rounded-lg mt-8">
+          <h3 class="text-xl font-bold mb-2">Ready to start?</h3>
+          <p>Begin with Lesson 1, what Claude Design is and what it isn't, then work through the 12 lessons in order.</p>
+        </div>
+      </div>
+    `,
+    relatedPatterns: ['Augmented Creation', 'Collaborative AI', 'Contextual Assistance'],
+    relatedGuides: ['claude-code-learning-path'],
+  },
 ];
 
 /**

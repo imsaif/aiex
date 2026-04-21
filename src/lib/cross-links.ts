@@ -54,6 +54,15 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'selective-memory',
     'feedback-loops',
   ],
+  'claude-design-learning-path': [
+    'augmented-creation',
+    'collaborative-ai',
+    'contextual-assistance',
+    'progressive-disclosure',
+    'human-in-the-loop',
+    'explainable-ai',
+    'confidence-visualization',
+  ],
 };
 
 /** For a given pattern slug, return guide slugs that teach it in practice. */

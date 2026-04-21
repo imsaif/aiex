@@ -645,18 +645,35 @@ const renderSection = (
     case 'code-preview':
       return <CodePreviewBlock key={index} section={section} />;
 
-    case 'image':
+    case 'image': {
+      // Detect video sources by extension so a single `image` section can
+      // carry a looped screen recording without introducing a new section type.
+      // Keeps the schema additive and preserves the `alt` / `label` contract.
+      const isVideo = !!section.src && /\.(mp4|webm|mov)$/i.test(section.src);
       return (
         <div key={index} className="mb-8">
           {section.src ? (
             <figure className="m-0">
-              <img
-                src={section.src}
-                alt={section.alt}
-                width={800}
-                height={450}
-                className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
-              />
+              {isVideo ? (
+                <video
+                  src={section.src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  aria-label={section.alt}
+                  className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                />
+              ) : (
+                <img
+                  src={section.src}
+                  alt={section.alt}
+                  width={800}
+                  height={450}
+                  className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                />
+              )}
               {section.label && (
                 <figcaption className="p-3 text-gray-500 dark:text-gray-400 text-sm">
                   {section.label}
@@ -674,6 +691,7 @@ const renderSection = (
           )}
         </div>
       );
+    }
 
     case 'completion':
       return (

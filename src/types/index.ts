@@ -255,7 +255,7 @@ export interface Course {
 /**
  * Guide tool types for organizing guides
  */
-export type GuideTool = 'Claude Code' | 'Cursor' | 'GitHub' | 'GitHub Copilot' | 'Replit AI' | 'V0 by Vercel' | 'Figma' | 'Conversational UI' | 'Other';
+export type GuideTool = 'Claude Code' | 'Claude Design' | 'Cursor' | 'GitHub' | 'GitHub Copilot' | 'Replit AI' | 'V0 by Vercel' | 'Figma' | 'Conversational UI' | 'Other';
 export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
 /**
