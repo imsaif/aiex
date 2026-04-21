@@ -140,9 +140,62 @@ export default async function GuidePage({ params }: GuidePageProps) {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
+        {/* Full-width hero — mirrors the /news hero treatment so every guide
+            opens with the same centered, branded moment instead of a bordered
+            card squeezed inside the article column. */}
+        <section className="pt-20 md:pt-24 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info uppercase tracking-wider">
+                  {guide.tool} Course
+                </span>
+              </div>
+              <h1
+                className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-text-primary leading-[1.1]"
+                style={{ textWrap: 'balance' }}
+              >
+                {guide.title}
+              </h1>
+              <p className="text-lg md:text-xl text-text-secondary mb-8 max-w-3xl mx-auto leading-relaxed">
+                {guide.excerpt || guide.description}
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface-primary border border-border-primary text-xs text-text-secondary font-medium">
+                  {guide.skillLevel}
+                </span>
+                {guide.lastUpdatedDate && (
+                  <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface-primary border border-border-primary text-xs text-text-secondary font-medium">
+                    Updated{' '}
+                    {new Date(guide.lastUpdatedDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                )}
+              </div>
+              {firstLesson && (
+                <div className="flex justify-center">
+                  <Link
+                    href={firstLesson.url}
+                    className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors whitespace-nowrap"
+                  >
+                    Start Learning
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              )}
+              <p className="text-base font-medium text-text-secondary mt-6">
+                {totalLessons} lessons · {totalMinutes} minutes · {moduleOrder.length} {moduleOrder.length === 1 ? 'module' : 'modules'}
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Three-column docs layout — same grid as /guides/[course]/[lesson]
             so users see a consistent shell the moment they enter the course. */}
-        <div className="max-w-[1400px] mx-auto px-6 pt-20 md:pt-24 pb-16">
+        <div className="max-w-[1400px] mx-auto px-6 pt-12 md:pt-16 pb-16">
           <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px] lg:gap-10">
             {/* LEFT SIDEBAR — course nav */}
             <aside className="hidden lg:block">
@@ -170,90 +223,6 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   </li>
                 </ol>
               </nav>
-
-              {/* Hero card — bordered two-column container.
-                  Left: kicker + title + excerpt + meta chips + primary CTA.
-                  Right: 2x2 stat tile grid (hidden on mobile to keep the
-                  hero compact on small screens). */}
-              {/* 2-col split only kicks in at lg+; at md the stat tiles stack
-                  below so the title has the full width and isn't squeezed
-                  into a 400px column that forces long titles to wrap 4 lines. */}
-              <header className="mb-12 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary p-6 md:p-10 grid lg:grid-cols-[1fr_220px] gap-8 lg:gap-10 items-start">
-                <div>
-                  <p className="text-xs font-semibold text-accent-primary uppercase tracking-wider mb-3">
-                    {guide.tool} Course
-                  </p>
-                  <h1
-                    className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-5 leading-[1.1]"
-                    style={{ textWrap: 'balance' }}
-                  >
-                    {guide.title}
-                  </h1>
-                  <p className="text-lg md:text-xl text-text-secondary mb-6 leading-relaxed">
-                    {guide.excerpt || guide.description}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2 mb-8">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
-                      {totalLessons} lessons
-                    </span>
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
-                      {totalMinutes} min total
-                    </span>
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
-                      {guide.skillLevel}
-                    </span>
-                    {guide.lastUpdatedDate && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-background-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary font-medium">
-                        Updated{' '}
-                        {new Date(guide.lastUpdatedDate).toLocaleDateString(
-                          'en-US',
-                          { year: 'numeric', month: 'short', day: 'numeric' }
-                        )}
-                      </span>
-                    )}
-                  </div>
-                  {firstLesson && (
-                    <Link
-                      href={firstLesson.url}
-                      className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors whitespace-nowrap"
-                    >
-                      Start Learning
-                      <ArrowRightIcon className="w-4 h-4" />
-                    </Link>
-                  )}
-                </div>
-
-                {/* Stat tile grid — numeric stats only. Skill level moved to
-                    the meta chip row below the excerpt so the tiles can stay
-                    typographically uniform (2xl tabular numbers) without long
-                    strings like "Intermediate" overflowing narrow cells. */}
-                <div className="hidden lg:grid grid-cols-2 gap-3">
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
-                    <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
-                      {totalLessons}
-                    </div>
-                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
-                      Lessons
-                    </div>
-                  </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
-                    <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
-                      {totalMinutes}
-                    </div>
-                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
-                      Minutes
-                    </div>
-                  </div>
-                  <div className="col-span-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-background-primary p-4 flex flex-col justify-center min-h-[88px]">
-                    <div className="text-2xl font-semibold tabular-nums text-text-primary leading-none">
-                      {moduleOrder.length}
-                    </div>
-                    <div className="text-[11px] text-text-secondary uppercase tracking-wide mt-2">
-                      {moduleOrder.length === 1 ? 'Module' : 'Modules'}
-                    </div>
-                  </div>
-                </div>
-              </header>
 
               {/* About this course */}
               <section className="mb-12">
