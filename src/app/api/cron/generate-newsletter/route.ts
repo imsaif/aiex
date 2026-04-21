@@ -1677,28 +1677,36 @@ export async function GET(request: NextRequest) {
   const isMonday = new Date().getUTCDay() === 1;
   const type: NewsletterType = requestedType || (isMonday ? 'weekly' : 'daily');
 
-  // For daily: Skip if a weekly was already published today (quick DB check before responding)
+  // For daily: Skip if a weekly was already published today (quick DB check before responding).
+  // If the DB call throws (e.g., Neon cold-start + Vercel cold-start combo seen Apr 21 2026
+  // → 500 in 6.5s → lost a day's issue), log and fall through. The duplicate guard inside
+  // generateNewsletter (line ~1555) handles races safely; skipping the shortcut at worst
+  // does one extra pass of RSS work that gets deduped later.
   if (type === 'daily') {
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
     tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
 
-    const weeklyToday = await prisma.newsletterDraft.findFirst({
-      where: {
-        type: 'weekly',
-        status: { in: ['published', 'pending_review'] },
-        createdAt: { gte: today, lt: tomorrow },
-      },
-    });
-
-    if (weeklyToday) {
-      return NextResponse.json({
-        success: true,
-        message: 'Skipped daily - weekly newsletter already exists for today',
-        weeklyId: weeklyToday.id,
-        weeklyTitle: weeklyToday.title,
+    try {
+      const weeklyToday = await prisma.newsletterDraft.findFirst({
+        where: {
+          type: 'weekly',
+          status: { in: ['published', 'pending_review'] },
+          createdAt: { gte: today, lt: tomorrow },
+        },
       });
+
+      if (weeklyToday) {
+        return NextResponse.json({
+          success: true,
+          message: 'Skipped daily - weekly newsletter already exists for today',
+          weeklyId: weeklyToday.id,
+          weeklyTitle: weeklyToday.title,
+        });
+      }
+    } catch (err) {
+      console.error('[newsletter] Pre-response weekly-dedup query failed, proceeding anyway:', err);
     }
   }
 
