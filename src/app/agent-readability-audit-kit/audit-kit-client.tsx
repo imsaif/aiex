@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
   ClipboardDocumentCheckIcon,
@@ -205,11 +204,8 @@ export function AuditKitClient() {
               </p>
               <div className="space-y-3">
                 {auditKitItems.map((item) => (
-                  <motion.div
+                  <div
                     key={item.number}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: item.number * 0.1 }}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-4 hover:border-gray-500 transition"
                   >
                     <div className="flex items-start gap-4">
@@ -228,7 +224,7 @@ export function AuditKitClient() {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -288,11 +284,7 @@ export function AuditKitClient() {
                 </p>
               </div>
             ) : (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-10"
-              >
+              <div className="mb-10">
                 {/* Success Message */}
                 <div className="p-4 bg-emerald-500/20 border border-emerald-500 rounded-lg mb-4">
                   <p className="text-white font-semibold mb-1">Your audit kit is downloading!</p>
@@ -309,7 +301,7 @@ export function AuditKitClient() {
                   <ArrowDownTrayIcon className="w-4 h-4" />
                   Download Again
                 </button>
-              </motion.div>
+              </div>
             )}
 
             {/* Benefits */}

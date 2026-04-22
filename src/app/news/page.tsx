@@ -17,7 +17,10 @@ export const metadata: Metadata = {
   },
 };
 
-export const dynamic = 'force-dynamic'; // Always fetch latest published drafts so newly-approved newsletters appear immediately
+// ISR with a short TTL + on-demand revalidatePath('/news') in publish/route.ts.
+// force-dynamic killed the edge cache and caused LCP >4.5s; a 60s TTL serves
+// cached HTML while admin publishes still propagate immediately via revalidatePath.
+export const revalidate = 60;
 
 const PRODUCT_KEYWORDS: Record<string, string[]> = {
   'ChatGPT': ['ChatGPT'],

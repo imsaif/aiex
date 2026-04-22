@@ -323,10 +323,34 @@ const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
 // workflow" item doesn't get penalized) and isDesignNative() (the publish-time
 // design-light gate). Keep in sync with HIGH_RELEVANCE_KEYWORDS above.
 const DESIGN_KEYWORDS_SET: ReadonlySet<string> = new Set([
+  // Classic design vocabulary
   'user experience', 'ux design', 'ui design', 'interaction design',
   'usability', 'accessibility', 'a11y', 'user research', 'user testing',
   'design system', 'component library', 'figma', 'prototype', 'wireframe',
+  'storyboard',
+  // Design-tool / visual-creation vocabulary
+  'design tool', 'design platform', 'visual design', 'visual creation',
+  'canvas', 'mockup', 'handoff', 'design workflow',
+  // Image-model / UI-generation vocabulary (designers care about mockup quality)
+  'image generation', 'image model', 'ui generation', 'ui rendering',
+  'render ui', 'text in images',
 ]);
+
+// Agentic-UX pattern terms — separate from DESIGN_KEYWORDS_SET because they
+// need a co-occurring application term (ui/interface/workflow/user/product)
+// to count as design-native. Used only by isDesignNativeItem().
+const AGENTIC_UX_TERMS: readonly string[] = [
+  'agentic', 'agent ui', 'human-in-the-loop', 'pre-flight',
+  'intent preview', 'plan summary', 'trust calibration',
+];
+const AGENTIC_APPLICATION_TERMS: readonly string[] = [
+  'ui', 'interface', 'workflow', 'user', 'product',
+];
+
+// Matches design-tool product names when they appear in the item title.
+// Captures "Claude Design", "Figma X", "Framer Y" etc. without forcing a
+// bigram-keyword match. Intentionally narrow: only these brand names.
+const DESIGN_TOOL_PRODUCT_RE = /\b(figma|framer|canva|sketch|penpot|rive)\b|\bdesign\b/;
 
 // Pure-infrastructure markers. We penalize items containing these UNLESS the
 // item also mentions a design keyword (so cross-cutting stories like "Figma
@@ -390,19 +414,34 @@ function isRelevant(item: Parser.Item, sourceTier?: SourceTier): boolean {
   return scoreRelevance(item, sourceTier) >= 10; // Minimum threshold
 }
 
-// Code-side design-native check (not a Claude self-report). True if the item
-// comes from a design-publication or design-tool tier, OR has at least 2
-// design keywords in title+description (covers cross-cutting stories from
-// AI labs / community feeds).
+// Code-side design-native check (not a Claude self-report). Passes when the
+// item matters to a product/UX designer, by any of these signals:
+//   1. Source tier is design-pub / design-tool / design-opinion.
+//   2. Title names a design-tool brand or contains "design" (e.g. "Claude
+//      Design launches..."). Scoped to title only so a Vercel post that
+//      mentions "design" in passing doesn't pass.
+//   3. 2+ hits from DESIGN_KEYWORDS_SET across title+description.
+//   4. An agentic-UX term co-occurs with an application term — catches
+//      "agentic safety in the UI", "human-in-the-loop workflow" etc.
 function isDesignNativeItem(item: NewsItem, tier?: SourceTier): boolean {
   if (tier === 'design-pub' || tier === 'design-tool' || tier === 'design-opinion') return true;
+
+  const title = item.title.toLowerCase();
+  if (DESIGN_TOOL_PRODUCT_RE.test(title)) return true;
+
   const text = `${item.title} ${item.description}`.toLowerCase();
-  const keywords = Array.from(DESIGN_KEYWORDS_SET);
   let hits = 0;
-  for (const k of keywords) {
-    if (text.includes(k)) hits += 1;
-    if (hits >= 2) return true;
+  for (const k of Array.from(DESIGN_KEYWORDS_SET)) {
+    if (text.includes(k)) {
+      hits += 1;
+      if (hits >= 2) return true;
+    }
   }
+
+  const hasAgentic = AGENTIC_UX_TERMS.some((k) => text.includes(k));
+  const hasApplication = AGENTIC_APPLICATION_TERMS.some((k) => text.includes(k));
+  if (hasAgentic && hasApplication) return true;
+
   return false;
 }
 

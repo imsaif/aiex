@@ -7069,7 +7069,7 @@ export const guides: Guide[] = [
     author: 'Design Team',
     publishedDate: '2026-04-21',
     lastUpdatedDate: '2026-04-21',
-    status: 'work-in-progress',
+    status: 'ready',
     thumbnail: '/images/guides/claude-design-learning-path/thumbnail.svg',
     tags: ['claude-design', 'anthropic', 'learning-path', 'ai-design-tool', 'prototyping', 'design-systems', 'opus-4-7'],
     lessons: [

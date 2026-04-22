@@ -26,7 +26,7 @@ import {
   LessonSection,
   IconType,
 } from '@/types/lesson';
-import { getPreviewComponent } from '@/components/guides/chat-previews';
+import { DynamicPreview } from '@/components/guides/DynamicPreview';
 import { slugifyHeading } from '@/lib/guides/headings';
 
 interface LessonRendererProps {
@@ -197,7 +197,6 @@ function CopyButton({ code }: { code: string }) {
 
 function CodePreviewBlock({ section }: { section: { code: string; language?: string; label?: string; previewId: string } }) {
   const [showCode, setShowCode] = useState(false);
-  const PreviewComponent = getPreviewComponent(section.previewId);
 
   return (
     <div className="mb-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
@@ -247,11 +246,7 @@ function CodePreviewBlock({ section }: { section: { code: string; language?: str
         </div>
       ) : (
         <div className="p-4 bg-gray-50/50 dark:bg-gray-900/30">
-          {PreviewComponent ? (
-            <PreviewComponent />
-          ) : (
-            <div className="text-center py-8 text-gray-400 text-sm">Preview not available</div>
-          )}
+          <DynamicPreview previewId={section.previewId} />
         </div>
       )}
     </div>
