@@ -73,20 +73,20 @@ export function generateMetadata({
 const customPatternMetadata: Record<string, { title: string; description: string }> = {
   // --- High-impression patterns (top 10 by GSC data) ---
   'progressive-disclosure': {
-    title: 'Progressive Disclosure in AI — How to Gradually Reveal Complexity',
-    description: 'Progressive disclosure for AI interfaces: show only what users need, when they need it. Reduce cognitive overload in AI agents, chatbots, and dashboards. Examples from ChatGPT, Claude, and Notion.',
+    title: 'Progressive Disclosure in AI — ChatGPT, Claude & Notion Examples',
+    description: 'See how ChatGPT, Claude, and Notion use progressive disclosure to hide complexity without losing power. Real examples, interactive demos, and copy-ready UI patterns for AI products.',
   },
   'conversational-ui': {
-    title: 'Conversational UI — Design Patterns for Chat Interfaces & Conversational UX',
-    description: 'What is conversational UI? A complete guide to designing chat interfaces, voice assistants, and conversational user interfaces. Examples from ChatGPT, Slack, and Siri with interactive demos.',
+    title: 'Conversational UI Design — Patterns, Examples & Demos (2026)',
+    description: 'Every major conversational UI pattern with working demos — from basic chat to voice assistants and agentic interfaces. See how ChatGPT, Slack, Siri, and Claude do it.',
   },
   'privacy-first-design': {
-    title: 'Privacy-First AI — Design Patterns for Data Protection & User Consent',
-    description: 'Privacy-first AI design: on-device processing, data minimization, and transparent consent UX. How Apple, Signal, and DuckDuckGo protect user data in AI products. Interactive demos and code.',
+    title: 'Privacy-First AI Design — On-Device, Minimization & Consent Patterns',
+    description: 'The privacy-first AI playbook: on-device ML, data minimization defaults, and transparent consent UX. See how Apple Intelligence, Signal, and DuckDuckGo build AI without mining user data.',
   },
   'confidence-visualization': {
-    title: 'AI Confidence Scores UX — How to Show Confidence Levels to Users',
-    description: 'How to display AI confidence scores and uncertainty to users. Patterns for confidence gauges, probability indicators, and trust signals with examples from GitHub Copilot and medical AI.',
+    title: 'How to Show AI Confidence Scores — UI Patterns & Real Examples',
+    description: 'How GitHub Copilot, medical AI tools, and LLM apps display confidence scores: gauges, probability bars, and trust signals that actually work. Interactive demos and design guidelines.',
   },
   'adaptive-interfaces': {
     title: 'Adaptive Interfaces — AI UX That Learns and Adapts to Each User',
@@ -105,8 +105,8 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'How AI feedback loops work, with diagrams. Design thumbs up/down, implicit signals, and corrective feedback that drives continuous learning. Real examples from ChatGPT, Midjourney, and Notion.',
   },
   'error-recovery': {
-    title: 'AI Error Recovery — How to Design Graceful Fallbacks When AI Fails',
-    description: 'AI error recovery patterns: help users recover from wrong predictions, hallucinations, and failed generations. Undo, retry, and fallback strategies with examples from ChatGPT and Copilot.',
+    title: 'AI Error Recovery — Undo, Retry & Fallback Patterns + Examples',
+    description: 'When AI gets it wrong — how ChatGPT, Copilot, and Notion let users undo, retry, and recover gracefully. Real error-recovery patterns with code examples and design guidelines.',
   },
   'contextual-assistance': {
     title: 'Contextual Help UX — Design In-App AI Assistance That Appears at the Right Moment',
@@ -139,8 +139,8 @@ const customPatternMetadata: Record<string, { title: string; description: string
   },
   // --- Patterns ranking near page 1 (position 5-15) ---
   'trust-calibration': {
-    title: 'Trust Calibration in AI — What It Means & How to Design for Appropriate Trust',
-    description: 'What is trust calibration? Design AI interfaces that help users trust AI accurately — not too much, not too little. Patterns for reliability signals, expectations, and preventing over-reliance.',
+    title: 'Trust Calibration in AI — Meaning + UX Patterns for Appropriate Trust',
+    description: 'Trust calibration is how UX helps users trust AI the right amount — neither over-relying nor dismissing it. See reliability signals, confidence cues, and over-reliance safeguards with real examples.',
   },
   'explainable-ai': {
     title: 'Explainable AI (XAI) UX — Make AI Decisions Transparent & Understandable',
