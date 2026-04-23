@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 
@@ -98,6 +99,13 @@ export async function PATCH(request: NextRequest) {
       where: { id },
       data: updateData,
     });
+
+    // Flush /news caches when editing a published item so changes propagate
+    // instantly instead of waiting out the 60s listing TTL / 1hr article TTL.
+    if (draft.status === 'published') {
+      revalidatePath('/news');
+      revalidatePath(`/news/${draft.slug}`);
+    }
 
     return NextResponse.json(draft);
   } catch (error) {
