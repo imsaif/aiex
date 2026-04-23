@@ -448,7 +448,7 @@ export default function AdminNewsletterClient({
 
                     {/* Publish + post-publish actions */}
                     <div className="flex items-center justify-end gap-2 md:gap-3 flex-wrap">
-                      {publishedAt && (
+                      {(publishedAt || activeDraft.status === 'published') && (
                         <>
                           <button
                             onClick={copyHtmlToClipboard}
@@ -468,10 +468,10 @@ export default function AdminNewsletterClient({
                       )}
                       <button
                         onClick={publishDraft}
-                        disabled={isPublishing || !!publishedAt}
+                        disabled={isPublishing || !!publishedAt || activeDraft.status === 'published'}
                         className="px-4 md:px-5 py-2 bg-status-success text-white rounded-md hover:bg-status-success/90 transition-colors disabled:opacity-50 text-sm font-medium whitespace-nowrap"
                       >
-                        {isPublishing ? 'Publishing...' : publishedAt ? 'Published ✓' : 'Publish'}
+                        {isPublishing ? 'Publishing...' : (publishedAt || activeDraft.status === 'published') ? 'Published ✓' : 'Publish'}
                       </button>
                     </div>
                   </div>
