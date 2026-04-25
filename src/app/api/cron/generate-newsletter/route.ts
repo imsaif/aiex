@@ -452,6 +452,84 @@ function isRecent(item: Parser.Item, hoursAgo = 48): boolean {
   return pubDate >= cutoff;
 }
 
+// TLDR's RSS feed gives one item per daily digest with title + link only — no
+// per-story description and no outbound source URLs. The digest *page* however
+// has a clean structure: each story is an <article class="mt-3"> with a
+// font-bold <a href> to the source, an <h3> title, and a
+// <div class="newsletter-html"> blurb. We scrape the digest URL to expand a
+// single RSS digest into per-story NewsItems with real source URLs and real
+// blurbs (instead of letting Claude fabricate descriptions and reuse the
+// digest URL as the link).
+function decodeHtmlEntities(s: string): string {
+  return s
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ');
+}
+
+async function fetchTldrDigestStories(
+  digestUrl: string,
+  source: { name: string; color: string; tier?: SourceTier },
+  pubDate: string
+): Promise<NewsItem[]> {
+  let html: string;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 5000);
+    const res = await fetch(digestUrl, {
+      signal: ctrl.signal,
+      headers: { 'user-agent': 'Mozilla/5.0 aiuxdesign-newsletter-bot' },
+    });
+    clearTimeout(timer);
+    if (!res.ok) {
+      console.warn(`[newsletter] TLDR digest fetch failed: ${digestUrl} → ${res.status}`);
+      return [];
+    }
+    html = await res.text();
+  } catch (err) {
+    console.warn(`[newsletter] TLDR digest fetch error: ${digestUrl} → ${(err as Error).message}`);
+    return [];
+  }
+
+  const stories: NewsItem[] = [];
+  const articleRe = /<article class="mt-3">([\s\S]*?)<\/article>/g;
+  let m: RegExpExecArray | null;
+  while ((m = articleRe.exec(html)) !== null) {
+    const block = m[1];
+    const hrefMatch = block.match(/<a [^>]*class="font-bold"[^>]*href="([^"]+)"/);
+    const titleMatch = block.match(/<h3>([\s\S]*?)<\/h3>/);
+    const blurbMatch = block.match(/<div class="newsletter-html">([\s\S]*?)<\/div>/);
+    if (!hrefMatch || !titleMatch) continue;
+    const link = decodeHtmlEntities(hrefMatch[1]);
+    if (/(^|\/\/)([^/]+\.)?tldr\.tech\b/i.test(link)) continue; // skip self-links / sponsor placeholders
+    const rawTitle = decodeHtmlEntities(titleMatch[1].replace(/<[^>]+>/g, '')).trim();
+    const title = rawTitle.replace(/\s*\((?:\d+\s+minute\s+read|Website|Product|GitHub Repo|Video)\)\s*$/i, '').trim();
+    if (!title) continue;
+    const blurbHtml = blurbMatch?.[1] ?? '';
+    const blurb = decodeHtmlEntities(blurbHtml.replace(/<[^>]+>/g, '')).trim().slice(0, 500);
+
+    const synth = { title, contentSnippet: blurb, content: blurb } as Parser.Item;
+    const score = scoreRelevance(synth, source.tier);
+    if (score < 10) continue;
+
+    stories.push({
+      source: source.name,
+      sourceColor: source.color,
+      sourceTier: source.tier,
+      title,
+      description: blurb,
+      link,
+      pubDate,
+      relevanceScore: score,
+    });
+  }
+  return stories;
+}
+
 interface NewsItem {
   source: string;
   sourceColor: string;
@@ -693,10 +771,30 @@ async function aggregateNews(
       sources.map(async (source) => {
         try {
           const feed = await parser.parseURL(source.url);
+
+          // TLDR Design: each RSS item is a daily digest with no body. Expand
+          // it by scraping the digest page for per-story sections.
+          if (source.name === 'TLDR Design') {
+            const recentDigests = (feed.items || []).filter((item) => isRecent(item, lookbackHours));
+            const all: NewsItem[] = [];
+            for (const digest of recentDigests) {
+              if (!digest.link) continue;
+              const stories = await fetchTldrDigestStories(
+                digest.link,
+                { name: source.name, color: source.color, tier: source.tier },
+                digest.pubDate || digest.isoDate || new Date().toISOString()
+              );
+              all.push(...stories);
+            }
+            return all
+              .filter((s) => !usedUrls.has(s.link))
+              .filter((s) => !isTitleAlreadyUsed(s.title));
+          }
+
           return (feed.items || [])
             .filter((item) => isRecent(item, lookbackHours) && isRelevant(item, source.tier))
-            .filter((item) => !item.link || !usedUrls.has(item.link)) // Exclude already-used URLs
-            .filter((item) => !item.title || !isTitleAlreadyUsed(item.title.trim())) // Exclude similar titles
+            .filter((item) => !item.link || !usedUrls.has(item.link))
+            .filter((item) => !item.title || !isTitleAlreadyUsed(item.title.trim()))
             .map((item) => ({
               source: source.name,
               sourceColor: source.color,
