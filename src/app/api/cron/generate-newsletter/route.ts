@@ -1252,13 +1252,12 @@ function renderDarkCallout(opts: {
 }
 
 function renderFooterCTA(type: NewsletterType): string {
-  const n = patterns.length;
   const wordmark = type === 'weekly' ? 'AI UX WEEKLY' : 'AI UX DAILY';
   return `
 <div style="text-align: center; padding: 24px 0 0;">
   <p style="margin: 0 0 10px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Keep exploring</p>
-  <h3 style="margin: 0 0 24px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.2px; line-height: 1.3;">All ${n} AI UX patterns in one place</h3>
-  <a href="${SITE_URL}/patterns" target="_blank" rel="noopener" style="display: inline-block; padding: 14px 28px; background-color: ${EMAIL_INK}; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; letter-spacing: 0.2px;">Explore the pattern library →</a>
+  <h3 style="margin: 0 0 24px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.2px; line-height: 1.3;">Free AI UX learning guides for designers</h3>
+  <a href="${SITE_URL}/guides" target="_blank" rel="noopener" style="display: inline-block; padding: 14px 28px; background-color: ${EMAIL_INK}; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; letter-spacing: 0.2px;">Explore all guides →</a>
 </div>
 
 <div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
