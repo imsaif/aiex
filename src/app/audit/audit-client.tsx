@@ -3,8 +3,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
-import { AnchorQuestion } from '@/components/audit/AnchorQuestion';
 import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
+import { SocialProof } from '@/components/audit/SocialProof';
+import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
 import { useAuditCount } from '@/hooks/useAuditCount';
 import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
@@ -13,9 +14,10 @@ import { trackAuditEvent } from '@/lib/audit/analytics';
 
 // Lazy load heavy components that aren't needed on initial paint
 
+// FullPageResults SSRs — it owns the H1 + dashboard mockup (LCP element) on the demo landing.
+// Per CLAUDE.md Perf Issue #9 + #12: ssr:false on above-fold content empties the hero.
 const FullPageResults = dynamic(
-  () => import('@/components/audit/FullPageResults').then(mod => ({ default: mod.FullPageResults })),
-  { ssr: false }
+  () => import('@/components/audit/FullPageResults').then(mod => ({ default: mod.FullPageResults }))
 );
 
 const UsageLimitModal = dynamic(
@@ -29,33 +31,33 @@ const PaywallModal = dynamic(
 );
 
 export default function AuditClient() {
-  // Multi-step flow state
-  const [step, setStep] = useState<AuditStep>('product-type');
+  // Multi-step flow state — landing on the demo result, then upload, then real results
+  const [step, setStep] = useState<AuditStep>('demo');
   const [productType, setProductType] = useState<ProductType | null>(null);
 
-  // Existing state
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
+  // Existing state — preload demo so the landing paints a real result
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([{
+    base64: DEMO_SCREENSHOT_FALLBACK,
+    fileName: 'demo-chat-interface.png',
+    deviceType: 'desktop',
+  }]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(null);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(DEMO_ANALYSIS_RESULTS);
   const [rateLimitError, setRateLimitError] = useState<string | null>(null);
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(true);
 
   // Paywall state
   const { auditCount, incrementAuditCount, isPaywalled, auditsRemaining } = useAuditCount();
   const [showPaywall, setShowPaywall] = useState(false);
   const hasAutoOpenedPaywallRef = useRef(false);
 
-  // Handle demo mode — lazy-load demo data only when triggered
-  const handleStartDemo = useCallback(async () => {
-    const { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } = await import('@/data/demo-audit');
-    setIsDemoMode(true);
-    setStep('results');
-    setUploadedImages([{
-      base64: DEMO_SCREENSHOT_FALLBACK,
-      fileName: 'demo-chat-interface.png',
-      deviceType: 'desktop',
-    }]);
-    setAnalysisResults(DEMO_ANALYSIS_RESULTS);
+  // User clicked "Start your own audit" on the landing demo — drop into upload
+  const handleStartRealAudit = useCallback(() => {
+    setIsDemoMode(false);
+    setAnalysisResults(null);
+    setUploadedImages([]);
+    setProductType(null);
+    setStep('screenshot');
   }, []);
 
   // Run analysis against the API
@@ -142,37 +144,26 @@ export default function AuditClient() {
     await runAnalysis(images);
   }, [isPaywalled, runAnalysis]);
 
-  // Handle clear/reset — go back to step 1
+  // Handle clear/reset — "Run Another Audit" returns to upload (not the demo)
   const handleClear = useCallback(() => {
     setUploadedImages([]);
     setAnalysisResults(null);
     setIsAnalyzing(false);
     setIsDemoMode(false);
-    setStep('product-type');
+    setStep('screenshot');
     setProductType(null);
   }, []);
 
-  // Determine if we're in the intake flow or results view
-  const isIntakeFlow = step !== 'results';
-
-  // Hide server-rendered SocialProof during results view
-  useEffect(() => {
-    const el = document.getElementById('audit-social-proof');
-    if (el) el.style.display = isIntakeFlow ? '' : 'none';
-  }, [isIntakeFlow]);
-
-  // Hide server-rendered intake hero once user advances past product-type step
-  useEffect(() => {
-    const el = document.getElementById('audit-intake-hero');
-    if (el) el.style.display = step === 'product-type' ? '' : 'none';
-  }, [step]);
+  // Determine if we're in the upload-intake step (only the upload screen renders the intake chrome)
+  const isIntakeFlow = step === 'screenshot';
+  const isResultsView = step === 'demo' || step === 'results';
 
   // Auto-open the paywall modal once per mount for returning exhausted users
   useEffect(() => {
     if (
       !hasAutoOpenedPaywallRef.current &&
       isPaywalled &&
-      step === 'product-type' &&
+      step === 'screenshot' &&
       !isDemoMode
     ) {
       hasAutoOpenedPaywallRef.current = true;
@@ -180,24 +171,13 @@ export default function AuditClient() {
     }
   }, [isPaywalled, step, isDemoMode]);
 
-  // Keep the server-rendered chip in sync with localStorage-backed count
+  // Fire demo-viewed analytics once on mount when landing on demo
   useEffect(() => {
-    const chipEl = document.getElementById('audit-intake-chip');
-    if (!chipEl) return;
-    if (auditCount >= FREE_AUDIT_LIMIT) {
-      chipEl.style.display = 'none';
-      return;
+    if (step === 'demo') {
+      trackAuditEvent('audit_demo_viewed');
     }
-    chipEl.style.display = '';
-    if (auditCount === 0) {
-      chipEl.textContent =
-        FREE_AUDIT_LIMIT === 1
-          ? 'Claim your free audit'
-          : `Claim your ${FREE_AUDIT_LIMIT} free audits`;
-    } else {
-      chipEl.textContent = `${auditsRemaining} free audit${auditsRemaining === 1 ? '' : 's'} left`;
-    }
-  }, [auditCount, auditsRemaining]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Show nudge/banner conditions
   const oneRemaining = FREE_AUDIT_LIMIT > 1 && auditCount === FREE_AUDIT_LIMIT - 1;
@@ -221,68 +201,43 @@ export default function AuditClient() {
         />
       )}
 
-      {isIntakeFlow ? (
-        <>
-          {/* INTAKE FLOW — cards + dynamic steps. Hero chip/H1/subtitle rendered server-side in page.tsx. */}
-          <section
-            className={`${
-              step === 'product-type'
-                ? 'pt-4 sm:pt-6 md:pt-8'
-                : 'pt-8 sm:pt-12 md:pt-16'
-            } pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain`}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                {/* "1 remaining" banner in intake flow */}
-                {showIntakeBanner && (
-                  <div className="mb-6 max-w-lg mx-auto">
-                    <RemainingAuditsBanner auditsRemaining={auditsRemaining} />
-                  </div>
-                )}
+      {isIntakeFlow && (
+        <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-canvas-grid">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            {showIntakeBanner && (
+              <div className="mb-6 max-w-lg mx-auto">
+                <RemainingAuditsBanner auditsRemaining={auditsRemaining} />
+              </div>
+            )}
 
-                {/* Step 1: Product type selection (hero above is server-rendered) */}
-                {step === 'product-type' && (
-                  <div className="text-center max-w-5xl mx-auto">
-                    <AnchorQuestion
-                      onSelect={(type) => {
-                        setProductType(type);
-                        setStep('screenshot');
-                        trackAuditEvent('audit_step_completed', { step: 'product-type', productType: type });
-                      }}
-                    />
+            <ScreenshotUpload
+              productType={productType}
+              onProductTypeChange={(type) => {
+                setProductType(type);
+                trackAuditEvent('audit_step_completed', { step: 'product-type', productType: type });
+              }}
+              onAnalyze={handleScreenshotUpload}
+            />
+          </div>
+        </section>
+      )}
 
-                    {/* Demo link */}
-                    <p className="mt-10 text-sm text-text-tertiary">
-                      Just exploring?{' '}
-                      <button onClick={handleStartDemo} className="underline hover:text-text-secondary transition-colors cursor-pointer">
-                        Try the demo
-                      </button>
-                    </p>
-                  </div>
-                )}
-
-                {/* Step 2: Screenshot upload with example preview */}
-                {step === 'screenshot' && productType && (
-                  <ScreenshotUpload
-                    productType={productType}
-                    onBack={() => setStep('product-type')}
-                    onAnalyze={handleScreenshotUpload}
-                  />
-                )}
-            </div>
-          </section>
-        </>
-      ) : (
-        /* RESULTS VIEW — Full-page layout */
-        <section className="bg-[#F0F1F5] dark:bg-[#162036] bg-grain min-h-[80vh]">
+      {isResultsView && (
+        <section className="bg-[#F0F1F5] dark:bg-[#162036] bg-canvas-grid">
           <FullPageResults
             results={analysisResults}
             onNewAudit={handleClear}
             isAnalyzing={isAnalyzing}
             isDemoMode={isDemoMode}
             screenshotUrl={uploadedImages[0]?.base64}
+            screenshotDeviceType={uploadedImages[0]?.deviceType}
+            onStartRealAudit={step === 'demo' ? handleStartRealAudit : undefined}
           />
         </section>
       )}
+
+      {/* SEO content + community block — only on the demo landing */}
+      {step === 'demo' && <SocialProof />}
     </div>
   );
 }

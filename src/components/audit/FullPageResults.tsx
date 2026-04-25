@@ -2,19 +2,17 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import {
-  ArrowPathIcon,
-  EnvelopeIcon,
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
   ChevronDownIcon,
   LightBulbIcon,
   CheckCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { SparklesIcon } from '@heroicons/react/24/solid';
 import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
-import { LetterGrade } from './LetterGrade';
 import { GapCard } from './GapCard';
 import { EmailReportModal } from './EmailReportModal';
+import { DemoProductMockup, DEMO_PINS } from './DemoProductMockup';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 
 interface ExtendedResults extends AnalysisResults {
@@ -31,6 +29,8 @@ interface FullPageResultsProps {
   isAnalyzing: boolean;
   isDemoMode: boolean;
   screenshotUrl?: string;
+  screenshotDeviceType?: 'mobile' | 'desktop';
+  onStartRealAudit?: () => void;
 }
 
 interface ChatMessage {
@@ -82,6 +82,17 @@ const CHAT_SUGGESTIONS = [
   'What should I fix first?',
   'Explain the top issue',
   'Show me examples',
+];
+
+// Deterministic pin positions overlaid on the user's uploaded screenshot.
+// We don't have AI-detected coordinates, so we distribute up to 5 pins evenly
+// across the screenshot — the side panel reveals the actual pattern feedback.
+const REAL_PIN_POSITIONS: Array<{ xPct: number; yPct: number }> = [
+  { xPct: 22, yPct: 18 },
+  { xPct: 78, yPct: 22 },
+  { xPct: 50, yPct: 45 },
+  { xPct: 22, yPct: 70 },
+  { xPct: 78, yPct: 76 },
 ];
 
 function FormattedChatMessage({ content }: { content: string }) {
@@ -142,7 +153,8 @@ function FormattedChatMessage({ content }: { content: string }) {
   );
 }
 
-export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl }: FullPageResultsProps) {
+export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, onStartRealAudit }: FullPageResultsProps) {
+  const showDemoCTA = isDemoMode && !!onStartRealAudit;
   // Analysis loading state
   const [messageIndex, setMessageIndex] = useState(0);
   const [scanIndex, setScanIndex] = useState(0);
@@ -160,6 +172,10 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   // Well-implemented collapsed state
   const [showWellImplemented, setShowWellImplemented] = useState(false);
+
+  // Pin → side panel (demo mode)
+  const [openPin, setOpenPin] = useState<number | null>(null);
+  const [hoveredPin, setHoveredPin] = useState<number | null>(null);
 
   // Rotate analysis messages
   useEffect(() => {
@@ -386,291 +402,329 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const quickWins = results.quickWins || [];
   const issues = topGaps.filter((g) => g.status === 'missing' || g.status === 'needs-improvement');
   const wellImplemented = topGaps.filter((g) => g.status === 'good');
-  const productSummary = results.productTypeSummary || results.componentDescription || '';
-  const topIssues = issues.slice(0, 3);
-  const remainingIssues = issues.slice(3);
 
-  return (
-    <div className="pb-12 sm:pb-16 md:pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10">
+  // ----- Demo view: full-bleed dashboard mockup with clickable pins + side panel -----
+  if (showDemoCTA) {
+    const openGap = openPin ? topGaps[openPin - 1] : null;
+    const openPinMeta = openPin ? DEMO_PINS.find(p => p.index === openPin) : null;
 
-        {/* Demo banner */}
-        {isDemoMode && (
-          <div className="mb-6 rounded-xl border border-accent-primary/30 bg-accent-primary/5 p-4 text-center">
-            <p className="text-sm text-text-secondary">
-              <span className="font-medium text-accent-primary">Demo mode</span> — upload your own screenshot for a real analysis
+    return (
+      <div className="pb-8 sm:pb-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16">
+          {/* Hero headline */}
+          <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+            <h1
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6"
+              style={{ color: 'var(--text-hero)' }}
+            >
+              Free AI UX Audit Tool
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl text-text-secondary">
+              Score your AI interface against 36 proven design patterns. Pick your product type and upload a screenshot.
             </p>
           </div>
-        )}
 
-        {/* Split view: screenshot left, findings right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Dashboard mockup (full width) with overlaid side panel */}
+          <div className="relative">
+            <DemoProductMockup
+              activePin={openPin ?? hoveredPin}
+              onPinClick={(idx) => {
+                setOpenPin(idx);
+                trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
+              }}
+              onPinHover={setHoveredPin}
+            />
 
-          {/* LEFT — Screenshot + Score (sticky on desktop) */}
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-24 space-y-5">
-              {/* Screenshot */}
-              {screenshotUrl && (
-                <div className="rounded-2xl border border-border-primary overflow-hidden bg-background-secondary shadow-sm">
-                  <img
-                    src={screenshotUrl}
-                    alt="Your audited interface"
-                    className="w-full h-auto"
-                  />
-                </div>
-              )}
-
-              {/* Score card */}
-              <div className="rounded-2xl border border-border-primary bg-background-primary p-6 text-center">
-                <LetterGrade score={results.score} maxScore={results.maxScore} size="sm" />
-                {productSummary && (
-                  <p className="mt-4 text-sm text-text-secondary leading-relaxed">{productSummary}</p>
-                )}
-              </div>
-
-              {/* CTAs — desktop only (below screenshot) */}
-              <div className="hidden lg:flex flex-col gap-2.5">
+            {/* Slide-in side panel */}
+            {openGap && openPinMeta && (
+              <>
                 <button
-                  onClick={() => setShowEmailModal(true)}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-                >
-                  <EnvelopeIcon className="w-4 h-4" />
-                  Email Report
-                </button>
-                <button
-                  onClick={onNewAudit}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-accent-primary text-white dark:text-gray-900 text-sm font-medium hover:bg-accent-hover transition-colors cursor-pointer"
-                >
-                  <ArrowPathIcon className="w-4 h-4" />
-                  Run Another Audit
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* RIGHT — Tab toggle + content */}
-          <div className="lg:col-span-7">
-
-            {/* Tab bar */}
-            <div className="flex items-center gap-1 mb-6 border-b border-border-primary">
-              <button
-                onClick={() => setActiveTab('issues')}
-                className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
-                  activeTab === 'issues'
-                    ? 'border-accent-primary text-accent-primary'
-                    : 'border-transparent text-text-tertiary hover:text-text-secondary'
-                }`}
-              >
-                Issues{topGaps.length > 0 && ` (${issues.length})`}
-              </button>
-              <button
-                onClick={() => {
-                  setActiveTab('chat');
-                  // Auto-send opening message on first chat open
-                  if (!hasSentOpener && issues.length > 0) {
-                    setHasSentOpener(true);
-                    const topPatterns = issues.slice(0, 3).map(g => g.pattern).join(', ');
-                    setTimeout(() => sendMessage(
-                      `I found ${issues.length} issues in my interface. The top priorities are: ${topPatterns}. What should I fix first and how?`
-                    ), 200);
-                  }
-                }}
-                className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors cursor-pointer flex items-center gap-2 ${
-                  activeTab === 'chat'
-                    ? 'border-accent-primary text-accent-primary'
-                    : 'border-transparent text-text-tertiary hover:text-text-secondary'
-                }`}
-              >
-                <ChatBubbleLeftRightIcon className="w-4 h-4" />
-                Chat
-                {messages.length > 0 && activeTab !== 'chat' && (
-                  <span className="w-2 h-2 rounded-full bg-accent-primary" />
-                )}
-              </button>
-            </div>
-
-            {/* Issues tab */}
-            {activeTab === 'issues' && (
-              <div className="space-y-8">
-                {/* Top Issues */}
-                {issues.length > 0 && (
-                  <section>
-                    <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-                      Top Issues
-                      <span className="text-sm font-normal text-text-tertiary">({issues.length})</span>
-                    </h2>
-                    <div className="space-y-3">
-                      {topIssues.map((gap, i) => (
-                        <GapCard key={gap.pattern} gap={gap} index={i + 1} />
-                      ))}
+                  onClick={() => setOpenPin(null)}
+                  aria-label="Close panel"
+                  className="absolute inset-0 bg-black/30 z-20 cursor-pointer"
+                />
+                <aside className="absolute top-0 right-0 bottom-0 w-full sm:w-[420px] z-30 bg-background-primary border-l border-border-primary shadow-xl overflow-y-auto animate-slide-in">
+                  <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-border-primary bg-background-primary">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
+                        {openPin}
+                      </span>
+                      <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Pattern detected</p>
                     </div>
-
-                    {remainingIssues.length > 0 && (
-                      <div className="mt-3">
-                        <button
-                          onClick={() => setShowWellImplemented(prev => !prev)}
-                          className="flex items-center gap-1.5 text-sm font-medium text-text-tertiary hover:text-text-primary transition-colors cursor-pointer"
-                        >
-                          <ChevronDownIcon className={`w-4 h-4 transition-transform ${showWellImplemented ? 'rotate-180' : ''}`} />
-                          {showWellImplemented ? 'Show less' : `Show ${remainingIssues.length} more issues`}
-                        </button>
-                        {showWellImplemented && (
-                          <div className="space-y-3 mt-3">
-                            {remainingIssues.map((gap, i) => (
-                              <GapCard key={gap.pattern} gap={gap} index={topIssues.length + i + 1} />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </section>
-                )}
-
-                {/* All Good state */}
-                {issues.length === 0 && topGaps.length > 0 && (
-                  <div className="text-center py-8">
-                    <CheckCircleIcon className="w-16 h-16 text-status-success mx-auto mb-4" />
-                    <h2 className="text-2xl font-semibold text-text-primary mb-2">Great job!</h2>
-                    <p className="text-text-secondary">All applicable patterns are well implemented.</p>
+                    <button
+                      onClick={() => setOpenPin(null)}
+                      aria-label="Close"
+                      className="p-1.5 rounded-md hover:bg-background-secondary cursor-pointer"
+                    >
+                      <XMarkIcon className="w-5 h-5 text-text-tertiary" />
+                    </button>
                   </div>
-                )}
-
-                {/* Quick Wins */}
-                {quickWins.length > 0 && (
-                  <section>
-                    <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-                      <LightBulbIcon className="w-5 h-5 text-amber-500" />
-                      Quick Wins
-                    </h2>
-                    <div className="rounded-xl border border-border-primary bg-background-primary p-5">
-                      <ul className="space-y-3">
-                        {quickWins.map((win, i) => (
-                          <li key={i} className="flex gap-3 text-sm">
-                            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xs font-semibold">
-                              {i + 1}
-                            </span>
-                            <span className="text-text-secondary leading-relaxed">{win}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </section>
-                )}
-
-                {/* What You're Doing Well */}
-                {wellImplemented.length > 0 && (
-                  <section>
-                    <details className="group">
-                      <summary className="flex items-center gap-2 text-lg font-semibold text-text-primary cursor-pointer hover:text-accent-primary transition-colors list-none">
-                        <CheckCircleIcon className="w-5 h-5 text-status-success" />
-                        What You&apos;re Doing Well
-                        <span className="text-sm font-normal text-text-tertiary">({wellImplemented.length})</span>
-                        <ChevronDownIcon className="w-4 h-4 text-text-tertiary transition-transform group-open:rotate-180" />
-                      </summary>
-                      <div className="space-y-3 mt-4">
-                        {wellImplemented.map((gap) => (
-                          <GapCard key={gap.pattern} gap={gap} />
-                        ))}
-                      </div>
-                    </details>
-                  </section>
-                )}
-              </div>
+                  <div className="p-5">
+                    <GapCard gap={openGap} />
+                  </div>
+                </aside>
+              </>
             )}
-
-            {/* Chat tab */}
-            {activeTab === 'chat' && (
-              <div className="rounded-xl border border-border-primary bg-background-primary overflow-hidden flex flex-col" style={{ minHeight: '60vh' }}>
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-5 space-y-4">
-                  {messages.length === 0 && !isLoading && (
-                    <div>
-                      <p className="text-sm text-text-tertiary mb-4">Ask anything about your audit results:</p>
-                      <div className="flex flex-wrap gap-2">
-                        {CHAT_SUGGESTIONS.map((suggestion) => (
-                          <button
-                            key={suggestion}
-                            onClick={() => sendMessage(suggestion)}
-                            className="px-3 py-1.5 rounded-full border border-border-primary text-sm text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors cursor-pointer"
-                          >
-                            {suggestion}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {messages.map((msg, i) => (
-                    <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                        msg.role === 'user'
-                          ? 'bg-accent-primary text-white dark:text-gray-900'
-                          : 'bg-background-secondary'
-                      }`}>
-                        {msg.role === 'user' ? (
-                          <p className="text-sm">{msg.content}</p>
-                        ) : (
-                          <FormattedChatMessage content={msg.content} />
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  {isLoading && (
-                    <div className="flex justify-start">
-                      <div className="bg-background-secondary rounded-2xl px-4 py-3">
-                        <div className="flex gap-1.5">
-                          <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '0ms' }} />
-                          <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '150ms' }} />
-                          <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '300ms' }} />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <div ref={chatEndRef} />
-                </div>
-
-                {/* Input */}
-                <div className="border-t border-border-primary p-3 flex gap-2">
-                  <textarea
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Ask about your results..."
-                    rows={1}
-                    className="flex-1 resize-none rounded-xl border border-border-primary bg-background-primary px-4 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary"
-                  />
-                  <button
-                    onClick={() => sendMessage(inputValue)}
-                    disabled={!inputValue.trim() || isLoading}
-                    className="p-2.5 rounded-xl bg-accent-primary text-white dark:text-gray-900 disabled:opacity-40 hover:bg-accent-hover transition-colors cursor-pointer"
-                  >
-                    <PaperAirplaneIcon className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* CTAs — mobile only (below findings) */}
-            <div className="flex flex-col sm:flex-row gap-3 lg:hidden mt-8">
-              <button
-                onClick={() => setShowEmailModal(true)}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-              >
-                <EnvelopeIcon className="w-4 h-4" />
-                Email Report
-              </button>
-              <button
-                onClick={onNewAudit}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-accent-primary text-white dark:text-gray-900 text-sm font-medium hover:bg-accent-hover transition-colors cursor-pointer"
-              >
-                <ArrowPathIcon className="w-4 h-4" />
-                Run Another Audit
-              </button>
-            </div>
           </div>
+
+          {/* Big CTA below the demo */}
+          <div className="mt-10 sm:mt-12 flex justify-center">
+            <button
+              onClick={() => {
+                trackAuditEvent('audit_demo_start_real_clicked');
+                onStartRealAudit!();
+              }}
+              className="inline-flex items-center px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base sm:text-lg font-semibold hover:bg-accent-hover transition-all active:scale-95 cursor-pointer shadow-lg shadow-accent-primary/20"
+            >
+              Start your audit
+            </button>
+          </div>
+
         </div>
       </div>
+    );
+  }
 
-      {/* Email Report Modal */}
+  // ----- Real audit view -----
+  // Mirrors the demo layout: user's screenshot full-width with numbered pins,
+  // each pin opens a side panel with the matching pattern's GapCard.
+  const topPinnedIssues = issues.slice(0, REAL_PIN_POSITIONS.length);
+  const realPins = topPinnedIssues.map((_, i) => ({
+    index: i + 1,
+    ...REAL_PIN_POSITIONS[i],
+  }));
+  const realOpenGap = openPin ? topPinnedIssues[openPin - 1] : null;
+
+  return (
+    <div className="pb-8 sm:pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
+
+        {/* Screenshot canvas + optional chat side panel.
+            Both columns have explicit fixed heights on desktop so the row size never changes
+            when chat opens/closes — chat content scrolls inside its own bounds. */}
+        <div className="flex flex-col lg:flex-row lg:justify-center gap-4 lg:gap-6">
+
+        {/* Pinned screenshot — fixed width + aspect ratio per device type drives canvas height */}
+        <div
+          className={`relative flex-shrink-0 w-full mx-auto ${
+            screenshotDeviceType === 'mobile' ? 'max-w-[400px] aspect-[9/16]' : 'max-w-[880px] aspect-[4/3]'
+          }`}
+        >
+          {screenshotUrl && (
+            <div className="absolute inset-0 rounded-2xl border border-border-primary overflow-hidden bg-background-secondary shadow-sm">
+              <img
+                src={screenshotUrl}
+                alt="Your audited interface"
+                className="w-full h-full object-contain block blur-[2px]"
+              />
+              {/* Subtle wash so the numbered pins read clearly over the blurred shot */}
+              <div className="absolute inset-0 bg-white/30 dark:bg-black/30 pointer-events-none" />
+            </div>
+          )}
+
+          {/* Numbered pins */}
+          {realPins.map((pin) => {
+            const isActive = openPin === pin.index || hoveredPin === pin.index;
+            return (
+              <button
+                key={pin.index}
+                onClick={() => setOpenPin(pin.index)}
+                onMouseEnter={() => setHoveredPin(pin.index)}
+                onMouseLeave={() => setHoveredPin(null)}
+                aria-label={`Issue ${pin.index}: ${topPinnedIssues[pin.index - 1].pattern}`}
+                className="absolute z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                style={{ left: `${pin.xPct}%`, top: `${pin.yPct}%` }}
+              >
+                <span
+                  className={`relative flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold border-2 transition-all ${
+                    isActive
+                      ? 'bg-accent-primary text-white dark:text-gray-900 border-white scale-125 shadow-lg'
+                      : 'bg-white text-accent-primary border-accent-primary shadow-md group-hover:scale-110'
+                  }`}
+                >
+                  {pin.index}
+                  <span
+                    className={`absolute inset-0 rounded-full border-2 border-accent-primary ${isActive ? '' : 'animate-ping opacity-60'}`}
+                    aria-hidden
+                  />
+                </span>
+              </button>
+            );
+          })}
+
+          {/* Slide-in side panel */}
+          {realOpenGap && (
+            <>
+              <button
+                onClick={() => setOpenPin(null)}
+                aria-label="Close panel"
+                className="absolute inset-0 bg-black/30 z-20 cursor-pointer"
+              />
+              <aside className="absolute top-0 right-0 bottom-0 w-full sm:w-[420px] z-30 bg-background-primary border-l border-border-primary shadow-xl overflow-y-auto animate-slide-in">
+                <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-border-primary bg-background-primary">
+                  <div className="flex items-center gap-2.5">
+                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
+                      {openPin}
+                    </span>
+                    <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Pattern detected</p>
+                  </div>
+                  <button
+                    onClick={() => setOpenPin(null)}
+                    aria-label="Close"
+                    className="p-1.5 rounded-md hover:bg-background-secondary cursor-pointer"
+                  >
+                    <XMarkIcon className="w-5 h-5 text-text-tertiary" />
+                  </button>
+                </div>
+                <div className="p-5">
+                  <GapCard gap={realOpenGap} />
+                </div>
+              </aside>
+            </>
+          )}
+        </div>
+
+        {/* In-flow chat side panel — sits next to the screenshot */}
+        {activeTab === 'chat' && (
+          <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary shadow-sm flex flex-col overflow-hidden min-h-0 ${
+            screenshotDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
+          }`}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border-primary">
+              <div className="flex items-center gap-2">
+                <ChatBubbleLeftRightIcon className="w-5 h-5 text-accent-primary" />
+                <p className="font-semibold text-text-primary">Chat with results</p>
+              </div>
+              <button
+                onClick={() => setActiveTab('issues')}
+                aria-label="Close"
+                className="p-1.5 rounded-md hover:bg-background-secondary cursor-pointer"
+              >
+                <XMarkIcon className="w-5 h-5 text-text-tertiary" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              {messages.length === 0 && !isLoading && (
+                <div>
+                  <p className="text-sm text-text-tertiary mb-4">Ask anything about your audit results:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {CHAT_SUGGESTIONS.map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        onClick={() => sendMessage(suggestion)}
+                        className="px-3 py-1.5 rounded-full border border-border-primary text-sm text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors cursor-pointer"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {messages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                    msg.role === 'user'
+                      ? 'bg-accent-primary text-white dark:text-gray-900'
+                      : 'bg-background-secondary'
+                  }`}>
+                    {msg.role === 'user' ? (
+                      <p className="text-sm">{msg.content}</p>
+                    ) : (
+                      <FormattedChatMessage content={msg.content} />
+                    )}
+                  </div>
+                </div>
+              ))}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-background-secondary rounded-2xl px-4 py-3">
+                    <div className="flex gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+            <div className="border-t border-border-primary p-3 flex gap-2">
+              <textarea
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask about your results..."
+                rows={1}
+                className="flex-1 resize-none rounded-xl border border-border-primary bg-background-primary px-4 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary"
+              />
+              <button
+                onClick={() => sendMessage(inputValue)}
+                disabled={!inputValue.trim() || isLoading}
+                className="p-2.5 rounded-xl bg-accent-primary text-white dark:text-gray-900 disabled:opacity-40 hover:bg-accent-hover transition-colors cursor-pointer"
+              >
+                <PaperAirplaneIcon className="w-4 h-4" />
+              </button>
+            </div>
+          </aside>
+        )}
+
+        </div>
+        {/* /flex-row screenshot+chat wrapper */}
+
+        {/* CTAs */}
+        <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center max-w-2xl mx-auto">
+          <button
+            onClick={() => setShowEmailModal(true)}
+            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
+          >
+            Email Report
+          </button>
+          <button
+            onClick={() => {
+              const next = activeTab === 'chat' ? 'issues' : 'chat';
+              setActiveTab(next);
+              if (next === 'chat' && !hasSentOpener && issues.length > 0) {
+                setHasSentOpener(true);
+                const topPatterns = issues.slice(0, 3).map(g => g.pattern).join(', ');
+                setTimeout(() => sendMessage(
+                  `I found ${issues.length} issues in my interface. The top priorities are: ${topPatterns}. What should I fix first and how?`
+                ), 200);
+              }
+            }}
+            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
+          >
+            {activeTab === 'chat' ? 'Hide chat' : 'Chat with results'}
+          </button>
+          <button
+            onClick={onNewAudit}
+            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
+          >
+            Run Another Audit
+          </button>
+        </div>
+
+        {/* Quick Wins */}
+        {quickWins.length > 0 && (
+          <section className="mt-10 sm:mt-12 max-w-3xl mx-auto">
+            <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
+              <LightBulbIcon className="w-5 h-5 text-amber-500" />
+              Quick Wins
+            </h2>
+            <div className="rounded-xl border border-border-primary bg-background-primary p-5">
+              <ul className="space-y-3">
+                {quickWins.map((win, i) => (
+                  <li key={i} className="flex gap-3 text-sm">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xs font-semibold">
+                      {i + 1}
+                    </span>
+                    <span className="text-text-secondary leading-relaxed">{win}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+      </div>
+
       {showEmailModal && (
         <EmailReportModal
           isOpen={showEmailModal}

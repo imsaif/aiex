@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ProductType } from '@/types/audit';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
-import { ArrowLeftIcon, ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, XCircleIcon, ExclamationTriangleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
-import { SparklesIcon } from '@heroicons/react/24/solid';
-import { LetterGrade } from './LetterGrade';
+import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { productOptions } from './productOptions';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 const productTypeLabels: Record<ProductType, string> = {
   'chat-interface': 'conversational AI',
@@ -15,74 +15,9 @@ const productTypeLabels: Record<ProductType, string> = {
   other: 'your product type',
 };
 
-// Sample audit previews per product type — shows what the user will get
-const sampleAudits: Record<ProductType, {
-  score: number;
-  maxScore: number;
-  product: string;
-  findings: Array<{ pattern: string; status: 'missing' | 'needs-improvement' | 'good'; snippet: string }>;
-}> = {
-  'chat-interface': {
-    score: 19,
-    maxScore: 36,
-    product: 'AI Chat Assistant',
-    findings: [
-      { pattern: 'Confidence Visualization', status: 'missing', snippet: 'No confidence indicators on AI responses' },
-      { pattern: 'Error Recovery', status: 'needs-improvement', snippet: 'Basic error messages but no retry path' },
-      { pattern: 'Conversational UI', status: 'good', snippet: 'Clear chat bubble design with turn-taking' },
-    ],
-  },
-  'ai-agent': {
-    score: 14,
-    maxScore: 36,
-    product: 'AI Task Agent',
-    findings: [
-      { pattern: 'Intent Preview', status: 'missing', snippet: 'Agent acts without showing planned actions' },
-      { pattern: 'Autonomy Spectrum', status: 'needs-improvement', snippet: 'No graduated autonomy levels visible' },
-      { pattern: 'Action Audit Trail', status: 'good', snippet: 'Clear log of completed agent actions' },
-    ],
-  },
-  'recommendation-system': {
-    score: 22,
-    maxScore: 36,
-    product: 'AI Recommendation Engine',
-    findings: [
-      { pattern: 'Explainable AI', status: 'missing', snippet: 'No reasoning shown for recommendations' },
-      { pattern: 'Feedback Loops', status: 'needs-improvement', snippet: 'Like/dislike but no refinement controls' },
-      { pattern: 'Progressive Disclosure', status: 'good', snippet: 'Complexity revealed gradually' },
-    ],
-  },
-  'content-generation': {
-    score: 20,
-    maxScore: 36,
-    product: 'AI Content Generator',
-    findings: [
-      { pattern: 'Human-in-the-Loop', status: 'missing', snippet: 'No edit or review controls on output' },
-      { pattern: 'Safe Exploration', status: 'needs-improvement', snippet: 'No undo or version history visible' },
-      { pattern: 'Augmented Creation', status: 'good', snippet: 'AI assists without replacing the creator' },
-    ],
-  },
-  other: {
-    score: 18,
-    maxScore: 36,
-    product: 'AI-Powered Product',
-    findings: [
-      { pattern: 'Confidence Visualization', status: 'missing', snippet: 'No uncertainty indicators for AI outputs' },
-      { pattern: 'Explainable AI', status: 'needs-improvement', snippet: 'Limited transparency into reasoning' },
-      { pattern: 'Contextual Assistance', status: 'good', snippet: 'Help relevant to current task context' },
-    ],
-  },
-};
-
-const statusConfig = {
-  missing: { label: 'Critical', icon: XCircleIcon, className: 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-950/40' },
-  'needs-improvement': { label: 'Warning', icon: ExclamationTriangleIcon, className: 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/40' },
-  good: { label: 'Good', icon: CheckCircleIcon, className: 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/40' },
-};
-
 interface ScreenshotUploadProps {
-  productType: ProductType;
-  onBack: () => void;
+  productType: ProductType | null;
+  onProductTypeChange: (productType: ProductType) => void;
   onAnalyze: (images: UploadedImage[]) => void;
 }
 
@@ -91,7 +26,7 @@ function detectDeviceType(width: number, height: number): 'mobile' | 'desktop' {
   return aspectRatio > 1.2 ? 'mobile' : 'desktop';
 }
 
-export function ScreenshotUpload({ productType, onBack, onAnalyze }: ScreenshotUploadProps) {
+export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }: ScreenshotUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [stagedImages, setStagedImages] = useState<UploadedImage[]>([]);
   const [limitMessage, setLimitMessage] = useState(false);
@@ -165,26 +100,45 @@ export function ScreenshotUpload({ productType, onBack, onAnalyze }: ScreenshotU
 
   const hasImages = stagedImages.length > 0;
   const canAddMore = stagedImages.length < 4;
-  const sample = sampleAudits[productType];
+  const canAnalyze = hasImages && !!productType;
 
   return (
-    <div className="w-full max-w-6xl mx-auto text-left">
-      <button
-        onClick={onBack}
-        className="inline-flex items-center gap-1.5 text-base text-text-tertiary mb-6 hover:text-text-primary transition-colors cursor-pointer"
-      >
-        <ArrowLeftIcon className="w-4 h-4" />
-        Back
-      </button>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
-
-        {/* LEFT — Upload area */}
+    <div className="w-full max-w-2xl mx-auto">
         <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-2 text-text-primary">Now let&apos;s audit yours</h2>
-          <p className="text-text-secondary mb-8 text-base">
-            Upload a screenshot and we&apos;ll check it against the patterns most critical for {productTypeLabels[productType]}.
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-2 text-text-primary">Audit your interface</h2>
+          <p className="text-text-secondary mb-6 text-base">
+            {productType
+              ? <>Upload a screenshot and we&apos;ll check it against the patterns most critical for {productTypeLabels[productType]}.</>
+              : <>Pick your product type and upload a screenshot to get started.</>}
           </p>
+
+          {/* Product type chips */}
+          <div className="mb-6">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary mb-3">Product type</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              {productOptions.map((option) => {
+                const Icon = option.icon;
+                const isSelected = productType === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    onClick={() => {
+                      trackAuditEvent('audit_product_type_selected', { productType: option.id });
+                      onProductTypeChange(option.id);
+                    }}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-accent-primary bg-accent-primary text-white dark:text-gray-900'
+                        : 'border-border-primary bg-background-primary text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* Staged image previews */}
           {hasImages && (
@@ -281,56 +235,20 @@ export function ScreenshotUpload({ productType, onBack, onAnalyze }: ScreenshotU
 
           {/* Analyze button */}
           {hasImages && (
-            <button
-              onClick={() => onAnalyze(stagedImages)}
-              className="mt-6 inline-flex items-center gap-2 px-8 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
-            >
-              <SparklesIcon className="w-5 h-5" />
-              Analyze {stagedImages.length} {stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}
-            </button>
+            <>
+              <button
+                onClick={() => canAnalyze && onAnalyze(stagedImages)}
+                disabled={!canAnalyze}
+                className="mt-6 inline-flex items-center px-8 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
+              >
+                Analyze {stagedImages.length} {stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}
+              </button>
+              {!productType && (
+                <p className="mt-3 text-xs text-text-tertiary">Pick a product type above to enable analysis</p>
+              )}
+            </>
           )}
         </div>
-
-        {/* RIGHT — Example audit preview */}
-        <div className="rounded-2xl border border-border-primary bg-background-primary p-6 sm:p-8 shadow-sm">
-          <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary mb-5">Example audit result</p>
-
-          {/* Mini grade */}
-          <div className="flex items-center gap-5 mb-6">
-            <LetterGrade score={sample.score} maxScore={sample.maxScore} size="sm" />
-            <div>
-              <p className="font-semibold text-text-primary">{sample.product}</p>
-              <p className="text-sm text-text-secondary mt-0.5">Checked against {sample.maxScore} AI UX patterns</p>
-            </div>
-          </div>
-
-          {/* Sample findings */}
-          <div className="space-y-3">
-            {sample.findings.map((f) => {
-              const config = statusConfig[f.status];
-              const Icon = config.icon;
-              return (
-                <div key={f.pattern} className="flex items-start gap-3 py-2.5 border-t border-border-primary/50 first:border-0 first:pt-0">
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium flex-shrink-0 mt-0.5 ${config.className}`}>
-                    <Icon className="w-3 h-3" />
-                    {config.label}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-text-primary">{f.pattern}</p>
-                    <p className="text-xs text-text-tertiary mt-0.5">{f.snippet}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-border-primary/50">
-            <p className="text-xs text-text-tertiary text-center">
-              Plus quick wins, detailed recommendations, and AI chat to help you fix issues
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

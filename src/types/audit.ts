@@ -99,7 +99,7 @@ export type ProductType =
   | 'content-generation'
   | 'other';
 
-export type AuditStep = 'product-type' | 'screenshot' | 'results';
+export type AuditStep = 'demo' | 'product-type' | 'screenshot' | 'results';
 
 export interface ProductContext {
   productType: ProductType;

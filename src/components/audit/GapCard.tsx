@@ -4,6 +4,9 @@ import type { TopGap } from '@/types/audit';
 interface GapCardProps {
   gap: TopGap;
   index?: number;
+  isHighlighted?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 const severityConfig = {
@@ -27,12 +30,18 @@ const severityConfig = {
   },
 };
 
-export function GapCard({ gap, index }: GapCardProps) {
+export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave }: GapCardProps) {
   const config = severityConfig[gap.status] || severityConfig.missing;
   const Icon = config.icon;
 
   return (
-    <div className={`rounded-xl border ${config.border} bg-background-primary p-5`}>
+    <div
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={`rounded-xl border ${config.border} bg-background-primary p-5 transition-all ${
+        isHighlighted ? 'ring-2 ring-accent-primary border-accent-primary shadow-md' : ''
+      }`}
+    >
       <div className="flex items-start gap-3">
         {index !== undefined && (
           <span className="flex-shrink-0 w-7 h-7 rounded-full bg-background-secondary flex items-center justify-center text-sm font-semibold text-text-secondary">

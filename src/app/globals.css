@@ -274,6 +274,19 @@ p {
   @apply w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin;
 }
 
+/* Canvas grid background — subtle architectural grid lines, light & dark variants */
+.bg-canvas-grid {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.dark .bg-canvas-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
 /* Custom pattern backgrounds */
 .pattern-grid-white {
   background-color: rgba(255, 255, 255, 0.05);

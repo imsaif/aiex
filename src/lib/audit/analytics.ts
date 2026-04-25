@@ -16,7 +16,9 @@ type AuditEvent =
   | 'audit_paywall_dismissed'
   | 'audit_paywall_waitlist_signup'
   | 'audit_remaining_banner_shown'
-  | 'audit_save_nudge_shown';
+  | 'audit_save_nudge_shown'
+  | 'audit_demo_viewed'
+  | 'audit_demo_start_real_clicked';
 
 declare global {
   interface Window {

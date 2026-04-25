@@ -1,8 +1,6 @@
 import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { SocialProof } from '@/components/audit/SocialProof';
-import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
 import AuditClient from './audit-client';
 
 export const revalidate = 3600;
@@ -140,11 +138,6 @@ const breadcrumbJsonLd = {
 };
 
 export default function AuditPage() {
-  const chipDefaultLabel =
-    FREE_AUDIT_LIMIT === 1
-      ? 'Claim your free audit'
-      : `Claim your ${FREE_AUDIT_LIMIT} free audits`;
-
   return (
     <>
       {/* Structured data */}
@@ -161,38 +154,7 @@ export default function AuditPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <Navbar />
-      {/* Server-rendered intake hero — LCP element. Hidden via JS when step > product-type. */}
-      <section
-        id="audit-intake-hero"
-        className="pt-8 sm:pt-12 md:pt-16 pb-4 sm:pb-6 md:pb-8 bg-[#F0F1F5] dark:bg-[#162036] bg-grain"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-5xl mx-auto">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span
-                id="audit-intake-chip"
-                className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info"
-              >
-                {chipDefaultLabel}
-              </span>
-            </div>
-            <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6"
-              style={{ color: 'var(--text-hero)' }}
-            >
-              Free AI UX Audit Tool
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-text-secondary mb-0">
-              Score your AI interface against 36 proven design patterns. Select your product type to get started.
-            </p>
-          </div>
-        </div>
-      </section>
       <AuditClient />
-      {/* Server-rendered SEO content — visible during intake flow, hidden via JS during results */}
-      <div id="audit-social-proof">
-        <SocialProof />
-      </div>
       <Footer />
     </>
   );
