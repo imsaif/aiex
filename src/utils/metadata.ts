@@ -89,28 +89,28 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'How GitHub Copilot, medical AI tools, and LLM apps display confidence scores: gauges, probability bars, and trust signals that actually work. Interactive demos and design guidelines.',
   },
   'adaptive-interfaces': {
-    title: 'Adaptive Interfaces — AI UX That Learns and Adapts to Each User',
-    description: 'What are adaptive interfaces? AI-powered layouts that learn user behavior and adjust automatically. Smart defaults, personalized workflows, and adaptive UI examples from Spotify, Netflix, and Notion.',
+    title: 'Adaptive Interfaces in AI: Netflix, Spotify & Duolingo Patterns',
+    description: 'How AI interfaces learn from user behavior. Real examples from Netflix, Spotify, and Duolingo. Design patterns, guidelines, and a working demo.',
   },
   'context-switching': {
-    title: 'How AI Handles Context Switching Between Projects — Design Patterns',
-    description: 'How does AI handle context switching between different projects? Patterns for preserving state, managing multiple conversations, and seamless task switching in chatbots and AI tools.',
+    title: 'Context Switching in AI: ChatGPT, Notion AI & Slack Patterns',
+    description: 'How AI manages multiple contexts and projects without losing track. Patterns from ChatGPT threads, Notion AI workspaces, and Slack for seamless task switching.',
   },
   'multimodal-interaction': {
-    title: 'Multimodal Interaction — What It Means & How to Design Voice, Touch & Text UX',
-    description: 'What is multimodal interaction? Design patterns for combining voice, touch, gesture, and text in AI interfaces. Real examples from Siri, Google Lens, and GPT-4V with interactive demos.',
+    title: 'Multimodal AI Interaction: Google, Tesla & iPad Pro Examples',
+    description: 'How AI products combine voice, touch, and gesture. Real examples from Google Assistant, Tesla, and iPad Pro — with patterns for seamless mode switching.',
   },
   'feedback-loops': {
-    title: 'AI Feedback Loops — Diagrams, Examples & How to Design Continuous Learning',
-    description: 'How AI feedback loops work, with diagrams. Design thumbs up/down, implicit signals, and corrective feedback that drives continuous learning. Real examples from ChatGPT, Midjourney, and Notion.',
+    title: 'AI Feedback Loops: Design Patterns for Continuous Learning',
+    description: 'How AI products capture user feedback to improve over time. Design patterns for explicit and implicit feedback, with real-world examples and a working demo.',
   },
   'error-recovery': {
     title: 'AI Error Recovery — Undo, Retry & Fallback Patterns + Examples',
     description: 'When AI gets it wrong — how ChatGPT, Copilot, and Notion let users undo, retry, and recover gracefully. Real error-recovery patterns with code examples and design guidelines.',
   },
   'contextual-assistance': {
-    title: 'Contextual Help UX — Design In-App AI Assistance That Appears at the Right Moment',
-    description: 'Contextual assistance patterns: smart tooltips, proactive suggestions, and in-app help that knows when users need it. How Gmail, Notion, and Copilot design contextual AI help.',
+    title: 'Contextual Assistance in AI: Gmail, Notion & Copilot Examples',
+    description: 'Proactive AI help that respects user flow. Patterns from Gmail Smart Compose, Notion AI, and GitHub Copilot — with real examples and a working code demo.',
   },
   // --- Medium-impression patterns (500-1000+ impressions) ---
   'collaborative-ai': {
@@ -122,16 +122,16 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'Ambient AI design patterns for invisible, context-aware assistance. Smart environments that anticipate needs without explicit commands. Examples from Apple, Nest, and Tesla.',
   },
   'intelligent-caching': {
-    title: 'Intelligent Caching — Smart Caching Strategies for AI-Powered Products',
-    description: 'What is intelligent caching? Predictive prefetching, context-aware invalidation, and smart caching strategies that make AI products feel instant. Real-world examples and code demos.',
+    title: 'Smart Caching in AI: Pre-Fetch Strategies for Instant Responses',
+    description: 'How AI products use intelligent caching to feel instant. Pre-fetch strategies, partial response patterns, and latency tricks from production systems.',
   },
   'escalation-pathways': {
-    title: 'Escalation Pathways in AI — When and How to Hand Off to Humans',
-    description: 'Design escalation pathways for AI agents. When should AI hand off to a human? Patterns for agent-to-human handoff, crisis escalation, and support routing. Examples from Intercom and healthcare AI.',
+    title: 'AI Escalation Pathways: When Agents Should Hand Off to Humans',
+    description: 'When should AI agents hand off to humans? Design patterns for escalation triggers, ambiguity, and decisions beyond agent authority. Examples and code demo.',
   },
   'progressive-enhancement': {
-    title: 'Progressive Enhancement for AI — Graceful Degradation & Fallback Design',
-    description: 'Progressive enhancement patterns for AI products. Design interfaces that degrade gracefully when AI fails or is unavailable. Fallback strategies, offline support, and resilient UX.',
+    title: 'Progressive Enhancement in AI: Fast Results, Refined Over Time',
+    description: 'Design AI interfaces that show basic results immediately, then progressively add detail. Patterns for streaming responses, partial outputs, and refinement.',
   },
   'crisis-detection-escalation': {
     title: 'Crisis Detection & Escalation — AI Safety Pattern for Sensitive Situations',
@@ -180,8 +180,8 @@ const customPatternMetadata: Record<string, { title: string; description: string
   },
   // --- Remaining patterns for complete coverage ---
   'agent-status-monitoring': {
-    title: 'Agent Status Monitoring — Track What AI Agents Are Doing in Real-Time',
-    description: 'Design status dashboards and monitoring UX for AI agents. Real-time progress, activity logs, and transparency patterns. Examples from GitHub Actions, Zapier, and Claude.',
+    title: 'Agent Status Monitoring: Track AI Agent Actions in Real-Time',
+    description: 'Design real-time visibility for AI agents. Patterns for showing what is running, when to intervene, and how to monitor multi-step agent workflows.',
   },
   'augmented-creation': {
     title: 'Augmented Creation — AI as Creative Partner, Not Replacement',
@@ -204,8 +204,8 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'Design AI autonomy controls from fully manual to fully autonomous. Slider patterns, permission levels, and trust-building UX for AI agents and copilots.',
   },
   'mixed-initiative-control': {
-    title: 'Mixed-Initiative Control — Shared Control Between Human and AI',
-    description: 'Design mixed-initiative interfaces where humans and AI share control. Patterns for turn-taking, initiative switching, and collaborative decision-making in AI products.',
+    title: 'Mixed-Initiative Control in AI: Patterns for Human-AI Handoff',
+    description: 'Design shared control between users and AI agents. When to lead, when to defer, and how to make handoffs feel natural. Real-world patterns and a working demo.',
   },
   'session-degradation-prevention': {
     title: 'Session Degradation Prevention — Keep AI Conversations Productive Over Time',
@@ -247,11 +247,11 @@ export function generatePatternMetadata({
   const customMetadata = customPatternMetadata[slug];
 
   // Use custom title or default format
-  const pageTitle = customMetadata?.title || `${title} | AI Design Patterns`;
+  const pageTitle = customMetadata?.title || `${title} in AI Design: Patterns, Examples & Code`;
 
-  // Use custom description or truncate default
+  // Use custom description or named-product fallback
   const pageDescription = customMetadata?.description ||
-    (description.length > 160 ? `${description.substring(0, 157)}...` : description);
+    `${title} in AI UX. Real-world examples from shipped products like ChatGPT, GitHub Copilot, and Notion. Design patterns, guidelines, and a working code demo.`;
 
   // Dynamic OG image — branded 1200x630 card generated per pattern
   const ogImage = `/api/og/patterns?slug=${slug}`;
@@ -284,9 +284,9 @@ export function generatePatternMetadata({
  */
 export function generateHomeMetadata(): Metadata {
   return generateMetadata({
-    title: 'AIUX — AI UX Design Patterns | 36 Patterns from 50+ Shipped Products',
+    title: 'AI UX Design Patterns: 36 Examples from ChatGPT, Claude & More',
     description:
-      'A framework of 36 AI UX design patterns documented from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products. Real examples, code demos, and actionable guidance for designing AI-powered experiences.',
+      'The AI UX pattern library. 36 patterns documented from ChatGPT, Claude, Figma, Notion, GitHub Copilot, and 45+ shipped products. Code, demos, real examples.',
     url: '/',
     keywords: [
       'AI design patterns',

@@ -6,8 +6,8 @@ import AuditClient from './audit-client';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Free AI UX Audit Tool — Score Your AI Interface Design | AIUX',
-  description: 'Free AI UX audit tool — upload a screenshot of your chatbot, AI agent, or dashboard and get instant feedback. Scores against 36 proven design patterns from ChatGPT, Copilot, and Notion. No signup required.',
+  title: 'AI UX Audit: Free Tool to Score Designs Against 36 Patterns',
+  description: 'Upload any AI interface screenshot. Get instant feedback scored against 36 patterns from 50+ shipped products like ChatGPT, GitHub Copilot, and Notion. Free, no signup.',
   keywords: [
     'ai ux audit',
     'ai ux audit tool',
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
     canonical: 'https://www.aiuxdesign.guide/audit',
   },
   openGraph: {
-    title: 'Free AI UX Audit Tool — Score Your AI Interface Design',
-    description: 'Upload your AI interface screenshot and get instant UX feedback scored against 36 proven design patterns. Free, no signup.',
+    title: 'AI UX Audit: Free Tool to Score Designs Against 36 Patterns',
+    description: 'Upload any AI interface. Get instant feedback scored against 36 patterns from 50+ shipped products. Free, no signup.',
     url: 'https://www.aiuxdesign.guide/audit',
     siteName: 'AI UX Design Guide',
     type: 'website',
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Free AI UX Audit Tool — Score Your AI Interface Design',
-    description: 'Upload your AI interface screenshot and get instant UX feedback scored against 36 proven design patterns. Free, no signup.',
+    title: 'AI UX Audit Tool — 36 Pattern Analysis',
+    description: 'Upload any AI interface. Get instant feedback against 36 patterns from 50+ products. Free.',
     images: ['/images/og/og-pattern-default.png'],
     creator: '@aiuxdesignguide',
   },
