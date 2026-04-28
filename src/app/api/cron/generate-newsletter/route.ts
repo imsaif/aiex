@@ -308,7 +308,7 @@ function getProductIconImg(productName: string): string {
 // out lower ones for a given keyword profile, so the gaps matter as much as
 // the absolute values.
 const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
-  'design-pub': 50,        // research/news/case studies — top priority
+  'design-pub': 30,        // research/news/case studies — narrowed from 50 (Apr 28) so strong ai-lab items with multiple keyword hits can outscore mediocre design-pub items
   'design-tool': 40,       // first-party design product news
   'ai-lab': 30,            // concrete AI product launches
   'design-opinion': 28,    // think-pieces — useful but capped to 1-2 per issue via prompt
