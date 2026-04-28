@@ -5,6 +5,8 @@ import {
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
   ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
   LightBulbIcon,
   CheckCircleIcon,
   XMarkIcon,
@@ -21,6 +23,8 @@ interface ExtendedResults extends AnalysisResults {
   chatContext?: string;
   productContext?: ProductContext;
   productTypeSummary?: string;
+  surfaceDescription?: string;
+  applicablePatterns?: string[];
 }
 
 interface FullPageResultsProps {
@@ -30,6 +34,7 @@ interface FullPageResultsProps {
   isDemoMode: boolean;
   screenshotUrl?: string;
   screenshotDeviceType?: 'mobile' | 'desktop';
+  screenshots?: Array<{ url: string; deviceType: 'mobile' | 'desktop' }>;
   onStartRealAudit?: () => void;
 }
 
@@ -153,7 +158,15 @@ function FormattedChatMessage({ content }: { content: string }) {
   );
 }
 
-export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, onStartRealAudit }: FullPageResultsProps) {
+export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit }: FullPageResultsProps) {
+  // Normalize: prefer the multi-screenshot prop, fall back to the single-screenshot props for backwards compat.
+  const allScreenshots = screenshots && screenshots.length > 0
+    ? screenshots
+    : (screenshotUrl ? [{ url: screenshotUrl, deviceType: screenshotDeviceType || 'desktop' }] : []);
+  const [activeScreenshotIndex, setActiveScreenshotIndex] = useState(0);
+  const activeScreenshot = allScreenshots[activeScreenshotIndex];
+  const heroScreenshotUrl = activeScreenshot?.url ?? screenshotUrl;
+  const heroDeviceType = activeScreenshot?.deviceType ?? screenshotDeviceType;
   const showDemoCTA = isDemoMode && !!onStartRealAudit;
   // Analysis loading state
   const [messageIndex, setMessageIndex] = useState(0);
@@ -165,7 +178,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
@@ -195,9 +208,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     return () => clearInterval(interval);
   }, [isAnalyzing]);
 
-  // Scroll chat to bottom on new messages
+  // Scroll chat panel to bottom on new messages — scope to the chat container
+  // (never use scrollIntoView here: it scrolls every ancestor including window).
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const el = chatScrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages]);
 
   // Chat send handler
@@ -489,32 +504,60 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   // Mirrors the demo layout: user's screenshot full-width with numbered pins,
   // each pin opens a side panel with the matching pattern's GapCard.
   const topPinnedIssues = issues.slice(0, REAL_PIN_POSITIONS.length);
-  const realPins = topPinnedIssues.map((_, i) => ({
-    index: i + 1,
-    ...REAL_PIN_POSITIONS[i],
-  }));
+  // Pin assignment: prefer the AI-returned `screenshotIndex` (1-based) on each gap.
+  // Fall back to round-robin across screens for older results that don't carry it.
+  const screenshotCount = Math.max(1, allScreenshots.length);
+  const pinAssignments = topPinnedIssues.map((g, i) => {
+    const aiIdx = (g as TopGap & { screenshotIndex?: number }).screenshotIndex;
+    if (typeof aiIdx === 'number' && aiIdx >= 1 && aiIdx <= screenshotCount) {
+      return aiIdx - 1;
+    }
+    return i % screenshotCount;
+  });
+  const pinsForActiveScreenshot = topPinnedIssues
+    .map((_, i) => ({ index: i + 1, ...REAL_PIN_POSITIONS[i], screenshotIdx: pinAssignments[i] }))
+    .filter((p) => p.screenshotIdx === activeScreenshotIndex);
   const realOpenGap = openPin ? topPinnedIssues[openPin - 1] : null;
+
+  const surfaceDescription = (results as ExtendedResults | null)?.surfaceDescription;
+  const noFindings = topPinnedIssues.length === 0;
 
   return (
     <div className="pb-8 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
+
+        {/* What we saw — grounds the audit in the actual surface(s) */}
+        {surfaceDescription && (
+          <div className="mb-4 max-w-3xl mx-auto px-4 py-3 rounded-xl bg-background-primary border border-border-primary text-sm text-text-secondary">
+            <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-1">What we audited</p>
+            <p>{surfaceDescription}</p>
+            {noFindings && (
+              <p className="mt-2 text-text-primary font-medium">
+                No AI UX patterns meaningfully apply to this surface — there&apos;s nothing to flag here. Try uploading a screen where the AI is producing output (a chat thread, a recommendation list, a generation flow).
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Screenshot canvas + optional chat side panel.
             Both columns have explicit fixed heights on desktop so the row size never changes
             when chat opens/closes — chat content scrolls inside its own bounds. */}
         <div className="flex flex-col lg:flex-row lg:justify-center gap-4 lg:gap-6">
 
-        {/* Pinned screenshot — fixed width + aspect ratio per device type drives canvas height */}
+        {/* Pinned screenshot column — wraps the canvas + carousel thumbnail strip */}
+        <div className={`flex-shrink-0 flex flex-col gap-3 w-full mx-auto ${
+          heroDeviceType === 'mobile' ? 'max-w-[400px] lg:w-[400px]' : 'max-w-[880px] lg:w-[880px]'
+        }`}>
         <div
-          className={`relative flex-shrink-0 w-full mx-auto ${
-            screenshotDeviceType === 'mobile' ? 'max-w-[400px] aspect-[9/16]' : 'max-w-[880px] aspect-[4/3]'
+          className={`relative w-full ${
+            heroDeviceType === 'mobile' ? 'aspect-[9/16]' : 'aspect-[4/3]'
           }`}
         >
-          {screenshotUrl && (
+          {heroScreenshotUrl && (
             <div className="absolute inset-0 rounded-2xl border border-border-primary overflow-hidden bg-background-secondary shadow-sm">
               <img
-                src={screenshotUrl}
-                alt="Your audited interface"
+                src={heroScreenshotUrl}
+                alt={`Your audited interface ${activeScreenshotIndex + 1}`}
                 className="w-full h-full object-contain block blur-[2px]"
               />
               {/* Subtle wash so the numbered pins read clearly over the blurred shot */}
@@ -522,13 +565,50 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             </div>
           )}
 
-          {/* Numbered pins */}
-          {realPins.map((pin) => {
+          {/* Carousel arrows + counter — when more than one screenshot */}
+          {allScreenshots.length > 1 && (
+            <>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  setActiveScreenshotIndex((i) => (i - 1 + allScreenshots.length) % allScreenshots.length);
+                  setOpenPin(null);
+                  (e.currentTarget as HTMLButtonElement).blur();
+                }}
+                aria-label="Previous screenshot"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+              >
+                <ChevronLeftIcon className="w-5 h-5" />
+              </button>
+              <button
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  setActiveScreenshotIndex((i) => (i + 1) % allScreenshots.length);
+                  setOpenPin(null);
+                  (e.currentTarget as HTMLButtonElement).blur();
+                }}
+                aria-label="Next screenshot"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+              >
+                <ChevronRightIcon className="w-5 h-5" />
+              </button>
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-black/60 text-white text-xs rounded-full z-10">
+                Screenshot {activeScreenshotIndex + 1} / {allScreenshots.length}
+              </div>
+            </>
+          )}
+
+          {/* Numbered pins — only the ones assigned to the active screenshot */}
+          {pinsForActiveScreenshot.map((pin) => {
             const isActive = openPin === pin.index || hoveredPin === pin.index;
             return (
               <button
                 key={pin.index}
-                onClick={() => setOpenPin(pin.index)}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  setOpenPin(pin.index);
+                  (e.currentTarget as HTMLButtonElement).blur();
+                }}
                 onMouseEnter={() => setHoveredPin(pin.index)}
                 onMouseLeave={() => setHoveredPin(null)}
                 aria-label={`Issue ${pin.index}: ${topPinnedIssues[pin.index - 1].pattern}`}
@@ -584,10 +664,45 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           )}
         </div>
 
+        {/* Carousel thumbnail nav — only when more than one screenshot */}
+        {allScreenshots.length > 1 && (
+          <div className="flex flex-wrap gap-2 items-center justify-center">
+            {allScreenshots.map((shot, index) => {
+              const isActive = index === activeScreenshotIndex;
+              const pinCount = pinAssignments.filter((a) => a === index).length;
+              return (
+                <button
+                  key={index}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={(e) => {
+                    setActiveScreenshotIndex(index);
+                    setOpenPin(null);
+                    (e.currentTarget as HTMLButtonElement).blur();
+                  }}
+                  aria-label={`Show screenshot ${index + 1}`}
+                  className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                    isActive
+                      ? 'border-accent-primary shadow-md scale-105'
+                      : 'border-border-primary opacity-70 hover:opacity-100 hover:border-accent-primary/50'
+                  }`}
+                >
+                  <img src={shot.url} alt="" className="w-full h-full object-cover block" />
+                  {pinCount > 0 && (
+                    <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-accent-primary text-white dark:text-gray-900 text-[10px] font-bold rounded-full flex items-center justify-center">
+                      {pinCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+        </div>
+
         {/* In-flow chat side panel — sits next to the screenshot */}
         {activeTab === 'chat' && (
           <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary shadow-sm flex flex-col overflow-hidden min-h-0 ${
-            screenshotDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
+            heroDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
           }`}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-border-primary">
               <div className="flex items-center gap-2">
@@ -602,7 +717,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 <XMarkIcon className="w-5 h-5 text-text-tertiary" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            <div ref={chatScrollRef} className="flex-1 overflow-y-auto p-5 space-y-4">
               {messages.length === 0 && !isLoading && (
                 <div>
                   <p className="text-sm text-text-tertiary mb-4">Ask anything about your audit results:</p>
@@ -645,7 +760,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                   </div>
                 </div>
               )}
-              <div ref={chatEndRef} />
             </div>
             <div className="border-t border-border-primary p-3 flex gap-2">
               <textarea

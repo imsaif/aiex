@@ -161,9 +161,11 @@ export async function POST(request: NextRequest) {
       // Return context-aware results format
       const results = {
         id,
-        score: analysisData.score || 0,
-        maxScore: analysisData.maxScore || 36,
+        score: analysisData.score ?? 0,
+        maxScore: analysisData.maxScore ?? 36,
         productTypeSummary: analysisData.productTypeSummary || '',
+        surfaceDescription: analysisData.surfaceDescription || '',
+        applicablePatterns: analysisData.applicablePatterns || [],
         topGaps: analysisData.topGaps || [],
         quickWins: analysisData.quickWins || [],
         chatContext: analysisData.chatContext || '',

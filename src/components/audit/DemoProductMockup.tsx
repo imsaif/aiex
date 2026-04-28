@@ -69,7 +69,7 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
         </div>
         <div className="flex items-center gap-2">
           <BellIcon className="w-4 h-4 text-text-tertiary" />
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-pink-400 to-orange-500" />
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700" />
         </div>
       </div>
 
@@ -206,7 +206,11 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
         return (
           <button
             key={pin.index}
-            onClick={() => onPinClick(pin.index)}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={(e) => {
+              onPinClick(pin.index);
+              (e.currentTarget as HTMLButtonElement).blur();
+            }}
             onMouseEnter={() => onPinHover?.(pin.index)}
             onMouseLeave={() => onPinHover?.(null)}
             aria-label={`Issue ${pin.index}: ${pin.label}`}

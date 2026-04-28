@@ -231,6 +231,7 @@ export default function AuditClient() {
             isDemoMode={isDemoMode}
             screenshotUrl={uploadedImages[0]?.base64}
             screenshotDeviceType={uploadedImages[0]?.deviceType}
+            screenshots={uploadedImages.map((img) => ({ url: img.base64, deviceType: img.deviceType }))}
             onStartRealAudit={step === 'demo' ? handleStartRealAudit : undefined}
           />
         </section>

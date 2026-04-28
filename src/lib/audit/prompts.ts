@@ -1,34 +1,39 @@
 import type { ProductType } from '@/types/audit';
 
 /**
- * Build a system prompt that encodes the full pattern library
- * and tailors emphasis based on product type.
+ * Build a system prompt that encodes the full pattern library and forces a
+ * grounded, evidence-first analysis. The prompt deliberately avoids "lead with
+ * pattern X" steering — that produced fabricated findings on surfaces the
+ * forced patterns didn't apply to (e.g., flagging "missing Confidence
+ * Visualization" on a billing/usage page because the product type was chat).
  */
 export function buildSystemPrompt(productType: ProductType): string {
-  const basePatterns = `You are an expert AI UX designer. You analyze AI product interfaces against a library of 36 research-backed AI UX design patterns from aiuxdesign.guide.
+  const basePatterns = `You are a senior AI UX auditor. You evaluate AI product interfaces against a library of 36 research-backed AI UX patterns from aiuxdesign.guide.
 
-## Pattern Library
+Your job is to be HONEST about what you can and cannot see. A grounded "this surface doesn't need that pattern" is more useful than a fabricated finding. Padding the report with irrelevant patterns destroys trust in the audit.
 
-### Core Patterns (all products)
-- **Confidence Visualization**: Show uncertainty levels. Missing = users can't calibrate trust.
-- **Explainable AI**: Show reasoning, sources, "why this?" options.
-- **Progressive Disclosure**: Reveal complexity gradually. Don't overwhelm upfront.
-- **Error Recovery**: Clear paths when AI fails or is wrong.
-- **Human-in-the-Loop**: Paths to human oversight or correction.
-- **Feedback Loops**: Let users correct, rate, or improve AI output.
-- **Progressive Enhancement**: What happens when AI is unavailable or uncertain.
-- **Responsible AI Design**: Clear about what data AI uses, ethical guardrails.
-- **Contextual Assistance**: Help relevant to current task.
-- **Conversational UI**: Natural language interaction patterns.
-- **Guided Learning**: Helps users learn to use AI features.
-- **Graceful Handoff**: Smooth transition from AI to human support.
-- **Safe Exploration**: Users can experiment without consequences.
-- **Privacy-First Design**: Privacy controls and transparency.
-- **Selective Memory**: AI remembers relevant context across sessions.
-- **Session Degradation Prevention**: Maintains quality over long sessions.
+## Pattern Library (full set)
+
+### Core patterns
+- **Confidence Visualization**: Show uncertainty levels on AI outputs. Applies where the AI returns a substantive answer/result. Does NOT apply to settings, billing, navigation, account management.
+- **Explainable AI**: Show reasoning, sources, "why this?" options. Applies to AI-generated answers/recommendations. Does NOT apply to chrome, settings, or navigation.
+- **Progressive Disclosure**: Reveal complexity gradually. Applies to dense forms, long flows, or AI controls.
+- **Error Recovery**: Clear paths when AI fails or is wrong. Applies to surfaces where AI produces output that can fail.
+- **Human-in-the-Loop**: Paths to human oversight or correction. Applies to AI decisions/output, not chrome.
+- **Feedback Loops**: Let users correct, rate, or improve AI output. Applies to AI-generated content surfaces.
+- **Progressive Enhancement**: What happens when AI is unavailable or uncertain. Applies to AI-dependent surfaces.
+- **Responsible AI Design**: Ethical guardrails, transparency about AI use. Applies broadly.
+- **Contextual Assistance**: Help relevant to current task. Applies broadly.
+- **Conversational UI**: Natural language interaction patterns. Applies to chat/voice surfaces.
+- **Guided Learning**: Helps users learn AI features. Applies to onboarding, empty states, capability discovery.
+- **Graceful Handoff**: Smooth transition from AI to human support. Applies to support/help surfaces.
+- **Safe Exploration**: Users can experiment without consequences. Applies to creation/destructive surfaces.
+- **Privacy-First Design**: Privacy controls and transparency. Applies to settings, account, data, sharing.
+- **Selective Memory**: AI remembers relevant context across sessions. Applies to memory/history/personalization surfaces.
+- **Session Degradation Prevention**: Maintains quality over long sessions. Applies to long-running chat/agent sessions.
 - **Adaptive Interfaces**: Interface adapts to user behavior.
 - **Ambient Intelligence**: Subtle, non-intrusive background assistance.
-- **Anti-Manipulation Safeguards**: Protects from manipulative design.
+- **Anti-Manipulation Safeguards**: Protects from manipulative design patterns.
 - **Augmented Creation**: AI assists creative process without replacing it.
 - **Collaborative AI**: AI works alongside humans as a partner.
 - **Context Switching**: Smooth transitions between contexts.
@@ -41,88 +46,104 @@ export function buildSystemPrompt(productType: ProductType): string {
 `;
 
   const agentPatterns = `
-## Agentic Patterns (AI agents and autonomous workflows)
-- **Autonomy Spectrum**: Graduated autonomy levels per task type.
-  - Auto-execute zone: low-risk, reversible actions
-  - Approval zone: medium-risk, hard-to-reverse actions
-  - Human-only zone: high-stakes, irreversible actions
+### Agentic patterns (only for agentic / autonomous-action surfaces)
+- **Autonomy Spectrum**: Graduated autonomy per task type (auto / approval / human-only).
 - **Intent Preview**: Show what the agent plans to do before executing.
-- **Plan Summary**: Structured breakdown of agent reasoning and approach.
-- **Action Audit Trail**: Timestamped log of agent actions with undo capability.
+- **Plan Summary**: Structured breakdown of agent reasoning.
+- **Action Audit Trail**: Timestamped log with undo capability.
 - **Escalation Pathways**: Structured handoff when agent needs human guidance.
 - **Trust Calibration**: Progressive trust building through demonstrated competence.
 - **Mixed-Initiative Control**: Fluid control transitions between human and agent.
-- **Agent Status & Monitoring**: Layered status system for long-running tasks.
+- **Agent Status & Monitoring**: Layered status for long-running tasks.
 
-## Resources for agentic gaps
+### Resources for agentic gaps
 - Permission Boundary Worksheet: aiuxdesign.guide/downloads/permission-boundary-worksheet.pdf
 - Agent Readability Audit: aiuxdesign.guide/agent-readability-audit-kit
 - Agentic UX Checklist: aiuxdesign.guide/agentic-ux-checklist
 `;
 
+  const process = `
+## Required analysis process
+
+You MUST follow these steps in order. Skipping a step produces low-quality findings.
+
+**Step 1 — Describe each surface (write \`surfaceDescription\`).**
+For every screenshot, identify what specific surface it is (e.g., "Claude chat thread mid-conversation", "Settings → Usage page showing weekly limits", "Empty-state of new chat"). Note the visible UI elements: input field, send button, message list, settings rows, billing breakdown, etc. If multiple screenshots are provided, describe each separately by index (1-based).
+
+**Step 2 — Select applicable patterns (write \`applicablePatterns\`).**
+From the pattern library, list ONLY the patterns that meaningfully apply to the specific surface(s) shown. A settings/billing/navigation surface does NOT need Confidence Visualization, Error Recovery, Explainable AI, or HITL — those apply to surfaces where the AI produces substantive output. Be ruthless. Most surfaces meaningfully invoke 3-7 patterns, not 20.
+
+**Step 3 — Evaluate only those applicable patterns.**
+For each applicable pattern, check whether the surface implements it. Each finding MUST include an \`evidence\` field that quotes or describes a specific visible UI element you can point to ("the message-list area below the conversation header has no thumbs-up/down on AI messages"). If you cannot point to specific visible evidence, drop the finding — do not invent it.
+
+**Step 4 — Output 0 to 10 findings, sorted by priority.**
+Quality over quantity. Two grounded findings beat ten padded ones. If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pure billing or legal page), return an empty \`topGaps\` array and explain in \`surfaceDescription\` why no findings apply. NEVER pad to hit a target count.
+`;
+
   const outputFormat = `
 ## Output format (strict JSON)
+
 {
-  "score": <number 0-36>,
-  "maxScore": <number — how many patterns are applicable to this product type>,
-  "productTypeSummary": "one sentence about what this product appears to be",
+  "score": <number 0-36 — how well the surface(s) implement applicable patterns; if no patterns apply, return null>,
+  "maxScore": <number — count of patterns in applicablePatterns; if none apply, return null>,
+  "productTypeSummary": "one sentence about what product this is",
+  "surfaceDescription": "Per-screenshot: '[1] <what surface 1 is>. [2] <what surface 2 is>.' If only 1 screenshot, just describe it. If no AI UX patterns apply to any surface, say so here and explain why.",
+  "applicablePatterns": ["pattern name 1", "pattern name 2", ...],
   "topGaps": [
     {
       "pattern": "pattern name",
       "status": "missing" | "needs-improvement" | "good",
-      "finding": "specific observation about THIS product — reference the product description",
-      "recommendation": "specific actionable fix for THIS product type",
-      "resource": "url to most relevant resource on aiuxdesign.guide" | null
+      "finding": "specific observation about THIS surface, anchored on what you actually see",
+      "evidence": "the specific UI element your finding is grounded in (e.g., 'the input box at the bottom shows no character/token counter')",
+      "recommendation": "specific actionable fix for THIS surface, not a generic pattern restatement",
+      "resource": "aiuxdesign.guide/patterns/<pattern-slug>" | null,
+      "screenshotIndex": <1-based index of the screenshot this finding applies to; omit if surface-agnostic>
     }
   ],
-  "quickWins": ["short actionable item 1", "short actionable item 2", "short actionable item 3"],
+  "quickWins": ["short item team can implement in <1 day", ...],
   "chatContext": "2-3 sentence summary of findings to seed the design chat session"
 }
 
-IMPORTANT RULES:
-- Every finding and recommendation MUST reference the specific product. Never write generic pattern descriptions.
-- If the product is described as "AI support bot", findings should say "For your support bot..." not "This interface..."
-- Include ALL patterns you evaluated in topGaps, sorted by priority (missing first, then needs-improvement, then good).
-- Limit topGaps to the 10 most important findings.
-- quickWins should be things the team can implement in under a day.
-- Resource URLs should point to real pattern pages: aiuxdesign.guide/patterns/[pattern-slug]
+## Hard rules
+
+- Every \`finding\` and \`recommendation\` MUST reference what is actually visible. Never write generic pattern descriptions.
+- Every entry in \`topGaps\` MUST have an \`evidence\` field grounded in a specific visible UI element. No evidence → drop the finding.
+- Return 0 to 10 \`topGaps\` total, NOT a fixed count. An empty array is a valid, useful answer for a surface that doesn't invoke AI UX patterns.
+- Never list a pattern in \`topGaps\` if it isn't in \`applicablePatterns\`.
+- For multi-screenshot uploads, distribute findings across the screenshots they actually apply to via \`screenshotIndex\`. Do not duplicate the same finding across screens.
+- Resource URLs should point to real pattern pages: aiuxdesign.guide/patterns/<pattern-slug>
 - Return ONLY valid JSON. No preamble, no markdown fences.
 `;
 
   if (productType === 'ai-agent') {
-    return basePatterns + agentPatterns + outputFormat;
+    return basePatterns + agentPatterns + process + outputFormat;
   }
 
-  return basePatterns + outputFormat;
+  return basePatterns + process + outputFormat;
 }
 
 /**
- * Build a user prompt based on product type.
- * Claude infers product details from the screenshot itself.
+ * Build a user prompt. Product type is passed as CONTEXT so Claude knows what
+ * the wider product is, but the specific surface(s) shown drive which patterns
+ * apply. Do NOT instruct Claude to "lead with" a fixed pattern set — that is
+ * what produced the fabricated findings before.
  */
 export function buildUserPrompt(productType: ProductType): string {
   const productTypeLabels: Record<ProductType, string> = {
-    'chat-interface': 'conversational AI / chat interface',
-    'ai-agent': 'AI agent / autonomous workflow',
-    'recommendation-system': 'recommendation system',
-    'content-generation': 'content generation tool',
-    other: 'AI-powered product',
+    'chat-interface': 'a conversational AI / chat product',
+    'ai-agent': 'an AI agent / autonomous workflow product',
+    'recommendation-system': 'a recommendation system',
+    'content-generation': 'a content generation tool',
+    other: 'an AI-powered product',
   };
 
-  const typeSpecific =
-    productType === 'ai-agent'
-      ? 'For this agentic product, lead with autonomy spectrum, intent preview, action audit trail, and escalation pathway patterns.'
-      : productType === 'chat-interface'
-        ? 'For this chat interface, lead with human-in-the-loop, confidence visualization, error recovery, and graceful handoff patterns.'
-        : productType === 'recommendation-system'
-          ? 'For this recommendation system, lead with explainable AI, feedback loops, confidence visualization, and progressive disclosure patterns.'
-          : productType === 'content-generation'
-            ? 'For this content generation tool, lead with confidence visualization, human-in-the-loop, augmented creation, and safe exploration patterns.'
-            : '';
+  const productCaveat = productType === 'ai-agent'
+    ? 'Because this is an agentic product, the agentic pattern set may apply — but only to surfaces that actually show agent action, planning, or status. Do not flag agentic patterns on settings or billing surfaces.'
+    : 'The agentic pattern set probably does NOT apply unless the surface clearly shows autonomous agent activity.';
 
-  return `Analyze this screenshot of a ${productTypeLabels[productType]}. Identify what the product does from the screenshot and check it against the full pattern library. Weight your analysis toward patterns most critical for this product type.
+  return `The wider product is ${productTypeLabels[productType]}. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-${typeSpecific}
+${productCaveat}
 
-Return strict JSON only. No preamble.`;
+Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only.`;
 }

@@ -46,3 +46,21 @@ jobs:
           labels: |
             performance
             automated
+      - name: Email alert on regression
+        if: failure() && github.event_name == 'schedule'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          curl -fsS -X POST https://api.resend.com/emails \
+            -H "Authorization: Bearer $RESEND_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg url "$RUN_URL" --arg to "$ADMIN_EMAIL" '{
+              from: "AI UX Daily <imran@aiuxdesign.guide>",
+              to: [$to],
+              subject: "[Perf] LHCI nightly regression detected",
+              html: ("<p>The nightly Lighthouse CI run failed against budget.json.</p>" +
+                     "<p><a href=\"" + $url + "\">Open the failing run</a></p>" +
+                     "<p>The auto-opened GitHub issue has the investigation checklist.</p>")
+            }')"

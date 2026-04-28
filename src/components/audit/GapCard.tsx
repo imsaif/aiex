@@ -57,6 +57,12 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
             <h3 className="font-semibold text-text-primary">{gap.pattern}</h3>
           </div>
           <p className="text-sm text-text-secondary leading-relaxed mb-2">{gap.finding}</p>
+          {gap.evidence && (
+            <p className="text-xs text-text-tertiary leading-relaxed mb-2 pl-3 border-l-2 border-border-primary italic">
+              <span className="font-semibold not-italic text-text-secondary">What we saw: </span>
+              {gap.evidence}
+            </p>
+          )}
           {gap.recommendation && (
             <p className="text-sm text-text-secondary leading-relaxed">
               <span className="font-medium text-text-primary">Fix: </span>

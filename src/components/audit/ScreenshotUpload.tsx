@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ProductType } from '@/types/audit';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
-import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { productOptions } from './productOptions';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 
@@ -26,10 +26,42 @@ function detectDeviceType(width: number, height: number): 'mobile' | 'desktop' {
   return aspectRatio > 1.2 ? 'mobile' : 'desktop';
 }
 
+function DeviceFrame({ src, alt, deviceType }: { src: string; alt: string; deviceType: 'mobile' | 'desktop' }) {
+  if (deviceType === 'mobile') {
+    return (
+      <div className="relative h-full max-h-full flex items-center justify-center">
+        <div className="relative h-full max-h-[600px] aspect-[9/19] bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-gray-900 rounded-b-2xl z-10" />
+          <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-white">
+            <img src={src} alt={alt} className="w-full h-full object-cover block" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="relative w-full h-full flex flex-col rounded-xl overflow-hidden border border-border-primary bg-background-primary shadow-lg">
+      <div className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-border-primary">
+        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#FF5F57' }} />
+        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#FEBC2E' }} />
+        <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#28C840' }} />
+      </div>
+      <div className="flex-1 min-h-0 bg-white dark:bg-gray-900">
+        <img src={src} alt={alt} className="w-full h-full object-contain block" />
+      </div>
+    </div>
+  );
+}
+
 export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }: ScreenshotUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [stagedImages, setStagedImages] = useState<UploadedImage[]>([]);
   const [limitMessage, setLimitMessage] = useState(false);
+  const [isClassifying, setIsClassifying] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const hasAutoClassifiedRef = useRef(false);
+  const productTypeRef = useRef(productType);
+  productTypeRef.current = productType;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const showLimitMessage = useCallback(() => {
@@ -69,8 +101,28 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         if (prev.length >= 4) showLimitMessage();
         return merged;
       });
+
+      // Auto-classify product type from the first image — once per session,
+      // only if user hasn't already picked one.
+      if (!hasAutoClassifiedRef.current && !productTypeRef.current && newImages[0]) {
+        hasAutoClassifiedRef.current = true;
+        setIsClassifying(true);
+        fetch('/api/audit/classify-product', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: newImages[0].base64 }),
+        })
+          .then((r) => (r.ok ? r.json() : null))
+          .then((data: { productType?: ProductType } | null) => {
+            if (data?.productType && !productTypeRef.current) {
+              onProductTypeChange(data.productType);
+            }
+          })
+          .catch(() => { /* silent — user can still pick manually */ })
+          .finally(() => setIsClassifying(false));
+      }
     });
-  }, [showLimitMessage]);
+  }, [showLimitMessage, onProductTypeChange]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -82,7 +134,11 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
   );
 
   const removeImage = (index: number) => {
-    setStagedImages((prev) => prev.filter((_, i) => i !== index));
+    setStagedImages((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      setActiveIndex((curr) => Math.max(0, Math.min(curr, next.length - 1)));
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -103,103 +159,112 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
   const canAnalyze = hasImages && !!productType;
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-        <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl font-semibold mb-2 text-text-primary">Audit your interface</h2>
-          <p className="text-text-secondary mb-6 text-base">
-            {productType
-              ? <>Upload a screenshot and we&apos;ll check it against the patterns most critical for {productTypeLabels[productType]}.</>
-              : <>Pick your product type and upload a screenshot to get started.</>}
-          </p>
-
-          {/* Product type chips */}
-          <div className="mb-6">
-            <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary mb-3">Product type</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {productOptions.map((option) => {
-                const Icon = option.icon;
-                const isSelected = productType === option.id;
-                return (
-                  <button
-                    key={option.id}
-                    onClick={() => {
-                      trackAuditEvent('audit_product_type_selected', { productType: option.id });
-                      onProductTypeChange(option.id);
-                    }}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium transition-all cursor-pointer ${
-                      isSelected
-                        ? 'border-accent-primary bg-accent-primary text-white dark:text-gray-900'
-                        : 'border-border-primary bg-background-primary text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
-                    }`}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    {option.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Staged image previews */}
-          {hasImages && (
-            <>
-              <div className="flex flex-wrap gap-3 justify-center mb-6">
-                {stagedImages.map((img, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={img.base64}
-                      alt={img.fileName}
-                      className="w-36 h-36 object-cover rounded-xl border-2 border-border-primary"
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="flex flex-col lg:flex-row lg:justify-center gap-4 lg:gap-6 items-stretch">
+        {/* LEFT: Dropzone / staged previews — matches demo screenshot canvas (880×660) */}
+        <div className="w-full lg:w-[880px] lg:h-[660px] flex-shrink-0 flex flex-col">
+          {hasImages ? (
+            <div className="flex-1 flex flex-col gap-3">
+              {/* Hero carousel — active image fills the canvas inside a device frame */}
+              <div className="relative flex-1 min-h-0 overflow-hidden">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {stagedImages[activeIndex] && (
+                    <DeviceFrame
+                      src={stagedImages[activeIndex].base64}
+                      alt={stagedImages[activeIndex].fileName}
+                      deviceType={stagedImages[activeIndex].deviceType}
                     />
-                    <button
-                      onClick={() => removeImage(index)}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-status-error text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                    >
-                      <XMarkIcon className="w-4 h-4" />
-                    </button>
-                    <span className="absolute bottom-1 right-1 px-1.5 py-0.5 bg-black/60 text-white text-[10px] rounded-md capitalize">
-                      {img.deviceType}
-                    </span>
-                  </div>
-                ))}
+                  )}
+                </div>
 
-                {canAddMore ? (
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="w-36 h-36 border-2 border-dashed border-border-primary rounded-xl flex flex-col items-center justify-center gap-1 hover:border-accent-primary hover:bg-accent-primary/5 transition-all cursor-pointer"
-                  >
-                    <PlusIcon className="w-6 h-6 text-text-tertiary" />
-                    <span className="text-xs text-text-tertiary">Add more</span>
-                  </button>
-                ) : (
-                  <div className="w-36 h-36 border-2 border-dashed border-border-primary/50 rounded-xl flex flex-col items-center justify-center gap-1 opacity-50">
-                    <span className="text-xs text-text-tertiary">4/4 max</span>
-                  </div>
+                {/* Carousel arrows — only when more than one image */}
+                {stagedImages.length > 1 && (
+                  <>
+                    <button
+                      onClick={() => setActiveIndex((i) => (i - 1 + stagedImages.length) % stagedImages.length)}
+                      aria-label="Previous screenshot"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                    >
+                      <ChevronLeftIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => setActiveIndex((i) => (i + 1) % stagedImages.length)}
+                      aria-label="Next screenshot"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                    >
+                      <ChevronRightIcon className="w-5 h-5" />
+                    </button>
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-black/60 text-white text-xs rounded-full z-10">
+                      {activeIndex + 1} / {stagedImages.length}
+                    </div>
+                  </>
                 )}
+
+                <button
+                  onClick={() => removeImage(activeIndex)}
+                  aria-label="Remove this screenshot"
+                  className="absolute top-3 right-3 w-8 h-8 bg-black/60 hover:bg-status-error text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                </button>
               </div>
 
+              {/* Thumbnail navigator + Add more */}
+              {(stagedImages.length > 1 || canAddMore) && (
+                <div className="flex-shrink-0 flex flex-wrap gap-2 items-center justify-center">
+                  {stagedImages.map((img, index) => {
+                    const isActive = index === activeIndex;
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => setActiveIndex(index)}
+                        aria-label={`Show screenshot ${index + 1}`}
+                        className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                          isActive
+                            ? 'border-accent-primary shadow-md scale-105'
+                            : 'border-border-primary opacity-70 hover:opacity-100 hover:border-accent-primary/50'
+                        }`}
+                      >
+                        <img
+                          src={img.base64}
+                          alt={img.fileName}
+                          className="w-full h-full object-cover block"
+                        />
+                      </button>
+                    );
+                  })}
+
+                  {canAddMore && (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="w-16 h-16 border-2 border-dashed border-accent-primary/50 bg-background-primary rounded-lg flex flex-col items-center justify-center gap-0.5 text-accent-primary hover:border-accent-primary hover:bg-accent-primary/10 transition-all cursor-pointer shadow-sm"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                      <span className="text-[10px] font-medium">Add</span>
+                    </button>
+                  )}
+                </div>
+              )}
+
               {limitMessage && (
-                <p className="text-sm text-amber-600 dark:text-amber-400 animate-fade-in mb-2">
+                <p className="text-sm text-amber-600 dark:text-amber-400 animate-fade-in text-center">
                   Maximum 4 screenshots reached. Remove one to add another.
                 </p>
               )}
-            </>
-          )}
-
-          {/* Drop zone */}
-          {!hasImages && (
+            </div>
+          ) : (
             <div
               onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
               onDragLeave={() => setIsDragOver(false)}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-xl p-8 sm:p-12 cursor-pointer transition-all ${
+              className={`flex-1 min-h-[320px] border-2 border-dashed rounded-2xl p-8 sm:p-12 cursor-pointer transition-all flex items-center justify-center ${
                 isDragOver
                   ? 'border-accent-primary bg-accent-primary/5 shadow-md'
                   : 'border-border-primary bg-background-primary hover:border-accent-primary/50 hover:shadow-md'
               }`}
             >
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-4 text-center">
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-colors ${
                   isDragOver ? 'bg-accent-primary text-white' : 'bg-accent-primary/10'
                 }`}>
@@ -219,36 +284,85 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
               </div>
             </div>
           )}
-
-          {/* Hidden file input */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            multiple
-            className="hidden"
-            onChange={(e) => {
-              processFiles(e.target.files);
-              if (e.target) e.target.value = '';
-            }}
-          />
-
-          {/* Analyze button */}
-          {hasImages && (
-            <>
-              <button
-                onClick={() => canAnalyze && onAnalyze(stagedImages)}
-                disabled={!canAnalyze}
-                className="mt-6 inline-flex items-center px-8 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
-              >
-                Analyze {stagedImages.length} {stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}
-              </button>
-              {!productType && (
-                <p className="mt-3 text-xs text-text-tertiary">Pick a product type above to enable analysis</p>
-              )}
-            </>
-          )}
         </div>
+
+        {/* RIGHT: Product picker + Analyze */}
+        <aside className="w-full lg:w-[360px] lg:h-[660px] flex-shrink-0 flex flex-col gap-4 text-left">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-semibold mb-2 text-text-primary">Audit your interface</h2>
+            <p className="text-text-secondary text-sm">
+              {productType
+                ? <>Upload a screenshot and we&apos;ll check it against the patterns most critical for {productTypeLabels[productType]}.</>
+                : <>Pick your product type and upload a screenshot to get started.</>}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Product type</p>
+            {isClassifying && (
+              <span className="text-xs text-text-tertiary italic">Detecting…</span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {productOptions.map((option) => {
+              const Icon = option.icon;
+              const isSelected = productType === option.id;
+              return (
+                <button
+                  key={option.id}
+                  onClick={() => {
+                    trackAuditEvent('audit_product_type_selected', { productType: option.id });
+                    onProductTypeChange(option.id);
+                  }}
+                  className={`w-full inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all cursor-pointer text-left ${
+                    isSelected
+                      ? 'border-accent-primary bg-accent-primary text-white dark:text-gray-900'
+                      : 'border-border-primary bg-background-primary text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  <span>{option.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-auto pt-4">
+            <button
+              onClick={() => canAnalyze && onAnalyze(stagedImages)}
+              disabled={!canAnalyze}
+              className="w-full inline-flex items-center justify-center px-6 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
+            >
+              {hasImages
+                ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`
+                : 'Analyze'}
+            </button>
+            {!canAnalyze && (
+              <p className="mt-2 text-xs text-text-tertiary text-center">
+                {!hasImages && !productType
+                  ? 'Add a screenshot and pick a product type'
+                  : !hasImages
+                    ? 'Add a screenshot to enable analysis'
+                    : 'Pick a product type to enable analysis'}
+              </p>
+            )}
+          </div>
+        </aside>
+      </div>
+
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          processFiles(e.target.files);
+          if (e.target) e.target.value = '';
+        }}
+      />
     </div>
   );
 }

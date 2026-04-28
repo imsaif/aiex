@@ -113,6 +113,10 @@ export interface TopGap {
   finding: string;
   recommendation: string;
   resource: string | null;
+  /** Quote of the visible UI element this finding is grounded in. Required for honest findings. */
+  evidence?: string;
+  /** 1-based index of the screenshot this finding refers to (when multiple were uploaded). */
+  screenshotIndex?: number;
 }
 
 export interface ContextAwareResults {
