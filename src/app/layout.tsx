@@ -78,12 +78,24 @@ export default function RootLayout({
                   // Belt-and-braces: skip on localhost/preview even if NODE_ENV is production
                   var h = location.hostname;
                   if (h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local') || h.endsWith('.vercel.app')) return;
+                  // Auto-tag any session that touches /admin as role=admin
+                  try {
+                    if (location.pathname.indexOf('/admin') === 0) {
+                      localStorage.setItem('aiux:role', 'admin');
+                    }
+                  } catch (e) {}
                   function init() {
                     (function(c,l,a,r,i,t,y){
                       c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                       t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
                       y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                     })(window,document,"clarity","script","vj7nlmybbm");
+                    // Apply persistent role tag from localStorage so admin/QA sessions
+                    // can be filtered out of dashboards via a "role != admin" segment.
+                    try {
+                      var role = localStorage.getItem('aiux:role');
+                      if (role) window.clarity('set', 'role', role);
+                    } catch (e) {}
                   }
                   if ('requestIdleCallback' in window) {
                     requestIdleCallback(init, { timeout: 2500 });
