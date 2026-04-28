@@ -20,6 +20,14 @@ interface Pagination {
   totalPages: number;
 }
 
+interface Stats {
+  active: number;
+  inactive: number;
+  selfUnsubscribed: number;
+  beehiivRemoved: number;
+  total: number;
+}
+
 interface SubscribersClientProps {
   initialAuth?: boolean;
 }
@@ -30,12 +38,13 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
   const [authError, setAuthError] = useState('');
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [isReconciling, setIsReconciling] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [frequencyFilter, setFrequencyFilter] = useState<string>('all_frequencies');
   const [searchQuery, setSearchQuery] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [expandedSubscriber, setExpandedSubscriber] = useState<string | null>(null);
 
   const fetchSubscribers = useCallback(async (page = 1) => {
     setIsLoading(true);
@@ -54,6 +63,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
       if (response.ok) {
         setSubscribers(data.subscribers);
         setPagination(data.pagination);
+        if (data.stats) setStats(data.stats);
       } else {
         setMessage({ type: 'error', text: data.error || 'Failed to fetch subscribers' });
       }
@@ -142,6 +152,35 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
     }
   };
 
+  const reconcileWithBeehiiv = async () => {
+    if (!confirm('Pull active subscriber list from Beehiiv and mark any local rows that Beehiiv no longer has as inactive. Continue?')) {
+      return;
+    }
+    setIsReconciling(true);
+    try {
+      const response = await fetch('/api/newsletter/subscribers/reconcile', { method: 'POST' });
+      const data = await response.json();
+      if (response.ok) {
+        const parts = [`${data.beehiivActive} active in Beehiiv`];
+        if (data.createdFromBeehiiv) parts.push(`${data.createdFromBeehiiv} imported`);
+        if (data.reactivated) parts.push(`${data.reactivated} reactivated`);
+        if (data.markedInactive) parts.push(`${data.markedInactive} marked inactive`);
+        setMessage({
+          type: 'success',
+          text: `Reconciled with Beehiiv: ${parts.join(' · ')}.`,
+        });
+        if (data.stats) setStats(data.stats);
+        fetchSubscribers(pagination?.page || 1);
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Reconcile failed' });
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Reconcile failed' });
+    } finally {
+      setIsReconciling(false);
+    }
+  };
+
   const exportSubscribers = async () => {
     try {
       const params = new URLSearchParams({ limit: '10000' });
@@ -212,20 +251,43 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
           <div>
             <h1 className="text-3xl font-bold text-text-primary">Subscribers</h1>
             <p className="text-text-secondary mt-1">
-              Manage newsletter subscribers
-              {pagination && (
-                <span className="ml-2 text-text-tertiary">
-                  ({pagination.total} total)
+              {stats ? (
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="text-status-success font-medium">{stats.active} active</span>
+                  <span className="text-text-tertiary">·</span>
+                  <span className="text-text-tertiary">
+                    {stats.inactive} unsubscribed
+                    {stats.inactive > 0 && (
+                      <span className="ml-1 text-xs">
+                        ({stats.selfUnsubscribed} via site, {stats.beehiivRemoved} via Beehiiv)
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-text-tertiary">·</span>
+                  <span className="text-text-tertiary">{stats.total} total</span>
+                  <span className="text-xs text-text-tertiary">(active = matches Beehiiv)</span>
                 </span>
+              ) : (
+                'Manage newsletter subscribers'
               )}
             </p>
           </div>
-          <button
-            onClick={exportSubscribers}
-            className="px-4 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
-          >
-            Export CSV
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={reconcileWithBeehiiv}
+              disabled={isReconciling}
+              className="px-4 py-2 border border-border-primary text-text-primary rounded-md hover:bg-background-secondary transition-colors disabled:opacity-50"
+              title="Pull Beehiiv's active list and mark stale local rows inactive"
+            >
+              {isReconciling ? 'Syncing…' : 'Sync from Beehiiv'}
+            </button>
+            <button
+              onClick={exportSubscribers}
+              className="px-4 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
+            >
+              Export CSV
+            </button>
+          </div>
         </div>
       </header>
 
@@ -269,8 +331,10 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
               className="px-4 py-2 border border-border-primary rounded-md bg-background-secondary text-text-primary focus:ring-2 focus:ring-accent-primary"
             >
               <option value="all">All Status</option>
-              <option value="active">Active Only</option>
-              <option value="inactive">Inactive Only</option>
+              <option value="active">Active</option>
+              <option value="inactive">Unsubscribed (all)</option>
+              <option value="self_unsubscribed">Self-unsubscribed (via site)</option>
+              <option value="beehiiv_removed">Beehiiv-removed (bounce/complaint)</option>
             </select>
             <select
               value={frequencyFilter}
@@ -313,7 +377,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-text-tertiary mb-3">
-                  <span>{new Date(subscriber.subscribedAt).toLocaleDateString()}</span>
+                  <span>Joined {new Date(subscriber.subscribedAt).toLocaleDateString()}</span>
                   <span
                     className={`inline-flex px-2 py-0.5 rounded-full ${
                       subscriber.emailFrequency === 'all'
@@ -330,6 +394,16 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                       : 'None'}
                   </span>
                 </div>
+                {!subscriber.active && (subscriber.unsubscribedAt || subscriber.unsubscribeReason) && (
+                  <div className="text-xs text-text-tertiary mb-3 border-l-2 border-status-error/30 pl-2">
+                    {subscriber.unsubscribedAt && (
+                      <div>Unsubscribed {new Date(subscriber.unsubscribedAt).toLocaleDateString()}</div>
+                    )}
+                    {subscriber.unsubscribeReason && (
+                      <div className="break-words">Reason: {subscriber.unsubscribeReason}</div>
+                    )}
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => toggleSubscriberStatus(subscriber.id, subscriber.active)}
@@ -375,6 +449,9 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                   <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Frequency
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                    Unsubscribed
+                  </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Actions
                   </th>
@@ -385,22 +462,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                   <React.Fragment key={subscriber.id}>
                     <tr className="hover:bg-background-secondary/50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-text-primary">
-                        <div className="flex items-center gap-2">
-                          {subscriber.email}
-                          {subscriber.unsubscribeReason && (
-                            <button
-                              onClick={() => setExpandedSubscriber(
-                                expandedSubscriber === subscriber.id ? null : subscriber.id
-                              )}
-                              className="text-text-tertiary hover:text-text-secondary"
-                              title="View unsubscribe reason"
-                            >
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                            </button>
-                          )}
-                        </div>
+                        {subscriber.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
                         {new Date(subscriber.subscribedAt).toLocaleDateString()}
@@ -433,6 +495,24 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                             : 'None'}
                         </span>
                       </td>
+                      <td className="px-6 py-4 text-xs text-text-tertiary max-w-[200px]">
+                        {subscriber.unsubscribedAt || subscriber.unsubscribeReason ? (
+                          <div>
+                            {subscriber.unsubscribedAt && (
+                              <div className="text-text-secondary">
+                                {new Date(subscriber.unsubscribedAt).toLocaleDateString()}
+                              </div>
+                            )}
+                            {subscriber.unsubscribeReason && (
+                              <div className="truncate" title={subscriber.unsubscribeReason}>
+                                {subscriber.unsubscribeReason}
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-text-tertiary/50">—</span>
+                        )}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                         <button
                           onClick={() => toggleSubscriberStatus(subscriber.id, subscriber.active)}
@@ -452,26 +532,6 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                         </button>
                       </td>
                     </tr>
-                    {expandedSubscriber === subscriber.id && subscriber.unsubscribeReason && (
-                      <tr className="bg-background-secondary/30">
-                        <td colSpan={5} className="px-6 py-3 text-sm">
-                          <div className="flex gap-6">
-                            <div>
-                              <span className="text-text-tertiary">Unsubscribe reason:</span>{' '}
-                              <span className="text-text-secondary">{subscriber.unsubscribeReason}</span>
-                            </div>
-                            {subscriber.unsubscribedAt && (
-                              <div>
-                                <span className="text-text-tertiary">Unsubscribed at:</span>{' '}
-                                <span className="text-text-secondary">
-                                  {new Date(subscriber.unsubscribedAt).toLocaleString()}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    )}
                   </React.Fragment>
                 ))}
               </tbody>

@@ -18,20 +18,40 @@ export async function GET(request: NextRequest) {
     const where: {
       active?: boolean;
       email?: { contains: string; mode: 'insensitive' };
-      emailFrequency?: string;
+      emailFrequency?: string | { not: string };
     } = {};
 
+    // status options:
+    //   active             → active=true
+    //   inactive           → active=false (any reason)
+    //   self_unsubscribed  → active=false AND frequency='none' (clicked our /unsubscribe page)
+    //   beehiiv_removed    → active=false AND frequency!='none' (Beehiiv dropped via bounce/complaint/footer)
     if (status === 'active') where.active = true;
     if (status === 'inactive') where.active = false;
+    if (status === 'self_unsubscribed') {
+      where.active = false;
+      where.emailFrequency = 'none';
+    }
+    if (status === 'beehiiv_removed') {
+      where.active = false;
+      where.emailFrequency = { not: 'none' };
+    }
     if (search) where.email = { contains: search, mode: 'insensitive' };
 
-    // Filter by frequency preference
+    // Filter by frequency preference (separate from status)
     const frequency = searchParams.get('frequency');
-    if (frequency && ['all', 'weekly', 'none'].includes(frequency)) {
+    if (frequency && ['all', 'weekly', 'none'].includes(frequency) && !where.emailFrequency) {
       where.emailFrequency = frequency;
     }
 
-    const [subscribers, total] = await Promise.all([
+    const [
+      subscribers,
+      total,
+      activeCount,
+      inactiveCount,
+      selfUnsubscribedCount,
+      beehiivRemovedCount,
+    ] = await Promise.all([
       prisma.subscriber.findMany({
         where,
         orderBy: { subscribedAt: 'desc' },
@@ -49,6 +69,10 @@ export async function GET(request: NextRequest) {
         },
       }),
       prisma.subscriber.count({ where }),
+      prisma.subscriber.count({ where: { active: true } }),
+      prisma.subscriber.count({ where: { active: false } }),
+      prisma.subscriber.count({ where: { active: false, emailFrequency: 'none' } }),
+      prisma.subscriber.count({ where: { active: false, emailFrequency: { not: 'none' } } }),
     ]);
 
     return NextResponse.json({
@@ -58,6 +82,13 @@ export async function GET(request: NextRequest) {
         limit,
         total,
         totalPages: Math.ceil(total / limit),
+      },
+      stats: {
+        active: activeCount,
+        inactive: inactiveCount,
+        selfUnsubscribed: selfUnsubscribedCount,
+        beehiivRemoved: beehiivRemovedCount,
+        total: activeCount + inactiveCount,
       },
     });
   } catch (error) {
