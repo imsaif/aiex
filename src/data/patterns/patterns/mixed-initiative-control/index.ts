@@ -13,7 +13,7 @@ export const mixedinitiativecontrol: Pattern = {
   description: "Design interaction models where control flows seamlessly between human and agent  -  supporting parallel work zones, interruptible agent activity, and natural handoffs without formal 'take over' actions.",
   category: "Human-AI Collaboration",
   tags: ["agentic", "collaboration", "concurrent editing", "handoff", "co-creation", "real-time"],
-  thumbnail: "",
+  thumbnail: "/api/og/patterns?slug=mixed-initiative-control",
   introduction: "In traditional AI, either the human is in control (typing prompts, making decisions) or the AI is (generating responses). But agentic workflows require fluid back-and-forth  -  the agent works on a task, the human jumps in to adjust, the agent continues from the adjusted state. The challenge is designing interfaces where both human and agent can act without stepping on each other. This is especially difficult in collaborative documents, code editors, and planning tools where both parties might be working on the same artifact simultaneously. Mixed-Initiative Control provides clear control indicators, interrupt-without-disruption capability, parallel work zones, seamless handoffs, and explicit conflict resolution. Human input always takes precedence, and the agent should never block the human from interacting.",
   datePublished: "2026-02-16",
   dateModified: "2026-02-16",

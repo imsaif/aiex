@@ -44,7 +44,6 @@ interface ProductLogoCardProps {
 }
 
 const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl }) => {
-  const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const baseFilter = useThemeFilter('grayscale(100%)');
 
@@ -68,13 +67,10 @@ const ProductLogoCard: React.FC<ProductLogoCardProps> = ({ productName, logoUrl 
         alt={productName}
         width={28}
         height={28}
-        className={`h-7 w-7 transition-all duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
+        className="h-7 w-7"
         style={{
           filter: baseFilter,
         }}
-        onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}
       />
 

@@ -44,12 +44,11 @@ interface ClientPageProps {
   pattern: Pattern;
   previousPattern: Pattern | null;
   nextPattern: Pattern | null;
-  relatedPatterns: PatternSummary[];
   categoryPatterns: PatternSummary[];
   relatedGuides?: GuideSummary[];
 }
 
-export default function ClientPage({ pattern, previousPattern, nextPattern, relatedPatterns, categoryPatterns, relatedGuides = [] }: ClientPageProps) {
+export default function ClientPage({ pattern, previousPattern, nextPattern, categoryPatterns, relatedGuides = [] }: ClientPageProps) {
   // Get category badge classes - safer approach for Tailwind JIT
   const getCategoryClasses = (color: string = 'blue') => {
     const colorMap: Record<string, string> = {
@@ -270,34 +269,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, rela
         <section>
           <InlineAuditCTA variant="pattern-detail" />
         </section>
-
-        {/* Related Patterns - Rich Cards (moved above newsletter for better engagement) */}
-        {relatedPatterns.length > 0 && (
-          <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Related Patterns</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {relatedPatterns.map((related) => (
-                <Link
-                  key={related.id}
-                  href={`/patterns/${related.slug}`}
-                  className="group block"
-                >
-                  <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
-                    <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
-                      {related.title}
-                    </h3>
-                    <p className="text-sm text-text-secondary leading-relaxed line-clamp-2 flex-grow mb-4">
-                      {related.description}
-                    </p>
-                    <span className="inline-block self-start px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
-                      {related.category}
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* More from Category */}
         {categoryPatterns.length > 0 && (

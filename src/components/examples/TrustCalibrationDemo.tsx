@@ -1,124 +1,277 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-interface DomainTrust {
-  domain: string;
-  icon: string;
-  accuracy: number;
-  tasksCompleted: number;
-  currentLevel: number;
-  trend: 'up' | 'stable' | 'down';
-  canUpgrade: boolean;
+type Band = 'cautious' | 'moderate' | 'confident' | 'bold';
+
+interface Suggestion {
+  id: string;
+  band: Band;
+  rationale: string;
+  before: string;
+  after: string;
+  scope: 'word' | 'sentence' | 'paragraph' | 'structure';
+}
+
+const SUGGESTIONS: Suggestion[] = [
+  {
+    id: 's1',
+    band: 'cautious',
+    scope: 'word',
+    rationale: "Tighten phrasing",
+    before: "lots of",
+    after: "many",
+  },
+  {
+    id: 's2',
+    band: 'cautious',
+    scope: 'word',
+    rationale: "Capitalize acronym",
+    before: "ai-powered",
+    after: "AI-powered",
+  },
+  {
+    id: 's3',
+    band: 'moderate',
+    scope: 'sentence',
+    rationale: "Lead with the benefit, not the feature",
+    before: "Our tool uses AI to scan screenshots and find issues.",
+    after: "Catch UX issues in seconds — paste a screenshot, get a prioritized list.",
+  },
+  {
+    id: 's4',
+    band: 'moderate',
+    scope: 'sentence',
+    rationale: "Action-oriented CTA",
+    before: "Click here to start",
+    after: "Run my first audit",
+  },
+  {
+    id: 's5',
+    band: 'confident',
+    scope: 'paragraph',
+    rationale: "Cut redundant framing — 4 sentences → 2",
+    before: "We help designers ship better AI products. We do this by giving them patterns. The patterns are based on real shipped products. You can use them in your own work.",
+    after: "We help designers ship better AI products with patterns drawn from real shipped tools. Use them in your own work.",
+  },
+  {
+    id: 's6',
+    band: 'confident',
+    scope: 'paragraph',
+    rationale: "Reorder for stronger hook — outcome before method",
+    before: "By analyzing 50+ products, we extracted 36 patterns covering trust, safety, and collaboration.",
+    after: "36 patterns covering trust, safety, and collaboration — extracted from 50+ shipped AI products.",
+  },
+  {
+    id: 's7',
+    band: 'bold',
+    scope: 'structure',
+    rationale: "This 'About' section weakens the hero. Move it below the CTA?",
+    before: "[About section, 3 paragraphs]",
+    after: "[About section moved to below CTA]",
+  },
+  {
+    id: 's8',
+    band: 'bold',
+    scope: 'structure',
+    rationale: "Brief reads context-first; objectives buried. Lift Objectives to top?",
+    before: "Context → Objectives → Constraints → Deliverables",
+    after: "Objectives → Context → Constraints → Deliverables",
+  },
+];
+
+function bandFromTrust(trust: number): Band {
+  if (trust < 30) return 'cautious';
+  if (trust < 60) return 'moderate';
+  if (trust < 85) return 'confident';
+  return 'bold';
+}
+
+function modeFromTrust(trust: number): { label: string; sub: string; pill: string } {
+  if (trust < 50) return { label: 'Suggest only', sub: 'AI shows changes inline. You approve each one.', pill: 'bg-gray-100 dark:bg-gray-800 text-text-secondary' };
+  if (trust < 80) return { label: 'Auto-apply with undo', sub: 'AI applies after 3s. Undo within the window.', pill: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' };
+  return { label: 'Apply silently', sub: 'AI applies immediately. Decision shown in history.', pill: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' };
 }
 
 export default function TrustCalibrationDemo() {
-  const [domains, setDomains] = useState<DomainTrust[]>([
-    { domain: 'Email Sorting', icon: '\u{1F4E7}', accuracy: 96, tasksCompleted: 234, currentLevel: 3, trend: 'up', canUpgrade: true },
-    { domain: 'Calendar Management', icon: '\u{1F4C5}', accuracy: 89, tasksCompleted: 87, currentLevel: 2, trend: 'stable', canUpgrade: false },
-    { domain: 'Document Editing', icon: '\u{1F4DD}', accuracy: 78, tasksCompleted: 45, currentLevel: 1, trend: 'up', canUpgrade: false },
-    { domain: 'Financial Reports', icon: '\u{1F4B0}', accuracy: 72, tasksCompleted: 12, currentLevel: 0, trend: 'down', canUpgrade: false },
-  ]);
+  const [trust, setTrust] = useState(20);
+  const [history, setHistory] = useState<{ id: string; action: 'accept' | 'reject'; auto?: boolean }[]>([]);
+  const [autoCountdown, setAutoCountdown] = useState<number | null>(null);
 
-  const [showMilestone, setShowMilestone] = useState(true);
-  const LEVELS = ['Suggest Only', 'Propose & Confirm', 'Act & Notify', 'Full Autonomy'];
+  const band = bandFromTrust(trust);
+  const mode = modeFromTrust(trust);
 
-  const upgradeLevel = (domain: string) => {
-    setDomains(prev => prev.map(d =>
-      d.domain === domain ? { ...d, currentLevel: Math.min(3, d.currentLevel + 1), canUpgrade: false } : d
-    ));
-  };
+  // Pick the next suggestion: matches current band, not yet seen, prefer scope variety
+  const current: Suggestion | null = useMemo(() => {
+    const seen = new Set(history.map((h) => h.id));
+    const pool = SUGGESTIONS.filter((s) => !seen.has(s.id) && s.band === band);
+    if (pool.length > 0) return pool[0];
+    // Fall back: any unseen suggestion (so the demo keeps moving even if exact band is exhausted)
+    const fallback = SUGGESTIONS.filter((s) => !seen.has(s.id));
+    return fallback[0] ?? null;
+  }, [trust, history, band]);
 
-  const getAccuracyColor = (accuracy: number) => {
-    if (accuracy >= 90) return 'bg-green-500';
-    if (accuracy >= 80) return 'bg-amber-500';
-    return 'bg-red-500';
-  };
-
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case 'up': return { icon: '\u2191', color: 'text-green-500' };
-      case 'down': return { icon: '\u2193', color: 'text-red-500' };
-      default: return { icon: '\u2192', color: 'text-text-tertiary' };
+  // Auto-apply timer for moderate/high trust
+  useEffect(() => {
+    if (!current) return;
+    if (mode.label === 'Suggest only') {
+      setAutoCountdown(null);
+      return;
     }
+    const total = mode.label === 'Apply silently' ? 1 : 3;
+    setAutoCountdown(total);
+    const interval = setInterval(() => {
+      setAutoCountdown((c) => (c === null ? null : Math.max(0, c - 1)));
+    }, 1000);
+    const timeout = setTimeout(() => {
+      setHistory((h) => [...h, { id: current.id, action: 'accept', auto: true }]);
+      setTrust((t) => Math.min(100, t + 4));
+    }, total * 1000);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [current?.id, mode.label]);
+
+  const accept = () => {
+    if (!current) return;
+    setHistory((h) => [...h, { id: current.id, action: 'accept' }]);
+    setTrust((t) => Math.min(100, t + 8));
   };
 
-  const totalTasks = domains.reduce((sum, d) => sum + d.tasksCompleted, 0);
-  const avgAccuracy = Math.round(domains.reduce((sum, d) => sum + d.accuracy, 0) / domains.length);
+  const reject = () => {
+    if (!current) return;
+    setHistory((h) => [...h, { id: current.id, action: 'reject' }]);
+    setTrust((t) => Math.max(0, t - 12));
+  };
+
+  const reset = () => {
+    setHistory([]);
+    setTrust(20);
+  };
+
+  const trustColor = trust < 30 ? 'bg-red-500' : trust < 60 ? 'bg-amber-500' : trust < 85 ? 'bg-blue-500' : 'bg-green-500';
 
   return (
-    <div className="max-w-xl mx-auto space-y-4">
-      {/* Milestone card */}
-      {showMilestone && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-surface-primary border border-primary rounded-xl p-5 relative"
-        >
-          <button onClick={() => setShowMilestone(false)} className="absolute top-3 right-3 text-text-tertiary hover:text-text-primary">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl">{'\u{1F3C6}'}</div>
-            <div>
-              <p className="font-semibold text-text-primary">Milestone Reached!</p>
-              <p className="text-sm text-text-secondary">{totalTasks} tasks completed with {avgAccuracy}% average accuracy</p>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Trust dashboard */}
+    <div className="max-w-2xl mx-auto">
       <div className="bg-surface-primary border border-primary rounded-xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-primary">
-          <h3 className="text-lg font-semibold text-text-primary">Trust Dashboard</h3>
-          <p className="text-sm text-text-secondary">Performance by domain</p>
+        {/* Header — trust meter + mode */}
+        <div className="px-5 py-4 border-b border-primary">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-sm font-semibold text-text-primary">Notion AI · Brief draft</p>
+              <p className="text-xs text-text-tertiary">{history.length} suggestion{history.length === 1 ? '' : 's'} reviewed</p>
+            </div>
+            <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${mode.pill}`}>{mode.label}</span>
+          </div>
+
+          <div className="flex items-center gap-3 mb-1">
+            <span className="text-xs text-text-tertiary w-12">Trust</span>
+            <div className="flex-1 bg-surface-secondary rounded-full h-2 overflow-hidden">
+              <motion.div
+                className={`h-2 ${trustColor}`}
+                animate={{ width: `${trust}%` }}
+                transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+              />
+            </div>
+            <span className="text-xs font-medium text-text-primary w-10 text-right">{trust}%</span>
+          </div>
+          <p className="text-xs text-text-tertiary">{mode.sub}</p>
         </div>
 
-        <div className="divide-y divide-primary">
-          {domains.map(d => {
-            const trend = getTrendIcon(d.trend);
-            return (
-              <div key={d.domain} className="px-6 py-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{d.icon}</span>
-                    <span className="font-medium text-text-primary">{d.domain}</span>
-                    <span className={`text-xs ${trend.color}`}>{trend.icon}</span>
+        {/* Suggestion card */}
+        <div className="p-5 min-h-[260px]">
+          <AnimatePresence mode="wait">
+            {current ? (
+              <motion.div
+                key={current.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                  <span className="text-xs uppercase tracking-wide text-text-tertiary font-semibold">
+                    {current.scope === 'word' && 'Word edit'}
+                    {current.scope === 'sentence' && 'Sentence rewrite'}
+                    {current.scope === 'paragraph' && 'Paragraph rewrite'}
+                    {current.scope === 'structure' && 'Structural change'}
+                  </span>
+                </div>
+
+                <p className="text-sm text-text-secondary mb-3">{current.rationale}</p>
+
+                <div className="space-y-2 mb-4">
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/40 rounded-lg p-3">
+                    <p className="text-[10px] uppercase tracking-wide text-red-700 dark:text-red-400 font-semibold mb-1">Before</p>
+                    <p className="text-sm text-text-primary line-through decoration-red-400/60">{current.before}</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-text-primary">{d.accuracy}%</span>
-                    <span className="text-xs text-text-tertiary">({d.tasksCompleted} tasks)</span>
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/40 rounded-lg p-3">
+                    <p className="text-[10px] uppercase tracking-wide text-green-700 dark:text-green-400 font-semibold mb-1">After</p>
+                    <p className="text-sm text-text-primary">{current.after}</p>
                   </div>
                 </div>
 
-                {/* Accuracy bar */}
-                <div className="w-full bg-surface-secondary rounded-full h-2 mb-2">
-                  <motion.div
-                    className={`h-2 rounded-full ${getAccuracyColor(d.accuracy)}`}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${d.accuracy}%` }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-text-tertiary">Level: {LEVELS[d.currentLevel]}</span>
-                  {d.canUpgrade && (
-                    <button
-                      onClick={() => upgradeLevel(d.domain)}
-                      className="text-xs px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
-                    >
-                      Upgrade to {LEVELS[d.currentLevel + 1]}
-                    </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={accept}
+                    className="flex-1 px-4 py-2 bg-accent-primary text-background-primary rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    onClick={reject}
+                    className="flex-1 px-4 py-2 border border-primary rounded-lg text-sm font-medium text-text-primary hover:bg-surface-secondary transition-colors"
+                  >
+                    Reject
+                  </button>
+                  {autoCountdown !== null && autoCountdown > 0 && (
+                    <span className="text-xs text-text-tertiary tabular-nums w-20 text-right shrink-0">auto in {autoCountdown}s</span>
                   )}
                 </div>
+              </motion.div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-10 text-center">
+                <p className="text-sm text-text-secondary mb-3">No more suggestions in this session.</p>
+                <button onClick={reset} className="text-xs px-3 py-1.5 border border-primary rounded-full text-text-primary hover:bg-surface-secondary transition-colors">
+                  Start over
+                </button>
               </div>
-            );
-          })}
+            )}
+          </AnimatePresence>
         </div>
+
+        {/* Footer — recent history */}
+        {history.length > 0 && (
+          <div className="px-5 py-3 border-t border-primary bg-surface-secondary/40">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs text-text-tertiary">Recent:</span>
+              {history.slice(-8).map((h, i) => (
+                <span
+                  key={`${h.id}-${i}`}
+                  className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full ${
+                    h.action === 'accept'
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                  }`}
+                >
+                  {h.action === 'accept' ? '✓' : '✗'} {h.auto ? 'auto' : ''}
+                </span>
+              ))}
+              <button onClick={reset} className="ml-auto text-[10px] text-text-tertiary hover:text-text-primary underline-offset-2 hover:underline">
+                Reset
+              </button>
+            </div>
+          </div>
+        )}
       </div>
+
+      <p className="text-xs text-text-tertiary text-center mt-3 max-w-md mx-auto leading-relaxed">
+        Accept or reject suggestions to see Notion AI&apos;s confidence calibrate in real time.
+        Reject several in a row and watch trust collapse — the AI regresses to small, cautious edits.
+      </p>
     </div>
   );
 }
