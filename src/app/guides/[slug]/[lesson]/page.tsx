@@ -1,11 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import {
-  ClockIcon,
-  BookOpenIcon,
-  ArrowPathIcon,
-} from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -13,6 +8,7 @@ import LessonRenderer from '@/components/ui/LessonRenderer';
 import GuideSidebar from '@/components/guides/GuideSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+import GuidePDFCTA from '@/components/guides/GuidePDFCTA';
 import { siteConfig } from '@/config/seo';
 import { LessonSection } from '@/types/lesson';
 import {
@@ -277,20 +273,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   {lesson.title}
                 </h1>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
-                    <ClockIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
                     {lesson.duration} min read
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
-                    <BookOpenIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
                     {guide.tool} for Designers
                   </span>
                   {guide.lastUpdatedDate && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
-                      <ArrowPathIcon
-                        className="w-3.5 h-3.5"
-                        aria-hidden="true"
-                      />
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
                       Updated{' '}
                       {new Date(guide.lastUpdatedDate).toLocaleDateString(
                         'en-US',
@@ -309,6 +299,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
               <div className="mb-12">
                 <LessonRenderer sections={sections} />
               </div>
+
+              {/* Inline PDF email-capture CTA. Component self-gates: only renders
+                  on configured guide+lesson pairs and hides post-submit via
+                  localStorage. */}
+              <GuidePDFCTA
+                guideSlug={guide.slug}
+                guideTitle={guide.title}
+                lessonOrder={lesson.order}
+              />
 
               {/* Newsletter signup — only on the last lesson of each course.
                   Peak-affinity moment: the reader just finished a 10-23 lesson

@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { XMarkIcon, EnvelopeIcon, DocumentArrowDownIcon } from '@heroicons/react/24/outline';
-import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 interface DownloadPDFModalProps {
   isOpen: boolean;
@@ -53,6 +52,9 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
       if (data.downloadUrl) {
         setDownloadUrl(data.downloadUrl);
       }
+      try {
+        localStorage.setItem(`gist_pdf_submitted:${guideSlug}`, '1');
+      } catch {}
       setStatus('success');
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Something went wrong');
@@ -104,34 +106,23 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
             >
               <XMarkIcon className="w-5 h-5 text-text-secondary" />
             </button>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-accent-subtle flex items-center justify-center">
-                <DocumentArrowDownIcon className="w-6 h-6 text-accent-primary" />
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-text-primary">Download PDF</h2>
-                <p className="text-sm text-text-secondary">Get the offline version</p>
-              </div>
-            </div>
+            <h2 className="text-xl font-bold text-text-primary">Download PDF</h2>
+            <p className="text-sm text-text-secondary mt-1">Get the offline version</p>
           </div>
 
           {/* Content */}
           <div className="p-6">
             {status === 'success' ? (
               <div className="text-center py-4">
-                <div className="w-16 h-16 rounded-full bg-status-success/10 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircleIcon className="w-8 h-8 text-status-success" />
-                </div>
-                <h3 className="text-lg font-semibold text-text-primary mb-2">Your PDF is ready!</h3>
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Your PDF is ready</h3>
                 <p className="text-text-secondary mb-4">
                   Click below to download. <strong>{email}</strong> has been added to our newsletter.
                 </p>
                 {downloadUrl && (
                   <a
                     href={downloadUrl}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors mb-3"
+                    className="inline-flex items-center px-6 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors mb-3"
                   >
-                    <DocumentArrowDownIcon className="w-5 h-5" />
                     Download PDF
                   </a>
                 )}
@@ -165,21 +156,18 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
                     <label htmlFor="email" className="block text-sm font-medium text-text-primary mb-2">
                       Email address
                     </label>
-                    <div className="relative">
-                      <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary" />
-                      <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          if (status === 'error') setStatus('idle');
-                        }}
-                        placeholder="you@example.com"
-                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary transition-colors"
-                        disabled={status === 'loading'}
-                      />
-                    </div>
+                    <input
+                      type="email"
+                      id="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        if (status === 'error') setStatus('idle');
+                      }}
+                      placeholder="you@example.com"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary transition-colors"
+                      disabled={status === 'loading'}
+                    />
                     {status === 'error' && errorMessage && (
                       <p className="mt-2 text-sm text-status-error">{errorMessage}</p>
                     )}
@@ -199,10 +187,7 @@ export default function DownloadPDFModal({ isOpen, onClose, guideTitle, guideSlu
                         Sending...
                       </>
                     ) : (
-                      <>
-                        <DocumentArrowDownIcon className="w-5 h-5" />
-                        Send me the PDF
-                      </>
+                      'Send me the PDF'
                     )}
                   </button>
                 </form>

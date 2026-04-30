@@ -10,7 +10,6 @@ import {
   ComputerDesktopIcon,
   ArrowDownTrayIcon,
   ArrowTopRightOnSquareIcon,
-  BookOpenIcon,
   LockClosedIcon,
   UserIcon,
   KeyIcon,
@@ -19,7 +18,6 @@ import {
   DocumentIcon,
   Cog6ToothIcon,
   LightBulbIcon,
-  StarIcon,
   EyeIcon,
 } from '@heroicons/react/24/outline';
 import {
@@ -32,21 +30,6 @@ import { slugifyHeading } from '@/lib/guides/headings';
 interface LessonRendererProps {
   sections: LessonSection[];
 }
-
-const getHeadingIcon = (headingText: string) => {
-  const iconClass = 'w-7 h-7 text-gray-600 dark:text-gray-400';
-
-  if (headingText.includes('Setup')) {
-    return <Cog6ToothIcon className={iconClass} />;
-  } else if (headingText.includes('Prototype')) {
-    return <LightBulbIcon className={iconClass} />;
-  } else if (headingText.includes('GitHub') || headingText.includes('Git')) {
-    return <CodeBracketIcon className={iconClass} />;
-  } else if (headingText.includes('Best Practices') || headingText.includes('Practices')) {
-    return <StarIcon className={iconClass} />;
-  }
-  return null;
-};
 
 const getIcon = (iconType: IconType) => {
   const iconClass = 'w-6 h-6';
@@ -422,15 +405,13 @@ const renderSection = (
     case 'heading': {
       const id = headingIds.get(index);
       if (section.level === 'h2') {
-        const icon = getHeadingIcon(section.content);
         return (
           <h2
             key={index}
             id={id}
-            className="scroll-mt-24 text-[1.75rem] font-bold text-gray-900 dark:text-gray-100 mt-0 mb-6 flex justify-between items-center gap-4 pb-4 border-b-2 border-gray-200 dark:border-gray-700"
+            className="scroll-mt-24 text-[1.75rem] font-bold text-gray-900 dark:text-gray-100 mt-0 mb-6 pb-4 border-b-2 border-gray-200 dark:border-gray-700"
           >
-            <span>{section.content}</span>
-            {icon && <div className="flex-shrink-0 flex items-center">{icon}</div>}
+            {section.content}
           </h2>
         );
       }
@@ -575,10 +556,7 @@ const renderSection = (
           key={index}
           className="mb-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-primary overflow-hidden"
         >
-          <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
-            <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-background-primary border border-gray-200 dark:border-gray-700 text-text-primary flex-shrink-0">
-              <BookOpenIcon className="w-5 h-5" />
-            </div>
+          <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
             <strong className="text-text-primary text-base">
               {section.title || 'Further reading'}
             </strong>

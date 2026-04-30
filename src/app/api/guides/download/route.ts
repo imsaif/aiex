@@ -747,14 +747,24 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
               }
 
               if (!imageEmbedded) {
-                const imageHeight = 25;
-                drawRoundedRect(margin, yPos, contentWidth, imageHeight, 3, COLORS.background);
                 doc.setFontSize(9);
                 doc.setFont(fontFamily, 'normal');
+                const imageLabel = sanitize(section.alt || section.label || 'See online guide for visual reference');
+                const labelLines = doc.splitTextToSize(imageLabel, contentWidth - 16);
+                const lineHeight = 5;
+                const verticalPadding = 8;
+                const imageHeight = Math.max(25, labelLines.length * lineHeight + verticalPadding * 2);
+
+                checkPageBreak(imageHeight + 5);
+                drawRoundedRect(margin, yPos, contentWidth, imageHeight, 3, COLORS.background);
+
                 doc.setTextColor(...COLORS.textSecondary);
-                const imageLabel = section.alt || section.label || 'See online guide for visual reference';
-                const labelWidth2 = doc.getTextWidth(imageLabel);
-                doc.text(imageLabel, margin + (contentWidth - labelWidth2) / 2, yPos + imageHeight / 2 + 2);
+                let labelY = yPos + (imageHeight - labelLines.length * lineHeight) / 2 + lineHeight - 1;
+                for (const line of labelLines) {
+                  const lineWidth = doc.getTextWidth(line);
+                  doc.text(line, margin + (contentWidth - lineWidth) / 2, labelY);
+                  labelY += lineHeight;
+                }
                 yPos += imageHeight;
               }
 
