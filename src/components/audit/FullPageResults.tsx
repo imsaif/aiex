@@ -16,6 +16,7 @@ import { GapCard } from './GapCard';
 import { EmailReportModal } from './EmailReportModal';
 import { DemoProductMockup, DEMO_PINS } from './DemoProductMockup';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
 
 interface ExtendedResults extends AnalysisResults {
   topGaps?: TopGap[];
@@ -42,18 +43,6 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
 }
-
-const ANALYSIS_MESSAGES = [
-  'Scanning your interface...',
-  'Comparing against 50+ top AI products...',
-  'Checking design patterns and best practices...',
-  'Analyzing visual hierarchy...',
-  'Evaluating user flow clarity...',
-  'Consulting the design agent...',
-  'Reviewing accessibility patterns...',
-  'Checking for AI UX patterns...',
-  'Polishing up the analysis...',
-];
 
 const SCAN_PATTERNS = [
   'Conversational UI', 'Error Recovery', 'Confidence Visualization',
@@ -83,12 +72,6 @@ const PRODUCT_LOGOS = [
   { src: '/images/logos/simple-icons/huggingface.svg', alt: 'Hugging Face' },
 ];
 
-const CHAT_SUGGESTIONS = [
-  'What should I fix first?',
-  'Explain the top issue',
-  'Show me examples',
-];
-
 // Deterministic pin positions overlaid on the user's uploaded screenshot.
 // We don't have AI-detected coordinates, so we distribute up to 5 pins evenly
 // across the screenshot — the side panel reveals the actual pattern feedback.
@@ -99,6 +82,50 @@ const REAL_PIN_POSITIONS: Array<{ xPct: number; yPct: number }> = [
   { xPct: 22, yPct: 70 },
   { xPct: 78, yPct: 76 },
 ];
+
+// Buttons inside the canvas can yank the page to bottom on click via focus-anchored
+// scroll. Suppress mousedown's default and blur on click to keep keyboard a11y.
+function withFocusSuppress(onClick: () => void) {
+  return {
+    onMouseDown: (e: React.MouseEvent<HTMLButtonElement>) => e.preventDefault(),
+    onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick();
+      e.currentTarget.blur();
+    },
+  };
+}
+
+function GapSidePanel({ gap, pinNumber, onClose }: { gap: TopGap; pinNumber: number; onClose: () => void }) {
+  return (
+    <>
+      <button
+        onClick={onClose}
+        aria-label="Close panel"
+        className="absolute inset-0 bg-black/30 z-20 cursor-pointer"
+      />
+      <aside className="absolute top-0 right-0 bottom-0 w-full sm:w-[420px] z-30 bg-background-primary border-l border-border-primary shadow-xl overflow-y-auto animate-slide-in">
+        <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-border-primary bg-background-primary">
+          <div className="flex items-center gap-2.5">
+            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
+              {pinNumber}
+            </span>
+            <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Pattern detected</p>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="p-1.5 rounded-md hover:bg-background-secondary cursor-pointer"
+          >
+            <XMarkIcon className="w-5 h-5 text-text-tertiary" />
+          </button>
+        </div>
+        <div className="p-5">
+          <GapCard gap={gap} />
+        </div>
+      </aside>
+    </>
+  );
+}
 
 function FormattedChatMessage({ content }: { content: string }) {
   const sections = content.split(/\n\n+/);
@@ -451,34 +478,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             />
 
             {/* Slide-in side panel */}
-            {openGap && openPinMeta && (
-              <>
-                <button
-                  onClick={() => setOpenPin(null)}
-                  aria-label="Close panel"
-                  className="absolute inset-0 bg-black/30 z-20 cursor-pointer"
-                />
-                <aside className="absolute top-0 right-0 bottom-0 w-full sm:w-[420px] z-30 bg-background-primary border-l border-border-primary shadow-xl overflow-y-auto animate-slide-in">
-                  <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-border-primary bg-background-primary">
-                    <div className="flex items-center gap-2.5">
-                      <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
-                        {openPin}
-                      </span>
-                      <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Pattern detected</p>
-                    </div>
-                    <button
-                      onClick={() => setOpenPin(null)}
-                      aria-label="Close"
-                      className="p-1.5 rounded-md hover:bg-background-secondary cursor-pointer"
-                    >
-                      <XMarkIcon className="w-5 h-5 text-text-tertiary" />
-                    </button>
-                  </div>
-                  <div className="p-5">
-                    <GapCard gap={openGap} />
-                  </div>
-                </aside>
-              </>
+            {openGap && openPinMeta && openPin !== null && (
+              <GapSidePanel gap={openGap} pinNumber={openPin} onClose={() => setOpenPin(null)} />
             )}
           </div>
 
@@ -569,24 +570,20 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           {allScreenshots.length > 1 && (
             <>
               <button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={(e) => {
+                {...withFocusSuppress(() => {
                   setActiveScreenshotIndex((i) => (i - 1 + allScreenshots.length) % allScreenshots.length);
                   setOpenPin(null);
-                  (e.currentTarget as HTMLButtonElement).blur();
-                }}
+                })}
                 aria-label="Previous screenshot"
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
               >
                 <ChevronLeftIcon className="w-5 h-5" />
               </button>
               <button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={(e) => {
+                {...withFocusSuppress(() => {
                   setActiveScreenshotIndex((i) => (i + 1) % allScreenshots.length);
                   setOpenPin(null);
-                  (e.currentTarget as HTMLButtonElement).blur();
-                }}
+                })}
                 aria-label="Next screenshot"
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
               >
@@ -604,11 +601,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             return (
               <button
                 key={pin.index}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={(e) => {
-                  setOpenPin(pin.index);
-                  (e.currentTarget as HTMLButtonElement).blur();
-                }}
+                {...withFocusSuppress(() => setOpenPin(pin.index))}
                 onMouseEnter={() => setHoveredPin(pin.index)}
                 onMouseLeave={() => setHoveredPin(null)}
                 aria-label={`Issue ${pin.index}: ${topPinnedIssues[pin.index - 1].pattern}`}
@@ -633,34 +626,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           })}
 
           {/* Slide-in side panel */}
-          {realOpenGap && (
-            <>
-              <button
-                onClick={() => setOpenPin(null)}
-                aria-label="Close panel"
-                className="absolute inset-0 bg-black/30 z-20 cursor-pointer"
-              />
-              <aside className="absolute top-0 right-0 bottom-0 w-full sm:w-[420px] z-30 bg-background-primary border-l border-border-primary shadow-xl overflow-y-auto animate-slide-in">
-                <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-border-primary bg-background-primary">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
-                      {openPin}
-                    </span>
-                    <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Pattern detected</p>
-                  </div>
-                  <button
-                    onClick={() => setOpenPin(null)}
-                    aria-label="Close"
-                    className="p-1.5 rounded-md hover:bg-background-secondary cursor-pointer"
-                  >
-                    <XMarkIcon className="w-5 h-5 text-text-tertiary" />
-                  </button>
-                </div>
-                <div className="p-5">
-                  <GapCard gap={realOpenGap} />
-                </div>
-              </aside>
-            </>
+          {realOpenGap && openPin !== null && (
+            <GapSidePanel gap={realOpenGap} pinNumber={openPin} onClose={() => setOpenPin(null)} />
           )}
         </div>
 
@@ -673,12 +640,10 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               return (
                 <button
                   key={index}
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={(e) => {
+                  {...withFocusSuppress(() => {
                     setActiveScreenshotIndex(index);
                     setOpenPin(null);
-                    (e.currentTarget as HTMLButtonElement).blur();
-                  }}
+                  })}
                   aria-label={`Show screenshot ${index + 1}`}
                   className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
                     isActive

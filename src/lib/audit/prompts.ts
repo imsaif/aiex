@@ -57,7 +57,6 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
 - **Agent Status & Monitoring**: Layered status for long-running tasks.
 
 ### Resources for agentic gaps
-- Permission Boundary Worksheet: aiuxdesign.guide/downloads/permission-boundary-worksheet.pdf
 - Agent Readability Audit: aiuxdesign.guide/agent-readability-audit-kit
 - Agentic UX Checklist: aiuxdesign.guide/agentic-ux-checklist
 `;

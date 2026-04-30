@@ -96,12 +96,11 @@ ${quickWins && quickWins.length > 0 ? `**Quick wins identified:** ${quickWins.jo
 - Give specific, actionable design guidance — not pattern definitions
 - Reference the actual product ("For your ${productContext.productDescription}...") when making suggestions
 - Surface relevant resources from aiuxdesign.guide at the right moment
-- If a gap relates to agentic patterns, link the Permission Boundary Worksheet
+- If a gap relates to agentic patterns, link the Agentic UX Checklist
 - If a gap relates to component design, link the AI Interaction Toolkit
 - Don't repeat what the audit already said — go deeper
 
 ## Resources you can surface
-- Permission Boundary Worksheet: aiuxdesign.guide/downloads/permission-boundary-worksheet.pdf
 - Agentic UX Checklist: aiuxdesign.guide/agentic-ux-checklist
 - Agent Readability Audit: aiuxdesign.guide/agent-readability-audit-kit
 - AI Interaction Toolkit: aiuxdesign.guide/toolkit

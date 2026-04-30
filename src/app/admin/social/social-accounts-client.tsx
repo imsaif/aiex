@@ -1,16 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-
-interface SocialAccount {
-  id: string;
-  platform: 'twitter' | 'linkedin';
-  accountName: string;
-  isActive: boolean;
-  tokenExpiry: string | null;
-  isExpired: boolean;
-  createdAt: string;
-}
+import { PostCard, type SocialAccount, type SocialPost } from './PostCard';
 
 interface Newsletter {
   id: string;
@@ -19,19 +10,6 @@ interface Newsletter {
   status: string;
   publishDate: string;
   createdAt: string;
-}
-
-interface SocialPost {
-  id: string;
-  newsletterId: string;
-  platform: 'twitter' | 'linkedin' | 'reddit';
-  content: string;
-  threadContent: string[] | null;
-  hashtags: string[];
-  status: 'draft' | 'posted' | 'failed';
-  platformPostUrl: string | null;
-  errorMessage: string | null;
-  account: { id: string; accountName: string } | null;
 }
 
 interface SocialAccountsClientProps {
@@ -292,14 +270,25 @@ export default function SocialAccountsClient({
     }
   };
 
-  const getTwitterAccount = () => accounts.find((a) => a.platform === 'twitter' && a.isActive);
-  const getLinkedInAccount = () => accounts.find((a) => a.platform === 'linkedin' && a.isActive);
-  const getTwitterPost = () => socialPosts.find((p) => p.platform === 'twitter');
-  const getLinkedInPost = () => socialPosts.find((p) => p.platform === 'linkedin');
-  const getRedditPost = () => socialPosts.find((p) => p.platform === 'reddit');
-
   const twitterAccount = accounts.find((a) => a.platform === 'twitter');
   const linkedInAccount = accounts.find((a) => a.platform === 'linkedin');
+  const activeTwitterAccount = twitterAccount?.isActive ? twitterAccount : undefined;
+  const activeLinkedInAccount = linkedInAccount?.isActive ? linkedInAccount : undefined;
+  const twitterPost = socialPosts.find((p) => p.platform === 'twitter');
+  const linkedInPost = socialPosts.find((p) => p.platform === 'linkedin');
+  const redditPost = socialPosts.find((p) => p.platform === 'reddit');
+
+  const startEdit = (postId: string, content: string) => {
+    setEditingSocialPost(postId);
+    setEditedSocialContent(content);
+  };
+  const cancelEdit = () => setEditingSocialPost(null);
+
+  const copyToClipboardWithToast = (text: string, successText: string) => {
+    navigator.clipboard.writeText(text);
+    setSocialMessage({ type: 'success', text: successText });
+    setTimeout(() => setSocialMessage(null), 3000);
+  };
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-8">
@@ -427,410 +416,54 @@ export default function SocialAccountsClient({
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Twitter/X Post Card */}
-              <div className="border border-border-primary rounded-lg overflow-hidden flex flex-col">
-                <div className="bg-social-twitter p-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                    <span className="text-white font-medium text-sm">X (Twitter)</span>
-                  </div>
-                  {getTwitterAccount() ? (
-                    <span className="text-xs text-gray-400">{getTwitterAccount()?.accountName}</span>
-                  ) : (
-                    <a
-                      href="/api/social/auth/twitter"
-                      className="text-xs text-status-info hover:text-status-info/80"
-                    >
-                      Connect Account
-                    </a>
-                  )}
-                </div>
-                <div className="p-4 bg-surface-primary flex-1 flex flex-col">
-                  {(() => {
-                    const twitterPost = getTwitterPost();
-                    if (!twitterPost) {
-                      return (
-                        <p className="text-text-tertiary text-sm">No Twitter post generated</p>
-                      );
-                    }
-
-                    const isEditing = editingSocialPost === twitterPost.id;
-                    const charCount = isEditing
-                      ? editedSocialContent.length
-                      : twitterPost.content.length;
-
-                    return (
-                      <div className="flex flex-col flex-1">
-                        <div className="flex-1">
-                          {isEditing ? (
-                            <textarea
-                              value={editedSocialContent}
-                              onChange={(e) => setEditedSocialContent(e.target.value)}
-                              className="w-full p-3 border border-border-primary rounded-lg bg-background-secondary text-text-primary text-sm resize-none"
-                              rows={4}
-                              maxLength={280}
-                            />
-                          ) : (
-                            <p className="text-text-primary text-sm whitespace-pre-wrap">
-                              {twitterPost.content}
-                            </p>
-                          )}
-
-                          {twitterPost.threadContent && twitterPost.threadContent.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-border-secondary">
-                              <p className="text-xs text-text-tertiary mb-2">
-                                Opinion thread ({twitterPost.threadContent.length} more tweets)
-                              </p>
-                              <div className="max-h-64 overflow-y-auto space-y-2">
-                                {twitterPost.threadContent.map((tweet, i) => (
-                                  <p key={i} className="text-sm text-text-secondary pl-3" style={{ borderLeft: '2px solid var(--border-secondary)' }}>
-                                    {tweet}
-                                  </p>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {twitterPost.hashtags.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-1">
-                              {twitterPost.hashtags.map((tag) => (
-                                <span key={tag} className="text-xs text-accent-primary">
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="mt-3 pt-3 border-t border-border-secondary flex items-center justify-between">
-                          <span className={`text-xs ${charCount > 280 ? 'text-status-error' : 'text-text-tertiary'}`}>
-                            {charCount}/280
-                          </span>
-                          <div className="flex items-center gap-2">
-                            {twitterPost.status === 'posted' ? (
-                              <a
-                                href={twitterPost.platformPostUrl || '#'}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-status-success"
-                              >
-                                Posted ✓
-                              </a>
-                            ) : twitterPost.status === 'failed' ? (
-                              <span className="text-xs text-status-error" title={twitterPost.errorMessage || ''}>
-                                Failed
-                              </span>
-                            ) : (
-                              <>
-                                {isEditing ? (
-                                  <>
-                                    <button
-                                      onClick={() => setEditingSocialPost(null)}
-                                      className="text-xs text-text-tertiary hover:text-text-primary"
-                                    >
-                                      Cancel
-                                    </button>
-                                    <button
-                                      onClick={() => updateSocialPost(twitterPost.id, editedSocialContent)}
-                                      className="text-xs text-accent-primary hover:text-accent-primary/80"
-                                    >
-                                      Save
-                                    </button>
-                                  </>
-                                ) : (
-                                  <>
-                                    <button
-                                      onClick={() => {
-                                        setEditingSocialPost(twitterPost.id);
-                                        setEditedSocialContent(twitterPost.content);
-                                      }}
-                                      className="text-xs text-text-tertiary hover:text-text-primary"
-                                    >
-                                      Edit
-                                    </button>
-                                    <button
-                                      onClick={() => generateSocialPosts(true, 'twitter')}
-                                      disabled={isGeneratingSocial}
-                                      className="text-xs text-text-tertiary hover:text-text-primary"
-                                    >
-                                      Regenerate
-                                    </button>
-                                    <button
-                                      onClick={() => publishSocialPost(twitterPost.id)}
-                                      disabled={isPublishingSocial !== null || !getTwitterAccount()}
-                                      className="px-3 py-1 bg-social-twitter text-white rounded text-xs hover:bg-social-twitter-hover disabled:opacity-50"
-                                    >
-                                      {isPublishingSocial === twitterPost.id ? 'Posting...' : 'Post to X'}
-                                    </button>
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-
-              {/* LinkedIn Post Card */}
-              <div className="border border-border-primary rounded-lg overflow-hidden flex flex-col">
-                <div className="bg-social-linkedin p-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                    <span className="text-white font-medium text-sm">LinkedIn</span>
-                  </div>
-                  {getLinkedInAccount() ? (
-                    <span className="text-xs text-social-linkedin-light">{getLinkedInAccount()?.accountName}</span>
-                  ) : (
-                    <a
-                      href="/api/social/auth/linkedin"
-                      className="text-xs text-social-linkedin-light hover:text-white"
-                    >
-                      Connect Account
-                    </a>
-                  )}
-                </div>
-                <div className="p-4 bg-surface-primary flex-1 flex flex-col">
-                  {(() => {
-                    const linkedInPost = getLinkedInPost();
-                    if (!linkedInPost) {
-                      return (
-                        <p className="text-text-tertiary text-sm">No LinkedIn post generated</p>
-                      );
-                    }
-
-                    const isEditing = editingSocialPost === linkedInPost.id;
-                    const charCount = isEditing
-                      ? editedSocialContent.length
-                      : linkedInPost.content.length;
-
-                    return (
-                      <div className="flex flex-col flex-1">
-                        <div className="flex-1">
-                          {isEditing ? (
-                            <textarea
-                              value={editedSocialContent}
-                              onChange={(e) => setEditedSocialContent(e.target.value)}
-                              className="w-full p-3 border border-border-primary rounded-lg bg-background-secondary text-text-primary text-sm resize-none"
-                              rows={8}
-                              maxLength={3000}
-                            />
-                          ) : (
-                            <div className="max-h-80 overflow-y-auto">
-                              <p className="text-text-primary text-sm whitespace-pre-wrap">
-                                {linkedInPost.content}
-                              </p>
-                            </div>
-                          )}
-
-                          {linkedInPost.hashtags.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-1">
-                              {linkedInPost.hashtags.map((tag) => (
-                                <span key={tag} className="text-xs text-social-linkedin">
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="mt-3 pt-3 border-t border-border-secondary flex items-center justify-between">
-                          <span className={`text-xs ${charCount > 3000 ? 'text-status-error' : 'text-text-tertiary'}`}>
-                            {charCount}/3000
-                          </span>
-                          <div className="flex items-center gap-2">
-                            {linkedInPost.status === 'posted' ? (
-                              <a
-                                href={linkedInPost.platformPostUrl || '#'}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-status-success"
-                              >
-                                Posted ✓
-                              </a>
-                            ) : linkedInPost.status === 'failed' ? (
-                              <span className="text-xs text-status-error" title={linkedInPost.errorMessage || ''}>
-                                Failed
-                              </span>
-                            ) : (
-                              <>
-                                {isEditing ? (
-                                  <>
-                                    <button
-                                      onClick={() => setEditingSocialPost(null)}
-                                      className="text-xs text-text-tertiary hover:text-text-primary"
-                                    >
-                                      Cancel
-                                    </button>
-                                    <button
-                                      onClick={() => updateSocialPost(linkedInPost.id, editedSocialContent)}
-                                      className="text-xs text-accent-primary hover:text-accent-primary/80"
-                                    >
-                                      Save
-                                    </button>
-                                  </>
-                                ) : (
-                                  <>
-                                    <button
-                                      onClick={() => {
-                                        setEditingSocialPost(linkedInPost.id);
-                                        setEditedSocialContent(linkedInPost.content);
-                                      }}
-                                      className="text-xs text-text-tertiary hover:text-text-primary"
-                                    >
-                                      Edit
-                                    </button>
-                                    <button
-                                      onClick={() => generateSocialPosts(true, 'linkedin')}
-                                      disabled={isGeneratingSocial}
-                                      className="text-xs text-text-tertiary hover:text-text-primary"
-                                    >
-                                      Regenerate
-                                    </button>
-                                    <button
-                                      onClick={() => publishSocialPost(linkedInPost.id)}
-                                      disabled={isPublishingSocial !== null || !getLinkedInAccount()}
-                                      className="px-3 py-1 bg-social-linkedin text-white rounded text-xs hover:bg-social-linkedin-hover disabled:opacity-50"
-                                    >
-                                      {isPublishingSocial === linkedInPost.id ? 'Posting...' : 'Post to LinkedIn'}
-                                    </button>
-                                  </>
-                                )}
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-
-              {/* Reddit Post Card */}
-              <div className="border border-border-primary rounded-lg overflow-hidden flex flex-col">
-                <div className="p-3 flex items-center justify-between" style={{ backgroundColor: '#FF4500' }}>
-                  <div className="flex items-center gap-2">
-                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z" />
-                    </svg>
-                    <span className="text-white font-medium text-sm">Reddit</span>
-                  </div>
-                  <span className="text-xs text-white/70">Copy & paste</span>
-                </div>
-                <div className="p-4 bg-surface-primary flex-1 flex flex-col">
-                  {(() => {
-                    const redditPost = getRedditPost();
-                    if (!redditPost) {
-                      return (
-                        <p className="text-text-tertiary text-sm">No Reddit post generated</p>
-                      );
-                    }
-
-                    // Reddit title is stored in threadContent[0]
-                    const redditTitle = redditPost.threadContent?.[0] || '';
-                    const isEditing = editingSocialPost === redditPost.id;
-
-                    return (
-                      <div className="flex flex-col flex-1">
-                        <div className="flex-1">
-                          {redditTitle && (
-                            <div className="mb-3 pb-3 border-b border-border-secondary">
-                              <p className="text-xs text-text-tertiary mb-1">Post Title</p>
-                              <p className="text-text-primary text-sm font-medium">{redditTitle}</p>
-                              <button
-                                onClick={() => {
-                                  navigator.clipboard.writeText(redditTitle);
-                                  setSocialMessage({ type: 'success', text: 'Reddit title copied!' });
-                                  setTimeout(() => setSocialMessage(null), 3000);
-                                }}
-                                className="mt-1 text-xs text-accent-primary hover:text-accent-primary/80"
-                              >
-                                Copy title
-                              </button>
-                            </div>
-                          )}
-
-                          {isEditing ? (
-                            <textarea
-                              value={editedSocialContent}
-                              onChange={(e) => setEditedSocialContent(e.target.value)}
-                              className="w-full p-3 border border-border-primary rounded-lg bg-background-secondary text-text-primary text-sm resize-none font-mono"
-                              rows={12}
-                            />
-                          ) : (
-                            <div className="max-h-80 overflow-y-auto">
-                              <p className="text-text-primary text-sm whitespace-pre-wrap">
-                                {redditPost.content}
-                              </p>
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="mt-3 pt-3 border-t border-border-secondary flex items-center justify-between">
-                          <span className="text-xs text-text-tertiary">
-                            {redditPost.content.length} chars
-                          </span>
-                          <div className="flex items-center gap-2">
-                            {isEditing ? (
-                              <>
-                                <button
-                                  onClick={() => setEditingSocialPost(null)}
-                                  className="text-xs text-text-tertiary hover:text-text-primary"
-                                >
-                                  Cancel
-                                </button>
-                                <button
-                                  onClick={() => updateSocialPost(redditPost.id, editedSocialContent)}
-                                  className="text-xs text-accent-primary hover:text-accent-primary/80"
-                                >
-                                  Save
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button
-                                  onClick={() => {
-                                    setEditingSocialPost(redditPost.id);
-                                    setEditedSocialContent(redditPost.content);
-                                  }}
-                                  className="text-xs text-text-tertiary hover:text-text-primary"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  onClick={() => generateSocialPosts(true, 'reddit')}
-                                  disabled={isGeneratingSocial}
-                                  className="text-xs text-text-tertiary hover:text-text-primary"
-                                >
-                                  Regenerate
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    const fullPost = redditTitle ? `${redditTitle}\n\n${redditPost.content}` : redditPost.content;
-                                    navigator.clipboard.writeText(fullPost);
-                                    setSocialMessage({ type: 'success', text: 'Reddit post copied to clipboard!' });
-                                    setTimeout(() => setSocialMessage(null), 3000);
-                                  }}
-                                  className="px-3 py-1 text-white rounded text-xs hover:opacity-90"
-                                  style={{ backgroundColor: '#FF4500' }}
-                                >
-                                  Copy Post
-                                </button>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
+              <PostCard
+                platform="twitter"
+                post={twitterPost}
+                account={activeTwitterAccount}
+                editingPostId={editingSocialPost}
+                editedContent={editedSocialContent}
+                isPublishingPostId={isPublishingSocial}
+                isGenerating={isGeneratingSocial}
+                onStartEdit={startEdit}
+                onCancelEdit={cancelEdit}
+                onSaveEdit={updateSocialPost}
+                onChangeContent={setEditedSocialContent}
+                onRegenerate={() => generateSocialPosts(true, 'twitter')}
+                onPublish={publishSocialPost}
+              />
+              <PostCard
+                platform="linkedin"
+                post={linkedInPost}
+                account={activeLinkedInAccount}
+                editingPostId={editingSocialPost}
+                editedContent={editedSocialContent}
+                isPublishingPostId={isPublishingSocial}
+                isGenerating={isGeneratingSocial}
+                onStartEdit={startEdit}
+                onCancelEdit={cancelEdit}
+                onSaveEdit={updateSocialPost}
+                onChangeContent={setEditedSocialContent}
+                onRegenerate={() => generateSocialPosts(true, 'linkedin')}
+                onPublish={publishSocialPost}
+              />
+              <PostCard
+                platform="reddit"
+                post={redditPost}
+                editingPostId={editingSocialPost}
+                editedContent={editedSocialContent}
+                isPublishingPostId={isPublishingSocial}
+                isGenerating={isGeneratingSocial}
+                onStartEdit={startEdit}
+                onCancelEdit={cancelEdit}
+                onSaveEdit={updateSocialPost}
+                onChangeContent={setEditedSocialContent}
+                onRegenerate={() => generateSocialPosts(true, 'reddit')}
+                onCopyPost={(post, title) => {
+                  const fullPost = title ? `${title}\n\n${post.content}` : post.content;
+                  copyToClipboardWithToast(fullPost, 'Reddit post copied to clipboard!');
+                }}
+                onCopyTitle={(title) => copyToClipboardWithToast(title, 'Reddit title copied!')}
+              />
             </div>
           )}
 

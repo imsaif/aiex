@@ -574,19 +574,19 @@ function normalizeTitle(title: string): string {
 // Design by Anthropic Labs" matches "Claude introduces scheduled tasks
 // feature" at 40% overlap (claud + introduc) because both stem to the same
 // shared words. Strip them so dedup only counts content terms.
+// Entries must equal stemWord(themselves) — the lookup is always against stems,
+// so inflected forms like 'launching' would never match (input gets stemmed to 'launch' first).
 const DEDUP_STOPWORDS_STEMMED: ReadonlySet<string> = new Set([
-  // Announcement verbs (stemmed forms)
-  'introduc', 'introducing', 'launch', 'launches', 'launching', 'announc', 'announces', 'announcing',
-  'release', 'releases', 'releasing', 'unveil', 'unveils', 'unveiling', 'reveal', 'reveals',
-  'add', 'adds', 'adding', 'bring', 'brings', 'bringing', 'roll', 'rolls', 'rolling',
-  'ship', 'ships', 'shipping', 'debut', 'debuts', 'debuting', 'arrive', 'arrives', 'arriving',
-  'available', 'avail', 'now', 'today', 'this', 'week', 'this',
-  // Generic action verbs
-  'get', 'gets', 'getting', 'use', 'uses', 'using', 'make', 'makes', 'making',
-  'start', 'starts', 'starting', 'help', 'helps', 'helping',
+  // Announcement verbs (stems)
+  'introduc', 'launch', 'announc', 'unveil', 'reveal',
+  'add', 'bring', 'roll', 'ship', 'debut',
+  // Time/availability
+  'avail', 'now', 'today', 'week',
+  // Generic action verbs (stems)
+  'get', 'use', 'using', 'make', 'start', 'help',
   // Filler
   'new', 'first', 'next', 'just', 'how', 'why', 'what', 'with', 'for', 'and', 'the',
-  'into', 'from', 'over', 'under', 'after', 'before',
+  'into', 'from', 'over', 'under', 'after',
 ]);
 
 // Get stemmed word set from a title for comparison
@@ -1371,79 +1371,72 @@ function generateSlug(title: string, type: NewsletterType = 'daily'): string {
   return `${prefix}-${monthDay}-${titleSlug}`;
 }
 
+async function sendAdminEmail(subject: string, html: string) {
+  if (!resend || !process.env.ADMIN_EMAIL) return;
+  try {
+    await resend.emails.send({
+      from: 'AI UX Daily <imran@aiuxdesign.guide>',
+      replyTo: 'imranrizom@gmail.com',
+      to: process.env.ADMIN_EMAIL,
+      subject,
+      html,
+    });
+  } catch (error) {
+    console.error('[newsletter] Failed to send admin email:', error);
+  }
+}
+
 async function sendAdminNotification(
   draft: { id: string; title: string; summary: string },
   previewUrl: string
 ) {
-  if (!resend || !process.env.ADMIN_EMAIL) {
-    return;
-  }
-
   const approveUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/newsletter/publish?id=${draft.id}&secret=${process.env.ADMIN_APPROVE_SECRET}`;
+  await sendAdminEmail(
+    `📰 Newsletter Draft Ready: ${draft.title}`,
+    `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="font-size: 24px; color: #0f172a;">Newsletter Draft Ready</h1>
 
-  try {
-    await resend.emails.send({
-      from: 'AI UX Daily <imran@aiuxdesign.guide>',
-      replyTo: 'imranrizom@gmail.com',
-      to: process.env.ADMIN_EMAIL,
-      subject: `📰 Newsletter Draft Ready: ${draft.title}`,
-      html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h1 style="font-size: 24px; color: #0f172a;">Newsletter Draft Ready</h1>
-
-          <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="margin: 0 0 10px; font-size: 18px;">${draft.title}</h2>
-            <p style="margin: 0; color: #64748b;">${draft.summary}</p>
-          </div>
-
-          <p>A new AI UX Daily newsletter has been generated and is waiting for your review.</p>
-
-          <div style="margin: 30px 0;">
-            <a href="${previewUrl}" style="display: inline-block; padding: 12px 24px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 6px; margin-right: 10px;">Preview & Edit</a>
-            <a href="${approveUrl}" style="display: inline-block; padding: 12px 24px; background: #10b981; color: #fff; text-decoration: none; border-radius: 6px;">Quick Approve</a>
-          </div>
-
-          <p style="color: #94a3b8; font-size: 14px;">Approving publishes on-site. You'll then copy the HTML from the admin dashboard and paste it into Beehiiv to send.</p>
+        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h2 style="margin: 0 0 10px; font-size: 18px;">${draft.title}</h2>
+          <p style="margin: 0; color: #64748b;">${draft.summary}</p>
         </div>
-      `,
-    });
-  } catch (error) {
-    console.error('Failed to send admin notification:', error);
-  }
+
+        <p>A new AI UX Daily newsletter has been generated and is waiting for your review.</p>
+
+        <div style="margin: 30px 0;">
+          <a href="${previewUrl}" style="display: inline-block; padding: 12px 24px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 6px; margin-right: 10px;">Preview & Edit</a>
+          <a href="${approveUrl}" style="display: inline-block; padding: 12px 24px; background: #10b981; color: #fff; text-decoration: none; border-radius: 6px;">Quick Approve</a>
+        </div>
+
+        <p style="color: #94a3b8; font-size: 14px;">Approving publishes on-site. You'll then copy the HTML from the admin dashboard and paste it into Beehiiv to send.</p>
+      </div>
+    `
+  );
 }
 
 async function sendFailureAlert(type: NewsletterType, error: unknown) {
-  if (!resend || !process.env.ADMIN_EMAIL) return;
-
   const errorMessage = error instanceof Error ? error.message : String(error);
   const errorStack = error instanceof Error ? error.stack : '';
+  await sendAdminEmail(
+    `⚠️ Newsletter Generation Failed (${type})`,
+    `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="font-size: 24px; color: #dc2626;">Newsletter Generation Failed</h1>
+        <p>The <strong>${type}</strong> newsletter failed to generate at ${new Date().toISOString()}.</p>
 
-  try {
-    await resend.emails.send({
-      from: 'AI UX Daily <imran@aiuxdesign.guide>',
-      replyTo: 'imranrizom@gmail.com',
-      to: process.env.ADMIN_EMAIL,
-      subject: `⚠️ Newsletter Generation Failed (${type})`,
-      html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h1 style="font-size: 24px; color: #dc2626;">Newsletter Generation Failed</h1>
-          <p>The <strong>${type}</strong> newsletter failed to generate at ${new Date().toISOString()}.</p>
-
-          <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin: 20px 0;">
-            <p style="margin: 0 0 8px; font-weight: 600; color: #991b1b;">Error:</p>
-            <pre style="margin: 0; font-size: 13px; color: #991b1b; white-space: pre-wrap; word-break: break-word;">${errorMessage}</pre>
-            ${errorStack ? `<details style="margin-top: 12px;"><summary style="cursor: pointer; color: #991b1b; font-size: 13px;">Stack trace</summary><pre style="margin-top: 8px; font-size: 12px; color: #6b7280; white-space: pre-wrap;">${errorStack}</pre></details>` : ''}
-          </div>
-
-          <p>You can trigger it manually:</p>
-          <pre style="background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 13px; overflow-x: auto;">curl -H "Authorization: Bearer $CRON_SECRET" \\
-  "${SITE_URL}/api/cron/generate-newsletter${type === 'weekly' ? '?type=weekly' : ''}"</pre>
+        <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 0 0 8px; font-weight: 600; color: #991b1b;">Error:</p>
+          <pre style="margin: 0; font-size: 13px; color: #991b1b; white-space: pre-wrap; word-break: break-word;">${errorMessage}</pre>
+          ${errorStack ? `<details style="margin-top: 12px;"><summary style="cursor: pointer; color: #991b1b; font-size: 13px;">Stack trace</summary><pre style="margin-top: 8px; font-size: 12px; color: #6b7280; white-space: pre-wrap;">${errorStack}</pre></details>` : ''}
         </div>
-      `,
-    });
-  } catch (emailErr) {
-    console.error('[newsletter] Failed to send failure alert email:', emailErr);
-  }
+
+        <p>You can trigger it manually:</p>
+        <pre style="background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 13px; overflow-x: auto;">curl -H "Authorization: Bearer $CRON_SECRET" \\
+"${SITE_URL}/api/cron/generate-newsletter${type === 'weekly' ? '?type=weekly' : ''}"</pre>
+      </div>
+    `
+  );
 }
 
 // Compute the QA telemetry block stashed on NewsletterDraft.structuredData.qa.

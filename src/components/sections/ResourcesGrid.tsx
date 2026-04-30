@@ -11,7 +11,6 @@ import {
   NewspaperIcon,
   WrenchScrewdriverIcon,
   CpuChipIcon,
-  ShieldCheckIcon,
   PaintBrushIcon,
   BookOpenIcon,
   ClipboardDocumentCheckIcon,
@@ -82,18 +81,6 @@ const RESOURCES: Resource[] = [
     href: '/agent-readability-audit-kit',
     ctaText: 'Get Audit Kit',
     linkType: 'internal',
-  },
-  {
-    id: 'permission-boundary-worksheet',
-    title: 'Permission Boundary Worksheet',
-    description: 'Map out where your AI agent needs user approval, auto-executes, or escalates. Essential for agentic UX.',
-    icon: <ShieldCheckIcon className={ICON_CLASS} />,
-    category: 'Downloads',
-    type: 'PDF',
-    tags: ['permissions', 'agent', 'boundaries'],
-    href: '/downloads/permission-boundary-worksheet.pdf', /* TODO: upload PDF */
-    ctaText: 'Download PDF',
-    linkType: 'download',
   },
   {
     id: 'figma-make-prompts',

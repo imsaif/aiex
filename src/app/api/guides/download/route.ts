@@ -6,82 +6,47 @@ import { jsPDF } from 'jspdf';
 import { readFileSync } from 'fs';
 import path from 'path';
 
-/**
- * Download guide PDF using a valid token
- * Token is generated and sent in welcome email
- */
 export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const token = searchParams.get('token');
-    const email = searchParams.get('email');
+  const searchParams = request.nextUrl.searchParams;
+  const token = searchParams.get('token');
+  const email = searchParams.get('email');
 
-    if (!token || !email) {
-      return NextResponse.json(
-        { error: 'Missing token or email parameter' },
-        { status: 400 }
-      );
-    }
+  if (!token || !email) {
+    return NextResponse.json({ error: 'Missing token or email parameter' }, { status: 400 });
+  }
 
-    // Validate token
-    const validatedData = validateGuideToken(token);
-    if (!validatedData) {
-      return NextResponse.json(
-        { error: 'Invalid or expired download link. Please request a new one from the guide page.' },
-        { status: 401 }
-      );
-    }
-
-    // Verify email matches
-    if (validatedData.email !== email) {
-      return NextResponse.json(
-        { error: 'Email does not match token' },
-        { status: 401 }
-      );
-    }
-
-    // Verify subscriber exists
-    const subscriber = await prisma.subscriber.findUnique({
-      where: { email },
-    });
-
-    if (!subscriber || !subscriber.active) {
-      return NextResponse.json(
-        { error: 'Email not found or subscription inactive' },
-        { status: 404 }
-      );
-    }
-
-    // Find the guide
-    const guide = guides.find(g => g.slug === validatedData.guideSlug);
-    if (!guide) {
-      return NextResponse.json(
-        { error: 'Guide not found' },
-        { status: 404 }
-      );
-    }
-
-    // Generate PDF
-    const pdfBuffer = await generateGuidePDF(guide);
-
-    // Create filename from guide title
-    const filename = guide.title.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-') + '.pdf';
-
-    // Return PDF file
-    return new NextResponse(pdfBuffer, {
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${filename}"`,
-        'Content-Length': pdfBuffer.byteLength.toString(),
-      },
-    });
-  } catch (error) {
-    console.error('Error processing guide download:', error);
+  const validatedData = validateGuideToken(token);
+  if (!validatedData) {
     return NextResponse.json(
-      { error: 'Failed to process guide download' },
-      { status: 500 }
+      { error: 'Invalid or expired download link. Please request a new one from the guide page.' },
+      { status: 401 }
     );
   }
+
+  if (validatedData.email !== email) {
+    return NextResponse.json({ error: 'Email does not match token' }, { status: 401 });
+  }
+
+  const subscriber = await prisma.subscriber.findUnique({ where: { email } });
+  if (!subscriber || !subscriber.active) {
+    return NextResponse.json({ error: 'Email not found or subscription inactive' }, { status: 404 });
+  }
+
+  const guide = guides.find(g => g.slug === validatedData.guideSlug);
+  if (!guide) {
+    return NextResponse.json({ error: 'Guide not found' }, { status: 404 });
+  }
+
+  const pdfBuffer = await generateGuidePDF(guide);
+  const filename = guide.title.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '-') + '.pdf';
+
+  return new NextResponse(pdfBuffer, {
+    headers: {
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Length': pdfBuffer.byteLength.toString(),
+    },
+  });
 }
 
 // Brand colors - minimal palette following brand guidelines
@@ -97,22 +62,14 @@ const COLORS = {
   codeBg: [30, 30, 30] as [number, number, number],         // Near black for code
 };
 
-// All modules use accent color for brand consistency
-const MODULE_COLORS: Record<string, [number, number, number]> = {
-  setup: [217, 119, 87],       // Brand accent
-  features: [217, 119, 87],    // Brand accent
-  prototype: [217, 119, 87],   // Brand accent
-  prototyping: [217, 119, 87], // Brand accent
-  collaboration: [217, 119, 87], // Brand accent
-  github: [217, 119, 87],      // Brand accent
-  practices: [217, 119, 87],   // Brand accent
-  figma: [217, 119, 87],       // Brand accent
-  general: [217, 119, 87],     // Brand accent
-};
+// Known modules render in brand accent; unknown ids fall back to muted text.
+const KNOWN_MODULES = new Set([
+  'setup', 'features', 'prototype', 'prototyping', 'collaboration',
+  'github', 'practices', 'figma', 'general',
+]);
+const getModuleColor = (id: string): [number, number, number] =>
+  KNOWN_MODULES.has(id) ? COLORS.accent : COLORS.textSecondary;
 
-/**
- * Generate a beautifully designed PDF from guide data
- */
 async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -344,7 +301,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
       const moduleId = modules[i];
       const moduleName = moduleNames[moduleId] || moduleId;
       const lessonCount = moduleGroups.get(moduleId)!.length;
-      const moduleColor = MODULE_COLORS[moduleId] || COLORS.textSecondary;
+      const moduleColor = getModuleColor(moduleId);
 
       checkPageBreak(moduleCardHeight + 5);
       drawRoundedRect(margin, yPos, contentWidth, moduleCardHeight, 2, COLORS.background);
@@ -407,7 +364,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
       checkPageBreak(25);
 
       const moduleName = moduleNames[moduleId] || moduleId;
-      const moduleColor = MODULE_COLORS[moduleId] || COLORS.textSecondary;
+      const moduleColor = getModuleColor(moduleId);
 
       // Module header
       doc.setFontSize(13);
@@ -475,7 +432,7 @@ async function generateGuidePDF(guide: typeof guides[0]): Promise<ArrayBuffer> {
 
       isFirstLesson = false;
 
-      const moduleColor = MODULE_COLORS[lesson.module || 'general'] || COLORS.textSecondary;
+      const moduleColor = getModuleColor(lesson.module || 'general');
 
       // Lesson number badge
       const badgeText = `Lesson ${lesson.order}`;

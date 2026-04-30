@@ -4,13 +4,10 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   XCircleIcon,
-  ArrowPathIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   PaperAirplaneIcon,
   MinusCircleIcon,
-  ClipboardDocumentIcon,
-  ClipboardDocumentCheckIcon,
   ChatBubbleLeftRightIcon,
   EnvelopeIcon,
 } from '@heroicons/react/24/outline';
@@ -20,6 +17,7 @@ import type { AnalysisResults, PatternResult, TopGap, ProductContext } from '@/t
 import { PatternModal } from './PatternModal';
 import { EmailReportModal } from './EmailReportModal';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
 
 // Extended results type that includes context-first fields when available
 interface ExtendedResults extends AnalysisResults {
@@ -29,26 +27,6 @@ interface ExtendedResults extends AnalysisResults {
   productContext?: ProductContext;
   productTypeSummary?: string;
 }
-
-// Designer-friendly analysis messages
-const ANALYSIS_MESSAGES = [
-  "Scanning your interface...",
-  "Comparing against 50+ top AI products...",
-  "Checking design patterns and best practices...",
-  "Analyzing visual hierarchy...",
-  "Evaluating user flow clarity...",
-  "Consulting the design agent...",
-  "Reviewing accessibility patterns...",
-  "Checking for AI UX patterns...",
-  "Polishing up the analysis...",
-];
-
-// Quick suggestion prompts for chat
-const SUGGESTIONS = [
-  "What should I fix first?",
-  "Explain the top issue",
-  "Show me examples",
-];
 
 interface ResultsPanelProps {
   results: ExtendedResults | null;
@@ -174,70 +152,12 @@ function CompactScoreInline({ score, total }: { score: number; total: number }) 
 
 
 
-// Get top 3 priority patterns to fix
-function getTopPriorities(
-  missingPatterns: (PatternResult & { id: string })[],
-  weakPatterns: (PatternResult & { id: string })[]
-): (PatternResult & { id: string })[] {
-  const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2, none: 3 };
-
-  // Combine missing and weak, prioritize missing first, then by priority level
-  const combined = [
-    ...missingPatterns.map(p => ({ ...p, isMissing: true })),
-    ...weakPatterns.map(p => ({ ...p, isMissing: false })),
-  ].sort((a, b) => {
-    // Missing patterns first
-    if (a.isMissing !== b.isMissing) return a.isMissing ? -1 : 1;
-    // Then by priority
-    return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
-  });
-
-  return combined.slice(0, 3);
-}
-
-// Generate copyable results summary
-function generateResultsSummary(
-  results: AnalysisResults,
-  missingPatterns: (PatternResult & { id: string })[],
-  weakPatterns: (PatternResult & { id: string })[],
-  goodPatterns: (PatternResult & { id: string })[]
-): string {
-  const lines: string[] = [
-    'AI UX Audit Results',
-    `Score: ${results.score}/${results.maxScore || 36} patterns detected`,
-    '',
-  ];
-
-  if (missingPatterns.length > 0) {
-    lines.push('Missing Patterns:');
-    missingPatterns.slice(0, 5).forEach(p => {
-      lines.push(`• ${p.name}${p.improvement ? ` - ${p.improvement}` : ''}`);
-    });
-    lines.push('');
-  }
-
-  if (weakPatterns.length > 0) {
-    lines.push('Needs Improvement:');
-    weakPatterns.slice(0, 5).forEach(p => {
-      lines.push(`• ${p.name}${p.improvement ? ` - ${p.improvement}` : ''}`);
-    });
-    lines.push('');
-  }
-
-  lines.push(`Well Implemented: ${goodPatterns.length} patterns`);
-  lines.push('');
-  lines.push('Run your own audit: aiuxdesign.guide/audit');
-
-  return lines.join('\n');
-}
-
 export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoMode = false, chatTrigger = 0, emailReportTrigger = 0 }: ResultsPanelProps) {
-  const [chatMode, setChatMode] = useState(false); // false = analysis view, true = chat view
+  const [chatMode, setChatMode] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
-  const [copied, setCopied] = useState(false);
   const [selectedPattern, setSelectedPattern] = useState<(PatternResult & { id: string }) | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -343,26 +263,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
     }, 100);
   }, [sendMessage]);
 
-  // Handle copy results to clipboard
-  const handleCopy = useCallback(async () => {
-    if (!results) return;
-
-    const allPatterns = Object.entries(results.patterns).map(([patternId, data]) => ({ ...data, id: patternId }));
-    const missing = allPatterns.filter(p => p.status === 'missing');
-    const weak = allPatterns.filter(p => p.status === 'weak');
-    const good = allPatterns.filter(p => p.status === 'well-implemented');
-
-    const summary = generateResultsSummary(results, missing, weak, good);
-
-    try {
-      await navigator.clipboard.writeText(summary);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  }, [results]);
-
   // Show loading state if analyzing
   if (isAnalyzing || !results) {
     return (
@@ -447,7 +347,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
           {/* Suggestion Pills (show when no messages) */}
           {messages.length === 0 && (
             <div className="flex flex-wrap gap-3 mb-5">
-              {SUGGESTIONS.map((suggestion) => (
+              {CHAT_SUGGESTIONS.map((suggestion) => (
                 <button
                   key={suggestion}
                   type="button"
@@ -517,12 +417,7 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
     );
   }
 
-  // Determine if this is a context-first result
   const hasContextFirstData = !!(results.topGaps && results.topGaps.length > 0);
-
-  // Get top 3 priorities for the hero section (legacy mode)
-  const topPriorities = getTopPriorities(missingPatterns, weakPatterns);
-  const remainingPatternCount = allPatterns.length - topPriorities.length;
 
   // ANALYSIS VIEW (default) - SIMPLIFIED
   return (
@@ -685,97 +580,6 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
               </details>
             )}
           </div>
-        ) : topPriorities.length > 0 ? (
-          /* LEGACY: TOP 3 PRIORITIES - Hero Section */
-          <div className="mb-6">
-            {/* Hero Header */}
-            <div className="flex items-center gap-3 mb-5">
-              <div className="p-2.5 rounded-xl bg-accent-subtle">
-                <SparklesIcon className="w-6 h-6 text-accent-primary" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-text-primary">
-                  Top {topPriorities.length} Priorities
-                </h2>
-                <p className="text-sm text-text-tertiary">Fix these first for maximum impact</p>
-              </div>
-            </div>
-
-            {/* Priority Cards */}
-            <div className="space-y-3">
-              {topPriorities.map((pattern, index) => {
-                const isMissing = pattern.status === 'missing';
-
-                return (
-                  <button
-                    key={pattern.id}
-                    type="button"
-                    onClick={() => setSelectedPattern(pattern)}
-                    className="w-full group p-4 rounded-xl border border-border-primary bg-background-secondary/50 hover:bg-background-secondary hover:border-accent-primary/50 transition-all text-left"
-                  >
-                    <div className="flex items-start gap-4">
-                      {/* Rank Number */}
-                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent-primary text-white dark:text-gray-900 flex items-center justify-center text-sm font-bold">
-                        {index + 1}
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                          <span className="font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
-                            {pattern.name}
-                          </span>
-                          {/* Status Badge */}
-                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                            isMissing
-                              ? 'bg-status-error/10 text-status-error'
-                              : 'bg-status-warning/10 text-status-warning'
-                          }`}>
-                            {isMissing ? (
-                              <><XCircleIcon className="w-3 h-3" /> Missing</>
-                            ) : (
-                              <><ExclamationTriangleIcon className="w-3 h-3" /> Improve</>
-                            )}
-                          </span>
-                        </div>
-                        {pattern.improvement && (
-                          <p className="text-sm text-text-secondary leading-relaxed">
-                            {pattern.improvement}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Arrow */}
-                      <ChevronRightIcon className="w-5 h-5 text-text-tertiary group-hover:text-accent-primary transition-colors flex-shrink-0 mt-1" />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Primary CTA */}
-            <button
-              type="button"
-              onClick={() => {
-                setChatMode(true);
-                setTimeout(() => sendMessage(`Help me fix ${topPriorities[0]?.name}. Give me specific steps.`), 100);
-              }}
-              className="w-full mt-5 flex items-center justify-center gap-2 px-5 py-4 bg-accent-primary text-white dark:text-gray-900 rounded-xl text-base font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
-            >
-              <ChatBubbleLeftRightIcon className="w-5 h-5" />
-              Get Help Fixing These
-            </button>
-
-            {/* Email Report Button */}
-            <button
-              type="button"
-              onClick={() => setShowEmailModal(true)}
-              className="w-full mt-3 flex items-center justify-center gap-2 px-5 py-3 border border-border-primary text-text-secondary rounded-xl text-base font-medium hover:bg-background-secondary hover:text-text-primary transition-colors"
-            >
-              <EnvelopeIcon className="w-5 h-5" />
-              Email This Report
-            </button>
-          </div>
         ) : (
           /* All Good State */
           <div className="text-center py-8 mb-6">
@@ -796,132 +600,48 @@ export function ResultsPanel({ results, onNewAudit, isAnalyzing = false, isDemoM
         )}
 
         {/* FULL REPORT - Collapsed Accordion */}
-        {remainingPatternCount > 0 && (
+        {allPatterns.length > 0 && (
           <details className="group">
             <summary className="flex items-center gap-2 cursor-pointer text-sm text-text-secondary hover:text-text-primary py-3 border-t border-border-primary">
               <ChevronDownIcon className="w-4 h-4 transition-transform group-open:rotate-180" />
-              View Full Report ({remainingPatternCount} more patterns)
+              View Full Report ({allPatterns.length} patterns)
             </summary>
 
             <div className="pt-4 space-y-5">
-              {/* Missing Patterns */}
-              {missingPatterns.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-status-error mb-3 flex items-center gap-2">
-                    <XCircleIcon className="w-4 h-4" />
-                    Missing ({missingPatterns.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {missingPatterns.map(pattern => (
-                      <button
-                        key={pattern.id}
-                        type="button"
-                        onClick={() => setSelectedPattern(pattern)}
-                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors">
-                            {pattern.name}
-                          </span>
-                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
-                        </div>
-                        {pattern.evidence && (
-                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
-                        )}
-                      </button>
-                    ))}
+              {[
+                { patterns: missingPatterns, label: 'Missing', headerClass: 'text-status-error', Icon: XCircleIcon, dim: false },
+                { patterns: weakPatterns, label: 'Needs Improvement', headerClass: 'text-status-warning', Icon: ExclamationTriangleIcon, dim: false },
+                { patterns: goodPatterns, label: 'Well Implemented', headerClass: 'text-status-success', Icon: CheckCircleIcon, dim: false },
+                { patterns: naPatterns, label: 'Not Applicable', headerClass: 'text-text-tertiary', Icon: MinusCircleIcon, dim: true },
+              ].map(({ patterns, label, headerClass, Icon, dim }) =>
+                patterns.length === 0 ? null : (
+                  <div key={label}>
+                    <h3 className={`text-sm font-semibold ${headerClass} mb-3 flex items-center gap-2`}>
+                      <Icon className="w-4 h-4" />
+                      {label} ({patterns.length})
+                    </h3>
+                    <div className="space-y-2">
+                      {patterns.map(pattern => (
+                        <button
+                          key={pattern.id}
+                          type="button"
+                          onClick={() => setSelectedPattern(pattern)}
+                          className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <span className={`text-sm font-medium ${dim ? 'text-text-secondary' : 'text-text-primary'} group-hover:text-accent-primary transition-colors`}>
+                              {pattern.name}
+                            </span>
+                            <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
+                          </div>
+                          {pattern.evidence && (
+                            <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {/* Weak Patterns */}
-              {weakPatterns.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-status-warning mb-3 flex items-center gap-2">
-                    <ExclamationTriangleIcon className="w-4 h-4" />
-                    Needs Improvement ({weakPatterns.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {weakPatterns.map(pattern => (
-                      <button
-                        key={pattern.id}
-                        type="button"
-                        onClick={() => setSelectedPattern(pattern)}
-                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors">
-                            {pattern.name}
-                          </span>
-                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
-                        </div>
-                        {pattern.evidence && (
-                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Good Patterns */}
-              {goodPatterns.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-status-success mb-3 flex items-center gap-2">
-                    <CheckCircleIcon className="w-4 h-4" />
-                    Well Implemented ({goodPatterns.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {goodPatterns.map(pattern => (
-                      <button
-                        key={pattern.id}
-                        type="button"
-                        onClick={() => setSelectedPattern(pattern)}
-                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition-colors">
-                            {pattern.name}
-                          </span>
-                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
-                        </div>
-                        {pattern.evidence && (
-                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* N/A Patterns */}
-              {naPatterns.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-semibold text-text-tertiary mb-3 flex items-center gap-2">
-                    <MinusCircleIcon className="w-4 h-4" />
-                    Not Applicable ({naPatterns.length})
-                  </h3>
-                  <div className="space-y-2">
-                    {naPatterns.map(pattern => (
-                      <button
-                        key={pattern.id}
-                        type="button"
-                        onClick={() => setSelectedPattern(pattern)}
-                        className="w-full p-3 rounded-lg border border-border-primary bg-background-secondary/30 hover:bg-background-secondary hover:border-accent-primary/30 transition-all text-left group"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <span className="text-sm font-medium text-text-secondary group-hover:text-accent-primary transition-colors">
-                            {pattern.name}
-                          </span>
-                          <ChevronRightIcon className="w-4 h-4 text-text-tertiary group-hover:text-accent-primary flex-shrink-0 mt-0.5" />
-                        </div>
-                        {pattern.evidence && (
-                          <p className="text-xs text-text-tertiary mt-1 line-clamp-2">{pattern.evidence}</p>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                )
               )}
             </div>
           </details>
