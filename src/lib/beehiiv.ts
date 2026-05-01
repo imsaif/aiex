@@ -49,7 +49,7 @@ export async function addSubscriberToBeehiiv(email: string, options?: BeehiivOpt
           email,
           reactivate_existing: true,
           send_welcome_email: true,
-          utm_source: options?.utmSource || 'website',
+          utm_source: options?.utmSource || 'direct',
           ...(customFields && { custom_fields: customFields }),
         }),
       }

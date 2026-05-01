@@ -53,12 +53,16 @@ export default function AuditClient() {
 
   // User clicked "Start your own audit" on the landing demo — drop into upload
   const handleStartRealAudit = useCallback(() => {
+    if (isPaywalled) {
+      setShowPaywall(true);
+      return;
+    }
     setIsDemoMode(false);
     setAnalysisResults(null);
     setUploadedImages([]);
     setProductType(null);
     setStep('screenshot');
-  }, []);
+  }, [isPaywalled]);
 
   // Run analysis against the API
   const runAnalysis = useCallback(async (images: UploadedImage[]) => {
@@ -146,13 +150,17 @@ export default function AuditClient() {
 
   // Handle clear/reset — "Run Another Audit" returns to upload (not the demo)
   const handleClear = useCallback(() => {
+    if (isPaywalled) {
+      setShowPaywall(true);
+      return;
+    }
     setUploadedImages([]);
     setAnalysisResults(null);
     setIsAnalyzing(false);
     setIsDemoMode(false);
     setStep('screenshot');
     setProductType(null);
-  }, []);
+  }, [isPaywalled]);
 
   // Determine if we're in the upload-intake step (only the upload screen renders the intake chrome)
   const isIntakeFlow = step === 'screenshot';
@@ -233,6 +241,8 @@ export default function AuditClient() {
             screenshotDeviceType={uploadedImages[0]?.deviceType}
             screenshots={uploadedImages.map((img) => ({ url: img.base64, deviceType: img.deviceType }))}
             onStartRealAudit={step === 'demo' ? handleStartRealAudit : undefined}
+            auditsRemaining={auditsRemaining}
+            isPaywalled={isPaywalled}
           />
         </section>
       )}

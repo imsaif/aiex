@@ -1,40 +1,18 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { XMarkIcon, CheckIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
-import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
 
 interface PaywallModalProps {
   onClose: () => void;
   auditCountAtTrigger?: number;
 }
 
-const TIERS = [
-  {
-    name: 'Free',
-    price: '$0',
-    period: '',
-    description: `${FREE_AUDIT_LIMIT} lifetime audit${FREE_AUDIT_LIMIT === 1 ? '' : 's'}`,
-    features: ['AI UX pattern scoring', 'Top gaps & quick wins', 'Chat follow-up (5 messages)'],
-    current: true,
-  },
-  {
-    name: 'Early Access Pro',
-    price: '$9',
-    period: '/mo',
-    description: 'First 50 only — locks in before $19',
-    features: ['Unlimited audits', 'Priority analysis', 'Full chat history', 'Email reports'],
-    highlight: true,
-  },
-  {
-    name: 'Individual Pro',
-    price: '$19',
-    period: '/mo',
-    description: 'After early access fills',
-    features: ['Everything in Early Access', 'Team sharing (coming soon)', 'Custom pattern library'],
-    highlight: false,
-  },
+const BENEFITS = [
+  'Unlimited audits across every project',
+  'Priority analysis with full chat history',
+  'Email reports for you and your team',
 ];
 
 export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps) {
@@ -90,13 +68,6 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
 
       setSuccess(true);
       trackAuditEvent('audit_paywall_waitlist_signup');
-
-      // Also subscribe to newsletter with waitlist tag (fire-and-forget)
-      fetch('/api/newsletter/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'audit-waitlist', website_url: '' }),
-      }).catch(() => {});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -106,151 +77,117 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
 
   return (
     <div className="fixed inset-0 z-50">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleDismiss} />
+      <div className="absolute inset-0 bg-text-primary/70 backdrop-blur-md" onClick={handleDismiss} />
 
       <div className="absolute inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4">
           <div
-            className="relative w-full max-w-4xl bg-background-primary rounded-2xl shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+            className="relative w-full max-w-md bg-background-primary rounded-2xl border border-border-primary shadow-[0_24px_60px_-12px_rgba(22,32,54,0.25)] animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close button */}
+            <div className="h-px bg-gradient-to-r from-transparent via-accent-primary/40 to-transparent" />
+
             <button
               type="button"
               onClick={handleDismiss}
-              className="absolute top-4 right-4 p-2 text-text-tertiary hover:text-text-primary hover:bg-background-secondary rounded-lg transition-colors z-10"
+              className="absolute top-4 right-4 p-1.5 text-text-tertiary hover:text-text-primary rounded-lg transition-colors z-10"
+              aria-label="Close"
             >
               <XMarkIcon className="w-5 h-5" />
             </button>
 
-            <div className="p-8 md:p-10">
-              {success ? (
-                /* Success State */
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-status-success/10 rounded-full flex items-center justify-center">
-                    <CheckIcon className="w-8 h-8 text-status-success" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-text-primary mb-2">
-                    You&apos;re on the list!
-                  </h2>
-                  <p className="text-text-secondary mb-6">
-                    We&apos;ll email you the moment Early Access opens — you&apos;ll be first in line.
-                  </p>
-                  <button
-                    onClick={onClose}
-                    className="px-6 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-xl font-medium hover:bg-accent-hover transition-colors"
-                  >
-                    Got it
-                  </button>
+            {success ? (
+              <div className="p-10 text-center">
+                <div className="w-12 h-12 mx-auto mb-5 bg-status-success/10 rounded-full flex items-center justify-center">
+                  <CheckIcon className="w-6 h-6 text-status-success" strokeWidth={2.5} />
                 </div>
-              ) : (
-                /* Paywall Content */
-                <>
-                  {/* Header */}
-                  <div className="text-center mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-status-warning/10 text-status-warning text-sm font-medium mb-4">
-                      <SparklesIcon className="w-4 h-4" />
-                      Free audits used
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-2">
-                      You&apos;ve used all your free audits
-                    </h2>
-                    <p className="text-text-secondary">
-                      Unlimited audits are coming soon. Join the early access list to lock in the lowest price.
-                    </p>
-                  </div>
+                <h2 className="text-xl font-semibold text-text-primary mb-2 tracking-tight">
+                  You&apos;re on the list
+                </h2>
+                <p className="text-sm text-text-secondary mb-6 leading-relaxed">
+                  We&apos;ll email you the moment Early Access opens — you&apos;ll be first in line.
+                </p>
+                <button
+                  onClick={onClose}
+                  className="px-5 py-2.5 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-hover transition-colors"
+                >
+                  Got it
+                </button>
+              </div>
+            ) : (
+              <div className="p-8">
+                <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-background-secondary border border-border-primary text-[11px] font-medium text-text-secondary mb-5">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-primary opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-primary"></span>
+                  </span>
+                  Early Access · First 50 only
+                </div>
 
-                  {/* Pricing Tiers */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-                    {TIERS.map((tier) => (
-                      <div
-                        key={tier.name}
-                        className={`rounded-xl p-5 border ${
-                          tier.highlight
-                            ? 'border-accent-primary bg-accent-subtle ring-1 ring-accent-primary'
-                            : tier.current
-                            ? 'border-border-primary bg-background-secondary opacity-60'
-                            : 'border-border-primary bg-background-secondary'
-                        }`}
-                      >
-                        {tier.highlight && (
-                          <span className="text-xs font-semibold text-accent-primary uppercase tracking-wide">
-                            Most Popular
-                          </span>
-                        )}
-                        {tier.current && (
-                          <span className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">
-                            Current Plan
-                          </span>
-                        )}
-                        <div className="mt-2 mb-4">
-                          <span className="text-3xl font-bold text-text-primary">{tier.price}</span>
-                          <span className="text-text-secondary text-sm">{tier.period}</span>
-                        </div>
-                        <p className="text-sm text-text-secondary mb-4">{tier.description}</p>
-                        <ul className="space-y-2">
-                          {tier.features.map((feature) => (
-                            <li key={feature} className="flex items-start gap-2 text-sm text-text-secondary">
-                              <CheckIcon className="w-4 h-4 text-status-success mt-0.5 flex-shrink-0" />
-                              {feature}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
+                <h2 className="text-[22px] font-semibold text-text-primary tracking-tight leading-[1.2] mb-2">
+                  Be first in line for unlimited audits.
+                </h2>
+                <p className="text-sm text-text-secondary mb-6 leading-relaxed">
+                  Drop your email and we&apos;ll let you know the moment Early Access opens.
+                </p>
 
-                  {/* Email Capture */}
-                  <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-                    {/* Honeypot */}
-                    <input
-                      type="text"
-                      name="website_url"
-                      value=""
-                      onChange={() => {}}
-                      tabIndex={-1}
-                      autoComplete="off"
-                      aria-hidden="true"
-                      style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
-                    />
+                <form onSubmit={handleSubmit} className="mb-5">
+                  <input
+                    type="text"
+                    name="website_url"
+                    value=""
+                    onChange={() => {}}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
+                  />
 
-                    <div className="flex gap-3">
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@example.com"
-                        className="flex-1 px-4 py-3 bg-background-secondary border border-border-primary rounded-xl text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/50 focus:border-accent-primary transition-colors"
-                        required
-                        autoFocus
-                      />
-                      <button
-                        type="submit"
-                        disabled={isLoading || !email}
-                        className="px-5 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-xl font-medium hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
-                      >
-                        {isLoading ? (
-                          <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                          </svg>
-                        ) : (
-                          'Join Early Access List →'
-                        )}
-                      </button>
-                    </div>
-
-                    {error && (
-                      <p className="mt-2 text-sm text-status-error">{error}</p>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@company.com"
+                    className="w-full px-4 py-3.5 bg-background-primary border border-border-secondary rounded-xl text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/20 focus:border-accent-primary transition-all mb-2.5 text-[15px]"
+                    required
+                    autoFocus
+                  />
+                  <button
+                    type="submit"
+                    disabled={isLoading || !email}
+                    className="w-full px-5 py-3.5 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-hover disabled:bg-text-disabled disabled:cursor-not-allowed transition-colors flex items-center justify-center text-[15px] shadow-sm"
+                  >
+                    {isLoading ? (
+                      <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                    ) : (
+                      'Join the waitlist'
                     )}
+                  </button>
 
-                    <p className="mt-3 text-xs text-text-tertiary text-center">
-                      No credit card required. We&apos;ll notify you when early access opens. You&apos;ll also receive daily AI UX news.
-                    </p>
-                  </form>
-                </>
-              )}
-            </div>
+                  {error && (
+                    <p className="mt-2 text-sm text-status-error">{error}</p>
+                  )}
+                </form>
+
+                <ul className="space-y-2 pt-5 border-t border-border-divider">
+                  {BENEFITS.map((benefit) => (
+                    <li key={benefit} className="flex items-start gap-2.5 text-[13px] text-text-secondary leading-relaxed">
+                      <span className="mt-0.5 flex-shrink-0 w-3.5 h-3.5 rounded-full bg-accent-primary/10 flex items-center justify-center">
+                        <CheckIcon className="w-2 h-2 text-accent-primary" strokeWidth={3} />
+                      </span>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+
+                <p className="mt-5 text-[11px] text-text-tertiary text-center leading-relaxed">
+                  By joining, you&apos;ll also get our daily AI UX newsletter. Unsubscribe anytime.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

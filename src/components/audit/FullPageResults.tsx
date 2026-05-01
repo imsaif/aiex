@@ -37,6 +37,8 @@ interface FullPageResultsProps {
   screenshotDeviceType?: 'mobile' | 'desktop';
   screenshots?: Array<{ url: string; deviceType: 'mobile' | 'desktop' }>;
   onStartRealAudit?: () => void;
+  auditsRemaining?: number;
+  isPaywalled?: boolean;
 }
 
 interface ChatMessage {
@@ -185,7 +187,7 @@ function FormattedChatMessage({ content }: { content: string }) {
   );
 }
 
-export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit }: FullPageResultsProps) {
+export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled }: FullPageResultsProps) {
   // Normalize: prefer the multi-screenshot prop, fall back to the single-screenshot props for backwards compat.
   const allScreenshots = screenshots && screenshots.length > 0
     ? screenshots
@@ -484,7 +486,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           </div>
 
           {/* Big CTA below the demo */}
-          <div className="mt-10 sm:mt-12 flex justify-center">
+          <div className="mt-10 sm:mt-12 flex flex-col items-center gap-3">
             <button
               onClick={() => {
                 trackAuditEvent('audit_demo_start_real_clicked');
@@ -492,8 +494,21 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               }}
               className="inline-flex items-center px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base sm:text-lg font-semibold hover:bg-accent-hover transition-all active:scale-95 cursor-pointer shadow-lg shadow-accent-primary/20"
             >
-              Start your audit
+              {isPaywalled ? 'Join Early Access' : 'Start your free audit'}
             </button>
+            {!isPaywalled && typeof auditsRemaining === 'number' && auditsRemaining > 0 && (
+              <p className="text-sm text-text-tertiary">
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
+                  {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} included · No signup required
+                </span>
+              </p>
+            )}
+            {isPaywalled && (
+              <p className="text-sm text-text-tertiary">
+                You&apos;ve used your free audit · Join Early Access for unlimited
+              </p>
+            )}
           </div>
 
         </div>

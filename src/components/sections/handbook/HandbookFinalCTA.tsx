@@ -28,7 +28,7 @@ export function HandbookFinalCTA() {
       const subscribeResponse = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, website_url: '' }),
+        body: JSON.stringify({ email, source: 'handbook', website_url: '' }),
       });
 
       if (!subscribeResponse.ok) {

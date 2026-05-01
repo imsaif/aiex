@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { prisma } from '@/lib/prisma';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
@@ -30,7 +31,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Security checks
     const securityError = validateEmailSecurity(body.email || '', body);
     if (securityError) {
       return NextResponse.json({ error: securityError }, { status: 400 });
@@ -38,8 +38,21 @@ export async function POST(request: NextRequest) {
 
     const { email } = waitlistSchema.parse(body);
 
-    // Sync to Beehiiv with paywall-waitlist source tag
-    addSubscriberToBeehiiv(email, { utmSource: 'paywall-waitlist' });
+    // Upsert into Prisma — re-submits and existing newsletter subscribers
+    // are valid waitlist joins, just not new rows.
+    const existing = await prisma.subscriber.findUnique({ where: { email } });
+    if (!existing) {
+      await prisma.subscriber.create({ data: { email } });
+    } else if (!existing.active) {
+      await prisma.subscriber.update({ where: { email }, data: { active: true } });
+    }
+
+    // Re-stamp signup_source on every submit so existing subscribers from
+    // other sources get filterable as waitlist members in Beehiiv.
+    await addSubscriberToBeehiiv(email, {
+      utmSource: 'audit-waitlist',
+      signupSource: 'audit-waitlist',
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
