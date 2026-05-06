@@ -741,7 +741,22 @@ function findDominantSource(
 // through that rule as 3 different "products". Capping at the source level
 // before Claude sees the pool closes that gap. Belt-and-suspenders: keep the
 // prompt-side rule too.
-const MAX_ITEMS_PER_SOURCE = 2;
+// Per-tier pool cap. design-opinion is capped at 1 because two opinion pieces
+// from the same publication (e.g. UX Collective) can crowd out concrete AI-lab
+// product news when both score similarly on keyword density. The prompt rule
+// "AT MOST 1 opinion piece per issue" was being ignored by Claude Haiku
+// (2026-05-06: 2/4 daily items were uxdesign.cc), so we enforce it at the pool
+// level. Other tiers stay at 2 — the previous behaviour.
+const MAX_ITEMS_PER_SOURCE_DEFAULT = 2;
+const MAX_ITEMS_PER_SOURCE_BY_TIER: Partial<Record<SourceTier, number>> = {
+  'design-opinion': 1,
+};
+function maxItemsForTier(tier?: SourceTier): number {
+  if (tier && MAX_ITEMS_PER_SOURCE_BY_TIER[tier] !== undefined) {
+    return MAX_ITEMS_PER_SOURCE_BY_TIER[tier]!;
+  }
+  return MAX_ITEMS_PER_SOURCE_DEFAULT;
+}
 
 interface AggregatedPool {
   items: NewsItem[];
@@ -863,7 +878,7 @@ async function aggregateNews(
   const capped: NewsItem[] = [];
   for (const item of sorted) {
     const seen = perSourceCount.get(item.source) || 0;
-    if (seen >= MAX_ITEMS_PER_SOURCE) {
+    if (seen >= maxItemsForTier(item.sourceTier)) {
       clippedSet.add(item.source);
       continue;
     }
