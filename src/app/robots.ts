@@ -4,35 +4,34 @@ import { siteConfig } from '@/config/seo';
 export default function robots(): MetadataRoute.Robots {
   const baseUrl = siteConfig.url;
 
+  // Per robots.txt spec, when a user-agent-specific group exists, that bot
+  // ignores the wildcard groups entirely. So Googlebot's disallow list must
+  // be explicit — don't rely on the `*` group to cascade.
+  const disallow = [
+    '/api/',
+    '/admin/',
+    '/*.json$',
+    '/*.xml$',
+    '/.next/',
+    '/search',
+    '/favorites',
+    '/audit/results/',
+    '/handbook/preview',
+    '/download/',
+  ];
+
   return {
     rules: [
       {
         userAgent: '*',
         allow: '/',
-        disallow: [
-          '/api/',
-          '/admin/',
-          '/*.json$',
-          '/*.xml$',
-          '/.next/',
-        ],
+        disallow,
       },
       {
-        // GoogleBot specific rules for increased crawl depth
         userAgent: 'Googlebot',
         allow: '/',
+        disallow,
         crawlDelay: 0.5,
-      },
-      {
-        // Block low-value utility pages and session-dependent routes from indexing
-        userAgent: '*',
-        disallow: [
-          '/search',
-          '/favorites',
-          '/audit/results/',
-          '/handbook/preview',
-          '/download/',
-        ],
       },
     ],
     // Primary sitemap reference

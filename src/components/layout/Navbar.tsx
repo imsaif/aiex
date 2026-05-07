@@ -9,6 +9,7 @@ import {
   NewspaperIcon,
   MagnifyingGlassIcon,
   FolderIcon,
+  AcademicCapIcon,
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
 import { ThemeToggle } from '../ui/ThemeToggle';
@@ -38,8 +39,11 @@ const Navbar = () => {
     if (href === '/') {
       return pathname === '/' || pathname.startsWith('/patterns');
     }
+    if (href === '/guides') {
+      return pathname.startsWith('/guides');
+    }
     if (href === '/resources') {
-      return pathname === '/resources' || pathname.startsWith('/prompts') || pathname.startsWith('/guides') || pathname.startsWith('/agent-readability-audit-kit');
+      return pathname === '/resources' || pathname.startsWith('/prompts') || pathname.startsWith('/agent-readability-audit-kit');
     }
     return pathname.startsWith(href);
   };
@@ -86,6 +90,16 @@ const Navbar = () => {
                 Patterns
                 <span className="invisible font-semibold block h-0" aria-hidden="true">
                   Patterns
+                </span>
+              </span>
+            </Link>
+
+            <Link href="/guides" className={getLinkClasses('/guides')}>
+              <AcademicCapIcon className="w-5 h-5" />
+              <span className="hidden sm:inline relative">
+                Guides
+                <span className="invisible font-semibold block h-0" aria-hidden="true">
+                  Guides
                 </span>
               </span>
             </Link>
