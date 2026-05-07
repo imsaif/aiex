@@ -308,9 +308,9 @@ function getProductIconImg(productName: string): string {
 // out lower ones for a given keyword profile, so the gaps matter as much as
 // the absolute values.
 const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
-  'design-pub': 30,        // research/news/case studies — narrowed from 50 (Apr 28) so strong ai-lab items with multiple keyword hits can outscore mediocre design-pub items
+  'design-pub': 25,        // research/news/case studies — narrowed 50→30 (Apr 28) and 30→25 (May 7) so concrete product news outranks design-pub keyword stacking
   'design-tool': 40,       // first-party design product news
-  'ai-lab': 30,            // concrete AI product launches
+  'ai-lab': 35,            // concrete AI product launches — bumped 30→35 (May 7) to compete with design-pub keyword density
   'design-opinion': 28,    // think-pieces — useful but capped to 1-2 per issue via prompt
   curator: 25,             // syntheses
   community: 25,
@@ -1059,8 +1059,12 @@ YOUR TASK:
 
    AUDIENCE FILTER (strict — this overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not write a strained Designer's Takeaway to bolt design relevance onto a dev story. Returning 3 strong design-relevant items is better than 5 mixed items.
-   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), and Lenny's Newsletter are usually opinion. Include AT MOST 1 opinion piece per issue, and ONLY when it introduces a genuinely new framework or insight that would change how a designer works in the next month. If you cannot point to that specific change, drop the opinion piece.
+   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), and Lenny's Newsletter are usually opinion. Count opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com) in your final selection — this count MUST be ≤1. If you have 2 candidates from these domains, pick the stronger one and drop the other; do not include both.
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
+
+   PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
+   - At least 1 of your selected items MUST be concrete product news from an AI lab or design tool (e.g., OpenAI, Anthropic/Claude, Google AI, Microsoft AI, Perplexity, Cursor, Notion, Linear, Windsurf, Figma, Framer). A "concrete product news" item announces a launch, feature, version, or dated change — not an opinion piece about that company.
+   - If the pool genuinely contains zero such items, return fewer total items rather than padding with opinion/articles. A 3-item issue with 1 product launch beats a 4-item all-opinion issue.
 
    DIVERSITY RULES (strict — these override relevance scoring):
    - Pick items from at least 3 DIFFERENT companies/products. A newsletter where every item is from one company is not useful.
@@ -1126,8 +1130,12 @@ YOUR TASK:
 
    AUDIENCE FILTER (strict — overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not bolt design relevance onto a dev story with a strained Designer's Takeaway. A leaner roundup of 5 strong design stories beats 8 mixed ones.
-   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), and Lenny's Newsletter are usually opinion. Include AT MOST 2 opinion pieces in a weekly roundup, and ONLY when each introduces a genuinely new framework or insight that would change how a designer works. If you cannot point to that specific change, drop the opinion piece.
+   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), and Lenny's Newsletter are usually opinion. Count opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com) in your final selection — this count MUST be ≤2 in a weekly roundup. If you have more than 2 candidates from these domains, pick the strongest and drop the rest.
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
+
+   PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
+   - At least 2 of your selected items MUST be concrete product news from an AI lab or design tool (e.g., OpenAI, Anthropic/Claude, Google AI, Microsoft AI, Perplexity, Cursor, Notion, Linear, Windsurf, Figma, Framer). A "concrete product news" item announces a launch, feature, version, or dated change — not an opinion piece about that company.
+   - If the pool genuinely contains fewer such items, return fewer total items rather than padding with opinion/articles.
 
    DIVERSITY RULES (strict — these override relevance scoring):
    - Pick items from at least 4 DIFFERENT companies/products across the week.
