@@ -40,18 +40,25 @@ export default function NewsletterDetailClient({
   const wordCount = newsletter.content ? newsletter.content.split(/\s+/).length : 0;
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-  // Lazy-load DOMPurify and sanitize content
+  // Lazy-load DOMPurify and sanitize content. Outbound links open in a new
+  // tab; pattern auto-linking happens AFTER that pass so internal /patterns/
+  // links stay same-tab navigation.
   useEffect(() => {
     if (!newsletter.content) return;
-    import('dompurify').then((mod) => {
-      const DOMPurify = mod.default;
+    Promise.all([
+      import('dompurify'),
+      import('@/lib/pattern-linkify'),
+    ]).then(([purifyMod, linkifyMod]) => {
+      const DOMPurify = purifyMod.default;
       const sanitized = DOMPurify.sanitize(newsletter.content, {
         ADD_TAGS: ['style'],
         ADD_ATTR: ['target', 'rel'],
       });
-      setSanitizedContent(
-        sanitized.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ')
+      const withTargets = sanitized.replace(
+        /<a /g,
+        '<a target="_blank" rel="noopener noreferrer" '
       );
+      setSanitizedContent(linkifyMod.linkifyPatternsInHtml(withTargets));
     });
   }, [newsletter.content]);
 

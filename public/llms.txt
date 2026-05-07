@@ -65,6 +65,7 @@ The AI UX design pattern library for product designers and teams building AI-pow
 Free learning paths for designers using AI tools:
 
 - [Claude Code for Designers](https://www.aiuxdesign.guide/guides/claude-code-learning-path): 23 lessons on using Claude Code for design-to-code workflows
+- [Claude Design for Designers](https://www.aiuxdesign.guide/guides/claude-design-learning-path): 12 lessons on Anthropic's Claude Design tool for prototyping and design systems
 - [Cursor for Designers](https://www.aiuxdesign.guide/guides/cursor-learning-path): AI-powered code editor guide for designers
 - [GitHub Copilot for Designers](https://www.aiuxdesign.guide/guides/github-copilot-learning-path): Code suggestions and AI pair programming for designers
 - [GitHub for Designers](https://www.aiuxdesign.guide/guides/github-learning-path): Version control and collaboration for design teams

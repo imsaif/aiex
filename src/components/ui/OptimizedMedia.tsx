@@ -91,6 +91,11 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
   const objectFitClass = isFeedbackExample ? 'object-contain' : 'object-cover';
 
   // For GIFs, prefer MP4 video (much smaller file size). Fall back to GIF if MP4 fails.
+  // Render media at full opacity from the start. The previous opacity-0 → opacity-100
+  // transition gated on isLoading hid LCP candidates from the browser and could leave
+  // cached media stuck invisible when onLoad fired before the listener attached
+  // (same SSR-race bug fixed on ProductsSection logos in Apr 29 — see CLAUDE.md
+  // Performance & Web Vitals).
   const videoComponent = isGif && !videoError ? (
     <video
       src={getVideoSrc(src)}
@@ -99,7 +104,7 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
       muted
       playsInline
       preload="metadata"
-      className={`${objectFitClass} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 w-full h-full ${fill ? 'absolute inset-0' : ''}`}
+      className={`${objectFitClass} w-full h-full ${fill ? 'absolute inset-0' : ''}`}
       onLoadedData={handleLoadComplete}
       onError={() => {
         // MP4 not available, fall back to GIF image
@@ -115,7 +120,7 @@ const OptimizedMedia: React.FC<OptimizedMediaProps> = ({
       src={src || '/placeholder-image.png'}
       alt={alt}
       {...(fill ? { fill: true, sizes: sizes || '100vw' } : { width, height })}
-      className={`${objectFitClass} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300 ${fill ? 'absolute inset-0' : ''}`}
+      className={`${objectFitClass} ${fill ? 'absolute inset-0' : ''}`}
       onLoad={handleLoadComplete}
       onError={handleLoadError}
       onClick={onClick}

@@ -297,11 +297,11 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         )}
 
-        {/* Practice in Guides — cross-link to guide courses for SEO */}
+        {/* Practice in Courses — cross-link to courses for SEO */}
         {relatedGuides.length > 0 && (
           <section>
             <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
-              Practice in Guides
+              Practice in Courses
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {relatedGuides.map((guide) => (

@@ -77,11 +77,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // /aiuxdesign.gist.design removed — static file, not an indexable page
   ];
 
+  // Per-pattern lastModified — prefer dateModified, fall back to datePublished.
+  // Previously every pattern URL got `new Date()` on each build, producing a
+  // bogus daily freshness signal Google may discount on a young domain.
+  const patternLastModified = (pattern: typeof patterns[number]): Date => {
+    const raw = pattern.dateModified || pattern.datePublished;
+    if (!raw) return new Date(0); // epoch — flags missing date so it's noticeable in audits
+    const d = new Date(raw);
+    return isNaN(d.getTime()) ? new Date(0) : d;
+  };
+
+  // Category lastModified is the most-recent dateModified across its patterns,
+  // so categories age with their content rather than always reading "today".
+  // pattern.category is the human-readable title; categories[i].title matches.
+  const categoryLastModified = (categoryTitle: string): Date => {
+    const dates = patterns
+      .filter((p) => p.category === categoryTitle)
+      .map(patternLastModified)
+      .filter((d) => d.getTime() > 0);
+    if (dates.length === 0) return new Date();
+    return new Date(Math.max(...dates.map((d) => d.getTime())));
+  };
+
   // Pattern category index pages - 8 categories at /patterns/category/[slug]
   const patternCategoryPages: MetadataRoute.Sitemap = categories.map(
     (category) => ({
       url: `${baseUrl}/patterns/category/${category.slug}`,
-      lastModified: new Date(),
+      lastModified: categoryLastModified(category.title),
       changeFrequency: 'monthly' as const,
       priority: 0.85,
     })
@@ -90,7 +112,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Pattern pages - 36 AI design patterns
   const patternPages: MetadataRoute.Sitemap = patterns.map((pattern) => ({
     url: `${baseUrl}/patterns/${pattern.slug}`,
-    lastModified: new Date(),
+    lastModified: patternLastModified(pattern),
     changeFrequency: 'monthly' as const,
     priority: 0.9,
   }));

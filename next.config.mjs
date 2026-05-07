@@ -199,6 +199,18 @@ const nextConfig = {
         destination: '/audit',
         permanent: true,
       },
+      // Nav label "Guides" became "Courses" May 2026; URLs stay on /guides until Week 3 URL move.
+      // /courses guesses route to live /guides pages so the new label doesn't 404.
+      {
+        source: '/courses',
+        destination: '/guides',
+        permanent: false,
+      },
+      {
+        source: '/courses/:path*',
+        destination: '/guides/:path*',
+        permanent: false,
+      },
     ];
   },
 

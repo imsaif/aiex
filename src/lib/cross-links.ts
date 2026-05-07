@@ -6,7 +6,9 @@
  * shipped in the Apr 2026 SEO refactor.
  */
 
-/** Guide slug → related pattern slugs (semantically curated). */
+/** Guide slug → related pattern slugs (semantically curated). Every pattern
+ *  in the 36-pattern catalogue must appear in at least one entry below so the
+ *  pattern detail page renders a "Practice in Courses" cross-link card. */
 const GUIDE_TO_PATTERNS: Record<string, string[]> = {
   'claude-code-learning-path': [
     'contextual-assistance',
@@ -19,6 +21,16 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'explainable-ai',
     'plan-summary',
     'action-audit-trail',
+    'ambient-intelligence',
+    'autonomy-spectrum',
+    'intent-preview',
+    'agent-status-monitoring',
+    'trust-calibration',
+    'safe-exploration',
+    'session-degradation-prevention',
+    'mixed-initiative-control',
+    'responsible-ai-design',
+    'escalation-pathways',
   ],
   'cursor-learning-path': [
     'contextual-assistance',
@@ -28,6 +40,11 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'progressive-disclosure',
     'confidence-visualization',
     'intelligent-caching',
+    'ambient-intelligence',
+    'progressive-enhancement',
+    'safe-exploration',
+    'intent-preview',
+    'trust-calibration',
   ],
   'github-copilot-learning-path': [
     'contextual-assistance',
@@ -36,6 +53,9 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'progressive-disclosure',
     'confidence-visualization',
     'adaptive-interfaces',
+    'ambient-intelligence',
+    'progressive-enhancement',
+    'trust-calibration',
   ],
   'github-learning-path': [
     'collaborative-ai',
@@ -43,6 +63,8 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'error-recovery',
     'human-in-the-loop',
     'feedback-loops',
+    'session-degradation-prevention',
+    'escalation-pathways',
   ],
   'conversational-ui-guide': [
     'conversational-ui',
@@ -53,6 +75,10 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'multimodal-interaction',
     'selective-memory',
     'feedback-loops',
+    'crisis-detection-escalation',
+    'vulnerable-user-protection',
+    'anti-manipulation-safeguards',
+    'escalation-pathways',
   ],
   'claude-design-learning-path': [
     'augmented-creation',
@@ -62,6 +88,13 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'human-in-the-loop',
     'explainable-ai',
     'confidence-visualization',
+    'anti-manipulation-safeguards',
+    'crisis-detection-escalation',
+    'privacy-first-design',
+    'responsible-ai-design',
+    'universal-access-patterns',
+    'vulnerable-user-protection',
+    'mixed-initiative-control',
   ],
 };
 

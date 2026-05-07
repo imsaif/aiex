@@ -20,12 +20,65 @@ import {
   LightBulbIcon,
   EyeIcon,
 } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 import {
   LessonSection,
   IconType,
 } from '@/types/lesson';
 import { DynamicPreview } from '@/components/guides/DynamicPreview';
 import { slugifyHeading } from '@/lib/guides/headings';
+import { patterns } from '@/data/patterns';
+
+// Pattern auto-linking. Lessons mention pattern names ("Confidence
+// Visualization", "Trust Calibration") in prose; wrap the first mention
+// of each pattern per text block in a Link to /patterns/<slug> so lessons
+// fund the pattern pages with internal-link equity. Longer titles are
+// matched first to avoid e.g. "Confidence" greedily eating "Confidence
+// Visualization".
+const PATTERN_TITLES = patterns
+  .map((p) => ({ slug: p.slug, title: p.title }))
+  .sort((a, b) => b.title.length - a.title.length);
+
+const PATTERN_RE = new RegExp(
+  `\\b(${PATTERN_TITLES.map((p) =>
+    p.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  ).join('|')})\\b`,
+  'g'
+);
+
+function linkifyPatterns(
+  text: string,
+  keyPrefix: string,
+  linked?: Set<string>
+): React.ReactNode {
+  if (!text) return text;
+  const parts: React.ReactNode[] = [];
+  let lastIdx = 0;
+  let match: RegExpExecArray | null;
+  let n = 0;
+  PATTERN_RE.lastIndex = 0;
+  while ((match = PATTERN_RE.exec(text)) !== null) {
+    const matched = match[0];
+    const found = PATTERN_TITLES.find((p) => p.title === matched);
+    if (!found) continue;
+    if (linked && linked.has(found.slug)) continue; // skip duplicates
+    if (match.index > lastIdx) parts.push(text.slice(lastIdx, match.index));
+    parts.push(
+      <Link
+        key={`${keyPrefix}-pl-${n++}`}
+        href={`/patterns/${found.slug}`}
+        className="text-accent-primary hover:underline"
+      >
+        {matched}
+      </Link>
+    );
+    if (linked) linked.add(found.slug);
+    lastIdx = match.index + matched.length;
+  }
+  if (parts.length === 0) return text;
+  if (lastIdx < text.length) parts.push(text.slice(lastIdx));
+  return <>{parts}</>;
+}
 
 interface LessonRendererProps {
   sections: LessonSection[];
@@ -343,6 +396,9 @@ function classifyTextBlocks(content: string): TextBlock[] {
 
 function renderRichText(content: string, indexKey: number): React.ReactNode {
   const blocks = classifyTextBlocks(content);
+  // Track patterns linked across this section so we don't repeat-link the
+  // same pattern name in every paragraph.
+  const linked = new Set<string>();
   return (
     <React.Fragment key={indexKey}>
       {blocks.map((block, i) => {
@@ -353,7 +409,7 @@ function renderRichText(content: string, indexKey: number): React.ReactNode {
               key={key}
               className="mb-4 text-text-secondary leading-relaxed text-base whitespace-pre-line"
             >
-              {block.text}
+              {linkifyPatterns(block.text, key, linked)}
             </p>
           );
         }
@@ -366,13 +422,13 @@ function renderRichText(content: string, indexKey: number): React.ReactNode {
           <div key={key} className="mb-4">
             {block.intro && (
               <p className="mb-3 text-text-secondary leading-relaxed text-base">
-                {block.intro}
+                {linkifyPatterns(block.intro, `${key}-intro`, linked)}
               </p>
             )}
             <ListTag className={listClass}>
               {block.items.map((item, j) => (
                 <li key={j} className="leading-relaxed">
-                  {item}
+                  {linkifyPatterns(item, `${key}-li-${j}`, linked)}
                 </li>
               ))}
             </ListTag>
@@ -398,7 +454,9 @@ const renderSection = (
           {section.icon && section.icon !== 'none' && (
             <div className="text-gray-600 dark:text-gray-400 flex-shrink-0">{getIcon(section.icon)}</div>
           )}
-          <p className="m-0 text-text-secondary">{section.content}</p>
+          <p className="m-0 text-text-secondary">
+            {linkifyPatterns(section.content, `intro-${index}`)}
+          </p>
         </div>
       );
 

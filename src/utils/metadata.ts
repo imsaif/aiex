@@ -73,20 +73,29 @@ export function generateMetadata({
 const customPatternMetadata: Record<string, { title: string; description: string }> = {
   // --- High-impression patterns (top 10 by GSC data) ---
   'progressive-disclosure': {
-    title: 'Progressive Disclosure in AI — ChatGPT, Claude & Notion Examples',
-    description: 'See how ChatGPT, Claude, and Notion use progressive disclosure to hide complexity without losing power. Real examples, interactive demos, and copy-ready UI patterns for AI products.',
+    // 2026-05 rewrite: prior CTR collapsed 0.21% → 0.09% post-Apr-27 rewrite.
+    // Mirroring the conversational-ui winner pattern: topic + "Patterns, Examples & Demos" + year.
+    title: 'Progressive Disclosure in AI — Patterns, Examples & Demos (2026)',
+    description: 'Every progressive disclosure pattern in AI products with working demos — from collapsed details to streamed-then-elaborated outputs. See how ChatGPT, Claude, Notion, and Linear do it.',
   },
   'conversational-ui': {
     title: 'Conversational UI Design — Patterns, Examples & Demos (2026)',
     description: 'Every major conversational UI pattern with working demos — from basic chat to voice assistants and agentic interfaces. See how ChatGPT, Slack, Siri, and Claude do it.',
   },
   'privacy-first-design': {
-    title: 'Privacy-First AI Design — On-Device, Minimization & Consent Patterns',
-    description: 'The privacy-first AI playbook: on-device ML, data minimization defaults, and transparent consent UX. See how Apple Intelligence, Signal, and DuckDuckGo build AI without mining user data.',
+    // 2026-05 rewrite: chronic 0.08% CTR at pos 11.3 / 1290 impressions / 1 click.
+    // Old title competed with "privacy first ai" buyer-guide intent (ProtonAI/DuckDuckGo
+    // recommendations dominate that SERP). Reframing toward designer-intent keyword.
+    title: 'AI Privacy UX Patterns — On-Device, Consent & Data Minimization Design',
+    description: 'Every AI privacy UX pattern with working demos — on-device ML, consent defaults, ephemeral context, and data-minimization design. See how Apple Intelligence, Signal, and Arc do it.',
   },
   'confidence-visualization': {
-    title: 'How to Show AI Confidence Scores — UI Patterns & Real Examples',
-    description: 'How GitHub Copilot, medical AI tools, and LLM apps display confidence scores: gauges, probability bars, and trust signals that actually work. Interactive demos and design guidelines.',
+    // 2026-05 rewrite: impressions dropped 39% over 28d (3,616 → 2,222), suggesting
+    // SERP-feature absorption (AI Overview / "People also ask"). CTR is fine at 1.04%
+    // — the page converts when shown. Aligning title to the conversational-ui winner
+    // format to recover impression share with stronger keyword surface.
+    title: 'Confidence Visualization in AI — UI Patterns, Examples & Demos',
+    description: 'Every confidence visualization pattern with working demos — gauges, probability bars, hedge language, and uncertainty cues. See how GitHub Copilot, ChatGPT, Notion AI, and medical AI tools do it.',
   },
   'adaptive-interfaces': {
     title: 'Adaptive Interfaces in AI: Netflix, Spotify & Duolingo Patterns',

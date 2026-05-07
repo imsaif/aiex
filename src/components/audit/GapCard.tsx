@@ -1,5 +1,7 @@
+import Link from 'next/link';
 import { ExclamationTriangleIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import type { TopGap } from '@/types/audit';
+import { resolvePatternSlug } from '@/lib/audit/pattern-link';
 
 interface GapCardProps {
   gap: TopGap;
@@ -69,16 +71,40 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
               {gap.recommendation}
             </p>
           )}
-          {gap.resource && (
-            <a
-              href={gap.resource}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-accent-primary hover:underline"
-            >
-              Learn more about this pattern &rarr;
-            </a>
-          )}
+          {(() => {
+            // Prefer internal /patterns/<slug> link so the audit funnels link
+            // equity into pattern pages. Fall back to the external resource
+            // (e.g., a third-party reference) only when no pattern matches.
+            const slug = resolvePatternSlug(gap.pattern, gap.resource);
+            if (slug) {
+              // Open in a new tab so the user's audit state (uploaded screenshots,
+              // findings, chat) isn't lost on back-navigation — `audit-client.tsx`
+              // resets to the demo state on remount.
+              return (
+                <Link
+                  href={`/patterns/${slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-accent-primary hover:underline"
+                >
+                  See how {gap.pattern} solves this &rarr;
+                </Link>
+              );
+            }
+            if (gap.resource) {
+              return (
+                <a
+                  href={gap.resource}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-accent-primary hover:underline"
+                >
+                  Learn more about this pattern &rarr;
+                </a>
+              );
+            }
+            return null;
+          })()}
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ export const guides: Guide[] = [
   {
     id: 'claude-code-course',
     slug: 'claude-code-learning-path',
-    title: "Claude Code Guide for Designers",
+    title: "Claude Code Course for Designers",
     description:
       'Master Claude Code for design and prototyping with AI-powered assistance. Now with bidirectional Figma MCP integration — design-to-code and code-to-design.',
     excerpt:
@@ -2228,7 +2228,7 @@ export const guides: Guide[] = [
   {
     id: 'cursor-course',
     slug: 'cursor-learning-path',
-    title: 'Cursor Guide for Designers',
+    title: 'Cursor Course for Designers',
     description: 'Master Cursor, the AI-powered code editor for designers.',
     excerpt: 'Your complete Cursor education: 12 sequential lessons covering setup, features, and advanced workflows. Unlock faster development with AI pair programming.',
     tool: 'Cursor',
@@ -4179,7 +4179,7 @@ export const guides: Guide[] = [
   {
     id: 'copilot-course',
     slug: 'github-copilot-learning-path',
-    title: 'GitHub Copilot Guide for Designers',
+    title: 'GitHub Copilot Course for Designers',
     description: 'Master GitHub Copilot as a designer—learn to code faster, prototype interactively, and collaborate with developers.',
     excerpt: 'Your complete GitHub Copilot guide for designers: 10 lessons across 4 modules covering setup, code suggestions, prototyping workflows, and developer collaboration.',
     tool: 'GitHub Copilot',
@@ -4558,7 +4558,7 @@ export const guides: Guide[] = [
   {
     id: 'github-course',
     slug: 'github-learning-path',
-    title: 'GitHub Guide for Designers',
+    title: 'GitHub Course for Designers',
     description: 'Master GitHub for version control and collaboration with your development team.',
     excerpt: 'Your complete GitHub guide: 10 lessons covering account setup, repositories, version control basics, branching, pull requests, and design team workflows.',
     tool: 'GitHub',
@@ -7056,7 +7056,7 @@ export const guides: Guide[] = [
   {
     id: 'claude-design-course',
     slug: 'claude-design-learning-path',
-    title: 'Claude Design Guide for Designers',
+    title: 'Claude Design Course',
     description:
       "Anthropic's AI design collaborator for prototypes, decks, and interactive work. Learn the four-part prompt framework, iterate via chat, inline comments and custom sliders, set up an organization-wide design system, and hand off to Claude Code.",
     excerpt:

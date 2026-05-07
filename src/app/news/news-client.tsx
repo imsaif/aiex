@@ -59,6 +59,14 @@ function isNew(date: string | Date): boolean {
 }
 
 export default function NewsClient({ initialNewsletters }: NewsClientProps) {
+  // Date-derived UI (isToday / isNew badges) runs `new Date()` which produces
+  // different output server-side (UTC) vs client-side (user TZ), causing the
+  // documented React #418 hydration mismatch on /news. Gate all such UI behind
+  // this flag so SSR and first client render are identical, then opt in after
+  // hydration.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+
   const [filterQuery, setFilterQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<'all' | 'daily' | 'weekly'>('all');
   const [productFilters, setProductFilters] = useState<string[]>([]);
@@ -335,8 +343,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
             // Quiet day entries have empty content - show inline without link
             const isQuietDay = !newsletter.content || newsletter.content.trim() === '';
             const isWeekly = newsletter.type === 'weekly' || newsletter.title.startsWith('This Week in');
-            const itemIsNew = isNew(newsletter.publishedAt);
-            const itemIsToday = isToday(newsletter.publishedAt);
+            const itemIsNew = hydrated && isNew(newsletter.publishedAt);
+            const itemIsToday = hydrated && isToday(newsletter.publishedAt);
             const readingTime = !isQuietDay ? getReadingTime(newsletter.content) : 0;
 
             return (

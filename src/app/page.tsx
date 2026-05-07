@@ -1,7 +1,9 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { generateHomeMetadata } from '@/utils/metadata';
 import Navbar from '@/components/layout/Navbar';
-import HeroAuditCTA from '@/components/audit/HeroAuditCTA';
+import HeroAuditButton from '@/components/audit/HeroAuditButton';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
@@ -9,10 +11,34 @@ import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
 import PatternGrid from './pattern-grid';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
+import { guides } from '@/data/guides';
 import { getAllProducts, getProductsForPattern } from '@/data/utils/product-utils';
 import { getAllIndustries, getIndustriesForPattern } from '@/data/utils/industry-utils';
 import { companyLogos } from '@/data/company-logos';
 import { PatternSummary } from '@/types';
+
+// Featured courses for the homepage band — the 4 with the strongest GSC
+// search demand ("claude for designers course," etc.). Order is editorial.
+// Icon paths point at the self-hosted simple-icons set in /public/images/logos.
+const FEATURED_COURSES: Array<{ slug: string; icon: string }> = [
+  { slug: 'claude-code-learning-path', icon: '/images/logos/claude.svg' },
+  { slug: 'claude-design-learning-path', icon: '/images/logos/simple-icons/claude-design.svg' },
+  { slug: 'cursor-learning-path', icon: '/images/logos/simple-icons/cursor.svg' },
+  { slug: 'github-copilot-learning-path', icon: '/images/logos/simple-icons/githubcopilot.svg' },
+];
+
+const featuredCourses = FEATURED_COURSES.map(({ slug, icon }) => {
+  const guide = guides.find((g) => g.slug === slug);
+  if (!guide) return null;
+  return {
+    slug: guide.slug,
+    title: guide.title,
+    tool: guide.tool,
+    lessonCount: guide.lessons?.length ?? 0,
+    excerpt: guide.excerpt || guide.description,
+    icon,
+  };
+}).filter((c): c is NonNullable<typeof c> => c !== null);
 
 export const metadata: Metadata = generateHomeMetadata();
 
@@ -38,13 +64,19 @@ export default function Home() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section - Server-rendered for fast LCP */}
+      {/* Hero Section - Server-rendered for fast LCP. Audit-first reposition
+          Stage A (May 2026): H1 + primary CTA route to /audit; newsletter
+          stays as a secondary CTA so we don't tank acquisition while we
+          measure whether the audit funnel converts at scale. */}
       <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Heading - LCP element, renders immediately as server HTML */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9" style={{ color: 'var(--text-hero)' }}>
-              AI UX Design Patterns
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6"
+              style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
+            >
+              Audit your designs against 36 AI patterns
             </h1>
 
             {/* Subheading */}
@@ -53,25 +85,66 @@ export default function Home() {
             </p>
 
             {/* Company Logo Carousel - Social Proof Before CTA */}
-            <div className="mb-16">
+            <div className="mb-10">
               <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                 Patterns used by leading companies
               </p>
               <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
             </div>
 
-            {/* Newsletter Signup - Primary CTA */}
-            <div className="animate-fade-in">
-              <InlineNewsletterSignup variant="hero" source="direct" />
+            {/* Primary CTA — audit button. Newsletter signup moved out
+                of the hero so the audit is the unambiguous primary action;
+                signup section now lives below the patterns grid. */}
+            <div className="flex justify-center animate-fade-in">
+              <HeroAuditButton />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Audit Tool — secondary CTA */}
-      <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 text-center">
-        <HeroAuditCTA />
-      </div>
+      {/* Courses band — supporting element, not a second hero. Compact
+          treatment so it sits *below* the audit moat in visual weight. */}
+      <section className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
+        <div className="flex items-baseline justify-between mb-5">
+          <h2 className="text-xl md:text-2xl font-semibold text-text-primary">
+            Free courses for designers using AI
+          </h2>
+          <Link
+            href="/guides"
+            className="hidden sm:inline-flex items-center gap-1 text-sm text-text-secondary hover:text-text-primary transition-colors"
+          >
+            See all
+            <ArrowRightIcon className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {featuredCourses.map((course) => (
+            <Link
+              key={course.slug}
+              href={`/guides/${course.slug}`}
+              className="group block bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-accent-primary transition-colors h-full flex flex-col"
+            >
+              <div className="flex items-center gap-2.5 mb-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={course.icon}
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 dark:invert opacity-80"
+                />
+                <span className="text-sm text-text-secondary">{course.tool}</span>
+              </div>
+              <h3 className="text-base font-semibold text-text-primary mb-3 group-hover:text-accent-primary transition-colors leading-snug">
+                {course.title}
+              </h3>
+              <span className="text-sm text-text-tertiary mt-auto">
+                {course.lessonCount} lessons · free
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* Interactive Pattern Grid - Client component */}
       <PatternGrid
@@ -80,6 +153,16 @@ export default function Home() {
         allProducts={allProducts}
         allIndustries={allIndustries}
       />
+
+      {/* Newsletter signup — moved out of hero in Stage A repositioning.
+          Catches readers who finished browsing patterns and want recurring
+          updates. Trust copy unchanged to preserve the 192 subs' contract. */}
+      <section className="max-w-2xl mx-auto px-6 py-16 md:py-20 text-center">
+        <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-3">
+          Daily AI UX news
+        </h2>
+        <InlineNewsletterSignup variant="hero" source="direct" />
+      </section>
 
       {/* SEO — keyword-rich server-rendered text for Googlebot */}
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
