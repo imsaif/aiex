@@ -3,18 +3,16 @@ import Link from 'next/link';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { generateHomeMetadata } from '@/utils/metadata';
 import Navbar from '@/components/layout/Navbar';
-import HeroAuditButton from '@/components/audit/HeroAuditButton';
+import HeroAuditExperience from '@/components/audit/HeroAuditExperience';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
-import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
 import PatternGrid from './pattern-grid';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
 import { guides } from '@/data/guides';
 import { getAllProducts, getProductsForPattern } from '@/data/utils/product-utils';
 import { getAllIndustries, getIndustriesForPattern } from '@/data/utils/industry-utils';
-import { companyLogos } from '@/data/company-logos';
 import { PatternSummary } from '@/types';
 
 // Featured courses for the homepage band — the 4 with the strongest GSC
@@ -64,43 +62,11 @@ export default function Home() {
     <main className="min-h-screen bg-background-primary text-text-primary">
       <Navbar />
 
-      {/* Hero Section - Server-rendered for fast LCP. Audit-first reposition
-          Stage A (May 2026): H1 + primary CTA route to /audit; newsletter
-          stays as a secondary CTA so we don't tank acquisition while we
-          measure whether the audit funnel converts at scale. */}
-      <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-4xl mx-auto">
-            {/* Heading - LCP element, renders immediately as server HTML */}
-            <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6"
-              style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
-            >
-              Audit your designs against 36 AI patterns
-            </h1>
-
-            {/* Subheading */}
-            <p className="text-2xl md:text-3xl text-text-secondary mb-12">
-              How the world&apos;s best AI products design their experiences, documented, analyzed, and continuously updated.
-            </p>
-
-            {/* Company Logo Carousel - Social Proof Before CTA */}
-            <div className="mb-10">
-              <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
-                Patterns used by leading companies
-              </p>
-              <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
-            </div>
-
-            {/* Primary CTA — audit button. Newsletter signup moved out
-                of the hero so the audit is the unambiguous primary action;
-                signup section now lives below the patterns grid. */}
-            <div className="flex justify-center animate-fade-in">
-              <HeroAuditButton />
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero — marketing copy + newsletter capture by default; transforms in
+          place into the upload/analyze/results flow when the user clicks
+          "Start your audit". Same component used by /audit handles the tool
+          mode so behavior stays in one place. */}
+      <HeroAuditExperience />
 
       {/* Courses band — supporting element, not a second hero. Compact
           treatment so it sits *below* the audit moat in visual weight. */}

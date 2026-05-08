@@ -30,21 +30,43 @@ const PaywallModal = dynamic(
   { ssr: false }
 );
 
-export default function AuditClient() {
+interface AuditClientProps {
+  /**
+   * Where the flow starts. Default 'demo' (audit page landing). Pass
+   * 'screenshot' to skip the demo and drop straight into upload — used by
+   * the homepage hero tool-mode.
+   */
+  initialStep?: AuditStep;
+  /** Render the SocialProof block under the demo. Default true. */
+  showSocialProof?: boolean;
+}
+
+export default function AuditClient({
+  initialStep = 'demo',
+  showSocialProof = true,
+}: AuditClientProps = {}) {
   // Multi-step flow state — landing on the demo result, then upload, then real results
-  const [step, setStep] = useState<AuditStep>('demo');
+  const [step, setStep] = useState<AuditStep>(initialStep);
   const [productType, setProductType] = useState<ProductType | null>(null);
 
+  const startsOnDemo = initialStep === 'demo';
+
   // Existing state — preload demo so the landing paints a real result
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([{
-    base64: DEMO_SCREENSHOT_FALLBACK,
-    fileName: 'demo-chat-interface.png',
-    deviceType: 'desktop',
-  }]);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>(
+    startsOnDemo
+      ? [{
+          base64: DEMO_SCREENSHOT_FALLBACK,
+          fileName: 'demo-chat-interface.png',
+          deviceType: 'desktop',
+        }]
+      : []
+  );
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(DEMO_ANALYSIS_RESULTS);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResults | null>(
+    startsOnDemo ? DEMO_ANALYSIS_RESULTS : null
+  );
   const [rateLimitError, setRateLimitError] = useState<string | null>(null);
-  const [isDemoMode, setIsDemoMode] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(startsOnDemo);
 
   // Paywall state
   const { auditCount, incrementAuditCount, isPaywalled, auditsRemaining } = useAuditCount();
@@ -182,7 +204,12 @@ export default function AuditClient() {
   // Fire demo-viewed analytics once on mount when landing on demo
   useEffect(() => {
     if (step === 'demo') {
-      trackAuditEvent('audit_demo_viewed');
+      trackAuditEvent('audit_demo_viewed', {
+        source:
+          typeof window !== 'undefined' && window.location.pathname === '/'
+            ? 'homepage'
+            : 'audit-page',
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -248,7 +275,7 @@ export default function AuditClient() {
       )}
 
       {/* SEO content + community block — only on the demo landing */}
-      {step === 'demo' && <SocialProof />}
+      {step === 'demo' && showSocialProof && <SocialProof />}
     </div>
   );
 }

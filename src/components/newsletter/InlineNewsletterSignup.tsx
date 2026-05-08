@@ -14,6 +14,8 @@ interface InlineNewsletterSignupProps {
   source?: NewsletterSource;
   /** Use when component is placed on a dark background */
   darkBackground?: boolean;
+  /** Render the submit as a secondary/outline button (visually demoted) */
+  secondary?: boolean;
 }
 
 export function InlineNewsletterSignup({
@@ -26,6 +28,7 @@ export function InlineNewsletterSignup({
   stacked = false,
   source = 'handbook',
   darkBackground = false,
+  secondary = false,
 }: InlineNewsletterSignupProps) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -147,15 +150,17 @@ export function InlineNewsletterSignup({
               disabled={status === 'loading'}
               className={`
                 px-8 py-4 rounded-full font-semibold
-                ${darkBackground
-                  ? 'bg-white text-gray-900 hover:bg-gray-100'
-                  : 'bg-accent-primary dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100'
+                ${secondary
+                  ? 'bg-transparent border-2 border-gray-300 dark:border-gray-600 text-text-primary hover:border-accent-primary dark:hover:border-white'
+                  : darkBackground
+                    ? 'bg-white text-gray-900 hover:bg-gray-100 shadow-lg'
+                    : 'bg-accent-primary dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 shadow-lg'
                 }
                 disabled:opacity-50 disabled:cursor-not-allowed
                 cursor-pointer
                 transition-all duration-200
                 hover:scale-[1.02] active:scale-[0.98]
-                whitespace-nowrap shadow-lg
+                whitespace-nowrap
                 ${isHero ? 'text-lg' : isPatternDetail ? 'text-base' : 'text-sm'}
               `}
             >
