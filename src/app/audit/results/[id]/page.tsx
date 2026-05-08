@@ -22,7 +22,7 @@ export default function ResultsPage() {
     if (savedResults) {
       setResults(JSON.parse(savedResults));
     } else {
-      router.push('/audit');
+      router.push('/');
     }
   }, [router]);
 
@@ -88,13 +88,13 @@ export default function ResultsPage() {
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link
-              href="/audit"
+              href="/"
               className="px-8 py-3 bg-accent-primary dark:bg-white text-white dark:text-black rounded-2xl font-semibold hover:scale-[1.02] transition-transform shadow-card text-center"
             >
               Start New Audit
             </Link>
             <Link
-              href="/"
+              href="/patterns"
               className="px-8 py-3 border-2 border-border-primary rounded-2xl font-semibold text-text-primary hover:border-border-secondary transition-colors text-center"
             >
               Explore All Patterns

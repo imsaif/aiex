@@ -15,6 +15,9 @@ import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
 import { GapCard } from './GapCard';
 import { EmailReportModal } from './EmailReportModal';
 import { DemoProductMockup, DEMO_PINS } from './DemoProductMockup';
+import { LaptopFrame } from './LaptopFrame';
+import { PhoneFrame } from './PhoneFrame';
+import { DemoChatMockup } from './DemoChatMockup';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
 
@@ -453,65 +456,109 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     const openPinMeta = openPin ? DEMO_PINS.find(p => p.index === openPin) : null;
 
     return (
-      <div className="pb-8 sm:pb-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16">
-          {/* Hero headline */}
-          <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-            <h1
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6"
-              style={{ color: 'var(--text-hero)' }}
-            >
-              Free AI UX Audit Tool
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-text-secondary">
-              Score your AI interface against 36 proven design patterns. Pick your product type and upload a screenshot.
-            </p>
-          </div>
+      <div className="relative">
+        {/* Hero zone — atmospheric mesh + corner reticles (editorial
+            precision aesthetic, see globals.css `.bg-hero-mesh`). The
+            laptop mockup lives INSIDE this section so the gradient
+            extends behind it fully; SocialProof's white bg starts
+            directly below. */}
+        <section className="relative bg-hero-mesh bg-grain pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20 overflow-hidden">
+          {/* Calibration-frame reticles — anchor the hero like a measuring
+              instrument. Hidden on mobile to avoid edge clipping. */}
+          <span aria-hidden className="hero-reticle hidden md:block top-6 left-6" />
+          <span aria-hidden className="hero-reticle hidden md:block top-6 right-6" />
+          <span aria-hidden className="hero-reticle hidden md:block bottom-6 left-6" />
+          <span aria-hidden className="hero-reticle hidden md:block bottom-6 right-6" />
 
-          {/* Dashboard mockup (full width) with overlaid side panel */}
-          <div className="relative">
-            <DemoProductMockup
-              activePin={openPin ?? hoveredPin}
-              onPinClick={(idx) => {
-                setOpenPin(idx);
-                trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
-              }}
-              onPinHover={setHoveredPin}
-            />
-
-            {/* Slide-in side panel */}
-            {openGap && openPinMeta && openPin !== null && (
-              <GapSidePanel gap={openGap} pinNumber={openPin} onClose={() => setOpenPin(null)} />
-            )}
-          </div>
-
-          {/* Big CTA below the demo */}
-          <div className="mt-10 sm:mt-12 flex flex-col items-center gap-3">
-            <button
-              onClick={() => {
-                trackAuditEvent('audit_demo_start_real_clicked');
-                onStartRealAudit!();
-              }}
-              className="inline-flex items-center px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base sm:text-lg font-semibold hover:bg-accent-hover transition-all active:scale-95 cursor-pointer shadow-lg shadow-accent-primary/20"
-            >
-              {isPaywalled ? 'Join Early Access' : 'Start your free audit'}
-            </button>
-            {!isPaywalled && typeof auditsRemaining === 'number' && auditsRemaining > 0 && (
-              <p className="text-sm text-text-tertiary">
-                <span className="inline-flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
-                  {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} included · No signup required
-                </span>
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="text-center max-w-3xl mx-auto">
+              <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent-primary mb-4 before:content-[''] before:w-6 before:h-px before:bg-accent-primary/40 after:content-[''] after:w-6 after:h-px after:bg-accent-primary/40">
+                Free · No signup required
               </p>
-            )}
-            {isPaywalled && (
-              <p className="text-sm text-text-tertiary">
-                You&apos;ve used your free audit · Join Early Access for unlimited
+              <h1
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-5"
+                style={{ color: 'var(--text-hero)' }}
+              >
+                Free AI UX Audit Tool
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-text-secondary mb-8 sm:mb-10">
+                Score any AI interface against 36 proven patterns. Get specific next steps from Claude.
               </p>
-            )}
-          </div>
 
-        </div>
+              {/* CTA — moved into the hero text zone so the email form sits
+                  above the dashboard rather than below it. Paywalled state
+                  keeps the Early Access button. */}
+              <div className="flex flex-col items-center gap-3 max-w-xl mx-auto">
+                {isPaywalled ? (
+                  <>
+                    <button
+                      onClick={() => {
+                        trackAuditEvent('audit_demo_start_real_clicked');
+                        onStartRealAudit!();
+                      }}
+                      className="inline-flex items-center px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base sm:text-lg font-semibold hover:bg-accent-hover transition-all active:scale-95 cursor-pointer shadow-lg shadow-accent-primary/20"
+                    >
+                      Join Early Access
+                    </button>
+                    <p className="text-sm text-text-tertiary">
+                      You&apos;ve used your free audit · Join Early Access for unlimited
+                    </p>
+                  </>
+                ) : (
+                  <DemoStartForm
+                    onStart={() => {
+                      trackAuditEvent('audit_demo_start_real_clicked');
+                      onStartRealAudit!();
+                    }}
+                    auditsRemaining={auditsRemaining}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Multi-device composition — laptop + glass phone laid out
+                side-by-side at center, vertically aligned. Reads as a
+                composed product shot. Phone hides below md so mobile
+                users see just the laptop. */}
+            <div className="relative mt-12 sm:mt-16 md:mt-20">
+              <div className="flex items-center justify-center gap-6 lg:gap-10">
+                <div className="flex-1 max-w-3xl lg:max-w-4xl min-w-0">
+                  <LaptopFrame>
+                    <DemoProductMockup
+                      activePin={openPin ?? hoveredPin}
+                      onPinClick={(idx) => {
+                        setOpenPin(idx);
+                        trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
+                      }}
+                      onPinHover={setHoveredPin}
+                    />
+                  </LaptopFrame>
+                </div>
+
+                {/* Phone — glass frame showing the AI Assistant findings
+                    panel. Pins pulsate and tap-through to the same
+                    GapSidePanel as the laptop pins. Hidden below md. */}
+                <div className="hidden md:block flex-shrink-0">
+                  <PhoneFrame>
+                    <DemoChatMockup
+                      activePin={openPin ?? hoveredPin}
+                      onPinClick={(idx) => {
+                        setOpenPin(idx);
+                        trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
+                      }}
+                      onPinHover={setHoveredPin}
+                    />
+                  </PhoneFrame>
+                </div>
+              </div>
+
+              {/* Slide-in side panel */}
+              {openGap && openPinMeta && openPin !== null && (
+                <GapSidePanel gap={openGap} pinNumber={openPin} onClose={() => setOpenPin(null)} />
+              )}
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
@@ -828,5 +875,103 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         />
       )}
     </div>
+  );
+}
+
+/**
+ * Email-capture demo CTA — primary "Start your audit" button paired with
+ * an optional email field + checkbox opt-in for the daily newsletter.
+ * Subscription is fire-and-forget so the audit transition stays instant.
+ */
+function DemoStartForm({
+  onStart,
+  auditsRemaining,
+}: {
+  onStart: () => void;
+  auditsRemaining?: number;
+}) {
+  const [email, setEmail] = useState('');
+  const [optIn, setOptIn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const isValidEmail = (value: string) => /\S+@\S+\.\S+/.test(value);
+
+  const handleStart = () => {
+    if (optIn && (!email || !isValidEmail(email))) {
+      setError('Enter a valid email to receive updates');
+      return;
+    }
+    setError(null);
+
+    if (optIn && email && isValidEmail(email)) {
+      // Fire-and-forget — don't block the audit transition.
+      fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, source: 'homepage-hero', website_url: '' }),
+      }).catch(() => {});
+    }
+
+    onStart();
+  };
+
+  return (
+    <form
+      className="w-full max-w-xl"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleStart();
+      }}
+    >
+      <div className="flex flex-col sm:flex-row gap-3">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (error) setError(null);
+          }}
+          placeholder="your@email.com"
+          className="flex-1 px-5 py-4 rounded-full text-base sm:text-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary placeholder:text-gray-400 focus:border-accent-primary dark:focus:border-white focus:outline-none transition-colors"
+          autoComplete="email"
+        />
+        <button
+          type="submit"
+          className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base sm:text-lg font-semibold hover:bg-accent-hover transition-all active:scale-95 cursor-pointer shadow-lg shadow-accent-primary/20 whitespace-nowrap"
+        >
+          Start your audit
+        </button>
+      </div>
+
+      <label className="flex items-center justify-center gap-2 mt-4 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          checked={optIn}
+          onChange={(e) => {
+            setOptIn(e.target.checked);
+            if (error) setError(null);
+          }}
+          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-accent-primary focus:ring-accent-primary cursor-pointer"
+        />
+        <span className="text-sm text-text-secondary">
+          Email me daily AIUX product news and pattern updates
+        </span>
+      </label>
+
+      {error ? (
+        <p className="text-sm text-border-error mt-2 text-center" role="alert">
+          {error}
+        </p>
+      ) : (
+        typeof auditsRemaining === 'number' && auditsRemaining > 0 && (
+          <p className="text-sm text-text-tertiary text-center mt-3">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
+              {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} included · No signup required
+            </span>
+          </p>
+        )
+      )}
+    </form>
   );
 }

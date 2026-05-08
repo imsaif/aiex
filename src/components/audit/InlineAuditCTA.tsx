@@ -17,7 +17,7 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
             </p>
           </div>
           <Link
-            href="/audit"
+            href="/"
             className="px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors whitespace-nowrap"
           >
             Try the Audit
@@ -37,7 +37,7 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
         </p>
       </div>
       <Link
-        href="/audit"
+        href="/"
         className="px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors whitespace-nowrap"
       >
         Audit My Design

@@ -2,10 +2,12 @@ import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletter
 
 export default function Footer() {
   return (
-    <footer className="bg-background-secondary border-t border-primary">
-      {/* Multi-Column Footer Section */}
-      <div className="border-t border-primary">
-        <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+    <footer className="border-t border-border-primary bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+      {/* Multi-Column Footer Section — card-on-grain treatment lifted from
+          the audit-page resources card so the homepage doesn't render two
+          adjacent footers. */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 lg:py-20">
+        <div className="bg-background-primary rounded-2xl border border-border-primary p-8 md:p-10 shadow-card">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12">
             {/* Left Section: Branding */}
             <div className="lg:col-span-4">
@@ -88,14 +90,6 @@ export default function Footer() {
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
                       AI Interaction Toolkit
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/audit"
-                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
-                    >
-                      AI UX Audit
                     </a>
                   </li>
                   <li>

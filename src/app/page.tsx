@@ -1,147 +1,140 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import { generateHomeMetadata } from '@/utils/metadata';
 import Navbar from '@/components/layout/Navbar';
-import HeroAuditExperience from '@/components/audit/HeroAuditExperience';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
-import PatternGrid from './pattern-grid';
-import patterns from '@/data/patterns';
-import categories from '@/data/categories';
-import { guides } from '@/data/guides';
-import { getAllProducts, getProductsForPattern } from '@/data/utils/product-utils';
-import { getAllIndustries, getIndustriesForPattern } from '@/data/utils/industry-utils';
-import { PatternSummary } from '@/types';
+import AuditClient from '@/components/audit/AuditClient';
 
-// Featured courses for the homepage band — the 4 with the strongest GSC
-// search demand ("claude for designers course," etc.). Order is editorial.
-// Icon paths point at the self-hosted simple-icons set in /public/images/logos.
-const FEATURED_COURSES: Array<{ slug: string; icon: string }> = [
-  { slug: 'claude-code-learning-path', icon: '/images/logos/claude.svg' },
-  { slug: 'claude-design-learning-path', icon: '/images/logos/simple-icons/claude-design.svg' },
-  { slug: 'cursor-learning-path', icon: '/images/logos/simple-icons/cursor.svg' },
-  { slug: 'github-copilot-learning-path', icon: '/images/logos/simple-icons/githubcopilot.svg' },
-];
+export const revalidate = 3600;
 
-const featuredCourses = FEATURED_COURSES.map(({ slug, icon }) => {
-  const guide = guides.find((g) => g.slug === slug);
-  if (!guide) return null;
-  return {
-    slug: guide.slug,
-    title: guide.title,
-    tool: guide.tool,
-    lessonCount: guide.lessons?.length ?? 0,
-    excerpt: guide.excerpt || guide.description,
-    icon,
-  };
-}).filter((c): c is NonNullable<typeof c> => c !== null);
+export const metadata: Metadata = {
+  title: 'AI UX Audit: Free Tool to Score Designs Against 36 Patterns',
+  description:
+    'Upload any AI interface screenshot. Get instant feedback scored against 36 patterns from 50+ shipped products like ChatGPT, GitHub Copilot, and Notion. Free, no signup.',
+  keywords: [
+    'ai ux audit',
+    'ai ux audit tool',
+    'ai ux review',
+    'ux audit tool',
+    'ai interface review',
+    'ai-powered ux audit',
+    'ai ux evaluation',
+    'ux audit ai',
+    'website ux audit ai',
+    'free ai ux evaluation',
+    'ai design review',
+    'ai interface design audit',
+  ],
+  alternates: {
+    canonical: 'https://www.aiuxdesign.guide/',
+  },
+  openGraph: {
+    title: 'AI UX Audit: Free Tool to Score Designs Against 36 Patterns',
+    description:
+      'Upload any AI interface. Get instant feedback scored against 36 patterns from 50+ shipped products. Free, no signup.',
+    url: 'https://www.aiuxdesign.guide/',
+    siteName: 'AI UX Design Guide',
+    type: 'website',
+    images: [
+      {
+        url: '/images/og/og-pattern-default.png',
+        width: 1200,
+        height: 630,
+        alt: 'AI UX Audit Tool — Score your AI interface against 36 proven design patterns',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AI UX Audit Tool — 36 Pattern Analysis',
+    description:
+      'Upload any AI interface. Get instant feedback against 36 patterns from 50+ products. Free.',
+    images: ['/images/og/og-pattern-default.png'],
+    creator: '@aiuxdesignguide',
+  },
+};
 
-export const metadata: Metadata = generateHomeMetadata();
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What is an AI UX audit?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'An AI UX audit analyzes your AI interface design against proven UX patterns. It identifies which patterns your product implements well, which need improvement, and which are missing — giving you a score and actionable recommendations. Try the free AI UX audit tool at aiuxdesign.guide to score your design against 36 research-backed patterns.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How does the AI UX audit tool work?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Upload a screenshot of your AI interface (chatbot, code assistant, dashboard, etc.) and the tool instantly analyzes it against 36 research-backed AI UX patterns. You get a score, pattern-by-pattern breakdown, and can chat with an AI design mentor for deeper insights. See real-world examples from ChatGPT, GitHub Copilot, and more.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What AI interfaces can I audit?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'You can audit any AI-powered interface: chatbots (like ChatGPT or Claude), code assistants (like GitHub Copilot or Cursor), AI dashboards, content generators, AI agents, and more. The tool supports both mobile and desktop screenshots. Upload yours at aiuxdesign.guide for instant feedback.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is the AI UX audit tool free?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, the AI UX audit tool is completely free and includes a small number of free audits. No signup or account is required. Your screenshots are never stored. Get started at aiuxdesign.guide.',
+      },
+    },
+  ],
+};
 
-// Compute lightweight pattern summaries server-side to avoid sending
-// full pattern data (code examples, guidelines, figma prompts) to the client
-const patternSummaries: PatternSummary[] = patterns.map(p => ({
-  id: p.id,
-  title: p.title,
-  slug: p.slug,
-  description: p.description,
-  category: p.category,
-  tags: p.tags,
-  thumbnail: p.thumbnail,
-  products: getProductsForPattern(p),
-  industries: getIndustriesForPattern(p),
-}));
-
-const allProducts = getAllProducts(patterns);
-const allIndustries = getAllIndustries(patterns);
+const webAppJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'AI UX Audit Tool',
+  url: 'https://www.aiuxdesign.guide/',
+  description:
+    'Free tool that scores AI interface designs against 36 proven UX patterns. Upload a screenshot, get instant feedback on usability strengths and gaps.',
+  applicationCategory: 'DesignApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  featureList: [
+    'Screenshot-based AI interface analysis',
+    'Scores against 36 AI UX design patterns',
+    'Pattern-by-pattern breakdown with recommendations',
+    'AI design mentor chat for deeper insights',
+    'Support for desktop and mobile screenshots',
+  ],
+  creator: {
+    '@type': 'Organization',
+    name: 'AI UX Design Guide',
+    url: 'https://www.aiuxdesign.guide',
+  },
+};
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background-primary text-text-primary">
-      <Navbar />
-
-      {/* Hero — marketing copy + newsletter capture by default; transforms in
-          place into the upload/analyze/results flow when the user clicks
-          "Start your audit". Same component used by /audit handles the tool
-          mode so behavior stays in one place. */}
-      <HeroAuditExperience />
-
-      {/* Courses band — supporting element, not a second hero. Compact
-          treatment so it sits *below* the audit moat in visual weight. */}
-      <section className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
-        <div className="flex items-baseline justify-between mb-5">
-          <h2 className="text-xl md:text-2xl font-semibold text-text-primary">
-            Free courses for designers using AI
-          </h2>
-          <Link
-            href="/guides"
-            className="hidden sm:inline-flex items-center gap-1 text-sm text-text-secondary hover:text-text-primary transition-colors"
-          >
-            See all
-            <ArrowRightIcon className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {featuredCourses.map((course) => (
-            <Link
-              key={course.slug}
-              href={`/guides/${course.slug}`}
-              className="group block bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 hover:border-accent-primary transition-colors h-full flex flex-col"
-            >
-              <div className="flex items-center gap-2.5 mb-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={course.icon}
-                  alt=""
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 dark:invert opacity-80"
-                />
-                <span className="text-sm text-text-secondary">{course.tool}</span>
-              </div>
-              <h3 className="text-base font-semibold text-text-primary mb-3 group-hover:text-accent-primary transition-colors leading-snug">
-                {course.title}
-              </h3>
-              <span className="text-sm text-text-tertiary mt-auto">
-                {course.lessonCount} lessons · free
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Interactive Pattern Grid - Client component */}
-      <PatternGrid
-        patterns={patternSummaries}
-        categories={categories}
-        allProducts={allProducts}
-        allIndustries={allIndustries}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-
-      {/* Newsletter signup — moved out of hero in Stage A repositioning.
-          Catches readers who finished browsing patterns and want recurring
-          updates. Trust copy unchanged to preserve the 192 subs' contract. */}
-      <section className="max-w-2xl mx-auto px-6 py-16 md:py-20 text-center">
-        <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-3">
-          Daily AI UX news
-        </h2>
-        <InlineNewsletterSignup variant="hero" source="direct" />
-      </section>
-
-      {/* SEO — keyword-rich server-rendered text for Googlebot */}
-      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-        <p className="text-base md:text-lg text-text-secondary text-center leading-relaxed">
-          The AI UX design pattern library for product designers and teams building AI-powered experiences. Each pattern is documented from 3+ real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, and Notion, with examples, code demos, and research-backed guidance you can apply today.
-        </p>
-      </div>
-
-      {/* Scroll to Top Button */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }}
+      />
+      <Navbar />
+      <AuditClient />
       <ScrollToTop />
-
-      {/* Footer */}
       <Footer />
-    </main>
+    </>
   );
 }

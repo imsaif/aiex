@@ -237,8 +237,44 @@ export default function AuditClient({
       )}
 
       {isIntakeFlow && (
-        <section className="pt-8 sm:pt-12 md:pt-16 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-canvas-grid">
+        <section className="pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-canvas-grid">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            {/* Back to demo — visible whenever the user reached the
+                intake from the demo screen (i.e., the canonical / flow). */}
+            <div className="mb-4 sm:mb-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setStep('demo');
+                  setUploadedImages([{
+                    base64: DEMO_SCREENSHOT_FALLBACK,
+                    fileName: 'demo-chat-interface.png',
+                    deviceType: 'desktop',
+                  }]);
+                  setAnalysisResults(DEMO_ANALYSIS_RESULTS);
+                  setIsDemoMode(true);
+                  setProductType(null);
+                }}
+                className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+              >
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                Back
+              </button>
+            </div>
+
             {showIntakeBanner && (
               <div className="mb-6 max-w-lg mx-auto">
                 <RemainingAuditsBanner auditsRemaining={auditsRemaining} />

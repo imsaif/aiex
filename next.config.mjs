@@ -147,12 +147,12 @@ const nextConfig = {
       },
       {
         source: '/prompt-builder',
-        destination: '/audit',
+        destination: '/',
         permanent: true,
       },
       {
         source: '/prompt-builder/:path*',
-        destination: '/audit',
+        destination: '/',
         permanent: true,
       },
       // Dead pattern slugs → closest existing patterns
@@ -183,20 +183,27 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
-      // Deleted audit sub-routes (legacy multi-step flow removed Apr 2026)
+      // /audit → / (audit-first reposition May 2026: homepage IS the audit)
+      // No wildcard /audit/:path* — would break /audit/results/[id] email deep-links.
+      {
+        source: '/audit',
+        destination: '/',
+        permanent: true,
+      },
+      // Deleted audit sub-routes (legacy multi-step flow removed Apr 2026; now repointed direct to / to avoid chained 301s)
       {
         source: '/audit/context',
-        destination: '/audit',
+        destination: '/',
         permanent: true,
       },
       {
         source: '/audit/upload',
-        destination: '/audit',
+        destination: '/',
         permanent: true,
       },
       {
         source: '/audit/analyze',
-        destination: '/audit',
+        destination: '/',
         permanent: true,
       },
       // Nav label "Guides" became "Courses" May 2026; URLs stay on /guides until Week 3 URL move.

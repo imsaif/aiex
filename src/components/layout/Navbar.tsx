@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Squares2X2Icon,
-  BeakerIcon,
   NewspaperIcon,
   MagnifyingGlassIcon,
   FolderIcon,
@@ -37,7 +36,7 @@ const Navbar = () => {
   // Check if a route is active
   const isActive = (href: string) => {
     if (href === '/') {
-      return pathname === '/' || pathname.startsWith('/patterns');
+      return pathname === '/';
     }
     if (href === '/guides') {
       return pathname.startsWith('/guides');
@@ -84,7 +83,7 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="flex items-center gap-1 sm:gap-3">
-            <Link href="/" className={getLinkClasses('/')}>
+            <Link href="/patterns" className={getLinkClasses('/patterns')}>
               <Squares2X2Icon className="w-5 h-5" />
               <span className="hidden sm:inline relative">
                 Patterns
@@ -114,17 +113,7 @@ const Navbar = () => {
               </span>
             </Link>
 
-            <Link href="/audit" className={getLinkClasses('/audit')}>
-              <BeakerIcon className="w-5 h-5" />
-              <span className="hidden sm:inline relative">
-                Audit
-                <span className="invisible font-semibold block h-0" aria-hidden="true">
-                  Audit
-                </span>
-              </span>
-            </Link>
-
-            <Link href="/resources" className={getLinkClasses('/resources')}>
+<Link href="/resources" className={getLinkClasses('/resources')}>
               <FolderIcon className="w-5 h-5" />
               <span className="hidden sm:inline relative">
                 Resources

@@ -24,7 +24,7 @@ export function WelcomePanel() {
         <div className="mb-4 text-center">
           <div className="flex items-center justify-center gap-3 mb-3">
             <BeakerIcon className="w-7 h-7 text-text-primary dark:text-white" />
-            <h2 className="text-2xl font-extrabold text-text-primary dark:text-white">
+            <h2 className="text-2xl font-bold text-text-primary dark:text-white">
               AI UX Design Audit
             </h2>
           </div>

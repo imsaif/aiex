@@ -28,7 +28,7 @@ export default function NotFound() {
               Browse Patterns
             </Link>
             <Link
-              href="/audit"
+              href="/"
               className="inline-flex items-center gap-2 px-6 py-3 border border-border-primary text-text-primary rounded-lg font-medium hover:bg-background-secondary transition-colors"
             >
               Try the Audit Tool

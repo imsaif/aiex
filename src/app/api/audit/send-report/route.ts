@@ -446,7 +446,7 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
 
         <!-- CTA -->
         <div style="background: #ffffff; padding: 32px 28px; text-align: center; border-left: 1px solid ${border}; border-right: 1px solid ${border}; border-top: 1px solid ${border};">
-          <a href="https://www.aiuxdesign.guide/audit"
+          <a href="https://www.aiuxdesign.guide/"
              style="display: inline-block; background: ${navy}; color: #fff; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px;">
             Run Another Audit &rarr;
           </a>
@@ -461,7 +461,7 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
           <p style="margin: 0; font-size: 11px; color: #9ca3af;">
             <a href="https://www.aiuxdesign.guide/api/newsletter/unsubscribe?email=RECIPIENT" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a>
             &nbsp;&middot;&nbsp;
-            <a href="https://www.aiuxdesign.guide/audit" style="color: #9ca3af; text-decoration: underline;">Run another audit</a>
+            <a href="https://www.aiuxdesign.guide/" style="color: #9ca3af; text-decoration: underline;">Run another audit</a>
           </p>
         </div>
 

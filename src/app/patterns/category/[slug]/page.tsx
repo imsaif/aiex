@@ -279,7 +279,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <p className="text-sm font-semibold uppercase tracking-wide text-accent-primary mb-4">
             Pattern Category
           </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             {category.title}
           </h1>
           <p className="text-xl text-text-secondary mb-6 leading-relaxed max-w-3xl">

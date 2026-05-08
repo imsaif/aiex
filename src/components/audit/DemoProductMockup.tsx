@@ -38,7 +38,7 @@ interface DemoProductMockupProps {
 
 export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoProductMockupProps) {
   return (
-    <div className="relative w-full rounded-2xl overflow-hidden border border-border-primary bg-background-primary shadow-sm">
+    <div className="relative w-full overflow-hidden bg-background-primary">
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border-primary">
         <div className="flex items-center gap-3">
@@ -225,10 +225,15 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
               }`}
             >
               {pin.index}
-              <span
-                className={`absolute inset-0 rounded-full border-2 border-accent-primary ${isActive ? '' : 'animate-ping opacity-60'}`}
-                aria-hidden
-              />
+              {/* Only pin #1 pulses — the rest are static so the hero
+                  doesn't feel like a slot machine. Pulse is the "start
+                  here" signal, not a per-pin attention cue. */}
+              {pin.index === 1 && !isActive && (
+                <span
+                  className="absolute inset-0 rounded-full border-2 border-accent-primary animate-ping opacity-60"
+                  aria-hidden
+                />
+              )}
             </span>
           </button>
         );

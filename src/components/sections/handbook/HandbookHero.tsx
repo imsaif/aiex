@@ -139,7 +139,7 @@ export function HandbookHero() {
                 </div>
               </Link>
               <Link
-                href="/audit"
+                href="/"
                 className="group flex items-center gap-3 px-4 py-3 rounded-xl border border-primary hover:border-accent-primary hover:shadow-sm transition"
               >
                 <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">
@@ -359,7 +359,7 @@ export function HandbookHero() {
             </div>
           </Link>
           <Link
-            href="/audit"
+            href="/"
             className="flex items-center gap-3 px-4 py-3 rounded-xl border border-primary"
           >
             <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center flex-shrink-0">

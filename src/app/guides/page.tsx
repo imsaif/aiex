@@ -304,7 +304,7 @@ export default function GuidesPage() {
                 Free Learning Paths
               </p>
               <h1
-                className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-9"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold mb-9"
                 style={{ color: 'var(--text-hero)' }}
               >
                 AI Tool Guides for Designers

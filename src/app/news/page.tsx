@@ -47,12 +47,27 @@ function extractProducts(title: string, summary: string): string[] {
 
 async function getPublishedDrafts(): Promise<Newsletter[]> {
   try {
+    // Project only the columns the list view renders. `structuredData`
+    // (50-200KB JSON per row) and `sources`/`createdAt`/`updatedAt` aren't
+    // used on /news — without an explicit `select`, Prisma streams them all
+    // and the page took 800-1700ms cold. Cap at 60 rows since older
+    // newsletters drop off the list anyway and the user can drill into a
+    // specific slug if needed.
     const drafts = await prisma.newsletterDraft.findMany({
       where: { status: 'published' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        summary: true,
+        content: true,
+        publishDate: true,
+        type: true,
+      },
       orderBy: { publishDate: 'desc' },
+      take: 60,
     });
 
-    // Convert database drafts to Newsletter format
     return drafts.map((draft) => ({
       id: draft.id,
       title: draft.title,

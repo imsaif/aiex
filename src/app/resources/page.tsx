@@ -32,7 +32,7 @@ export default function ResourcesPage() {
                 Tools, Downloads & Learning
               </span>
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6" style={{ color: 'var(--text-hero)' }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: 'var(--text-hero)' }}>
               AIUX Resources
             </h1>
             <p className="text-lg md:text-xl text-text-secondary">
@@ -54,7 +54,7 @@ export default function ResourcesPage() {
             prioritized report with the highest-impact improvements.
           </p>
           <Link
-            href="/audit"
+            href="/"
             className="inline-flex items-center gap-2 px-6 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             Start Pattern Audit
