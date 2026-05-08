@@ -306,6 +306,7 @@ export default function AuditClient({
             onStartRealAudit={step === 'demo' ? handleStartRealAudit : undefined}
             auditsRemaining={auditsRemaining}
             isPaywalled={isPaywalled}
+            auditCount={auditCount}
           />
         </section>
       )}

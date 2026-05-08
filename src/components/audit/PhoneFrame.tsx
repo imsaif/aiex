@@ -16,12 +16,14 @@ interface PhoneFrameProps {
 export function PhoneFrame({ children, className = '' }: PhoneFrameProps) {
   return (
     <div
-      className={`relative rounded-[2rem] p-1.5 shadow-2xl shadow-black/10 dark:shadow-black/40 backdrop-blur-md ${className}`}
+      className={`relative rounded-[2rem] p-2.5 shadow-2xl shadow-black/10 dark:shadow-black/40 ${className}`}
       style={{
         background:
-          'linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(245,247,252,0.65) 100%)',
+          'linear-gradient(160deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%)',
+        backdropFilter: 'blur(20px) saturate(140%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(140%)',
         boxShadow:
-          'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.04), 0 30px 60px -20px rgba(22,32,54,0.18)',
+          'inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.04), 0 30px 60px -20px rgba(22,32,54,0.18)',
       }}
     >
       {/* Inner bezel — frosted ring */}
@@ -32,7 +34,7 @@ export function PhoneFrame({ children, className = '' }: PhoneFrameProps) {
         </div>
 
         {/* Screen surface */}
-        <div className="relative w-[230px] h-[480px] overflow-hidden">
+        <div className="relative w-[235px] h-[490px] overflow-hidden">
           {children}
         </div>
       </div>

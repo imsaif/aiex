@@ -30,9 +30,7 @@ export function SocialProof() {
             What is an AI UX audit?
           </h2>
           <p className="text-base md:text-lg text-text-secondary leading-relaxed">
-            An AI UX audit evaluates your interface against proven design patterns to identify usability strengths and gaps.
-            This tool scores your design against 36 patterns specifically researched for AI products.
-            Upload a screenshot of any AI interface like a chatbot, code assistant, dashboard, or content generator and get instant, actionable feedback.
+            Score your interface against 36 patterns built for AI products. Upload a screenshot of any chatbot, code assistant, or dashboard for instant, actionable feedback.
           </p>
         </div>
 
@@ -63,34 +61,34 @@ export function SocialProof() {
         {/* How it works — 3 cards with icons */}
         <h3 className="text-xl font-bold text-text-primary mb-6">How it works</h3>
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="rounded-2xl border border-border-primary bg-background-secondary p-6">
+          <div className="rounded-2xl border border-border-primary bg-background-grain p-6">
             <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
               <ArrowUpTrayIcon className="w-6 h-6 text-accent-primary" />
             </div>
             <p className="text-sm font-semibold text-accent-primary mb-1">Step 1</p>
             <p className="text-base font-semibold text-text-primary mb-2">Upload</p>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Drop a screenshot of your AI interface. Supports desktop, mobile, and tablet designs.
+              Drop a screenshot. Desktop, mobile, or tablet.
             </p>
           </div>
-          <div className="rounded-2xl border border-border-primary bg-background-secondary p-6">
+          <div className="rounded-2xl border border-border-primary bg-background-grain p-6">
             <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
               <MagnifyingGlassCircleIcon className="w-6 h-6 text-accent-primary" />
             </div>
             <p className="text-sm font-semibold text-accent-primary mb-1">Step 2</p>
             <p className="text-base font-semibold text-text-primary mb-2">Analyze</p>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Scored against 36 AI UX patterns used by ChatGPT, GitHub Copilot, and Notion.
+              Scored against 36 patterns from ChatGPT, Copilot, and Notion.
             </p>
           </div>
-          <div className="rounded-2xl border border-border-primary bg-background-secondary p-6">
+          <div className="rounded-2xl border border-border-primary bg-background-grain p-6">
             <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
               <ChatBubbleLeftRightIcon className="w-6 h-6 text-accent-primary" />
             </div>
             <p className="text-sm font-semibold text-accent-primary mb-1">Step 3</p>
             <p className="text-base font-semibold text-text-primary mb-2">Get Insights</p>
             <p className="text-sm text-text-secondary leading-relaxed">
-              See which patterns are strong, weak, or missing, then chat with an AI design mentor.
+              See what&apos;s strong, weak, or missing. Chat with an AI mentor.
             </p>
           </div>
         </div>
@@ -102,12 +100,12 @@ export function SocialProof() {
             How-it-works cards above. */}
         <div className="mt-20 mb-2">
           <h3 className="text-2xl md:text-3xl font-bold text-text-primary mb-2">Keep exploring</h3>
-          <p className="text-base text-text-secondary">Browse the library, level up with a course, or just pick a starting point.</p>
+          <p className="text-base text-text-secondary">Browse patterns, take a course, or pick a starting point.</p>
         </div>
         <div className="grid md:grid-cols-2 gap-6 mt-8">
           <Link
             href="/patterns"
-            className="group relative block rounded-2xl border border-border-primary bg-background-secondary hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
+            className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
           >
             <div className="flex items-start justify-between mb-6">
               <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
@@ -121,7 +119,7 @@ export function SocialProof() {
               Browse the pattern library
             </h4>
             <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-              Real examples, code demos, and design guidance from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products.
+              Real examples and code from ChatGPT, Claude, Copilot, and 50+ AI products.
             </p>
             <div className="flex flex-wrap gap-2 mb-6">
               <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">Conversational UI</span>
@@ -136,7 +134,7 @@ export function SocialProof() {
 
           <Link
             href="/guides"
-            className="group relative block rounded-2xl border border-border-primary bg-background-secondary hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
+            className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
           >
             <div className="flex items-start justify-between mb-6">
               <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
@@ -150,7 +148,7 @@ export function SocialProof() {
               Free courses for designers
             </h4>
             <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-              Hands-on learning paths to ship AI features faster — straight from product designers using these tools every day.
+              Hands-on paths from product designers shipping AI features daily.
             </p>
             <div className="flex flex-wrap gap-2 mb-6">
               <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">Claude Code</span>
@@ -175,7 +173,7 @@ export function SocialProof() {
           <div className="grid md:grid-cols-2 gap-6">
             <Link
               href="/guides/conversational-ui-guide"
-              className="group relative block rounded-2xl border border-border-primary bg-background-secondary hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
+              className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
             >
               <div className="flex items-start justify-between mb-6">
                 <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
@@ -189,7 +187,7 @@ export function SocialProof() {
                 Build a Conversational UI
               </h4>
               <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-                Design and ship a chat interface from scratch — message bubbles, input states, error recovery, and the patterns ChatGPT and Claude actually use.
+                Ship a chat interface from scratch — bubbles, inputs, error recovery, the patterns ChatGPT and Claude use.
               </p>
               <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
                 Start the guide
@@ -199,7 +197,7 @@ export function SocialProof() {
 
             <Link
               href="/guides/claude-code-learning-path"
-              className="group relative block rounded-2xl border border-border-primary bg-background-secondary hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
+              className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
             >
               <div className="flex items-start justify-between mb-6">
                 <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
@@ -220,7 +218,7 @@ export function SocialProof() {
                 Claude Code Course for Designers
               </h4>
               <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-                Go from zero to shipping real features with Claude Code — designed for product designers who don&apos;t (yet) ship code daily.
+                Zero to shipping real features with Claude Code — for designers who don&apos;t (yet) code daily.
               </p>
               <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
                 Start the course

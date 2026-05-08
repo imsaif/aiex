@@ -1471,6 +1471,25 @@ interface NewsletterQA {
   designLightWarning: boolean;          // true iff designNativeCount === 0
   poolSize: number;                     // items Claude saw after pool-cap filter
   duplicateSourceClipped: string[];     // sources trimmed by MAX_ITEMS_PER_SOURCE
+  opinionCount: number;                 // items from known opinion domains (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com)
+  productNewsCount: number;             // items from ai-lab or design-tool tiers (concrete product launches)
+  selectionRuleViolation: string | null; // non-null when a hard selection rule failed; triggers auto-quiet
+}
+
+// Opinion-domain detection. The prompt already names uxdesign.cc/uxplanet.org/
+// lennysnewsletter.com but Claude routinely picks Substack pieces (which slip
+// through because they aren't on the named list). Treat all Substack and Medium
+// hosts as opinion since they're personal-publishing platforms.
+function isOpinionUrl(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+    if (host === 'uxdesign.cc' || host === 'uxplanet.org' || host === 'lennysnewsletter.com') return true;
+    if (host === 'medium.com' || host.endsWith('.medium.com')) return true;
+    if (host === 'substack.com' || host.endsWith('.substack.com')) return true;
+    return false;
+  } catch {
+    return false;
+  }
 }
 
 function buildQABlock(
@@ -1510,6 +1529,8 @@ function buildQABlock(
 
   const sourceCounts: Record<string, number> = {};
   let designNativeCount = 0;
+  let opinionCount = 0;
+  let productNewsCount = 0;
   for (const sel of selectedItems) {
     const original = resolveOriginal(sel.sourceUrl);
     // Prefer the upstream RSS source name; fall back to Claude's product label
@@ -1519,6 +1540,34 @@ function buildQABlock(
     if (original && isDesignNativeItem(original, original.sourceTier)) {
       designNativeCount += 1;
     }
+    if (isOpinionUrl(sel.sourceUrl)) {
+      opinionCount += 1;
+    }
+    // Concrete product news = items from an ai-lab or design-tool feed. The
+    // prompt names these as the eligible "product launch" sources. Use the
+    // pool's tier rather than Claude's product label so we can't be fooled
+    // by a hand-tagged "OpenAI" item that's actually a Medium opinion piece.
+    if (original && (original.sourceTier === 'ai-lab' || original.sourceTier === 'design-tool')) {
+      productNewsCount += 1;
+    }
+  }
+
+  // Hard selection rules for daily issues. Violations route to auto-quiet so
+  // we don't ship opinion-heavy filler when the pool can't support real news.
+  // Two violation types:
+  //   1) productNewsCount < 1 → no concrete launch in the issue at all.
+  //   2) opinionCount > 1 → opinion is dominating the issue.
+  // Pool-aware escape hatch: if the pool genuinely contained zero ai-lab or
+  // design-tool items, rule (1) doesn't fire — there's nothing better Claude
+  // could have picked, and shipping 4 design-pub items is acceptable.
+  const poolHadProductNews = pool.some(
+    (it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool',
+  );
+  let selectionRuleViolation: string | null = null;
+  if (productNewsCount < 1 && poolHadProductNews) {
+    selectionRuleViolation = `no_product_news (pool had ${pool.filter((it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool').length} product-news items but Claude picked 0)`;
+  } else if (opinionCount > 1) {
+    selectionRuleViolation = `opinion_heavy (${opinionCount} opinion items, max 1)`;
   }
 
   return {
@@ -1527,6 +1576,9 @@ function buildQABlock(
     designLightWarning: designNativeCount === 0,
     poolSize: pool.length,
     duplicateSourceClipped: clippedSources,
+    opinionCount,
+    productNewsCount,
+    selectionRuleViolation,
   };
 }
 
@@ -1699,7 +1751,45 @@ async function runGeneration(
   if (qa.designLightWarning) {
     console.warn(`[newsletter] Design-light: 0 design-native items in final selection (pool: ${qa.poolSize}). Routing to admin review.`);
   }
-  console.log(`[newsletter] QA: ${qa.designNativeCount}/${structuredData.items.length} design-native, sources: ${JSON.stringify(qa.sourceCounts)}`);
+  console.log(`[newsletter] QA: ${qa.designNativeCount}/${structuredData.items.length} design-native, opinion=${qa.opinionCount}, productNews=${qa.productNewsCount}, sources: ${JSON.stringify(qa.sourceCounts)}`);
+
+  // Selection-rule guard (daily only): if Claude ignored its own counted rules
+  // for opinion/product-news mix, auto-quiet the day instead of shipping
+  // filler. Weekly compilations re-pick from already-curated daily items, so
+  // the rule doesn't apply there.
+  if (type === 'daily' && qa.selectionRuleViolation) {
+    console.warn(`[newsletter] Selection rule violated: ${qa.selectionRuleViolation}. Auto-quieting today.`);
+    const date = new Date();
+    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-opinion-heavy-day`;
+
+    const existing = await prisma.newsletterDraft.findFirst({ where: { slug } });
+    if (existing) {
+      console.log('[newsletter] Opinion-heavy-day entry already exists for today');
+      return;
+    }
+
+    const summaryMsg = qa.productNewsCount < 1
+      ? "Today's pool didn't surface a concrete AI product launch worth your inbox. We're sitting this one out — back tomorrow with real news."
+      : "Today's mix leaned heavily on opinion pieces over product news. Rather than circulate filler, we're sitting this one out.";
+
+    await prisma.newsletterDraft.create({
+      data: {
+        title: 'AI UX Daily: Quiet Day — Opinion-Heavy Pool',
+        slug,
+        summary: summaryMsg,
+        content: '',
+        publishDate: new Date(),
+        status: 'published',
+        type: 'daily',
+        sources: newsItems.map((item) => item.link),
+        structuredData: { ...structuredData, qa } as object,
+      },
+    });
+    console.log('[newsletter] Opinion-heavy-day entry created and published');
+    return;
+  }
+
   const structuredDataWithQA = { ...structuredData, qa };
 
   // Save draft (re-check for duplicates to guard against race conditions from concurrent triggers)

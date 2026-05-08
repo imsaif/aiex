@@ -20,6 +20,7 @@ import { PhoneFrame } from './PhoneFrame';
 import { DemoChatMockup } from './DemoChatMockup';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
+import { PaywallInlineCapture } from './PaywallInlineCapture';
 
 interface ExtendedResults extends AnalysisResults {
   topGaps?: TopGap[];
@@ -42,6 +43,7 @@ interface FullPageResultsProps {
   onStartRealAudit?: () => void;
   auditsRemaining?: number;
   isPaywalled?: boolean;
+  auditCount?: number;
 }
 
 interface ChatMessage {
@@ -190,7 +192,7 @@ function FormattedChatMessage({ content }: { content: string }) {
   );
 }
 
-export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled }: FullPageResultsProps) {
+export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled, auditCount }: FullPageResultsProps) {
   // Normalize: prefer the multi-screenshot prop, fall back to the single-screenshot props for backwards compat.
   const allScreenshots = screenshots && screenshots.length > 0
     ? screenshots
@@ -482,28 +484,15 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 Free AI UX Audit Tool
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-text-secondary mb-8 sm:mb-10">
-                Score any AI interface against 36 proven patterns. Get specific next steps from Claude.
+                Score AI interfaces against 36 patterns. Get next steps from Claude.
               </p>
 
               {/* CTA — moved into the hero text zone so the email form sits
                   above the dashboard rather than below it. Paywalled state
-                  keeps the Early Access button. */}
+                  swaps in the inline waitlist capture. */}
               <div className="flex flex-col items-center gap-3 max-w-xl mx-auto">
                 {isPaywalled ? (
-                  <>
-                    <button
-                      onClick={() => {
-                        trackAuditEvent('audit_demo_start_real_clicked');
-                        onStartRealAudit!();
-                      }}
-                      className="inline-flex items-center px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base sm:text-lg font-semibold hover:bg-accent-hover transition-all active:scale-95 cursor-pointer shadow-lg shadow-accent-primary/20"
-                    >
-                      Join Early Access
-                    </button>
-                    <p className="text-sm text-text-tertiary">
-                      You&apos;ve used your free audit · Join Early Access for unlimited
-                    </p>
-                  </>
+                  <PaywallInlineCapture auditCountAtTrigger={auditCount} />
                 ) : (
                   <DemoStartForm
                     onStart={() => {
@@ -517,9 +506,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             </div>
 
             {/* Multi-device composition — laptop + glass phone laid out
-                side-by-side at center, vertically aligned. Reads as a
-                composed product shot. Phone hides below md so mobile
-                users see just the laptop. */}
+                side-by-side at center, vertically aligned. Phone hides
+                below md so mobile users see just the laptop. */}
             <div className="relative mt-12 sm:mt-16 md:mt-20">
               <div className="flex items-center justify-center gap-6 lg:gap-10">
                 <div className="flex-1 max-w-3xl lg:max-w-4xl min-w-0">
@@ -535,9 +523,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                   </LaptopFrame>
                 </div>
 
-                {/* Phone — glass frame showing the AI Assistant findings
-                    panel. Pins pulsate and tap-through to the same
-                    GapSidePanel as the laptop pins. Hidden below md. */}
                 <div className="hidden md:block flex-shrink-0">
                   <PhoneFrame>
                     <DemoChatMockup
@@ -954,7 +939,7 @@ function DemoStartForm({
           className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-accent-primary focus:ring-accent-primary cursor-pointer"
         />
         <span className="text-sm text-text-secondary">
-          Email me daily AIUX product news and pattern updates
+          Email me daily AI UX news
         </span>
       </label>
 
@@ -967,7 +952,7 @@ function DemoStartForm({
           <p className="text-sm text-text-tertiary text-center mt-3">
             <span className="inline-flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
-              {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} included · No signup required
+              {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} · No signup
             </span>
           </p>
         )

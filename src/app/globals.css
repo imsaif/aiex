@@ -406,24 +406,28 @@ p {
 .bg-hero-mesh {
   background-color: var(--background-grain);
   background-image:
-    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(252, 240, 218, 0.48) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 8% 8%, rgba(201, 211, 233, 0.55) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 30% at 50% 110%, rgba(22, 32, 54, 0.12) 0%, transparent 60%),
-    linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(22, 32, 54, 0.05) 100%);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 96px;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat-y;
+    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(252, 232, 200, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 55% at 5% 10%, rgba(186, 200, 232, 0.60) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 95% 5%, rgba(228, 198, 230, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 30% at 50% 110%, rgba(22, 32, 54, 0.10) 0%, transparent 60%),
+    linear-gradient(to right, rgba(22, 32, 54, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(22, 32, 54, 0.07) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 96px 100%, 100% 96px;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
 }
 
 @media (prefers-color-scheme: dark) {
   .bg-hero-mesh {
     background-color: var(--background-grain);
     background-image:
-      radial-gradient(ellipse 70% 55% at 50% -10%, rgba(244, 246, 251, 0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 8% 8%, rgba(110, 137, 196, 0.18) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 55% at 50% -10%, rgba(244, 246, 251, 0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 65% 55% at 5% 10%, rgba(110, 137, 196, 0.28) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 95% 5%, rgba(180, 140, 180, 0.22) 0%, transparent 60%),
       radial-gradient(ellipse 80% 30% at 50% 110%, rgba(0, 0, 0, 0.40) 0%, transparent 60%),
-      linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(255, 255, 255, 0.04) 100%);
-    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 96px;
-    background-repeat: no-repeat, no-repeat, no-repeat, repeat-y;
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 96px 100%, 100% 96px;
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
   }
 }
 
@@ -431,12 +435,14 @@ html[data-theme="dark"] .bg-hero-mesh,
 .dark .bg-hero-mesh {
   background-color: var(--background-grain);
   background-image:
-    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(244, 246, 251, 0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 8% 8%, rgba(110, 137, 196, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 55% at 50% -10%, rgba(244, 246, 251, 0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 55% at 5% 10%, rgba(110, 137, 196, 0.28) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 95% 5%, rgba(180, 140, 180, 0.22) 0%, transparent 60%),
     radial-gradient(ellipse 80% 30% at 50% 110%, rgba(0, 0, 0, 0.40) 0%, transparent 60%),
-    linear-gradient(transparent 0, transparent calc(100% - 1px), rgba(255, 255, 255, 0.04) 100%);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 96px;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat-y;
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 96px 100%, 100% 96px;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
 }
 
 /* Editorial registration marks — small "+" reticles at the corners of the
