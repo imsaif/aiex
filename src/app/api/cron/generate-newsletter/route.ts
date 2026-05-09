@@ -1629,11 +1629,11 @@ async function runGeneration(
         summary: randomMessage.message,
         content: '',
         publishDate: new Date(),
-        status: 'published',
+        status: 'pending_review',
         sources: [],
       },
     });
-    console.log('[newsletter] Quiet day entry created and published');
+    console.log('[newsletter] Quiet day entry created (pending_review)');
     return;
   }
 
@@ -1664,11 +1664,11 @@ async function runGeneration(
           summary: `Today's news pool was dominated by a single source (${dominant.source}). Rather than ship lopsided coverage, we're sitting this one out. Back tomorrow with broader updates.`,
           content: '',
           publishDate: new Date(),
-          status: 'published',
+          status: 'pending_review',
           sources: newsItems.map((item) => item.link),
         },
       });
-      console.log('[newsletter] Single-source-day entry created and published');
+      console.log('[newsletter] Single-source-day entry created (pending_review)');
       return;
     }
   }
@@ -1780,13 +1780,13 @@ async function runGeneration(
         summary: summaryMsg,
         content: '',
         publishDate: new Date(),
-        status: 'published',
+        status: 'pending_review',
         type: 'daily',
         sources: newsItems.map((item) => item.link),
         structuredData: { ...structuredData, qa } as object,
       },
     });
-    console.log('[newsletter] Opinion-heavy-day entry created and published');
+    console.log('[newsletter] Opinion-heavy-day entry created (pending_review)');
     return;
   }
 
