@@ -1492,6 +1492,28 @@ function isOpinionUrl(url: string): boolean {
   }
 }
 
+// One-shot retry directive appended to the original prompt when Claude's first
+// pass violates the selection rules but the pool actually contained eligible
+// product-news items. Names the URLs explicitly so Claude can't ignore them.
+function buildSelectionRetryAddendum(pool: NewsItem[], violation: string): string {
+  const productNewsItems = pool
+    .filter((it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool')
+    .slice(0, 12);
+  if (productNewsItems.length === 0) return '';
+  const lines = productNewsItems
+    .map((it) => `- ${it.source}: ${it.title} (${it.link})`)
+    .join('\n');
+  return `
+
+CRITICAL RETRY — your previous selection violated the rules: ${violation}.
+
+You MUST include AT LEAST ONE item from this list of concrete product-news sources that were in the pool. Pick the most designer-relevant one:
+
+${lines}
+
+You MUST also keep opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com) to AT MOST 1 in your final selection. Return the same JSON shape as before.`;
+}
+
 function buildQABlock(
   selectedItems: NewsletterItem[],
   pool: NewsItem[],
@@ -1747,16 +1769,56 @@ async function runGeneration(
   // the selected items came from prior daily NewsletterItems (no NewsItem pool
   // to map back to), so source/tier resolution falls through to Claude's
   // product label and tier-based design-native check is skipped for those.
-  const qa = buildQABlock(structuredData.items, newsItems, clippedSources);
+  let qa = buildQABlock(structuredData.items, newsItems, clippedSources);
   if (qa.designLightWarning) {
     console.warn(`[newsletter] Design-light: 0 design-native items in final selection (pool: ${qa.poolSize}). Routing to admin review.`);
   }
   console.log(`[newsletter] QA: ${qa.designNativeCount}/${structuredData.items.length} design-native, opinion=${qa.opinionCount}, productNews=${qa.productNewsCount}, sources: ${JSON.stringify(qa.sourceCounts)}`);
 
+  // One-shot retry on selection-rule violation (daily only). Claude routinely
+  // ignores the prompt's product-news floor / opinion cap on first pass even
+  // when the pool has eligible items. Re-prompting once with explicit URLs
+  // typically fixes it; falling through to auto-quiet stays the backstop.
+  if (type === 'daily' && qa.selectionRuleViolation) {
+    const addendum = buildSelectionRetryAddendum(newsItems, qa.selectionRuleViolation);
+    if (addendum) {
+      console.warn(`[newsletter] Selection rule violated on first pass: ${qa.selectionRuleViolation}. Retrying with hardened prompt.`);
+      const retryController = new AbortController();
+      const retryTimeout = setTimeout(() => retryController.abort(), 25000);
+      try {
+        const retryResponse = await anthropic.messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 2048,
+          messages: [{ role: 'user', content: prompt + addendum }],
+        }, { signal: retryController.signal });
+        const retryText = retryResponse.content[0].type === 'text' ? retryResponse.content[0].text : '';
+        const retryMatch =
+          retryText.match(/```json\s*([\s\S]*?)\s*```/) ||
+          retryText.match(/```\s*([\s\S]*?)\s*```/) || [null, retryText];
+        const retryParsed = JSON.parse(retryMatch[1] || retryText) as NewsletterData;
+        const retryQA = buildQABlock(retryParsed.items, newsItems, clippedSources);
+        if (!retryQA.selectionRuleViolation) {
+          console.log(`[newsletter] Retry succeeded — productNews=${retryQA.productNewsCount}, opinion=${retryQA.opinionCount}`);
+          structuredData = retryParsed;
+          htmlContent = generateHTML(retryParsed);
+          title = retryParsed.title;
+          summary = retryParsed.summary;
+          qa = retryQA;
+        } else {
+          console.warn(`[newsletter] Retry still violating: ${retryQA.selectionRuleViolation}. Falling through to auto-quiet.`);
+        }
+      } catch (retryError) {
+        console.warn(`[newsletter] Retry failed: ${(retryError as Error).message}. Falling through to auto-quiet.`);
+      } finally {
+        clearTimeout(retryTimeout);
+      }
+    }
+  }
+
   // Selection-rule guard (daily only): if Claude ignored its own counted rules
-  // for opinion/product-news mix, auto-quiet the day instead of shipping
-  // filler. Weekly compilations re-pick from already-curated daily items, so
-  // the rule doesn't apply there.
+  // for opinion/product-news mix even after retry, auto-quiet the day instead
+  // of shipping filler. Weekly compilations re-pick from already-curated daily
+  // items, so the rule doesn't apply there.
   if (type === 'daily' && qa.selectionRuleViolation) {
     console.warn(`[newsletter] Selection rule violated: ${qa.selectionRuleViolation}. Auto-quieting today.`);
     const date = new Date();
