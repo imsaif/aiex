@@ -871,12 +871,22 @@ async function aggregateNews(
     return new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime();
   });
 
+  // Pre-filter: drop any item whose URL is on an opinion domain regardless of
+  // which feed surfaced it. TLDR Design and similar curated feeds syndicate
+  // Substack/Medium pieces; isOpinionUrl looks at the final URL host so we
+  // strip them here before Claude ever sees the pool.
+  const opinionFiltered = sorted.filter((item) => !isOpinionUrl(item.link));
+  const opinionDropped = sorted.length - opinionFiltered.length;
+  if (opinionDropped > 0) {
+    console.log(`[newsletter] Pool opinion filter dropped ${opinionDropped} item(s) from substack/medium/etc.`);
+  }
+
   // Pool-level diversity cap: walk top-down, keep at most MAX_ITEMS_PER_SOURCE
   // from each source. Track which sources got clipped for the QA telemetry.
   const perSourceCount = new Map<string, number>();
   const clippedSet = new Set<string>();
   const capped: NewsItem[] = [];
-  for (const item of sorted) {
+  for (const item of opinionFiltered) {
     const seen = perSourceCount.get(item.source) || 0;
     if (seen >= maxItemsForTier(item.sourceTier)) {
       clippedSet.add(item.source);
@@ -1059,7 +1069,7 @@ YOUR TASK:
 
    AUDIENCE FILTER (strict — this overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not write a strained Designer's Takeaway to bolt design relevance onto a dev story. Returning 3 strong design-relevant items is better than 5 mixed items.
-   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), and Lenny's Newsletter are usually opinion. Count opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com) in your final selection — this count MUST be ≤1. If you have 2 candidates from these domains, pick the stronger one and drop the other; do not include both.
+   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), Lenny's Newsletter, *.substack.com, and medium.com are opinion. Count opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com) in your final selection — this count MUST be 0. If you have any candidates from these domains, drop them; do not include any opinion items.
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
@@ -1511,7 +1521,7 @@ You MUST include AT LEAST ONE item from this list of concrete product-news sourc
 
 ${lines}
 
-You MUST also keep opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com) to AT MOST 1 in your final selection. Return the same JSON shape as before.`;
+You MUST exclude all opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com) from your final selection — opinion count MUST be 0. Return the same JSON shape as before.`;
 }
 
 function buildQABlock(
@@ -1578,7 +1588,7 @@ function buildQABlock(
   // we don't ship opinion-heavy filler when the pool can't support real news.
   // Two violation types:
   //   1) productNewsCount < 1 → no concrete launch in the issue at all.
-  //   2) opinionCount > 1 → opinion is dominating the issue.
+  //   2) opinionCount > 0 → any opinion item disqualifies the issue.
   // Pool-aware escape hatch: if the pool genuinely contained zero ai-lab or
   // design-tool items, rule (1) doesn't fire — there's nothing better Claude
   // could have picked, and shipping 4 design-pub items is acceptable.
@@ -1588,8 +1598,8 @@ function buildQABlock(
   let selectionRuleViolation: string | null = null;
   if (productNewsCount < 1 && poolHadProductNews) {
     selectionRuleViolation = `no_product_news (pool had ${pool.filter((it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool').length} product-news items but Claude picked 0)`;
-  } else if (opinionCount > 1) {
-    selectionRuleViolation = `opinion_heavy (${opinionCount} opinion items, max 1)`;
+  } else if (opinionCount > 0) {
+    selectionRuleViolation = `opinion_present (${opinionCount} opinion items, max 0)`;
   }
 
   return {
