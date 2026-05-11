@@ -99,6 +99,9 @@ tasks/
 # Test results
 test-results/
 
+# Audit-tool eval runs (regenerated per run; not checked in)
+tests/audit-evals/last-run.json
+
 # Documentation drafts
 docs/status.md
 docs/*-agent.md

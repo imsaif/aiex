@@ -2,6 +2,8 @@
  * Type definitions for Pattern Audit Tool
  */
 
+import { z } from 'zod';
+
 export type InterfaceType = 'chatbot' | 'content' | 'code' | 'image' | 'analytics' | 'other';
 
 export type UserGoal =
@@ -130,3 +132,44 @@ export interface ContextAwareResults {
   productContext: ProductContext;
   timestamp: string;
 }
+
+// --- Zod schemas for runtime validation of Claude's analyze response ---
+//
+// The analyze prompt asks Claude to return a strict JSON shape (see
+// src/lib/audit/prompts.ts). We validate the parsed JSON against this schema
+// so that broken responses (missing fields, wrong types, hallucinated extras)
+// surface as typed errors instead of silently propagating through the UI.
+//
+// Kept deliberately permissive on `applicablePatterns`, `quickWins`, and
+// `score`/`maxScore` because the route already tolerates absent fields, but
+// strict on `topGaps[].pattern/status/finding` since those are user-visible
+// and the documented Apr 28 regression class is bad findings shape.
+
+export const TopGapSchema = z.object({
+  pattern: z.string().min(1),
+  status: z.enum(['missing', 'needs-improvement', 'good']),
+  finding: z.string().min(1),
+  evidence: z.string().optional(),
+  recommendation: z.string().optional().default(''),
+  resource: z.string().nullable().optional(),
+  screenshotIndex: z.number().int().positive().optional(),
+});
+
+export const ClaudeAnalysisResponseSchema = z.object({
+  score: z.number().nullable().optional(),
+  maxScore: z.number().nullable().optional(),
+  productTypeSummary: z.string().optional().default(''),
+  surfaceDescription: z.string().optional().default(''),
+  applicablePatterns: z.array(z.string()).optional().default([]),
+  topGaps: z.array(TopGapSchema).optional().default([]),
+  quickWins: z.array(z.string()).optional().default([]),
+  chatContext: z.string().optional().default(''),
+  // Legacy fields the route still passes through for backward compat
+  detectedComponent: z.string().optional(),
+  componentDescription: z.string().optional(),
+  patterns: z.record(z.string(), z.unknown()).optional(),
+  summary: z.string().optional(),
+  criticalMissing: z.array(z.string()).optional(),
+});
+
+export type ClaudeAnalysisResponse = z.infer<typeof ClaudeAnalysisResponseSchema>;

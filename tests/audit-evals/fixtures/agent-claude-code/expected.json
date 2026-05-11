@@ -1,0 +1,10 @@
+{
+  "description": "NEGATIVE CASE — terminal window showing text output from Claude Code (status header, Bash tool-call summaries, prose paragraphs). NO product UI is visible: no buttons, no panels, no clickable affordances. Just monospace text rendered in a terminal.",
+  "productType": "ai-agent",
+  "productDescription": "Claude Code — Anthropic's terminal-based coding agent. The screenshot is of the terminal window in which it runs, NOT a graphical product UI.",
+  "mustFindPatterns": [],
+  "mustNotFindPatterns": [],
+  "maxApplicablePatterns": 3,
+  "expectEmptyTopGaps": true,
+  "notes": "This fixture's job is to prove the audit refuses to hallucinate UI patterns from text-only surfaces. Even though productType is ai-agent, the SCREENSHOT shows only terminal text — no UI elements that 'Action Audit Trail', 'Agent Status & Monitoring', or 'Autonomy Spectrum' could meaningfully apply to (those patterns require visible UI affordances: status panels, action logs as UI, autonomy controls — not text strings in a terminal). The correct grounded behavior is the empty-topGaps + surfaceDescription-explains-why path documented in the system prompt's Step 4. This guards against the failure mode 'audit invents patterns from textual descriptions of agent activity'. If the audit returns a non-empty topGaps here, it's hallucinating UI from text — a real regression. maxApplicablePatterns is set tight (3) to allow at most 1-2 generic crossover patterns (e.g. Responsible AI Design) if the audit insists on something."
+}

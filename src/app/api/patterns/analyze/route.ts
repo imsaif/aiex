@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { buildContextAwarePrompt } from '@/lib/patterns/detection-prompts';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
+import { parseAnalysisResponse } from '@/lib/audit/parseAnalysis';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 
@@ -119,6 +120,7 @@ export async function POST(request: NextRequest) {
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
+      temperature: 0,
       ...(systemPrompt ? { system: systemPrompt } : {}),
       messages: [
         {
@@ -140,19 +142,29 @@ export async function POST(request: NextRequest) {
       throw new Error('No text response from Claude');
     }
 
-    // Parse the JSON response
-    let analysisData;
-    try {
-      // Extract JSON from the response (Claude might wrap it in markdown)
-      const jsonMatch = textContent.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error('No JSON found in response');
-      }
-      analysisData = JSON.parse(jsonMatch[0]);
-    } catch (parseError) {
-      console.error('[Pattern Audit] Failed to parse response:', textContent.text);
-      throw new Error('Failed to parse Claude response as JSON');
+    // Parse + validate the JSON response. Never throws — returns a typed
+    // Result so we can surface upstream model failures as 502 instead of a
+    // generic 500 (and so the user sees a real error instead of a blank UI).
+    const parseResult = parseAnalysisResponse(textContent.text);
+    if (!parseResult.ok) {
+      console.error(
+        '[Pattern Audit] Response parse failed:',
+        parseResult.reason,
+        '|',
+        parseResult.detail,
+        '\n--- raw response ---\n',
+        parseResult.raw.slice(0, 2000),
+      );
+      return NextResponse.json(
+        {
+          error: 'Upstream analysis returned an invalid response',
+          reason: parseResult.reason,
+          detail: parseResult.detail,
+        },
+        { status: 502 },
+      );
     }
+    const analysisData = parseResult.data;
 
     // Generate a unique ID for this analysis
     const id = `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -202,10 +214,10 @@ export async function POST(request: NextRequest) {
       id,
       context,
       score: analysisData.score || 0,
-      maxScore: analysisData.maxScore || analysisData.applicablePatternCount || 28,
+      maxScore: analysisData.maxScore || (analysisData.applicablePatterns?.length ?? 0) || 28,
       detectedComponent: analysisData.detectedComponent || 'unknown',
       componentDescription: analysisData.componentDescription || '',
-      patterns: analysisData.patterns || {},
+      patterns: (analysisData.patterns as AnalysisResults['patterns']) || {},
       summary: analysisData.summary || '',
       criticalMissing: analysisData.criticalMissing || [],
       timestamp: new Date().toISOString(),

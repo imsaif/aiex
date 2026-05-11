@@ -17,6 +17,7 @@
     "test:ci": "jest --ci --coverage --watchAll=false",
     "test:patterns": "jest src/data/__tests__/patterns.test.ts",
     "test:components": "jest src/components",
+    "eval:audit": "TS_NODE_PROJECT=tsconfig.eval.json ts-node -r tsconfig-paths/register tests/audit-evals/run.ts",
     "optimize-images": "node scripts/assets/optimize-images.js",
     "convert-gifs": "node scripts/assets/convert-gifs-enhanced.js",
     "perf-audit": "node scripts/analysis/perf-audit.js",

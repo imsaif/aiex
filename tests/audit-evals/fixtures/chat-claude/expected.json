@@ -1,0 +1,19 @@
+{
+  "description": "Claude.ai chat thread mid-conversation. Long instructional Opus 4.7 response with bullets + bold. Feedback controls (copy / thumbs-up / thumbs-down / regenerate) visible below the message. Generating-indicator showing. Bottom disclaimer 'Claude is AI and can make mistakes'.",
+  "productType": "chat-interface",
+  "productDescription": "Claude.ai — Anthropic's conversational AI assistant",
+  "mustFindPatterns": [],
+  "mustNotFindPatterns": [
+    "Autonomy Spectrum",
+    "Intent Preview",
+    "Plan Summary",
+    "Action Audit Trail",
+    "Agent Status & Monitoring",
+    "Mixed-Initiative Control",
+    "Trust Calibration",
+    "Escalation Pathways"
+  ],
+  "maxApplicablePatterns": 8,
+  "expectEmptyTopGaps": false,
+  "notes": "This is a vanilla conversational chat surface — NOT a research / deep-dive / citation surface, and NOT an agentic surface. Confidence Visualization and Explainable AI do NOT meaningfully apply here: Claude is having a normal conversation, not returning sourced research claims or recommendations that need 'why this?' justification. Feedback Loops IS implemented (thumbs-up/down + copy below message). Error Recovery IS partly implemented (regenerate button). The bottom 'Claude is AI and can make mistakes' is a Responsible AI Design touchpoint. This fixture's job is the must-NOT-find guard: flagging any of the 8 agentic patterns on a chat surface is the Apr 28 regression class and must fail. The maxApplicablePatterns cap of 8 guards against padding."
+}

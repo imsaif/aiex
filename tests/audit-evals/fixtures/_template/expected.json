@@ -1,0 +1,16 @@
+{
+  "description": "Short surface description, e.g. 'Claude chat thread mid-conversation'",
+  "productType": "chat-interface",
+  "productDescription": "One-sentence product context, e.g. 'Conversational AI assistant'",
+  "mustFindPatterns": [
+    "Confidence Visualization",
+    "Human-in-the-Loop"
+  ],
+  "mustNotFindPatterns": [
+    "Autonomy Spectrum",
+    "Action Audit Trail"
+  ],
+  "maxApplicablePatterns": 8,
+  "expectEmptyTopGaps": false,
+  "notes": "Why these patterns: the chat shows AI-generated answers with no source attribution and no thumbs-up/down. Why the anti-asserts: this is a chat product, not an agentic one — agentic patterns should not be flagged."
+}
