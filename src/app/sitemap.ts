@@ -4,8 +4,25 @@ import categories from '@/data/categories';
 import { guides } from '@/data/guides';
 import { getAllLessonParams } from '@/lib/guides/lesson-urls';
 import { siteConfig } from '@/config/seo';
+import { getNewsletters } from '@/data/newsletters';
+import { prisma } from '@/lib/prisma';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+async function getPublishedNewsSlugs(): Promise<Array<{ slug: string; publishDate: Date }>> {
+  try {
+    const drafts = await prisma.newsletterDraft.findMany({
+      where: { status: 'published' },
+      select: { slug: true, publishDate: true },
+      orderBy: { publishDate: 'desc' },
+      take: 200,
+    });
+    return drafts;
+  } catch {
+    // Sitemap must still build if DB is unreachable; static newsletters cover the gap.
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
 
   // Static pages with fixed priority and change frequency
@@ -135,11 +152,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   );
 
+  // News article pages — merge DB-published drafts with static newsletters,
+  // mirroring /news/page.tsx (static slug wins on collision).
+  const staticNews = getNewsletters();
+  const staticNewsSlugs = new Set(staticNews.map((n) => n.slug));
+  const dbNews = await getPublishedNewsSlugs();
+
+  const newsPages: MetadataRoute.Sitemap = [
+    ...staticNews.map((n) => ({
+      url: `${baseUrl}/news/${n.slug}`,
+      lastModified: new Date(n.publishedAt),
+      changeFrequency: 'yearly' as const,
+      priority: 0.6,
+    })),
+    ...dbNews
+      .filter((d) => !staticNewsSlugs.has(d.slug))
+      .map((d) => ({
+        url: `${baseUrl}/news/${d.slug}`,
+        lastModified: d.publishDate,
+        changeFrequency: 'yearly' as const,
+        priority: 0.6,
+      })),
+  ];
+
   return [
     ...staticPages,
     ...patternCategoryPages,
     ...patternPages,
     ...guidePages,
     ...lessonPages,
+    ...newsPages,
   ];
 }
