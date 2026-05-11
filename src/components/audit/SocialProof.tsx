@@ -9,9 +9,30 @@ import {
   ArrowRightIcon,
   Squares2X2Icon,
   AcademicCapIcon,
+  PlayCircleIcon,
 } from '@heroicons/react/24/outline';
-import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
-import { companyLogos } from '@/data/company-logos';
+import OptimizedMedia from '@/components/ui/OptimizedMedia';
+
+const PATTERN_DEMOS = [
+  {
+    slug: 'contextual-assistance',
+    title: 'Contextual Assistance',
+    blurb: 'Gmail Smart Compose finishes the sentence you were writing.',
+    media: '/images/examples/Smart-compose_Taco_Tuesday.gif',
+  },
+  {
+    slug: 'trust-calibration',
+    title: 'Trust Calibration',
+    blurb: 'Reject suggestions and watch AI confidence pull back.',
+    media: '/images/examples/notion-ai.gif',
+  },
+  {
+    slug: 'mixed-initiative-control',
+    title: 'Mixed-Initiative Control',
+    blurb: 'Click any field. AI yields and keeps writing the others.',
+    media: '/images/examples/figma-ai-design.gif',
+  },
+];
 
 const TRUST_POINTS = [
   'Screenshots never stored',
@@ -30,22 +51,47 @@ export function SocialProof() {
             What is an AI UX audit?
           </h2>
           <p className="text-base md:text-lg text-text-secondary leading-relaxed">
-            Score your interface against 36 patterns built for AI products. Upload a screenshot of any chatbot, code assistant, or dashboard for instant, actionable feedback.
+            Score your interface against 36 patterns built for AI products. Upload a screenshot of any chatbot, code assistant, or dashboard to get instant, actionable feedback, then explore each pattern through a working micro-app with code you can paste into your own designs.
           </p>
         </div>
 
-        {/* Logo carousel — trusted by */}
-        <div className="mb-12">
-          <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">Patterns used by teams at</p>
-          <div className="overflow-hidden">
-            <CompanyLogoCarousel
-              companies={companyLogos}
-              size="sm"
-              duration={80}
-              gap="lg"
-              className="py-2"
-            />
+        {/* Each pattern has a working demo — drives traffic to pattern detail pages */}
+        <div className="mb-14">
+          <h3 className="text-xl font-bold text-text-primary mb-6">Each pattern has a working demo</h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            {PATTERN_DEMOS.map((d) => (
+              <Link
+                key={d.slug}
+                href={`/patterns/${d.slug}`}
+                className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden flex flex-col"
+              >
+                <div className="relative aspect-video overflow-hidden bg-background-tertiary">
+                  <OptimizedMedia src={d.media} alt={`${d.title} demo`} fill sizes="(max-width: 768px) 100vw, 33vw" className="w-full h-full" />
+                  <span className="absolute top-3 left-3 z-10 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-accent-primary bg-background-primary/95 backdrop-blur px-2 py-1 rounded-full">
+                    <PlayCircleIcon className="w-3 h-3" />
+                    Interactive
+                  </span>
+                </div>
+                <div className="p-5 flex flex-col flex-1">
+                  <h4 className="text-base font-bold text-text-primary mb-1 group-hover:text-accent-primary transition-colors">
+                    {d.title}
+                  </h4>
+                  <p className="text-sm text-text-secondary leading-relaxed mb-4">{d.blurb}</p>
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
+                    Try the demo
+                    <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+              </Link>
+            ))}
           </div>
+          <Link
+            href="/patterns"
+            className="inline-flex items-center gap-1.5 mt-6 text-sm font-semibold text-accent-primary hover:underline"
+          >
+            See all 36 patterns
+            <ArrowRightIcon className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* Pattern pills — non-linked labels, +32 more links to patterns page */}
@@ -62,7 +108,7 @@ export function SocialProof() {
         <h3 className="text-xl font-bold text-text-primary mb-6">How it works</h3>
         <div className="grid md:grid-cols-3 gap-6">
           <div className="rounded-2xl border border-border-primary bg-background-grain p-6">
-            <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-full bg-background-primary border border-border-primary flex items-center justify-center mb-4">
               <ArrowUpTrayIcon className="w-6 h-6 text-accent-primary" />
             </div>
             <p className="text-sm font-semibold text-accent-primary mb-1">Step 1</p>
@@ -72,7 +118,7 @@ export function SocialProof() {
             </p>
           </div>
           <div className="rounded-2xl border border-border-primary bg-background-grain p-6">
-            <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-full bg-background-primary border border-border-primary flex items-center justify-center mb-4">
               <MagnifyingGlassCircleIcon className="w-6 h-6 text-accent-primary" />
             </div>
             <p className="text-sm font-semibold text-accent-primary mb-1">Step 2</p>
@@ -82,7 +128,7 @@ export function SocialProof() {
             </p>
           </div>
           <div className="rounded-2xl border border-border-primary bg-background-grain p-6">
-            <div className="w-12 h-12 rounded-full bg-accent-subtle flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-full bg-background-primary border border-border-primary flex items-center justify-center mb-4">
               <ChatBubbleLeftRightIcon className="w-6 h-6 text-accent-primary" />
             </div>
             <p className="text-sm font-semibold text-accent-primary mb-1">Step 3</p>
@@ -108,10 +154,10 @@ export function SocialProof() {
             className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
           >
             <div className="flex items-start justify-between mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-background-primary border border-border-primary flex items-center justify-center">
                 <Squares2X2Icon className="w-7 h-7 text-accent-primary" />
               </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-accent-subtle px-3 py-1.5 rounded-full">
+              <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-background-primary border border-border-primary px-3 py-1.5 rounded-full">
                 36 patterns
               </span>
             </div>
@@ -122,9 +168,9 @@ export function SocialProof() {
               Real examples and code from ChatGPT, Claude, Copilot, and 50+ AI products.
             </p>
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">Conversational UI</span>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">Confidence Visualization</span>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">+34 more</span>
+              <span className="text-xs px-2.5 py-1 rounded-md bg-background-primary border border-border-primary text-text-primary">Conversational UI</span>
+              <span className="text-xs px-2.5 py-1 rounded-md bg-background-primary border border-border-primary text-text-primary">Confidence Visualization</span>
+              <span className="text-xs px-2.5 py-1 rounded-md bg-background-primary border border-border-primary text-text-primary">+34 more</span>
             </div>
             <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
               Explore patterns
@@ -137,10 +183,10 @@ export function SocialProof() {
             className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
           >
             <div className="flex items-start justify-between mb-6">
-              <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
+              <div className="w-14 h-14 rounded-2xl bg-background-primary border border-border-primary flex items-center justify-center">
                 <AcademicCapIcon className="w-7 h-7 text-accent-primary" />
               </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-accent-subtle px-3 py-1.5 rounded-full">
+              <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-background-primary border border-border-primary px-3 py-1.5 rounded-full">
                 Free · No signup
               </span>
             </div>
@@ -151,10 +197,10 @@ export function SocialProof() {
               Hands-on paths from product designers shipping AI features daily.
             </p>
             <div className="flex flex-wrap gap-2 mb-6">
-              <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">Claude Code</span>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">Cursor</span>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">GitHub Copilot</span>
-              <span className="text-xs px-2.5 py-1 rounded-md bg-background-tertiary text-text-secondary">Claude Design</span>
+              <span className="text-xs px-2.5 py-1 rounded-md bg-background-primary border border-border-primary text-text-primary">Claude Code</span>
+              <span className="text-xs px-2.5 py-1 rounded-md bg-background-primary border border-border-primary text-text-primary">Cursor</span>
+              <span className="text-xs px-2.5 py-1 rounded-md bg-background-primary border border-border-primary text-text-primary">GitHub Copilot</span>
+              <span className="text-xs px-2.5 py-1 rounded-md bg-background-primary border border-border-primary text-text-primary">Claude Design</span>
             </div>
             <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
               Browse courses
@@ -176,10 +222,10 @@ export function SocialProof() {
               className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
             >
               <div className="flex items-start justify-between mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
+                <div className="w-14 h-14 rounded-2xl bg-background-primary border border-border-primary flex items-center justify-center">
                   <ChatBubbleOvalLeftEllipsisIcon className="w-7 h-7 text-accent-primary" />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-accent-subtle px-3 py-1.5 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-background-primary border border-border-primary px-3 py-1.5 rounded-full">
                   Hands-on
                 </span>
               </div>
@@ -187,7 +233,7 @@ export function SocialProof() {
                 Build a Conversational UI
               </h4>
               <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-                Ship a chat interface from scratch — bubbles, inputs, error recovery, the patterns ChatGPT and Claude use.
+                Ship a real chat interface using the patterns ChatGPT and Claude rely on.
               </p>
               <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
                 Start the guide
@@ -200,7 +246,7 @@ export function SocialProof() {
               className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
             >
               <div className="flex items-start justify-between mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-accent-subtle flex items-center justify-center">
+                <div className="w-14 h-14 rounded-2xl bg-background-primary border border-border-primary flex items-center justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/images/logos/claude.svg"
@@ -210,7 +256,7 @@ export function SocialProof() {
                     className="w-7 h-7 dark:invert"
                   />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-accent-subtle px-3 py-1.5 rounded-full">
+                <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-background-primary border border-border-primary px-3 py-1.5 rounded-full">
                   Most popular
                 </span>
               </div>
@@ -218,7 +264,7 @@ export function SocialProof() {
                 Claude Code Course for Designers
               </h4>
               <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-                Zero to shipping real features with Claude Code — for designers who don&apos;t (yet) code daily.
+                Ship real features with Claude Code, even if you don&apos;t code daily.
               </p>
               <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
                 Start the course

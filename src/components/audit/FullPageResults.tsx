@@ -21,6 +21,8 @@ import { DemoChatMockup } from './DemoChatMockup';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
 import { PaywallInlineCapture } from './PaywallInlineCapture';
+import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
+import { companyLogos } from '@/data/company-logos';
 
 interface ExtendedResults extends AnalysisResults {
   topGaps?: TopGap[];
@@ -502,6 +504,21 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                     auditsRemaining={auditsRemaining}
                   />
                 )}
+              </div>
+            </div>
+
+            <div className="mt-10 sm:mt-12">
+              <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4 text-center">
+                Patterns used by teams at
+              </p>
+              <div className="overflow-hidden">
+                <CompanyLogoCarousel
+                  companies={companyLogos}
+                  size="sm"
+                  duration={80}
+                  gap="lg"
+                  className="py-2"
+                />
               </div>
             </div>
 
