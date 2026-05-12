@@ -20,6 +20,7 @@ export const NEWSLETTER_SOURCES = [
   'design-with-claude',
   'guides',
   'homepage-hero',
+  'homepage-hero-pre-audit',
 ] as const;
 
 export type NewsletterSource = (typeof NEWSLETTER_SOURCES)[number];

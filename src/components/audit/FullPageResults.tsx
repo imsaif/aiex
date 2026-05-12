@@ -910,7 +910,7 @@ function DemoStartForm({
       fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'homepage-hero', website_url: '' }),
+        body: JSON.stringify({ email, source: 'homepage-hero-pre-audit', website_url: '' }),
       }).catch(() => {});
     }
 

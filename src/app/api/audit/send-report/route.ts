@@ -251,12 +251,15 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
   const percentage = Math.round((results.score / results.maxScore) * 100);
   const benchmark = getBenchmark(productContext?.productType);
 
-  // Brand colors — navy palette, minimal color use
-  const navy = '#162036';
-  const secondaryText = '#4b5563'; // gray-600
-  const mutedText = '#6b7280'; // gray-500
-  const border = '#e5e7eb';
-  const bgLight = '#f9fafb';
+  // Email design tokens — kept in sync with the newsletter renderer in
+  // src/app/api/cron/generate-newsletter/route.ts and the Beehiiv welcome
+  // templates in docs/email-templates/.
+  const navy = '#162036';        // EMAIL_INK / brand navy
+  const secondaryText = '#162036'; // body copy uses ink for max contrast
+  const mutedText = '#64748b';   // EMAIL_MUTED / slate-500
+  const border = '#e5e7eb';      // EMAIL_HAIRLINE / gray-200
+  const bgLight = '#f8fafc';     // soft callout bg — matches welcome templates
+  const fontStack = `'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`;
 
   const productName = productContext?.productDescription || results.detectedComponent || 'your AI interface';
 
@@ -317,18 +320,19 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>AI UX Audit Report</title>
       </head>
-      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: ${navy}; max-width: 680px; margin: 0 auto; padding: 20px; background: #f5f5f5;">
+      <body style="font-family: ${fontStack}; line-height: 1.6; color: ${navy}; margin: 0; padding: 0;">
+        <div style="font-family: ${fontStack}; color: ${navy}; max-width: 640px; margin: 0 auto; padding: 0 8px;">
+
+        <div style="background-color: #ffffff; padding: 40px 32px; border-radius: 14px; border: 1px solid ${border};">
 
         <!-- Header -->
-        <div style="background: ${navy}; padding: 32px 28px; border-radius: 10px 10px 0 0;">
-          <p style="margin: 0 0 4px 0; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px;">AI UX Audit Report</p>
-          <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">${productName}</h1>
-          ${productContext ? `<p style="color: #94a3b8; margin: 8px 0 0 0; font-size: 14px;">${formatProductType(productContext.productType)}${productContext.aiRole.length > 0 ? ' &middot; ' + productContext.aiRole.join(', ') : ''}</p>` : ''}
-        </div>
+        <p style="margin: 0 0 8px; font-size: 13px; font-weight: 600; color: ${mutedText}; letter-spacing: 0.8px; text-transform: uppercase;">AI UX Audit Report</p>
+        <h1 style="margin: 0 0 8px; font-size: 28px; font-weight: 700; color: ${navy}; letter-spacing: -0.4px; line-height: 1.25;">${productName}</h1>
+        ${productContext ? `<p style="margin: 0 0 32px; font-size: 14px; color: ${mutedText};">${formatProductType(productContext.productType)}${productContext.aiRole.length > 0 ? ' &middot; ' + productContext.aiRole.join(', ') : ''}</p>` : '<div style="height: 32px;"></div>'}
 
         <!-- How We Audited -->
-        <div style="background: ${bgLight}; padding: 20px 28px; border-left: 1px solid ${border}; border-right: 1px solid ${border};">
-          <h2 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: ${mutedText}; text-transform: uppercase; letter-spacing: 0.5px;">What we analyzed</h2>
+        <div style="padding: 20px; background-color: ${bgLight}; border-radius: 10px; margin: 0 0 32px;">
+          <p style="margin: 0 0 12px; font-size: 11px; font-weight: 600; color: ${mutedText}; text-transform: uppercase; letter-spacing: 0.6px;">What we analyzed</p>
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             <tr>
               ${productContext ? `<td style="padding: 4px 16px 4px 0; vertical-align: top;">
@@ -346,7 +350,7 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
             </tr>
           </table>
           ${productContext && productContext.aiRole.length > 0 ? `
-          <p style="margin: 12px 0 0 0; font-size: 13px; color: ${secondaryText}; line-height: 1.5;"><strong style="color: ${navy};">AI capabilities:</strong> ${productContext.aiRole.join(', ')}</p>
+          <p style="margin: 12px 0 0 0; font-size: 13px; color: ${navy}; line-height: 1.5;"><strong style="color: ${navy};">AI capabilities:</strong> ${productContext.aiRole.join(', ')}</p>
           ` : ''}
           <p style="margin: 12px 0 0 0; font-size: 12px; color: ${mutedText}; line-height: 1.5;">
             Your screenshot was analyzed against ${results.maxScore} research-backed UX patterns for AI products. Each pattern was scored as well-implemented, weak, or missing based on visible interface elements.
@@ -354,7 +358,7 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
         </div>
 
         <!-- Executive Summary + Score -->
-        <div style="background: #ffffff; padding: 28px; border-left: 1px solid ${border}; border-right: 1px solid ${border};">
+        <div style="margin: 0 0 32px;">
           <p style="margin: 0 0 20px 0; color: ${secondaryText}; font-size: 15px; line-height: 1.6;">
             ${results.summary}
           </p>
@@ -387,8 +391,8 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
 
         ${goodPatterns.length > 0 ? `
         <!-- Strengths -->
-        <div style="background: #ffffff; padding: 28px; border-left: 1px solid ${border}; border-right: 1px solid ${border}; border-top: 1px solid ${border};">
-          <h2 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700; color: ${navy};">What you're doing well</h2>
+        <div style="padding: 28px 0 0; margin: 32px 0 0; border-top: 1px solid ${border};">
+          <h2 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: ${navy}; letter-spacing: -0.2px;">What you're doing well</h2>
           <p style="margin: 0 0 16px 0; font-size: 13px; color: ${mutedText};">${goodPatterns.length} pattern${goodPatterns.length !== 1 ? 's' : ''} well implemented</p>
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             ${strengthsHtml}
@@ -398,8 +402,8 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
         ` : ''}
 
         <!-- Top Actions -->
-        <div style="background: #ffffff; padding: 28px; border-left: 1px solid ${border}; border-right: 1px solid ${border}; border-top: 1px solid ${border};">
-          <h2 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700; color: ${navy};">
+        <div style="padding: 28px 0 0; margin: 32px 0 0; border-top: 1px solid ${border};">
+          <h2 style="margin: 0 0 4px 0; font-size: 18px; font-weight: 700; color: ${navy}; letter-spacing: -0.2px;">
             ${topPriorities.length > 0 ? 'Your top 3 actions' : 'No critical gaps found'}
           </h2>
           <p style="margin: 0 0 16px 0; font-size: 13px; color: ${mutedText};">Highest impact improvements for ${productName}</p>
@@ -407,64 +411,57 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
           <table width="100%" cellpadding="0" cellspacing="0" border="0">
             ${actionsHtml}
           </table>
-          ` : `<p style="color: ${secondaryText}; font-size: 14px;">Your interface covers the key patterns. Consider exploring advanced patterns to stay ahead.</p>`}
+          ` : `<p style="color: ${navy}; font-size: 14px;">Your interface covers the key patterns. Consider exploring advanced patterns to stay ahead.</p>`}
         </div>
 
         ${topPriorities.length > 0 ? `
         <!-- Start Here -->
-        <div style="background: #ffffff; padding: 24px 28px; border-left: 1px solid ${border}; border-right: 1px solid ${border}; border-top: 1px solid ${border};">
-          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: ${bgLight}; border-radius: 8px; border: 1px solid ${border};">
-            <tr>
-              <td style="padding: 20px 24px;">
-                <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: ${mutedText}; text-transform: uppercase; letter-spacing: 0.5px;">If you fix one thing</p>
-                <p style="margin: 0 0 8px 0; font-size: 17px; font-weight: 700; color: ${navy};">
-                  <a href="https://www.aiuxdesign.guide/patterns/${getPatternSlug(topPriorities[0].id)}" style="color: ${navy}; text-decoration: none;">
-                    ${topPriorities[0].name} &rarr;
-                  </a>
-                </p>
-                <p style="margin: 0; font-size: 14px; color: ${secondaryText}; line-height: 1.5;">${topPriorities[0].improvement || topPriorities[0].evidence}</p>
-              </td>
-            </tr>
-          </table>
+        <div style="padding: 20px; background-color: ${bgLight}; border-radius: 10px; margin: 32px 0 0;">
+          <p style="margin: 0 0 4px 0; font-size: 12px; font-weight: 600; color: ${mutedText}; text-transform: uppercase; letter-spacing: 0.6px;">If you fix one thing</p>
+          <p style="margin: 0 0 8px 0; font-size: 17px; font-weight: 700; color: ${navy};">
+            <a href="https://www.aiuxdesign.guide/patterns/${getPatternSlug(topPriorities[0].id)}" style="color: ${navy}; text-decoration: none;">
+              ${topPriorities[0].name} &rarr;
+            </a>
+          </p>
+          <p style="margin: 0; font-size: 14px; color: ${navy}; line-height: 1.5;">${topPriorities[0].improvement || topPriorities[0].evidence}</p>
         </div>
         ` : ''}
 
         ${(weakPatterns.length > 3 || missingPatterns.length > 3) ? `
         <!-- Full Breakdown (compact) -->
-        <div style="background: #ffffff; padding: 28px; border-left: 1px solid ${border}; border-right: 1px solid ${border}; border-top: 1px solid ${border};">
-          <h2 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 700; color: ${navy};">Full breakdown</h2>
+        <div style="padding: 28px 0 0; margin: 32px 0 0; border-top: 1px solid ${border};">
+          <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 700; color: ${navy}; letter-spacing: -0.2px;">Full breakdown</h2>
           ${weakPatterns.length > 0 ? `
           <p style="margin: 0 0 8px 0; font-size: 13px;"><strong style="color: ${navy};">Needs improvement (${weakPatterns.length}):</strong></p>
-          <p style="margin: 0 0 16px 0; font-size: 13px; line-height: 1.8; color: ${secondaryText};">${compactList(weakPatterns)}</p>
+          <p style="margin: 0 0 16px 0; font-size: 13px; line-height: 1.8; color: ${navy};">${compactList(weakPatterns)}</p>
           ` : ''}
           ${missingPatterns.length > 0 ? `
           <p style="margin: 0 0 8px 0; font-size: 13px;"><strong style="color: ${navy};">Missing (${missingPatterns.length}):</strong></p>
-          <p style="margin: 0; font-size: 13px; line-height: 1.8; color: ${secondaryText};">${compactList(missingPatterns)}</p>
+          <p style="margin: 0; font-size: 13px; line-height: 1.8; color: ${navy};">${compactList(missingPatterns)}</p>
           ` : ''}
         </div>
         ` : ''}
 
         <!-- CTA -->
-        <div style="background: #ffffff; padding: 32px 28px; text-align: center; border-left: 1px solid ${border}; border-right: 1px solid ${border}; border-top: 1px solid ${border};">
+        <div style="text-align: center; margin: 32px 0 0;">
           <a href="https://www.aiuxdesign.guide/"
-             style="display: inline-block; background: ${navy}; color: #fff; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px;">
-            Run Another Audit &rarr;
+             style="display: inline-block; padding: 14px 28px; background-color: ${navy}; color: #f8fafc; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px; letter-spacing: 0.2px;">
+            Run another audit &rarr;
           </a>
           <p style="margin: 12px 0 0 0; color: ${mutedText}; font-size: 13px;">Try with a different screen or product</p>
         </div>
 
-        <!-- Footer -->
-        <div style="background: ${bgLight}; padding: 24px 28px; text-align: center; border: 1px solid ${border}; border-top: none; border-radius: 0 0 10px 10px;">
-          <p style="margin: 0 0 8px 0; color: ${mutedText}; font-size: 12px;">
-            <a href="https://www.aiuxdesign.guide" style="color: ${mutedText}; text-decoration: none;">aiuxdesign.guide</a>
-          </p>
-          <p style="margin: 0; font-size: 11px; color: #9ca3af;">
-            <a href="https://www.aiuxdesign.guide/api/newsletter/unsubscribe?email=RECIPIENT" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a>
-            &nbsp;&middot;&nbsp;
-            <a href="https://www.aiuxdesign.guide/" style="color: #9ca3af; text-decoration: underline;">Run another audit</a>
-          </p>
         </div>
 
+        <!-- Footer (outside the white card) -->
+        <p style="margin: 24px 0 8px; font-size: 13px; line-height: 1.6; color: ${mutedText}; text-align: center;">Imran &middot; <a href="https://www.aiuxdesign.guide/" style="color: ${mutedText}; text-decoration: underline;">aiuxdesign.guide</a></p>
+        <p style="margin: 0 0 24px; font-size: 12px; color: ${mutedText}; text-align: center;">
+          <a href="https://www.aiuxdesign.guide/api/newsletter/unsubscribe?email=RECIPIENT" style="color: ${mutedText}; text-decoration: underline;">Unsubscribe</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://www.aiuxdesign.guide/" style="color: ${mutedText}; text-decoration: underline;">Run another audit</a>
+        </p>
+
+        </div>
       </body>
     </html>
   `;
