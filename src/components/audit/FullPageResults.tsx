@@ -476,17 +476,17 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
             <div className="text-center max-w-3xl mx-auto">
-              <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent-primary mb-4 before:content-[''] before:w-6 before:h-px before:bg-accent-primary/40 after:content-[''] after:w-6 after:h-px after:bg-accent-primary/40">
-                Free · No signup required
+              <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-accent-primary mb-5 before:content-[''] before:w-8 before:h-px before:bg-accent-primary/40 after:content-[''] after:w-8 after:h-px after:bg-accent-primary/40">
+                Stop shipping AI slop
               </p>
               <h1
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-5"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 sm:mb-6"
                 style={{ color: 'var(--text-hero)' }}
               >
                 Free AI UX Audit Tool
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-text-secondary mb-8 sm:mb-10">
-                Score AI interfaces against 36 patterns. Get next steps from Claude.
+                Score AI interfaces against 36 proven patterns and get specific fixes you can ship today.
               </p>
 
               {/* CTA — moved into the hero text zone so the email form sits
@@ -881,9 +881,12 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 }
 
 /**
- * Email-capture demo CTA — primary "Start your audit" button paired with
- * an optional email field + checkbox opt-in for the daily newsletter.
- * Subscription is fire-and-forget so the audit transition stays instant.
+ * Single-CTA hero — one primary "Audit your design — free" button. The
+ * email-form-in-hero variant converted at 1.9% over the May 8-13 window
+ * (8 submits / 417 real sessions) while audit starts ran at 1.2%; pairing
+ * them in one component split attention so neither won. Email capture now
+ * lives post-audit (SaveResultsCard) and in the dedicated newsletter section
+ * further down the page.
  */
 function DemoStartForm({
   onStart,
@@ -892,88 +895,25 @@ function DemoStartForm({
   onStart: () => void;
   auditsRemaining?: number;
 }) {
-  const [email, setEmail] = useState('');
-  const [optIn, setOptIn] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const isValidEmail = (value: string) => /\S+@\S+\.\S+/.test(value);
-
-  const handleStart = () => {
-    if (optIn && (!email || !isValidEmail(email))) {
-      setError('Enter a valid email to receive updates');
-      return;
-    }
-    setError(null);
-
-    if (optIn && email && isValidEmail(email)) {
-      // Fire-and-forget — don't block the audit transition.
-      fetch('/api/newsletter/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'homepage-hero-pre-audit', website_url: '' }),
-      }).catch(() => {});
-    }
-
-    onStart();
-  };
-
   return (
-    <form
-      className="w-full max-w-xl"
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleStart();
-      }}
-    >
-      <div className="flex flex-col sm:flex-row gap-3">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            if (error) setError(null);
-          }}
-          placeholder="your@email.com"
-          className="flex-1 px-5 py-4 rounded-full text-base sm:text-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary placeholder:text-gray-400 focus:border-accent-primary dark:focus:border-white focus:outline-none transition-colors"
-          autoComplete="email"
-        />
-        <button
-          type="submit"
-          className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base sm:text-lg font-semibold hover:bg-accent-hover transition-all active:scale-95 cursor-pointer shadow-lg shadow-accent-primary/20 whitespace-nowrap"
-        >
-          Start your audit
-        </button>
-      </div>
+    <div className="w-full flex flex-col items-center">
+      <button
+        type="button"
+        onClick={onStart}
+        className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base font-semibold hover:bg-accent-hover transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap"
+      >
+        Audit your design
+        <span aria-hidden>→</span>
+      </button>
 
-      <label className="flex items-center justify-center gap-2 mt-4 cursor-pointer select-none">
-        <input
-          type="checkbox"
-          checked={optIn}
-          onChange={(e) => {
-            setOptIn(e.target.checked);
-            if (error) setError(null);
-          }}
-          className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-accent-primary focus:ring-accent-primary cursor-pointer"
-        />
-        <span className="text-sm text-text-secondary">
-          Email me daily AI UX news
-        </span>
-      </label>
-
-      {error ? (
-        <p className="text-sm text-border-error mt-2 text-center" role="alert">
-          {error}
+      {typeof auditsRemaining === 'number' && auditsRemaining > 0 && (
+        <p className="text-sm text-text-tertiary text-center mt-3">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
+            {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} · No signup
+          </span>
         </p>
-      ) : (
-        typeof auditsRemaining === 'number' && auditsRemaining > 0 && (
-          <p className="text-sm text-text-tertiary text-center mt-3">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
-              {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} · No signup
-            </span>
-          </p>
-        )
       )}
-    </form>
+    </div>
   );
 }
