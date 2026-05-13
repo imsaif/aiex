@@ -50,6 +50,30 @@ model SocialAccount {
   posts        SocialPost[]
 }
 
+model AuditSample {
+  id                     String   @id @default(cuid())
+  createdAt              DateTime @default(now())
+  outcome                String
+  isContextFirst         Boolean  @default(false)
+  productType            String?
+  deviceType             String?
+  imageCount             Int      @default(1)
+  score                  Int?
+  maxScore               Int?
+  applicablePatternCount Int      @default(0)
+  gapCount               Int      @default(0)
+  criticalMissingCount   Int      @default(0)
+  errorReason            String?
+  errorDetail            String?
+  latencyMs              Int?
+  ipHash                 String?
+  userAgent              String?
+
+  @@index([createdAt])
+  @@index([outcome])
+  @@index([productType])
+}
+
 model SocialPost {
   id              String          @id @default(cuid())
   newsletterId    String

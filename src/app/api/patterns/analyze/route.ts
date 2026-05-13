@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { after, NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { buildContextAwarePrompt } from '@/lib/patterns/detection-prompts';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
 import { parseAnalysisResponse } from '@/lib/audit/parseAnalysis';
+import { recordAuditSample } from '@/lib/audit/sample';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 
@@ -23,17 +24,27 @@ function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/we
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    // Get client IP for rate limiting
-    const forwardedFor = request.headers.get('x-forwarded-for');
-    const ip = forwardedFor?.split(',')[0]?.trim() ||
-               request.headers.get('x-real-ip') ||
-               'unknown';
+  const startedAt = Date.now();
+  const userAgent = request.headers.get('user-agent');
+  // Get client IP for rate limiting
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const ip = forwardedFor?.split(',')[0]?.trim() ||
+             request.headers.get('x-real-ip') ||
+             'unknown';
 
+  try {
     // Check rate limit
     const rateLimit = checkAnalysisRateLimit(ip);
     if (!rateLimit.allowed) {
       const timeUntilReset = formatTimeUntilReset(rateLimit.resetAt);
+      after(() =>
+        recordAuditSample({
+          outcome: 'rate_limited',
+          latencyMs: Date.now() - startedAt,
+          ip,
+          userAgent,
+        })
+      );
       return NextResponse.json(
         {
           error: 'Rate limit exceeded',
@@ -66,6 +77,18 @@ export async function POST(request: NextRequest) {
     };
 
     if (!imageBase64) {
+      after(() =>
+        recordAuditSample({
+          outcome: 'bad_request',
+          productType: productType ?? null,
+          deviceType: deviceType ?? null,
+          isContextFirst: !!productType,
+          errorReason: 'missing_image',
+          latencyMs: Date.now() - startedAt,
+          ip,
+          userAgent,
+        })
+      );
       return NextResponse.json(
         { error: 'Missing required field: imageBase64' },
         { status: 400 }
@@ -155,6 +178,20 @@ export async function POST(request: NextRequest) {
         '\n--- raw response ---\n',
         parseResult.raw.slice(0, 2000),
       );
+      after(() =>
+        recordAuditSample({
+          outcome: 'parse_error',
+          isContextFirst,
+          productType: productType ?? null,
+          deviceType: deviceType ?? null,
+          imageCount: imageList.length,
+          errorReason: parseResult.reason,
+          errorDetail: parseResult.detail,
+          latencyMs: Date.now() - startedAt,
+          ip,
+          userAgent,
+        })
+      );
       return NextResponse.json(
         {
           error: 'Upstream analysis returned an invalid response',
@@ -200,6 +237,24 @@ export async function POST(request: NextRequest) {
 
       console.log('[Pattern Audit] Context-first analysis complete. Score:', results.score, '/', results.maxScore);
 
+      after(() =>
+        recordAuditSample({
+          outcome: results.topGaps.length === 0 ? 'empty_gaps' : 'success',
+          isContextFirst: true,
+          productType: productType ?? null,
+          deviceType: deviceType ?? null,
+          imageCount: imageList.length,
+          score: results.score,
+          maxScore: results.maxScore,
+          applicablePatternCount: results.applicablePatterns.length,
+          gapCount: results.topGaps.length,
+          criticalMissingCount: results.criticalMissing.length,
+          latencyMs: Date.now() - startedAt,
+          ip,
+          userAgent,
+        })
+      );
+
       return NextResponse.json(results, {
         headers: {
           'X-RateLimit-Limit': rateLimit.limit.toString(),
@@ -225,6 +280,26 @@ export async function POST(request: NextRequest) {
 
     console.log('[Pattern Audit] Legacy analysis complete. Score:', results.score);
 
+    after(() =>
+      recordAuditSample({
+        outcome: results.criticalMissing.length === 0 && (!results.patterns || Object.keys(results.patterns).length === 0)
+          ? 'empty_gaps'
+          : 'success',
+        isContextFirst: false,
+        productType: null,
+        deviceType: deviceType ?? null,
+        imageCount: imageList.length,
+        score: results.score,
+        maxScore: results.maxScore,
+        applicablePatternCount: Object.keys(results.patterns || {}).length,
+        gapCount: results.criticalMissing.length,
+        criticalMissingCount: results.criticalMissing.length,
+        latencyMs: Date.now() - startedAt,
+        ip,
+        userAgent,
+      })
+    );
+
     return NextResponse.json(results, {
       headers: {
         'X-RateLimit-Limit': rateLimit.limit.toString(),
@@ -235,6 +310,17 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('[Pattern Audit] Error:', error);
+
+    after(() =>
+      recordAuditSample({
+        outcome: 'api_error',
+        errorReason: 'unhandled_exception',
+        errorDetail: error instanceof Error ? `${error.name}: ${error.message}\n${error.stack ?? ''}` : String(error),
+        latencyMs: Date.now() - startedAt,
+        ip,
+        userAgent,
+      })
+    );
 
     return NextResponse.json(
       {
