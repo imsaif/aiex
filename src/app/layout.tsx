@@ -79,10 +79,17 @@ export default function RootLayout({
                   // Belt-and-braces: skip on localhost/preview even if NODE_ENV is production
                   var h = location.hostname;
                   if (h === 'localhost' || h === '127.0.0.1' || h.endsWith('.local') || h.endsWith('.vercel.app')) return;
-                  // Auto-tag any session that touches /admin as role=admin
+                  // Auto-tag any session that touches /admin as role=admin.
+                  // Also honor ?role=test (one-time) so the owner can mark their
+                  // own QA sessions and exclude them via a "role != admin AND
+                  // role != test" Clarity segment.
                   try {
                     if (location.pathname.indexOf('/admin') === 0) {
                       localStorage.setItem('aiux:role', 'admin');
+                    }
+                    var qsRole = new URLSearchParams(location.search).get('role');
+                    if (qsRole === 'test' || qsRole === 'admin') {
+                      localStorage.setItem('aiux:role', qsRole);
                     }
                   } catch (e) {}
                   function init() {

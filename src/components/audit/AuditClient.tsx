@@ -132,11 +132,19 @@ export default function AuditClient({
       }
 
       setAnalysisResults(data as AnalysisResults);
-      incrementAuditCount();
+      // Only burn a free-audit credit when the run actually surfaced findings.
+      // Empty runs (the audit returned no applicable gaps — usually because the
+      // screenshot isn't an AI product surface) shouldn't count against the
+      // user's free quota; the empty-state UX in FullPageResults nudges them
+      // to try a different screenshot, which would otherwise hit the paywall.
+      const gapsFound = data.topGaps?.length || 0;
+      if (gapsFound > 0) {
+        incrementAuditCount();
+      }
       trackAuditEvent('audit_session_completed', {
         score: data.score,
         productType,
-        gapsFound: data.topGaps?.length || 0,
+        gapsFound,
       });
 
       // Track individual gaps found

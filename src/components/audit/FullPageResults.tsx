@@ -10,6 +10,8 @@ import {
   LightBulbIcon,
   CheckCircleIcon,
   XMarkIcon,
+  ArrowPathIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline';
 import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
 import { GapCard } from './GapCard';
@@ -190,6 +192,95 @@ function FormattedChatMessage({ content }: { content: string }) {
           </p>
         );
       })}
+    </div>
+  );
+}
+
+function EmptyAuditState({
+  surfaceDescription,
+  screenshotUrl,
+  onTryAgain,
+}: {
+  surfaceDescription?: string;
+  screenshotUrl?: string;
+  onTryAgain: () => void;
+}) {
+  useEffect(() => {
+    trackAuditEvent('audit_empty_state_shown', {
+      hasSurfaceDescription: !!surfaceDescription,
+    });
+  }, [surfaceDescription]);
+
+  const handleTryAgain = () => {
+    trackAuditEvent('audit_empty_state_retry_clicked');
+    onTryAgain();
+  };
+
+  return (
+    <div className="pb-12 sm:pb-16">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16">
+        <div className="bg-background-primary border border-border-primary rounded-2xl p-6 sm:p-10 text-center">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-subtle mb-5">
+            <SparklesIcon className="w-6 h-6 text-accent-primary" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mb-3">
+            This doesn&apos;t look like an AI product surface
+          </h2>
+          <p className="text-sm sm:text-base text-text-secondary leading-relaxed mb-6 max-w-xl mx-auto">
+            The audit evaluates designs against 36 patterns built for AI products. We didn&apos;t find anything to flag on this screenshot — usually because the surface isn&apos;t showing AI output.
+          </p>
+
+          {surfaceDescription && (
+            <div className="text-left mx-auto max-w-xl mb-6 px-4 py-3 rounded-xl bg-background-secondary border border-border-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-1">What we saw</p>
+              <p className="text-sm text-text-secondary">{surfaceDescription}</p>
+            </div>
+          )}
+
+          {screenshotUrl && (
+            <div className="mx-auto mb-6 max-w-xs">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={screenshotUrl}
+                alt="The screenshot you uploaded"
+                className="w-full h-auto rounded-lg border border-border-primary opacity-70"
+              />
+              <p className="text-xs text-text-tertiary mt-2">Your upload</p>
+            </div>
+          )}
+
+          <div className="text-left mx-auto max-w-xl mb-7">
+            <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-3">
+              Works best on
+            </p>
+            <ul className="space-y-2 text-sm text-text-secondary">
+              <li className="flex gap-2.5">
+                <CheckCircleIcon className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" />
+                <span><strong className="text-text-primary font-semibold">Chat threads</strong> — ChatGPT, Claude, Gemini, in-product AI assistants</span>
+              </li>
+              <li className="flex gap-2.5">
+                <CheckCircleIcon className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" />
+                <span><strong className="text-text-primary font-semibold">Code assistants</strong> — Cursor, Copilot, Claude Code, v0</span>
+              </li>
+              <li className="flex gap-2.5">
+                <CheckCircleIcon className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" />
+                <span><strong className="text-text-primary font-semibold">AI-powered features</strong> — recommendation lists, generation flows, agent dashboards</span>
+              </li>
+            </ul>
+          </div>
+
+          <button
+            onClick={handleTryAgain}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent-primary text-white font-semibold text-sm hover:bg-accent-primary/90 transition-colors cursor-pointer"
+          >
+            <ArrowPathIcon className="w-4 h-4" />
+            Try another screenshot
+          </button>
+          <p className="text-xs text-text-tertiary mt-4">
+            This run didn&apos;t count against your free audit.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -587,6 +678,21 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const surfaceDescription = (results as ExtendedResults | null)?.surfaceDescription;
   const noFindings = topPinnedIssues.length === 0;
 
+  // Empty-state branch: when a real (non-demo) run surfaces zero actionable
+  // findings, replace the normal results layout with an honest "this isn't an
+  // AI surface — try again" card. Users who hit this don't have their free
+  // audit credit decremented (gated in AuditClient.runAnalysis). Demo mode
+  // keeps the showcase layout regardless so it can render its scripted pins.
+  if (noFindings && !showDemoCTA) {
+    return (
+      <EmptyAuditState
+        surfaceDescription={surfaceDescription}
+        screenshotUrl={heroScreenshotUrl}
+        onTryAgain={onNewAudit}
+      />
+    );
+  }
+
   return (
     <div className="pb-8 sm:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
@@ -596,11 +702,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           <div className="mb-4 max-w-3xl mx-auto px-4 py-3 rounded-xl bg-background-primary border border-border-primary text-sm text-text-secondary">
             <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-1">What we audited</p>
             <p>{surfaceDescription}</p>
-            {noFindings && (
-              <p className="mt-2 text-text-primary font-medium">
-                No AI UX patterns meaningfully apply to this surface — there&apos;s nothing to flag here. Try uploading a screen where the AI is producing output (a chat thread, a recommendation list, a generation flow).
-              </p>
-            )}
           </div>
         )}
 

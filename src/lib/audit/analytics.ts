@@ -18,7 +18,9 @@ type AuditEvent =
   | 'audit_remaining_banner_shown'
   | 'audit_save_nudge_shown'
   | 'audit_demo_viewed'
-  | 'audit_demo_start_real_clicked';
+  | 'audit_demo_start_real_clicked'
+  | 'audit_empty_state_shown'
+  | 'audit_empty_state_retry_clicked';
 
 declare global {
   interface Window {
