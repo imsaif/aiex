@@ -38,6 +38,7 @@ type SourceTier =
   | 'ai-lab'          // AI model/product companies (OpenAI, Anthropic, Google AI)
   | 'curator'         // synthesis/aggregator newsletters (Latent Space)
   | 'community'       // user-voice forums (Reddit subs)
+  | 'designer-voice'  // individual practitioner X/Twitter feeds via RSS.app bridge
   | 'dev-platform'    // infra/devtool companies (Vercel, GitHub, Supabase)
   | 'tech-news';      // generic tech news (The Verge, TechCrunch, etc.)
 
@@ -73,6 +74,13 @@ const RSS_SOURCES: RssSource[] = [
   // Revisit if they ship one or via an aggregator.
   { name: 'Figma', url: 'https://www.figma.com/blog/feed/atom.xml', color: '#f24e1e', tier: 'design-tool' },
 
+  // Design tools (Google News searches — no direct RSS feeds)
+  // Queries are scoped to avoid generic-word collisions (e.g. "arc" → many false hits).
+  { name: 'Mobbin', url: 'https://news.google.com/rss/search?q=Mobbin+design+OR+Mobbin+MCP+OR+Mobbin+app&hl=en-US&gl=US&ceid=US:en', color: '#000000', tier: 'design-tool' },
+  { name: 'Loom', url: 'https://news.google.com/rss/search?q=%22Loom%22+video+OR+%22Loom%22+AI+OR+%22Loom%22+screen+recording&hl=en-US&gl=US&ceid=US:en', color: '#625df5', tier: 'design-tool' },
+  { name: 'Raycast', url: 'https://news.google.com/rss/search?q=Raycast+app+OR+Raycast+AI+OR+Raycast+extension&hl=en-US&gl=US&ceid=US:en', color: '#ff6363', tier: 'design-tool' },
+  { name: 'Arc Browser', url: 'https://news.google.com/rss/search?q=%22Arc+browser%22+OR+%22Browser+Company%22+OR+%22Arc+Max%22&hl=en-US&gl=US&ceid=US:en', color: '#fa5b3e', tier: 'design-tool' },
+
   // AI labs (direct blogs)
   { name: 'OpenAI', url: 'https://openai.com/blog/rss.xml', color: '#10a37f', tier: 'ai-lab' },
   { name: 'Google AI', url: 'https://blog.google/technology/ai/rss/', color: '#4285f4', tier: 'ai-lab' },
@@ -88,6 +96,18 @@ const RSS_SOURCES: RssSource[] = [
 
   // Curators / aggregators (do the X-recap and AI-synthesis work for us)
   { name: 'Latent Space', url: 'https://www.latent.space/feed', color: '#7c3aed', tier: 'curator' },
+
+  // Designer voices (X/Twitter via RSS.app bridge — direct X RSS doesn't exist post-API change)
+  // RSS.app trial cap is 2 X feeds; remaining 6 handles below stay commented until plan upgrade.
+  // Capped at 1 item/source/day (see MAX_ITEMS_PER_SOURCE_BY_TIER).
+  { name: '@rauchg',  url: 'https://rss.app/feeds/D7jrLkS9L8Cbqq6H.xml', color: '#000000', tier: 'designer-voice' },
+  { name: '@meng_to', url: 'https://rss.app/feeds/wK4b14K9sr22PHdF.xml', color: '#000000', tier: 'designer-voice' },
+  // { name: '@amelia_wattenberger', url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
+  // { name: '@addyosmani',        url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
+  // { name: '@brian_lovin',       url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
+  // { name: '@soleio',            url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
+  // { name: '@joellewenstein',    url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
+  // { name: '@jiholimm',          url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' }, // Jiho Lim, Mobbin founder
 
   // NOTE: Reddit dropped Apr 20 2026. All 4 candidate subreddits
   // (r/UXDesign, r/userexperience, r/web_design, r/Figma) returned 403 from
@@ -309,11 +329,12 @@ function getProductIconImg(productName: string): string {
 // the absolute values.
 const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
   'design-pub': 25,        // research/news/case studies — narrowed 50→30 (Apr 28) and 30→25 (May 7) so concrete product news outranks design-pub keyword stacking
-  'design-tool': 40,       // first-party design product news
+  'design-tool': 35,       // first-party design product news — at parity with ai-lab (May 17) after expanding from 1 → 5 sources to avoid same-day mix swing
   'ai-lab': 35,            // concrete AI product launches — bumped 30→35 (May 7) to compete with design-pub keyword density
   'design-opinion': 28,    // think-pieces — useful but capped to 1-2 per issue via prompt
   curator: 25,             // syntheses
   community: 25,
+  'designer-voice': 22,    // X/Twitter from trusted practitioners — lower than curator because tweets are less substantive than synthesized writeups, but above dev-platform
   'dev-platform': 20,
   'tech-news': 0,
 };
@@ -424,7 +445,7 @@ function isRelevant(item: Parser.Item, sourceTier?: SourceTier): boolean {
 //   4. An agentic-UX term co-occurs with an application term — catches
 //      "agentic safety in the UI", "human-in-the-loop workflow" etc.
 function isDesignNativeItem(item: NewsItem, tier?: SourceTier): boolean {
-  if (tier === 'design-pub' || tier === 'design-tool' || tier === 'design-opinion') return true;
+  if (tier === 'design-pub' || tier === 'design-tool' || tier === 'design-opinion' || tier === 'designer-voice') return true;
 
   const title = item.title.toLowerCase();
   if (DESIGN_TOOL_PRODUCT_RE.test(title)) return true;
@@ -748,14 +769,23 @@ function findDominantSource(
 // (2026-05-06: 2/4 daily items were uxdesign.cc), so we enforce it at the pool
 // level. Other tiers stay at 2 — the previous behaviour.
 const MAX_ITEMS_PER_SOURCE_DEFAULT = 2;
+// Weekends have thinner pools (ai-labs + dev-platforms barely publish Sat/Sun),
+// so we let each source contribute one extra item to keep Claude's choice set
+// from collapsing. design-opinion stays capped at 1 either way.
+const MAX_ITEMS_PER_SOURCE_WEEKEND = 3;
 const MAX_ITEMS_PER_SOURCE_BY_TIER: Partial<Record<SourceTier, number>> = {
   'design-opinion': 1,
+  'designer-voice': 1,  // one tweet per practitioner per day max — keep mix diverse
 };
-function maxItemsForTier(tier?: SourceTier): number {
+function isWeekendUTC(now: Date = new Date()): boolean {
+  const day = now.getUTCDay();
+  return day === 0 || day === 6;
+}
+function maxItemsForTier(tier?: SourceTier, now: Date = new Date()): number {
   if (tier && MAX_ITEMS_PER_SOURCE_BY_TIER[tier] !== undefined) {
     return MAX_ITEMS_PER_SOURCE_BY_TIER[tier]!;
   }
-  return MAX_ITEMS_PER_SOURCE_DEFAULT;
+  return isWeekendUTC(now) ? MAX_ITEMS_PER_SOURCE_WEEKEND : MAX_ITEMS_PER_SOURCE_DEFAULT;
 }
 
 interface AggregatedPool {
