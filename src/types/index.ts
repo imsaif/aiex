@@ -46,6 +46,26 @@ export interface FigmaPrompt {
 }
 
 /**
+ * Editorial "when to use this pattern — and when it backfires" block.
+ * Replaces the generic AI Design Prompt with prescriptive judgment.
+ * Optional: only the patterns that have opinionated guidance populate this.
+ */
+export interface JudgmentCall {
+  explainWhen: string[];   // Conditions under which the pattern earns its cost
+  dontWhen: string[];      // Conditions where applying it is friction, theater, or harm
+  trap: string;            // The single most common misuse — one paragraph
+}
+
+/**
+ * One ordered move a builder should make to apply the pattern in their product.
+ * Replaces the unranked guidelines/considerations bullets.
+ */
+export interface Takeaway {
+  heading: string;   // Short imperative — "Show the real drivers, ranked"
+  body: string;      // One short paragraph that argues the rule and its exception
+}
+
+/**
  * Represents a design resource for implementing a pattern
  */
 export interface DesignResource {
@@ -74,6 +94,9 @@ export interface PatternContent {
   relatedPatterns: string[];
   figmaPrompt?: FigmaPrompt; // Optional Figma AI prompt for designers
   designResources?: DesignResource[]; // Optional design resources for implementation
+  judgmentCall?: JudgmentCall;  // Opinionated when-to-use; if present, replaces figmaPrompt rendering
+  takeaways?: Takeaway[];       // Ordered moves; if present, replaces guidelines/considerations rendering
+  installPrompt?: string;       // Paste-ready Claude Code / Cursor prompt that installs THIS pattern into the reader's own codebase
 }
 
 /**
@@ -107,6 +130,9 @@ export interface Pattern {
 
   // Content structure (enhanced organization beyond flat PRD structure)
   content: PatternContent;
+
+  // Per-pattern overrides
+  hideFAQ?: boolean;          // Suppress the visible FAQ block AND the FAQ JSON-LD on this page
 }
 
 /**

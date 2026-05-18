@@ -44,6 +44,10 @@ export function generateArticleSchema(pattern: Pattern, url: string) {
  * Helps pattern pages appear in Google's "People Also Ask" and featured snippets
  */
 export function generateFAQSchema(pattern: Pattern) {
+  // Per-pattern: when hideFAQ is true, the visible FAQ section is suppressed
+  // in client-page.tsx — so emitting JSON-LD here would create the
+  // "structured data without visible content" mismatch Google penalizes.
+  if (pattern.hideFAQ) return null;
   if (!pattern.introduction) return null;
 
   // Append click-through hooks to FAQ answers so users visit the page

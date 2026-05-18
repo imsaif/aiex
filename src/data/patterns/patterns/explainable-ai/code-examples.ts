@@ -1,218 +1,104 @@
 export const codeExamples = [
   {
-    title: "AI Decision Explainer Component",
-    description: "Interactive component that shows how AI makes decisions with transparent reasoning, confidence scores, and contributing factors",
+    title: "Loan-decision explainer",
+    description: "The shape of an XAI surface for a high-stakes contestable decision. Ranked drivers (not a flat list), confidence as a sentence (not a number), an explicit appeal exit, and a 'what the model actually did' disclosure that guards against fake transparency.",
     language: "typescript",
     componentId: "explainable-ai-demo",
     code: `'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
-interface PredictionFactor {
-  name: string;
-  value: number;
-  impact: 'positive' | 'negative';
-  description: string;
+interface Driver {
+  label: string;
+  detail: string;
+  direction: 'pos' | 'neg';
 }
 
-interface PredictionResult {
-  prediction: string;
-  confidence: number;
-  factors: PredictionFactor[];
-  reasoning: string[];
-  alternatives: { option: string; confidence: number }[];
+interface Decision {
+  headline: string;          // "Approved", "Conditional", "Declined"
+  amount: string;            // "$12,000 at 7.4% APR over 36 months"
+  drivers: Driver[];         // RANKED top-first — never a flat list
+  confidence: string;        // SENTENCE — "matches 1,200 similar cases", not "0.87"
+  modelDisclosure: string;   // What the model actually did (vs. post-hoc rationalization)
+  nextSteps: { label: string; rationale: string }[];  // Maps explanation → action
 }
 
-export default function ExplainableAiDemo() {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState<PredictionResult | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  // Simulate AI analysis
-  const analyzeInput = async () => {
-    if (!input.trim()) return;
-    
-    setLoading(true);
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Mock analysis based on input
-    const analysis: PredictionResult = {
-      prediction: "Positive Sentiment",
-      confidence: 0.87,
-      factors: [
-        {
-          name: "Word Choice",
-          value: 0.35,
-          impact: "positive",
-          description: "Contains positive keywords and expressions"
-        },
-        {
-          name: "Sentence Structure",
-          value: 0.25,
-          impact: "positive",
-          description: "Well-structured sentences indicate clarity"
-        },
-        {
-          name: "Context Relevance",
-          value: 0.20,
-          impact: "positive",
-          description: "Content aligns with expected context"
-        },
-        {
-          name: "Emotional Tone",
-          value: 0.15,
-          impact: "positive",
-          description: "Optimistic and constructive tone detected"
-        },
-        {
-          name: "Ambiguity",
-          value: -0.08,
-          impact: "negative",
-          description: "Some phrases could have multiple interpretations"
-        }
-      ],
-      reasoning: [
-        "The text contains predominantly positive language patterns",
-        "Sentence structure suggests constructive intent",
-        "No strong negative indicators were detected",
-        "Context aligns with typical positive communication patterns"
-      ],
-      alternatives: [
-        { option: "Neutral Sentiment", confidence: 0.09 },
-        { option: "Negative Sentiment", confidence: 0.04 }
-      ]
-    };
-    
-    setResult(analysis);
-    setLoading(false);
-  };
-
-  const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.8) return 'text-green-600';
-    if (confidence >= 0.6) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const getImpactColor = (impact: string) => {
-    return impact === 'positive' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-  };
+export default function LoanDecisionExplainer({ decision }: { decision: Decision }) {
+  const [appealed, setAppealed] = useState(false);
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <div className="mb-6">
-        <h3 className="text-2xl font-bold text-gray-800 mb-2">
-          AI Decision Explainer
-        </h3>
-        <p className="text-gray-600">
-          See how AI makes decisions with transparent reasoning
-        </p>
+    <div className="rounded-xl border border-gray-200 p-6 space-y-5">
+      {/* The decision itself */}
+      <div>
+        <h3 className="text-lg font-semibold">{decision.headline}</h3>
+        <p className="text-gray-700">{decision.amount}</p>
       </div>
 
-      {/* Input Section */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Enter text for sentiment analysis:
-        </label>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type something to analyze..."
-          className="w-full p-3 border border-gray-300 rounded-lg"
-          rows={3}
-        />
-        <button
-          onClick={analyzeInput}
-          disabled={!input.trim() || loading}
-          className="mt-3 px-6 py-2 bg-blue-600 text-white rounded-lg"
-        >
-          {loading ? 'Analyzing...' : 'Analyze Text'}
-        </button>
-      </div>
+      {/* Ranked drivers — three, in order of weight, not nine unordered */}
+      <section>
+        <h4 className="font-semibold mb-1">Why — ranked by weight</h4>
+        <p className="text-xs text-gray-500 mb-3">Top driver first. Three, not nine.</p>
+        <ol className="space-y-3">
+          {decision.drivers.map((d, i) => (
+            <li key={i} className="flex gap-3">
+              <span className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold">
+                {i + 1}
+              </span>
+              <div>
+                <div>
+                  <span className="font-medium">{d.label}</span>{' '}
+                  <span className={d.direction === 'pos' ? 'text-green-700' : 'text-red-700'}>
+                    {d.direction === 'pos' ? 'helped' : 'hurt'}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600">{d.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-      {/* Results Section */}
-      <AnimatePresence>
-        {result && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+      {/* Legible confidence — a sentence, not a percentage */}
+      <section>
+        <h4 className="font-semibold mb-2">Confidence — in plain English</h4>
+        <p className="text-gray-700">{decision.confidence}</p>
+      </section>
+
+      {/* Model disclosure — guards against the "tidy three factors" trap */}
+      <section>
+        <h4 className="font-semibold mb-2">What the model actually did</h4>
+        <p className="text-gray-700">{decision.modelDisclosure}</p>
+      </section>
+
+      {/* Actionable next steps — every explanation maps to action */}
+      <section>
+        <h4 className="font-semibold mb-3">What you can do</h4>
+        <ul className="space-y-3">
+          {decision.nextSteps.map((n, i) => (
+            <li key={i}>
+              <div className="font-medium">{n.label}</div>
+              <p className="text-sm text-gray-600">{n.rationale}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* The exit — every explanation needs one. A decision the user
+          cannot contest is a press release, not transparency. */}
+      <div className="border-t pt-5">
+        {appealed ? (
+          <div className="rounded-lg border p-4">
+            <strong>Appeal submitted.</strong> A reviewer will contact you within 2 business days.
+          </div>
+        ) : (
+          <button
+            onClick={() => setAppealed(true)}
+            className="px-4 py-2 text-sm font-medium border rounded-lg hover:bg-gray-50"
           >
-            {/* Main Prediction with Confidence */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="text-lg font-semibold">
-                  Prediction: {result.prediction}
-                </h4>
-                <span className={\`text-2xl font-bold \${getConfidenceColor(result.confidence)}\`}>
-                  {(result.confidence * 100).toFixed(1)}%
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-blue-600 h-2 rounded-full"
-                  style={{ width: \`\${result.confidence * 100}%\` }}
-                />
-              </div>
-            </div>
-
-            {/* Toggle for Detailed Explanation */}
-            <button
-              onClick={() => setShowDetails(!showDetails)}
-              className="flex items-center space-x-2 text-blue-600"
-            >
-              <span>{showDetails ? 'Hide' : 'Show'} Detailed Explanation</span>
-            </button>
-
-            {/* Detailed Explanation */}
-            {showDetails && (
-              <div className="space-y-4">
-                {/* Contributing Factors */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h5 className="font-semibold mb-3">Contributing Factors:</h5>
-                  {result.factors.map((factor, index) => (
-                    <div key={index} className="flex justify-between mb-2">
-                      <div className="flex items-center space-x-2">
-                        <span className={\`px-2 py-1 rounded text-xs \${getImpactColor(factor.impact)}\`}>
-                          {factor.impact === 'positive' ? '+' : '-'}{Math.abs(factor.value * 100).toFixed(0)}%
-                        </span>
-                        <span>{factor.name}</span>
-                      </div>
-                      <span className="text-sm text-gray-500">{factor.description}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Reasoning Process */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h5 className="font-semibold mb-3">Reasoning Process:</h5>
-                  <ol className="list-decimal list-inside space-y-1">
-                    {result.reasoning.map((step, index) => (
-                      <li key={index}>{step}</li>
-                    ))}
-                  </ol>
-                </div>
-
-                {/* Alternative Predictions */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h5 className="font-semibold mb-3">Alternative Predictions:</h5>
-                  {result.alternatives.map((alt, index) => (
-                    <div key={index} className="flex justify-between">
-                      <span>{alt.option}</span>
-                      <span className="text-gray-500">
-                        {(alt.confidence * 100).toFixed(1)}% confidence
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </motion.div>
+            This looks wrong → appeal
+          </button>
         )}
-      </AnimatePresence>
+      </div>
     </div>
   );
 }`

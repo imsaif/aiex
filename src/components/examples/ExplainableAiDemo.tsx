@@ -1,366 +1,332 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+/**
+ * Scripted loan-decision scenario. Demonstrates Explainable AI on a high-stakes
+ * contestable decision — the inverse of sentiment, which was low-stakes and
+ * uncontestable. The demo enacts the four moves from the page's takeaways:
+ *  1. Decision maps to actions the user can take.
+ *  2. Drivers are ranked, not flat.
+ *  3. Confidence is legible ("matches 1,200 similar cases"), not "0.87".
+ *  4. Every decision has a visible "this looks wrong → appeal" exit.
+ */
 
-interface PredictionFactor {
-  name: string;
-  value: number;
-  impact: 'positive' | 'negative';
-  description: string;
+import React, { useState } from 'react';
+
+type DecisionKind = 'approve' | 'conditional' | 'decline';
+
+interface Driver {
+  label: string;        // "Credit score"
+  detail: string;       // "720 — above our 700 threshold for this loan size"
+  direction: 'pos' | 'neg';
 }
 
-interface PredictionResult {
-  prediction: string;
-  confidence: number;
-  factors: PredictionFactor[];
-  reasoning: string[];
-  alternatives: { option: string; confidence: number }[];
+interface ActionableNext {
+  label: string;        // "Add a co-signer with credit ≥720"
+  rationale: string;    // "Most-likely path to approval given the income gap"
 }
 
-const reasoningSteps = [
-  "Reading the input text...",
-  "Tokenizing words and phrases...",
-  "Analyzing word choice and vocabulary...",
-  "Detecting emotional tone indicators...",
-  "Evaluating sentence structure patterns...",
-  "Checking for negative sentiment markers...",
-  "Assessing context and communication style...",
-  "Calculating confidence scores...",
-  "Generating prediction...",
+interface ScenarioResult {
+  kind: DecisionKind;
+  headline: string;                 // "Approved" / "Approved with conditions" / "Declined"
+  amount: string;                   // "$12,000 at 7.4% APR over 36 months"
+  drivers: Driver[];                // Ranked, top-first
+  confidence: string;               // Legible sentence — not a number
+  modelDisclosure: string;          // What the model actually did — guards against fake transparency
+  nextSteps: ActionableNext[];      // What the applicant can actually do
+}
+
+interface Scenario {
+  id: string;
+  label: string;
+  profile: string;                  // One-line applicant summary
+  request: string;                  // "Auto loan, $12,000"
+  result: ScenarioResult;
+}
+
+const SCENARIOS: Scenario[] = [
+  {
+    id: 'sarah',
+    label: 'Sarah · auto loan',
+    profile: '$84,000/yr · credit 720 · 2 yrs at current employer',
+    request: 'Auto loan · $12,000 · 36 months',
+    result: {
+      kind: 'approve',
+      headline: 'Approved',
+      amount: '$12,000 at 7.4% APR over 36 months',
+      drivers: [
+        { label: 'Debt-to-income ratio', detail: '18%, well below our 36% ceiling for this product', direction: 'pos' },
+        { label: 'Credit score', detail: '720, above our 700 threshold for the requested loan size', direction: 'pos' },
+        { label: 'Employment tenure', detail: '24 months, above our 12-month minimum', direction: 'pos' },
+      ],
+      confidence: 'High confidence. This profile matches ~1,200 approved auto loans in the last 24 months with a 1.2% default rate.',
+      modelDisclosure: 'A gradient-boosted model produced this decision from 14 features. The three drivers above account for ~80% of the score. The remaining features (loan-to-value, prior history with us, requested term) were within normal ranges and not load-bearing.',
+      nextSteps: [
+        { label: 'Accept the offer as presented', rationale: 'No changes recommended. Terms reflect your full profile.' },
+        { label: 'Request a longer term to lower monthly payment', rationale: 'Available; will increase total interest paid by ~$340.' },
+      ],
+    },
+  },
+  {
+    id: 'marcus',
+    label: 'Marcus · personal loan',
+    profile: '$52,000/yr · credit 690 · 5 yrs at current employer',
+    request: 'Personal loan · $18,000 · 48 months',
+    result: {
+      kind: 'conditional',
+      headline: 'Approved with conditions',
+      amount: '$15,000 (reduced from $18,000) at 11.9% APR over 48 months',
+      drivers: [
+        { label: 'Requested amount vs income', detail: 'Loan-to-income at requested level is 34.6%, above our 30% comfort band; reducing to $15k brings it to 28.8%.', direction: 'neg' },
+        { label: 'Employment tenure', detail: '60 months, strong stability signal, the reason the loan was not declined outright', direction: 'pos' },
+        { label: 'Credit score', detail: '690, within our acceptable band for this product but priced at the upper end of the APR range', direction: 'neg' },
+      ],
+      confidence: 'Moderate confidence. ~430 similar profiles in the last 24 months; 78% accepted the reduced amount and the default rate on that cohort is 3.1%.',
+      modelDisclosure: 'The reduction is a hard rule, not a model output: any request above 30% of annual income is auto-reduced to the 28-30% band. The APR was set by the credit-score band, not by the model.',
+      nextSteps: [
+        { label: 'Accept the $15,000 offer', rationale: 'No additional documentation required.' },
+        { label: 'Reapply for $18,000 with a co-signer (credit ≥720)', rationale: 'Bypasses the loan-to-income rule; typical approval in 1–2 business days.' },
+        { label: 'Provide proof of additional income (e.g., spouse, 1099)', rationale: 'If verified income reaches $60k, the full $18,000 is approvable at the same APR.' },
+      ],
+    },
+  },
+  {
+    id: 'priya',
+    label: 'Priya · auto loan',
+    profile: '$61,000/yr · credit 645 · 8 months at current employer',
+    request: 'Auto loan · $25,000 · 60 months',
+    result: {
+      kind: 'decline',
+      headline: 'Declined',
+      amount: 'No offer at the requested amount',
+      drivers: [
+        { label: 'Employment tenure', detail: '8 months, below our 12-month minimum for loans over $20,000', direction: 'neg' },
+        { label: 'Credit score', detail: '645, below our 660 floor for loans over $20,000 without additional security', direction: 'neg' },
+        { label: 'Debt-to-income ratio', detail: '41% with current obligations, above our 36% ceiling', direction: 'neg' },
+      ],
+      confidence: 'High confidence in the decline, low confidence that nothing here is approvable. Roughly 1-in-4 declined profiles like this get approved after the steps below.',
+      modelDisclosure: 'This decline is driven by three hard rules (employment minimum, credit floor for loan size, DTI ceiling), not a model probability. A model score was computed but is not the basis for the decline; we are telling you the rules instead of a number so you know what to change.',
+      nextSteps: [
+        { label: 'Reapply for an amount under $20,000', rationale: 'Drops the credit-score floor to 640 and the employment minimum to 6 months. Both currently met.' },
+        { label: 'Reapply in 4 months', rationale: 'Will clear the 12-month employment minimum; credit and DTI must still meet the >$20k thresholds.' },
+        { label: 'Reapply with a co-signer (credit ≥700, DTI ≤25%)', rationale: 'Bypasses all three driving factors.' },
+      ],
+    },
+  },
 ];
 
-const positiveWords = ['great', 'amazing', 'excellent', 'love', 'wonderful', 'fantastic', 'good', 'happy', 'excited', 'awesome', 'best', 'beautiful', 'brilliant', 'perfect', 'recommend', 'enjoy', 'thank', 'helpful', 'impressive', 'outstanding'];
-const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'horrible', 'worst', 'disappointed', 'frustrating', 'annoying', 'poor', 'useless', 'waste', 'angry', 'sad', 'broken', 'fail', 'problem', 'issue', 'wrong', 'never'];
+const KIND_META: Record<DecisionKind, { ring: string; chip: string; chipLabel: string }> = {
+  approve:     { ring: 'border-status-success/40', chip: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',   chipLabel: 'Approved' },
+  conditional: { ring: 'border-status-warning/40', chip: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',   chipLabel: 'Conditional' },
+  decline:     { ring: 'border-status-error/40',   chip: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',           chipLabel: 'Declined' },
+};
 
-function analyzeText(text: string): PredictionResult {
-  const lowerText = text.toLowerCase();
-  const words = lowerText.split(/\s+/);
+type DisclosureKey = 'why' | 'confidence' | 'how' | 'next';
 
-  let positiveCount = 0;
-  let negativeCount = 0;
-
-  words.forEach(word => {
-    if (positiveWords.some(pw => word.includes(pw))) positiveCount++;
-    if (negativeWords.some(nw => word.includes(nw))) negativeCount++;
-  });
-
-  const totalSentimentWords = positiveCount + negativeCount;
-
-  let prediction: string;
-  let confidence: number;
-  let factors: PredictionFactor[];
-  let reasoning: string[];
-  let alternatives: { option: string; confidence: number }[];
-
-  if (positiveCount > negativeCount) {
-    const ratio = positiveCount / Math.max(totalSentimentWords, 1);
-    confidence = Math.min(0.95, 0.6 + (ratio * 0.3) + (positiveCount * 0.02));
-    prediction = "Positive Sentiment";
-    factors = [
-      { name: "Positive Words", value: 0.35, impact: "positive", description: `Found ${positiveCount} positive expression${positiveCount !== 1 ? 's' : ''}` },
-      { name: "Sentence Structure", value: 0.25, impact: "positive", description: "Constructive sentence patterns detected" },
-      { name: "Emotional Tone", value: 0.20, impact: "positive", description: "Optimistic tone indicators present" },
-      { name: "Context", value: 0.15, impact: "positive", description: "Content aligns with positive communication" },
-      ...(negativeCount > 0 ? [{ name: "Mixed Signals", value: -0.05, impact: "negative" as const, description: `${negativeCount} contrasting term${negativeCount !== 1 ? 's' : ''} found` }] : [])
-    ];
-    reasoning = [
-      `Detected ${positiveCount} positive language pattern${positiveCount !== 1 ? 's' : ''} in the text`,
-      "Sentence structure suggests constructive intent",
-      negativeCount > 0 ? `Found ${negativeCount} negative term${negativeCount !== 1 ? 's' : ''}, but positive signals dominate` : "No significant negative indicators detected",
-      "Overall context aligns with positive communication style"
-    ];
-    alternatives = [
-      { option: "Neutral Sentiment", confidence: Math.max(0.05, 0.15 - (positiveCount * 0.02)) },
-      { option: "Negative Sentiment", confidence: Math.max(0.02, negativeCount * 0.03) }
-    ];
-  } else if (negativeCount > positiveCount) {
-    const ratio = negativeCount / Math.max(totalSentimentWords, 1);
-    confidence = Math.min(0.95, 0.6 + (ratio * 0.3) + (negativeCount * 0.02));
-    prediction = "Negative Sentiment";
-    factors = [
-      { name: "Negative Words", value: 0.40, impact: "negative", description: `Found ${negativeCount} negative expression${negativeCount !== 1 ? 's' : ''}` },
-      { name: "Emotional Tone", value: 0.25, impact: "negative", description: "Critical or frustrated tone detected" },
-      { name: "Sentence Structure", value: 0.15, impact: "negative", description: "Patterns suggest dissatisfaction" },
-      ...(positiveCount > 0 ? [{ name: "Mitigating Factors", value: 0.08, impact: "positive" as const, description: `${positiveCount} positive term${positiveCount !== 1 ? 's' : ''} noted` }] : [])
-    ];
-    reasoning = [
-      `Detected ${negativeCount} negative language pattern${negativeCount !== 1 ? 's' : ''} in the text`,
-      "Emotional tone suggests frustration or criticism",
-      positiveCount > 0 ? `Found ${positiveCount} positive term${positiveCount !== 1 ? 's' : ''}, but negative signals are stronger` : "No significant positive indicators to offset",
-      "Overall sentiment leans toward dissatisfaction"
-    ];
-    alternatives = [
-      { option: "Neutral Sentiment", confidence: Math.max(0.05, 0.15 - (negativeCount * 0.02)) },
-      { option: "Positive Sentiment", confidence: Math.max(0.02, positiveCount * 0.03) }
-    ];
-  } else {
-    confidence = 0.65 + (Math.random() * 0.15);
-    prediction = "Neutral Sentiment";
-    factors = [
-      { name: "Balanced Tone", value: 0.30, impact: "positive", description: "No strong emotional bias detected" },
-      { name: "Objective Language", value: 0.25, impact: "positive", description: "Factual or informational style" },
-      { name: "Mixed Signals", value: 0.10, impact: "negative", description: totalSentimentWords > 0 ? "Equal positive and negative indicators" : "No clear sentiment markers" }
-    ];
-    reasoning = [
-      totalSentimentWords > 0 ? "Found balanced mix of positive and negative indicators" : "No strong emotional language detected",
-      "Text appears factual or informational in nature",
-      "Sentence structure suggests neutral communication",
-      "No dominant sentiment pattern identified"
-    ];
-    alternatives = [
-      { option: "Positive Sentiment", confidence: 0.15 + (positiveCount * 0.02) },
-      { option: "Negative Sentiment", confidence: 0.10 + (negativeCount * 0.02) }
-    ];
-  }
-
-  return { prediction, confidence, factors, reasoning, alternatives };
+interface DisclosureDef {
+  key: DisclosureKey;
+  prompt: (kind: DecisionKind) => string;   // what the user asks
+  hint: string;                              // tiny subline above the row
 }
 
+const DISCLOSURES: DisclosureDef[] = [
+  {
+    key: 'why',
+    prompt: (k) => k === 'decline' ? 'Why was this declined?' : k === 'conditional' ? 'Why the change?' : 'Why was this approved?',
+    hint: 'Drivers, ranked. Top first',
+  },
+  {
+    key: 'confidence',
+    prompt: () => 'How confident is this?',
+    hint: 'Confidence in plain English, not a percent',
+  },
+  {
+    key: 'next',
+    prompt: () => 'What can I do now?',
+    hint: 'Every explanation should map to an action',
+  },
+  {
+    key: 'how',
+    prompt: () => 'How was this actually decided?',
+    hint: 'Model disclosure: guards against fake transparency',
+  },
+];
+
 export default function ExplainableAiDemo() {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState<PredictionResult | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [currentReasoningStep, setCurrentReasoningStep] = useState(0);
-  const [visibleSteps, setVisibleSteps] = useState<string[]>([]);
-  const reasoningRef = useRef<HTMLDivElement>(null);
+  const [activeId, setActiveId] = useState<string>(SCENARIOS[0].id);
+  const [opened, setOpened] = useState<Record<string, Set<DisclosureKey>>>({});
+  const [appealed, setAppealed] = useState<Record<string, boolean>>({});
 
-  // Auto-scroll reasoning panel
-  useEffect(() => {
-    if (reasoningRef.current) {
-      reasoningRef.current.scrollTop = reasoningRef.current.scrollHeight;
-    }
-  }, [visibleSteps]);
+  const scenario = SCENARIOS.find(s => s.id === activeId) ?? SCENARIOS[0];
+  const meta = KIND_META[scenario.result.kind];
+  const isAppealed = !!appealed[scenario.id];
+  const openedSet = opened[scenario.id] ?? new Set<DisclosureKey>();
 
-  const analyzeInput = async () => {
-    if (!input.trim()) return;
-
-    setLoading(true);
-    setResult(null);
-    setVisibleSteps([]);
-    setCurrentReasoningStep(0);
-
-    // Show reasoning steps one by one
-    for (let i = 0; i < reasoningSteps.length; i++) {
-      setCurrentReasoningStep(i);
-      setVisibleSteps(prev => [...prev, reasoningSteps[i]]);
-      await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000));
-    }
-
-    // Analyze the actual input
-    const analysis = analyzeText(input);
-
-    setResult(analysis);
-    setShowDetails(false);
-    setLoading(false);
+  const toggle = (key: DisclosureKey) => {
+    setOpened(prev => {
+      const next = new Set(prev[scenario.id] ?? []);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return { ...prev, [scenario.id]: next };
+    });
   };
 
-  const handleReset = () => {
-    setInput('');
-    setResult(null);
-    setShowDetails(false);
-    setVisibleSteps([]);
-    setCurrentReasoningStep(0);
+  const pickScenario = (id: string) => {
+    setActiveId(id);
   };
 
   return (
     <div className="w-full bg-surface-primary border border-primary rounded-xl overflow-hidden">
       {/* Header */}
-      <div className="border-b border-primary px-6 py-5 flex items-center justify-between">
-        <div>
-          <h3 className="text-xl font-semibold text-text-primary">AI Decision Explainer</h3>
-          <p className="text-sm text-text-secondary mt-1">
-            See how AI makes decisions with transparent reasoning
-          </p>
-        </div>
-        {(result || loading) && (
-          <button
-            onClick={handleReset}
-            className="px-4 py-2 text-sm text-text-secondary hover:text-text-primary border border-secondary rounded-lg hover:border-primary transition-colors cursor-pointer"
-          >
-            Reset
-          </button>
-        )}
+      <div className="border-b border-primary px-6 py-5">
+        <h3 className="text-xl font-semibold text-text-primary">Loan decision, explained</h3>
+        <p className="text-sm text-text-secondary mt-1">
+          Pick a profile, then pull the parts of the explanation you want. The decision is the answer. Depth is opt-in.
+        </p>
       </div>
 
-      <div className="p-6 space-y-6">
-        {/* Input Section */}
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-text-secondary">
-              Enter text for sentiment analysis:
-            </label>
-            <span className={`text-xs ${input.length > 200 ? 'text-red-500' : 'text-text-tertiary'}`}>
-              {input.length}/200
-            </span>
-          </div>
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value.slice(0, 200))}
-            placeholder="Type a short sentence to analyze..."
-            className="w-full p-4 border border-secondary rounded-xl bg-surface-primary text-text-primary placeholder-text-tertiary focus:outline-none focus:border-primary transition text-base"
-            rows={2}
-            disabled={loading}
-            maxLength={200}
-          />
-          <button
-            onClick={analyzeInput}
-            disabled={!input.trim() || loading}
-            className="mt-4 px-6 py-2.5 bg-accent-primary text-white rounded-lg hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed transition cursor-pointer"
-          >
-            {loading ? 'Analyzing...' : 'Analyze Text'}
-          </button>
+      {/* Step 1 — scenario picker */}
+      <div className="px-6 pt-5">
+        <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-2">1 · Pick an applicant</div>
+        <div className="flex flex-wrap gap-2">
+          {SCENARIOS.map(s => {
+            const active = s.id === activeId;
+            return (
+              <button
+                key={s.id}
+                onClick={() => pickScenario(s.id)}
+                className={`px-3.5 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer ${
+                  active
+                    ? 'bg-accent-primary text-white border-accent-primary'
+                    : 'bg-surface-primary text-text-secondary border-secondary hover:border-primary hover:text-text-primary'
+                }`}
+              >
+                {s.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="px-6 pt-5 pb-6 space-y-5">
+        {/* Applicant + request — compact */}
+        <div className="bg-surface-secondary border border-primary rounded-xl p-4">
+          <div className="text-text-primary text-sm font-medium">{scenario.profile}</div>
+          <div className="text-sm text-text-secondary mt-0.5">{scenario.request}</div>
         </div>
 
-        {/* Live Reasoning Panel - Shows during analysis */}
-        {loading && visibleSteps.length > 0 && (
-          <div className="bg-surface-secondary border border-primary rounded-xl overflow-hidden">
-            <div className="px-5 py-3 border-b border-primary flex items-center gap-2">
-              <div className="w-2 h-2 bg-status-warning rounded-full animate-pulse" />
-              <span className="text-sm font-medium text-text-primary">AI Reasoning</span>
+        {/* The decision — always visible. This is the "answer". */}
+        <div>
+          <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-2">2 · The decision</div>
+          <div className={`bg-surface-secondary border-2 ${meta.ring} rounded-xl p-5`}>
+            <div className="flex items-center gap-3 mb-2">
+              <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${meta.chip}`}>{meta.chipLabel}</span>
+              <h4 className="text-lg font-semibold text-text-primary">{scenario.result.headline}</h4>
             </div>
-            <div
-              ref={reasoningRef}
-              className="p-5 max-h-48 overflow-y-auto font-mono text-sm space-y-2"
-            >
-              {visibleSteps.map((step, index) => (
-                <div
-                  key={index}
-                  className={`flex items-start gap-2 ${
-                    index === visibleSteps.length - 1 ? 'text-text-primary' : 'text-text-tertiary'
-                  }`}
-                >
-                  <span className="text-text-tertiary select-none">&gt;</span>
-                  <span>{step}</span>
-                  {index === visibleSteps.length - 1 && (
-                    <span className="inline-block w-2 h-4 bg-text-primary animate-pulse" />
+            <p className="text-text-primary">{scenario.result.amount}</p>
+          </div>
+        </div>
+
+        {/* Step 3 — pull-on-demand disclosures. The pattern in action. */}
+        <div>
+          <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-2">
+            3 · Ask what you want to know
+          </div>
+          <div className="space-y-2">
+            {DISCLOSURES.map(({ key, prompt, hint }) => {
+              const open = openedSet.has(key);
+              return (
+                <div key={key} className="bg-surface-secondary border border-primary rounded-lg overflow-hidden">
+                  <button
+                    onClick={() => toggle(key)}
+                    aria-expanded={open}
+                    className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-background-secondary transition-colors cursor-pointer"
+                  >
+                    <div className="min-w-0">
+                      <div className="text-text-primary font-medium">{prompt(scenario.result.kind)}</div>
+                      <div className="text-xs text-text-tertiary mt-0.5">{hint}</div>
+                    </div>
+                    <svg
+                      className={`flex-shrink-0 h-5 w-5 text-text-secondary transition-transform ${open ? 'rotate-90' : ''}`}
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+
+                  {open && (
+                    <div className="px-4 pb-4 pt-1 border-t border-primary">
+                      {key === 'why' && (
+                        <ol className="space-y-3 mt-3">
+                          {scenario.result.drivers.map((d, i) => (
+                            <li key={i} className="flex items-start gap-3">
+                              <span className="flex-shrink-0 h-6 w-6 rounded-full bg-background-secondary border border-secondary flex items-center justify-center text-xs font-semibold text-text-secondary mt-0.5">
+                                {i + 1}
+                              </span>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-text-primary font-medium">{d.label}</span>
+                                  <span className={`text-xs px-1.5 py-0.5 rounded ${
+                                    d.direction === 'pos'
+                                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                      : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                                  }`}>
+                                    {d.direction === 'pos' ? 'helped' : 'hurt'}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-text-secondary mt-0.5">{d.detail}</p>
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
+                      )}
+
+                      {key === 'confidence' && (
+                        <p className="text-text-secondary mt-3">{scenario.result.confidence}</p>
+                      )}
+
+                      {key === 'next' && (
+                        <ul className="space-y-3 mt-3">
+                          {scenario.result.nextSteps.map((n, i) => (
+                            <li key={i}>
+                              <div className="text-text-primary font-medium">{n.label}</div>
+                              <p className="text-sm text-text-secondary mt-0.5">{n.rationale}</p>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      {key === 'how' && (
+                        <p className="text-text-secondary mt-3">{scenario.result.modelDisclosure}</p>
+                      )}
+                    </div>
                   )}
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        )}
+        </div>
 
-        {/* Results Section */}
-        {result && (
-          <div className="space-y-5">
-            {/* Completed Reasoning Panel */}
-            <div className="bg-surface-secondary border border-primary rounded-xl overflow-hidden">
-              <div className="px-5 py-3 border-b border-primary flex items-center gap-2">
-                <div className="w-2 h-2 bg-status-success rounded-full" />
-                <span className="text-sm font-medium text-text-primary">AI Reasoning Complete</span>
-              </div>
-              <div className="p-5 max-h-36 overflow-y-auto font-mono text-sm space-y-1">
-                {visibleSteps.map((step, index) => (
-                  <div key={index} className="flex items-start gap-2 text-text-tertiary">
-                    <span className="select-none">&gt;</span>
-                    <span>{step}</span>
-                  </div>
-                ))}
-                <div className="flex items-start gap-2 text-status-success font-medium pt-2">
-                  <span className="select-none">&gt;</span>
-                  <span>Analysis complete. Result: {result.prediction}</span>
-                </div>
+        {/* The exit — always available, regardless of how deep the user went */}
+        <div>
+          <div className="text-xs font-medium text-text-tertiary uppercase tracking-wide mb-2">4 · Disagree?</div>
+          {isAppealed ? (
+            <div className="bg-surface-secondary border border-primary rounded-lg p-4 flex items-start gap-3">
+              <div className="h-5 w-5 rounded-full bg-status-success/20 text-status-success flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">✓</div>
+              <div>
+                <div className="text-text-primary font-medium">Appeal submitted.</div>
+                <p className="text-sm text-text-secondary mt-0.5">
+                  A reviewer will contact you within 2 business days with the specific drivers they re-examined.
+                </p>
               </div>
             </div>
-
-            {/* Main Prediction */}
-            <div className="bg-surface-secondary border border-primary rounded-xl p-5">
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-lg font-semibold text-text-primary">
-                  Prediction: {result.prediction}
-                </h4>
-                <span className="text-2xl font-bold text-status-success">
-                  {(result.confidence * 100).toFixed(0)}%
-                </span>
-              </div>
-              <div className="w-full bg-surface-primary rounded-full h-2 border border-secondary">
-                <div
-                  className="bg-accent-primary h-full rounded-full transition-all duration-500"
-                  style={{ width: `${result.confidence * 100}%` }}
-                />
-              </div>
-              <p className="text-sm text-text-tertiary mt-2">Confidence score</p>
-            </div>
-
-            {/* Explanation Toggle */}
+          ) : (
             <button
-              onClick={() => setShowDetails(!showDetails)}
-              className="flex items-center gap-2 text-text-secondary hover:text-text-primary font-medium transition-all active:scale-95 cursor-pointer"
+              onClick={() => setAppealed(prev => ({ ...prev, [scenario.id]: true }))}
+              className="w-full sm:w-auto px-4 py-2.5 text-sm font-medium border border-primary rounded-lg text-text-primary hover:bg-background-secondary transition-colors cursor-pointer"
             >
-              <svg
-                className={`w-5 h-5 transform transition-transform ${showDetails ? 'rotate-90' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-              <span>{showDetails ? 'Hide' : 'Show'} Detailed Breakdown</span>
+              This looks wrong → appeal to a human reviewer
             </button>
-
-            {/* Detailed Explanation */}
-            {showDetails && (
-              <div className="space-y-4">
-                {/* Contributing Factors */}
-                <div className="bg-surface-secondary rounded-xl p-5">
-                  <h5 className="font-semibold text-text-primary mb-4">Contributing Factors</h5>
-                  <div className="space-y-3">
-                    {result.factors.map((factor, index) => (
-                      <div key={index} className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                          <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${
-                            factor.impact === 'positive'
-                              ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                              : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                          }`}>
-                            {factor.impact === 'positive' ? '+' : '-'}{Math.abs(factor.value * 100).toFixed(0)}%
-                          </span>
-                          <span className="text-text-primary font-medium">{factor.name}</span>
-                        </div>
-                        <span className="text-sm text-text-tertiary text-right">{factor.description}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Reasoning Steps */}
-                <div className="bg-surface-secondary rounded-xl p-5">
-                  <h5 className="font-semibold text-text-primary mb-4">Summary</h5>
-                  <ol className="list-decimal list-inside space-y-2">
-                    {result.reasoning.map((step, index) => (
-                      <li key={index} className="text-text-secondary">{step}</li>
-                    ))}
-                  </ol>
-                </div>
-
-                {/* Alternative Predictions */}
-                <div className="bg-surface-secondary rounded-xl p-5">
-                  <h5 className="font-semibold text-text-primary mb-4">Alternative Predictions</h5>
-                  <div className="space-y-3">
-                    {result.alternatives.map((alt, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-text-secondary">{alt.option}</span>
-                        <span className="text-text-tertiary text-sm">
-                          {(alt.confidence * 100).toFixed(1)}% confidence
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Example prompt */}
-        {!input && !result && !loading && (
-          <div className="p-4 bg-surface-secondary rounded-xl">
-            <p className="text-sm text-text-secondary">
-              <span className="font-medium text-text-primary">Try this example:</span> &quot;I&apos;m really excited about the new features in this product. The team has done an amazing job!&quot;
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

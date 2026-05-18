@@ -33,6 +33,10 @@ const ProductsSection = dynamic(() => import('@/components/sections/ProductsSect
   loading: () => <div className="animate-pulse bg-background-secondary h-32 rounded-lg"></div>,
 });
 
+const JudgmentCallBlock = dynamic(() => import('@/components/Pattern/JudgmentCallBlock'));
+const TakeawaysList = dynamic(() => import('@/components/Pattern/TakeawaysList'));
+const InstallPatternCTA = dynamic(() => import('@/components/Pattern/InstallPatternCTA'));
+
 interface GuideSummary {
   slug: string;
   title: string;
@@ -178,15 +182,46 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         )}
 
-        {/* AI Design Prompt */}
-        {pattern.content.figmaPrompt && (
+        {/* "When to use — and when it backfires" replaces the AI Design Prompt
+            when a pattern has opinionated judgment to ship; otherwise we fall
+            back to the legacy figmaPrompt rendering. */}
+        {pattern.content.judgmentCall ? (
+          <JudgmentCallBlock data={pattern.content.judgmentCall} patternTitle={pattern.title} />
+        ) : pattern.content.figmaPrompt && (
           <section>
             <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">AI Design Prompt</h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </section>
         )}
 
-        {/* Implementation Guidelines and Design Considerations */}
+        {/* "Take it into your own product" replaces the flat
+            Guidelines/Considerations columns when a pattern has ranked
+            takeaways. When an installPrompt is also present, the section
+            becomes a two-column layout: numbered moves on the left, the
+            paste-into-Claude-Code CTA sticky on the right. Otherwise we
+            fall back to the legacy two-column block. */}
+        {pattern.content.takeaways && pattern.content.takeaways.length > 0 ? (
+          <section>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+              Take it into your own product
+            </h2>
+            {pattern.content.installPrompt ? (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+                <div className="lg:col-span-2">
+                  <TakeawaysList items={pattern.content.takeaways} />
+                </div>
+                <div className="lg:col-span-1">
+                  <InstallPatternCTA
+                    patternTitle={pattern.title}
+                    installPrompt={pattern.content.installPrompt}
+                  />
+                </div>
+              </div>
+            ) : (
+              <TakeawaysList items={pattern.content.takeaways} />
+            )}
+          </section>
+        ) : (
         <section>
           <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Guidelines & Considerations</h2>
 
@@ -226,11 +261,17 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             </div>
           </div>
         </section>
+        )}
 
         {/* FAQ — visible on page to match the FAQ JSON-LD in the server
             wrapper. Google's Aug 2023 FAQ policy effectively requires the
             content to be visibly rendered, not only structured data. These
-            three Q&As mirror generateFAQSchema() in utils/structuredData.ts. */}
+            three Q&As mirror generateFAQSchema() in utils/structuredData.ts.
+            Per-pattern: suppress both the visible block AND the JSON-LD
+            (see structuredData.ts) when pattern.hideFAQ is true — keeps the
+            two surfaces in lockstep so we don't trigger Google's
+            "structured data without visible content" penalty. */}
+        {!pattern.hideFAQ && (
         <section>
           <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
             Frequently Asked Questions
@@ -264,6 +305,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             </div>
           </div>
         </section>
+        )}
 
         {/* Audit CTA */}
         <section>

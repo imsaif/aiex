@@ -31,9 +31,9 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
     <div className="bg-accent-subtle/50 border border-accent-primary/20 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-4">
       <BeakerIcon className="w-8 h-8 text-accent-primary flex-shrink-0" />
       <div className="flex-1 text-center sm:text-left">
-        <p className="font-semibold text-text-primary">See this pattern in your product</p>
+        <p className="font-semibold text-text-primary">Check if your product already has this pattern</p>
         <p className="text-sm text-text-secondary mt-1">
-          Upload a screenshot and find out which of the 36 patterns your AI interface uses.
+          Upload a screenshot. We&apos;ll tell you which of the 36 patterns your AI interface uses and where the gaps are.
         </p>
       </div>
       <Link
