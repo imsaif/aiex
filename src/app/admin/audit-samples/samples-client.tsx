@@ -17,6 +17,7 @@ interface Sample {
   criticalMissingCount: number;
   errorReason: string | null;
   errorDetail: string | null;
+  surfaceDescription: string | null;
   latencyMs: number | null;
   ipHash: string | null;
 }
@@ -168,6 +169,7 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
               <th className="px-3 py-2">Outcome</th>
               <th className="px-3 py-2">Product</th>
               <th className="px-3 py-2">Device</th>
+              <th className="px-3 py-2">Surface</th>
               <th className="px-3 py-2 text-right">Patterns</th>
               <th className="px-3 py-2 text-right">Gaps</th>
               <th className="px-3 py-2 text-right">Score</th>
@@ -184,6 +186,9 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
                 </td>
                 <td className="px-3 py-2">{s.productType ?? '—'}</td>
                 <td className="px-3 py-2">{s.deviceType ?? '—'}</td>
+                <td className="px-3 py-2 max-w-xs truncate" title={s.surfaceDescription ?? ''}>
+                  {s.surfaceDescription ?? '—'}
+                </td>
                 <td className="px-3 py-2 text-right">{s.applicablePatternCount}</td>
                 <td className="px-3 py-2 text-right">{s.gapCount}</td>
                 <td className="px-3 py-2 text-right">{s.score != null ? `${s.score}/${s.maxScore ?? '?'}` : '—'}</td>
@@ -195,7 +200,7 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
             ))}
             {samples.length === 0 && !isLoading && (
               <tr>
-                <td colSpan={9} className="px-3 py-8 text-center text-text-secondary">No samples in window.</td>
+                <td colSpan={10} className="px-3 py-8 text-center text-text-secondary">No samples in window.</td>
               </tr>
             )}
           </tbody>

@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
     if (isContextFirst) {
       // New context-first flow — use product-aware prompts
       systemPrompt = buildSystemPrompt(productType!);
-      userPrompt = buildUserPrompt(productType!) + deviceContext + multiImageContext;
+      userPrompt = buildUserPrompt(productType!, productDescription) + deviceContext + multiImageContext;
       console.log('[Pattern Audit] Context-first analysis:', productType, '| Device:', deviceType || 'unknown', '| Images:', imageList.length);
     } else {
       // Legacy flow — use component-detection prompts
@@ -249,6 +249,7 @@ export async function POST(request: NextRequest) {
           applicablePatternCount: results.applicablePatterns.length,
           gapCount: results.topGaps.length,
           criticalMissingCount: results.criticalMissing.length,
+          surfaceDescription: results.surfaceDescription || null,
           latencyMs: Date.now() - startedAt,
           ip,
           userAgent,
@@ -294,6 +295,7 @@ export async function POST(request: NextRequest) {
         applicablePatternCount: Object.keys(results.patterns || {}).length,
         gapCount: results.criticalMissing.length,
         criticalMissingCount: results.criticalMissing.length,
+        surfaceDescription: results.componentDescription || null,
         latencyMs: Date.now() - startedAt,
         ip,
         userAgent,

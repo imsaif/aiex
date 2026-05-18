@@ -12,6 +12,7 @@ import {
   XMarkIcon,
   ArrowPathIcon,
   SparklesIcon,
+  DocumentMagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
 import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
 import { GapCard } from './GapCard';
@@ -196,89 +197,267 @@ function FormattedChatMessage({ content }: { content: string }) {
   );
 }
 
+interface IntentSuggestion {
+  slug: string;
+  title: string;
+  category: string;
+  description: string;
+  why: string;
+  url: string;
+}
+
 function EmptyAuditState({
   surfaceDescription,
   screenshotUrl,
+  productType,
   onTryAgain,
 }: {
   surfaceDescription?: string;
   screenshotUrl?: string;
+  productType?: string;
   onTryAgain: () => void;
 }) {
+  const [intent, setIntent] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [suggestions, setSuggestions] = useState<IntentSuggestion[] | null>(null);
+  const [suggestError, setSuggestError] = useState<string | null>(null);
+  const [statusIndex, setStatusIndex] = useState(0);
+
+  const STATUS_MESSAGES = [
+    'Reading your intent…',
+    'Scanning 36 patterns in the library…',
+    'Matching against your use case…',
+    'Ranking by relevance…',
+  ];
+
   useEffect(() => {
     trackAuditEvent('audit_empty_state_shown', {
       hasSurfaceDescription: !!surfaceDescription,
     });
   }, [surfaceDescription]);
 
+  useEffect(() => {
+    if (!submitting) {
+      setStatusIndex(0);
+      return;
+    }
+    const id = setInterval(() => {
+      setStatusIndex((i) => Math.min(i + 1, STATUS_MESSAGES.length - 1));
+    }, 1800);
+    return () => clearInterval(id);
+  }, [submitting, STATUS_MESSAGES.length]);
+
   const handleTryAgain = () => {
     trackAuditEvent('audit_empty_state_retry_clicked');
     onTryAgain();
   };
 
+  const handleSuggest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = intent.trim();
+    if (trimmed.length < 8 || submitting) return;
+    setSubmitting(true);
+    setSuggestError(null);
+    setSuggestions(null);
+    trackAuditEvent('audit_intent_submitted', { length: trimmed.length });
+    try {
+      const res = await fetch('/api/audit/suggest-patterns', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ intent: trimmed, productType }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSuggestError(data.error || 'Could not generate suggestions. Please try again.');
+        trackAuditEvent('audit_intent_suggestions_failed', {
+          status: res.status,
+          reason: data.error || 'unknown',
+        });
+      } else {
+        setSuggestions(data.suggestions);
+        trackAuditEvent('audit_intent_suggestions_returned', { count: data.suggestions?.length ?? 0 });
+      }
+    } catch (err) {
+      setSuggestError('Network error. Please try again.');
+      trackAuditEvent('audit_intent_suggestions_failed', {
+        status: 0,
+        reason: err instanceof Error ? err.message.slice(0, 100) : 'network_error',
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handlePatternClick = (slug: string) => {
+    trackAuditEvent('audit_intent_pattern_clicked', { slug });
+  };
+
+  const hasSuggestions = !!suggestions && suggestions.length > 0;
+
   return (
     <div className="pb-12 sm:pb-16">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16">
-        <div className="bg-background-primary border border-border-primary rounded-2xl p-6 sm:p-10 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-subtle mb-5">
-            <SparklesIcon className="w-6 h-6 text-accent-primary" />
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mb-3">
-            This doesn&apos;t look like an AI product surface
-          </h2>
-          <p className="text-sm sm:text-base text-text-secondary leading-relaxed mb-6 max-w-xl mx-auto">
-            The audit evaluates designs against 36 patterns built for AI products. We didn&apos;t find anything to flag on this screenshot — usually because the surface isn&apos;t showing AI output.
-          </p>
-
-          {surfaceDescription && (
-            <div className="text-left mx-auto max-w-xl mb-6 px-4 py-3 rounded-xl bg-background-secondary border border-border-primary">
-              <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-1">What we saw</p>
-              <p className="text-sm text-text-secondary">{surfaceDescription}</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 space-y-6">
+        {/* Card 1: Empty-state diagnostic — internal 2-col on lg+ */}
+        <div className="bg-background-primary border border-border-primary rounded-2xl p-8 sm:p-12 lg:p-14">
+          <div className="grid lg:grid-cols-5 gap-10 lg:gap-12 items-center min-h-[360px]">
+            <div className="lg:col-span-3">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent-subtle flex-shrink-0">
+                  <DocumentMagnifyingGlassIcon className="w-7 h-7 text-accent-primary" />
+                </div>
+                <h2 className="text-3xl sm:text-4xl font-bold text-text-primary leading-tight">
+                  This doesn&apos;t look like an AI product surface
+                </h2>
+              </div>
+              <p className="text-lg text-text-secondary leading-relaxed mb-8">
+                The audit evaluates designs against 36 patterns built for AI products. We didn&apos;t find anything to flag on this screenshot, usually because the surface isn&apos;t showing AI output.
+              </p>
+              <div className="flex items-center gap-4 flex-wrap">
+                <button
+                  onClick={handleTryAgain}
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-border-primary bg-background-primary text-text-primary font-semibold text-base hover:bg-background-secondary transition-colors cursor-pointer"
+                >
+                  <ArrowPathIcon className="w-5 h-5" />
+                  Try another screenshot
+                </button>
+                <span className="text-base text-text-tertiary">
+                  This run didn&apos;t count against your free audit.
+                </span>
+              </div>
             </div>
-          )}
 
-          {screenshotUrl && (
-            <div className="mx-auto mb-6 max-w-xs">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={screenshotUrl}
-                alt="The screenshot you uploaded"
-                className="w-full h-auto rounded-lg border border-border-primary opacity-70"
+            <div className="lg:col-span-2 space-y-5">
+              {(surfaceDescription || screenshotUrl) && (
+                <div className="flex gap-4 px-5 py-5 rounded-xl bg-background-secondary border border-border-primary">
+                  {screenshotUrl && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={screenshotUrl}
+                      alt="The screenshot you uploaded"
+                      className="w-24 h-24 object-cover rounded-md border border-border-primary opacity-85 flex-shrink-0"
+                    />
+                  )}
+                  {surfaceDescription && (
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-2">What we saw</p>
+                      <p className="text-base text-text-secondary leading-relaxed line-clamp-5">{surfaceDescription}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3">Works best on</p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="text-base px-4 py-1.5 rounded-full bg-background-secondary border border-border-primary text-text-secondary">Chat threads</span>
+                  <span className="text-base px-4 py-1.5 rounded-full bg-background-secondary border border-border-primary text-text-secondary">Code assistants</span>
+                  <span className="text-base px-4 py-1.5 rounded-full bg-background-secondary border border-border-primary text-text-secondary">AI features</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: Intent capture + suggestions */}
+        <div className="bg-background-primary border border-border-primary rounded-2xl p-8 sm:p-12 lg:p-14">
+          <div className="grid lg:grid-cols-5 gap-10 lg:gap-12 items-start">
+            <div className="lg:col-span-2">
+              <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3">
+                Or skip the screenshot
+              </p>
+              <h3 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4 leading-tight">
+                Tell us what you&apos;re trying to design
+              </h3>
+              <p className="text-lg text-text-secondary leading-relaxed">
+                We&apos;ll surface the most relevant patterns from the library based on your intent. Nothing to upload, just describe it.
+              </p>
+            </div>
+
+            <form onSubmit={handleSuggest} className="lg:col-span-3">
+              <textarea
+                value={intent}
+                onChange={(e) => setIntent(e.target.value)}
+                maxLength={1000}
+                rows={5}
+                placeholder="e.g., A chat assistant for customer support that can hand off to a human, or an AI agent that schedules meetings on the user's behalf."
+                className="w-full px-5 py-4 rounded-xl border border-border-primary bg-background-primary text-base text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary resize-none leading-relaxed"
+                disabled={submitting}
               />
-              <p className="text-xs text-text-tertiary mt-2">Your upload</p>
+              <div className="flex items-center justify-between mt-4">
+                <span className="text-base text-text-tertiary">{intent.length}/1000</span>
+                <button
+                  type="submit"
+                  disabled={submitting || intent.trim().length < 8}
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-accent-primary text-white font-semibold text-base hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                >
+                  {submitting ? 'Finding patterns…' : 'Show me relevant patterns'}
+                </button>
+              </div>
+              {suggestError && (
+                <div className="mt-4 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-base text-red-700 dark:text-red-300">
+                  {suggestError}
+                </div>
+              )}
+            </form>
+          </div>
+
+          {submitting && (
+            <div className="mt-10 pt-10 border-t border-border-primary">
+              <div className="flex items-center gap-3 mb-5" aria-live="polite">
+                <span className="relative inline-flex w-3 h-3" aria-hidden="true">
+                  <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-75"></span>
+                  <span className="relative rounded-full w-3 h-3 bg-accent-primary"></span>
+                </span>
+                <p className="text-base text-text-secondary transition-opacity duration-300">
+                  {STATUS_MESSAGES[statusIndex]}
+                </p>
+              </div>
+              <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[0, 1, 2].map((i) => (
+                  <li key={i}>
+                    <div className="block h-full px-5 py-5 rounded-xl border border-border-primary bg-background-secondary/30 animate-pulse">
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="h-5 bg-background-secondary rounded w-3/5"></div>
+                        <div className="h-3 bg-background-secondary rounded w-1/4 mt-1"></div>
+                      </div>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-background-secondary rounded w-full"></div>
+                        <div className="h-4 bg-background-secondary rounded w-4/5"></div>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
-          <div className="text-left mx-auto max-w-xl mb-7">
-            <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-3">
-              Works best on
-            </p>
-            <ul className="space-y-2 text-sm text-text-secondary">
-              <li className="flex gap-2.5">
-                <CheckCircleIcon className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" />
-                <span><strong className="text-text-primary font-semibold">Chat threads</strong> — ChatGPT, Claude, Gemini, in-product AI assistants</span>
-              </li>
-              <li className="flex gap-2.5">
-                <CheckCircleIcon className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" />
-                <span><strong className="text-text-primary font-semibold">Code assistants</strong> — Cursor, Copilot, Claude Code, v0</span>
-              </li>
-              <li className="flex gap-2.5">
-                <CheckCircleIcon className="w-5 h-5 text-accent-primary flex-shrink-0 mt-0.5" />
-                <span><strong className="text-text-primary font-semibold">AI-powered features</strong> — recommendation lists, generation flows, agent dashboards</span>
-              </li>
-            </ul>
-          </div>
-
-          <button
-            onClick={handleTryAgain}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent-primary text-white font-semibold text-sm hover:bg-accent-primary/90 transition-colors cursor-pointer"
-          >
-            <ArrowPathIcon className="w-4 h-4" />
-            Try another screenshot
-          </button>
-          <p className="text-xs text-text-tertiary mt-4">
-            This run didn&apos;t count against your free audit.
-          </p>
+          {hasSuggestions && !submitting && (
+            <div className="mt-10 pt-10 border-t border-border-primary">
+              <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-5">
+                {suggestions!.length} relevant {suggestions!.length === 1 ? 'pattern' : 'patterns'}
+              </p>
+              <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {suggestions!.map((s) => (
+                  <li key={s.slug}>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => handlePatternClick(s.slug)}
+                      className="block h-full px-5 py-5 rounded-xl border border-border-primary hover:border-accent-primary hover:bg-accent-subtle/50 transition-colors group"
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <h4 className="text-lg font-semibold text-text-primary group-hover:text-accent-primary leading-tight">
+                          {s.title}
+                        </h4>
+                        <span className="text-sm text-text-tertiary whitespace-nowrap mt-1 flex-shrink-0">{s.category}</span>
+                      </div>
+                      <p className="text-base text-text-secondary leading-relaxed">{s.why}</p>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -688,6 +867,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
       <EmptyAuditState
         surfaceDescription={surfaceDescription}
         screenshotUrl={heroScreenshotUrl}
+        productType={results?.productContext?.productType}
         onTryAgain={onNewAudit}
       />
     );

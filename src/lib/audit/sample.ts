@@ -22,6 +22,7 @@ export interface RecordAuditSampleInput {
   criticalMissingCount?: number;
   errorReason?: string | null;
   errorDetail?: string | null;
+  surfaceDescription?: string | null;
   latencyMs?: number | null;
   ip?: string | null;
   userAgent?: string | null;
@@ -35,6 +36,7 @@ function hashIp(ip: string | null | undefined): string | null {
 
 const DETAIL_MAX = 2000;
 const UA_MAX = 200;
+const SURFACE_MAX = 500;
 
 export async function recordAuditSample(input: RecordAuditSampleInput): Promise<void> {
   try {
@@ -52,6 +54,7 @@ export async function recordAuditSample(input: RecordAuditSampleInput): Promise<
         criticalMissingCount: input.criticalMissingCount ?? 0,
         errorReason: input.errorReason ?? null,
         errorDetail: input.errorDetail ? input.errorDetail.slice(0, DETAIL_MAX) : null,
+        surfaceDescription: input.surfaceDescription ? input.surfaceDescription.slice(0, SURFACE_MAX) : null,
         latencyMs: input.latencyMs ?? null,
         ipHash: hashIp(input.ip),
         userAgent: input.userAgent ? input.userAgent.slice(0, UA_MAX) : null,

@@ -133,7 +133,10 @@ Quality over quantity. Two grounded findings beat ten padded ones. If the surfac
  * apply. Do NOT instruct Claude to "lead with" a fixed pattern set — that is
  * what produced the fabricated findings before.
  */
-export function buildUserPrompt(productType: ProductType): string {
+export function buildUserPrompt(
+  productType: ProductType,
+  productDescription?: string,
+): string {
   const productTypeLabels: Record<ProductType, string> = {
     'chat-interface': 'a conversational AI / chat product',
     'ai-agent': 'an AI agent / autonomous workflow product',
@@ -146,9 +149,17 @@ export function buildUserPrompt(productType: ProductType): string {
     ? 'Because this is an agentic product, the agentic pattern set may apply — but only to surfaces that actually show agent action, planning, or status. Do not flag agentic patterns on settings or billing surfaces.'
     : 'The agentic pattern set probably does NOT apply unless the surface clearly shows autonomous agent activity.';
 
+  // User-supplied description is informative context only. The system prompt's
+  // evidence-first rules still apply: findings must reference visible UI, and
+  // the audit must return empty topGaps if the screenshot doesn't actually
+  // show AI output, regardless of what the user typed.
+  const userDescription = productDescription?.trim()
+    ? `\n\nThe user describes their product as: "${productDescription.trim().slice(0, 500)}". Use this to inform which patterns from the library are in scope, but evaluate strictly against what is visible in the screenshot. If the user's description and the screenshot disagree, trust the screenshot.`
+    : '';
+
   return `The wider product is ${productTypeLabels[productType]}. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-${productCaveat}
+${productCaveat}${userDescription}
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only.`;
 }

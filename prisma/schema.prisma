@@ -65,6 +65,7 @@ model AuditSample {
   criticalMissingCount   Int      @default(0)
   errorReason            String?
   errorDetail            String?
+  surfaceDescription     String?
   latencyMs              Int?
   ipHash                 String?
   userAgent              String?
@@ -72,6 +73,21 @@ model AuditSample {
   @@index([createdAt])
   @@index([outcome])
   @@index([productType])
+}
+
+model PatternIntent {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  intent            String
+  source            String   @default("audit_empty_state")
+  productType       String?
+  suggestedPatterns String   @default("[]")
+  latencyMs         Int?
+  ipHash            String?
+  userAgent         String?
+
+  @@index([createdAt])
+  @@index([source])
 }
 
 model SocialPost {
