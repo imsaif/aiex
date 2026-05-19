@@ -112,6 +112,31 @@ export async function GET(request: NextRequest) {
 
   console.log(`[watchdog] Checking ${type} newsletter (check-only: ${checkOnly})`);
 
+  // Step 0: Verify /news is actually rendering DB-backed items, not the
+  // 2-item static fallback. This catches the recurring failure where a
+  // Prisma error or empty-row response causes ISR to cache a degraded page
+  // even though generation itself is fine. See CLAUDE.md → Known Issues →
+  // "/news silently falls back to 2 static newsletters".
+  try {
+    const newsHtml = await fetch(`${SITE_URL}/news`, { cache: 'no-store' }).then((r) => r.text());
+    const slugMatches = newsHtml.match(/href="\/news\/[^"]+"/g) || [];
+    const uniqueSlugs = new Set(slugMatches);
+    if (uniqueSlugs.size <= 2) {
+      const result: WatchdogResult = {
+        status: 'failed',
+        type,
+        checkedAt: now,
+        message: `/news is rendering only ${uniqueSlugs.size} item(s) — static-fallback failure mode. DB read in NewsPage is failing or returning empty; ISR is caching the degraded page. Check Vercel logs for "[News] CRITICAL".`,
+      };
+      console.error(`[watchdog] /news render check FAILED — only ${uniqueSlugs.size} slugs on page`);
+      await sendWatchdogAlert(result);
+      return NextResponse.json(result);
+    }
+    console.log(`[watchdog] /news render check OK — ${uniqueSlugs.size} slugs on page`);
+  } catch (err) {
+    console.error('[watchdog] /news render check threw — non-fatal, continuing:', err);
+  }
+
   // Step 1: Check if today's newsletter exists
   const existing = await findTodaysNewsletter(type);
 

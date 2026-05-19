@@ -80,8 +80,16 @@ async function getPublishedDrafts(): Promise<Newsletter[]> {
       type: (draft.type as 'daily' | 'weekly') || 'daily',
     }));
   } catch (error) {
-    console.error('[News] CRITICAL: Failed to fetch published drafts — /news will render stale static fallback only.', error);
-    return [];
+    // Do NOT swallow + return []. ISR (`revalidate = 60`) caches whatever this
+    // function returns; on transient Prisma/Neon failures the empty array
+    // becomes the cached page, leaving /news showing only the two static
+    // fallback newsletters until the next successful revalidation. Re-throwing
+    // makes Next.js keep serving the last-known-good prerender instead of
+    // overwriting it with degraded content. See CLAUDE.md → Known Issues →
+    // "News page silently falls back to static newsletters" for the incident
+    // history.
+    console.error('[News] CRITICAL: Failed to fetch published drafts. Re-throwing so ISR keeps the last-good cache.', error);
+    throw error;
   }
 }
 
@@ -91,6 +99,22 @@ export default async function NewsPage() {
 
   // Get published drafts from database
   const dbNewsletters = await getPublishedDrafts();
+
+  // Invariant: the cron has been publishing 1+ newsletter/day for months, so a
+  // successful query returning ZERO rows means something is wrong — schema
+  // drift, wrong DATABASE_URL, a connection pool that returned an empty result
+  // without throwing, etc. Render-with-just-static (the 2 Dec 2025 fallback
+  // items) is a footgun: it looks superficially fine but hides the failure.
+  // Throw here so ISR keeps the last-known-good prerender and the error
+  // surfaces in Vercel logs. Skip the assertion only in true local dev
+  // (no Vercel env set) so a missing local DATABASE_URL doesn't block work.
+  if (dbNewsletters.length === 0 && process.env.VERCEL_ENV) {
+    throw new Error(
+      '[News] CRITICAL: getPublishedDrafts() returned 0 rows in a Vercel env. ' +
+      'Aborting render so ISR keeps the last-good cache. Check Prisma/Neon connectivity, ' +
+      'schema, and DATABASE_URL. See CLAUDE.md → Known Issues → /news static-fallback.'
+    );
+  }
 
   // Merge and deduplicate (prefer static file if slug exists in both)
   const staticSlugs = new Set(staticNewsletters.map((n) => n.slug));
