@@ -14,7 +14,7 @@ const ProposalSchema = z.object({
   proposedCategory: z.string().min(3).max(60),
   problem: z.string().min(20).max(600),
   solution: z.string().min(20).max(600),
-  rationale: z.string().min(20).max(600),
+  rationale: z.string().min(20).max(1200),
   supportingItemIds: z.array(z.string()).min(MIN_CLUSTER_SIZE).max(20),
 });
 
