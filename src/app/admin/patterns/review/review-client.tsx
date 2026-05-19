@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface CandidateRow {
@@ -29,11 +28,8 @@ export default function ReviewClient({ initialAuth, candidates }: Props) {
 
   if (!initialAuth) {
     return (
-      <div className="max-w-md mx-auto mt-20 p-6 border border-border-primary rounded-lg">
-        <p className="text-text-primary">Admin authentication required.</p>
-        <Link href="/admin/login" className="text-accent-primary underline">
-          Log in
-        </Link>
+      <div className="max-w-2xl mx-auto p-8">
+        <p className="text-text-secondary">Sign in via <a className="underline" href="/admin/newsletter">/admin/newsletter</a> first.</p>
       </div>
     );
   }
