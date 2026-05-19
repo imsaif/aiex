@@ -90,6 +90,7 @@ async function runClassifyAndEnrich(
               patternSlug: m.slug,
               confidence: m.confidence,
               rationale: m.rationale,
+              status: 'approved',
             },
           });
           matchesWritten++;
@@ -122,6 +123,7 @@ async function runClassifyAndEnrich(
             description: proposal.exampleDescription!,
             rationale: proposal.rationale ?? top.rationale,
             newsletterId: item.id,
+            status: 'approved',
           },
         });
       }
@@ -178,6 +180,7 @@ async function runScreenshots(
                 title: m.exampleTitle,
                 description: m.exampleDescription,
                 rationale: m.rationale,
+                status: 'approved',
               },
             });
             written++;

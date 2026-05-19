@@ -4,27 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-interface MatchRow {
-  id: string;
-  patternSlug: string;
-  confidence: number;
-  rationale: string;
-  createdAt: string;
-  newsletter: { title: string; slug: string; publishDate: string } | null;
-}
-
-interface ExampleRow {
-  id: string;
-  patternSlug: string;
-  sourceType: string;
-  sourceUrl: string;
-  sourceTitle: string | null;
-  title: string;
-  description: string;
-  rationale: string;
-  createdAt: string;
-}
-
 interface CandidateRow {
   id: string;
   proposedSlug: string;
@@ -38,17 +17,12 @@ interface CandidateRow {
   createdAt: string;
 }
 
-type Tab = 'matches' | 'examples' | 'candidates';
-
 interface Props {
   initialAuth: boolean;
-  matches: MatchRow[];
-  examples: ExampleRow[];
   candidates: CandidateRow[];
 }
 
-export default function ReviewClient({ initialAuth, matches, examples, candidates }: Props) {
-  const [tab, setTab] = useState<Tab>('matches');
+export default function ReviewClient({ initialAuth, candidates }: Props) {
   const [pending, setPending] = useState<Record<string, boolean>>({});
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const router = useRouter();
@@ -64,17 +38,15 @@ export default function ReviewClient({ initialAuth, matches, examples, candidate
     );
   }
 
-  const visibleMatches = matches.filter((m) => !hidden.has(m.id));
-  const visibleExamples = examples.filter((e) => !hidden.has(e.id));
-  const visibleCandidates = candidates.filter((c) => !hidden.has(c.id));
+  const visible = candidates.filter((c) => !hidden.has(c.id));
 
-  async function act(id: string, kind: 'match' | 'example' | 'candidate', action: 'approve' | 'reject') {
+  async function act(id: string, action: 'approve' | 'reject') {
     setPending((p) => ({ ...p, [id]: true }));
     try {
       const res = await fetch(`/api/admin/patterns/review/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ kind, action }),
+        body: JSON.stringify({ kind: 'candidate', action }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setHidden((h) => new Set(h).add(id));
@@ -89,147 +61,79 @@ export default function ReviewClient({ initialAuth, matches, examples, candidate
     }
   }
 
-  const tabs: { key: Tab; label: string; count: number }[] = [
-    { key: 'matches', label: 'Pattern matches', count: visibleMatches.length },
-    { key: 'examples', label: 'Example candidates', count: visibleExamples.length },
-    { key: 'candidates', label: 'New patterns', count: visibleCandidates.length },
-  ];
-
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-text-primary">Pattern Review Queue</h1>
-        <p className="text-text-secondary text-sm mt-1">
-          AI-suggested matches, examples, and new pattern candidates from the news pipeline.
-          Approve to publish; reject to hide.
-        </p>
-      </div>
-
-      <div className="flex gap-2 border-b border-border-primary mb-6">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
-              tab === t.key
-                ? 'border-accent-primary text-accent-primary'
-                : 'border-transparent text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            {t.label} <span className="ml-1 text-xs opacity-70">({t.count})</span>
-          </button>
-        ))}
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="flex items-baseline justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-semibold text-text-primary">New Pattern Candidates</h1>
+          <p className="text-text-secondary text-sm mt-1">
+            Proposed patterns detected from news clusters. Runs every Monday.
+          </p>
+        </div>
         <button
           onClick={() => router.refresh()}
-          className="ml-auto px-3 py-1.5 text-xs text-text-secondary hover:text-text-primary"
+          className="text-xs text-text-secondary hover:text-text-primary"
         >
           Refresh
         </button>
       </div>
 
-      {tab === 'matches' && (
-        <div className="space-y-3">
-          {visibleMatches.length === 0 && <Empty label="No pending pattern matches." />}
-          {visibleMatches.map((m) => (
-            <Card key={m.id} pending={pending[m.id]} onApprove={() => act(m.id, 'match', 'approve')} onReject={() => act(m.id, 'match', 'reject')}>
-              <div className="flex items-baseline gap-2 mb-1">
-                <Link href={`/patterns/${m.patternSlug}`} className="font-semibold text-text-primary hover:text-accent-primary">
-                  {m.patternSlug}
-                </Link>
-                <span className="text-xs text-text-tertiary">confidence {m.confidence.toFixed(2)}</span>
-              </div>
-              <p className="text-sm text-text-primary mb-2">{m.rationale}</p>
-              {m.newsletter && (
-                <Link href={`/news/${m.newsletter.slug}`} className="text-xs text-text-secondary hover:text-accent-primary">
-                  ← {m.newsletter.title}
-                </Link>
-              )}
-            </Card>
-          ))}
+      {visible.length === 0 ? (
+        <div className="text-center py-20 text-text-secondary">
+          <p className="text-lg mb-2">No candidates yet</p>
+          <p className="text-sm">The discoverer runs on Mondays after the newsletter cron.</p>
         </div>
-      )}
-
-      {tab === 'examples' && (
-        <div className="space-y-3">
-          {visibleExamples.length === 0 && <Empty label="No pending example candidates." />}
-          {visibleExamples.map((e) => (
-            <Card key={e.id} pending={pending[e.id]} onApprove={() => act(e.id, 'example', 'approve')} onReject={() => act(e.id, 'example', 'reject')}>
-              <div className="flex items-baseline gap-2 mb-1">
-                <Link href={`/patterns/${e.patternSlug}`} className="font-semibold text-text-primary hover:text-accent-primary">
-                  {e.patternSlug}
-                </Link>
-                <span className="text-xs text-text-tertiary">{e.sourceType}</span>
+      ) : (
+        <div className="space-y-4">
+          {visible.map((c) => {
+            const sources = Array.isArray(c.supportingSources) ? c.supportingSources as { title: string; url: string }[] : [];
+            return (
+              <div key={c.id} className="border border-border-primary rounded-lg p-5 bg-surface-primary">
+                <div className="flex gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline gap-3 mb-1">
+                      <span className="font-semibold text-text-primary text-lg">{c.proposedTitle}</span>
+                      <span className="text-xs text-text-tertiary">{c.proposedCategory} · {c.clusterSize} articles</span>
+                    </div>
+                    <p className="text-xs text-text-tertiary mb-3">slug: {c.proposedSlug}</p>
+                    <div className="space-y-2 mb-3">
+                      <p className="text-sm text-text-primary"><span className="font-medium">Problem:</span> {c.problem}</p>
+                      <p className="text-sm text-text-primary"><span className="font-medium">Solution:</span> {c.solution}</p>
+                    </div>
+                    <p className="text-xs text-text-secondary italic mb-3">{c.rationale}</p>
+                    {sources.length > 0 && (
+                      <div className="text-xs text-text-tertiary space-y-0.5">
+                        <p className="font-medium mb-1">Supporting articles:</p>
+                        {sources.map((s, i) => (
+                          <a key={i} href={s.url} target="_blank" rel="noreferrer" className="block hover:text-accent-primary truncate">
+                            ↗ {s.title}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-2 shrink-0">
+                    <button
+                      onClick={() => act(c.id, 'approve')}
+                      disabled={pending[c.id]}
+                      className="px-3 py-1.5 text-sm rounded-md bg-accent-primary text-white hover:opacity-90 disabled:opacity-50"
+                    >
+                      Add to library
+                    </button>
+                    <button
+                      onClick={() => act(c.id, 'reject')}
+                      disabled={pending[c.id]}
+                      className="px-3 py-1.5 text-sm rounded-md border border-border-primary text-text-secondary hover:text-text-primary disabled:opacity-50"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
               </div>
-              <p className="font-medium text-text-primary mb-1">{e.title}</p>
-              <p className="text-sm text-text-primary mb-2">{e.description}</p>
-              <p className="text-xs text-text-secondary italic mb-2">Why: {e.rationale}</p>
-              <a href={e.sourceUrl} className="text-xs text-accent-primary hover:underline" target="_blank" rel="noreferrer">
-                Source ↗
-              </a>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {tab === 'candidates' && (
-        <div className="space-y-3">
-          {visibleCandidates.length === 0 && <Empty label="No new pattern proposals yet (runs weekly)." />}
-          {visibleCandidates.map((c) => (
-            <Card key={c.id} pending={pending[c.id]} onApprove={() => act(c.id, 'candidate', 'approve')} onReject={() => act(c.id, 'candidate', 'reject')}>
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="font-semibold text-text-primary">{c.proposedTitle}</span>
-                <span className="text-xs text-text-tertiary">{c.proposedCategory} · cluster {c.clusterSize}</span>
-              </div>
-              <p className="text-xs text-text-tertiary mb-2">slug: {c.proposedSlug}</p>
-              <div className="text-sm text-text-primary space-y-1 mb-2">
-                <p><span className="font-medium">Problem:</span> {c.problem}</p>
-                <p><span className="font-medium">Solution:</span> {c.solution}</p>
-              </div>
-              <p className="text-xs text-text-secondary italic">Rationale: {c.rationale}</p>
-            </Card>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
   );
-}
-
-function Card({
-  children,
-  pending,
-  onApprove,
-  onReject,
-}: {
-  children: React.ReactNode;
-  pending?: boolean;
-  onApprove: () => void;
-  onReject: () => void;
-}) {
-  return (
-    <div className="border border-border-primary rounded-lg p-4 bg-surface-primary">
-      <div className="flex gap-4">
-        <div className="flex-1 min-w-0">{children}</div>
-        <div className="flex flex-col gap-2 shrink-0">
-          <button
-            onClick={onApprove}
-            disabled={pending}
-            className="px-3 py-1.5 text-sm rounded-md bg-accent-primary text-white hover:opacity-90 disabled:opacity-50"
-          >
-            Approve
-          </button>
-          <button
-            onClick={onReject}
-            disabled={pending}
-            className="px-3 py-1.5 text-sm rounded-md border border-border-primary text-text-secondary hover:text-text-primary disabled:opacity-50"
-          >
-            Reject
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Empty({ label }: { label: string }) {
-  return <div className="text-center py-12 text-text-secondary text-sm">{label}</div>;
 }
