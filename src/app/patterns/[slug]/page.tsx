@@ -11,6 +11,7 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import { PatternSummary } from '@/types';
 import { guides } from '@/data/guides';
 import { getGuidesForPattern } from '@/lib/cross-links';
+import FeaturedInNewsForPattern from '@/components/PatternIntel/FeaturedInNewsForPattern';
 
 // ISR: revalidate every hour to avoid cold function execution on every request
 export const revalidate = 3600;
@@ -114,6 +115,7 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
           categoryPatterns={categoryPatterns}
           relatedGuides={relatedGuideData}
         />
+        <FeaturedInNewsForPattern patternSlug={pattern.slug} />
         <Footer />
         <ScrollToTop />
       </main>

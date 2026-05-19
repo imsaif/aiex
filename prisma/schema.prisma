@@ -21,19 +21,72 @@ model Subscriber {
 }
 
 model NewsletterDraft {
-  id             String       @id @default(cuid())
+  id             String              @id @default(cuid())
   title          String
-  slug           String       @unique
+  slug           String              @unique
   summary        String
   content        String
   publishDate    DateTime
-  status         String       @default("pending_review")
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  type           String       @default("daily")
-  sources        Json         @default("[]")
+  status         String              @default("pending_review")
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  type           String              @default("daily")
+  sources        Json                @default("[]")
   structuredData Json?
   socialPosts    SocialPost[]
+  patternMatches NewsPatternMatch[]
+}
+
+model NewsPatternMatch {
+  id           String          @id @default(cuid())
+  newsletterId String
+  patternSlug  String
+  confidence   Float
+  rationale    String
+  status       String          @default("pending")
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  newsletter   NewsletterDraft @relation(fields: [newsletterId], references: [id], onDelete: Cascade)
+
+  @@unique([newsletterId, patternSlug])
+  @@index([status])
+  @@index([patternSlug, status])
+}
+
+model PatternExampleCandidate {
+  id            String   @id @default(cuid())
+  patternSlug   String
+  sourceType    String
+  sourceUrl     String
+  sourceTitle   String?
+  imageUrl      String?
+  title         String
+  description   String
+  rationale     String
+  newsletterId  String?
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([patternSlug, status])
+}
+
+model PatternCandidate {
+  id                String   @id @default(cuid())
+  proposedSlug      String
+  proposedTitle     String
+  proposedCategory  String
+  problem           String
+  solution          String
+  rationale         String
+  supportingSources Json     @default("[]")
+  clusterSize       Int      @default(0)
+  status            String   @default("pending")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([status])
 }
 
 model SocialAccount {

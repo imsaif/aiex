@@ -8,6 +8,7 @@ import {
 } from '@/data/newsletters';
 import { prisma } from '@/lib/prisma';
 import NewsletterDetailClient from './newsletter-detail-client';
+import RelatedPatternsForNews from '@/components/PatternIntel/RelatedPatternsForNews';
 import type { Newsletter } from '@/types';
 
 interface PageProps {
@@ -133,6 +134,7 @@ export default async function NewsletterPage({ params }: PageProps) {
         previousNewsletter={previous}
         nextNewsletter={next}
       />
+      <RelatedPatternsForNews newsletterId={newsletter.id} />
     </>
   );
 }

@@ -9,6 +9,7 @@ const links = [
   { href: '/admin/social', label: 'Social' },
   { href: '/admin/publish', label: 'Publish' },
   { href: '/admin/audit-samples', label: 'Audit Samples' },
+  { href: '/admin/patterns/review', label: 'Pattern Review' },
 ];
 
 export default function AdminNav() {
