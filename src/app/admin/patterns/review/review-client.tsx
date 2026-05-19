@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function ReviewClient({ initialAuth, candidates }: Props) {
-  const [pending, setPending] = useState<Record<string, boolean>>({});
+  const [pending, setPending] = useState<Record<string, 'approve' | 'reject'>>({});
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const router = useRouter();
 
@@ -37,18 +37,22 @@ export default function ReviewClient({ initialAuth, candidates }: Props) {
   const visible = candidates.filter((c) => !hidden.has(c.id));
 
   async function act(id: string, action: 'approve' | 'reject') {
-    setPending((p) => ({ ...p, [id]: true }));
+    setPending((p) => ({ ...p, [id]: action }));
     try {
       const res = await fetch(`/api/admin/patterns/review/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind: 'candidate', action }),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      if (action === 'approve' && data.slug) {
+        alert(`Pattern scaffolded! ${data.filesCommitted} files committed to GitHub. Vercel will deploy in ~2 minutes.\n\n/patterns/${data.slug}`);
+      }
       setHidden((h) => new Set(h).add(id));
     } catch (err) {
       console.error(err);
-      alert('Action failed; see console.');
+      alert(`Action failed: ${err instanceof Error ? err.message : err}`);
     } finally {
       setPending((p) => {
         const { [id]: _, ...rest } = p;
@@ -111,14 +115,14 @@ export default function ReviewClient({ initialAuth, candidates }: Props) {
                   <div className="flex flex-col gap-2 shrink-0">
                     <button
                       onClick={() => act(c.id, 'approve')}
-                      disabled={pending[c.id]}
+                      disabled={!!pending[c.id]}
                       className="px-3 py-1.5 text-sm rounded-md bg-accent-primary text-white hover:opacity-90 disabled:opacity-50"
                     >
-                      Add to library
+                      {pending[c.id] === 'approve' ? 'Scaffolding…' : 'Add to library'}
                     </button>
                     <button
                       onClick={() => act(c.id, 'reject')}
-                      disabled={pending[c.id]}
+                      disabled={!!pending[c.id]}
                       className="px-3 py-1.5 text-sm rounded-md border border-border-primary text-text-secondary hover:text-text-primary disabled:opacity-50"
                     >
                       Dismiss

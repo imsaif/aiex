@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { scaffoldPattern, patchPatternsRegistry } from '@/lib/agents/pattern-intel/scaffolder';
+import { commitPatternFiles } from '@/lib/github';
 
 type Kind = 'match' | 'example' | 'candidate';
 type Action = 'approve' | 'reject';
@@ -9,6 +11,27 @@ type Action = 'approve' | 'reject';
 interface Body {
   kind: Kind;
   action: Action;
+}
+
+async function fetchPatternsRegistryFromGitHub(): Promise<{ content: string; sha: string }> {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error('GITHUB_TOKEN not set');
+  const res = await fetch(
+    'https://api.github.com/repos/imsaif/aiex/contents/src/data/patterns.ts?ref=master',
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    },
+  );
+  if (!res.ok) throw new Error(`GitHub fetch patterns.ts failed: ${res.status}`);
+  const data = await res.json() as { content: string; sha: string };
+  return {
+    content: Buffer.from(data.content, 'base64').toString('utf-8'),
+    sha: data.sha,
+  };
 }
 
 export async function POST(
@@ -49,20 +72,74 @@ export async function POST(
         select: { slug: true },
       });
       if (draft) revalidatePath(`/news/${draft.slug}`);
+
     } else if (kind === 'example') {
       await prisma.patternExampleCandidate.update({
         where: { id },
         data: { status },
       });
+
     } else {
-      await prisma.patternCandidate.update({
-        where: { id },
-        data: { status },
+      // Candidate — scaffold on approve, just mark rejected on dismiss
+      if (action === 'reject') {
+        await prisma.patternCandidate.update({ where: { id }, data: { status: 'rejected' } });
+        return NextResponse.json({ ok: true, id, status: 'rejected' });
+      }
+
+      const candidate = await prisma.patternCandidate.findUnique({ where: { id } });
+      if (!candidate) {
+        return NextResponse.json({ error: 'Candidate not found' }, { status: 404 });
+      }
+
+      if (!process.env.GITHUB_TOKEN) {
+        return NextResponse.json(
+          { error: 'GITHUB_TOKEN not configured — add it to Vercel environment variables' },
+          { status: 503 },
+        );
+      }
+
+      // Generate all pattern files
+      const scaffold = await scaffoldPattern({
+        slug: candidate.proposedSlug,
+        title: candidate.proposedTitle,
+        category: candidate.proposedCategory,
+        problem: candidate.problem,
+        solution: candidate.solution,
+        rationale: candidate.rationale,
+      });
+
+      // Patch patterns.ts
+      const { content: registryContent } = await fetchPatternsRegistryFromGitHub();
+      const patchedRegistry = patchPatternsRegistry(
+        registryContent,
+        candidate.proposedSlug,
+        scaffold.exportName,
+      );
+
+      // Commit everything to GitHub
+      const allFiles = {
+        ...scaffold.files,
+        'src/data/patterns.ts': patchedRegistry,
+      };
+      await commitPatternFiles(allFiles, candidate.proposedTitle);
+
+      // Mark as approved
+      await prisma.patternCandidate.update({ where: { id }, data: { status: 'approved' } });
+
+      return NextResponse.json({
+        ok: true,
+        id,
+        status: 'approved',
+        slug: candidate.proposedSlug,
+        filesCommitted: Object.keys(allFiles).length,
       });
     }
   } catch (err) {
     console.error('[pattern-review] update failed:', err);
-    return NextResponse.json({ error: 'Update failed' }, { status: 500 });
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Update failed' },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ ok: true, id, status });
