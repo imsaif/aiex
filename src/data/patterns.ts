@@ -36,6 +36,7 @@ import { trustcalibration } from './patterns/patterns/trust-calibration';
 import { mixedinitiativecontrol } from './patterns/patterns/mixed-initiative-control';
 import { agentstatusmonitoring } from './patterns/patterns/agent-status-monitoring';
 import { agentReflectionLearning } from './patterns/patterns/agent-reflection-learning';
+import { workspaceNativeAgents } from './patterns/patterns/workspace-native-agents';
 
 export const patterns: Pattern[] = [
   contextualassistance,
@@ -75,6 +76,7 @@ export const patterns: Pattern[] = [
   mixedinitiativecontrol,
   agentstatusmonitoring,
   agentReflectionLearning,
+  workspaceNativeAgents,
 ];
 
 export default patterns;
