@@ -35,6 +35,7 @@ import { escalationpathways } from './patterns/patterns/escalation-pathways';
 import { trustcalibration } from './patterns/patterns/trust-calibration';
 import { mixedinitiativecontrol } from './patterns/patterns/mixed-initiative-control';
 import { agentstatusmonitoring } from './patterns/patterns/agent-status-monitoring';
+import { agentReflectionLearning } from './patterns/patterns/agent-reflection-learning';
 
 export const patterns: Pattern[] = [
   contextualassistance,
@@ -73,6 +74,7 @@ export const patterns: Pattern[] = [
   trustcalibration,
   mixedinitiativecontrol,
   agentstatusmonitoring
+  agentReflectionLearning,
 ];
 
 export default patterns;
