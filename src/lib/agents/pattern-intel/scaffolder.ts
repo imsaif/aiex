@@ -66,59 +66,104 @@ export async function scaffoldPattern(input: ScaffoldInput): Promise<ScaffoldedF
   const { slug, title, category, problem, solution, rationale } = input;
   const exportName = slugToCamel(slug);
 
-  const systemPrompt = `You are an expert AI UX designer and TypeScript developer generating content for a design pattern library at aiuxdesign.guide.
+  const systemPrompt = `You generate content for AI UX design pattern pages at aiuxdesign.guide.
 
-The library has 36 patterns across 8 categories. Patterns explain recurring UI/UX design challenges in AI products and how to solve them.
+VOICE: Punchy. Opinionated. No marketing fluff. No throat-clearing. Cut every sentence that doesn't earn its place. Read it back — if a sentence could be deleted without losing meaning, delete it. Match this voice (from the Explainable AI pattern):
 
-The newest pattern page format (applied to explainable-ai) includes these fields:
-- judgmentCall: { explainWhen[], dontWhen[], trap } — opinionated guidance on when to use vs avoid
-- takeaways: [{ heading, body }] — 3-4 ranked, actionable design moves
-- installPrompt: a Claude Code prompt the user can copy to apply this pattern to their own codebase
-- hideFAQ: true (always set for new patterns)
+  Takeaway heading: "First, decide what the user can do with the explanation."
+  Takeaway body: "If the answer is 'nothing,' you don't need an explanation, you need a better decision. Every explanation should map to an action the user can take: change an input, correct data, escalate, appeal. No action, no explanation."
 
-Return strict JSON (no markdown fences, no prose outside JSON) matching this schema exactly:
+  Judgment-call entry: "The decision is high-stakes and contestable (medical, credit, moderation), and the user needs grounds to challenge it."
+
+  Trap: "Fake transparency: a confidence number and three tidy 'factors' that look rigorous but aren't how the model decided. Worse than no explanation."
+
+LENGTH TARGETS (hard ceilings — go shorter if you can):
+- description: ≤ 200 chars, one sentence
+- introduction: 2 short paragraphs, ≤ 600 chars TOTAL. Not 1200. State what the pattern is and the single load-bearing reason it matters. No "in today's world…", no examples list — those live in the Examples section.
+- guidelines: 4-6 items, each ≤ 140 chars, imperative voice ("Show…", "Cap…", "Replace…")
+- considerations: 4-6 items, each ≤ 140 chars, blunt tradeoffs
+- judgmentCall.explainWhen / dontWhen: 3 items each, each ≤ 180 chars, concrete conditions
+- judgmentCall.trap: ≤ 250 chars, one named failure mode
+- takeaways: exactly 4. heading ≤ 80 chars (imperative). body ≤ 200 chars (one tight paragraph, no listing)
+- installPrompt: 800-1500 chars. Structured as: 1-line summary → "Apply these moves to AI surfaces in this codebase:" → 4 numbered moves with concrete instructions → 1 sentence on what to avoid → "Output: a Markdown report listing surfaces updated and surfaces flagged."
+- figmaPromptText: ≤ 500 chars
+- figmaTips: 3-5 items, ≤ 120 chars each
+
+Return strict JSON, no markdown fences, no commentary. Schema:
 {
-  "description": "one-sentence pattern definition, max 300 chars",
-  "introduction": "2-3 paragraph intro explaining what this pattern is, why it matters, and real-world examples (100-1200 chars)",
-  "tags": ["2-8 lowercase kebab-case tags"],
-  "guidelines": ["3-8 action-oriented guideline strings"],
-  "considerations": ["3-8 implementation consideration strings"],
-  "judgmentCall": {
-    "explainWhen": ["2-4 specific conditions where this pattern is the right call"],
-    "dontWhen": ["2-4 specific conditions where this pattern adds friction or fails"],
-    "trap": "the single most common misapplication of this pattern, 30-400 chars"
-  },
-  "takeaways": [
-    { "heading": "imperative sentence max 120 chars", "body": "explanation 30-400 chars" }
-  ],
-  "installPrompt": "a complete Claude Code prompt (200-3000 chars) for implementing this pattern in a real codebase. Should be opinionated and concrete with specific implementation steps.",
-  "figmaPromptText": "a Figma design prompt for this pattern (100-1000 chars)",
-  "figmaTips": ["3-6 Figma-specific design tips"]
+  "description": "...",
+  "introduction": "...",
+  "tags": ["..."],
+  "guidelines": ["..."],
+  "considerations": ["..."],
+  "judgmentCall": { "explainWhen": ["..."], "dontWhen": ["..."], "trap": "..." },
+  "takeaways": [{ "heading": "...", "body": "..." }],
+  "installPrompt": "...",
+  "figmaPromptText": "...",
+  "figmaTips": ["..."]
 }`;
 
-  const userPrompt = `Generate full pattern content for:
+  const userPrompt = `Generate the pattern content. Be punchy.
 
 Title: ${title}
-Slug: ${slug}
 Category: ${category}
 Problem: ${problem}
 Solution: ${solution}
 Context: ${rationale}
 
-Make the content practical and opinionated. The takeaways should be the 3-4 most important design moves, ranked by impact. The installPrompt should be detailed enough that a developer can run it with Claude Code against their codebase and get real changes.`;
+The 4 takeaways are the most important thing. They must be the 4 ranked design moves a reader applies in their product — heading is the imperative ("Decide what the user can do first"), body explains the move in ≤ 200 chars with a sharp line, not a paragraph of throat-clearing.`;
 
-  const response = await anthropic.messages.create({
-    model: SONNET_MODEL,
-    max_tokens: 6000,
-    temperature: 0.3,
-    messages: [{ role: 'user', content: userPrompt }],
-    system: systemPrompt,
-  });
+  // Run editorial content and code example in parallel — separate calls
+  // so the code example has its own token budget and doesn't truncate JSON.
+  const [editorialResponse, codeResponse] = await Promise.all([
+    anthropic.messages.create({
+      model: SONNET_MODEL,
+      max_tokens: 6000,
+      temperature: 0.3,
+      messages: [{ role: 'user', content: userPrompt }],
+      system: systemPrompt,
+    }),
+    anthropic.messages.create({
+      model: SONNET_MODEL,
+      max_tokens: 3000,
+      temperature: 0.2,
+      system: `You write minimal, self-contained React/TSX code samples for an AI design pattern library.
 
-  const text = response.content
+Output ONLY the code, no prose, no markdown fences, no commentary. Start with imports, end with a default export.
+
+Constraints:
+- Single React component, default exported
+- Uses only \`import React, { useState } from 'react';\` (no other imports)
+- Inline Tailwind className strings — no external CSS, no styled-components
+- Concrete and runnable, not pseudocode
+- 60-120 lines total
+- Demonstrates the pattern interactively (a button, a toggle, a state change — something the reader can mentally execute)
+- Realistic placeholder data baked in
+- No comments explaining the obvious; only flag the non-obvious load-bearing decisions`,
+      messages: [{
+        role: 'user',
+        content: `Write a minimal interactive React component that demonstrates the "${title}" pattern.
+
+Problem the pattern solves: ${problem}
+Solution: ${solution}
+
+The component should show the pattern in action — not a generic UI, but the specific design move that defines this pattern. A reader should look at this and understand: "oh, THAT's how you do it."`,
+      }],
+    }),
+  ]);
+
+  const text = editorialResponse.content
     .filter((b): b is Anthropic.TextBlock => b.type === 'text')
     .map((b) => b.text)
     .join('');
+
+  const rawCode = codeResponse.content
+    .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+    .map((b) => b.text)
+    .join('')
+    .trim()
+    .replace(/^```(?:tsx|jsx|typescript|javascript)?\s*\n/, '')
+    .replace(/\n```\s*$/, '');
 
   let data: z.infer<typeof ScaffoldSchema>;
   try {
@@ -188,8 +233,15 @@ export const examples: Example[] = [];
 
   const codeExamplesTs = `import { CodeExample } from '../../../../types';
 
-// TODO: Add an interactive demo component for this pattern
-export const codeExamples: CodeExample[] = [];
+export const codeExamples: CodeExample[] = [
+  {
+    title: ${JSON.stringify(`${title} — Implementation`)},
+    description: ${JSON.stringify(`A minimal React example showing how to implement the ${title} pattern.`)},
+    language: "tsx",
+    componentId: ${JSON.stringify(`${slug}-demo`)},
+    code: ${JSON.stringify(rawCode)},
+  },
+];
 `;
 
   return {
