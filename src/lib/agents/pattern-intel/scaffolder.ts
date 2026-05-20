@@ -26,24 +26,23 @@ function slugToCamel(slug: string): string {
 }
 
 const ScaffoldSchema = z.object({
-  description: z.string().min(20).max(300),
-  introduction: z.string().min(100).max(1200),
-  tags: z.array(z.string()).min(2).max(8),
-  guidelines: z.array(z.string()).min(3).max(8),
-  considerations: z.array(z.string()).min(3).max(8),
+  description: z.string().min(20),
+  introduction: z.string().min(100),
+  tags: z.array(z.string()).min(2).max(10),
+  guidelines: z.array(z.string()).min(3).max(10),
+  considerations: z.array(z.string()).min(3).max(10),
   judgmentCall: z.object({
-    explainWhen: z.array(z.string()).min(2).max(4),
-    dontWhen: z.array(z.string()).min(2).max(4),
-    trap: z.string().min(30).max(400),
+    explainWhen: z.array(z.string()).min(2),
+    dontWhen: z.array(z.string()).min(2),
+    trap: z.string().min(20),
   }),
   takeaways: z.array(z.object({
-    heading: z.string().min(10).max(120),
-    body: z.string().min(30).max(400),
-  })).min(3).max(4),
-  installPrompt: z.string().min(200).max(3000),
-  figmaPromptText: z.string().min(100).max(1000),
-  figmaTips: z.array(z.string()).min(3).max(6),
-  demoComponentCode: z.string().min(200),
+    heading: z.string().min(10),
+    body: z.string().min(30),
+  })).min(3),
+  installPrompt: z.string().min(100),
+  figmaPromptText: z.string().min(50),
+  figmaTips: z.array(z.string()).min(2),
 });
 
 function extractJson(text: string): unknown {
@@ -94,8 +93,7 @@ Return strict JSON (no markdown fences, no prose outside JSON) matching this sch
   ],
   "installPrompt": "a complete Claude Code prompt (200-3000 chars) for implementing this pattern in a real codebase. Should be opinionated and concrete with specific implementation steps.",
   "figmaPromptText": "a Figma design prompt for this pattern (100-1000 chars)",
-  "figmaTips": ["3-6 Figma-specific design tips"],
-  "demoComponentCode": "a complete working React/TSX component (no imports needed, no default export) that demonstrates this pattern interactively. Use only React hooks and inline Tailwind-like styles via className. Export as: export default function Demo() { ... }"
+  "figmaTips": ["3-6 Figma-specific design tips"]
 }`;
 
   const userPrompt = `Generate full pattern content for:
@@ -111,7 +109,7 @@ Make the content practical and opinionated. The takeaways should be the 3-4 most
 
   const response = await anthropic.messages.create({
     model: SONNET_MODEL,
-    max_tokens: 4000,
+    max_tokens: 6000,
     temperature: 0.3,
     messages: [{ role: 'user', content: userPrompt }],
     system: systemPrompt,
@@ -190,15 +188,8 @@ export const examples: Example[] = [];
 
   const codeExamplesTs = `import { CodeExample } from '../../../../types';
 
-export const codeExamples: CodeExample[] = [
-  {
-    title: "${title} Demo",
-    description: "Interactive demonstration of the ${title} pattern.",
-    language: "tsx",
-    componentId: "${slug}-demo",
-    code: ${JSON.stringify(data.demoComponentCode)},
-  },
-];
+// TODO: Add an interactive demo component for this pattern
+export const codeExamples: CodeExample[] = [];
 `;
 
   return {
