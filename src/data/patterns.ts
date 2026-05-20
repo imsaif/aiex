@@ -73,7 +73,7 @@ export const patterns: Pattern[] = [
   escalationpathways,
   trustcalibration,
   mixedinitiativecontrol,
-  agentstatusmonitoring
+  agentstatusmonitoring,
   agentReflectionLearning,
 ];
 

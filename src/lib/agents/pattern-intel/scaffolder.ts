@@ -218,10 +218,14 @@ export function patchPatternsRegistry(
   const newImport = `\nimport { ${exportName} } from './patterns/patterns/${slug}';`;
   const withImport = currentContent.slice(0, insertAfter) + newImport + currentContent.slice(insertAfter);
 
-  // Add to patterns array before the closing bracket
+  // Add to patterns array before the closing bracket.
+  // Ensure the previous last entry ends with a comma (some entries don't).
   const arrayCloseIdx = withImport.lastIndexOf('];');
   if (arrayCloseIdx === -1) throw new Error('Could not find patterns array close in patterns.ts');
-  const withEntry = withImport.slice(0, arrayCloseIdx) + `  ${exportName},\n` + withImport.slice(arrayCloseIdx);
+  const before = withImport.slice(0, arrayCloseIdx);
+  const after = withImport.slice(arrayCloseIdx);
+  const beforeTrimmed = before.replace(/,?\s*$/, '');
+  const withEntry = `${beforeTrimmed},\n  ${exportName},\n${after}`;
 
   return withEntry;
 }
