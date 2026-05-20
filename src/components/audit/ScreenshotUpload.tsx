@@ -3,17 +3,35 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ProductType } from '@/types/audit';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
-import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon, ChartBarIcon, ExclamationTriangleIcon, ListBulletIcon } from '@heroicons/react/24/outline';
 import { productOptions } from './productOptions';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 
-const productTypeLabels: Record<ProductType, string> = {
-  'chat-interface': 'conversational AI',
-  'ai-agent': 'agentic products',
-  'recommendation-system': 'recommendation systems',
-  'content-generation': 'content generation tools',
-  other: 'your product type',
-};
+const SAMPLE_SCREENSHOTS: Array<{
+  label: string;
+  fileName: string;
+  src: string;
+  productType: ProductType;
+}> = [
+  {
+    label: 'Claude',
+    fileName: 'claude-sample.webp',
+    src: '/images/examples/claude-constitution.webp',
+    productType: 'chat-interface',
+  },
+  {
+    label: 'ChatGPT',
+    fileName: 'chatgpt-sample.png',
+    src: '/images/examples/chatgpt-limitations.png',
+    productType: 'chat-interface',
+  },
+  {
+    label: 'Copilot',
+    fileName: 'copilot-sample.jpg',
+    src: '/images/examples/github-copilot-offline.jpg',
+    productType: 'chat-interface',
+  },
+];
 
 interface ScreenshotUploadProps {
   productType: ProductType | null;
@@ -123,6 +141,27 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
       }
     });
   }, [showLimitMessage, onProductTypeChange]);
+
+  const loadSample = useCallback(
+    async (sample: typeof SAMPLE_SCREENSHOTS[number]) => {
+      trackAuditEvent('audit_sample_screenshot_clicked', { label: sample.label });
+      try {
+        const res = await fetch(sample.src);
+        if (!res.ok) return;
+        const blob = await res.blob();
+        const file = new File([blob], sample.fileName, { type: blob.type || 'image/png' });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        // Skip auto-classification — sample's productType is known.
+        hasAutoClassifiedRef.current = true;
+        if (!productTypeRef.current) onProductTypeChange(sample.productType);
+        processFiles(dt.files);
+      } catch {
+        /* silent — user can still upload manually */
+      }
+    },
+    [processFiles, onProductTypeChange]
+  );
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -253,6 +292,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
               )}
             </div>
           ) : (
+            <div className="flex-1 flex flex-col gap-4">
             <div
               onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
               onDragLeave={() => setIsDragOver(false)}
@@ -276,12 +316,40 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                 </div>
                 <div>
                   <p className="font-semibold text-text-primary text-base">
-                    {isDragOver ? 'Drop to upload' : 'Drop your screenshot here'}
+                    {isDragOver ? 'Drop to upload' : 'Drop your screenshots here'}
                   </p>
                   <p className="text-sm text-text-secondary mt-1">or click to browse or paste from clipboard</p>
                 </div>
                 <p className="text-xs text-text-tertiary">PNG, JPG, or WebP &middot; up to 4 images &middot; Ctrl+V to paste</p>
               </div>
+            </div>
+
+            {/* Sample screenshots — one-click try for users without a screenshot ready */}
+            <div className="flex-shrink-0">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Or try a sample</span>
+                <span className="flex-1 h-px bg-border-primary" />
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {SAMPLE_SCREENSHOTS.map((sample) => (
+                  <button
+                    key={sample.label}
+                    onClick={() => loadSample(sample)}
+                    className="group relative aspect-[16/10] rounded-lg overflow-hidden border border-border-primary bg-background-primary hover:border-accent-primary hover:shadow-md transition-all cursor-pointer text-left"
+                    aria-label={`Try ${sample.label} sample screenshot`}
+                  >
+                    <img
+                      src={sample.src}
+                      alt=""
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-2 py-1.5">
+                      <span className="text-xs font-semibold text-white">{sample.label}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
             </div>
           )}
         </div>
@@ -289,25 +357,21 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         {/* RIGHT: Product picker + Analyze */}
         <aside className="w-full lg:w-[360px] lg:h-[660px] flex-shrink-0 flex flex-col gap-4 text-left">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-semibold mb-2 text-text-primary">Audit your interface</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2 text-text-primary">Audit your interface</h2>
             <p className="text-text-secondary text-sm">
-              {productType
-                ? <>Upload a screenshot and we&apos;ll check it against the patterns most critical for {productTypeLabels[productType]}.</>
-                : <>Pick your product type and upload a screenshot to get started.</>}
+              Score your design against 36 AI UX patterns.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Product type</p>
-            {isClassifying && (
-              <span className="text-xs text-text-tertiary italic">Detecting…</span>
-            )}
-          </div>
+          {isClassifying && (
+            <span className="text-xs text-text-tertiary italic">Detecting product type…</span>
+          )}
 
-          <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {productOptions.map((option) => {
               const Icon = option.icon;
               const isSelected = productType === option.id;
+              const spanBoth = option.id === 'other';
               return (
                 <button
                   key={option.id}
@@ -315,38 +379,80 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                     trackAuditEvent('audit_product_type_selected', { productType: option.id });
                     onProductTypeChange(option.id);
                   }}
-                  className={`w-full inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all cursor-pointer text-left ${
+                  className={`${spanBoth ? 'col-span-2' : ''} flex flex-col gap-1 px-3 py-2.5 rounded-lg border text-left transition-all cursor-pointer ${
                     isSelected
-                      ? 'border-accent-primary bg-accent-primary text-white dark:text-gray-900'
-                      : 'border-border-primary bg-background-primary text-text-secondary hover:border-accent-primary/50 hover:text-text-primary'
+                      ? 'border-accent-primary bg-accent-primary/5 shadow-sm'
+                      : 'border-border-primary bg-background-primary hover:border-accent-primary/50 hover:bg-background-secondary'
                   }`}
                 >
-                  <Icon className="w-4 h-4 flex-shrink-0" />
-                  <span>{option.label}</span>
+                  <div className="flex items-center gap-2">
+                    <Icon className={`w-5 h-5 flex-shrink-0 ${isSelected ? 'text-accent-primary' : 'text-text-secondary'}`} />
+                    <span className={`text-sm font-semibold ${isSelected ? 'text-text-primary' : 'text-text-primary'}`}>{option.label}</span>
+                  </div>
+                  <span className="text-xs text-text-tertiary leading-snug">{option.desc}</span>
                 </button>
               );
             })}
           </div>
 
-          <div className="mt-auto pt-4">
+          {productType && (
+            <div className="rounded-lg border border-border-primary bg-background-secondary px-3 py-2.5 text-xs text-text-secondary leading-relaxed">
+              <span className="text-text-tertiary">Includes </span>
+              <span className="font-medium text-text-primary">
+                {productOptions.find((o) => o.id === productType)?.examplePatterns.join(', ')}
+              </span>
+              <span className="text-text-tertiary"> + more.</span>
+            </div>
+          )}
+
+          <div className="mt-auto pt-2">
+            {!canAnalyze && (
+              <p className="mb-2 text-xs text-text-tertiary">
+                {!hasImages && !productType
+                  ? 'Add a screenshot and pick a type.'
+                  : !hasImages
+                    ? 'Add a screenshot.'
+                    : 'Pick a type.'}
+              </p>
+            )}
             <button
               onClick={() => canAnalyze && onAnalyze(stagedImages)}
               disabled={!canAnalyze}
-              className="w-full inline-flex items-center justify-center px-6 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
+              className="w-full inline-flex items-center justify-center px-6 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
             >
               {hasImages
                 ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`
                 : 'Analyze'}
             </button>
-            {!canAnalyze && (
-              <p className="mt-2 text-xs text-text-tertiary text-center">
-                {!hasImages && !productType
-                  ? 'Add a screenshot and pick a product type'
-                  : !hasImages
-                    ? 'Add a screenshot to enable analysis'
-                    : 'Pick a product type to enable analysis'}
+
+            <div className="mt-4 rounded-lg border border-border-primary bg-background-primary">
+              <p className="px-3 pt-2.5 pb-2 text-xs font-medium uppercase tracking-wider text-text-tertiary">
+                What you&apos;ll get
               </p>
-            )}
+              <ul className="divide-y divide-border-primary">
+                <li className="flex items-start gap-2.5 px-3 py-2.5">
+                  <ChartBarIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
+                  <div className="text-xs leading-snug">
+                    <span className="font-semibold text-text-primary">Score</span>
+                    <span className="text-text-secondary"> out of applicable patterns</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5 px-3 py-2.5">
+                  <ExclamationTriangleIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
+                  <div className="text-xs leading-snug">
+                    <span className="font-semibold text-text-primary">Top gaps</span>
+                    <span className="text-text-secondary"> and patterns to add</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5 px-3 py-2.5">
+                  <ListBulletIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
+                  <div className="text-xs leading-snug">
+                    <span className="font-semibold text-text-primary">Actions</span>
+                    <span className="text-text-secondary"> you can ship today</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </aside>
       </div>

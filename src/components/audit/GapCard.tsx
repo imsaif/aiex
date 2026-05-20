@@ -51,23 +51,23 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
           </span>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-2">
-            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${config.badge}`}>
-              <Icon className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 flex-wrap mb-3">
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium ${config.badge}`}>
+              <Icon className="w-4 h-4" />
               {config.label}
             </span>
-            <h3 className="font-semibold text-text-primary">{gap.pattern}</h3>
+            <h3 className="text-lg font-semibold text-text-primary">{gap.pattern}</h3>
           </div>
-          <p className="text-sm text-text-secondary leading-relaxed mb-2">{gap.finding}</p>
+          <p className="text-base text-text-secondary leading-relaxed mb-3">{gap.finding}</p>
           {gap.evidence && (
-            <p className="text-xs text-text-tertiary leading-relaxed mb-2 pl-3 border-l-2 border-border-primary italic">
-              <span className="font-semibold not-italic text-text-secondary">What we saw: </span>
+            <p className="text-sm text-text-secondary leading-relaxed mb-3 pl-3 border-l-2 border-border-primary italic">
+              <span className="font-semibold not-italic text-text-primary">What we saw: </span>
               {gap.evidence}
             </p>
           )}
           {gap.recommendation && (
-            <p className="text-sm text-text-secondary leading-relaxed">
-              <span className="font-medium text-text-primary">Fix: </span>
+            <p className="text-base text-text-secondary leading-relaxed">
+              <span className="font-semibold text-text-primary">Fix: </span>
               {gap.recommendation}
             </p>
           )}
@@ -85,7 +85,7 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
                   href={`/patterns/${slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-accent-primary hover:underline"
+                  className="inline-flex items-center gap-1 mt-4 text-base font-medium text-accent-primary hover:underline"
                 >
                   See how {gap.pattern} solves this &rarr;
                 </Link>
@@ -97,7 +97,7 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
                   href={gap.resource}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 mt-3 text-sm font-medium text-accent-primary hover:underline"
+                  className="inline-flex items-center gap-1 mt-4 text-base font-medium text-accent-primary hover:underline"
                 >
                   Learn more about this pattern &rarr;
                 </a>

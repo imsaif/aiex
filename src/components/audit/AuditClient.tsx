@@ -227,7 +227,7 @@ export default function AuditClient({
   const showIntakeBanner = oneRemaining && isIntakeFlow;
 
   return (
-    <div className={isIntakeFlow ? '' : 'min-h-screen'}>
+    <div className={step === 'demo' ? 'min-h-screen' : ''}>
       {/* Rate Limit Modal */}
       {rateLimitError && (
         <UsageLimitModal

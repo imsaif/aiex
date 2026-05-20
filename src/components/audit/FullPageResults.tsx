@@ -12,8 +12,9 @@ import {
   XMarkIcon,
   ArrowPathIcon,
   SparklesIcon,
-  DocumentMagnifyingGlassIcon,
+  CommandLineIcon,
 } from '@heroicons/react/24/outline';
+import { composeHandoffPrompt } from '@/lib/audit/handoff';
 import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
 import { GapCard } from './GapCard';
 import { EmailReportModal } from './EmailReportModal';
@@ -121,7 +122,7 @@ function GapSidePanel({ gap, pinNumber, onClose }: { gap: TopGap; pinNumber: num
             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
               {pinNumber}
             </span>
-            <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">Pattern detected</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary">Pattern detected</p>
           </div>
           <button
             onClick={onClose}
@@ -301,16 +302,11 @@ function EmptyAuditState({
         <div className="bg-background-primary border border-border-primary rounded-2xl p-8 sm:p-12 lg:p-14">
           <div className="grid lg:grid-cols-5 gap-10 lg:gap-12 items-center min-h-[360px]">
             <div className="lg:col-span-3">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent-subtle flex-shrink-0">
-                  <DocumentMagnifyingGlassIcon className="w-7 h-7 text-accent-primary" />
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-bold text-text-primary leading-tight">
-                  This doesn&apos;t look like an AI product surface
-                </h2>
-              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-text-primary leading-tight mb-6">
+                We scanned for 36 AI UX patterns
+              </h2>
               <p className="text-lg text-text-secondary leading-relaxed mb-8">
-                The audit evaluates designs against 36 patterns built for AI products. We didn&apos;t find anything to flag on this screenshot, usually because the surface isn&apos;t showing AI output.
+                These patterns cover behaviors like confidence cues, error recovery, and explainability. None showed up in your screenshot, which usually means the surface isn&apos;t displaying AI output yet.
               </p>
               <div className="flex items-center gap-4 flex-wrap">
                 <button
@@ -480,6 +476,9 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   // Tab + Chat state
   const [activeTab, setActiveTab] = useState<'issues' | 'chat'>('issues');
+  const [showAllQuickWins, setShowAllQuickWins] = useState(false);
+  const [handoffCopied, setHandoffCopied] = useState(false);
+  const [showHandoffSource, setShowHandoffSource] = useState(false);
   const [hasSentOpener, setHasSentOpener] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -874,16 +873,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   }
 
   return (
-    <div className="pb-8 sm:pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
-
-        {/* What we saw — grounds the audit in the actual surface(s) */}
-        {surfaceDescription && (
-          <div className="mb-4 max-w-3xl mx-auto px-4 py-3 rounded-xl bg-background-primary border border-border-primary text-sm text-text-secondary">
-            <p className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-1">What we audited</p>
-            <p>{surfaceDescription}</p>
-          </div>
-        )}
+    <div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-8">
 
         {/* Screenshot canvas + optional chat side panel.
             Both columns have explicit fixed heights on desktop so the row size never changes
@@ -1009,6 +1000,77 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         )}
         </div>
 
+        {/* What we audited + Quick Wins — sits beside the screenshot when chat isn't active */}
+        {activeTab !== 'chat' && (surfaceDescription || quickWins.length > 0 || results.applicablePatterns?.length) && (
+          <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary px-5 py-4 overflow-y-auto max-h-[640px] lg:max-h-none ${
+            heroDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
+          }`}>
+            {(() => {
+              const productLabel: Record<string, string> = {
+                'chat-interface': 'Chat interface',
+                'ai-agent': 'AI agent',
+                'recommendation-system': 'Recommendations',
+                'content-generation': 'Content generation',
+                other: 'AI product',
+              };
+              const productType = results.productContext?.productType;
+              const facts: Array<{ label: string; value: string }> = [];
+              if (productType) facts.push({ label: 'Surface', value: productLabel[productType] || productType });
+              facts.push({ label: 'Device', value: heroDeviceType === 'mobile' ? 'Mobile' : 'Desktop' });
+              if (allScreenshots.length > 0) facts.push({ label: 'Screenshots', value: String(allScreenshots.length) });
+              if (results.applicablePatterns?.length) facts.push({ label: 'Applicable patterns', value: `${results.applicablePatterns.length} of 36` });
+              if (issues.length > 0) facts.push({ label: 'Gaps found', value: String(issues.length) });
+              return (
+                <div className={(surfaceDescription || quickWins.length > 0) ? 'pb-4 mb-4 border-b border-border-primary' : ''}>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3">What we audited</p>
+                  <dl className="rounded-lg border border-border-primary bg-background-secondary divide-y divide-border-primary mb-3">
+                    {facts.map((f) => (
+                      <div key={f.label} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
+                        <dt className="text-sm text-text-secondary">{f.label}</dt>
+                        <dd className="text-base font-semibold text-text-primary text-right truncate">{f.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {surfaceDescription && (
+                    <p className="text-sm text-text-secondary leading-relaxed line-clamp-4">{surfaceDescription}</p>
+                  )}
+                </div>
+              );
+            })()}
+            {quickWins.length > 0 && (() => {
+              const QUICK_WINS_CAP = 4;
+              const visibleWins = showAllQuickWins ? quickWins : quickWins.slice(0, QUICK_WINS_CAP);
+              const hiddenCount = quickWins.length - QUICK_WINS_CAP;
+              return (
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3 flex items-center gap-1.5">
+                    <LightBulbIcon className="w-4 h-4 text-amber-500" />
+                    Quick Wins
+                  </p>
+                  <ul className="space-y-3">
+                    {visibleWins.map((win, i) => (
+                      <li key={i} className="flex gap-2.5 text-sm">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xs font-semibold">
+                          {i + 1}
+                        </span>
+                        <span className="text-text-secondary leading-relaxed line-clamp-3">{win}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {hiddenCount > 0 && (
+                    <button
+                      onClick={() => setShowAllQuickWins((v) => !v)}
+                      className="mt-3 text-sm font-medium text-accent-primary hover:text-accent-hover cursor-pointer"
+                    >
+                      {showAllQuickWins ? 'Show fewer' : `+ ${hiddenCount} more`}
+                    </button>
+                  )}
+                </div>
+              );
+            })()}
+          </aside>
+        )}
+
         {/* In-flow chat side panel — sits next to the screenshot */}
         {activeTab === 'chat' && (
           <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary shadow-sm flex flex-col overflow-hidden min-h-0 ${
@@ -1094,8 +1156,84 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         </div>
         {/* /flex-row screenshot+chat wrapper */}
 
+        {/* Consolidated handoff — one prompt the user pastes into Claude Code / Cursor */}
+        {issues.length > 0 && (() => {
+          const handoffPrompt = composeHandoffPrompt({
+            surfaceDescription,
+            productType: results.productContext?.productType,
+            gaps: issues,
+          });
+          const handleCopyHandoff = async () => {
+            try {
+              if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(handoffPrompt);
+              } else {
+                const ta = document.createElement('textarea');
+                ta.value = handoffPrompt;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+              }
+              trackAuditEvent('audit_handoff_copied', { gapCount: issues.length });
+              setHandoffCopied(true);
+              setTimeout(() => setHandoffCopied(false), 2000);
+            } catch {
+              /* swallow — clipboard can fail in private browsing; user can still copy from disclosure */
+            }
+          };
+          return (
+            <section className="mt-8">
+              <div className="rounded-2xl border border-border-primary bg-background-primary p-6 sm:p-10">
+                <p className="text-sm font-semibold uppercase tracking-wider text-accent-primary mb-2">Apply with Claude Code</p>
+                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary mb-2">Take this to your IDE</h2>
+                <p className="text-base text-text-secondary leading-relaxed mb-5">
+                  Paste this into Claude Code or Cursor. It will find the affected surfaces in your repo, apply each of the {issues.length} pattern{issues.length === 1 ? '' : 's'} in the right files, and report back what changed.
+                </p>
+                <button
+                  onClick={handleCopyHandoff}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
+                >
+                  {handoffCopied ? (
+                    <>
+                      <CheckCircleIcon className="w-5 h-5" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <CommandLineIcon className="w-5 h-5" />
+                      Copy handoff prompt
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setShowHandoffSource((v) => !v)}
+                  aria-expanded={showHandoffSource}
+                  className="ml-3 sm:ml-4 inline-flex items-center gap-1.5 text-base font-medium text-text-secondary hover:text-text-primary cursor-pointer"
+                >
+                  <ChevronDownIcon className={`w-4 h-4 transition-transform ${showHandoffSource ? 'rotate-180' : ''}`} />
+                  {showHandoffSource ? 'Hide' : 'Inspect'}
+                </button>
+                {showHandoffSource && (
+                  <div className="mt-3 rounded-lg border border-border-primary bg-background-secondary p-4 max-h-96 overflow-y-auto">
+                    <pre className="text-sm font-mono whitespace-pre-wrap text-text-secondary leading-relaxed">{handoffPrompt}</pre>
+                  </div>
+                )}
+                <div className="mt-6 pt-5 border-t border-border-primary">
+                  <p className="text-base text-text-primary font-semibold mb-1">
+                    Audit every time you ship.
+                  </p>
+                  <p className="text-sm text-text-secondary leading-relaxed">
+                    Catch AI slop before your users do. Re-run after each change to keep your interface honest.
+                  </p>
+                </div>
+              </div>
+            </section>
+          );
+        })()}
+
         {/* CTAs */}
-        <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center max-w-2xl mx-auto">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-2xl mx-auto">
           <button
             onClick={() => setShowEmailModal(true)}
             className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
@@ -1126,27 +1264,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           </button>
         </div>
 
-        {/* Quick Wins */}
-        {quickWins.length > 0 && (
-          <section className="mt-10 sm:mt-12 max-w-3xl mx-auto">
-            <h2 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-              <LightBulbIcon className="w-5 h-5 text-amber-500" />
-              Quick Wins
-            </h2>
-            <div className="rounded-xl border border-border-primary bg-background-primary p-5">
-              <ul className="space-y-3">
-                {quickWins.map((win, i) => (
-                  <li key={i} className="flex gap-3 text-sm">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xs font-semibold">
-                      {i + 1}
-                    </span>
-                    <span className="text-text-secondary leading-relaxed">{win}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
       </div>
 
       {showEmailModal && (
