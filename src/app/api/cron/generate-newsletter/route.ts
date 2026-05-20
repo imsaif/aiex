@@ -1314,6 +1314,10 @@ function renderDarkCallout(opts: {
 </div>`.trim();
 }
 
+function auditUrl(campaign: string): string {
+  return `${SITE_URL}/?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
+}
+
 function renderFooterCTA(type: NewsletterType): string {
   const wordmark = type === 'weekly' ? 'AI UX WEEKLY' : 'AI UX DAILY';
   return `
@@ -1339,7 +1343,7 @@ function renderAnnouncementBanner(): string {
     <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Three things new at aiuxdesign.guide</p>
     <h2 style="margin: 0 0 24px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.3;">Free AI UX audit, Courses, and a dedicated Patterns page</h2>
 
-    <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.65; color: ${EMAIL_TEXT};"><strong style="color: ${EMAIL_INK};">1. Free AI UX audit on the homepage.</strong> Paste a screenshot of any AI interface, drop your email, and get pattern-grounded findings instantly. <a href="${SITE_URL}/" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Try the audit →</a></p>
+    <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.65; color: ${EMAIL_TEXT};"><strong style="color: ${EMAIL_INK};">1. Free AI UX audit on the homepage.</strong> Paste a screenshot of any AI interface, drop your email, and get pattern-grounded findings instantly. <a href="${auditUrl('daily-banner')}" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Try the audit →</a></p>
 
     <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.65; color: ${EMAIL_TEXT};"><strong style="color: ${EMAIL_INK};">2. Guides are now Courses.</strong> The Claude Code Course gets updated every time Anthropic ships — same goes for Cursor, GitHub Copilot, and Claude Design. <a href="${SITE_URL}/guides" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Browse all courses →</a></p>
 
