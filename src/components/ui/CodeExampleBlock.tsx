@@ -523,6 +523,12 @@ interface CodeExampleBlockProps {
   componentId: string;
 }
 
+import { scaffoldedDemos } from '@/components/examples/scaffolded/registry';
+
+const REGISTERED_DEMOS = new Set([
+  'contextual-assistance-editor','human-in-the-loop-moderation','progressive-disclosure-email','progressive-disclosure-email-demo','conversational-ui-bot','conversational-ui-guided','confidence-indicator','adaptive-dashboard','adaptive-learning','multimodal-search','guided-learning-tutorial','augmented-creation-demo','responsible-ai-design-demo','error-recovery-demo','collaborative-ai-demo','ambient-intelligence-demo','safe-exploration-demo','explainable-ai-demo','predictive-anticipation-demo','confidence-visualization-demo','selective-memory-demo','feedback-loops-demo','graceful-handoff-demo','context-switching-demo','intelligent-caching-demo','privacy-first-design-demo','progressive-enhancement-demo','universal-access-patterns-demo','crisis-detection-escalation-demo','multi-layer-crisis-detection','session-degradation-prevention-example-0','anti-manipulation-safeguards-demo','VulnerableUserProtectionDemo','autonomy-spectrum-demo','intent-preview-demo','plan-summary-demo','action-audit-trail-demo','escalation-pathways-demo','trust-calibration-demo','mixed-initiative-control-demo','agent-status-monitoring-demo',
+]);
+
 export default function CodeExampleBlock({
   code,
   language,
@@ -530,7 +536,9 @@ export default function CodeExampleBlock({
   description,
   componentId,
 }: CodeExampleBlockProps) {
-  const [showCode, setShowCode] = useState(false);
+  const ScaffoldedDemo = scaffoldedDemos[componentId];
+  const hasLivePreview = REGISTERED_DEMOS.has(componentId) || !!ScaffoldedDemo;
+  const [showCode, setShowCode] = useState(!hasLivePreview);
   const [componentLoaded, setComponentLoaded] = useState(false);
 
   useEffect(() => {
@@ -622,6 +630,9 @@ export default function CodeExampleBlock({
       case 'agent-status-monitoring-demo':
         return <AgentStatusMonitoringDemo />;
       default:
+        if (ScaffoldedDemo) {
+          return <ScaffoldedDemo />;
+        }
         return (
           <div className="flex items-center justify-center h-64 text-text-tertiary">
             <div className="text-center">
@@ -647,7 +658,7 @@ export default function CodeExampleBlock({
       {/* Content area with toggle */}
       <div className="relative">
         {/* Segmented Control Header */}
-        <div className="flex justify-center p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className={`${hasLivePreview ? 'flex' : 'hidden'} justify-center p-4 border-b border-gray-200 dark:border-gray-700`}>
           <div className="inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 p-1">
             {/* Preview Button */}
             <button
@@ -707,7 +718,7 @@ export default function CodeExampleBlock({
           </>
         ) : (
           /* Live Preview */
-          <div className="p-6 flex justify-center min-h-[400px]">
+          <div className={`p-6 flex justify-center ${ScaffoldedDemo ? '' : 'min-h-[400px]'}`}>
             <div className={`w-full ${
               // Components that need full width (max-w-6xl)
               ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo', 'autonomy-spectrum-demo', 'conversational-ui-guided'].includes(componentId)
@@ -721,6 +732,9 @@ export default function CodeExampleBlock({
                 // Components that need medium width (max-w-2xl)
                 : ['session-degradation-prevention-example-0', 'anti-manipulation-safeguards-demo'].includes(componentId)
                 ? 'max-w-2xl'
+                // Scaffolded demos default to max-w-4xl to match the dominant existing pattern
+                : ScaffoldedDemo
+                ? 'max-w-4xl'
                 // Default to medium width for smaller components
                 : 'max-w-lg'
             }`}>
@@ -734,9 +748,11 @@ export default function CodeExampleBlock({
         )}
 
         {/* Footer Note */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
-          <p>{showCode ? 'Toggle to preview mode to see the interactive demo.' : 'Toggle to code view to see the implementation details.'}</p>
-        </div>
+        {hasLivePreview && (
+          <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
+            <p>{showCode ? 'Toggle to preview mode to see the interactive demo.' : 'Toggle to code view to see the implementation details.'}</p>
+          </div>
+        )}
       </div>
     </div>
   );

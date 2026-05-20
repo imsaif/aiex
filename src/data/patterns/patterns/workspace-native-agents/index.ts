@@ -9,26 +9,23 @@ export const workspaceNativeAgents: Pattern = {
   title: "Workspace-Native Agent Integration",
   slug: "workspace-native-agents",
   status: 'implemented',
-  description: "Embed AI agent capabilities directly into the native workspace interface where users already work, making agents feel like natural extensions of existing workflows rather than separate destinations.",
-  category: "Natural Interaction",
+  description: "Embed AI capabilities inside existing tools so users never leave their working context to get help.",
+  category: "Human-AI Collaboration",
   tags: [
-    "agent-integration",
-    "workspace",
-    "embedded-ai",
-    "developer-tools",
-    "design-tools",
-    "adoption",
-    "in-context",
-    "natural-interaction"
+    "Human-AI Collaboration",
+    "Workflow Integration",
+    "Embedded AI",
+    "Context Preservation",
+    "Agent Design"
   ],
   thumbnail: "/images/patterns/placeholder.png",
-  introduction: "When AI agents live outside the tools people already use, adoption dies at the door. Users don't want to copy-paste between their IDE and a chat window, or leave Figma to describe a design problem to an external assistant. Workspace-native integration means the agent's controls, outputs, and feedback appear exactly where the work is happening—inline in the editor, as a panel in the design tool, or as a command in the application's own command palette.\n\nThe pattern is about architectural placement, not just visual proximity. Figma's image generation lives inside the canvas workflow. GitHub Copilot appears as inline suggestions in the editor buffer. SketchUp's Claude integration responds to spatial context from the 3D viewport. In each case, the agent has access to the workspace's data model and can write back to it directly—no copy-paste, no context-switch, no separate destination.\n\nThe payoff is compounding: when agents are native, users discover them through existing habits rather than needing to form new ones. The learning curve collapses because the interaction vocabulary is already familiar. And because the agent can read and write the workspace's actual state, its outputs are immediately actionable rather than advisory.",
+  introduction: "Workspace-native integration means the agent lives where the work happens, not in a separate tab. The moment users must switch interfaces to access AI, you've added friction that compounds every single time they need it.",
   datePublished: "2026-05-20",
   dateModified: "2026-05-20",
   hideFAQ: true,
   content: {
-    problem: "AI agents are often bolted onto existing tools as separate chat interfaces or external services, forcing users to context-switch between their primary workspace and the AI assistant. This breaks flow and creates friction in adoption.",
-    solution: "Embed AI agent capabilities directly into the native workspace interface where users already work—whether that's design tools, IDEs, or business applications. Agents should feel like natural extensions of existing workflows rather than separate destinations, with controls and outputs appearing in-context.",
+    problem: "AI agents are being added to existing professional tools but feel like separate tools, creating context-switching overhead.",
+    solution: "Embed AI capabilities directly into existing workflow contexts where users already work, rather than requiring switch to separate interfaces.",
     examples: [],
     guidelines,
     considerations,
@@ -37,36 +34,34 @@ export const workspaceNativeAgents: Pattern = {
     figmaPrompt,
     judgmentCall: {
         "explainWhen": [
-            "Users spend the majority of their working time in a single tool (IDE, design app, spreadsheet) and the AI task is directly related to work happening there.",
-            "The agent needs to read from or write to the workspace's data model to be useful—advisory-only agents that can't act on the workspace gain little from native embedding.",
-            "Adoption is blocked by context-switching friction, not by lack of awareness of the AI capability.",
-            "The host application has a mature, stable plugin or extension API that supports the required level of integration."
+            "The user's primary task is document, code, or message creation inside an established tool.",
+            "Context-switching to a separate AI tool would require re-explaining work already visible on screen.",
+            "The team has a stable, shared workflow the agent can attach to without retraining habits."
         ],
         "dontWhen": [
-            "The AI task spans multiple tools or requires a broad research/conversation phase that doesn't map to any single workspace.",
-            "The host application's extension API is too limited to give the agent meaningful workspace context or write-back capability.",
-            "Users are already comfortable with a separate AI tool and the integration would add UI clutter without reducing friction.",
-            "The agent's outputs are long-form documents or reports that are better consumed outside the workspace than inline."
+            "The AI task is exploratory research with no clear home in an existing workspace surface.",
+            "The tool's interface is already overloaded and adding inline AI creates visual noise.",
+            "Users are early in adoption and need a contained space to experiment without affecting live work."
         ],
-        "trap": "Building a chat panel docked to the side of the workspace and calling it 'native integration.' A side panel that doesn't read workspace state or write back to it is just a reframed context-switch—users still have to manually bridge the gap between the AI's output and their actual work."
+        "trap": "Shallow embedding: a floating chat button bolted onto an existing tool. It looks native but forces the same context switch. Real integration means the agent reads and writes to the artifact the user is already touching."
     },
-    installPrompt: "I want to implement a workspace-native AI agent integration in this codebase. Please analyze the existing application structure and implement the following:\n\n1. AUDIT EXISTING ENTRY POINTS\n   - Find the application's command palette, context menus, toolbar, and keyboard shortcut registry\n   - Identify where new commands can be registered without adding new navigation destinations\n   - Note the application's undo/redo or history management system\n\n2. CREATE AN AGENT CONTEXT PROVIDER\n   - Build a WorkspaceAgentContext that captures: current selection/cursor position, active file or document, visible viewport content, and user's recent actions\n   - Implement a getWorkspaceContext() function that returns the tightest relevant scope first (selection > open file > project)\n   - Add a writeBackToWorkspace(agentOutput, targetLocation) function that applies agent results directly to the workspace data model\n\n3. REGISTER NATIVE ENTRY POINTS\n   - Add an 'Ask AI' command to the existing command palette with keyboard shortcut (Cmd+Shift+K or equivalent)\n   - Add context-sensitive agent actions to right-click/context menus based on what's selected (e.g., 'Explain this', 'Refactor this', 'Generate from this')\n   - If there's a toolbar, add a single agent icon that opens an inline popover (not a new page or modal)\n\n4. BUILD THE INLINE INTERACTION COMPONENT\n   - Create an InlineAgentPopover component that appears anchored to the current selection or cursor position\n   - The popover should show: a text input for the user's request, the detected workspace context (with a 'expand context' toggle), and streaming response output\n   - Response output should include an 'Apply' button that calls writeBackToWorkspace() and an 'Insert at cursor' option\n   - Match the host application's existing component library for all UI elements\n\n5. INTEGRATE WITH UNDO/REDO\n   - Wrap all writeBackToWorkspace() calls in the application's existing history/transaction API\n   - Ensure agent edits appear in the undo stack as a single named action (e.g., 'AI: Refactor function')\n   - If no history API exists, implement a simple action stack with Cmd+Z support\n\n6. ADD PROVENANCE MARKERS\n   - Tag all AI-generated content with a lightweight metadata marker (comment, attribute, or annotation depending on the content type)\n   - Add a workspace-level toggle to show/hide AI provenance highlights\n\nUse the existing tech stack and component patterns. Do not introduce a new routing destination or full-page AI view. All agent interactions should be completable without leaving the current workspace context.",
+    installPrompt: "Audit your product for workspace-native agent integration gaps.\n\nApply these moves:\n\n1. List every surface where users create or edit artifacts. Mark which surfaces currently require leaving to access AI assistance.\n2. For each surface, identify the closest trigger point: selection, pause, command shortcut. Note whether the agent can read the artifact's current state without user re-input.\n3. Check where agent output currently lands. Flag any output that appears outside the artifact being edited.\n4. Review dismissal paths. Flag any agent interaction that blocks task continuation until resolved.\n\nAvoid flagging surfaces where the task is exploratory or has no stable artifact to attach to, forced embedding there creates noise, not value.\n\nOutput: a Markdown report listing surfaces updated and surfaces flagged.",
     takeaways: [
         {
-            "heading": "Write back to the workspace data model, not just to a text output",
-            "body": "The defining difference between a native agent and a docked chat window is whether the agent can directly modify the workspace state. If users have to copy the agent's output and paste it into their work, you haven't solved the context-switch problem—you've just moved it one step later. Prioritize write-back capability above all other integration features."
+            "heading": "Anchor the agent to the artifact, not the app.",
+            "body": "The agent should act on the document, ticket, or message in focus. If it can't see what the user sees, it's just another chatbot with extra steps."
         },
         {
-            "heading": "Hook into existing entry points before adding new UI",
-            "body": "Command palettes, right-click menus, and keyboard shortcuts are already part of the user's muscle memory. Registering agent actions in these existing affordances means users discover the capability through habits they already have, not through onboarding flows they'll skip. Add new UI only when no existing affordance fits."
+            "heading": "Make invocation zero-cost or automatic.",
+            "body": "Every required click to summon the agent is a reason not to use it. Trigger on selection, on pause, or on explicit shortcut, never on navigation."
         },
         {
-            "heading": "Respect undo/redo as a non-negotiable contract",
-            "body": "Users trust a tool when they know they can reverse any action. If agent edits bypass the workspace's undo stack, users will treat the agent as dangerous and avoid it for anything consequential. Integrate with the host app's history API from day one—retrofitting this later is significantly harder."
+            "heading": "Output must land where the work lands.",
+            "body": "Suggestions shown in a side panel get ignored. Output inserted inline, into the actual artifact, gets used. Place the result where the cursor already is."
         },
         {
-            "heading": "Scope context to the selection before the whole project",
-            "body": "Agents that always send the entire project as context are slow and often less accurate than agents that start with what's selected or visible. Default to the tightest relevant scope—current selection, open file, active component—and expand only when the user explicitly asks for broader context. This also keeps latency low, which is critical for in-flow interactions."
+            "heading": "Let users ignore the agent without penalty.",
+            "body": "Inline AI that demands resolution before the user can continue is a blocker, not a collaborator. Dismiss must always be one key or zero clicks."
         }
     ],
   },

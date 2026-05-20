@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { scaffoldPattern, patchPatternsRegistry } from '@/lib/agents/pattern-intel/scaffolder';
+import { scaffoldPattern, patchPatternsRegistry, patchScaffoldedRegistry } from '@/lib/agents/pattern-intel/scaffolder';
 import { commitPatternFiles } from '@/lib/github';
 
 type Kind = 'match' | 'example' | 'candidate';
@@ -13,11 +13,11 @@ interface Body {
   action: Action;
 }
 
-async function fetchPatternsRegistryFromGitHub(): Promise<{ content: string; sha: string }> {
+async function fetchFileFromGitHub(path: string): Promise<{ content: string; sha: string }> {
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error('GITHUB_TOKEN not set');
   const res = await fetch(
-    'https://api.github.com/repos/imsaif/aiex/contents/src/data/patterns.ts?ref=master',
+    `https://api.github.com/repos/imsaif/aiex/contents/${path}?ref=master`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -26,7 +26,7 @@ async function fetchPatternsRegistryFromGitHub(): Promise<{ content: string; sha
       },
     },
   );
-  if (!res.ok) throw new Error(`GitHub fetch patterns.ts failed: ${res.status}`);
+  if (!res.ok) throw new Error(`GitHub fetch ${path} failed: ${res.status}`);
   const data = await res.json() as { content: string; sha: string };
   return {
     content: Buffer.from(data.content, 'base64').toString('utf-8'),
@@ -108,18 +108,22 @@ export async function POST(
         rationale: candidate.rationale,
       });
 
-      // Patch patterns.ts
-      const { content: registryContent } = await fetchPatternsRegistryFromGitHub();
-      const patchedRegistry = patchPatternsRegistry(
-        registryContent,
+      // Patch patterns.ts + scaffolded demo registry in parallel
+      const [{ content: patternsContent }, { content: scaffoldedRegContent }] = await Promise.all([
+        fetchFileFromGitHub('src/data/patterns.ts'),
+        fetchFileFromGitHub('src/components/examples/scaffolded/registry.ts'),
+      ]);
+      const patchedPatterns = patchPatternsRegistry(
+        patternsContent,
         candidate.proposedSlug,
         scaffold.exportName,
       );
+      const patchedScaffoldedReg = patchScaffoldedRegistry(scaffoldedRegContent, scaffold.demoSlug);
 
-      // Commit everything to GitHub
       const allFiles = {
         ...scaffold.files,
-        'src/data/patterns.ts': patchedRegistry,
+        'src/data/patterns.ts': patchedPatterns,
+        'src/components/examples/scaffolded/registry.ts': patchedScaffoldedReg,
       };
       await commitPatternFiles(allFiles, candidate.proposedTitle);
 
