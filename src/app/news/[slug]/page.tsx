@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { unstable_noStore as noStore } from 'next/cache';
 import {
   getNewsletterBySlug,
   getNewsletters,
@@ -29,11 +30,18 @@ async function getNewsletterFromDb(slug: string): Promise<Newsletter | undefined
       where: { slug, status: 'published' },
     });
   } catch (error) {
-    if (process.env.NEXT_PHASE === 'phase-production-build') {
-      console.warn(`[News slug] Prisma error during BUILD for ${slug} — falling back. ISR will render at runtime.`, error);
-      return undefined;
+    // Opt out of caching so a transient Prisma error doesn't poison the ISR
+    // cache (would otherwise serve a cached 404 OR 500 for the full
+    // s-maxage=3600 window). noStore() marks this request as dynamic; the
+    // next request retries against the DB. Same intent as the May 19 hardening
+    // — surface the issue without trapping the user behind a cached error.
+    if (process.env.NEXT_PHASE !== 'phase-production-build') {
+      noStore();
+      console.error(`[News slug] Runtime Prisma error for ${slug} — opting out of cache:`, error);
+    } else {
+      console.warn(`[News slug] Prisma error during BUILD for ${slug} — falling back.`, error);
     }
-    throw error;
+    return undefined;
   }
 
   if (!draft) return undefined;

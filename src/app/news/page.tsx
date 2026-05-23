@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { unstable_noStore as noStore } from 'next/cache';
 import { getNewsletters, getAllTags } from '@/data/newsletters';
 import { prisma } from '@/lib/prisma';
 import NewsClient from './news-client';
@@ -80,19 +81,20 @@ async function getPublishedDrafts(): Promise<Newsletter[]> {
       type: (draft.type as 'daily' | 'weekly') || 'daily',
     }));
   } catch (error) {
-    // Build-time vs runtime: during `next build` there is no last-good cache
-    // to preserve, so throwing here just kills the deploy when Neon is
-    // transiently unreachable (observed May 23 2026: ap-southeast-1 hiccup
-    // blocked an unrelated deploy). Fail soft during build — ISR will
-    // regenerate this page on the first runtime request when the DB recovers.
-    // At runtime we still throw so ISR keeps the last-good prerender instead
-    // of overwriting it with a degraded empty page.
-    if (process.env.NEXT_PHASE === 'phase-production-build') {
-      console.warn('[News] Prisma error during BUILD — falling back to static-only render. ISR will rehydrate at runtime.', error);
-      return [];
+    // Opt out of caching at runtime so a Prisma flake doesn't cache an empty
+    // (or 500) response. The next request retries the DB. Throwing here is
+    // wrong: it produces a cacheable 500 because Vercel caches ISR error
+    // responses per cache-control headers, and for first-request slugs there
+    // is no last-good prerender to preserve.
+    // Build-time: fall back to static-only so the build can complete; runtime
+    // ISR rehydrates on first request.
+    if (process.env.NEXT_PHASE !== 'phase-production-build') {
+      noStore();
+      console.error('[News] Runtime Prisma error — opting out of cache, returning empty until next request:', error);
+    } else {
+      console.warn('[News] Prisma error during BUILD — falling back to static-only render.', error);
     }
-    console.error('[News] CRITICAL: Failed to fetch published drafts. Re-throwing so ISR keeps the last-good cache.', error);
-    throw error;
+    return [];
   }
 }
 
