@@ -80,14 +80,17 @@ async function getPublishedDrafts(): Promise<Newsletter[]> {
       type: (draft.type as 'daily' | 'weekly') || 'daily',
     }));
   } catch (error) {
-    // Do NOT swallow + return []. ISR (`revalidate = 60`) caches whatever this
-    // function returns; on transient Prisma/Neon failures the empty array
-    // becomes the cached page, leaving /news showing only the two static
-    // fallback newsletters until the next successful revalidation. Re-throwing
-    // makes Next.js keep serving the last-known-good prerender instead of
-    // overwriting it with degraded content. See CLAUDE.md → Known Issues →
-    // "News page silently falls back to static newsletters" for the incident
-    // history.
+    // Build-time vs runtime: during `next build` there is no last-good cache
+    // to preserve, so throwing here just kills the deploy when Neon is
+    // transiently unreachable (observed May 23 2026: ap-southeast-1 hiccup
+    // blocked an unrelated deploy). Fail soft during build — ISR will
+    // regenerate this page on the first runtime request when the DB recovers.
+    // At runtime we still throw so ISR keeps the last-good prerender instead
+    // of overwriting it with a degraded empty page.
+    if (process.env.NEXT_PHASE === 'phase-production-build') {
+      console.warn('[News] Prisma error during BUILD — falling back to static-only render. ISR will rehydrate at runtime.', error);
+      return [];
+    }
     console.error('[News] CRITICAL: Failed to fetch published drafts. Re-throwing so ISR keeps the last-good cache.', error);
     throw error;
   }
@@ -108,7 +111,7 @@ export default async function NewsPage() {
   // Throw here so ISR keeps the last-known-good prerender and the error
   // surfaces in Vercel logs. Skip the assertion only in true local dev
   // (no Vercel env set) so a missing local DATABASE_URL doesn't block work.
-  if (dbNewsletters.length === 0 && process.env.VERCEL_ENV) {
+  if (dbNewsletters.length === 0 && process.env.VERCEL_ENV && process.env.NEXT_PHASE !== 'phase-production-build') {
     throw new Error(
       '[News] CRITICAL: getPublishedDrafts() returned 0 rows in a Vercel env. ' +
       'Aborting render so ISR keeps the last-good cache. Check Prisma/Neon connectivity, ' +
