@@ -19,26 +19,26 @@ export const revalidate = 3600; // ISR: revalidate every hour
 export const dynamicParams = true; // Allow DB-only slugs to render on-demand
 
 async function getNewsletterFromDb(slug: string): Promise<Newsletter | undefined> {
-  // Do NOT catch Prisma errors here. A transient DB failure must throw so
-  // Next's ISR retains the last-known-good prerender instead of caching
-  // notFound() for the full revalidate window. Same lesson as the May 19
-  // /news index fix — see CLAUDE.md → Known Issues → static-fallback.
-  const draft = await prisma.newsletterDraft.findFirst({
-    where: { slug, status: 'published' },
-  });
+  try {
+    const draft = await prisma.newsletterDraft.findFirst({
+      where: { slug, status: 'published' },
+    });
 
-  if (!draft) return undefined;
+    if (!draft) return undefined;
 
-  return {
-    id: draft.id,
-    title: draft.title,
-    slug: draft.slug,
-    summary: draft.summary,
-    content: draft.content,
-    publishedAt: draft.publishDate.toISOString().split('T')[0],
-    published: true,
-    tags: defaultTags.filter((t) => t.slug === 'ai-design' || t.slug === 'ux-patterns'),
-  };
+    return {
+      id: draft.id,
+      title: draft.title,
+      slug: draft.slug,
+      summary: draft.summary,
+      content: draft.content,
+      publishedAt: draft.publishDate.toISOString().split('T')[0],
+      published: true,
+      tags: defaultTags.filter((t) => t.slug === 'ai-design' || t.slug === 'ux-patterns'),
+    };
+  } catch {
+    return undefined;
+  }
 }
 
 export function generateStaticParams() {
