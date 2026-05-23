@@ -17,10 +17,12 @@ export const metadata: Metadata = {
   },
 };
 
-// ISR with a short TTL + on-demand revalidatePath('/news') in publish/route.ts.
-// force-dynamic killed the edge cache and caused LCP >4.5s; a 60s TTL serves
-// cached HTML while admin publishes still propagate immediately via revalidatePath.
-export const revalidate = 60;
+// ISR with a long TTL + on-demand revalidatePath('/news') in publish/route.ts.
+// Bumped 60s → 3600s on 2026-05-23: a 60s TTL meant ISR regen fired every minute
+// on any active page, which kept the Neon compute permanently awake and blew the
+// 100 CU-hr free tier within the month. Publishing via the admin route still
+// triggers immediate revalidation, so editorial updates don't wait the full hour.
+export const revalidate = 3600;
 
 const PRODUCT_KEYWORDS: Record<string, string[]> = {
   'ChatGPT': ['ChatGPT'],

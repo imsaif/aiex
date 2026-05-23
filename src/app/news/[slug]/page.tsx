@@ -15,7 +15,11 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 3600; // ISR: revalidate every hour
+// Bumped 3600s → 86400s on 2026-05-23 for compute-cost reduction. Newsletter
+// slug content is immutable once published; daily background regen is plenty.
+// The publish route calls revalidatePath(`/news/${slug}`) so editorial updates
+// don't wait the full 24h.
+export const revalidate = 86400; // ISR: revalidate daily
 export const dynamicParams = true; // Allow DB-only slugs to render on-demand
 
 async function getNewsletterFromDb(slug: string): Promise<Newsletter | undefined> {
