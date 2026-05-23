@@ -137,6 +137,34 @@ export async function GET(request: NextRequest) {
     console.error('[watchdog] /news render check threw — non-fatal, continuing:', err);
   }
 
+  // Step 0b: Spot-check that the most recent published newsletter actually
+  // renders. Catches the "ISR cached notFound() after a transient Prisma
+  // error" failure mode on /news/[slug] — DB has the row but the page is 404.
+  try {
+    const latest = await prisma.newsletterDraft.findFirst({
+      where: { status: 'published' },
+      orderBy: { publishDate: 'desc' },
+      select: { slug: true, title: true },
+    });
+    if (latest) {
+      const slugRes = await fetch(`${SITE_URL}/news/${latest.slug}`, { cache: 'no-store' });
+      if (slugRes.status === 404) {
+        const result: WatchdogResult = {
+          status: 'failed',
+          type,
+          checkedAt: now,
+          message: `/news/${latest.slug} returned 404 but DB row exists ("${latest.title}"). ISR likely cached notFound() after a transient Prisma error. Redeploy or wait ${'$'}{revalidate} to recover.`,
+        };
+        console.error(`[watchdog] slug spot-check FAILED — ${latest.slug} is 404 with DB row present`);
+        await sendWatchdogAlert(result);
+        return NextResponse.json(result);
+      }
+      console.log(`[watchdog] slug spot-check OK — /news/${latest.slug} → ${slugRes.status}`);
+    }
+  } catch (err) {
+    console.error('[watchdog] slug spot-check threw — non-fatal, continuing:', err);
+  }
+
   // Step 1: Check if today's newsletter exists
   const existing = await findTodaysNewsletter(type);
 
