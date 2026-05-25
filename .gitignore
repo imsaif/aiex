@@ -27,6 +27,7 @@ next-env.d.ts
 **/__tests__/
 **/*.test.*
 **/*.spec.*
+!e2e/**/*.spec.ts
 **/*.snap
 jest.setup.js
 jest.config.js
@@ -98,6 +99,8 @@ tasks/
 
 # Test results
 test-results/
+playwright-report/
+playwright/.cache/
 
 # Audit-tool eval runs (regenerated per run; not checked in)
 tests/audit-evals/last-run.json

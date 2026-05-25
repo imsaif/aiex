@@ -5,6 +5,7 @@ import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
 import { parseAnalysisResponse } from '@/lib/audit/parseAnalysis';
 import { recordAuditSample } from '@/lib/audit/sample';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
+import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 
@@ -43,6 +44,25 @@ export async function POST(request: NextRequest) {
     }
   } catch {
     // Cookie parse failure shouldn't break the analyze path.
+  }
+
+  // E2E_MODE short-circuit — Playwright specs hit this branch so they don't
+  // call Anthropic or burn API spend. Header picks scenario; default is
+  // "success" (gaps present). Keep before rate-limit + body parse so tests
+  // never see flake from limiter state.
+  if (isE2EMode()) {
+    try {
+      const body = await request.json().catch(() => ({} as Record<string, unknown>));
+      const scenario = pickScenario(request.headers.get('x-e2e-scenario'));
+      const images = (body as { images?: unknown[] }).images;
+      const imageCount = Array.isArray(images) && images.length > 0 ? images.length : 1;
+      const productType = ((body as { productType?: string }).productType ?? null) as
+        | import('@/types/audit').ProductType
+        | null;
+      return NextResponse.json(buildMockResponse({ scenario, productType, imageCount }));
+    } catch {
+      return NextResponse.json(buildMockResponse({ scenario: 'success', productType: null, imageCount: 1 }));
+    }
   }
 
   try {
