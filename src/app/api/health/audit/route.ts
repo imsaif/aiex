@@ -73,8 +73,25 @@ async function checkAnalyzeRoute(): Promise<{ ok: boolean; detail?: string }> {
 }
 
 async function checkDatabase(): Promise<{ ok: boolean; detail?: string }> {
-  await prisma.$queryRaw`SELECT 1`;
-  return { ok: true };
+  // Neon free-tier compute auto-suspends after ~5 min idle. The first query
+  // post-suspension is a cold-start that can take 2-5s and sometimes fails
+  // outright before the wake completes. Retry once after a short delay so
+  // we don't alert on every Neon wake. If the retry also fails, it's a
+  // real outage.
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return { ok: true };
+  } catch (firstErr) {
+    await new Promise((r) => setTimeout(r, 1500));
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      return { ok: true, detail: 'recovered after retry (likely Neon cold-start)' };
+    } catch (secondErr) {
+      const detail = secondErr instanceof Error ? secondErr.message : String(secondErr);
+      const firstDetail = firstErr instanceof Error ? firstErr.message : String(firstErr);
+      return { ok: false, detail: `retry failed: ${detail} (first: ${firstDetail.slice(0, 100)})` };
+    }
+  }
 }
 
 function checkEnv(): { ok: boolean; detail?: string } {
