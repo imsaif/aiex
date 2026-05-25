@@ -4,18 +4,44 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
+function getAdminHashes(): string[] {
+  const raw = process.env.ADMIN_AUDIT_IP_HASHES || '';
+  return raw.split(',').map((s) => s.trim()).filter(Boolean);
+}
+
 export const GET = withAdminAuth(async (request: NextRequest) => {
   const { searchParams } = new URL(request.url);
   const days = Math.min(parseInt(searchParams.get('days') || '14', 10) || 14, 90);
   const outcome = searchParams.get('outcome');
   const productType = searchParams.get('productType');
   const limit = Math.min(parseInt(searchParams.get('limit') || '200', 10) || 200, 1000);
+  const includeTest = searchParams.get('includeTest') === '1';
 
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const adminHashes = getAdminHashes();
 
-  const where: Record<string, unknown> = { createdAt: { gte: since } };
+  const excludeTestClause = includeTest
+    ? {}
+    : {
+        AND: [
+          { OR: [{ role: null }, { role: { notIn: ['test', 'admin'] } }] },
+          adminHashes.length > 0
+            ? { OR: [{ ipHash: null }, { ipHash: { notIn: adminHashes } }] }
+            : {},
+        ],
+      };
+
+  const where: Record<string, unknown> = {
+    createdAt: { gte: since },
+    ...excludeTestClause,
+  };
   if (outcome && outcome !== 'all') where.outcome = outcome;
   if (productType && productType !== 'all') where.productType = productType;
+
+  const statsWhere: Record<string, unknown> = {
+    createdAt: { gte: since },
+    ...excludeTestClause,
+  };
 
   const [samples, totals] = await Promise.all([
     prisma.auditSample.findMany({
@@ -25,7 +51,7 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
     }),
     prisma.auditSample.groupBy({
       by: ['outcome'],
-      where: { createdAt: { gte: since } },
+      where: statsWhere,
       _count: { _all: true },
     }),
   ]);
@@ -43,9 +69,22 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
   const apiErrorCount = byOutcome['api_error'] ?? 0;
 
   const aggregates = await prisma.auditSample.aggregate({
-    where: { createdAt: { gte: since }, outcome: 'success' },
+    where: { ...statsWhere, outcome: 'success' },
     _avg: { score: true, maxScore: true, gapCount: true, latencyMs: true },
   });
+
+  // Separately count what we excluded, so the UI can show "N test rows hidden"
+  const excludedCount = includeTest
+    ? 0
+    : await prisma.auditSample.count({
+        where: {
+          createdAt: { gte: since },
+          OR: [
+            { role: { in: ['test', 'admin'] } },
+            ...(adminHashes.length > 0 ? [{ ipHash: { in: adminHashes } }] : []),
+          ],
+        },
+      });
 
   return NextResponse.json({
     samples,
@@ -60,6 +99,8 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
       avgMaxScore: aggregates._avg.maxScore,
       avgGapCount: aggregates._avg.gapCount,
       avgLatencyMs: aggregates._avg.latencyMs,
+      excludedCount,
+      includeTest,
     },
   });
 });

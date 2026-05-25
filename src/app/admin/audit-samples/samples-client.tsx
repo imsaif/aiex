@@ -20,6 +20,7 @@ interface Sample {
   surfaceDescription: string | null;
   latencyMs: number | null;
   ipHash: string | null;
+  role: string | null;
 }
 
 interface Stats {
@@ -33,6 +34,8 @@ interface Stats {
   avgMaxScore: number | null;
   avgGapCount: number | null;
   avgLatencyMs: number | null;
+  excludedCount: number;
+  includeTest: boolean;
 }
 
 const OUTCOMES = ['all', 'success', 'empty_gaps', 'parse_error', 'api_error', 'rate_limited', 'bad_request'];
@@ -63,6 +66,7 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
   const [stats, setStats] = useState<Stats | null>(null);
   const [days, setDays] = useState(14);
   const [outcome, setOutcome] = useState('all');
+  const [includeTest, setIncludeTest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,6 +76,7 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
     try {
       const params = new URLSearchParams({ days: String(days) });
       if (outcome !== 'all') params.set('outcome', outcome);
+      if (includeTest) params.set('includeTest', '1');
       const res = await fetch(`/api/admin/audit-samples?${params}`);
       const data = await res.json();
       if (!res.ok) {
@@ -85,7 +90,7 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
     } finally {
       setIsLoading(false);
     }
-  }, [days, outcome]);
+  }, [days, outcome, includeTest]);
 
   useEffect(() => {
     if (isAuthenticated) fetchData();
@@ -124,6 +129,15 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
               <option key={o} value={o}>{o}</option>
             ))}
           </select>
+          <label className="flex items-center gap-1.5 text-sm text-text-secondary cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={includeTest}
+              onChange={(e) => setIncludeTest(e.target.checked)}
+              className="h-3.5 w-3.5"
+            />
+            Include test
+          </label>
           <button
             onClick={fetchData}
             disabled={isLoading}
@@ -133,6 +147,12 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
           </button>
         </div>
       </div>
+
+      {stats && stats.excludedCount > 0 && !includeTest && (
+        <div className="text-xs text-text-secondary mb-3">
+          {stats.excludedCount} test row{stats.excludedCount === 1 ? '' : 's'} hidden (role=test or admin ipHash).
+        </div>
+      )}
 
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-800 rounded p-3 mb-4 text-sm">{error}</div>

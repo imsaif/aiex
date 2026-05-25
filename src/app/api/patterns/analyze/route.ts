@@ -4,6 +4,7 @@ import { buildContextAwarePrompt } from '@/lib/patterns/detection-prompts';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
 import { parseAnalysisResponse } from '@/lib/audit/parseAnalysis';
 import { recordAuditSample } from '@/lib/audit/sample';
+import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 
@@ -31,6 +32,18 @@ export async function POST(request: NextRequest) {
   const ip = forwardedFor?.split(',')[0]?.trim() ||
              request.headers.get('x-real-ip') ||
              'unknown';
+  let role: string | null = null;
+
+  // Auto-detect admin session cookie — if the requester is logged into
+  // /admin/* their audits are self-testing and should be tagged so they
+  // stay out of the AuditSample dashboard's default view.
+  try {
+    if (await isAdminAuthenticated(request)) {
+      role = 'admin';
+    }
+  } catch {
+    // Cookie parse failure shouldn't break the analyze path.
+  }
 
   try {
     // Check rate limit
@@ -43,6 +56,7 @@ export async function POST(request: NextRequest) {
           latencyMs: Date.now() - startedAt,
           ip,
           userAgent,
+          role,
         })
       );
       return NextResponse.json(
@@ -65,7 +79,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, imageBase64, images, deviceType, productType, productDescription, aiRole } = body as {
+    const { context, imageBase64, images, deviceType, productType, productDescription, aiRole, role: bodyRole } = body as {
       context: ContextData;
       imageBase64: string;
       images?: Array<{ base64: string; deviceType: DeviceType }>;
@@ -74,7 +88,14 @@ export async function POST(request: NextRequest) {
       productType?: ProductType;
       productDescription?: string;
       aiRole?: string[];
+      role?: string;
     };
+    // Admin auto-detection (above) takes precedence over a client-supplied
+    // role — don't let a stale `aiux:role=test` localStorage value downgrade
+    // an admin tag, and don't let a missing flag erase it.
+    if (role !== 'admin' && typeof bodyRole === 'string' && bodyRole.length > 0) {
+      role = bodyRole;
+    }
 
     if (!imageBase64) {
       after(() =>
@@ -87,6 +108,7 @@ export async function POST(request: NextRequest) {
           latencyMs: Date.now() - startedAt,
           ip,
           userAgent,
+          role,
         })
       );
       return NextResponse.json(
@@ -190,6 +212,7 @@ export async function POST(request: NextRequest) {
           latencyMs: Date.now() - startedAt,
           ip,
           userAgent,
+          role,
         })
       );
       return NextResponse.json(
@@ -253,6 +276,7 @@ export async function POST(request: NextRequest) {
           latencyMs: Date.now() - startedAt,
           ip,
           userAgent,
+          role,
         })
       );
 

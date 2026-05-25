@@ -122,10 +122,12 @@ model AuditSample {
   latencyMs              Int?
   ipHash                 String?
   userAgent              String?
+  role                   String?
 
   @@index([createdAt])
   @@index([outcome])
   @@index([productType])
+  @@index([role])
 }
 
 model PatternIntent {

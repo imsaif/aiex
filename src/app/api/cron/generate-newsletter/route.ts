@@ -1328,31 +1328,20 @@ function renderFooterCTA(type: NewsletterType): string {
 </div>`.trim();
 }
 
-// Announcement banner — top-of-issue marketing block. Toggle by setting
-// NEWSLETTER_ANNOUNCEMENT=off in env to disable, or remove the call site
-// in generateHTML when this campaign ends.
-function renderAnnouncementBanner(): string {
+// Announcement banner — single-CTA block promoting the audit. Toggle by
+// setting NEWSLETTER_ANNOUNCEMENT=off in env to disable, or remove the call
+// site in generateHTML/generateWeeklyHTML when this campaign ends. Campaign
+// string is parameterized so daily vs weekly attribution can be compared.
+function renderAnnouncementBanner(campaign: string): string {
   if (process.env.NEWSLETTER_ANNOUNCEMENT === 'off') return '';
-  // Grain canvas + white inner card mirrors the homepage section pattern
-  // (Footer / SocialProof "Keep exploring"): bg-background-grain wrapper with
-  // a bg-background-primary card lifted on top.
   const GRAIN_BG = '#F0F1F5';
   return `
 <div style="background-color: ${GRAIN_BG}; padding: 28px; border-radius: 20px; margin: 0 0 40px;">
-  <div style="background-color: #ffffff; padding: 32px; border-radius: 14px; border: 1px solid ${EMAIL_HAIRLINE};">
-    <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Three things new at aiuxdesign.guide</p>
-    <h2 style="margin: 0 0 24px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.3;">Free AI UX audit, Courses, and a dedicated Patterns page</h2>
-
-    <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.65; color: ${EMAIL_TEXT};"><strong style="color: ${EMAIL_INK};">1. Free AI UX audit on the homepage.</strong> Paste a screenshot of any AI interface, drop your email, and get pattern-grounded findings instantly. <a href="${auditUrl('daily-banner')}" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Try the audit →</a></p>
-
-    <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.65; color: ${EMAIL_TEXT};"><strong style="color: ${EMAIL_INK};">2. Guides are now Courses.</strong> The Claude Code Course gets updated every time Anthropic ships — same goes for Cursor, GitHub Copilot, and Claude Design. <a href="${SITE_URL}/guides" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Browse all courses →</a></p>
-
-    <p style="margin: 0 0 28px; font-size: 16px; line-height: 1.65; color: ${EMAIL_TEXT};"><strong style="color: ${EMAIL_INK};">3. Patterns has its own page.</strong> All 36 AI UX patterns now live at <a href="${SITE_URL}/patterns" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">/patterns</a> with search and category filters.</p>
-
-    <div style="border-top: 1px solid ${EMAIL_HAIRLINE}; padding-top: 22px;">
-      <p style="margin: 0 0 8px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Want unlimited audits?</p>
-      <p style="margin: 0; font-size: 15px; line-height: 1.65; color: ${EMAIL_TEXT};">We're looking for a small group of designers to run repeated audits and tell us where the tool's weak — what it misses, what it gets wrong, where the UX trips up. Hit reply with the word <strong style="color: ${EMAIL_INK};">volunteer</strong> and we'll set you up with unlimited audit access in exchange for honest feedback.</p>
-    </div>
+  <div style="background-color: #ffffff; padding: 32px; border-radius: 14px; border: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
+    <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
+    <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against 36 patterns</h2>
+    <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
+    <a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;">Audit your design →</a>
   </div>
 </div>`.trim();
 }
@@ -1390,7 +1379,7 @@ ${items}
 
 ${takeaway}
 
-${renderAnnouncementBanner()}
+${renderAnnouncementBanner('daily-banner')}
 
 ${renderFooterCTA('daily')}
   `.trim();
@@ -1438,6 +1427,8 @@ ${items}
 ${stealThis}
 
 ${patternToKnow}
+
+${renderAnnouncementBanner('weekly-banner')}
 
 ${renderFooterCTA('weekly')}
   `.trim();

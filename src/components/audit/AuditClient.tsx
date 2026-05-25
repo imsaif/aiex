@@ -69,9 +69,20 @@ export default function AuditClient({
   const [isDemoMode, setIsDemoMode] = useState(startsOnDemo);
 
   // Paywall state
-  const { auditCount, incrementAuditCount, isPaywalled, auditsRemaining } = useAuditCount();
+  const {
+    auditCount,
+    incrementAuditCount,
+    isPaywalled,
+    auditsRemaining,
+    isUnlocked,
+    markUnlocked,
+    needsUnlock,
+    atFinalCap,
+  } = useAuditCount();
   const [showPaywall, setShowPaywall] = useState(false);
   const hasAutoOpenedPaywallRef = useRef(false);
+  const hasPromptedUnlockRef = useRef(false);
+  const paywallMode: 'unlock' | 'final' = atFinalCap ? 'final' : 'unlock';
 
   // User clicked "Start your own audit" on the landing demo — drop into upload
   const handleStartRealAudit = useCallback(() => {
@@ -106,6 +117,8 @@ export default function AuditClient({
         deviceType: img.deviceType,
       }));
 
+      const role = typeof window !== 'undefined' ? window.localStorage.getItem('aiux:role') : null;
+
       const response = await fetch('/api/patterns/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -115,6 +128,7 @@ export default function AuditClient({
           images: imagesPayload,
           deviceType: primaryDeviceType,
           productType,
+          ...(role ? { role } : {}),
         }),
       });
 
@@ -140,6 +154,15 @@ export default function AuditClient({
       const gapsFound = data.topGaps?.length || 0;
       if (gapsFound > 0) {
         incrementAuditCount();
+        // After a successful audit that burned a credit, if the user is now
+        // out of free audits and hasn't unlocked yet, surface the unlock
+        // prompt. Fire once per page-mount to avoid nagging users who
+        // dismiss.
+        if (!isUnlocked && !hasPromptedUnlockRef.current && (auditCount + 1) >= FREE_AUDIT_LIMIT) {
+          hasPromptedUnlockRef.current = true;
+          // Defer so the results render first.
+          setTimeout(() => setShowPaywall(true), 600);
+        }
       }
       trackAuditEvent('audit_session_completed', {
         score: data.score,
@@ -163,7 +186,7 @@ export default function AuditClient({
     } finally {
       setIsAnalyzing(false);
     }
-  }, [productType, incrementAuditCount]);
+  }, [productType, incrementAuditCount, isUnlocked, auditCount]);
 
   // Handle analyze from ScreenshotUpload — user clicked "Analyze"
   const handleScreenshotUpload = useCallback(async (images: UploadedImage[]) => {
@@ -223,7 +246,7 @@ export default function AuditClient({
   }, []);
 
   // Show nudge/banner conditions
-  const oneRemaining = FREE_AUDIT_LIMIT > 1 && auditCount === FREE_AUDIT_LIMIT - 1;
+  const oneRemaining = auditsRemaining === 1 && (isUnlocked ? auditCount >= 1 : false);
   const showIntakeBanner = oneRemaining && isIntakeFlow;
 
   return (
@@ -239,8 +262,10 @@ export default function AuditClient({
       {/* Paywall Modal */}
       {showPaywall && (
         <PaywallModal
+          mode={paywallMode}
           auditCountAtTrigger={auditCount}
           onClose={() => setShowPaywall(false)}
+          onUnlocked={markUnlocked}
         />
       )}
 
@@ -315,6 +340,7 @@ export default function AuditClient({
             auditsRemaining={auditsRemaining}
             isPaywalled={isPaywalled}
             auditCount={auditCount}
+            isUnlocked={isUnlocked}
           />
         </section>
       )}

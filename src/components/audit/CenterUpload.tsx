@@ -15,7 +15,7 @@ import {
 import { DeviceFrame } from './DeviceFrame';
 import { detectDeviceType, type DeviceType } from '@/utils/imageDetection';
 
-const MAX_IMAGES = 4;
+const MAX_IMAGES = 2;
 
 interface UsageInfo {
   used: number;

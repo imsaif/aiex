@@ -15,20 +15,20 @@ const SAMPLE_SCREENSHOTS: Array<{
 }> = [
   {
     label: 'Claude',
-    fileName: 'claude-sample.webp',
-    src: '/images/examples/claude-constitution.webp',
+    fileName: 'claude-sample.png',
+    src: '/images/examples/audit-samples/claudeclarifying.png',
     productType: 'chat-interface',
   },
   {
     label: 'ChatGPT',
     fileName: 'chatgpt-sample.png',
-    src: '/images/examples/chatgpt-limitations.png',
+    src: '/images/examples/audit-samples/chatgpt-feedback.png',
     productType: 'chat-interface',
   },
   {
     label: 'Copilot',
-    fileName: 'copilot-sample.jpg',
-    src: '/images/examples/github-copilot-offline.jpg',
+    fileName: 'copilot-sample.png',
+    src: '/images/examples/audit-samples/microsoft-copilot.png',
     productType: 'chat-interface',
   },
 ];
@@ -320,7 +320,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                   </p>
                   <p className="text-sm text-text-secondary mt-1">or click to browse or paste from clipboard</p>
                 </div>
-                <p className="text-xs text-text-tertiary">PNG, JPG, or WebP &middot; up to 4 images &middot; Ctrl+V to paste</p>
+                <p className="text-xs text-text-tertiary">PNG, JPG, or WebP &middot; up to 2 images &middot; Ctrl+V to paste</p>
               </div>
             </div>
 

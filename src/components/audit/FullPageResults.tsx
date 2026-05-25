@@ -50,6 +50,7 @@ interface FullPageResultsProps {
   auditsRemaining?: number;
   isPaywalled?: boolean;
   auditCount?: number;
+  isUnlocked?: boolean;
 }
 
 interface ChatMessage {
@@ -460,7 +461,7 @@ function EmptyAuditState({
   );
 }
 
-export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled, auditCount }: FullPageResultsProps) {
+export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled, auditCount, isUnlocked }: FullPageResultsProps) {
   // Normalize: prefer the multi-screenshot prop, fall back to the single-screenshot props for backwards compat.
   const allScreenshots = screenshots && screenshots.length > 0
     ? screenshots
@@ -771,6 +772,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                       onStartRealAudit!();
                     }}
                     auditsRemaining={auditsRemaining}
+                    isUnlocked={isUnlocked}
                   />
                 )}
               </div>
@@ -778,7 +780,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
             <div className="mt-10 sm:mt-12">
               <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4 text-center">
-                Patterns used by teams at
+                Patterns observed in products from
               </p>
               <div className="overflow-hidden">
                 <CompanyLogoCarousel
@@ -1289,10 +1291,19 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 function DemoStartForm({
   onStart,
   auditsRemaining,
+  isUnlocked,
 }: {
   onStart: () => void;
   auditsRemaining?: number;
+  isUnlocked?: boolean;
 }) {
+  let pillCopy: string | null = null;
+  if (typeof auditsRemaining === 'number' && auditsRemaining > 0) {
+    pillCopy = isUnlocked
+      ? `${auditsRemaining} free audit${auditsRemaining === 1 ? '' : 's'} remaining`
+      : '1 free audit · 3 more after email';
+  }
+
   return (
     <div className="w-full flex flex-col items-center">
       <button
@@ -1304,11 +1315,11 @@ function DemoStartForm({
         <span aria-hidden>→</span>
       </button>
 
-      {typeof auditsRemaining === 'number' && auditsRemaining > 0 && (
+      {pillCopy && (
         <p className="text-sm text-text-tertiary text-center mt-3">
           <span className="inline-flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-status-success" />
-            {auditsRemaining} free audit{auditsRemaining === 1 ? '' : 's'} · No signup
+            {pillCopy}
           </span>
         </p>
       )}

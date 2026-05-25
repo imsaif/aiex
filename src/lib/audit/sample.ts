@@ -26,6 +26,7 @@ export interface RecordAuditSampleInput {
   latencyMs?: number | null;
   ip?: string | null;
   userAgent?: string | null;
+  role?: string | null;
 }
 
 function hashIp(ip: string | null | undefined): string | null {
@@ -58,6 +59,7 @@ export async function recordAuditSample(input: RecordAuditSampleInput): Promise<
         latencyMs: input.latencyMs ?? null,
         ipHash: hashIp(input.ip),
         userAgent: input.userAgent ? input.userAgent.slice(0, UA_MAX) : null,
+        role: input.role && /^[a-z0-9_-]{1,32}$/i.test(input.role) ? input.role.toLowerCase() : null,
       },
     });
   } catch (err) {

@@ -26,7 +26,11 @@ type AuditEvent =
   | 'audit_intent_suggestions_failed'
   | 'audit_intent_pattern_clicked'
   | 'audit_sample_screenshot_clicked'
-  | 'audit_handoff_copied';
+  | 'audit_handoff_copied'
+  | 'audit_unlock_modal_shown'
+  | 'audit_unlock_submitted'
+  | 'audit_unlock_dismissed'
+  | 'audit_final_cap_shown';
 
 declare global {
   interface Window {

@@ -1,36 +1,45 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, CheckIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { UNLOCKED_AUDIT_LIMIT } from '@/lib/audit/constants';
 
 interface PaywallModalProps {
   onClose: () => void;
+  mode: 'unlock' | 'final';
   auditCountAtTrigger?: number;
+  onUnlocked?: () => void;
 }
 
-const BENEFITS = [
-  'Unlimited audits across every project',
-  'Priority analysis with full chat history',
-  'Email reports for you and your team',
+const UNLOCK_BENEFITS = [
+  '3 more audits — score AI surfaces against 36 patterns',
+  'Upload up to 2 screenshots per audit',
+  'Daily AI UX newsletter (unsubscribe anytime)',
 ];
 
-export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps) {
+export function PaywallModal({ onClose, mode, auditCountAtTrigger, onUnlocked }: PaywallModalProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    trackAuditEvent('audit_paywall_shown', { audit_count_at_trigger: auditCountAtTrigger });
+    if (mode === 'unlock') {
+      trackAuditEvent('audit_unlock_modal_shown', { audit_count_at_trigger: auditCountAtTrigger });
+    } else {
+      trackAuditEvent('audit_final_cap_shown', { audit_count_at_trigger: auditCountAtTrigger });
+    }
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
-  }, [auditCountAtTrigger]);
+  }, [auditCountAtTrigger, mode]);
 
   const handleDismiss = useCallback(() => {
-    if (!success) trackAuditEvent('audit_paywall_dismissed');
+    if (mode === 'unlock' && !success) {
+      trackAuditEvent('audit_unlock_dismissed');
+    }
     onClose();
-  }, [success, onClose]);
+  }, [success, onClose, mode]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') handleDismiss();
@@ -54,20 +63,22 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/audit/waitlist', {
+      const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, website_url: '' }),
+        body: JSON.stringify({ email, source: 'audit-unlock' }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to join waitlist');
+      // Treat "already subscribed" as success — they get the unlock either way.
+      if (!response.ok && !/already subscribed/i.test(data.error || '')) {
+        throw new Error(data.error || 'Failed to unlock');
       }
 
       setSuccess(true);
-      trackAuditEvent('audit_paywall_waitlist_signup');
+      trackAuditEvent('audit_unlock_submitted');
+      onUnlocked?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -96,16 +107,17 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
               <XMarkIcon className="w-5 h-5" />
             </button>
 
-            {success ? (
-              <div className="p-10 text-center">
-                <div className="w-12 h-12 mx-auto mb-5 bg-status-success/10 rounded-full flex items-center justify-center">
-                  <CheckIcon className="w-6 h-6 text-status-success" strokeWidth={2.5} />
+            {/* Final cap — informational, no email field */}
+            {mode === 'final' && (
+              <div className="p-8 text-center">
+                <div className="w-12 h-12 mx-auto mb-5 bg-accent-primary/10 rounded-full flex items-center justify-center">
+                  <SparklesIcon className="w-6 h-6 text-accent-primary" strokeWidth={2} />
                 </div>
                 <h2 className="text-xl font-semibold text-text-primary mb-2 tracking-tight">
-                  You&apos;re on the list
+                  You&apos;ve reached the free limit
                 </h2>
                 <p className="text-sm text-text-secondary mb-6 leading-relaxed">
-                  We&apos;ll email you the moment Early Access opens — you&apos;ll be first in line.
+                  You&apos;ve used all {UNLOCKED_AUDIT_LIMIT} of your free audits. We&apos;re keeping this capped for now so it stays available for more designers exploring the tool. We&apos;ll email you the moment we open it up further.
                 </p>
                 <button
                   onClick={onClose}
@@ -114,35 +126,47 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
                   Got it
                 </button>
               </div>
-            ) : (
+            )}
+
+            {/* Unlock — email capture for 3 more audits */}
+            {mode === 'unlock' && success && (
+              <div className="p-10 text-center">
+                <div className="w-12 h-12 mx-auto mb-5 bg-status-success/10 rounded-full flex items-center justify-center">
+                  <CheckIcon className="w-6 h-6 text-status-success" strokeWidth={2.5} />
+                </div>
+                <h2 className="text-xl font-semibold text-text-primary mb-2 tracking-tight">
+                  Unlocked
+                </h2>
+                <p className="text-sm text-text-secondary mb-6 leading-relaxed">
+                  3 more audits are ready. Upload a new screenshot whenever you&apos;re ready.
+                </p>
+                <button
+                  onClick={onClose}
+                  className="px-5 py-2.5 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-hover transition-colors"
+                >
+                  Continue
+                </button>
+              </div>
+            )}
+
+            {mode === 'unlock' && !success && (
               <div className="p-8">
                 <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-background-secondary border border-border-primary text-[11px] font-medium text-text-secondary mb-5">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-primary opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-primary"></span>
                   </span>
-                  Early Access · First 50 only
+                  Unlock 3 more · Free
                 </div>
 
                 <h2 className="text-[22px] font-semibold text-text-primary tracking-tight leading-[1.2] mb-2">
-                  Be first in line for unlimited audits.
+                  Like what you saw? Get 3 more audits.
                 </h2>
                 <p className="text-sm text-text-secondary mb-6 leading-relaxed">
-                  Drop your email and we&apos;ll let you know the moment Early Access opens.
+                  Drop your email and we&apos;ll unlock 3 more free audits right now. No card, no commitment.
                 </p>
 
                 <form onSubmit={handleSubmit} className="mb-5">
-                  <input
-                    type="text"
-                    name="website_url"
-                    value=""
-                    onChange={() => {}}
-                    tabIndex={-1}
-                    autoComplete="off"
-                    aria-hidden="true"
-                    style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
-                  />
-
                   <input
                     type="email"
                     value={email}
@@ -163,7 +187,7 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                     ) : (
-                      'Join the waitlist'
+                      'Unlock 3 more audits'
                     )}
                   </button>
 
@@ -173,7 +197,7 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
                 </form>
 
                 <ul className="space-y-2 pt-5 border-t border-border-divider">
-                  {BENEFITS.map((benefit) => (
+                  {UNLOCK_BENEFITS.map((benefit) => (
                     <li key={benefit} className="flex items-start gap-2.5 text-[13px] text-text-secondary leading-relaxed">
                       <span className="mt-0.5 flex-shrink-0 w-3.5 h-3.5 rounded-full bg-accent-primary/10 flex items-center justify-center">
                         <CheckIcon className="w-2 h-2 text-accent-primary" strokeWidth={3} />
@@ -182,10 +206,6 @@ export function PaywallModal({ onClose, auditCountAtTrigger }: PaywallModalProps
                     </li>
                   ))}
                 </ul>
-
-                <p className="mt-5 text-[11px] text-text-tertiary text-center leading-relaxed">
-                  By joining, you&apos;ll also get our daily AI UX newsletter. Unsubscribe anytime.
-                </p>
               </div>
             )}
           </div>

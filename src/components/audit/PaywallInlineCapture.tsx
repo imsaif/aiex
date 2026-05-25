@@ -3,20 +3,27 @@
 import { useState, useEffect } from 'react';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { useAuditCount } from '@/hooks/useAuditCount';
+import { UNLOCKED_AUDIT_LIMIT } from '@/lib/audit/constants';
 
 interface PaywallInlineCaptureProps {
   auditCountAtTrigger?: number;
 }
 
 export function PaywallInlineCapture({ auditCountAtTrigger }: PaywallInlineCaptureProps) {
+  const { atFinalCap, markUnlocked } = useAuditCount();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    trackAuditEvent('audit_paywall_shown', { audit_count_at_trigger: auditCountAtTrigger });
-  }, [auditCountAtTrigger]);
+    if (atFinalCap) {
+      trackAuditEvent('audit_final_cap_shown', { audit_count_at_trigger: auditCountAtTrigger });
+    } else {
+      trackAuditEvent('audit_unlock_modal_shown', { audit_count_at_trigger: auditCountAtTrigger });
+    }
+  }, [auditCountAtTrigger, atFinalCap]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,26 +38,41 @@ export function PaywallInlineCapture({ auditCountAtTrigger }: PaywallInlineCaptu
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/audit/waitlist', {
+      const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, website_url: '' }),
+        body: JSON.stringify({ email, source: 'audit-unlock' }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to join waitlist');
+      if (!response.ok && !/already subscribed/i.test(data.error || '')) {
+        throw new Error(data.error || 'Failed to unlock');
       }
 
       setSuccess(true);
-      trackAuditEvent('audit_paywall_waitlist_signup');
+      trackAuditEvent('audit_unlock_submitted');
+      markUnlocked();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Final cap — informational only, no form
+  if (atFinalCap) {
+    return (
+      <div className="w-full max-w-xl text-center">
+        <h3 className="text-xl sm:text-2xl font-semibold text-text-primary tracking-tight leading-[1.2] mb-2">
+          You&apos;ve reached the free limit
+        </h3>
+        <p className="text-sm text-text-secondary leading-relaxed">
+          You&apos;ve used all {UNLOCKED_AUDIT_LIMIT} of your free audits. We&apos;re keeping this capped for now so it stays available for more designers. We&apos;ll email you when we open it up further.
+        </p>
+      </div>
+    );
+  }
 
   if (success) {
     return (
@@ -59,10 +81,10 @@ export function PaywallInlineCapture({ auditCountAtTrigger }: PaywallInlineCaptu
           <CheckIcon className="w-6 h-6 text-status-success" strokeWidth={2.5} />
         </div>
         <h3 className="text-lg font-semibold text-text-primary mb-1.5 tracking-tight">
-          You&apos;re on the list
+          Unlocked
         </h3>
         <p className="text-sm text-text-secondary">
-          We&apos;ll email you the moment Early Access opens — you&apos;ll be first in line.
+          3 more audits are ready. Upload a screenshot to continue.
         </p>
       </div>
     );
@@ -75,28 +97,17 @@ export function PaywallInlineCapture({ auditCountAtTrigger }: PaywallInlineCaptu
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-primary opacity-75"></span>
           <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-primary"></span>
         </span>
-        Early Access · First 50 only
+        Unlock 3 more · Free
       </div>
 
       <h3 className="text-xl sm:text-2xl font-semibold text-text-primary tracking-tight leading-[1.2] mb-2">
-        Be first for unlimited audits.
+        Like what you saw? Get 3 more audits.
       </h3>
       <p className="text-sm text-text-secondary mb-5">
-        Free audit used. Get notified when Early Access opens.
+        Drop your email and we&apos;ll unlock 3 more free audits right now. No card, no commitment.
       </p>
 
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="website_url"
-          value=""
-          onChange={() => {}}
-          tabIndex={-1}
-          autoComplete="off"
-          aria-hidden="true"
-          style={{ position: 'absolute', left: '-9999px', top: '-9999px', opacity: 0, height: 0, width: 0, overflow: 'hidden' }}
-        />
-
         <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="email"
@@ -121,7 +132,7 @@ export function PaywallInlineCapture({ auditCountAtTrigger }: PaywallInlineCaptu
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
             ) : (
-              'Join the waitlist'
+              'Unlock 3 more'
             )}
           </button>
         </div>
