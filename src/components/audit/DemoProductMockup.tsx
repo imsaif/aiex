@@ -15,19 +15,23 @@ import {
 
 export interface MockupPin {
   index: number;
+  /** Desktop (md+) pin position — keyed to the 7/5 grid layout. */
   xPct: number;
   yPct: number;
+  /** Mobile (< md) pin position — keyed to the single-column stacked layout
+   *  where the AI Assistant block sits below the dashboard. */
+  mobile: { xPct: number; yPct: number };
   label: string;
 }
 
 // Pin coordinates correspond to the dashboard mockup below.
 // Order matches the first 5 topGaps in DEMO_ANALYSIS_RESULTS.
 export const DEMO_PINS: MockupPin[] = [
-  { index: 1, xPct: 96, yPct: 32, label: 'Confidence Visualization' },
-  { index: 2, xPct: 76, yPct: 11, label: 'Human-in-the-Loop' },
-  { index: 3, xPct: 78, yPct: 56, label: 'Error Recovery' },
-  { index: 4, xPct: 96, yPct: 44, label: 'Explainable AI' },
-  { index: 5, xPct: 76, yPct: 21, label: 'Selective Memory' },
+  { index: 1, xPct: 96, yPct: 32, label: 'Confidence Visualization', mobile: { xPct: 93, yPct: 17 } },
+  { index: 2, xPct: 76, yPct: 11, label: 'Human-in-the-Loop',        mobile: { xPct: 12, yPct: 60 } },
+  { index: 3, xPct: 78, yPct: 56, label: 'Error Recovery',           mobile: { xPct: 93, yPct: 90 } },
+  { index: 4, xPct: 96, yPct: 44, label: 'Explainable AI',           mobile: { xPct: 93, yPct: 80 } },
+  { index: 5, xPct: 76, yPct: 21, label: 'Selective Memory',         mobile: { xPct: 93, yPct: 68 } },
 ];
 
 interface DemoProductMockupProps {
@@ -73,17 +77,18 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
         </div>
       </div>
 
-      {/* Main grid: dashboard left, AI assistant right */}
-      <div className="grid grid-cols-12 gap-3 p-3 sm:p-4 bg-background-secondary min-h-[460px]">
+      {/* Main grid: dashboard left, AI assistant right.
+          Mobile (< md) stacks them: dashboard first, AI assistant below. */}
+      <div className="flex flex-col md:grid md:grid-cols-12 gap-3 p-3 sm:p-4 bg-background-secondary md:min-h-[460px]">
         {/* LEFT — Dashboard content */}
-        <div className="col-span-7 space-y-3">
+        <div className="md:col-span-7 space-y-3">
           <div className="flex items-baseline justify-between">
             <h2 className="font-semibold text-sm text-text-primary">Sales overview</h2>
             <span className="text-[10px] text-text-tertiary">Last 30 days</span>
           </div>
 
-          {/* KPI cards */}
-          <div className="grid grid-cols-4 gap-2">
+          {/* KPI cards — 2-col on mobile, 4-col on desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
               { label: 'Revenue', value: '$48.2K', delta: '+12%', up: true },
               { label: 'Orders', value: '1,284', delta: '+4%', up: true },
@@ -150,8 +155,8 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
           </div>
         </div>
 
-        {/* RIGHT — AI Assistant panel */}
-        <div className="col-span-5 rounded-lg border border-border-primary bg-background-primary flex flex-col">
+        {/* RIGHT — AI Assistant panel (stacks below dashboard on mobile) */}
+        <div className="md:col-span-5 rounded-lg border border-border-primary bg-background-primary flex flex-col">
           {/* Assistant header */}
           <div className="px-3 py-2.5 border-b border-border-primary flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -200,42 +205,64 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
         </div>
       </div>
 
-      {/* Numbered pins */}
+      {/* Numbered pins — desktop positions (md+) and mobile positions (< md)
+          are emitted as separate sets because the underlying layout reflows
+          (single column on mobile, 7/5 grid on desktop). */}
       {DEMO_PINS.map((pin) => {
         const isActive = activePin === pin.index;
+        const pinClasses = `relative flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold border-2 transition-all ${
+          isActive
+            ? 'bg-accent-primary text-white dark:text-gray-900 border-white scale-125 shadow-lg'
+            : 'bg-white text-accent-primary border-accent-primary shadow-md group-hover:scale-110'
+        }`;
         return (
-          <button
-            key={pin.index}
-            onMouseDown={(e) => e.preventDefault()}
-            onClick={(e) => {
-              onPinClick(pin.index);
-              (e.currentTarget as HTMLButtonElement).blur();
-            }}
-            onMouseEnter={() => onPinHover?.(pin.index)}
-            onMouseLeave={() => onPinHover?.(null)}
-            aria-label={`Issue ${pin.index}: ${pin.label}`}
-            className="absolute z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-            style={{ left: `${pin.xPct}%`, top: `${pin.yPct}%` }}
-          >
-            <span
-              className={`relative flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold border-2 transition-all ${
-                isActive
-                  ? 'bg-accent-primary text-white dark:text-gray-900 border-white scale-125 shadow-lg'
-                  : 'bg-white text-accent-primary border-accent-primary shadow-md group-hover:scale-110'
-              }`}
+          <span key={pin.index}>
+            {/* Desktop pin */}
+            <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => {
+                onPinClick(pin.index);
+                (e.currentTarget as HTMLButtonElement).blur();
+              }}
+              onMouseEnter={() => onPinHover?.(pin.index)}
+              onMouseLeave={() => onPinHover?.(null)}
+              aria-label={`Issue ${pin.index}: ${pin.label}`}
+              className="hidden md:block absolute z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+              style={{ left: `${pin.xPct}%`, top: `${pin.yPct}%` }}
             >
-              {pin.index}
-              {/* Only pin #1 pulses — the rest are static so the hero
-                  doesn't feel like a slot machine. Pulse is the "start
-                  here" signal, not a per-pin attention cue. */}
-              {pin.index === 1 && !isActive && (
-                <span
-                  className="absolute inset-0 rounded-full border-2 border-accent-primary animate-ping opacity-60"
-                  aria-hidden
-                />
-              )}
-            </span>
-          </button>
+              <span className={pinClasses}>
+                {pin.index}
+                {pin.index === 1 && !isActive && (
+                  <span
+                    className="absolute inset-0 rounded-full border-2 border-accent-primary animate-ping opacity-60"
+                    aria-hidden
+                  />
+                )}
+              </span>
+            </button>
+            {/* Mobile pin */}
+            <button
+              type="button"
+              onClick={(e) => {
+                onPinClick(pin.index);
+                (e.currentTarget as HTMLButtonElement).blur();
+              }}
+              aria-label={`Issue ${pin.index}: ${pin.label}`}
+              className="md:hidden absolute z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+              style={{ left: `${pin.mobile.xPct}%`, top: `${pin.mobile.yPct}%` }}
+            >
+              <span className={pinClasses}>
+                {pin.index}
+                {pin.index === 1 && !isActive && (
+                  <span
+                    className="absolute inset-0 rounded-full border-2 border-accent-primary animate-ping opacity-60"
+                    aria-hidden
+                  />
+                )}
+              </span>
+            </button>
+          </span>
         );
       })}
     </div>

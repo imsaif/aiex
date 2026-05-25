@@ -110,14 +110,37 @@ function withFocusSuppress(onClick: () => void) {
 }
 
 function GapSidePanel({ gap, pinNumber, onClose }: { gap: TopGap; pinNumber: number; onClose: () => void }) {
+  // Lock body scroll while the mobile bottom sheet is open so it doesn't
+  // double-scroll with the page underneath. No-op on desktop (the side
+  // panel is contained within the canvas).
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+    if (!isMobile) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, []);
+
   return (
     <>
+      {/* Backdrop: fixed full-screen on mobile, absolute within canvas on desktop. */}
       <button
         onClick={onClose}
         aria-label="Close panel"
-        className="absolute inset-0 bg-black/30 z-20 cursor-pointer"
+        className="fixed lg:absolute inset-0 bg-black/50 lg:bg-black/30 z-40 lg:z-20 cursor-pointer animate-fade-in"
       />
-      <aside className="absolute top-0 right-0 bottom-0 w-full sm:w-[420px] z-30 bg-background-primary border-l border-border-primary shadow-xl overflow-y-auto animate-slide-in">
+      {/* Sheet: fixed bottom sheet on mobile, right-anchored side panel on desktop. */}
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Pattern detected: ${gap.pattern}`}
+        className="fixed lg:absolute inset-x-0 bottom-0 lg:inset-x-auto lg:top-0 lg:right-0 lg:bottom-0 w-full lg:w-[420px] max-h-[85vh] lg:max-h-none z-50 lg:z-30 bg-background-primary border-t lg:border-t-0 lg:border-l border-border-primary shadow-xl overflow-y-auto overscroll-contain rounded-t-2xl lg:rounded-none animate-slide-up lg:animate-slide-in"
+      >
+        {/* Drag handle (mobile only) — visual affordance for the bottom-sheet pattern. */}
+        <div className="lg:hidden flex justify-center pt-2.5 pb-1" aria-hidden>
+          <div className="w-10 h-1.5 rounded-full bg-border-primary" />
+        </div>
         <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-border-primary bg-background-primary">
           <div className="flex items-center gap-2.5">
             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
@@ -300,10 +323,10 @@ function EmptyAuditState({
     <div className="pb-12 sm:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-10 space-y-6">
         {/* Card 1: Empty-state diagnostic — internal 2-col on lg+ */}
-        <div className="bg-background-primary border border-border-primary rounded-2xl p-8 sm:p-12 lg:p-14">
-          <div className="grid lg:grid-cols-5 gap-10 lg:gap-12 items-center min-h-[360px]">
+        <div className="bg-background-primary border border-border-primary rounded-2xl p-5 sm:p-12 lg:p-14">
+          <div className="grid lg:grid-cols-5 gap-6 sm:gap-10 lg:gap-12 items-center lg:min-h-[360px]">
             <div className="lg:col-span-3">
-              <h2 className="text-3xl sm:text-4xl font-bold text-text-primary leading-tight mb-6">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-primary leading-tight mb-4 sm:mb-6">
                 We scanned for 36 AI UX patterns
               </h2>
               <p className="text-lg text-text-secondary leading-relaxed mb-8">
@@ -355,13 +378,13 @@ function EmptyAuditState({
         </div>
 
         {/* Card 2: Intent capture + suggestions */}
-        <div className="bg-background-primary border border-border-primary rounded-2xl p-8 sm:p-12 lg:p-14">
-          <div className="grid lg:grid-cols-5 gap-10 lg:gap-12 items-start">
+        <div className="bg-background-primary border border-border-primary rounded-2xl p-5 sm:p-12 lg:p-14">
+          <div className="grid lg:grid-cols-5 gap-6 sm:gap-10 lg:gap-12 items-start">
             <div className="lg:col-span-2">
               <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3">
                 Or skip the screenshot
               </p>
-              <h3 className="text-3xl sm:text-4xl font-bold text-text-primary mb-4 leading-tight">
+              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-primary mb-3 sm:mb-4 leading-tight">
                 Tell us what you&apos;re trying to design
               </h3>
               <p className="text-lg text-text-secondary leading-relaxed">
@@ -374,17 +397,17 @@ function EmptyAuditState({
                 value={intent}
                 onChange={(e) => setIntent(e.target.value)}
                 maxLength={1000}
-                rows={5}
+                rows={4}
                 placeholder="e.g., A chat assistant for customer support that can hand off to a human, or an AI agent that schedules meetings on the user's behalf."
-                className="w-full px-5 py-4 rounded-xl border border-border-primary bg-background-primary text-base text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary resize-none leading-relaxed"
+                className="w-full px-4 sm:px-5 py-3 sm:py-4 rounded-xl border border-border-primary bg-background-primary text-base text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary resize-none leading-relaxed"
                 disabled={submitting}
               />
-              <div className="flex items-center justify-between mt-4">
-                <span className="text-base text-text-tertiary">{intent.length}/1000</span>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
+                <span className="text-sm sm:text-base text-text-tertiary order-2 sm:order-1">{intent.length}/1000</span>
                 <button
                   type="submit"
                   disabled={submitting || intent.trim().length < 8}
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-accent-primary text-white font-semibold text-base hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  className="order-1 sm:order-2 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-accent-primary text-white font-semibold text-base hover:bg-accent-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer min-h-[48px]"
                 >
                   {submitting ? 'Finding patterns…' : 'Show me relevant patterns'}
                 </button>
@@ -476,7 +499,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const [scanIndex, setScanIndex] = useState(0);
 
   // Tab + Chat state
-  const [activeTab, setActiveTab] = useState<'issues' | 'chat'>('issues');
+  // Tab state controls the chat aside on desktop and the mobile section
+  // selector (Gaps / Audit details / Chat). On desktop, 'issues' and 'details'
+  // are visually equivalent — both let the details aside render beside the
+  // screenshot. On mobile, they pick which block is visible below the screenshot.
+  const [activeTab, setActiveTab] = useState<'issues' | 'details' | 'chat'>('issues');
   const [showAllQuickWins, setShowAllQuickWins] = useState(false);
   const [handoffCopied, setHandoffCopied] = useState(false);
   const [showHandoffSource, setShowHandoffSource] = useState(false);
@@ -724,6 +751,37 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const issues = topGaps.filter((g) => g.status === 'missing' || g.status === 'needs-improvement');
   const wellImplemented = topGaps.filter((g) => g.status === 'good');
 
+  // Shared handoff-copy handler — used by both the inline IDE card and the
+  // mobile sticky bottom bar so both surfaces fire the same Clarity event
+  // and the same "Copied" feedback state.
+  const surfaceDescriptionForHandoff = (results as ExtendedResults | null)?.surfaceDescription;
+  const productTypeForHandoff = results.productContext?.productType;
+  const handleCopyHandoff = useCallback(async () => {
+    if (issues.length === 0) return;
+    const handoffPrompt = composeHandoffPrompt({
+      surfaceDescription: surfaceDescriptionForHandoff,
+      productType: productTypeForHandoff,
+      gaps: issues,
+    });
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(handoffPrompt);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = handoffPrompt;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      trackAuditEvent('audit_handoff_copied', { gapCount: issues.length });
+      setHandoffCopied(true);
+      setTimeout(() => setHandoffCopied(false), 2000);
+    } catch {
+      /* swallow — clipboard can fail in private browsing; user can still copy from disclosure */
+    }
+  }, [issues, surfaceDescriptionForHandoff, productTypeForHandoff]);
+
   // ----- Demo view: full-bleed dashboard mockup with clickable pins + side panel -----
   if (showDemoCTA) {
     const openGap = openPin ? topGaps[openPin - 1] : null;
@@ -794,10 +852,12 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             </div>
 
             {/* Multi-device composition — laptop + glass phone laid out
-                side-by-side at center, vertically aligned. Phone hides
-                below md so mobile users see just the laptop. */}
+                side-by-side at center, vertically aligned. Hidden below md
+                because the desktop dashboard mockup can't reflow into a
+                phone-width viewport; mobile users see the gap list below
+                instead, which carries the same audit context. */}
             <div className="relative mt-12 sm:mt-16 md:mt-20">
-              <div className="flex items-center justify-center gap-6 lg:gap-10">
+              <div className="hidden md:flex items-center justify-center gap-6 lg:gap-10">
                 <div className="flex-1 max-w-3xl lg:max-w-4xl min-w-0">
                   <LaptopFrame>
                     <DemoProductMockup
@@ -822,6 +882,30 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                       onPinHover={setHoveredPin}
                     />
                   </PhoneFrame>
+                </div>
+              </div>
+
+              {/* Mobile-only prototype — same DemoProductMockup as desktop but
+                  rendered in its responsive stacked layout with mobile pin
+                  positions. Each pin opens the same bottom-sheet flow. */}
+              <div className="md:hidden">
+                <div className="text-center mb-5">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent-primary mb-2">
+                    Example audit
+                  </p>
+                  <p className="text-base text-text-secondary leading-relaxed max-w-xs mx-auto">
+                    Tap a numbered pin to see the fix.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-border-primary overflow-hidden shadow-md">
+                  <DemoProductMockup
+                    activePin={openPin ?? hoveredPin}
+                    onPinClick={(idx) => {
+                      setOpenPin(idx);
+                      trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
+                    }}
+                    onPinHover={setHoveredPin}
+                  />
                 </div>
               </div>
 
@@ -876,7 +960,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   return (
     <div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 lg:pb-8">
 
         {/* Screenshot canvas + optional chat side panel.
             Both columns have explicit fixed heights on desktop so the row size never changes
@@ -897,10 +981,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               <img
                 src={heroScreenshotUrl}
                 alt={`Your audited interface ${activeScreenshotIndex + 1}`}
-                className="w-full h-full object-contain block blur-[2px]"
+                className="w-full h-full object-contain block lg:blur-[2px]"
               />
-              {/* Subtle wash so the numbered pins read clearly over the blurred shot */}
-              <div className="absolute inset-0 bg-white/30 dark:bg-black/30 pointer-events-none" />
+              {/* Subtle wash so the numbered pins read clearly over the blurred shot.
+                  Desktop only — mobile shows the screenshot clearly since pins move to a list below. */}
+              <div className="hidden lg:block absolute inset-0 bg-white/30 dark:bg-black/30 pointer-events-none" />
             </div>
           )}
 
@@ -943,7 +1028,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 onMouseEnter={() => setHoveredPin(pin.index)}
                 onMouseLeave={() => setHoveredPin(null)}
                 aria-label={`Issue ${pin.index}: ${topPinnedIssues[pin.index - 1].pattern}`}
-                className="absolute z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                className="hidden lg:block absolute z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                 style={{ left: `${pin.xPct}%`, top: `${pin.yPct}%` }}
               >
                 <span
@@ -1000,11 +1085,111 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             })}
           </div>
         )}
+
+        {/* Mobile-only section tabs — Gaps / Audit details / Chat. Lets the
+            three blocks below the screenshot share one slot instead of stacking. */}
+        {topPinnedIssues.length > 0 && (
+          <div
+            role="tablist"
+            aria-label="Audit sections"
+            className="lg:hidden mt-3 grid grid-cols-3 gap-1 p-1 rounded-full border border-border-primary bg-background-secondary"
+          >
+            {([
+              { id: 'issues', label: `Gaps · ${topPinnedIssues.length}` },
+              { id: 'details', label: 'Details' },
+              { id: 'chat', label: 'Chat' },
+            ] as const).map((t) => {
+              const isActive = activeTab === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => {
+                    setActiveTab(t.id);
+                    if (t.id === 'chat' && !hasSentOpener && issues.length > 0) {
+                      setHasSentOpener(true);
+                      const topPatterns = issues.slice(0, 3).map((g) => g.pattern).join(', ');
+                      setTimeout(
+                        () =>
+                          sendMessage(
+                            `I found ${issues.length} issues in my interface. The top priorities are: ${topPatterns}. What should I fix first and how?`,
+                          ),
+                        200,
+                      );
+                    }
+                  }}
+                  className={`px-3 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer min-h-[40px] ${
+                    isActive
+                      ? 'bg-background-primary text-text-primary shadow-sm'
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Mobile-only gap list — replaces the on-canvas pin overlay on small screens.
+            Each row opens the same bottom-sheet flow via setOpenPin. */}
+        {topPinnedIssues.length > 0 && (
+          <div className={`lg:hidden mt-2 rounded-2xl border border-border-primary bg-background-primary overflow-hidden ${activeTab === 'issues' ? '' : 'hidden'}`}>
+            <div className="px-4 py-3 border-b border-border-primary bg-background-secondary">
+              <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary">
+                {topPinnedIssues.length} gap{topPinnedIssues.length === 1 ? '' : 's'} found
+              </p>
+              <p className="text-xs text-text-tertiary mt-0.5">Tap a row for details</p>
+            </div>
+            <ul className="divide-y divide-border-primary">
+              {topPinnedIssues.map((gap, i) => {
+                const idx = i + 1;
+                const severity = (gap as TopGap & { severity?: string }).severity;
+                const severityChip =
+                  severity === 'critical'
+                    ? 'bg-status-error/10 text-status-error'
+                    : severity === 'important'
+                      ? 'bg-status-warning/10 text-status-warning'
+                      : 'bg-background-secondary text-text-secondary';
+                return (
+                  <li key={idx}>
+                    <button
+                      type="button"
+                      onClick={() => setOpenPin(idx)}
+                      className="w-full flex items-start gap-3 px-4 py-3.5 text-left active:bg-background-secondary cursor-pointer min-h-[56px]"
+                      aria-label={`Open details for gap ${idx}: ${gap.pattern}`}
+                    >
+                      <span className="flex-shrink-0 mt-0.5 flex items-center justify-center w-7 h-7 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
+                        {idx}
+                      </span>
+                      <span className="flex-1 min-w-0">
+                        <span className="flex items-center gap-2 flex-wrap">
+                          <span className="text-base font-semibold text-text-primary">{gap.pattern}</span>
+                          {severity && (
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${severityChip}`}>
+                              {severity}
+                            </span>
+                          )}
+                        </span>
+                        {gap.finding && (
+                          <span className="block mt-1 text-sm text-text-secondary line-clamp-2">{gap.finding}</span>
+                        )}
+                      </span>
+                      <ChevronRightIcon className="flex-shrink-0 w-5 h-5 text-text-tertiary mt-1.5" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
         </div>
 
         {/* What we audited + Quick Wins — sits beside the screenshot when chat isn't active */}
         {activeTab !== 'chat' && (surfaceDescription || quickWins.length > 0 || results.applicablePatterns?.length) && (
-          <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary px-5 py-4 overflow-y-auto max-h-[640px] lg:max-h-none ${
+          <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary px-5 py-4 overflow-y-auto max-h-[640px] lg:max-h-none ${activeTab === 'details' ? '' : 'hidden lg:block'} ${
             heroDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
           }`}>
             {(() => {
@@ -1165,27 +1350,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             productType: results.productContext?.productType,
             gaps: issues,
           });
-          const handleCopyHandoff = async () => {
-            try {
-              if (navigator.clipboard?.writeText) {
-                await navigator.clipboard.writeText(handoffPrompt);
-              } else {
-                const ta = document.createElement('textarea');
-                ta.value = handoffPrompt;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-              }
-              trackAuditEvent('audit_handoff_copied', { gapCount: issues.length });
-              setHandoffCopied(true);
-              setTimeout(() => setHandoffCopied(false), 2000);
-            } catch {
-              /* swallow — clipboard can fail in private browsing; user can still copy from disclosure */
-            }
-          };
           return (
-            <section className="mt-8">
+            <section className="mt-8" id="handoff-card">
               <div className="rounded-2xl border border-border-primary bg-background-primary p-6 sm:p-10">
                 <p className="text-sm font-semibold uppercase tracking-wider text-accent-primary mb-2">Apply with Claude Code</p>
                 <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary mb-2">Take this to your IDE</h2>
@@ -1244,7 +1410,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           </button>
           <button
             onClick={() => {
-              const next = activeTab === 'chat' ? 'issues' : 'chat';
+              const next: 'issues' | 'chat' = activeTab === 'chat' ? 'issues' : 'chat';
               setActiveTab(next);
               if (next === 'chat' && !hasSentOpener && issues.length > 0) {
                 setHasSentOpener(true);
@@ -1267,6 +1433,32 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         </div>
 
       </div>
+
+      {/* Mobile sticky handoff CTA — keeps the load-bearing action thumb-reachable
+          while the user scrolls the results. Hidden when the gap sheet or chat
+          tab is active so it doesn't compete with whichever surface the user
+          is interacting with. */}
+      {issues.length > 0 && openPin === null && activeTab !== 'chat' && (
+        <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
+          <button
+            type="button"
+            onClick={handleCopyHandoff}
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-base shadow-lg active:scale-95 transition-transform cursor-pointer min-h-[48px]"
+          >
+            {handoffCopied ? (
+              <>
+                <CheckCircleIcon className="w-5 h-5" />
+                Copied — paste into Claude Code
+              </>
+            ) : (
+              <>
+                <CommandLineIcon className="w-5 h-5" />
+                Copy handoff prompt
+              </>
+            )}
+          </button>
+        </div>
+      )}
 
       {showEmailModal && (
         <EmailReportModal

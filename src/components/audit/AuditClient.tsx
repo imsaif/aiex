@@ -8,7 +8,6 @@ import { SocialProof } from '@/components/audit/SocialProof';
 import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
 import { useAuditCount } from '@/hooks/useAuditCount';
-import { FREE_AUDIT_LIMIT } from '@/lib/audit/constants';
 import type { AnalysisResults, AuditStep, ProductType } from '@/types/audit';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 
@@ -81,7 +80,6 @@ export default function AuditClient({
   } = useAuditCount();
   const [showPaywall, setShowPaywall] = useState(false);
   const hasAutoOpenedPaywallRef = useRef(false);
-  const hasPromptedUnlockRef = useRef(false);
   const paywallMode: 'unlock' | 'final' = atFinalCap ? 'final' : 'unlock';
 
   // User clicked "Start your own audit" on the landing demo — drop into upload
@@ -99,6 +97,10 @@ export default function AuditClient({
 
   // Run analysis against the API
   const runAnalysis = useCallback(async (images: UploadedImage[]) => {
+    // Sample-screenshot runs are preview-only — they let the user experience
+    // the flow without burning a free-audit credit. Detected via the isSample
+    // flag set by ScreenshotUpload.loadSample().
+    const isSampleRun = images.some((img) => img.isSample);
     setIsAnalyzing(true);
     setRateLimitError(null);
 
@@ -152,17 +154,13 @@ export default function AuditClient({
       // user's free quota; the empty-state UX in FullPageResults nudges them
       // to try a different screenshot, which would otherwise hit the paywall.
       const gapsFound = data.topGaps?.length || 0;
-      if (gapsFound > 0) {
+      if (gapsFound > 0 && !isSampleRun) {
         incrementAuditCount();
-        // After a successful audit that burned a credit, if the user is now
-        // out of free audits and hasn't unlocked yet, surface the unlock
-        // prompt. Fire once per page-mount to avoid nagging users who
-        // dismiss.
-        if (!isUnlocked && !hasPromptedUnlockRef.current && (auditCount + 1) >= FREE_AUDIT_LIMIT) {
-          hasPromptedUnlockRef.current = true;
-          // Defer so the results render first.
-          setTimeout(() => setShowPaywall(true), 600);
-        }
+        // Don't auto-fire the unlock modal here — let the user explore their
+        // results first. The paywall will surface naturally when they attempt
+        // a re-audit (handleClear / handleScreenshotUpload / handleStartRealAudit
+        // all gate on isPaywalled), or on next homepage mount via the
+        // returning-exhausted-user effect below.
       }
       trackAuditEvent('audit_session_completed', {
         score: data.score,
@@ -186,12 +184,14 @@ export default function AuditClient({
     } finally {
       setIsAnalyzing(false);
     }
-  }, [productType, incrementAuditCount, isUnlocked, auditCount]);
+  }, [productType, incrementAuditCount]);
 
   // Handle analyze from ScreenshotUpload — user clicked "Analyze"
   const handleScreenshotUpload = useCallback(async (images: UploadedImage[]) => {
-    // Check paywall before running analysis
-    if (isPaywalled) {
+    // Sample-screenshot runs bypass the paywall — they're preview-only and
+    // don't burn a credit (handled in runAnalysis).
+    const isSampleRun = images.some((img) => img.isSample);
+    if (isPaywalled && !isSampleRun) {
       setShowPaywall(true);
       return;
     }

@@ -87,7 +87,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
     setTimeout(() => setLimitMessage(false), 2500);
   }, []);
 
-  const processFiles = useCallback((files: FileList | null) => {
+  const processFiles = useCallback((files: FileList | null, opts?: { isSample?: boolean }) => {
     if (!files || files.length === 0) return;
 
     const validFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
@@ -105,6 +105,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                 base64,
                 fileName: file.name,
                 deviceType: detectDeviceType(img.naturalWidth, img.naturalHeight),
+                isSample: opts?.isSample,
               });
             };
             img.src = base64;
@@ -155,7 +156,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         // Skip auto-classification — sample's productType is known.
         hasAutoClassifiedRef.current = true;
         if (!productTypeRef.current) onProductTypeChange(sample.productType);
-        processFiles(dt.files);
+        processFiles(dt.files, { isSample: true });
       } catch {
         /* silent — user can still upload manually */
       }
@@ -199,7 +200,10 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-      <div className="flex flex-col lg:flex-row lg:justify-center gap-4 lg:gap-6 items-stretch">
+      {/* On mobile we flip the order so the product-type picker (in the aside)
+          comes first, then the dropzone — matches the order users actually
+          fill these in. Sticky bottom Analyze CTA replaces the inline button. */}
+      <div className="flex flex-col-reverse lg:flex-row lg:justify-center gap-4 lg:gap-6 items-stretch pb-24 lg:pb-0">
         {/* LEFT: Dropzone / staged previews — matches demo screenshot canvas (880×660) */}
         <div className="w-full lg:w-[880px] lg:h-[660px] flex-shrink-0 flex flex-col">
           {hasImages ? (
@@ -405,7 +409,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
             </div>
           )}
 
-          <div className="mt-auto pt-2">
+          <div className="mt-auto pt-2 hidden lg:block">
             {!canAnalyze && (
               <p className="mb-2 text-xs text-text-tertiary">
                 {!hasImages && !productType
@@ -455,6 +459,29 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
             </div>
           </div>
         </aside>
+      </div>
+
+      {/* Mobile sticky Analyze bar — replaces the inline Analyze button on small
+          screens so the action is always thumb-reachable. */}
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
+        {!canAnalyze && (
+          <p className="mb-2 text-xs text-text-tertiary text-center">
+            {!hasImages && !productType
+              ? 'Add a screenshot and pick a type.'
+              : !hasImages
+                ? 'Add a screenshot.'
+                : 'Pick a type.'}
+          </p>
+        )}
+        <button
+          onClick={() => canAnalyze && onAnalyze(stagedImages)}
+          disabled={!canAnalyze}
+          className="w-full inline-flex items-center justify-center px-6 py-3.5 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base shadow-lg active:scale-95 transition-transform cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
+        >
+          {hasImages
+            ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`
+            : 'Analyze'}
+        </button>
       </div>
 
       {/* Hidden file input */}

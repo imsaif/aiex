@@ -27,6 +27,12 @@ export interface UploadedImage {
   base64: string;
   fileName: string;
   deviceType: DeviceType;
+  /**
+   * True when this image came from the "Try a sample" thumbnails on the upload
+   * screen. Sample runs are preview-only — they don't burn a free-audit credit
+   * and bypass the paywall so returning users can still explore the flow.
+   */
+  isSample?: boolean;
 }
 
 interface CenterUploadProps {
