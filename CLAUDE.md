@@ -578,6 +578,7 @@ This section documents issues we've encountered and their solutions, so Claude r
 **cron-job.org Setup:**
 - Daily newsletter: `0 3 * * *` (3 AM UTC / 8:30 AM IST) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
 - Weekly newsletter: `0 2 * * 1` (2 AM UTC / 7:30 AM IST Mon) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly`
+- Audit health monitor: `*/5 * * * *` (every 5 min) → `https://www.aiuxdesign.guide/api/health/audit` — synthetic monitor for the audit funnel; reuses CRON_SECRET; emails admin via Resend on failure. Healthy checks are silent. See `src/app/api/health/audit/route.ts` for the four checks (env, homepage, analyze route, database).
 - Requires `Authorization: Bearer <CRON_SECRET>` header
 
 **Newsletter Troubleshooting Checklist:**
