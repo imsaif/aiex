@@ -4,7 +4,7 @@ import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import AuditClient from '@/components/audit/AuditClient';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: 'AI UX Audit: Free Tool to Score Designs Against 36 Patterns',

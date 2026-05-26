@@ -14,7 +14,7 @@ import { siteConfig } from '@/config/seo';
 import type { PatternSummary } from '@/types';
 
 // ISR so Googlebot hits the warm edge cache
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: {

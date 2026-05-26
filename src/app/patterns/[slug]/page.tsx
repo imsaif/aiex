@@ -12,8 +12,8 @@ import { PatternSummary } from '@/types';
 import { guides } from '@/data/guides';
 import { getGuidesForPattern } from '@/lib/cross-links';
 
-// ISR: revalidate every hour to avoid cold function execution on every request
-export const revalidate = 3600;
+// ISR: revalidate daily — content is stable + on-demand revalidation handles admin edits
+export const revalidate = 86400;
 // Only allow slugs from generateStaticParams — unknown slugs return 404
 export const dynamicParams = false;
 

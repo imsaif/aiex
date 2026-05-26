@@ -9,7 +9,7 @@ import categories from '@/data/categories';
 import { siteConfig } from '@/config/seo';
 import type { Category } from '@/types';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 export const dynamicParams = false;
 
 export async function generateStaticParams() {

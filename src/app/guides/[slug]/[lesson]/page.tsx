@@ -21,7 +21,7 @@ import { extractHeadings } from '@/lib/guides/headings';
 import { MODULE_TITLES } from '@/lib/guides/modules';
 
 // ISR so the first request is cached and Googlebot hits warm HTML
-export const revalidate = 3600;
+export const revalidate = 86400;
 export const dynamicParams = false;
 
 // Pre-render every lesson at build time. Next.js requires the param keys here

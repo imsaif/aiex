@@ -83,11 +83,12 @@ const customPatternMetadata: Record<string, { title: string; description: string
     description: 'Every major conversational UI pattern with working demos — from basic chat to voice assistants and agentic interfaces. See how ChatGPT, Slack, Siri, and Claude do it.',
   },
   'privacy-first-design': {
-    // 2026-05 rewrite: chronic 0.08% CTR at pos 11.3 / 1290 impressions / 1 click.
-    // Old title competed with "privacy first ai" buyer-guide intent (ProtonAI/DuckDuckGo
-    // recommendations dominate that SERP). Reframing toward designer-intent keyword.
-    title: 'AI Privacy UX Patterns — On-Device, Consent & Data Minimization Design',
-    description: 'Every AI privacy UX pattern with working demos — on-device ML, consent defaults, ephemeral context, and data-minimization design. See how Apple Intelligence, Signal, and Arc do it.',
+    // 2026-05-26 rewrite #2: Apr 27 title held pos 9 but earned 0.10% CTR (1 click / 1036 imp).
+    // Diagnosis: query `privacy first ai` (was 310 imp) is product-discovery intent — abandoned.
+    // The aligned query `privacy-first design` (pos 9, 27 imp, 0% CTR) wants annotated UI examples,
+    // not pattern taxonomy. New title leads with "6 UI Moves" + 3 named products to win that click.
+    title: 'Privacy-First Design Patterns — 6 UI Moves from Apple, ChatGPT, Signal',
+    description: 'How privacy-respecting AI products communicate data use. Annotated UI examples — consent flows, memory controls, on-device indicators, and per-feature toggles.',
   },
   'confidence-visualization': {
     // 2026-05 rewrite: impressions dropped 39% over 28d (3,616 → 2,222), suggesting
