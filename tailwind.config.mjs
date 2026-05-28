@@ -121,22 +121,65 @@ export default {
         wider: '.05em',
         widest: '.25em',
       },
-      // Refined shadows - fold.money inspired
+      // Shadow / elevation scale — semantic, dark-mode aware via CSS vars.
+      // `subtle` kept as legacy; `flat/card/card-hover/elevated/popover` are
+      // the new design-system tokens.
       boxShadow: {
         'subtle': '0 2px 8px rgba(51, 65, 85, 0.04)',
-        'card': '0 4px 12px rgba(51, 65, 85, 0.05)',
-        'card-hover': '0 8px 24px rgba(51, 65, 85, 0.08)',
-        'elevated': '0 12px 32px rgba(51, 65, 85, 0.1)',
+        'flat': 'var(--shadow-flat)',
+        'card': 'var(--shadow-card)',
+        'card-hover': 'var(--shadow-card-hover)',
+        'elevated': 'var(--shadow-elevated)',
+        'modal': 'var(--shadow-modal)',
+        'popover': 'var(--shadow-popover)',
       },
-      // Extended border radius for softer feel
+      // Border radius — role-named tokens (design-system) + legacy size-named.
       borderRadius: {
         '2xl': '1rem',
         '3xl': '1.5rem',
         '4xl': '2rem',
+        // Design-system tokens
+        'input': 'var(--radius-input)',
+        'card': 'var(--radius-card)',
+        'modal': 'var(--radius-modal)',
+        'mockup': 'var(--radius-mockup)',
+        'pill': 'var(--radius-pill)',
       },
-      // Animation timing
+      // Z-index stack — explicit layering tokens. Rule: new code uses these,
+      // never raw `z-50`. Old code is on the migration backlog.
+      zIndex: {
+        'base': 'var(--z-base)',
+        'dropdown': 'var(--z-dropdown)',
+        'sticky': 'var(--z-sticky)',
+        'overlay': 'var(--z-overlay)',
+        'modal': 'var(--z-modal)',
+        'toast': 'var(--z-toast)',
+        'tooltip': 'var(--z-tooltip)',
+      },
+      // Motion durations — semantic, mapped to perceptual research.
+      // Use `duration-snap` for taps, `duration-quick` for hover,
+      // `duration-base` for modals, `duration-deliberate` for page-level.
+      transitionDuration: {
+        'snap': 'var(--duration-snap)',
+        'quick': 'var(--duration-quick)',
+        'base': 'var(--duration-base)',
+        'deliberate': 'var(--duration-deliberate)',
+      },
+      // Easings — `ease-out-expo` kept for compat; new tokens via CSS vars.
       transitionTimingFunction: {
         'ease-out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'out-expo': 'var(--ease-out-expo)',
+        'in-out-soft': 'var(--ease-in-out-soft)',
+        'spring': 'var(--ease-spring)',
+      },
+      // Spacing aliases — semantic names for component-internal rhythm.
+      // Use `p-default`, `gap-loose`, etc. instead of raw `p-4`, `gap-6`.
+      spacing: {
+        'tight': 'var(--space-tight)',
+        'snug': 'var(--space-snug)',
+        'default': 'var(--space-default)',
+        'loose': 'var(--space-loose)',
+        'roomy': 'var(--space-roomy)',
       },
     },
   },

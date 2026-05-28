@@ -59,8 +59,9 @@
     "usage:json": "ccusage daily --json",
     "error-status": "echo '=== TypeScript Errors ===' && (npx tsc --noEmit | grep -c 'error TS' || echo '0') && echo '=== ESLint Errors ===' && (npm run lint | grep -c 'Error:' || echo '0') && echo '=== Test Status ===' && npm test -- --passWithNoTests --silent",
     "brand:check": "node scripts/analysis/brand-validator.js --staged --verbose",
-    "brand:check:all": "node scripts/analysis/brand-validator.js --verbose",
+    "brand:check:all": "node scripts/analysis/brand-validator.js --all --verbose",
     "brand:fix": "node scripts/analysis/brand-validator.js --staged --fix",
+    "design-audit:report": "node scripts/analysis/brand-validator.js --all --report",
     "fix-all": "npm run lint -- --fix && npm test -- --passWithNoTests && npm run brand:fix"
   },
   "dependencies": {

@@ -136,6 +136,14 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
+                      href="/design-system"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Design System
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="/resources"
                       className="text-base font-medium text-accent-primary hover:text-accent-hover transition-colors"
                     >
