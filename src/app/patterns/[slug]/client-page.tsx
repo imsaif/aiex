@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { InlineAuditCTA } from '@/components/audit/InlineAuditCTA';
+import SaveToDashboardButton from '@/components/handoff/SaveToDashboardButton';
+import { hasLiveDemo } from '@/components/ui/demo-registry';
 
 // Lazy load heavy components to reduce initial bundle size.
 //
@@ -69,6 +71,30 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
     return colorMap[color] || colorMap['blue'];
   };
 
+  // Inline interactive demo: placement is per-pattern (defaults to after the
+  // Problem/Solution grid). Renders nothing when the pattern has no live demo
+  // or placement is 'none'. The demo also always appears in Implementation.
+  const inlineDemoPlacement = pattern.content.inlineDemoPlacement ?? 'after-problem-solution';
+  const primaryDemo = pattern.content.codeExamples?.[0];
+  const primaryDemoId = primaryDemo?.componentId || `${pattern.slug}-example-0`;
+  const showInlineDemo = inlineDemoPlacement !== 'none' && hasLiveDemo(primaryDemoId);
+  const renderInlineDemo = () =>
+    showInlineDemo ? (
+      <section>
+        <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-primary">
+          See it in action
+        </h2>
+        <CodeExampleBlock
+          code={primaryDemo?.code || ''}
+          language={primaryDemo?.language || 'tsx'}
+          title={primaryDemo?.title || pattern.title}
+          description={primaryDemo?.description || ''}
+          componentId={primaryDemoId}
+          previewOnly
+        />
+      </section>
+    ) : null;
+
   return (
     <main className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6 animate-fade-in">
       {/* Previous / Next Navigation */}
@@ -114,6 +140,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         <div className="text-lg text-text-secondary leading-relaxed">
           {pattern.description}
         </div>
+        <div className="mt-6">
+          <SaveToDashboardButton slug={pattern.slug} variant="full" />
+        </div>
       </div>
 
       {/* Introduction Section - SEO Enhanced */}
@@ -130,6 +159,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
 
       {/* Main Content - Full Width */}
       <div className="space-y-12">
+        {/* Inline demo — placement 'after-intro' */}
+        {inlineDemoPlacement === 'after-intro' && renderInlineDemo()}
+
         {/* Problem and Solution Side by Side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <section className="bg-surface-primary p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
@@ -147,6 +179,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         </div>
 
+        {/* Inline demo — placement 'after-problem-solution' (default) */}
+        {inlineDemoPlacement === 'after-problem-solution' && renderInlineDemo()}
+
         {/* Products Using This Pattern */}
         <div>
           <ProductsSection pattern={pattern} />
@@ -161,6 +196,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             </div>
           </section>
         )}
+
+        {/* Inline demo — placement 'after-examples' */}
+        {inlineDemoPlacement === 'after-examples' && renderInlineDemo()}
 
         {/* Code Examples */}
         {pattern.content.codeExamples && pattern.content.codeExamples.length > 0 && (

@@ -107,7 +107,7 @@ function SearchResultsContent({ patterns }: SearchResultsClientProps) {
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm text-text-secondary">
             Built with ☕ by Imran ·
-            <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">Portfolio</a> ·
+            <a href="https://www.imranai.design/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">Portfolio</a> ·
             <a href="https://github.com/imsaif" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">GitHub</a> ·
             <a href="https://www.linkedin.com/in/imsaif/" target="_blank" rel="noopener noreferrer" className="hover:text-text-primary ml-1">LinkedIn</a>
           </p>

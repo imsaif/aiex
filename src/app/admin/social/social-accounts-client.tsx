@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { PostCard, type SocialAccount, type SocialPost } from './PostCard';
+import PatternDeepDiveSection from './PatternDeepDiveSection';
 
 interface Newsletter {
   id: string;
@@ -21,6 +22,7 @@ export default function SocialAccountsClient({
   initialSuccess,
   initialError,
 }: SocialAccountsClientProps) {
+  const [mode, setMode] = useState<'deepdive' | 'newsletter'>('deepdive');
   const [accounts, setAccounts] = useState<SocialAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
@@ -292,13 +294,41 @@ export default function SocialAccountsClient({
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 py-8">
-      <header className="mb-8">
+      <header className="mb-6">
         <h1 className="text-3xl font-bold text-text-primary">Social Media</h1>
         <p className="text-text-secondary mt-1">
-          Manage accounts and post to X, LinkedIn, and Reddit
+          Pattern deep-dives for LinkedIn + X, and newsletter distribution
         </p>
       </header>
 
+      {/* Mode tabs */}
+      <div className="mb-8 inline-flex rounded-lg border border-border-primary bg-surface-primary p-1">
+        <button
+          onClick={() => setMode('deepdive')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            mode === 'deepdive'
+              ? 'bg-accent-primary text-white'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          Pattern Deep-Dives
+        </button>
+        <button
+          onClick={() => setMode('newsletter')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            mode === 'newsletter'
+              ? 'bg-accent-primary text-white'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}
+        >
+          Newsletter Distribution
+        </button>
+      </div>
+
+      {mode === 'deepdive' ? (
+        <PatternDeepDiveSection />
+      ) : (
+        <>
       {message && (
         <div
           className={`mb-6 p-4 rounded-lg ${
@@ -668,6 +698,8 @@ SOCIAL_TOKEN_SECRET=your_32_byte_hex_secret`}
             </div>
           )}
         </div>
+      )}
+        </>
       )}
     </div>
   );

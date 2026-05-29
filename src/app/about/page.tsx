@@ -285,7 +285,7 @@ export default function AboutPage() {
               <a href="https://www.linkedin.com/in/imsaif/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">LinkedIn</a>
               <a href="https://medium.com/@imsaif" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Medium</a>
               <a href="https://github.com/imsaif" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">GitHub</a>
-              <a href="https://www.imranaidesign.com/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Portfolio</a>
+              <a href="https://www.imranai.design/" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover transition-colors">Portfolio</a>
             </div>
           </div>
         </section>

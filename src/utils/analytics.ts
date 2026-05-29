@@ -2,7 +2,7 @@
 // Tracks usage patterns without collecting personal data
 
 interface AnalyticsEvent {
-  type: 'page_view' | 'pattern_view' | 'search' | 'favorite' | 'copy_code' | 'export';
+  type: 'page_view' | 'pattern_view' | 'search' | 'favorite' | 'copy_code' | 'export' | 'handoff';
   data?: Record<string, unknown>;
   timestamp: number;
   sessionId: string;

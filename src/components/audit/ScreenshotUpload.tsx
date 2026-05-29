@@ -6,6 +6,7 @@ import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon, ChartBarIcon, ExclamationTriangleIcon, ListBulletIcon } from '@heroicons/react/24/outline';
 import { productOptions } from './productOptions';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { processImageFile } from '@/lib/audit/image';
 
 const SAMPLE_SCREENSHOTS: Array<{
   label: string;
@@ -93,25 +94,15 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
     const validFiles = Array.from(files).filter((f) => f.type.startsWith('image/'));
     if (validFiles.length === 0) return;
 
-    const promises = validFiles.map(
-      (file) =>
-        new Promise<UploadedImage>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const base64 = reader.result as string;
-            const img = new Image();
-            img.onload = () => {
-              resolve({
-                base64,
-                fileName: file.name,
-                deviceType: detectDeviceType(img.naturalWidth, img.naturalHeight),
-                isSample: opts?.isSample,
-              });
-            };
-            img.src = base64;
-          };
-          reader.readAsDataURL(file);
-        })
+    const promises = validFiles.map((file) =>
+      // Downscale large screenshots before upload — Anthropic's vision API
+      // rejects images over ~5MB / extreme dimensions ("Could not process image").
+      processImageFile(file).then(({ base64, width, height }) => ({
+        base64,
+        fileName: file.name,
+        deviceType: detectDeviceType(width, height),
+        isSample: opts?.isSample,
+      }))
     );
 
     Promise.all(promises).then((newImages) => {

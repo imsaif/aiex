@@ -3,6 +3,7 @@ import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { figmaPrompt } from './figma-prompt';
 import { codeExamples } from './code-examples';
+import { examples } from './examples';
 
 export const workspaceNativeAgents: Pattern = {
   id: "workspace-native-agents",
@@ -26,7 +27,7 @@ export const workspaceNativeAgents: Pattern = {
   content: {
     problem: "AI agents are being added to existing professional tools but feel like separate tools, creating context-switching overhead.",
     solution: "Embed AI capabilities directly into existing workflow contexts where users already work, rather than requiring switch to separate interfaces.",
-    examples: [],
+    examples,
     guidelines,
     considerations,
     relatedPatterns: [],

@@ -9,6 +9,7 @@ import ProductFilterBar from '../components/ui/ProductFilterBar';
 import IndustryFilterBar from '../components/ui/IndustryFilterBar';
 import { useThemeFilter } from '../hooks/useTheme';
 import { getProductLogoUrl, hasProductLogo } from '../data/product-logos';
+import SaveToDashboardButton from '../components/handoff/SaveToDashboardButton';
 import type { PatternSummary, Category } from '../types';
 import type { Product } from '../data/utils/product-utils';
 import type { Industry } from '../data/utils/industry-utils';
@@ -156,8 +157,13 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
               {filteredPatterns.map((pattern) => (
                 <div
                   key={pattern.id}
-                  className="transition-transform duration-200 ease-out hover:-translate-y-1.5"
+                  className="relative transition-transform duration-200 ease-out hover:-translate-y-1.5"
                 >
+                  <SaveToDashboardButton
+                    slug={pattern.slug}
+                    variant="icon"
+                    className="absolute top-4 right-4"
+                  />
                   <Link
                     href={`/patterns/${pattern.slug}`}
                     className="block group"

@@ -521,13 +521,14 @@ interface CodeExampleBlockProps {
   title: string;
   description: string;
   componentId: string;
+  /** Render only the live interactive demo (no code toggle / code panel / header).
+   *  Used by the pattern page's inline demo slot. Renders nothing when the
+   *  componentId has no live demo. */
+  previewOnly?: boolean;
 }
 
 import { scaffoldedDemos } from '@/components/examples/scaffolded/registry';
-
-const REGISTERED_DEMOS = new Set([
-  'contextual-assistance-editor','human-in-the-loop-moderation','progressive-disclosure-email','progressive-disclosure-email-demo','conversational-ui-bot','conversational-ui-guided','confidence-indicator','adaptive-dashboard','adaptive-learning','multimodal-search','guided-learning-tutorial','augmented-creation-demo','responsible-ai-design-demo','error-recovery-demo','collaborative-ai-demo','ambient-intelligence-demo','safe-exploration-demo','explainable-ai-demo','predictive-anticipation-demo','confidence-visualization-demo','selective-memory-demo','feedback-loops-demo','graceful-handoff-demo','context-switching-demo','intelligent-caching-demo','privacy-first-design-demo','progressive-enhancement-demo','universal-access-patterns-demo','crisis-detection-escalation-demo','multi-layer-crisis-detection','session-degradation-prevention-example-0','anti-manipulation-safeguards-demo','VulnerableUserProtectionDemo','autonomy-spectrum-demo','intent-preview-demo','plan-summary-demo','action-audit-trail-demo','escalation-pathways-demo','trust-calibration-demo','mixed-initiative-control-demo','agent-status-monitoring-demo',
-]);
+import { REGISTERED_DEMOS } from './demo-registry';
 
 export default function CodeExampleBlock({
   code,
@@ -535,10 +536,26 @@ export default function CodeExampleBlock({
   title,
   description,
   componentId,
+  previewOnly = false,
 }: CodeExampleBlockProps) {
   const ScaffoldedDemo = scaffoldedDemos[componentId];
   const hasLivePreview = REGISTERED_DEMOS.has(componentId) || !!ScaffoldedDemo;
   const [showCode, setShowCode] = useState(!hasLivePreview);
+
+  // Width class for the live preview, shared by the full block and preview-only mode.
+  const previewMaxWidth = [
+    'human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo', 'autonomy-spectrum-demo', 'conversational-ui-guided', 'VulnerableUserProtectionDemo',
+  ].includes(componentId)
+    ? 'max-w-6xl'
+    : [
+        'augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo',
+      ].includes(componentId)
+      ? 'max-w-4xl'
+      : ['session-degradation-prevention-example-0', 'anti-manipulation-safeguards-demo'].includes(componentId)
+        ? 'max-w-2xl'
+        : ScaffoldedDemo
+          ? 'max-w-4xl'
+          : 'max-w-lg';
   const [componentLoaded, setComponentLoaded] = useState(false);
 
   useEffect(() => {
@@ -647,6 +664,25 @@ export default function CodeExampleBlock({
     }
   };
 
+  // Preview-only mode: render just the live demo, no header / toggle / code.
+  // Renders nothing when there is no live demo for this componentId.
+  if (previewOnly) {
+    if (!hasLivePreview) return null;
+    return (
+      <div className="bg-surface-primary border border-border-primary rounded-lg shadow-sm overflow-hidden">
+        <div className={`p-6 flex justify-center ${ScaffoldedDemo ? '' : 'min-h-[400px]'}`}>
+          <div className={`w-full ${previewMaxWidth}`}>
+            {componentLoaded ? renderComponent() : (
+              <div className="flex items-center justify-center h-64">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
       {/* Example header */}
@@ -719,25 +755,7 @@ export default function CodeExampleBlock({
         ) : (
           /* Live Preview */
           <div className={`p-6 flex justify-center ${ScaffoldedDemo ? '' : 'min-h-[400px]'}`}>
-            <div className={`w-full ${
-              // Components that need full width (max-w-6xl)
-              ['human-in-the-loop-moderation', 'confidence-indicator', 'guided-learning-tutorial', 'collaborative-ai-demo', 'ambient-intelligence-demo', 'responsible-ai-design-demo', 'confidence-visualization-demo', 'selective-memory-demo', 'context-switching-demo', 'crisis-detection-escalation-demo', 'multi-layer-crisis-detection', 'action-audit-trail-demo', 'mixed-initiative-control-demo', 'autonomy-spectrum-demo', 'conversational-ui-guided'].includes(componentId)
-                ? 'max-w-6xl'
-                // Components that need large width (max-w-4xl)
-                : ['augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo'].includes(componentId)
-                ? 'max-w-4xl'
-                // Components that need large width (max-w-4xl)
-                : ['VulnerableUserProtectionDemo'].includes(componentId)
-                ? 'max-w-6xl'
-                // Components that need medium width (max-w-2xl)
-                : ['session-degradation-prevention-example-0', 'anti-manipulation-safeguards-demo'].includes(componentId)
-                ? 'max-w-2xl'
-                // Scaffolded demos default to max-w-4xl to match the dominant existing pattern
-                : ScaffoldedDemo
-                ? 'max-w-4xl'
-                // Default to medium width for smaller components
-                : 'max-w-lg'
-            }`}>
+            <div className={`w-full ${previewMaxWidth}`}>
               {componentLoaded ? renderComponent() : (
                 <div className="flex items-center justify-center h-64">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>

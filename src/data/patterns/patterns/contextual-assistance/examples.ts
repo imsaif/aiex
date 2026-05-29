@@ -18,5 +18,12 @@ export const examples: Example[] = [
     description: "Offers writing suggestions, summaries, and editing help based on the document content and user's current focus.",
     image: "/images/examples/notion-ai.gif",
     altText: "Notion AI providing writing assistance"
+  },
+  {
+    title: "Granola",
+    description: "After each meeting, Granola surfaces contextual quick-actions — List action items, Write follow-up email, List Q&A — derived from that meeting's transcript, offering the right next step exactly where the user needs it.",
+    image: "/images/examples/granola-ask.png",
+    altText: "Granola's Ask Granola panel showing contextual quick-actions based on the meeting transcript",
+    url: "https://www.granola.ai/"
   }
 ]; 

@@ -11,7 +11,7 @@ export const siteConfig = {
   links: {
     github: 'https://github.com/imsaif',
     linkedin: 'https://www.linkedin.com/in/imsaif/',
-    portfolio: 'https://www.imranaidesign.com/',
+    portfolio: 'https://www.imranai.design/',
   },
   creator: {
     name: 'Imran',

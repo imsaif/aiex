@@ -606,6 +606,41 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     }
   }, [messages, results, isLoading]);
 
+  // Shared handoff-copy handler — used by both the inline IDE card and the
+  // mobile sticky bottom bar. Defined here (before any conditional return) so
+  // the hook order stays stable; it derives its inputs from `results` and
+  // no-ops when results aren't ready yet. (Moving this below the `if (!results)
+  // return null` guard caused React error #310 — a hooks-count mismatch.)
+  const handleCopyHandoff = useCallback(async () => {
+    if (!results) return;
+    const gaps = (results.topGaps || []).filter(
+      (g) => g.status === 'missing' || g.status === 'needs-improvement'
+    );
+    if (gaps.length === 0) return;
+    const handoffPrompt = composeHandoffPrompt({
+      surfaceDescription: (results as ExtendedResults | null)?.surfaceDescription,
+      productType: results.productContext?.productType,
+      gaps,
+    });
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(handoffPrompt);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = handoffPrompt;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      trackAuditEvent('audit_handoff_copied', { gapCount: gaps.length });
+      setHandoffCopied(true);
+      setTimeout(() => setHandoffCopied(false), 2000);
+    } catch {
+      /* swallow — clipboard can fail in private browsing; user can still copy from disclosure */
+    }
+  }, [results]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -750,37 +785,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const quickWins = results.quickWins || [];
   const issues = topGaps.filter((g) => g.status === 'missing' || g.status === 'needs-improvement');
   const wellImplemented = topGaps.filter((g) => g.status === 'good');
-
-  // Shared handoff-copy handler — used by both the inline IDE card and the
-  // mobile sticky bottom bar so both surfaces fire the same Clarity event
-  // and the same "Copied" feedback state.
-  const surfaceDescriptionForHandoff = (results as ExtendedResults | null)?.surfaceDescription;
-  const productTypeForHandoff = results.productContext?.productType;
-  const handleCopyHandoff = useCallback(async () => {
-    if (issues.length === 0) return;
-    const handoffPrompt = composeHandoffPrompt({
-      surfaceDescription: surfaceDescriptionForHandoff,
-      productType: productTypeForHandoff,
-      gaps: issues,
-    });
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(handoffPrompt);
-      } else {
-        const ta = document.createElement('textarea');
-        ta.value = handoffPrompt;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      }
-      trackAuditEvent('audit_handoff_copied', { gapCount: issues.length });
-      setHandoffCopied(true);
-      setTimeout(() => setHandoffCopied(false), 2000);
-    } catch {
-      /* swallow — clipboard can fail in private browsing; user can still copy from disclosure */
-    }
-  }, [issues, surfaceDescriptionForHandoff, productTypeForHandoff]);
 
   // ----- Demo view: full-bleed dashboard mockup with clickable pins + side panel -----
   if (showDemoCTA) {

@@ -202,7 +202,7 @@ export default function Footer() {
                 <ul className="space-y-3">
                   <li>
                     <a
-                      href="https://www.imranaidesign.com/"
+                      href="https://www.imranai.design/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"

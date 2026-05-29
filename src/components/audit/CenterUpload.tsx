@@ -14,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { DeviceFrame } from './DeviceFrame';
 import { detectDeviceType, type DeviceType } from '@/utils/imageDetection';
+import { processImageFile } from '@/lib/audit/image';
 
 const MAX_IMAGES = 2;
 
@@ -93,11 +94,9 @@ export function CenterUpload({
       const newImages: UploadedImage[] = [];
 
       for (const file of files) {
-        const base64 = await new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.readAsDataURL(file);
-        });
+        // Downscale large screenshots before upload — Anthropic's vision API
+        // rejects images over ~5MB / extreme dimensions ("Could not process image").
+        const { base64 } = await processImageFile(file);
 
         const result = await detectDeviceType(base64);
         newImages.push({

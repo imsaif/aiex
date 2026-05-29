@@ -9,9 +9,11 @@ import {
   MagnifyingGlassIcon,
   FolderIcon,
   AcademicCapIcon,
+  BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
 import { ThemeToggle } from '../ui/ThemeToggle';
+import { useHandoffKit } from '@/hooks/useHandoffKit';
 
 // Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
 const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
@@ -19,6 +21,7 @@ const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 const Navbar = () => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { count: savedCount } = useHandoffKit();
 
   // Global keyboard shortcut for search (⌘K / Ctrl+K)
   useEffect(() => {
@@ -119,6 +122,26 @@ const Navbar = () => {
                 Resources
                 <span className="invisible font-semibold block h-0" aria-hidden="true">
                   Resources
+                </span>
+              </span>
+            </Link>
+
+            <Link href="/dashboard" className={getLinkClasses('/dashboard')}>
+              <span className="relative inline-flex">
+                <BookmarkIcon className="w-5 h-5" />
+                {savedCount > 0 && (
+                  <span
+                    className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-primary px-1 text-xs font-semibold leading-none text-white"
+                    aria-hidden="true"
+                  >
+                    {savedCount}
+                  </span>
+                )}
+              </span>
+              <span className="hidden sm:inline relative">
+                Saved
+                <span className="invisible font-semibold block h-0" aria-hidden="true">
+                  Saved
                 </span>
               </span>
             </Link>

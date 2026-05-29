@@ -12,12 +12,19 @@ import { prisma } from '@/lib/prisma';
  *   - Neon DB unreachable (free-tier quota / connection limit)
  *   - ANTHROPIC_API_KEY missing or rotated without update
  *
- * Does NOT call Anthropic — sends a deliberately invalid POST that the
- * route rejects at 400 before reaching the model. Zero API spend per check.
+ * By default it does NOT call Anthropic — the analyze check sends a
+ * deliberately invalid POST that the route rejects at 400 before reaching the
+ * model, so the 5-min cron stays zero-spend. That check confirms the key is
+ * PRESENT but not that it's VALID. Pass `?deep=1` to additionally run a real
+ * 1-token Anthropic ping that catches an invalid/rotated key (run this on
+ * demand after rotating secrets — it costs ~1 token, not zero).
  *
  * Auth: requires `Authorization: Bearer <CRON_SECRET>` so the response
  * (which leaks env shape) can't be enumerated by a stranger.
  */
+
+// Keep in sync with the model used by /api/patterns/analyze.
+const ANTHROPIC_MODEL = 'claude-sonnet-4-20250514';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.guide';
@@ -101,6 +108,41 @@ function checkEnv(): { ok: boolean; detail?: string } {
     : { ok: false, detail: `missing env: ${missing.join(', ')}` };
 }
 
+/**
+ * Deep check (only when ?deep=1): a real 1-token Anthropic call that proves the
+ * key is VALID, not just present. This is the gap that made a rotated/typo'd
+ * ANTHROPIC_API_KEY surface as a user-facing "Something went wrong" instead of
+ * an alert: the env + analyze checks both pass with a present-but-invalid key.
+ */
+async function checkAnthropicKey(): Promise<{ ok: boolean; detail?: string }> {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return { ok: false, detail: 'ANTHROPIC_API_KEY not set' };
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: ANTHROPIC_MODEL,
+      max_tokens: 1,
+      messages: [{ role: 'user', content: 'ping' }],
+    }),
+    cache: 'no-store',
+  });
+  // Auth is validated before the request body, so any non-auth status (200, or
+  // even a 400 about the body/model) means the key itself is accepted.
+  if (res.status === 200) return { ok: true, detail: 'key valid (1-token ping)' };
+  if (res.status === 401 || res.status === 403) {
+    return { ok: false, detail: `Anthropic rejected the key (${res.status}) — invalid or rotated without update` };
+  }
+  if (res.status === 400) return { ok: true, detail: 'auth accepted (400 on ping body; key valid)' };
+  if (res.status === 429) return { ok: true, detail: 'rate limited (429) but key valid' };
+  const body = await res.text().catch(() => '');
+  return { ok: false, detail: `Anthropic returned ${res.status}: ${body.slice(0, 120)}` };
+}
+
 async function sendHealthAlert(failures: CheckResult[], allChecks: CheckResult[]) {
   if (!resend || !process.env.ADMIN_EMAIL) return;
   try {
@@ -127,8 +169,8 @@ async function sendHealthAlert(failures: CheckResult[], allChecks: CheckResult[]
           <h2 style="font-size: 16px; margin-top: 24px;">All checks</h2>
           <ul style="line-height: 1.6;">${allList}</ul>
 
-          <p style="margin-top: 20px;">Re-run manually:</p>
-          <pre style="background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 13px; overflow-x: auto;">curl -H "Authorization: Bearer $CRON_SECRET" "${SITE_URL}/api/health/audit"</pre>
+          <p style="margin-top: 20px;">Re-run manually (add <code>?deep=1</code> to also validate the Anthropic key with a 1-token ping):</p>
+          <pre style="background: #f1f5f9; padding: 12px; border-radius: 6px; font-size: 13px; overflow-x: auto;">curl -H "Authorization: Bearer $CRON_SECRET" "${SITE_URL}/api/health/audit?deep=1"</pre>
 
           <p style="margin-top: 16px; font-size: 13px; color: #64748b;">
             cron-job.org will keep retrying every 5 min and will email again after the next failure window. Healthy checks are silent.
@@ -147,14 +189,21 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // ?deep=1 adds a real 1-token Anthropic ping (catches an invalid/rotated key).
+  // Off by default so the 5-min cron stays zero-spend.
+  const deep = ['1', 'true'].includes(new URL(request.url).searchParams.get('deep') ?? '');
+
+  const parallelChecks = [
+    timed('homepage', checkHomepage),
+    timed('analyze_route', checkAnalyzeRoute),
+    timed('database', checkDatabase),
+  ];
+  if (deep) parallelChecks.push(timed('anthropic_key', checkAnthropicKey));
+
   const envCheck = checkEnv();
   const checks: CheckResult[] = [
     { name: 'env', ok: envCheck.ok, latencyMs: 0, detail: envCheck.detail },
-    ...(await Promise.all([
-      timed('homepage', checkHomepage),
-      timed('analyze_route', checkAnalyzeRoute),
-      timed('database', checkDatabase),
-    ])),
+    ...(await Promise.all(parallelChecks)),
   ];
 
   const failures = checks.filter((c) => !c.ok);

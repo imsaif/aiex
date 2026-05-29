@@ -3,6 +3,7 @@ import { guidelines } from './guidelines';
 import { considerations } from './considerations';
 import { figmaPrompt } from './figma-prompt';
 import { codeExamples } from './code-examples';
+import { examples } from './examples';
 
 export const agentReflectionLearning: Pattern = {
   id: "agent-reflection-learning",
@@ -28,7 +29,7 @@ export const agentReflectionLearning: Pattern = {
   content: {
     problem: "As AI agents gain autonomy, users struggle to understand what the agent has learned from past interactions and corrections, making it hard to trust the agent over time.",
     solution: "Surface what the agent has learned from corrections and past sessions through visible learning indicators, correction acknowledgements, and improvement summaries that build trust incrementally.",
-    examples: [],
+    examples,
     guidelines,
     considerations,
     relatedPatterns: [],
