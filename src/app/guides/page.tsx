@@ -10,6 +10,7 @@ import {
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { guides } from '@/data/guides';
 import { siteConfig } from '@/config/seo';
 
@@ -311,13 +312,29 @@ export default function GuidesPage() {
               </h1>
               <p className="text-2xl md:text-3xl text-text-secondary mb-12">
                 Free step-by-step courses on Claude Code, Cursor, GitHub
-                Copilot, GitHub, and conversational UI. No coding experience
-                needed.
+                Copilot, GitHub, and conversational UI.
               </p>
               <p className="text-base text-text-secondary">
                 {guides.length} guides · {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)} lessons ·
-                All free, no signup required
+                All free, start instantly
               </p>
+
+              {/* Hero email capture — mirrors the /news and /patterns hero
+                  treatment (stacked form + social proof) for a consistent,
+                  above-the-fold conversion surface. */}
+              <div className="mt-10 max-w-md mx-auto">
+                <InlineNewsletterSignup
+                  variant="hero"
+                  source="direct"
+                  customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
+                  customButtonText="Solve my AI design overload →"
+                  customSuccessMessage="You're in! Watch for our next issue."
+                  stacked
+                />
+                <p className="text-base font-medium text-text-secondary mt-4">
+                  46,000+ reads · 50+ products analyzed daily
+                </p>
+              </div>
             </div>
           </div>
         </section>

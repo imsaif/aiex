@@ -156,14 +156,14 @@ export function PaywallModal({ onClose, mode, auditCountAtTrigger, onUnlocked }:
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-primary opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-primary"></span>
                   </span>
-                  Unlock 3 more · Free
+                  Free · No card needed
                 </div>
 
                 <h2 className="text-[22px] font-semibold text-text-primary tracking-tight leading-[1.2] mb-2">
-                  Like what you saw? Get 3 more audits.
+                  Get 3 more audits, free.
                 </h2>
                 <p className="text-sm text-text-secondary mb-6 leading-relaxed">
-                  Drop your email and we&apos;ll unlock 3 more free audits right now. No card, no commitment.
+                  Add your email and we&apos;ll unlock them right away.
                 </p>
 
                 <form onSubmit={handleSubmit} className="mb-5">
@@ -187,7 +187,7 @@ export function PaywallModal({ onClose, mode, auditCountAtTrigger, onUnlocked }:
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                     ) : (
-                      'Unlock 3 more audits'
+                      'Unlock audits'
                     )}
                   </button>
 

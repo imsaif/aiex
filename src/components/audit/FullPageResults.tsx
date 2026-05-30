@@ -14,7 +14,9 @@ import {
   SparklesIcon,
   CommandLineIcon,
 } from '@heroicons/react/24/outline';
-import { composeHandoffPrompt } from '@/lib/audit/handoff';
+import { composeHandoffPrompt, productTypeLabel } from '@/lib/audit/handoff';
+import SaveAuditButton from './SaveAuditButton';
+import type { SavedAudit } from '@/hooks/useSavedAudits';
 import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
 import { GapCard } from './GapCard';
 import { EmailReportModal } from './EmailReportModal';
@@ -793,19 +795,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
     return (
       <div className="relative">
-        {/* Hero zone — atmospheric mesh + corner reticles (editorial
-            precision aesthetic, see globals.css `.bg-hero-mesh`). The
-            laptop mockup lives INSIDE this section so the gradient
-            extends behind it fully; SocialProof's white bg starts
-            directly below. */}
-        <section className="relative bg-hero-mesh bg-grain pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20 overflow-hidden">
-          {/* Calibration-frame reticles — anchor the hero like a measuring
-              instrument. Hidden on mobile to avoid edge clipping. */}
-          <span aria-hidden className="hero-reticle hidden md:block top-6 left-6" />
-          <span aria-hidden className="hero-reticle hidden md:block top-6 right-6" />
-          <span aria-hidden className="hero-reticle hidden md:block bottom-6 left-6" />
-          <span aria-hidden className="hero-reticle hidden md:block bottom-6 right-6" />
-
+        {/* Hero zone — transparent so the page background (solid + dot
+            pattern from the parent section) shows through. The laptop mockup
+            lives INSIDE this section; SocialProof's white bg starts directly
+            below. */}
+        <section className="relative pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20 overflow-hidden">
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
             <div className="text-center max-w-3xl mx-auto">
               <p className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-accent-primary mb-5 before:content-[''] before:w-8 before:h-px before:bg-accent-primary/40 after:content-[''] after:w-8 after:h-px after:bg-accent-primary/40">
@@ -945,6 +939,22 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   const surfaceDescription = (results as ExtendedResults | null)?.surfaceDescription;
   const noFindings = topPinnedIssues.length === 0;
+
+  // Text-only snapshot for the "Save audit" action — exactly the inputs the
+  // dashboard needs to recap the audit and re-compose the IDE handoff prompt.
+  // The screenshot is deliberately omitted (localStorage cap, see useSavedAudits).
+  const savedAudit: SavedAudit = {
+    id: results.id,
+    savedAt: Date.now(),
+    productType: results.productContext?.productType,
+    productLabel: productTypeLabel(results.productContext?.productType),
+    surfaceDescription: surfaceDescription || '',
+    score: typeof results.score === 'number' ? results.score : null,
+    maxScore: typeof results.maxScore === 'number' ? results.maxScore : null,
+    applicablePatternsCount: results.applicablePatterns?.length ?? 0,
+    gaps: issues,
+    quickWins,
+  };
 
   // Empty-state branch: when a real (non-demo) run surfaces zero actionable
   // findings, replace the normal results layout with an honest "this isn't an
@@ -1405,7 +1415,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         })()}
 
         {/* CTAs */}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-2xl mx-auto">
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-3xl mx-auto">
+          <SaveAuditButton
+            audit={savedAudit}
+            className="flex-1 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary cursor-pointer"
+          />
           <button
             onClick={() => setShowEmailModal(true)}
             className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
@@ -1494,10 +1508,8 @@ function DemoStartForm({
   isUnlocked?: boolean;
 }) {
   let pillCopy: string | null = null;
-  if (typeof auditsRemaining === 'number' && auditsRemaining > 0) {
-    pillCopy = isUnlocked
-      ? `${auditsRemaining} free audit${auditsRemaining === 1 ? '' : 's'} remaining`
-      : '1 free audit · 3 more after email';
+  if (isUnlocked && typeof auditsRemaining === 'number' && auditsRemaining > 0) {
+    pillCopy = `${auditsRemaining} free audit${auditsRemaining === 1 ? '' : 's'} remaining`;
   }
 
   return (

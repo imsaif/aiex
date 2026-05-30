@@ -15,10 +15,43 @@ export function productTypeLabel(productType?: string | null): string {
   return PRODUCT_TYPE_LABELS[productType] || 'an AI product';
 }
 
+/** Filename for a downloaded audit handoff prompt (.md), namespaced + dated. */
+export function auditHandoffFilename(productType?: string | null): string {
+  const slug = (productType || 'audit').replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+  return `aiux-audit-${slug}-handoff.md`;
+}
+
 interface ComposeInput {
   surfaceDescription?: string | null;
   productType?: string | null;
   gaps: TopGap[];
+}
+
+/**
+ * Build a single gap's markdown block. Exported so the combined-handoff
+ * composer (src/lib/handoff/composeCombined.ts) can reuse the exact per-gap
+ * format without duplicating the installPrompt/URL fallback logic.
+ */
+export function gapBlock(gap: TopGap, index: number): string {
+  const slug = resolvePatternSlug(gap.pattern, gap.resource);
+  const matched = slug ? patterns.find((p) => p.slug === slug) : null;
+  const installPrompt = matched?.content?.installPrompt?.trim();
+  const url = slug ? `https://aiuxdesign.guide/patterns/${slug}` : null;
+
+  const installSection = installPrompt
+    ? `Pattern install instructions:\n${installPrompt}`
+    : url
+      ? `Pattern reference: ${url}\nRead this page and apply the same principles in code.`
+      : `Pattern reference: search aiuxdesign.guide for "${gap.pattern}" and apply the principles.`;
+
+  return [
+    `## Gap ${index + 1}: ${gap.pattern}`,
+    `What we saw: ${gap.evidence?.trim() || '(no specifics captured in this finding)'}`,
+    `Finding: ${gap.finding.trim()}`,
+    `Recommended fix: ${gap.recommendation.trim()}`,
+    '',
+    installSection,
+  ].join('\n');
 }
 
 export function composeHandoffPrompt({ surfaceDescription, productType, gaps }: ComposeInput): string {
@@ -34,27 +67,7 @@ export function composeHandoffPrompt({ surfaceDescription, productType, gaps }: 
     .filter(Boolean)
     .join('\n');
 
-  const gapBlocks = gaps.map((gap, i) => {
-    const slug = resolvePatternSlug(gap.pattern, gap.resource);
-    const matched = slug ? patterns.find((p) => p.slug === slug) : null;
-    const installPrompt = matched?.content?.installPrompt?.trim();
-    const url = slug ? `https://aiuxdesign.guide/patterns/${slug}` : null;
-
-    const installSection = installPrompt
-      ? `Pattern install instructions:\n${installPrompt}`
-      : url
-        ? `Pattern reference: ${url}\nRead this page and apply the same principles in code.`
-        : `Pattern reference: search aiuxdesign.guide for "${gap.pattern}" and apply the principles.`;
-
-    return [
-      `## Gap ${i + 1}: ${gap.pattern}`,
-      `What we saw: ${gap.evidence?.trim() || '(no specifics captured in this finding)'}`,
-      `Finding: ${gap.finding.trim()}`,
-      `Recommended fix: ${gap.recommendation.trim()}`,
-      '',
-      installSection,
-    ].join('\n');
-  });
+  const gapBlocks = gaps.map((gap, i) => gapBlock(gap, i));
 
   const closing = [
     'When done, output a Markdown report with:',

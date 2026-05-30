@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import {
   ChatBubbleLeftRightIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
   ArrowUpTrayIcon,
   MagnifyingGlassCircleIcon,
   ArrowRightIcon,
@@ -51,7 +50,7 @@ export function SocialProof() {
             What is an AI UX audit?
           </h2>
           <p className="text-base md:text-lg text-text-secondary leading-relaxed">
-            Score your interface against 36 patterns built for AI products. Upload a screenshot of any chatbot, code assistant, or dashboard to get instant, actionable feedback, then explore each pattern through a working micro-app with code you can paste into your own designs.
+            Score your interface against 36 patterns built for AI products. Upload a screenshot of any chatbot, code assistant, or dashboard and get instant, actionable fixes.
           </p>
         </div>
 
@@ -92,16 +91,6 @@ export function SocialProof() {
             See all 36 patterns
             <ArrowRightIcon className="w-4 h-4" />
           </Link>
-        </div>
-
-        {/* Pattern pills — non-linked labels, +32 more links to patterns page */}
-        <div className="flex flex-wrap gap-2 mb-14">
-          <span className="text-sm text-text-tertiary py-1">Patterns tested:</span>
-          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Progressive Disclosure</span>
-          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Confidence Visualization</span>
-          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Error Recovery</span>
-          <span className="px-3 py-1 rounded-full text-sm text-text-secondary border border-border-primary/50">Contextual Assistance</span>
-          <a href="/patterns" className="px-3 py-1 rounded-full text-sm text-accent-primary hover:underline transition-colors">+32 more</a>
         </div>
 
         {/* How it works — 3 cards with icons */}
@@ -209,70 +198,6 @@ export function SocialProof() {
           </Link>
         </div>
 
-        {/* "Not sure where to start?" beginner-friendly starter cards.
-            Same surface treatment as the primary Keep exploring cards
-            above so they read as legitimate options, not afterthoughts. */}
-        <div className="mt-10 pt-10 border-t border-border-primary/60">
-          <p className="text-sm font-semibold uppercase tracking-wide text-text-tertiary mb-6">
-            Not sure where to start?
-          </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <Link
-              href="/guides/conversational-ui-guide"
-              className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-background-primary border border-border-primary flex items-center justify-center">
-                  <ChatBubbleOvalLeftEllipsisIcon className="w-7 h-7 text-accent-primary" />
-                </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-background-primary border border-border-primary px-3 py-1.5 rounded-full">
-                  Hands-on
-                </span>
-              </div>
-              <h4 className="text-xl md:text-2xl font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">
-                Build a Conversational UI
-              </h4>
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-                Ship a real chat interface using the patterns ChatGPT and Claude rely on.
-              </p>
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
-                Start the guide
-                <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-
-            <Link
-              href="/guides/claude-code-learning-path"
-              className="group relative block rounded-2xl border border-border-primary bg-background-grain hover:bg-background-primary hover:border-accent-primary hover:shadow-card transition-all overflow-hidden h-full flex flex-col p-8"
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div className="w-14 h-14 rounded-2xl bg-background-primary border border-border-primary flex items-center justify-center">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/images/logos/claude.svg"
-                    alt=""
-                    width={28}
-                    height={28}
-                    className="w-7 h-7 dark:invert"
-                  />
-                </div>
-                <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-background-primary border border-border-primary px-3 py-1.5 rounded-full">
-                  Most popular
-                </span>
-              </div>
-              <h4 className="text-xl md:text-2xl font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">
-                Claude Code Course for Designers
-              </h4>
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-6">
-                Ship real features with Claude Code, even if you don&apos;t code daily.
-              </p>
-              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-primary mt-auto">
-                Start the course
-                <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          </div>
-        </div>
       </div>
 
       {/* Trust Points Strip */}

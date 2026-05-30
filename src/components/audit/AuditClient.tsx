@@ -270,7 +270,7 @@ export default function AuditClient({
       )}
 
       {isIntakeFlow && (
-        <section className="pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-canvas-grid">
+        <section className="pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             {/* Back to demo — visible whenever the user reached the
                 intake from the demo screen (i.e., the canonical / flow). */}
@@ -327,7 +327,7 @@ export default function AuditClient({
       )}
 
       {isResultsView && (
-        <section className="bg-[#F0F1F5] dark:bg-[#162036] bg-canvas-grid">
+        <section className="bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern">
           <FullPageResults
             results={analysisResults}
             onNewAudit={handleClear}

@@ -438,6 +438,16 @@ p {
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
 }
 
+/* Dot pattern background — subtle dot grid, light & dark variants.
+   Same 24px cadence as .bg-canvas-grid so it's a drop-in alternative. */
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.14) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.dark .bg-dot-pattern {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+}
+
 /* Custom pattern backgrounds */
 .pattern-grid-white {
   background-color: rgba(255, 255, 255, 0.05);

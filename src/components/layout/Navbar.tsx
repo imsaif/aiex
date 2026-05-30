@@ -12,8 +12,8 @@ import {
   BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
-import { ThemeToggle } from '../ui/ThemeToggle';
 import { useHandoffKit } from '@/hooks/useHandoffKit';
+import { useSavedAudits } from '@/hooks/useSavedAudits';
 
 // Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
 const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
@@ -21,7 +21,9 @@ const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 const Navbar = () => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { count: savedCount } = useHandoffKit();
+  const { count: savedPatternCount } = useHandoffKit();
+  const { count: savedAuditCount } = useSavedAudits();
+  const savedCount = savedPatternCount + savedAuditCount;
 
   // Global keyboard shortcut for search (⌘K / Ctrl+K)
   useEffect(() => {
@@ -154,11 +156,6 @@ const Navbar = () => {
             >
               <MagnifyingGlassIcon className="w-5 h-5" />
             </button>
-
-            {/* Theme Toggle */}
-            <div className="relative">
-              <ThemeToggle />
-            </div>
           </div>
         </div>
       </div>

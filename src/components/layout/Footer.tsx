@@ -1,4 +1,5 @@
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function Footer() {
   return (
@@ -7,7 +8,7 @@ export default function Footer() {
           the audit-page resources card so the homepage doesn't render two
           adjacent footers. */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 lg:py-20">
-        <div className="bg-background-primary rounded-2xl border border-border-primary p-8 md:p-10 shadow-card">
+        <div className="bg-background-primary rounded-2xl border border-border-primary p-8 md:p-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12">
             {/* Left Section: Branding */}
             <div className="lg:col-span-4">
@@ -251,26 +252,29 @@ export default function Footer() {
       <div className="border-t border-primary">
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Email */}
-            <a
-              href="mailto:imranrizom@gmail.com"
-              className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent-primary transition-colors"
-              aria-label="Contact via email"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-5 h-5"
+            {/* Email + theme toggle */}
+            <div className="flex items-center gap-3">
+              <a
+                href="mailto:imranrizom@gmail.com"
+                className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent-primary transition-colors"
+                aria-label="Contact via email"
               >
-                <rect width="20" height="16" x="2" y="4" rx="2" />
-                <path d="m2 7 8.97 5.7a1.94 1.94 0 0 0 2.06 0L22 7" />
-              </svg>
-            </a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-5 h-5"
+                >
+                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                  <path d="m2 7 8.97 5.7a1.94 1.94 0 0 0 2.06 0L22 7" />
+                </svg>
+              </a>
+              <ThemeToggle />
+            </div>
 
             {/* Copyright */}
             <div className="text-sm text-text-secondary">

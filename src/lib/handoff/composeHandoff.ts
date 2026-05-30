@@ -14,7 +14,7 @@ import type { Pattern } from '@/types';
  * moves (takeaways or guidelines) so the file is still actionable.
  */
 
-const SITE = 'https://aiuxdesign.guide';
+export const SITE = 'https://aiuxdesign.guide';
 
 function patternMoves(pattern: Pattern): string[] {
   const takeaways = pattern.content.takeaways;
@@ -29,7 +29,11 @@ function patternMoves(pattern: Pattern): string[] {
   return (pattern.content.guidelines || []).slice(0, 5);
 }
 
-function patternBlock(pattern: Pattern, index: number): string {
+/**
+ * Build a single pattern's markdown block. Exported so the combined-handoff
+ * composer (composeCombined.ts) reuses the exact per-pattern format.
+ */
+export function patternBlock(pattern: Pattern, index: number): string {
   const url = `${SITE}/patterns/${pattern.slug}`;
   const why = (pattern.content.problem || pattern.description || '').trim();
   const install = pattern.content.installPrompt?.trim();

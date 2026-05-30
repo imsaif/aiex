@@ -154,6 +154,23 @@ export default function PatternsIndexPage() {
                 </p>
                 <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
               </div>
+
+              {/* Hero email capture — mirrors the /news hero treatment (stacked
+                  form + social proof) so visitors don't have to scroll past the
+                  full grid to subscribe. A second copy lives below the grid. */}
+              <div className="mt-10 max-w-md mx-auto">
+                <InlineNewsletterSignup
+                  variant="hero"
+                  source="direct"
+                  customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
+                  customButtonText="Solve my AI design overload →"
+                  customSuccessMessage="You're in! Watch for our next issue."
+                  stacked
+                />
+                <p className="text-base font-medium text-text-secondary mt-4">
+                  46,000+ reads · 50+ products analyzed daily
+                </p>
+              </div>
             </div>
           </div>
         </section>

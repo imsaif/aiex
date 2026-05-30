@@ -27,6 +27,8 @@ type AuditEvent =
   | 'audit_intent_pattern_clicked'
   | 'audit_sample_screenshot_clicked'
   | 'audit_handoff_copied'
+  | 'audit_saved'
+  | 'audit_save_removed'
   | 'audit_unlock_modal_shown'
   | 'audit_unlock_submitted'
   | 'audit_unlock_dismissed'
