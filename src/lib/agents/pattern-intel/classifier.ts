@@ -69,13 +69,10 @@ export async function classifyNewsItem(
     model: HAIKU_MODEL,
     max_tokens: 600,
     temperature: 0,
-    system: [
-      {
-        type: 'text',
-        text: systemPrompt,
-        cache_control: { type: 'ephemeral' },
-      },
-    ],
+    // No prompt caching here: this system prompt (~1.1-1.3K tokens) is below
+    // Haiku 4.5's 4096-token minimum cacheable prefix, so cache_control was a
+    // silent no-op (cache_creation_input_tokens stayed 0). Plain string instead.
+    system: systemPrompt,
     messages: [
       {
         role: 'user',
