@@ -982,7 +982,9 @@ async function getDailyNewsletterItems(days = 7): Promise<NewsletterItem[]> {
   const dailyNewsletters = await prisma.newsletterDraft.findMany({
     where: {
       type: 'daily',
-      status: { in: ['published', 'pending_review'] },
+      // Only compile from published dailies. pending_review drafts may contain
+      // low-quality or rejected content that shouldn't feed into the weekly.
+      status: 'published',
       createdAt: { gte: cutoffDate },
     },
     orderBy: { createdAt: 'desc' },
@@ -1443,7 +1445,12 @@ function generateSlug(title: string, type: NewsletterType = 'daily'): string {
     .replace(' ', '-')
     .toLowerCase();
 
-  const titleSlug = title
+  // Strip the newsletter prefix from the title before slugifying so the slug
+  // doesn't double up the prefix (e.g. "this-week-in-aiux-...-this-week-in-aiux-...").
+  const strippedTitle = title
+    .replace(/^(this week in aiux|ai ux daily)[:\s-]*/i, '')
+    .trim();
+  const titleSlug = strippedTitle
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
@@ -1539,13 +1546,21 @@ interface NewsletterQA {
 // Opinion-domain detection. The prompt already names uxdesign.cc/uxplanet.org/
 // lennysnewsletter.com but Claude routinely picks Substack pieces (which slip
 // through because they aren't on the named list). Treat all Substack and Medium
-// hosts as opinion since they're personal-publishing platforms.
+// hosts as opinion since they're personal-publishing platforms. Also catch
+// custom-domain personal newsletters that use the Substack /p/ path pattern
+// (e.g. unknownarts.co/p/how-i-rebuilt-my-portfolio — custom domain, not
+// blocked by hostname, but the /p/ path is a Substack ghosthost signal).
 function isOpinionUrl(url: string): boolean {
   try {
-    const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+    const parsed = new URL(url);
+    const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
     if (host === 'uxdesign.cc' || host === 'uxplanet.org' || host === 'lennysnewsletter.com') return true;
     if (host === 'medium.com' || host.endsWith('.medium.com')) return true;
     if (host === 'substack.com' || host.endsWith('.substack.com')) return true;
+    // Custom-domain Substack ghosthosts use /p/<slug> path. Block them unless
+    // they're a known design-tool domain (e.g. figma.com/blog/p/...).
+    const KNOWN_PRODUCT_HOSTS = new Set(['figma.com', 'framer.com', 'vercel.com', 'github.com', 'openai.com', 'anthropic.com']);
+    if (!KNOWN_PRODUCT_HOSTS.has(host) && /^\/p\/[a-z0-9-]+/.test(parsed.pathname)) return true;
     return false;
   } catch {
     return false;
