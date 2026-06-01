@@ -97,19 +97,7 @@ export interface PatternContent {
   judgmentCall?: JudgmentCall;  // Opinionated when-to-use; if present, replaces figmaPrompt rendering
   takeaways?: Takeaway[];       // Ordered moves; if present, replaces guidelines/considerations rendering
   installPrompt?: string;       // Paste-ready Claude Code / Cursor prompt that installs THIS pattern into the reader's own codebase
-  inlineDemoPlacement?: InlineDemoPlacement; // Where the live interactive demo appears inline in the page content. Defaults to 'after-problem-solution'. 'none' hides the inline demo (it still shows in the Implementation section).
 }
-
-/**
- * Named anchor positions for the inline interactive demo on a pattern page.
- * The demo always also appears in the Implementation section; this controls the
- * additional inline placement so it can sit where it reads best per pattern.
- */
-export type InlineDemoPlacement =
-  | 'after-intro'             // right after the "What is X?" intro, before Problem/Solution
-  | 'after-problem-solution'  // after the Problem/Solution grid (default)
-  | 'after-examples'          // after the Real-World Examples carousel
-  | 'none';                   // no inline demo
 
 /**
  * Core Pattern interface compliant with PRD specifications

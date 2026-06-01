@@ -521,10 +521,6 @@ interface CodeExampleBlockProps {
   title: string;
   description: string;
   componentId: string;
-  /** Render only the live interactive demo (no code toggle / code panel / header).
-   *  Used by the pattern page's inline demo slot. Renders nothing when the
-   *  componentId has no live demo. */
-  previewOnly?: boolean;
 }
 
 import { scaffoldedDemos } from '@/components/examples/scaffolded/registry';
@@ -536,7 +532,6 @@ export default function CodeExampleBlock({
   title,
   description,
   componentId,
-  previewOnly = false,
 }: CodeExampleBlockProps) {
   const ScaffoldedDemo = scaffoldedDemos[componentId];
   const hasLivePreview = REGISTERED_DEMOS.has(componentId) || !!ScaffoldedDemo;
@@ -663,25 +658,6 @@ export default function CodeExampleBlock({
         );
     }
   };
-
-  // Preview-only mode: render just the live demo, no header / toggle / code.
-  // Renders nothing when there is no live demo for this componentId.
-  if (previewOnly) {
-    if (!hasLivePreview) return null;
-    return (
-      <div className="bg-surface-primary border border-border-primary rounded-lg shadow-sm overflow-hidden">
-        <div className={`p-6 flex justify-center ${ScaffoldedDemo ? '' : 'min-h-[400px]'}`}>
-          <div className={`w-full ${previewMaxWidth}`}>
-            {componentLoaded ? renderComponent() : (
-              <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-primary"></div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
