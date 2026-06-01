@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { JudgeScoresSchema, type JudgeScores } from './types';
 
-const JUDGE_MODEL = 'claude-sonnet-4-20250514';
+const JUDGE_MODEL = 'claude-sonnet-4-6';
 
 function buildJudgePrompt(opts: {
   fixtureDescription: string;

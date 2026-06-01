@@ -85,7 +85,7 @@ export async function generateTwitterContent(
   const prompt = buildTwitterOpinionThreadPrompt(newsletterData, newsletterUrl);
 
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 2048,
     system: `You are a sharp, opinionated voice in the AI design and product space. You write for X (Twitter). Your posts are standalone opinions — not summaries, not teasers, not newsletter promotions. You write like someone who has a point of view and isn't afraid to state it plainly. Each tweet in a thread should hit hard on its own.`,
     messages: [
@@ -133,7 +133,7 @@ export async function generateLinkedInContent(
   const prompt = buildLinkedInPrompt(newsletterData, newsletterUrl);
 
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 1024,
     messages: [
       {
@@ -332,7 +332,7 @@ export async function generateRedditContent(
   const prompt = buildRedditPrompt(newsletterData, newsletterUrl);
 
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
+    model: 'claude-sonnet-4-6',
     max_tokens: 2048,
     system: `You are a knowledgeable contributor to Reddit communities about AI, UX design, and product development. You write thoughtful, substantive self-posts that spark discussion. You sound like a practitioner sharing insights, not a marketer promoting a newsletter. Your tone is conversational, informed, and opinionated without being aggressive.`,
     messages: [

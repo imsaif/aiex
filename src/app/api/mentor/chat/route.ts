@@ -309,7 +309,7 @@ export async function POST(request: NextRequest) {
 
     // Call Claude with tools
     const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1024,
       system: systemPrompt,
       tools: TOOL_DEFINITIONS,
@@ -359,7 +359,7 @@ export async function POST(request: NextRequest) {
           };
 
           const continuedResponse = await anthropic.messages.create({
-            model: 'claude-sonnet-4-20250514',
+            model: 'claude-sonnet-4-6',
             max_tokens: 1024,
             system: systemPrompt,
             tools: TOOL_DEFINITIONS,

@@ -4,7 +4,7 @@ import { getSocialHandle } from '@/data/product-social-handles';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
-const MODEL = 'claude-sonnet-4-20250514';
+const MODEL = 'claude-sonnet-4-6';
 const BRAND_SIGNOFF = 'I break down AI UX patterns at aiuxdesign.guide.';
 
 export interface CompanyToTag {

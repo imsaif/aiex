@@ -31,7 +31,7 @@ import { judgeAudit } from './judge';
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
 const REPORT_PATH = path.join(__dirname, 'last-run.json');
 const PASS_THRESHOLD = 4.0;
-const ANALYZE_MODEL = 'claude-sonnet-4-20250514';
+const ANALYZE_MODEL = 'claude-sonnet-4-6';
 
 type MediaType = 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif';
 
