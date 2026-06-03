@@ -112,3 +112,12 @@ newsletter-preview*.html
 
 # Private prep / notes
 INTERVIEW_PREP.md
+INTERVIEW_PREP.html
+
+# Private article drafts (kept local, not published from repo)
+docs/building-trust-into-an-llm-audit-tool.md
+docs/medium-ux-collective-aiux-audit-story.md
+
+# Local-only tool output / scratch
+.claude/worktrees/
+.dwic/

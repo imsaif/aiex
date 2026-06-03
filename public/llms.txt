@@ -1,10 +1,20 @@
 # aiuxdesign.guide
 
-> AI UX Design Patterns — how the world's best AI products design their experiences, documented, analyzed, and continuously updated.
+> A free, no-signup AI UX audit tool that scores any AI interface screenshot against 36 research-backed AI UX patterns. Each finding links to the pattern's full documentation, real-world examples, and a course that teaches the skill. For product designers, design engineers, and PMs shipping AI features.
 
-The AI UX design pattern library for product designers and teams building AI-powered experiences. 36 patterns across 8 categories, each documented from 3+ real implementations with examples, interactive demos, and code.
+The audit is the front door. Behind it: 36 AI UX pattern pages (the reference backbone), a free Claude Code course for designers (the depth the audit recommends), a daily newsletter, and a toolkit. All free, no account required.
 
-## Patterns
+## Audit (the headline product)
+
+- [Free AI UX Audit](https://www.aiuxdesign.guide/audit): Upload a screenshot of any AI interface (chatbot, code assistant, dashboard, agent, content generator). Claude Vision scores it against 36 AI UX patterns and an AI design mentor answers follow-up questions. Returns a pattern-by-pattern verdict in under 60 seconds. No signup, no email gate, no Figma plugin install.
+
+## Product Context
+
+For a structured, AI-readable summary of what aiuxdesign.guide is, who it's for, what it's explicitly not, and how it differs from adjacent tools:
+
+- [llms.gist](https://www.aiuxdesign.guide/llms.gist): Full product context in the `.gist` open format (positioning, audience, competitor differentiation, audit-flow design decisions, AI approach).
+
+## Patterns (the reference behind the audit)
 
 36 AI UX design patterns organized by category:
 
@@ -60,9 +70,9 @@ The AI UX design pattern library for product designers and teams building AI-pow
 ### Accessibility & Inclusion
 - [Universal Access Patterns](https://www.aiuxdesign.guide/patterns/universal-access-patterns): Making AI interfaces accessible to everyone
 
-## Guides
+## Courses (the depth the audit recommends)
 
-Free learning paths for designers using AI tools:
+Free, self-paced courses positioned as the depth the audit recommends — not standalone paid cohorts. Not affiliated with Maven, Smashing, IxDF, Reforge, or Design+Code:
 
 - [Claude Code for Designers](https://www.aiuxdesign.guide/guides/claude-code-learning-path): 23 lessons on using Claude Code for design-to-code workflows
 - [Claude Design for Designers](https://www.aiuxdesign.guide/guides/claude-design-learning-path): 12 lessons on Anthropic's Claude Design tool for prototyping and design systems
@@ -70,10 +80,6 @@ Free learning paths for designers using AI tools:
 - [GitHub Copilot for Designers](https://www.aiuxdesign.guide/guides/github-copilot-learning-path): Code suggestions and AI pair programming for designers
 - [GitHub for Designers](https://www.aiuxdesign.guide/guides/github-learning-path): Version control and collaboration for design teams
 - [Build a Conversational UI](https://www.aiuxdesign.guide/guides/conversational-ui-guide): Complete design and implementation guide for conversational interfaces
-
-## Tools
-
-- [Free AI UX Audit](https://www.aiuxdesign.guide/audit): Score your AI interface against 36 design patterns. Personalized gaps and fixes in 2 minutes.
 
 ## Resources
 
@@ -84,8 +90,15 @@ Free learning paths for designers using AI tools:
 
 ## About
 
-Created by Imran Mohammed. Each pattern is documented from real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, Notion, Figma, and more.
+Created by Imran Mohammed. Not affiliated with aiuxpatterns.com, shapeof.ai, or aiverse.design — those are different products by different creators. Each pattern is documented from real implementations across products like ChatGPT, Claude, GitHub Copilot, Cursor, Notion AI, Midjourney, Linear, Figma, and more.
 
 - Website: https://www.aiuxdesign.guide
-- Newsletter: Daily AI UX news and pattern insights
+- Newsletter: Daily AI UX patterns (daily cadence, not weekly)
 - Sitemap: https://www.aiuxdesign.guide/sitemap.xml
+
+## Not for
+
+- People looking for a generic UX audit (Hotjar, Maze, UI Auditor) — aiuxdesign.guide audits AI-specific interaction patterns, not generic UX heuristics.
+- People looking for a paid cohort course (Maven, Smashing, IxDF, Reforge, Design+Code) — the courses here are free and audit-integrated.
+- People looking for a Figma plugin, component kit, or platform design system — there is no plugin and no component library.
+- People looking for a screenshot gallery without analysis (Mobbin, Pageflows) — aiuxdesign.guide audits *your* design, not catalogs others'.

@@ -302,13 +302,37 @@ export async function GET(request: NextRequest) {
   const dryRun = url.searchParams.get('dryRun') === 'true';
   const forceDiscover = url.searchParams.get('discover') === 'true';
 
+  // Cost control: this is a vision-heavy multi-agent pipeline (per-screenshot
+  // Anthropic calls), so it is PAUSED by default to avoid recurring spend.
+  // It runs only when one of these is true:
+  //   - PATTERN_INTEL_ENABLED=true  → re-enables the scheduled cron entirely
+  //   - request carries ?run=1      → a deliberate, one-off manual trigger
+  // A scheduled cron hit with neither set no-ops with ZERO API spend.
+  const manualRun = url.searchParams.get('run') === '1';
+  const enabled = process.env.PATTERN_INTEL_ENABLED === 'true';
+  if (!enabled && !manualRun) {
+    console.log('[pattern-intel] skipped — paused (no PATTERN_INTEL_ENABLED, no ?run=1)');
+    return NextResponse.json({
+      ok: true,
+      skipped: true,
+      reason: 'pattern-intel is paused; set PATTERN_INTEL_ENABLED=true to resume the schedule, or call with ?run=1 to run once',
+      at: new Date().toISOString(),
+    });
+  }
+
   after(() =>
     runPatternIntel(dryRun, { discover: forceDiscover }).catch((err) =>
       console.error('[pattern-intel] fatal:', err),
     ),
   );
 
-  return NextResponse.json({ ok: true, dryRun, forceDiscover, kickedOffAt: new Date().toISOString() });
+  return NextResponse.json({
+    ok: true,
+    dryRun,
+    forceDiscover,
+    trigger: manualRun ? 'manual' : 'scheduled',
+    kickedOffAt: new Date().toISOString(),
+  });
 }
 
 export async function POST(request: NextRequest) {
