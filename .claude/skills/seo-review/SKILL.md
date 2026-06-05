@@ -106,7 +106,7 @@ If "discovered not indexed" URL count is high (check GSC Coverage separately), a
 
 ## After a review, document what you changed
 
-If the review leads to edits (meta rewrites, schema additions, content depth work), record them in the relevant session's CLAUDE.md `/save` notes so the next review has a baseline. Pattern we use:
+If the review leads to edits (meta rewrites, schema additions, content depth work), record them in the relevant session's `docs/SESSION-LOG.md` `/save` notes so the next review has a baseline. Pattern we use:
 - what changed + file path
 - which pages/queries it targeted
 - what success looks like (imp/click/pos delta at N days)

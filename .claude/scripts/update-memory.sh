@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # update-memory.sh
-# Automatically updates CLAUDE.md with session information
+# Automatically appends a terse session summary to docs/SESSION-LOG.md
+# (NOT CLAUDE.md — CLAUDE.md is the lean, auto-loaded reference and must stay small).
 
 set -e
 
@@ -20,10 +21,11 @@ if [ -z "$GIT_ROOT" ]; then
     exit 0
 fi
 
-# Check if CLAUDE.md exists
-CLAUDE_FILE="$GIT_ROOT/CLAUDE.md"
+# Target the non-loaded session log, not CLAUDE.md.
+# CLAUDE_FILE keeps its name to avoid touching the loop logic below; it now points at SESSION-LOG.md.
+CLAUDE_FILE="$GIT_ROOT/docs/SESSION-LOG.md"
 if [ ! -f "$CLAUDE_FILE" ]; then
-    echo -e "${YELLOW}⚠️  CLAUDE.md not found in repository. Skipping memory update.${NC}"
+    echo -e "${YELLOW}⚠️  docs/SESSION-LOG.md not found. Skipping memory update.${NC}"
     exit 0
 fi
 

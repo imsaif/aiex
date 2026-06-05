@@ -69,7 +69,7 @@ Claude will automatically invoke this skill when:
 
 ### 3. Recent Session Activity
 
-Extracted from CLAUDE.md "Recent Sessions" section, showing:
+Extracted from `docs/SESSION-LOG.md` "Recent Sessions" section, showing:
 - Last work session date and machine
 - Pattern(s) worked on
 - Files changed
@@ -231,7 +231,7 @@ This skill monitors and coordinates:
 
 ## Recent Achievements
 
-From CLAUDE.md recent sessions:
+From `docs/SESSION-LOG.md` recent sessions:
 
 ✅ **Session 2025-10-19**: Footer redesigned, About/Privacy/Terms pages created, all footer links functional
 ✅ **Session 2025-10-16**: Vercel Analytics integrated for page view tracking and web vitals
