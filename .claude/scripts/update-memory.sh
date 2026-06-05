@@ -58,8 +58,10 @@ if git diff --cached --name-only | grep -q "patterns/"; then
     fi
 fi
 
-# Count test files changed
-TESTS_CHANGED=$(git diff --cached --name-only | grep -c "test\|spec" || echo "0")
+# Count test files changed.
+# Use `|| true` (not `|| echo 0`): grep -c already prints the count (including 0);
+# echoing another 0 produced the long-standing stray "0" line in the session entry.
+TESTS_CHANGED=$(git diff --cached --name-only | grep -c "test\|spec" || true)
 
 # Create session summary
 SESSION_SUMMARY="### Session $SESSION_DATE ($MACHINE_TYPE)
