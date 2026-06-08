@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
 import { SocialProof } from '@/components/audit/SocialProof';
+import Footer from '@/components/layout/Footer';
 import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
 import { useAuditCount } from '@/hooks/useAuditCount';
@@ -347,6 +348,9 @@ export default function AuditClient({
 
       {/* SEO content + community block — only on the demo landing */}
       {step === 'demo' && showSocialProof && <SocialProof />}
+
+      {/* Footer — only on the demo landing, not the audit/results view */}
+      {step === 'demo' && <Footer />}
     </div>
   );
 }

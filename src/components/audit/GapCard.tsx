@@ -7,6 +7,8 @@ interface GapCardProps {
   gap: TopGap;
   index?: number;
   isHighlighted?: boolean;
+  /** Larger treatment for the lead "top priority" gap. */
+  prominent?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }
@@ -32,7 +34,7 @@ const severityConfig = {
   },
 };
 
-export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave }: GapCardProps) {
+export function GapCard({ gap, index, isHighlighted, prominent, onMouseEnter, onMouseLeave }: GapCardProps) {
   const config = severityConfig[gap.status] || severityConfig.missing;
   const Icon = config.icon;
 
@@ -40,7 +42,9 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
     <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={`rounded-xl border ${config.border} bg-background-primary p-5 transition-all ${
+      className={`rounded-xl border ${config.border} bg-background-primary transition-all ${
+        prominent ? 'p-6 sm:p-7 shadow-card' : 'p-5'
+      } ${
         isHighlighted ? 'ring-2 ring-accent-primary border-accent-primary shadow-md' : ''
       }`}
     >
@@ -57,7 +61,7 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
               <Icon className="w-3.5 h-3.5" />
               {config.label}
             </span>
-            <h3 className="text-lg font-semibold text-text-primary leading-tight">{gap.pattern}</h3>
+            <h3 className={`font-semibold text-text-primary leading-tight ${prominent ? 'text-xl' : 'text-lg'}`}>{gap.pattern}</h3>
           </div>
 
           {/* Finding — the problem */}
@@ -86,7 +90,7 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
                   href={`/patterns/${slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-accent-primary hover:underline"
+                  className="inline-flex items-center gap-1 mt-3 text-xs text-text-tertiary hover:text-accent-primary hover:underline"
                 >
                   See how {gap.pattern} solves this &rarr;
                 </Link>
@@ -98,7 +102,7 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
                   href={gap.resource}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-accent-primary hover:underline"
+                  className="inline-flex items-center gap-1 mt-3 text-xs text-text-tertiary hover:text-accent-primary hover:underline"
                 >
                   Learn more about this pattern &rarr;
                 </a>

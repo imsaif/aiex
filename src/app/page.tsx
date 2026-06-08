@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import AuditClient from '@/components/audit/AuditClient';
 
@@ -134,7 +133,6 @@ export default function Home() {
       <Navbar />
       <AuditClient />
       <ScrollToTop />
-      <Footer />
     </>
   );
 }

@@ -10,7 +10,6 @@ import {
   CheckCircleIcon,
   XMarkIcon,
   ArrowPathIcon,
-  SparklesIcon,
   CommandLineIcon,
 } from '@heroicons/react/24/outline';
 import { composeHandoffPrompt, productTypeLabel } from '@/lib/audit/handoff';
@@ -499,15 +498,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const [messageIndex, setMessageIndex] = useState(0);
   const [scanIndex, setScanIndex] = useState(0);
 
-  // Tab + Chat state
-  // Tab state controls the chat aside on desktop and the mobile section
-  // selector (Gaps / Audit details / Chat). On desktop, 'issues' and 'details'
-  // are visually equivalent — both let the details aside render beside the
-  // screenshot. On mobile, they pick which block is visible below the screenshot.
-  const [activeTab, setActiveTab] = useState<'issues' | 'details' | 'chat'>('issues');
+  // Handoff copy state
   const [handoffCopied, setHandoffCopied] = useState(false);
   const [showHandoffSource, setShowHandoffSource] = useState(false);
-  const [hasSentOpener, setHasSentOpener] = useState(false);
+
+  // Chat state — inline conversation below the findings
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -516,8 +511,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   // Email modal state
   const [showEmailModal, setShowEmailModal] = useState(false);
 
-  // Well-implemented collapsed state
-  const [showWellImplemented, setShowWellImplemented] = useState(false);
+  // Optional "see it on your screenshot" disclosure
+  const [showScreenshot, setShowScreenshot] = useState(false);
 
   // Pin → side panel (demo mode)
   const [openPin, setOpenPin] = useState<number | null>(null);
@@ -541,11 +536,12 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     return () => clearInterval(interval);
   }, [isAnalyzing]);
 
-  // Scroll chat panel to bottom on new messages — scope to the chat container
-  // (never use scrollIntoView here: it scrolls every ancestor including window).
+  // Bring the latest message into view. The conversation now flows in the page
+  // (no inner scroll container) with a sticky input, so scrolling the window to
+  // the end sentinel is the intended behaviour.
   useEffect(() => {
-    const el = chatScrollRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (messages.length === 0) return;
+    chatScrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages]);
 
   // Chat send handler
@@ -784,7 +780,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const topGaps = results.topGaps || [];
   const quickWins = results.quickWins || [];
   const issues = topGaps.filter((g) => g.status === 'missing' || g.status === 'needs-improvement');
-  const wellImplemented = topGaps.filter((g) => g.status === 'good');
 
   // ----- Demo view: full-bleed dashboard mockup with clickable pins + side panel -----
   if (showDemoCTA) {
@@ -972,499 +967,366 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   return (
     <div>
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 lg:pb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 lg:pb-32">
 
-        {/* Results header — keeps the "New audit" action visible the moment
-            results load. The full CTA row sits at the very bottom of a long
-            results page; session replays showed users finishing their review
-            and not finding a way to start over, so this anchors it up top. */}
-        <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6">
-          <div className="min-w-0">
+        {/* Results header — wrapped in the same two-column geometry (768px slot
+            + rail spacer) so the title/description line up with the gap cards.
+            "New audit" now lives as the last action in the right rail. */}
+        <div className="lg:flex lg:gap-8 lg:justify-center mb-5 sm:mb-6">
+          <div className="w-full lg:w-[768px] min-w-0">
             <h1 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight leading-tight">
               Your audit results
             </h1>
             <p className="text-xs sm:text-sm text-text-secondary leading-snug">
-              Review the gaps below, then re-run after each change.
+              Review the gaps below and learn what you are missing in the design.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onNewAudit}
-            className="flex-shrink-0 inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold hover:bg-accent-hover transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap"
-          >
-            <ArrowPathIcon className="w-4 h-4" />
-            New audit
-          </button>
+          <div className="hidden lg:block lg:w-[340px] lg:flex-shrink-0" aria-hidden />
         </div>
 
-        {/* Screenshot canvas + optional chat side panel.
-            Both columns have explicit fixed heights on desktop so the row size never changes
-            when chat opens/closes — chat content scrolls inside its own bounds. */}
-        <div className="flex flex-col lg:flex-row lg:justify-center gap-4 lg:gap-6">
+        <div className="lg:flex lg:gap-8 lg:items-start lg:justify-center">
 
-        {/* Pinned screenshot column — wraps the canvas + carousel thumbnail strip */}
-        <div className={`flex-shrink-0 flex flex-col gap-3 w-full mx-auto ${
-          heroDeviceType === 'mobile' ? 'max-w-[400px] lg:w-[400px]' : 'max-w-[1040px] lg:w-[1040px]'
-        }`}>
-        <div
-          className={`relative w-full ${
-            heroDeviceType === 'mobile' ? 'aspect-[9/16]' : 'aspect-video'
-          }`}
-        >
-          {heroScreenshotUrl && (
-            <div className="absolute inset-0 rounded-2xl border border-border-primary overflow-hidden bg-background-secondary shadow-sm">
-              <img
-                src={heroScreenshotUrl}
-                alt={`Your audited interface ${activeScreenshotIndex + 1}`}
-                className="w-full h-full object-contain block"
-              />
-            </div>
-          )}
+        {/* LEFT — the findings, then a conversation about them */}
+        <main className="w-full lg:w-[768px] min-w-0">
 
-          {/* Carousel arrows + counter — when more than one screenshot */}
-          {allScreenshots.length > 1 && (
-            <>
-              <button
-                {...withFocusSuppress(() => {
-                  setActiveScreenshotIndex((i) => (i - 1 + allScreenshots.length) % allScreenshots.length);
-                  setOpenPin(null);
-                })}
-                aria-label="Previous screenshot"
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
-              >
-                <ChevronLeftIcon className="w-5 h-5" />
-              </button>
-              <button
-                {...withFocusSuppress(() => {
-                  setActiveScreenshotIndex((i) => (i + 1) % allScreenshots.length);
-                  setOpenPin(null);
-                })}
-                aria-label="Next screenshot"
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
-              >
-                <ChevronRightIcon className="w-5 h-5" />
-              </button>
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-black/60 text-white text-xs rounded-full z-10">
-                Screenshot {activeScreenshotIndex + 1} / {allScreenshots.length}
-              </div>
-            </>
-          )}
-
-          {/* Numbered pins — only the ones assigned to the active screenshot */}
-          {pinsForActiveScreenshot.map((pin) => {
-            const isActive = openPin === pin.index || hoveredPin === pin.index;
-            return (
-              <button
-                key={pin.index}
-                {...withFocusSuppress(() => setOpenPin(pin.index))}
-                onMouseEnter={() => setHoveredPin(pin.index)}
-                onMouseLeave={() => setHoveredPin(null)}
-                aria-label={`Issue ${pin.index}: ${topPinnedIssues[pin.index - 1].pattern}`}
-                className="hidden lg:block absolute z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-                style={{ left: `${pin.xPct}%`, top: `${pin.yPct}%` }}
-              >
-                <span
-                  className={`relative flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold border-2 transition-all ${
-                    isActive
-                      ? 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 scale-125 shadow-lg ring-2 ring-black/15 dark:ring-white/25'
-                      : 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 shadow-md ring-1 ring-black/10 dark:ring-white/20 group-hover:scale-110'
-                  }`}
-                >
-                  {pin.index}
-                </span>
-              </button>
-            );
-          })}
-
-          {/* Slide-in side panel */}
-          {realOpenGap && openPin !== null && (
-            <GapSidePanel gap={realOpenGap} pinNumber={openPin} onClose={() => setOpenPin(null)} />
-          )}
-        </div>
-
-        {/* Carousel thumbnail nav — only when more than one screenshot */}
-        {allScreenshots.length > 1 && (
-          <div className="flex flex-wrap gap-2 items-center justify-center">
-            {allScreenshots.map((shot, index) => {
-              const isActive = index === activeScreenshotIndex;
-              const pinCount = pinAssignments.filter((a) => a === index).length;
-              return (
-                <button
-                  key={index}
-                  {...withFocusSuppress(() => {
-                    setActiveScreenshotIndex(index);
-                    setOpenPin(null);
-                  })}
-                  aria-label={`Show screenshot ${index + 1}`}
-                  className={`relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
-                    isActive
-                      ? 'border-accent-primary shadow-md scale-105'
-                      : 'border-border-primary opacity-70 hover:opacity-100 hover:border-accent-primary/50'
-                  }`}
-                >
-                  <img src={shot.url} alt="" className="w-full h-full object-cover block" />
-                  {pinCount > 0 && (
-                    <span className="absolute top-1 right-1 min-w-[18px] h-[18px] px-1 bg-accent-primary text-white dark:text-gray-900 text-[10px] font-bold rounded-full flex items-center justify-center">
-                      {pinCount}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Mobile-only section tabs — Gaps / Audit details / Chat. Lets the
-            three blocks below the screenshot share one slot instead of stacking. */}
-        {topPinnedIssues.length > 0 && (
-          <div
-            role="tablist"
-            aria-label="Audit sections"
-            className="lg:hidden mt-3 grid grid-cols-3 gap-1 p-1 rounded-full border border-border-primary bg-background-secondary"
-          >
-            {([
-              { id: 'issues', label: `Gaps · ${topPinnedIssues.length}` },
-              { id: 'details', label: 'Details' },
-              { id: 'chat', label: 'Chat' },
-            ] as const).map((t) => {
-              const isActive = activeTab === t.id;
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => {
-                    setActiveTab(t.id);
-                    if (t.id === 'chat' && !hasSentOpener && issues.length > 0) {
-                      setHasSentOpener(true);
-                      const topPatterns = issues.slice(0, 3).map((g) => g.pattern).join(', ');
-                      setTimeout(
-                        () =>
-                          sendMessage(
-                            `I found ${issues.length} issues in my interface. The top priorities are: ${topPatterns}. What should I fix first and how?`,
-                          ),
-                        200,
-                      );
-                    }
-                  }}
-                  className={`px-3 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer min-h-[40px] ${
-                    isActive
-                      ? 'bg-background-primary text-text-primary shadow-sm'
-                      : 'text-text-secondary hover:text-text-primary'
-                  }`}
-                >
-                  {t.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Mobile-only gap list — replaces the on-canvas pin overlay on small screens.
-            Each row opens the same bottom-sheet flow via setOpenPin. */}
-        {topPinnedIssues.length > 0 && (
-          <div className={`lg:hidden mt-2 rounded-2xl border border-border-primary bg-background-primary overflow-hidden ${activeTab === 'issues' ? '' : 'hidden'}`}>
-            <div className="px-4 py-3 border-b border-border-primary bg-background-secondary">
-              <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary">
+          {/* Findings — every gap as a card */}
+          {topPinnedIssues.length > 0 && (
+            <section>
+              <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-4">
                 {topPinnedIssues.length} gap{topPinnedIssues.length === 1 ? '' : 's'} found
               </p>
-              <p className="text-xs text-text-tertiary mt-0.5">Tap a row for details</p>
-            </div>
-            <ul className="divide-y divide-border-primary">
-              {topPinnedIssues.map((gap, i) => {
-                const idx = i + 1;
-                const severity = (gap as TopGap & { severity?: string }).severity;
-                const severityChip =
-                  severity === 'critical'
-                    ? 'bg-status-error/10 text-status-error'
-                    : severity === 'important'
-                      ? 'bg-status-warning/10 text-status-warning'
-                      : 'bg-background-secondary text-text-secondary';
-                return (
-                  <li key={idx}>
-                    <button
-                      type="button"
-                      onClick={() => setOpenPin(idx)}
-                      className="w-full flex items-start gap-3 px-4 py-3.5 text-left active:bg-background-secondary cursor-pointer min-h-[56px]"
-                      aria-label={`Open details for gap ${idx}: ${gap.pattern}`}
-                    >
-                      <span className="flex-shrink-0 mt-0.5 flex items-center justify-center w-7 h-7 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-bold">
-                        {idx}
-                      </span>
-                      <span className="flex-1 min-w-0">
-                        <span className="flex items-center gap-2 flex-wrap">
-                          <span className="text-base font-semibold text-text-primary">{gap.pattern}</span>
-                          {severity && (
-                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${severityChip}`}>
-                              {severity}
-                            </span>
-                          )}
-                        </span>
-                        {gap.finding && (
-                          <span className="block mt-1 text-sm text-text-secondary line-clamp-2">{gap.finding}</span>
-                        )}
-                      </span>
-                      <ChevronRightIcon className="flex-shrink-0 w-5 h-5 text-text-tertiary mt-1.5" />
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
-        </div>
+              <div className="space-y-3">
+                {topPinnedIssues.map((gap, i) => (
+                  <GapCard key={i} gap={gap} index={i + 1} />
+                ))}
+              </div>
+            </section>
+          )}
 
-        {/* What we audited — sits beside the screenshot when chat isn't active */}
-        {activeTab !== 'chat' && (surfaceDescription || results.applicablePatterns?.length) && (
-          <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary px-5 py-4 overflow-y-auto max-h-[640px] lg:max-h-none ${activeTab === 'details' ? '' : 'hidden lg:block'} ${
-            heroDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
-          }`}>
-            {(() => {
-              const productLabel: Record<string, string> = {
-                'chat-interface': 'Chat interface',
-                'ai-agent': 'AI agent',
-                'recommendation-system': 'Recommendations',
-                'content-generation': 'Content generation',
-                other: 'AI product',
-              };
-              const productType = results.productContext?.productType;
-              const facts: Array<{ label: string; value: string }> = [];
-              if (productType) facts.push({ label: 'Surface', value: productLabel[productType] || productType });
-              facts.push({ label: 'Device', value: heroDeviceType === 'mobile' ? 'Mobile' : 'Desktop' });
-              if (allScreenshots.length > 0) facts.push({ label: 'Screenshots', value: String(allScreenshots.length) });
-              if (results.applicablePatterns?.length) facts.push({ label: 'Applicable patterns', value: `${results.applicablePatterns.length} of 36` });
-              if (issues.length > 0) facts.push({ label: 'Gaps found', value: String(issues.length) });
-              return (
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3">What we audited</p>
-                  <dl className="rounded-lg border border-border-primary bg-background-secondary divide-y divide-border-primary mb-3">
-                    {facts.map((f) => (
-                      <div key={f.label} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
-                        <dt className="text-sm text-text-secondary">{f.label}</dt>
-                        <dd className="text-base font-semibold text-text-primary text-right truncate">{f.value}</dd>
+          {/* Conversation — messages flow in the column; the input floats at
+              the bottom of the viewport (sticky on desktop). */}
+          <section className="mt-10">
+            <div className="flex items-center gap-2 text-text-secondary mb-4">
+              <ChatBubbleLeftRightIcon className="w-5 h-5 text-accent-primary" />
+              <p className="text-sm font-semibold text-text-primary">Ask about your audit</p>
+            </div>
+
+            {messages.length > 0 && (
+              <div className="space-y-4 mb-4">
+                {messages.map((msg, i) => (
+                  <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                      msg.role === 'user'
+                        ? 'bg-accent-primary text-white dark:text-gray-900'
+                        : 'bg-background-secondary'
+                    }`}>
+                      {msg.role === 'user' ? (
+                        <p className="text-sm">{msg.content}</p>
+                      ) : (
+                        <FormattedChatMessage content={msg.content} />
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="bg-background-secondary rounded-2xl px-4 py-3">
+                      <div className="flex gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '150ms' }} />
+                        <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '300ms' }} />
                       </div>
-                    ))}
-                  </dl>
-                  {surfaceDescription && (
-                    <p className="text-sm text-text-secondary leading-relaxed line-clamp-4">{surfaceDescription}</p>
+                    </div>
+                  </div>
+                )}
+                <div ref={chatScrollRef} />
+              </div>
+            )}
+
+            {messages.length === 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {CHAT_SUGGESTIONS.map((suggestion) => (
+                  <button
+                    key={suggestion}
+                    onClick={() => sendMessage(suggestion)}
+                    className="px-3 py-1.5 rounded-full border border-border-primary text-sm text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors cursor-pointer"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Mobile input (inline at the end of the conversation). Desktop uses
+                the fixed floating bar rendered below the two-column layout. */}
+            <div className="lg:hidden">
+              <div className="flex gap-2 items-end rounded-2xl border-2 border-border-primary bg-background-primary shadow-card p-3">
+                <textarea
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Ask about your audit..."
+                  rows={2}
+                  className="flex-1 resize-none bg-transparent px-2 py-1.5 text-base text-text-primary placeholder:text-text-tertiary focus:outline-none min-h-[3.5rem]"
+                />
+                <button
+                  onClick={() => sendMessage(inputValue)}
+                  disabled={!inputValue.trim() || isLoading}
+                  aria-label="Send"
+                  className="flex-shrink-0 p-3 rounded-xl bg-accent-primary text-white dark:text-gray-900 disabled:opacity-40 hover:bg-accent-hover transition-colors cursor-pointer"
+                >
+                  <PaperAirplaneIcon className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </section>
+
+        </main>
+
+        {/* RIGHT — artifacts: fix handoff, screenshot, save, email, audit facts */}
+        <aside className="mt-8 lg:mt-9 lg:w-[340px] lg:flex-shrink-0">
+          <div className="lg:sticky lg:top-6 space-y-4">
+
+            {/* Apply the fixes — copy the handoff prompt to Claude Code / Cursor */}
+            {issues.length > 0 && (() => {
+              const handoffPrompt = composeHandoffPrompt({
+                surfaceDescription,
+                productType: results.productContext?.productType,
+                gaps: issues,
+              });
+              return (
+                <div className="rounded-2xl border border-border-primary bg-background-primary p-5">
+                  <p className="text-sm font-semibold uppercase tracking-wider text-accent-primary mb-1">Apply the fixes</p>
+                  <p className="text-sm text-text-secondary leading-relaxed mb-3">
+                    One prompt with all {issues.length} gap{issues.length === 1 ? '' : 's'} &mdash; paste into Claude Code or Cursor.
+                  </p>
+                  <button
+                    onClick={handleCopyHandoff}
+                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
+                  >
+                    {handoffCopied ? (
+                      <>
+                        <CheckCircleIcon className="w-5 h-5" />
+                        Copied
+                      </>
+                    ) : (
+                      <>
+                        <CommandLineIcon className="w-5 h-5" />
+                        Copy fix for Claude Code
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setShowHandoffSource((v) => !v)}
+                    aria-expanded={showHandoffSource}
+                    className="mt-2 w-full inline-flex items-center justify-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
+                  >
+                    <ChevronDownIcon className={`w-4 h-4 transition-transform ${showHandoffSource ? 'rotate-180' : ''}`} />
+                    {showHandoffSource ? 'Hide prompt' : 'Inspect prompt'}
+                  </button>
+                  {showHandoffSource && (
+                    <div className="mt-3 rounded-lg border border-border-primary bg-background-secondary p-3 max-h-72 overflow-y-auto">
+                      <pre className="text-xs font-mono whitespace-pre-wrap text-text-secondary leading-relaxed">{handoffPrompt}</pre>
+                    </div>
                   )}
                 </div>
               );
             })()}
-          </aside>
-        )}
 
-        {/* In-flow chat side panel — sits next to the screenshot */}
-        {activeTab === 'chat' && (
-          <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary shadow-sm flex flex-col overflow-hidden min-h-0 ${
-            heroDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
-          }`}>
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border-primary">
-              <div className="flex items-center gap-2">
-                <ChatBubbleLeftRightIcon className="w-5 h-5 text-accent-primary" />
-                <p className="font-semibold text-text-primary">Chat with results</p>
-              </div>
-              <button
-                onClick={() => setActiveTab('issues')}
-                aria-label="Close"
-                className="p-1.5 rounded-md hover:bg-background-secondary cursor-pointer"
-              >
-                <XMarkIcon className="w-5 h-5 text-text-tertiary" />
-              </button>
-            </div>
-            <div ref={chatScrollRef} className="flex-1 overflow-y-auto p-5 space-y-4">
-              {messages.length === 0 && !isLoading && (
-                <div>
-                  <p className="text-sm text-text-tertiary mb-4">Ask anything about your audit results:</p>
-                  <div className="flex flex-wrap gap-2">
-                    {CHAT_SUGGESTIONS.map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        onClick={() => sendMessage(suggestion)}
-                        className="px-3 py-1.5 rounded-full border border-border-primary text-sm text-text-secondary hover:bg-background-secondary hover:text-text-primary transition-colors cursor-pointer"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                    msg.role === 'user'
-                      ? 'bg-accent-primary text-white dark:text-gray-900'
-                      : 'bg-background-secondary'
-                  }`}>
-                    {msg.role === 'user' ? (
-                      <p className="text-sm">{msg.content}</p>
-                    ) : (
-                      <FormattedChatMessage content={msg.content} />
+            {/* Screenshot — collapsible artifact with non-interactive markers */}
+            {heroScreenshotUrl && (
+              <div className="rounded-2xl border border-border-primary bg-background-primary p-4">
+                <button
+                  type="button"
+                  onClick={() => setShowScreenshot((v) => !v)}
+                  aria-expanded={showScreenshot}
+                  className="w-full inline-flex items-center justify-between gap-1.5 text-sm font-medium text-text-secondary hover:text-text-primary cursor-pointer"
+                >
+                  <span>See where each gap is</span>
+                  <ChevronDownIcon className={`w-4 h-4 transition-transform ${showScreenshot ? 'rotate-180' : ''}`} />
+                </button>
+                {showScreenshot && (
+                  <div className="mt-3 flex flex-col gap-3">
+                    <div className={`relative w-full ${heroDeviceType === 'mobile' ? 'aspect-[9/16]' : 'aspect-video'}`}>
+                      <div className="absolute inset-0 rounded-xl border border-border-primary overflow-hidden bg-background-secondary">
+                        <img
+                          src={heroScreenshotUrl}
+                          alt={`Your audited interface ${activeScreenshotIndex + 1}`}
+                          className="w-full h-full object-contain block"
+                        />
+                      </div>
+                      {allScreenshots.length > 1 && (
+                        <>
+                          <button
+                            {...withFocusSuppress(() => setActiveScreenshotIndex((i) => (i - 1 + allScreenshots.length) % allScreenshots.length))}
+                            aria-label="Previous screenshot"
+                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                          >
+                            <ChevronLeftIcon className="w-4 h-4" />
+                          </button>
+                          <button
+                            {...withFocusSuppress(() => setActiveScreenshotIndex((i) => (i + 1) % allScreenshots.length))}
+                            aria-label="Next screenshot"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                          >
+                            <ChevronRightIcon className="w-4 h-4" />
+                          </button>
+                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black/60 text-white text-xs rounded-full z-10">
+                            {activeScreenshotIndex + 1} / {allScreenshots.length}
+                          </div>
+                        </>
+                      )}
+                      {pinsForActiveScreenshot.map((pin) => {
+                        const isActive = openPin === pin.index || hoveredPin === pin.index;
+                        return (
+                          <span
+                            key={pin.index}
+                            aria-hidden
+                            className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold border-2 transition-all bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 ${
+                              isActive
+                                ? 'scale-125 shadow-lg ring-2 ring-black/15 dark:ring-white/25'
+                                : 'shadow-md ring-1 ring-black/10 dark:ring-white/20'
+                            }`}
+                            style={{ left: `${pin.xPct}%`, top: `${pin.yPct}%` }}
+                          >
+                            {pin.index}
+                          </span>
+                        );
+                      })}
+                    </div>
+                    {allScreenshots.length > 1 && (
+                      <div className="flex flex-wrap gap-2 items-center justify-center">
+                        {allScreenshots.map((shot, index) => {
+                          const isActive = index === activeScreenshotIndex;
+                          const pinCount = pinAssignments.filter((a) => a === index).length;
+                          return (
+                            <button
+                              key={index}
+                              {...withFocusSuppress(() => setActiveScreenshotIndex(index))}
+                              aria-label={`Show screenshot ${index + 1}`}
+                              className={`relative w-12 h-12 rounded-lg overflow-hidden border-2 transition-all cursor-pointer ${
+                                isActive
+                                  ? 'border-accent-primary shadow-md scale-105'
+                                  : 'border-border-primary opacity-70 hover:opacity-100 hover:border-accent-primary/50'
+                              }`}
+                            >
+                              <img src={shot.url} alt="" className="w-full h-full object-cover block" />
+                              {pinCount > 0 && (
+                                <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 px-1 bg-accent-primary text-white dark:text-gray-900 text-[10px] font-bold rounded-full flex items-center justify-center">
+                                  {pinCount}
+                                </span>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
                     )}
                   </div>
-                </div>
-              ))}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-background-secondary rounded-2xl px-4 py-3">
-                    <div className="flex gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <div className="w-2 h-2 rounded-full bg-text-tertiary animate-bounce" style={{ animationDelay: '300ms' }} />
-                    </div>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
+            )}
+
+            {/* Save / Email / New audit (the last CTA) */}
+            <div className="flex flex-col gap-2">
+              <SaveAuditButton
+                audit={savedAudit}
+                className="w-full px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary cursor-pointer"
+              />
+              <button
+                onClick={() => setShowEmailModal(true)}
+                className="w-full inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
+              >
+                Email Report
+              </button>
+              <button
+                type="button"
+                onClick={onNewAudit}
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
+              >
+                <ArrowPathIcon className="w-4 h-4" />
+                New audit
+              </button>
             </div>
-            <div className="border-t border-border-primary p-3 flex gap-2">
+
+            {/* What we audited — optional details */}
+            {(surfaceDescription || results.applicablePatterns?.length) && (
+              <details className="rounded-2xl border border-border-primary bg-background-primary px-5 py-4">
+                <summary className="text-sm font-semibold uppercase tracking-wider text-text-tertiary cursor-pointer select-none">What we audited</summary>
+                {(() => {
+                  const productLabel: Record<string, string> = {
+                    'chat-interface': 'Chat interface',
+                    'ai-agent': 'AI agent',
+                    'recommendation-system': 'Recommendations',
+                    'content-generation': 'Content generation',
+                    other: 'AI product',
+                  };
+                  const productType = results.productContext?.productType;
+                  const facts: Array<{ label: string; value: string }> = [];
+                  if (productType) facts.push({ label: 'Surface', value: productLabel[productType] || productType });
+                  facts.push({ label: 'Device', value: heroDeviceType === 'mobile' ? 'Mobile' : 'Desktop' });
+                  if (allScreenshots.length > 0) facts.push({ label: 'Screenshots', value: String(allScreenshots.length) });
+                  if (results.applicablePatterns?.length) facts.push({ label: 'Applicable patterns', value: `${results.applicablePatterns.length} of 36` });
+                  if (issues.length > 0) facts.push({ label: 'Gaps found', value: String(issues.length) });
+                  return (
+                    <div className="mt-3">
+                      <dl className="rounded-lg border border-border-primary bg-background-secondary divide-y divide-border-primary mb-3">
+                        {facts.map((f) => (
+                          <div key={f.label} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
+                            <dt className="text-sm text-text-secondary">{f.label}</dt>
+                            <dd className="text-base font-semibold text-text-primary text-right truncate">{f.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                      {surfaceDescription && (
+                        <p className="text-sm text-text-secondary leading-relaxed">{surfaceDescription}</p>
+                      )}
+                    </div>
+                  );
+                })()}
+              </details>
+            )}
+
+          </div>
+        </aside>
+
+        </div>
+
+      </div>
+
+      {/* Desktop floating chat input — fixed to the viewport bottom, aligned to
+          the left findings column via a mirror of the two-column layout (a
+          340px spacer reserves the rail). pointer-events pass through the empty
+          gutters so only the input itself is interactive. */}
+      <div className="hidden lg:block fixed inset-x-0 bottom-6 z-sticky pointer-events-none">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex gap-8 justify-center">
+          <div className="w-full lg:w-[768px] min-w-0 pointer-events-auto">
+            <div className="flex gap-2 items-end rounded-2xl border-2 border-border-primary bg-background-primary shadow-elevated p-3 lg:-mx-8">
               <textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about your results..."
-                rows={1}
-                className="flex-1 resize-none rounded-xl border border-border-primary bg-background-primary px-4 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary/30 focus:border-accent-primary"
+                placeholder="Ask about your audit..."
+                rows={2}
+                className="flex-1 resize-none bg-transparent px-2 py-1.5 text-base text-text-primary placeholder:text-text-tertiary focus:outline-none min-h-[3.5rem]"
               />
               <button
                 onClick={() => sendMessage(inputValue)}
                 disabled={!inputValue.trim() || isLoading}
-                className="p-2.5 rounded-xl bg-accent-primary text-white dark:text-gray-900 disabled:opacity-40 hover:bg-accent-hover transition-colors cursor-pointer"
+                aria-label="Send"
+                className="flex-shrink-0 p-3 rounded-xl bg-accent-primary text-white dark:text-gray-900 disabled:opacity-40 hover:bg-accent-hover transition-colors cursor-pointer"
               >
-                <PaperAirplaneIcon className="w-4 h-4" />
+                <PaperAirplaneIcon className="w-5 h-5" />
               </button>
             </div>
-          </aside>
-        )}
-
-        </div>
-        {/* /flex-row screenshot+chat wrapper */}
-
-        {/* Desktop findings — full text cards (finding + fix + pattern link)
-            shown inline, so every gap is readable as accessible high-contrast
-            text without opening the on-screenshot side panel. Hovering a card
-            highlights its marker on the screenshot above. */}
-        {topPinnedIssues.length > 0 && (
-          <div className="hidden lg:block mt-8 max-w-4xl mx-auto">
-            <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-4">
-              {topPinnedIssues.length} gap{topPinnedIssues.length === 1 ? '' : 's'} found
-            </p>
-            <div className="space-y-3">
-              {topPinnedIssues.map((gap, i) => (
-                <GapCard
-                  key={i}
-                  gap={gap}
-                  index={i + 1}
-                  isHighlighted={hoveredPin === i + 1 || openPin === i + 1}
-                  onMouseEnter={() => setHoveredPin(i + 1)}
-                  onMouseLeave={() => setHoveredPin(null)}
-                />
-              ))}
-            </div>
           </div>
-        )}
-
-        {/* Primary actions — placed right after the audit results and above
-            the "Apply with Claude Code" handoff card. */}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-4xl mx-auto">
-          <SaveAuditButton
-            audit={savedAudit}
-            className="flex-1 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary cursor-pointer"
-          />
-          <button
-            onClick={() => setShowEmailModal(true)}
-            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-          >
-            Email Report
-          </button>
-          <button
-            onClick={() => {
-              const next: 'issues' | 'chat' = activeTab === 'chat' ? 'issues' : 'chat';
-              setActiveTab(next);
-              if (next === 'chat' && !hasSentOpener && issues.length > 0) {
-                setHasSentOpener(true);
-                const topPatterns = issues.slice(0, 3).map(g => g.pattern).join(', ');
-                setTimeout(() => sendMessage(
-                  `I found ${issues.length} issues in my interface. The top priorities are: ${topPatterns}. What should I fix first and how?`
-                ), 200);
-              }
-            }}
-            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-          >
-            {activeTab === 'chat' ? 'Hide chat' : 'Chat with results'}
-          </button>
-          <button
-            onClick={onNewAudit}
-            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
-          >
-            Run Another Audit
-          </button>
+          <div className="w-[340px] flex-shrink-0" aria-hidden />
         </div>
-
-        {/* Consolidated handoff — one prompt the user pastes into Claude Code / Cursor */}
-        {issues.length > 0 && (() => {
-          const handoffPrompt = composeHandoffPrompt({
-            surfaceDescription,
-            productType: results.productContext?.productType,
-            gaps: issues,
-          });
-          return (
-            <section className="mt-8" id="handoff-card">
-              <div className="rounded-2xl border border-border-primary bg-background-primary p-6 sm:p-10">
-                <p className="text-sm font-semibold uppercase tracking-wider text-accent-primary mb-2">Apply with Claude Code</p>
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-text-primary mb-2">Take this to your IDE</h2>
-                <p className="text-base text-text-secondary leading-relaxed mb-5">
-                  Paste this into Claude Code or Cursor. It will find the affected surfaces in your repo, apply each of the {issues.length} pattern{issues.length === 1 ? '' : 's'} in the right files, and report back what changed.
-                </p>
-                <button
-                  onClick={handleCopyHandoff}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
-                >
-                  {handoffCopied ? (
-                    <>
-                      <CheckCircleIcon className="w-5 h-5" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <CommandLineIcon className="w-5 h-5" />
-                      Copy handoff prompt
-                    </>
-                  )}
-                </button>
-                <button
-                  onClick={() => setShowHandoffSource((v) => !v)}
-                  aria-expanded={showHandoffSource}
-                  className="ml-3 sm:ml-4 inline-flex items-center gap-1.5 text-base font-medium text-text-secondary hover:text-text-primary cursor-pointer"
-                >
-                  <ChevronDownIcon className={`w-4 h-4 transition-transform ${showHandoffSource ? 'rotate-180' : ''}`} />
-                  {showHandoffSource ? 'Hide' : 'Inspect'}
-                </button>
-                {showHandoffSource && (
-                  <div className="mt-3 rounded-lg border border-border-primary bg-background-secondary p-4 max-h-96 overflow-y-auto">
-                    <pre className="text-sm font-mono whitespace-pre-wrap text-text-secondary leading-relaxed">{handoffPrompt}</pre>
-                  </div>
-                )}
-                <div className="mt-6 pt-5 border-t border-border-primary">
-                  <p className="text-base text-text-primary font-semibold mb-1">
-                    Audit every time you ship.
-                  </p>
-                  <p className="text-sm text-text-secondary leading-relaxed">
-                    Catch AI slop before your users do. Re-run after each change to keep your interface honest.
-                  </p>
-                </div>
-              </div>
-            </section>
-          );
-        })()}
-
       </div>
 
       {/* Mobile sticky handoff CTA — keeps the load-bearing action thumb-reachable
-          while the user scrolls the results. Hidden when the gap sheet or chat
-          tab is active so it doesn't compete with whichever surface the user
-          is interacting with. */}
-      {issues.length > 0 && openPin === null && activeTab !== 'chat' && (
+          while the user scrolls the results. Hidden when a gap side-sheet is
+          open so it doesn't compete with that surface. */}
+      {issues.length > 0 && openPin === null && (
         <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
           <button
             type="button"
