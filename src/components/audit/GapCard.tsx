@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ExclamationTriangleIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { ExclamationTriangleIcon, XCircleIcon, CheckCircleIcon, LightBulbIcon } from '@heroicons/react/24/outline';
 import type { TopGap } from '@/types/audit';
 import { resolvePatternSlug } from '@/lib/audit/pattern-link';
 
@@ -51,41 +51,42 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
           </span>
         )}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-3">
-            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium ${config.badge}`}>
-              <Icon className="w-4 h-4" />
+          {/* Header — pattern name leads, severity is a quieter tag beside it */}
+          <div className="flex items-center gap-2 flex-wrap mb-2.5">
+            <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${config.badge}`}>
+              <Icon className="w-3.5 h-3.5" />
               {config.label}
             </span>
-            <h3 className="text-lg font-semibold text-text-primary">{gap.pattern}</h3>
+            <h3 className="text-lg font-semibold text-text-primary leading-tight">{gap.pattern}</h3>
           </div>
-          <p className="text-base text-text-secondary leading-relaxed mb-3">{gap.finding}</p>
-          {gap.evidence && (
-            <p className="text-sm text-text-secondary leading-relaxed mb-3 pl-3 border-l-2 border-border-primary italic">
-              <span className="font-semibold not-italic text-text-primary">What we saw: </span>
-              {gap.evidence}
-            </p>
-          )}
+
+          {/* Finding — the problem */}
+          <p className="text-base text-text-secondary leading-relaxed">{gap.finding}</p>
+
+          {/* Fix — the action, in its own block so the card reads as
+              problem → fix instead of one undifferentiated wall of text. */}
           {gap.recommendation && (
-            <p className="text-base text-text-secondary leading-relaxed">
-              <span className="font-semibold text-text-primary">Fix: </span>
-              {gap.recommendation}
-            </p>
+            <div className="mt-3.5 rounded-lg border border-border-primary bg-accent-subtle p-4">
+              <div className="flex items-center gap-1.5 mb-2">
+                <LightBulbIcon className="w-4 h-4 text-accent-primary" />
+                <span className="text-xs font-bold uppercase tracking-wider text-accent-primary">Recommended fix</span>
+              </div>
+              <p className="text-base text-text-primary leading-relaxed">{gap.recommendation}</p>
+            </div>
           )}
+
           {(() => {
             // Prefer internal /patterns/<slug> link so the audit funnels link
-            // equity into pattern pages. Fall back to the external resource
-            // (e.g., a third-party reference) only when no pattern matches.
+            // equity into pattern pages. Fall back to the external resource only
+            // when no pattern matches. New tab preserves the user's audit state.
             const slug = resolvePatternSlug(gap.pattern, gap.resource);
             if (slug) {
-              // Open in a new tab so the user's audit state (uploaded screenshots,
-              // findings, chat) isn't lost on back-navigation — `audit-client.tsx`
-              // resets to the demo state on remount.
               return (
                 <Link
                   href={`/patterns/${slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 mt-4 text-base font-medium text-accent-primary hover:underline"
+                  className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-accent-primary hover:underline"
                 >
                   See how {gap.pattern} solves this &rarr;
                 </Link>
@@ -97,7 +98,7 @@ export function GapCard({ gap, index, isHighlighted, onMouseEnter, onMouseLeave 
                   href={gap.resource}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 mt-4 text-base font-medium text-accent-primary hover:underline"
+                  className="inline-flex items-center gap-1 mt-4 text-sm font-medium text-accent-primary hover:underline"
                 >
                   Learn more about this pattern &rarr;
                 </a>

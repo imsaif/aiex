@@ -6,11 +6,11 @@ import {
   HomeIcon,
   DocumentTextIcon,
   BellIcon,
-  SparklesIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
   ExclamationCircleIcon,
   PaperAirplaneIcon,
+  ChatBubbleOvalLeftIcon,
 } from '@heroicons/react/24/outline';
 
 export interface MockupPin {
@@ -38,6 +38,28 @@ interface DemoProductMockupProps {
   activePin: number | null;
   onPinClick: (index: number) => void;
   onPinHover?: (index: number | null) => void;
+}
+
+/**
+ * Map a click position (as a % of the mockup) to the closest pin's finding.
+ * Heatmap data showed most visitors click the mockup cards rather than the
+ * small numbered pins — Clarity logged those as dead clicks. The full-surface
+ * overlay below uses this so any click opens the nearest gap instead of
+ * doing nothing.
+ */
+function nearestPinIndex(xPct: number, yPct: number, useMobile: boolean): number {
+  let best = Infinity;
+  let idx = DEMO_PINS[0].index;
+  for (const p of DEMO_PINS) {
+    const px = useMobile ? p.mobile.xPct : p.xPct;
+    const py = useMobile ? p.mobile.yPct : p.yPct;
+    const d = (px - xPct) ** 2 + (py - yPct) ** 2;
+    if (d < best) {
+      best = d;
+      idx = p.index;
+    }
+  }
+  return idx;
 }
 
 export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoProductMockupProps) {
@@ -160,9 +182,7 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
           {/* Assistant header */}
           <div className="px-3 py-2.5 border-b border-border-primary flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-accent-primary flex items-center justify-center">
-                <SparklesIcon className="w-3.5 h-3.5 text-white dark:text-gray-900" />
-              </div>
+              <ChatBubbleOvalLeftIcon className="w-5 h-5 text-text-tertiary flex-shrink-0" />
               <div>
                 <p className="text-xs font-semibold text-text-primary">AI Assistant</p>
                 <p className="text-[10px] text-text-tertiary">Insights for this dashboard</p>
@@ -205,6 +225,36 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
         </div>
       </div>
 
+      {/* Full-surface click target — sits BELOW the pins (z-0 vs z-10) so
+          direct pin clicks still win, but any click that lands on a card
+          (which is what most visitors do) opens the nearest finding instead
+          of registering as a dead click. Mouse-only enhancement; keyboard and
+          screen-reader users get the individually-labelled pin buttons below. */}
+      <button
+        type="button"
+        aria-hidden="true"
+        tabIndex={-1}
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const xPct = ((e.clientX - rect.left) / rect.width) * 100;
+          const yPct = ((e.clientY - rect.top) / rect.height) * 100;
+          onPinClick(nearestPinIndex(xPct, yPct, false));
+        }}
+        className="hidden md:block absolute inset-0 z-0 cursor-pointer"
+      />
+      <button
+        type="button"
+        aria-hidden="true"
+        tabIndex={-1}
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const xPct = ((e.clientX - rect.left) / rect.width) * 100;
+          const yPct = ((e.clientY - rect.top) / rect.height) * 100;
+          onPinClick(nearestPinIndex(xPct, yPct, true));
+        }}
+        className="md:hidden absolute inset-0 z-0 cursor-pointer"
+      />
+
       {/* Numbered pins — desktop positions (md+) and mobile positions (< md)
           are emitted as separate sets because the underlying layout reflows
           (single column on mobile, 7/5 grid on desktop). */}
@@ -212,8 +262,8 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
         const isActive = activePin === pin.index;
         const pinClasses = `relative flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold border-2 transition-all ${
           isActive
-            ? 'bg-accent-primary text-white dark:text-gray-900 border-white scale-125 shadow-lg'
-            : 'bg-white text-accent-primary border-accent-primary shadow-md group-hover:scale-110'
+            ? 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 scale-125 shadow-lg ring-2 ring-black/15 dark:ring-white/25'
+            : 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 shadow-md ring-1 ring-black/10 dark:ring-white/20 group-hover:scale-110'
         }`;
         return (
           <span key={pin.index}>
@@ -233,12 +283,6 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
             >
               <span className={pinClasses}>
                 {pin.index}
-                {pin.index === 1 && !isActive && (
-                  <span
-                    className="absolute inset-0 rounded-full border-2 border-accent-primary animate-ping opacity-60"
-                    aria-hidden
-                  />
-                )}
               </span>
             </button>
             {/* Mobile pin */}
@@ -254,12 +298,6 @@ export function DemoProductMockup({ activePin, onPinClick, onPinHover }: DemoPro
             >
               <span className={pinClasses}>
                 {pin.index}
-                {pin.index === 1 && !isActive && (
-                  <span
-                    className="absolute inset-0 rounded-full border-2 border-accent-primary animate-ping opacity-60"
-                    aria-hidden
-                  />
-                )}
               </span>
             </button>
           </span>

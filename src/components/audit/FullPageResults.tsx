@@ -7,7 +7,6 @@ import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  LightBulbIcon,
   CheckCircleIcon,
   XMarkIcon,
   ArrowPathIcon,
@@ -506,7 +505,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   // are visually equivalent — both let the details aside render beside the
   // screenshot. On mobile, they pick which block is visible below the screenshot.
   const [activeTab, setActiveTab] = useState<'issues' | 'details' | 'chat'>('issues');
-  const [showAllQuickWins, setShowAllQuickWins] = useState(false);
   const [handoffCopied, setHandoffCopied] = useState(false);
   const [showHandoffSource, setShowHandoffSource] = useState(false);
   const [hasSentOpener, setHasSentOpener] = useState(false);
@@ -974,7 +972,30 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   return (
     <div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 lg:pb-8">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 lg:pb-8">
+
+        {/* Results header — keeps the "New audit" action visible the moment
+            results load. The full CTA row sits at the very bottom of a long
+            results page; session replays showed users finishing their review
+            and not finding a way to start over, so this anchors it up top. */}
+        <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6">
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight leading-tight">
+              Your audit results
+            </h1>
+            <p className="text-xs sm:text-sm text-text-secondary leading-snug">
+              Review the gaps below, then re-run after each change.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onNewAudit}
+            className="flex-shrink-0 inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold hover:bg-accent-hover transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap"
+          >
+            <ArrowPathIcon className="w-4 h-4" />
+            New audit
+          </button>
+        </div>
 
         {/* Screenshot canvas + optional chat side panel.
             Both columns have explicit fixed heights on desktop so the row size never changes
@@ -983,11 +1004,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
         {/* Pinned screenshot column — wraps the canvas + carousel thumbnail strip */}
         <div className={`flex-shrink-0 flex flex-col gap-3 w-full mx-auto ${
-          heroDeviceType === 'mobile' ? 'max-w-[400px] lg:w-[400px]' : 'max-w-[880px] lg:w-[880px]'
+          heroDeviceType === 'mobile' ? 'max-w-[400px] lg:w-[400px]' : 'max-w-[1040px] lg:w-[1040px]'
         }`}>
         <div
           className={`relative w-full ${
-            heroDeviceType === 'mobile' ? 'aspect-[9/16]' : 'aspect-[4/3]'
+            heroDeviceType === 'mobile' ? 'aspect-[9/16]' : 'aspect-video'
           }`}
         >
           {heroScreenshotUrl && (
@@ -995,11 +1016,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               <img
                 src={heroScreenshotUrl}
                 alt={`Your audited interface ${activeScreenshotIndex + 1}`}
-                className="w-full h-full object-contain block lg:blur-[2px]"
+                className="w-full h-full object-contain block"
               />
-              {/* Subtle wash so the numbered pins read clearly over the blurred shot.
-                  Desktop only — mobile shows the screenshot clearly since pins move to a list below. */}
-              <div className="hidden lg:block absolute inset-0 bg-white/30 dark:bg-black/30 pointer-events-none" />
             </div>
           )}
 
@@ -1048,15 +1066,11 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 <span
                   className={`relative flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold border-2 transition-all ${
                     isActive
-                      ? 'bg-accent-primary text-white dark:text-gray-900 border-white scale-125 shadow-lg'
-                      : 'bg-white text-accent-primary border-accent-primary shadow-md group-hover:scale-110'
+                      ? 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 scale-125 shadow-lg ring-2 ring-black/15 dark:ring-white/25'
+                      : 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 shadow-md ring-1 ring-black/10 dark:ring-white/20 group-hover:scale-110'
                   }`}
                 >
                   {pin.index}
-                  <span
-                    className={`absolute inset-0 rounded-full border-2 border-accent-primary ${isActive ? '' : 'animate-ping opacity-60'}`}
-                    aria-hidden
-                  />
                 </span>
               </button>
             );
@@ -1201,8 +1215,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         )}
         </div>
 
-        {/* What we audited + Quick Wins — sits beside the screenshot when chat isn't active */}
-        {activeTab !== 'chat' && (surfaceDescription || quickWins.length > 0 || results.applicablePatterns?.length) && (
+        {/* What we audited — sits beside the screenshot when chat isn't active */}
+        {activeTab !== 'chat' && (surfaceDescription || results.applicablePatterns?.length) && (
           <aside className={`w-full lg:w-[360px] lg:flex-shrink-0 rounded-2xl border border-border-primary bg-background-primary px-5 py-4 overflow-y-auto max-h-[640px] lg:max-h-none ${activeTab === 'details' ? '' : 'hidden lg:block'} ${
             heroDeviceType === 'mobile' ? 'lg:h-[711px]' : 'lg:h-[660px]'
           }`}>
@@ -1222,7 +1236,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               if (results.applicablePatterns?.length) facts.push({ label: 'Applicable patterns', value: `${results.applicablePatterns.length} of 36` });
               if (issues.length > 0) facts.push({ label: 'Gaps found', value: String(issues.length) });
               return (
-                <div className={(surfaceDescription || quickWins.length > 0) ? 'pb-4 mb-4 border-b border-border-primary' : ''}>
+                <div>
                   <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3">What we audited</p>
                   <dl className="rounded-lg border border-border-primary bg-background-secondary divide-y divide-border-primary mb-3">
                     {facts.map((f) => (
@@ -1234,37 +1248,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                   </dl>
                   {surfaceDescription && (
                     <p className="text-sm text-text-secondary leading-relaxed line-clamp-4">{surfaceDescription}</p>
-                  )}
-                </div>
-              );
-            })()}
-            {quickWins.length > 0 && (() => {
-              const QUICK_WINS_CAP = 4;
-              const visibleWins = showAllQuickWins ? quickWins : quickWins.slice(0, QUICK_WINS_CAP);
-              const hiddenCount = quickWins.length - QUICK_WINS_CAP;
-              return (
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3 flex items-center gap-1.5">
-                    <LightBulbIcon className="w-4 h-4 text-amber-500" />
-                    Quick Wins
-                  </p>
-                  <ul className="space-y-3">
-                    {visibleWins.map((win, i) => (
-                      <li key={i} className="flex gap-2.5 text-sm">
-                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xs font-semibold">
-                          {i + 1}
-                        </span>
-                        <span className="text-text-secondary leading-relaxed line-clamp-3">{win}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  {hiddenCount > 0 && (
-                    <button
-                      onClick={() => setShowAllQuickWins((v) => !v)}
-                      className="mt-3 text-sm font-medium text-accent-primary hover:text-accent-hover cursor-pointer"
-                    >
-                      {showAllQuickWins ? 'Show fewer' : `+ ${hiddenCount} more`}
-                    </button>
                   )}
                 </div>
               );
@@ -1357,6 +1340,67 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         </div>
         {/* /flex-row screenshot+chat wrapper */}
 
+        {/* Desktop findings — full text cards (finding + fix + pattern link)
+            shown inline, so every gap is readable as accessible high-contrast
+            text without opening the on-screenshot side panel. Hovering a card
+            highlights its marker on the screenshot above. */}
+        {topPinnedIssues.length > 0 && (
+          <div className="hidden lg:block mt-8 max-w-4xl mx-auto">
+            <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-4">
+              {topPinnedIssues.length} gap{topPinnedIssues.length === 1 ? '' : 's'} found
+            </p>
+            <div className="space-y-3">
+              {topPinnedIssues.map((gap, i) => (
+                <GapCard
+                  key={i}
+                  gap={gap}
+                  index={i + 1}
+                  isHighlighted={hoveredPin === i + 1 || openPin === i + 1}
+                  onMouseEnter={() => setHoveredPin(i + 1)}
+                  onMouseLeave={() => setHoveredPin(null)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Primary actions — placed right after the audit results and above
+            the "Apply with Claude Code" handoff card. */}
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-4xl mx-auto">
+          <SaveAuditButton
+            audit={savedAudit}
+            className="flex-1 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary cursor-pointer"
+          />
+          <button
+            onClick={() => setShowEmailModal(true)}
+            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
+          >
+            Email Report
+          </button>
+          <button
+            onClick={() => {
+              const next: 'issues' | 'chat' = activeTab === 'chat' ? 'issues' : 'chat';
+              setActiveTab(next);
+              if (next === 'chat' && !hasSentOpener && issues.length > 0) {
+                setHasSentOpener(true);
+                const topPatterns = issues.slice(0, 3).map(g => g.pattern).join(', ');
+                setTimeout(() => sendMessage(
+                  `I found ${issues.length} issues in my interface. The top priorities are: ${topPatterns}. What should I fix first and how?`
+                ), 200);
+              }
+            }}
+            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
+          >
+            {activeTab === 'chat' ? 'Hide chat' : 'Chat with results'}
+          </button>
+          <button
+            onClick={onNewAudit}
+            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
+          >
+            Run Another Audit
+          </button>
+        </div>
+
         {/* Consolidated handoff — one prompt the user pastes into Claude Code / Cursor */}
         {issues.length > 0 && (() => {
           const handoffPrompt = composeHandoffPrompt({
@@ -1413,42 +1457,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             </section>
           );
         })()}
-
-        {/* CTAs */}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-3xl mx-auto">
-          <SaveAuditButton
-            audit={savedAudit}
-            className="flex-1 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary cursor-pointer"
-          />
-          <button
-            onClick={() => setShowEmailModal(true)}
-            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-          >
-            Email Report
-          </button>
-          <button
-            onClick={() => {
-              const next: 'issues' | 'chat' = activeTab === 'chat' ? 'issues' : 'chat';
-              setActiveTab(next);
-              if (next === 'chat' && !hasSentOpener && issues.length > 0) {
-                setHasSentOpener(true);
-                const topPatterns = issues.slice(0, 3).map(g => g.pattern).join(', ');
-                setTimeout(() => sendMessage(
-                  `I found ${issues.length} issues in my interface. The top priorities are: ${topPatterns}. What should I fix first and how?`
-                ), 200);
-              }
-            }}
-            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-          >
-            {activeTab === 'chat' ? 'Hide chat' : 'Chat with results'}
-          </button>
-          <button
-            onClick={onNewAudit}
-            className="flex-1 inline-flex items-center justify-center px-5 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 text-sm font-semibold hover:bg-accent-hover transition-colors cursor-pointer"
-          >
-            Run Another Audit
-          </button>
-        </div>
 
       </div>
 

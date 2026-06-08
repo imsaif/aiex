@@ -1,6 +1,6 @@
 'use client';
 
-import { SparklesIcon } from '@heroicons/react/24/outline';
+import { ChatBubbleOvalLeftIcon } from '@heroicons/react/24/outline';
 import { DEMO_PINS } from './DemoProductMockup';
 
 interface DemoChatMockupProps {
@@ -39,9 +39,7 @@ export function DemoChatMockup({ activePin, onPinClick, onPinHover }: DemoChatMo
 
       {/* Header */}
       <div className="flex items-center gap-2 px-3 pt-3 pb-3 border-b border-border-primary">
-        <div className="w-7 h-7 rounded-md bg-accent-primary flex items-center justify-center">
-          <SparklesIcon className="w-4 h-4 text-white dark:text-gray-900" />
-        </div>
+        <ChatBubbleOvalLeftIcon className="w-5 h-5 text-text-tertiary flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-[11px] font-semibold leading-tight text-text-primary">AI Assistant</p>
           <p className="text-[9px] text-text-tertiary leading-tight">5 audit findings</p>
@@ -49,8 +47,8 @@ export function DemoChatMockup({ activePin, onPinClick, onPinHover }: DemoChatMo
       </div>
 
       {/* Findings list — each row matches the laptop pin styling
-          (numbered circle with animate-ping ring) so the visual story
-          stays consistent across devices. */}
+          (filled-accent numbered circle) so the visual story stays
+          consistent across devices. */}
       <div className="flex-1 px-3 py-3 space-y-2 overflow-hidden">
         {DEMO_PINS.map((pin) => {
           const data = FINDINGS[pin.index];
@@ -72,26 +70,18 @@ export function DemoChatMockup({ activePin, onPinClick, onPinHover }: DemoChatMo
                   : 'border-border-primary bg-background-secondary hover:border-accent-primary/50'
               }`}
             >
-              {/* Pulsating numbered pin — same animation pattern as the
-                  laptop's `animate-ping` ring. */}
+              {/* Numbered pin — filled accent (dark in light mode, white in
+                  dark mode), no pulse. */}
               <span className="relative flex-shrink-0 mt-0.5">
                 <span
                   className={`relative z-10 flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-bold border-2 transition-all ${
                     isActive
-                      ? 'bg-accent-primary text-white dark:text-gray-900 border-white scale-110 shadow'
-                      : 'bg-white text-accent-primary border-accent-primary'
+                      ? 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 scale-110 shadow'
+                      : 'bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900'
                   }`}
                 >
                   {pin.index}
                 </span>
-                {/* Pulse only on pin #1 (mirroring the laptop) so the
-                    hero doesn't feel busy with five competing animations. */}
-                {pin.index === 1 && !isActive && (
-                  <span
-                    aria-hidden
-                    className="absolute inset-0 rounded-full border-2 border-accent-primary animate-ping opacity-50"
-                  />
-                )}
               </span>
 
               <div className="flex-1 min-w-0">
