@@ -94,8 +94,9 @@ export default function NewsletterDetailClient({
             </div>
           )}
 
-          {/* Title */}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-text-primary animate-fade-in">
+          {/* Title — no animate-fade-in: this H1 is the LCP element and an
+              opacity:0→1 entrance defers the credited LCP paint under throttling. */}
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold mb-6 text-text-primary">
             {newsletter.title}
           </h1>
 

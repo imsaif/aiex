@@ -70,8 +70,11 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
     return colorMap[color] || colorMap['blue'];
   };
 
+  // No entrance fade on the <main> wrapper: it holds the H1 LCP element, and an
+  // opacity:0→1 animation defers the credited LCP paint (inflated LCP under
+  // throttling). Keep fade-ins scoped to below-fold sections only.
   return (
-    <main className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6 animate-fade-in">
+    <main className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6">
       {/* Previous / Next Navigation */}
       <nav className="flex items-center justify-between text-sm mb-6">
         {previousPattern ? (
