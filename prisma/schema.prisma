@@ -163,3 +163,21 @@ model SocialPost {
   account         SocialAccount?  @relation(fields: [accountId], references: [id])
   newsletter      NewsletterDraft @relation(fields: [newsletterId], references: [id], onDelete: Cascade)
 }
+
+// Real-user (field) Core Web Vitals, self-reported by the browser via
+// /api/vitals. The daily /api/cron/check-web-vitals job computes rolling p75
+// per metric and alerts on regressions — the field-data layer LHCI (lab) is
+// blind to. Self-testing (aiux:role) is filtered client-side before reporting.
+model WebVitalMetric {
+  id           String   @id @default(cuid())
+  metric       String // LCP | INP | CLS | FCP | TTFB
+  value        Float //  ms for LCP/INP/FCP/TTFB; unitless for CLS
+  rating       String //  good | needs-improvement | poor (from web-vitals)
+  path         String //  pathname, e.g. /patterns/conversational-ui
+  device       String //  mobile | desktop (viewport proxy)
+  navigationId String? // web-vitals per-metric-instance id (NOT a page-load group key)
+  createdAt    DateTime @default(now())
+
+  @@index([metric, createdAt])
+  @@index([path, metric, createdAt])
+}
