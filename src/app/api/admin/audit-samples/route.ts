@@ -24,7 +24,7 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
     ? {}
     : {
         AND: [
-          { OR: [{ role: null }, { role: { notIn: ['test', 'admin'] } }] },
+          { OR: [{ role: null }, { role: { notIn: ['test', 'admin', 'monitor'] } }] },
           adminHashes.length > 0
             ? { OR: [{ ipHash: null }, { ipHash: { notIn: adminHashes } }] }
             : {},
@@ -80,7 +80,7 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
         where: {
           createdAt: { gte: since },
           OR: [
-            { role: { in: ['test', 'admin'] } },
+            { role: { in: ['test', 'admin', 'monitor'] } },
             ...(adminHashes.length > 0 ? [{ ipHash: { in: adminHashes } }] : []),
           ],
         },

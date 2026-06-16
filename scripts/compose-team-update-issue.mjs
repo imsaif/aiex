@@ -99,17 +99,14 @@ ${inner}
 }
 
 // --- Content ---
-const LEAD = `The AI news wire is quiet today: no major launches or research worth your inbox. So instead of forcing it, here is what we have shipped on aiuxdesign.guide over the past couple of weeks.`;
+const LEAD = `The AI news wire is quiet today, no major launches or research worth your inbox. So instead of forcing it, here is what we have shipped on aiuxdesign.guide lately.`;
 
 const CARDS = [
   {
-    kicker: 'New patterns · now 38',
-    headline: 'Two new patterns for agentic products',
-    body: 'Workspace-Native Agent Integration covers designing agents that live where the work already happens, instead of in a separate tab. Agent Reflection &amp; Learning covers agents that improve from their own outputs and user corrections.',
-    links: [
-      { label: 'Workspace-Native Agents', href: `${SITE_URL}/patterns/workspace-native-agents`, primary: true },
-      { label: 'Agent Reflection &amp; Learning', href: `${SITE_URL}/patterns/agent-reflection-learning`, primary: true },
-    ],
+    kicker: 'Product · audit',
+    headline: 'A redesigned, easier-to-read audit',
+    body: 'We rebuilt how your audit results read. Instead of a dense report, you now get a two-column conversational layout that walks you through each UX gap and the specific fix, one point at a time.',
+    links: [{ label: 'Run an audit', href: SITE_URL, primary: true }],
   },
   {
     kicker: 'Product',
@@ -118,10 +115,13 @@ const CARDS = [
     links: [{ label: 'Open the dashboard', href: `${SITE_URL}/dashboard`, primary: false }],
   },
   {
-    kicker: 'Reference',
-    headline: 'A public design system reference',
-    body: 'We opened up the tokens and primitives behind the site as a reference you can browse.',
-    links: [{ label: 'Browse the design system', href: `${SITE_URL}/design-system`, primary: false }],
+    kicker: 'New patterns · now 38',
+    headline: 'Two new patterns for agentic products',
+    body: 'Workspace-Native Agent Integration covers designing agents that live where the work already happens, instead of in a separate tab. Agent Reflection &amp; Learning covers agents that improve from their own outputs and user corrections.',
+    links: [
+      { label: 'Workspace-Native Agents', href: `${SITE_URL}/patterns/workspace-native-agents`, primary: false },
+      { label: 'Agent Reflection &amp; Learning', href: `${SITE_URL}/patterns/agent-reflection-learning`, primary: false },
+    ],
   },
 ];
 
@@ -159,7 +159,7 @@ const envFile = envIdx >= 0 ? args[envIdx + 1] : null;
 
 const content = buildContent();
 const title = 'A quiet news day, so here is what we shipped';
-const summary = 'No big AI launches today, so a catch-up from our side: two new patterns (now 38), a new audit dashboard, a public design system reference, and free audits.';
+const summary = 'No big AI launches today, so a catch-up from our side: a redesigned, easier-to-read audit, a dashboard to save and hand off your audits, and two new agentic patterns (now 38).';
 const slug = `ai-ux-daily-${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).replace(' ', '-').toLowerCase()}-team-updates`;
 
 const outFile = path.join(process.cwd(), `newsletter-team-update-${slug}.html`);

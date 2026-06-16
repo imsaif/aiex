@@ -150,12 +150,12 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
 
       {stats && stats.excludedCount > 0 && !includeTest && (
         <div className="text-xs text-text-secondary mb-3">
-          {stats.excludedCount} test row{stats.excludedCount === 1 ? '' : 's'} hidden (role=test or admin ipHash).
+          {stats.excludedCount} test row{stats.excludedCount === 1 ? '' : 's'} hidden (role=test/admin/monitor or admin ipHash).
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-800 rounded p-3 mb-4 text-sm">{error}</div>
+        <div className="bg-status-error/10 border border-status-error/20 text-status-error rounded p-3 mb-4 text-sm">{error}</div>
       )}
 
       {stats && (

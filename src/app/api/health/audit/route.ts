@@ -67,10 +67,15 @@ async function checkAnalyzeRoute(): Promise<{ ok: boolean; detail?: string }> {
   // Send a deliberately incomplete body — route returns 400 before any
   // Anthropic call. We're verifying the route is reachable + returns
   // structured JSON, not exercising the model.
+  //
+  // The route records a `bad_request`/`missing_image` AuditSample on the 400
+  // path. Tag it `role: 'monitor'` so this synthetic ping is filtered out of
+  // the /admin/audit-samples default view (excluded alongside test/admin) and
+  // doesn't inflate the bad_request count or mask a real client-side bug.
   const res = await fetch(`${SITE_URL}/api/patterns/analyze`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({}),
+    body: JSON.stringify({ role: 'monitor' }),
     cache: 'no-store',
   });
   if (res.status !== 400) {
