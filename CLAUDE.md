@@ -521,7 +521,8 @@ This section documents issues we've encountered and their solutions, so Claude r
 **cron-job.org Setup:**
 - Daily newsletter: `0 3 * * *` (3 AM UTC / 8:30 AM IST) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
 - Weekly newsletter: `0 2 * * 1` (2 AM UTC / 7:30 AM IST Mon) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly`
-- Audit health monitor: `*/5 * * * *` (every 5 min) → `https://www.aiuxdesign.guide/api/health/audit` — synthetic monitor for the audit funnel; reuses CRON_SECRET; emails admin via Resend on failure. Healthy checks are silent. See `src/app/api/health/audit/route.ts` for the four checks (env, homepage, analyze route, database).
+- Audit health monitor: `0 * * * *` (hourly) → `https://www.aiuxdesign.guide/api/health/audit` — synthetic monitor for the audit funnel; reuses CRON_SECRET; emails admin via Resend on failure. Healthy checks are silent. See `src/app/api/health/audit/route.ts` for the four checks (env, homepage, analyze route, database). **Cadence: dialed from `*/5` → hourly on 2026-06-16 — real audit volume is ~2/day (see `/admin/audit-samples`), so 5-min checks were 144× the usage rate and kept Neon free-tier compute from auto-suspending (quota risk). Hourly still catches breakage well within the daytime usage window (UTC ~05:00–12:00) and lets Neon sleep ~55 min/hour.**
+- Field Web Vitals monitor: `0 5 * * *` (daily, 5 AM UTC) → `https://www.aiuxdesign.guide/api/cron/check-web-vitals` — computes rolling p75 of real-user CWV from the `WebVitalMetric` table (fed by `WebVitalsReporter` → `/api/vitals`); reuses CRON_SECRET; emails admin via Resend ONLY on a "good"-threshold breach (LCP>2.5s/INP>200ms/CLS>0.1), silent otherwise. The field-data layer LHCI (lab) is blind to. Added 2026-06-16.
 - Requires `Authorization: Bearer <CRON_SECRET>` header
 
 **Newsletter Troubleshooting Checklist:**
