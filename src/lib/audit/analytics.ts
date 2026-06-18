@@ -32,7 +32,12 @@ type AuditEvent =
   | 'audit_unlock_modal_shown'
   | 'audit_unlock_submitted'
   | 'audit_unlock_dismissed'
-  | 'audit_final_cap_shown';
+  | 'audit_final_cap_shown'
+  // Paid done-for-you audit service (the /services page + post-audit CTAs)
+  | 'service_page_viewed'
+  | 'service_intake_started'
+  | 'service_intake_submitted'
+  | 'service_cta_clicked';
 
 declare global {
   interface Window {

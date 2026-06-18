@@ -52,7 +52,32 @@ export default function Footer() {
             </div>
 
             {/* Right Section: Footer Columns */}
-            <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {/* SERVICES Column */}
+              <div>
+                <h4 className="text-base font-semibold text-text-primary mb-5">
+                  Services
+                </h4>
+                <ul className="space-y-3">
+                  <li>
+                    <a
+                      href="/services"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Audit my product
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="/services#start"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Request an audit
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
               {/* RESOURCES Column */}
               <div>
                 <h4 className="text-base font-semibold text-text-primary mb-5">

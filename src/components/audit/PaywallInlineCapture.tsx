@@ -67,9 +67,19 @@ export function PaywallInlineCapture({ auditCountAtTrigger }: PaywallInlineCaptu
         <h3 className="text-xl sm:text-2xl font-semibold text-text-primary tracking-tight leading-[1.2] mb-2">
           You&apos;ve reached the free limit
         </h3>
-        <p className="text-sm text-text-secondary leading-relaxed">
-          You&apos;ve used all {UNLOCKED_AUDIT_LIMIT} of your free audits. We&apos;re keeping this capped for now so it stays available for more designers. We&apos;ll email you when we open it up further.
+        <p className="text-sm text-text-secondary leading-relaxed mb-5">
+          You&apos;ve used all {UNLOCKED_AUDIT_LIMIT} of your free audits. We&apos;re keeping the free tool capped for now so it stays available for more designers. Want a deeper review of your whole product?
         </p>
+        <a
+          href="/services?from=post-audit-cta"
+          onClick={() => trackAuditEvent('service_cta_clicked', { source: 'inline_final_cap' })}
+          className="inline-flex items-center gap-2 px-6 py-3 bg-accent-primary text-white rounded-full font-medium hover:bg-accent-hover hover:scale-[1.02] active:scale-[0.98] transition-all"
+        >
+          Get your product audited
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
       </div>
     );
   }

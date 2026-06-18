@@ -185,6 +185,12 @@ export default function DashboardClient() {
         Pick what to include, then generate one handoff file for Claude Code, Cursor, or any AI
         coding agent.
       </p>
+      <p className="mt-4 text-base text-text-secondary max-w-2xl">
+        Want a senior set of eyes instead?{' '}
+        <Link href="/services" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+          Get your whole product audited for you →
+        </Link>
+      </p>
     </div>
   );
 

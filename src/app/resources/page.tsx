@@ -71,6 +71,12 @@ export default function ResourcesPage() {
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </Link>
+          <p className="mt-6 text-text-secondary">
+            Want it done for you?{' '}
+            <Link href="/services" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+              Get a senior audit of your whole product →
+            </Link>
+          </p>
         </div>
       </section>
 

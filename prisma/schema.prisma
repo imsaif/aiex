@@ -164,6 +164,30 @@ model SocialPost {
   newsletter      NewsletterDraft @relation(fields: [newsletterId], references: [id], onDelete: Cascade)
 }
 
+// Inbound leads for the paid done-for-you product-audit service (the /services
+// page + post-audit CTAs). Quote-based: a lead lands here + emails the admin via
+// Resend, the human replies with scope + a Dodo Static Payment Link. No payment
+// state is stored here — these rows are the demand + pricing-validation signal.
+model ServiceLead {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  name        String
+  email       String
+  company     String?
+  productUrl  String?
+  productType String?
+  message     String
+  budget      String?
+  timeline    String?
+  source      String   @default("services-page") // services-page | post-audit-cta
+  status      String   @default("new") // new | contacted | quoted | won | lost
+  ipHash      String?
+  userAgent   String?
+
+  @@index([createdAt])
+  @@index([status])
+}
+
 // Real-user (field) Core Web Vitals, self-reported by the browser via
 // /api/vitals. The daily /api/cron/check-web-vitals job computes rolling p75
 // per metric and alerts on regressions — the field-data layer LHCI (lab) is

@@ -117,13 +117,20 @@ export function PaywallModal({ onClose, mode, auditCountAtTrigger, onUnlocked }:
                   You&apos;ve reached the free limit
                 </h2>
                 <p className="text-sm text-text-secondary mb-6 leading-relaxed">
-                  You&apos;ve used all {UNLOCKED_AUDIT_LIMIT} of your free audits. We&apos;re keeping this capped for now so it stays available for more designers exploring the tool. We&apos;ll email you the moment we open it up further.
+                  You&apos;ve used all {UNLOCKED_AUDIT_LIMIT} of your free audits. We&apos;re keeping the free tool capped for now so it stays available for more designers exploring it. Want a deeper review of your whole product?
                 </p>
+                <a
+                  href="/services?from=post-audit-cta"
+                  onClick={() => trackAuditEvent('service_cta_clicked', { source: 'paywall_final_cap' })}
+                  className="inline-block px-5 py-2.5 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-hover transition-colors"
+                >
+                  Get your product audited
+                </a>
                 <button
                   onClick={onClose}
-                  className="px-5 py-2.5 bg-accent-primary text-white rounded-xl font-medium hover:bg-accent-hover transition-colors"
+                  className="block mx-auto mt-4 text-sm text-text-tertiary hover:text-text-primary transition-colors"
                 >
-                  Got it
+                  No thanks
                 </button>
               </div>
             )}

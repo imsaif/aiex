@@ -84,6 +84,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    {
+      // Done-for-you audit service (commercial landing page)
+      url: `${baseUrl}/services`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // /search excluded — blocked in robots.txt
     // /aiuxdesign.gist.design removed — static file, not an indexable page
   ];

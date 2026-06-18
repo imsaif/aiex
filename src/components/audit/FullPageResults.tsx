@@ -1248,6 +1248,16 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               </button>
             </div>
 
+            {/* Done-for-you upsell — non-blocking secondary offer */}
+            <a
+              href="/services?from=post-audit-cta"
+              onClick={() => trackAuditEvent('service_cta_clicked', { source: 'results_rail' })}
+              className="block rounded-2xl border border-border-primary bg-background-primary px-5 py-4 hover:bg-background-secondary transition-colors"
+            >
+              <span className="block text-sm font-semibold text-text-primary mb-0.5">Want us to audit your whole product?</span>
+              <span className="block text-sm text-text-secondary">A senior, done-for-you AI-UX audit with a detailed report, prioritized recommendations, and a walkthrough with your team. <span className="text-accent-primary">Learn more →</span></span>
+            </a>
+
             {/* What we audited — optional details */}
             {(surfaceDescription || results.applicablePatterns?.length) && (
               <details className="rounded-2xl border border-border-primary bg-background-primary px-5 py-4">
