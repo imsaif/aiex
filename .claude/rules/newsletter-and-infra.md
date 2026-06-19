@@ -99,3 +99,11 @@ When newsletter doesn't run or emails don't send:
 | Issue | Date | Solution |
 |-------|------|----------|
 | **Anthropic has no RSS feed** | Dec 2025 | Scrape `anthropic.com/news` page directly instead of using RSS parser |
+
+## Monitoring & False Alarms
+
+**The real, working monitors** all run on Vercel (or as GitHub Actions) and alert via Resend email or a GitHub issue. Full map in [`docs/MONITORING.md`](../../docs/MONITORING.md). The on-Vercel newsletter watchdog (`cron-job.org → /api/cron/newsletter-watchdog`) is the authoritative newsletter check — it reads the DB directly, auto-retriggers generation, and emails on real failure.
+
+| Issue | Date | Solution |
+|-------|------|----------|
+| **GitHub issues "Newsletter watchdog failed/blocked — network egress blocked" / "Host not in allowlist: www.aiuxdesign.guide"** | Apr–Jun 2026 | **FALSE ALARM — not a real outage.** A redundant **Claude Code on the web scheduled session** tried to verify the newsletter by fetching the production host from inside the Claude sandbox; the sandbox's network egress policy blocks that host, so the agent opened a "status unknown" issue. The error string is the **Claude environment's own** egress block, **not** Vercel (issue #27 misattributed it to "Vercel Firewall" — wrong; same egress root cause). **Resolution (Jun 2026):** retired the redundant Claude Code web trigger — the on-Vercel watchdog already covers this and actually works. If these issues reappear, the web trigger was re-added; delete it again in the Claude Code web UI. **Do not chase a Vercel WAF/firewall rule — there isn't one.** |
