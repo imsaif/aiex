@@ -10,12 +10,20 @@ interface CompanyToTag {
   needsHandle: boolean;
 }
 
+interface DeepDiveImage {
+  url: string;
+  caption: string;
+  alt?: string;
+}
+
 interface DeepDive {
   featuredProduct: string;
   patternTitle: string;
-  linkedin: string;
+  patternUrl: string;
+  article: string;
   x: string;
   companiesToTag: CompanyToTag[];
+  images: DeepDiveImage[];
 }
 
 function extractProductName(title: string): string {
@@ -47,7 +55,7 @@ export default function PatternDeepDiveSection() {
   const [featuredProduct, setFeaturedProduct] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [deepDive, setDeepDive] = useState<DeepDive | null>(null);
-  const [linkedinDraft, setLinkedinDraft] = useState('');
+  const [articleDraft, setArticleDraft] = useState('');
   const [xDraft, setXDraft] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -71,9 +79,9 @@ export default function PatternDeepDiveSection() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Generation failed');
       setDeepDive(data.deepDive);
-      setLinkedinDraft(data.deepDive.linkedin);
+      setArticleDraft(data.deepDive.article);
       setXDraft(data.deepDive.x);
-      flash('success', 'Draft generated. Review, edit, then copy into the native composer to tag companies.');
+      flash('success', 'Article generated. Review, edit, then publish as a LinkedIn Article and tag the companies below.');
     } catch (error) {
       flash('error', error instanceof Error ? error.message : 'Generation failed');
     } finally {
@@ -140,8 +148,9 @@ export default function PatternDeepDiveSection() {
         </div>
 
         <p className="mt-3 text-xs text-text-tertiary">
-          Generates a draft for review. LinkedIn company tags only fire from the native composer, so
-          copy the text in, then tag the companies listed below using @-autocomplete. Nothing is auto-posted.
+          Generates a long-form article draft for review. Real code from the pattern is spliced in
+          verbatim. Paste it into LinkedIn&apos;s Article editor, attach the images listed below, and tag the
+          companies using @-autocomplete. Nothing is auto-posted.
         </p>
 
         {message && (
@@ -160,47 +169,55 @@ export default function PatternDeepDiveSection() {
       {!deepDive ? (
         <div className="bg-surface-primary rounded-lg border border-border-primary p-6">
           <p className="text-center text-text-tertiary py-8">
-            Pick a pattern and generate a product-first teardown for LinkedIn + X.
+            Pick a pattern and generate a long-form article for LinkedIn, with a short X teaser.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* LinkedIn draft */}
+        <div className="space-y-6">
+          {/* Long-form article (primary) */}
           <div className="bg-surface-primary rounded-lg border border-border-primary p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-text-primary">
-                LinkedIn draft
+                LinkedIn article
                 <span className="ml-2 font-normal text-text-tertiary">
-                  {linkedinDraft.length} chars
+                  {articleDraft.trim() ? articleDraft.trim().split(/\s+/).length : 0} words · {articleDraft.length} chars
                 </span>
               </h3>
               <button
-                onClick={() => copy(linkedinDraft, 'LinkedIn draft')}
+                onClick={() => copy(articleDraft, 'Article')}
                 className="px-3 py-1.5 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors text-xs font-medium"
               >
-                Copy for LinkedIn
+                Copy for LinkedIn Article
               </button>
             </div>
             <textarea
-              value={linkedinDraft}
-              onChange={(e) => setLinkedinDraft(e.target.value)}
-              rows={16}
-              className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-md text-text-primary text-sm focus:ring-2 focus:ring-accent-primary focus:border-accent-primary resize-y"
+              value={articleDraft}
+              onChange={(e) => setArticleDraft(e.target.value)}
+              rows={24}
+              className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-md text-text-primary text-sm font-mono focus:ring-2 focus:ring-accent-primary focus:border-accent-primary resize-y"
             />
+            <p className="mt-2 text-xs text-text-tertiary">
+              Markdown. Paste into LinkedIn&apos;s Article editor (headings, code blocks, and bullets carry over).
+              Links back to{' '}
+              <a href={deepDive.patternUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                {deepDive.patternUrl}
+              </a>
+              .
+            </p>
           </div>
 
-          {/* X draft + companies to tag */}
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* X teaser */}
             <div className="bg-surface-primary rounded-lg border border-border-primary p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-text-primary">
-                  X draft
+                  X teaser
                   <span className={`ml-2 font-normal ${xDraft.length > 280 ? 'text-status-error' : 'text-text-tertiary'}`}>
                     {xDraft.length}/280
                   </span>
                 </h3>
                 <button
-                  onClick={() => copy(xDraft, 'X draft')}
+                  onClick={() => copy(xDraft, 'X teaser')}
                   className="px-3 py-1.5 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors text-xs font-medium"
                 >
                   Copy for X
@@ -214,31 +231,69 @@ export default function PatternDeepDiveSection() {
               />
             </div>
 
-            <div className="bg-surface-primary rounded-lg border border-border-primary p-4">
-              <h3 className="text-sm font-semibold text-text-primary mb-1">Companies to tag</h3>
-              <p className="text-xs text-text-tertiary mb-3">
-                Tag these in the composer. LinkedIn: type @ and pick the page. X: the handle is shown.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {deepDive.companiesToTag.map((c) => (
-                  <span
-                    key={c.product}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs border ${
-                      c.needsHandle
-                        ? 'bg-status-warning/10 text-status-warning border-status-warning/20'
-                        : 'bg-background-secondary text-text-primary border-border-primary'
-                    }`}
-                    title={c.needsHandle ? 'No verified handle on file — verify before tagging' : undefined}
-                  >
-                    <span className="font-medium">{c.product}</span>
-                    {c.x ? (
-                      <span className="text-text-tertiary">@{c.x}</span>
-                    ) : (
-                      <span className="text-status-warning">verify handle</span>
-                    )}
-                  </span>
-                ))}
+            {/* Companies to tag + images to include */}
+            <div className="space-y-6">
+              <div className="bg-surface-primary rounded-lg border border-border-primary p-4">
+                <h3 className="text-sm font-semibold text-text-primary mb-1">Companies to tag</h3>
+                <p className="text-xs text-text-tertiary mb-3">
+                  Tag these in the composer. LinkedIn: type @ and pick the page. X: the handle is shown.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {deepDive.companiesToTag.map((c) => (
+                    <span
+                      key={c.product}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs border ${
+                        c.needsHandle
+                          ? 'bg-status-warning/10 text-status-warning border-status-warning/20'
+                          : 'bg-background-secondary text-text-primary border-border-primary'
+                      }`}
+                      title={c.needsHandle ? 'No verified handle on file — verify before tagging' : undefined}
+                    >
+                      <span className="font-medium">{c.product}</span>
+                      {c.x ? (
+                        <span className="text-text-tertiary">@{c.x}</span>
+                      ) : (
+                        <span className="text-status-warning">verify handle</span>
+                      )}
+                    </span>
+                  ))}
+                </div>
               </div>
+
+              {deepDive.images.length > 0 && (
+                <div className="bg-surface-primary rounded-lg border border-border-primary p-4">
+                  <h3 className="text-sm font-semibold text-text-primary mb-1">Images to include</h3>
+                  <p className="text-xs text-text-tertiary mb-3">
+                    Download and attach these to the article. Copy a URL to open or save it.
+                  </p>
+                  <ul className="space-y-2">
+                    {deepDive.images.map((img) => (
+                      <li
+                        key={img.url}
+                        className="flex items-center justify-between gap-3 rounded-md border border-border-primary bg-background-secondary px-3 py-2"
+                      >
+                        <div className="min-w-0">
+                          <p className="truncate text-xs font-medium text-text-primary">{img.caption || 'Image'}</p>
+                          <a
+                            href={img.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block truncate text-xs text-text-tertiary underline"
+                          >
+                            {img.url}
+                          </a>
+                        </div>
+                        <button
+                          onClick={() => copy(img.url, 'Image URL')}
+                          className="shrink-0 px-2.5 py-1 bg-background-primary border border-border-primary text-text-primary rounded-md hover:bg-surface-primary transition-colors text-xs font-medium"
+                        >
+                          Copy URL
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>

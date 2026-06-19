@@ -13,9 +13,12 @@ export default function Carousel({ examples }: { examples: Example[] }) {
   const images = examples.filter(e => e.image);
   const [current, setCurrent] = useState(0);
   if (images.length === 0) return null;
-  const prev = () => setCurrent(i => Math.max(i - 1, 0));
-  const next = () => setCurrent(i => Math.min(i + 1, images.length - 1));
-  const example = images[current];
+  // Clamp in case the examples array shrank since `current` was last set
+  // (e.g. data change or HMR), so we never index past the end.
+  const safeCurrent = Math.min(current, images.length - 1);
+  const prev = () => setCurrent(() => Math.max(safeCurrent - 1, 0));
+  const next = () => setCurrent(() => Math.min(safeCurrent + 1, images.length - 1));
+  const example = images[safeCurrent];
   return (
     <div className="flex flex-col items-center">
       {/* Side-by-side layout container - 70/30 split */}
@@ -39,8 +42,8 @@ export default function Carousel({ examples }: { examples: Example[] }) {
             <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between p-4 pointer-events-none">
               <button
                 onClick={prev}
-                disabled={current === 0}
-                className="p-2 bg-surface-primary hover:bg-background-secondary border border-primary shadow-sm rounded-full disabled:opacity-40 disabled:cursor-not-allowed z-10 transition-colors pointer-events-auto"
+                disabled={safeCurrent === 0}
+                className="p-2 bg-surface-primary hover:bg-background-secondary border border-primary shadow-sm rounded-full disabled:opacity-40 disabled:cursor-not-allowed z-dropdown transition-colors pointer-events-auto"
                 aria-label="Previous image"
               >
                 <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-text-primary">
@@ -49,8 +52,8 @@ export default function Carousel({ examples }: { examples: Example[] }) {
               </button>
               <button
                 onClick={next}
-                disabled={current === images.length - 1}
-                className="p-2 bg-surface-primary hover:bg-background-secondary border border-primary shadow-sm rounded-full disabled:opacity-40 disabled:cursor-not-allowed z-10 transition-colors pointer-events-auto"
+                disabled={safeCurrent === images.length - 1}
+                className="p-2 bg-surface-primary hover:bg-background-secondary border border-primary shadow-sm rounded-full disabled:opacity-40 disabled:cursor-not-allowed z-dropdown transition-colors pointer-events-auto"
                 aria-label="Next image"
               >
                 <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="text-text-primary">
@@ -76,7 +79,7 @@ export default function Carousel({ examples }: { examples: Example[] }) {
                   key={i}
                   onClick={() => setCurrent(i)}
                   className={`h-1 rounded-full transition-all ${
-                    i === current
+                    i === safeCurrent
                       ? 'bg-category-blue w-8'
                       : 'bg-background-secondary w-3 hover:bg-background-tertiary'
                   }`}
