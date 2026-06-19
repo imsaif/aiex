@@ -4,7 +4,6 @@
  */
 
 type AuditEvent =
-  | 'audit_hero_cta_clicked'
   | 'audit_product_type_selected'
   | 'audit_step_completed'
   | 'audit_gap_found'
@@ -12,9 +11,6 @@ type AuditEvent =
   | 'audit_chat_message_sent'
   | 'audit_session_completed'
   | 'audit_email_report_sent'
-  | 'audit_paywall_shown'
-  | 'audit_paywall_dismissed'
-  | 'audit_paywall_waitlist_signup'
   | 'audit_remaining_banner_shown'
   | 'audit_save_nudge_shown'
   | 'audit_demo_viewed'
@@ -37,7 +33,12 @@ type AuditEvent =
   | 'service_page_viewed'
   | 'service_intake_started'
   | 'service_intake_submitted'
-  | 'service_cta_clicked';
+  | 'service_cta_clicked'
+  // Dashboard: saved-patterns kit + handoff file generation
+  | 'dashboard_pattern_saved'
+  | 'dashboard_pattern_removed'
+  | 'dashboard_kit_cleared'
+  | 'dashboard_handoff_generated';
 
 declare global {
   interface Window {

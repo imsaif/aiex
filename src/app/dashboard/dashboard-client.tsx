@@ -16,6 +16,7 @@ import { useHandoffKit } from '@/hooks/useHandoffKit';
 import { useSavedAudits } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff, combinedHandoffFilename } from '@/lib/handoff/composeCombined';
 import { trackEvent } from '@/utils/analytics';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 import { SelectCheckbox } from '@/components/ui/SelectCheckbox';
 import { UndoSnackbar } from '@/components/ui/UndoSnackbar';
 import SavedAuditsSection from './SavedAuditsSection';
@@ -151,6 +152,7 @@ export default function DashboardClient() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     trackEvent('handoff', { action: 'download', audits: nA, patterns: nP, count: nA + nP });
+    trackAuditEvent('dashboard_handoff_generated', { action: 'download', audits: nA, patterns: nP, count: nA + nP });
   };
 
   const handleCopy = async () => {
@@ -172,6 +174,7 @@ export default function DashboardClient() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     trackEvent('handoff', { action: 'copy', audits: nA, patterns: nP, count: nA + nP });
+    trackAuditEvent('dashboard_handoff_generated', { action: 'copy', audits: nA, patterns: nP, count: nA + nP });
   };
 
   const header = (

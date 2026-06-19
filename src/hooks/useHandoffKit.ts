@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { trackEvent } from '../utils/analytics';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 /**
  * Saved-patterns "handoff kit" — the set of pattern slugs a user has saved to
@@ -73,6 +74,7 @@ export function useHandoffKit() {
     writeStore(next);
     setSlugs(next);
     trackEvent('handoff', { action: 'add', slug, count: next.length });
+    trackAuditEvent('dashboard_pattern_saved', { slug, count: next.length });
   }, []);
 
   const remove = useCallback((slug: string) => {
@@ -81,6 +83,7 @@ export function useHandoffKit() {
     writeStore(next);
     setSlugs(next);
     trackEvent('handoff', { action: 'remove', slug, count: next.length });
+    trackAuditEvent('dashboard_pattern_removed', { slug, count: next.length });
   }, []);
 
   const toggle = useCallback((slug: string) => {
@@ -90,11 +93,13 @@ export function useHandoffKit() {
       writeStore(next);
       setSlugs(next);
       trackEvent('handoff', { action: 'remove', slug, count: next.length });
+      trackAuditEvent('dashboard_pattern_removed', { slug, count: next.length });
     } else {
       const next = [...current, slug];
       writeStore(next);
       setSlugs(next);
       trackEvent('handoff', { action: 'add', slug, count: next.length });
+      trackAuditEvent('dashboard_pattern_saved', { slug, count: next.length });
     }
   }, []);
 
@@ -102,6 +107,7 @@ export function useHandoffKit() {
     writeStore([]);
     setSlugs([]);
     trackEvent('handoff', { action: 'clear' });
+    trackAuditEvent('dashboard_kit_cleared');
   }, []);
 
   return {
