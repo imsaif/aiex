@@ -41,6 +41,10 @@
 
 ## Architecture Decisions
 
+> Full Architecture Decision Records — with context, alternatives considered, and
+> trade-offs — now live in [`docs/adr/`](./adr/README.md). The summaries below are
+> kept for quick reference; the ADRs are the source of truth.
+
 ### Current Decisions
 1. **Next.js Framework**
    - Reason: Provides excellent TypeScript support and server-side rendering
