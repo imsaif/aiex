@@ -12,7 +12,7 @@ export const selectivememory: Pattern = {
   description: "Control what AI remembers, forgets, or ignores with transparent settings.",
   category: "Privacy & Control",
   tags: ["memory", "control", "privacy", "context", "personalization", "user control"],
-  thumbnail: "/images/examples/selective-memory.gif",
+  thumbnail: "/api/og/patterns?slug=selective-memory",
   introduction: "Selective Memory gives users explicit control over what AI remembers, forgets, or ignores. Instead of opaque memory, the system provides transparent controls to view, edit, or delete stored information. It's essential for personal assistants, conversational systems, or tools building context over time. Examples include ChatGPT's memory settings for viewing and deleting memories, Google Assistant's activity controls, or Replika marking conversations as temporary.",
   datePublished: "2024-01-15",
   dateModified: "2025-11-18",

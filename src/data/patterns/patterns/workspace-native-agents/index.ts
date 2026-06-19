@@ -19,7 +19,7 @@ export const workspaceNativeAgents: Pattern = {
     "Context Preservation",
     "Agent Design"
   ],
-  thumbnail: "/images/patterns/placeholder.png",
+  thumbnail: "/api/og/patterns?slug=workspace-native-agents",
   introduction: "Workspace-native integration means the agent lives where the work happens, not in a separate tab. The moment users must switch interfaces to access AI, you've added friction that compounds every single time they need it.",
   datePublished: "2026-05-20",
   dateModified: "2026-05-20",

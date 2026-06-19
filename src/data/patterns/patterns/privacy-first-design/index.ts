@@ -13,7 +13,7 @@ export const privacyfirstdesign: Pattern = {
   description: "Minimize data collection and provide transparent privacy controls.",
   category: "Privacy & Control",
   tags: ["privacy", "data protection", "transparency", "control", "security", "consent"],
-  thumbnail: "/images/examples/privacy-first-design.gif",
+  thumbnail: "/images/examples/privacyfirst-apple.webp",
   introduction: "Privacy-First Design prioritizes user privacy by minimizing data collection, processing locally when possible, and providing transparent controls. Instead of collecting everything by default, the system asks for consent and gives users granular control. It's critical for personal assistants, health apps, or systems handling sensitive data. Examples include Apple's on-device Siri, DuckDuckGo's private search, or Signal's encrypted AI features.",
   datePublished: "2024-11-07",
   dateModified: "2025-11-18",

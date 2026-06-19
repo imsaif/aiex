@@ -21,7 +21,7 @@ export const agentReflectionLearning: Pattern = {
     "autonomy",
     "feedback"
   ],
-  thumbnail: "/images/patterns/placeholder.png",
+  thumbnail: "/api/og/patterns?slug=agent-reflection-learning",
   introduction: "Agent Reflection surfaces the agent's learning history: corrections absorbed, mistakes acknowledged, behavior changed. Without it, users repeat corrections indefinitely and assume the agent is broken, not improving.",
   datePublished: "2026-05-20",
   dateModified: "2026-05-20",

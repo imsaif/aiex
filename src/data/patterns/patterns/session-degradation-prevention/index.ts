@@ -11,7 +11,7 @@ export const sessiondegradationprevention: Pattern = {
   slug: "session-degradation-prevention",
   category: "Safety & Harm Prevention",
   description: "Strengthen safety checks during extended conversations with session limits.",
-  thumbnail: "/images/examples/privacy-control.gif",
+  thumbnail: "/images/examples/wysasessions.webp",
   introduction: "Session Degradation Prevention strengthens safety checks during extended conversations instead of letting boundaries erode. Instead of becoming more agreeable in long sessions, the system uses circuit breakers, session limits, and mandatory breaks. It's essential for conversational AI, mental health chatbots, or multi-turn dialogue systems. Real concern: ChatGPT maintained harmful conversations for 4+ hours. This pattern prevents such risks through progressive safety reinforcement and automatic session termination.",
   datePublished: "2024-11-11",
   dateModified: "2025-11-18",
