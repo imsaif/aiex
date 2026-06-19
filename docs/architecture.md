@@ -1,5 +1,9 @@
 # Architecture Overview
 
+> **Why this stack?** This document describes *what* the architecture is. For the
+> *why* behind each major choice — and the alternatives considered — see the
+> [Architecture Decision Records](./adr/README.md).
+
 ## 🏗️ System Architecture
 
 The AI Design Patterns project is built using modern web technologies with a focus on performance, maintainability, and developer experience.
@@ -46,24 +50,33 @@ The AI Design Patterns project is built using modern web technologies with a foc
 
 ### Frontend Technologies
 - **React 19**: Latest React with concurrent features
-- **TypeScript 5.7**: Type safety and better DX
-- **Tailwind CSS 3.4**: Utility-first styling
+- **TypeScript 5**: Type safety and better DX (strict mode)
+- **Tailwind CSS v4**: Utility-first styling over an enforced design-token system
 - **Framer Motion**: Animation library
-- **Lucide React**: Icon library
+- **Heroicons / Lobehub icons**: Icon libraries
+- **Fuse.js**: Client-side fuzzy search
 
 ### Development Tools
-- **Jest**: Testing framework
-- **React Testing Library**: Component testing
+- **Jest + React Testing Library**: Unit/component testing
+- **Playwright**: End-to-end testing
 - **ESLint**: Code linting
 - **Prettier**: Code formatting
-- **Husky**: Git hooks
-- **Turbo**: Build optimization
+- **Husky + lint-staged**: Git hooks (incl. the design-token brand validator)
+- **Turbopack**: Dev build tooling
+- **Lighthouse / LHCI**: Performance budgets
 
 ### Data Management
 - **Zod**: Schema validation
-- **React Context**: State management
+- **React Context**: State management for static content
 - **Local Storage**: User preferences
-- **Static Data**: Pattern definitions
+- **Static Data (content-as-code)**: Pattern definitions live as typed TS modules ([ADR 0002](./adr/0002-content-as-code-zod.md))
+
+### Persistence & Services (dynamic features)
+- **Prisma ORM + Postgres (Neon)**: Newsletter subscribers, drafts, and operational data ([ADR 0005](./adr/0005-prisma-neon-postgres.md))
+- **Beehiiv**: Subscriber audience + newsletter delivery ([ADR 0006](./adr/0006-beehiiv-resend-email.md))
+- **Resend**: Transactional email (audit reports, admin/cron alerts)
+- **Anthropic SDK**: Powers the audit and content-generation tooling
+- **cron-job.org**: External scheduler for newsletter/health/vitals jobs ([ADR 0007](./adr/0007-external-cron.md))
 
 ## 📁 Project Structure
 
@@ -323,14 +336,18 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 ## 🔮 Future Architecture Plans
 
+> **Note:** Some items once listed here as "future" already shipped. A
+> PostgreSQL database (Prisma + Neon) is in production for the newsletter and
+> operational data — see [ADR 0005](./adr/0005-prisma-neon-postgres.md). Pattern
+> content remains intentionally code-based rather than CMS-backed; the trade-off
+> is documented in [ADR 0002](./adr/0002-content-as-code-zod.md).
+
 ### Planned Enhancements
 
-1. **API Layer**: RESTful API for pattern data
-2. **Database**: PostgreSQL for dynamic content
-3. **Authentication**: User accounts and favorites
-4. **CMS Integration**: Content management system
-5. **AI Features**: Pattern recommendations
-6. **Internationalization**: Multi-language support
+1. **Authentication**: User accounts and favorites
+2. **AI Features**: Pattern recommendations
+3. **Internationalization**: Multi-language support
+4. **CMS Integration**: Only if content authoring moves to non-technical editors (see ADR 0002)
 
 ### Scalability Considerations
 
