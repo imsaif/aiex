@@ -21,6 +21,7 @@ export const conversationalui: Pattern = {
   introduction: "Conversational UI is a design pattern where users interact with AI through natural language (text or voice) instead of traditional menus, forms, and buttons. Rather than learning a product's interface, users simply describe what they need and the AI interprets their intent.\n\nConversational interfaces come in many forms: text-based chatbots like ChatGPT and Claude, voice assistants like Siri and Alexa, embedded AI assistants like Slack AI and Microsoft Copilot, and hybrid interfaces that combine chat with traditional UI elements. What unites them is the principle that natural language is the primary input.\n\nThis pattern is especially powerful for customer support (answering questions without navigating help docs), complex workflows (generating code, writing emails, analyzing data through conversation), and accessibility (voice control for users who can't use traditional inputs). The best conversational UIs don't just respond to commands. They maintain context across turns, ask clarifying questions, and adapt their tone and detail level to the user.",
   datePublished: "2024-01-15",
   dateModified: "2026-05-26",
+  hideFAQ: true,
   content: {
     problem: "Traditional graphical interfaces require users to learn specific navigation patterns, menu hierarchies, and form layouts. As AI products grow more capable, the gap between what the system can do and what users can discover widens. Users prefer asking for what they need in plain language, but poorly designed conversational interfaces frustrate them with robotic responses, lost context, and dead-end conversations.",
     solution: "Design conversational interfaces that understand natural language, maintain context across multiple turns, and respond in a natural, human-like way. Support both text and voice input where appropriate. Provide conversation starters and suggested prompts to help users get started, use typing indicators and status cues for natural pacing, and design clear fallback paths for when the AI doesn't understand. The best conversational UIs blend chat with structured UI elements like buttons, cards, and carousels, so users can switch between typing and clicking based on what's fastest.",
@@ -119,6 +120,70 @@ Design for three scenarios:
         "Design mobile-responsive. Chat interfaces are heavily used on phones",
         "Show a subtle capability description in the empty state so users know what to ask"
       ]
-    }
+    },
+    judgmentCall: {
+      explainWhen: [
+        "The task is open-ended or hard to express through a form or menu: the user doesn't know the exact term, or the input space is too large to enumerate (support, search, generation).",
+        "Intent genuinely varies turn to turn and benefits from follow-up, clarification, and memory of what was just said.",
+        "Plain language is actually faster than the UI alternative, e.g. 'find the invoice from Acme last March' beats five filters."
+      ],
+      dontWhen: [
+        "The task is a known, finite set of choices. A button, toggle, or form is faster and less error-prone than parsing a sentence. A chat box wrapped around a 3-option workflow is worse UX, not better.",
+        "The action is high-frequency and precise (changing a setting, picking a date). Typing a request is slower than a direct control.",
+        "The model is slow or unreliable for this task. Conversation amplifies latency and errors; a deterministic UI degrades more gracefully than a chat that stalls or hallucinates."
+      ],
+      trap: "The blank chat box. A bare text input with no guidance looks magical in a demo and strands real users who have no idea what to type or what the system can do. Its cousin is the over-conversational UI, where core features get buried behind 'just ask' and become undiscoverable. A conversation is an input method, not an excuse to delete the interface."
+    },
+    installPrompt: `You are implementing the Conversational UI design pattern in this codebase.
+
+The pattern in one line: let users express intent in natural language, but never make conversation the only way to get something done.
+
+Apply the following moves wherever this codebase exposes a chat or natural-language surface. DO NOT convert finite, high-frequency, or precision tasks (settings, date pickers, single-choice flows) into chat. There, a control beats a sentence.
+
+1. Kill the blank slate.
+   Every empty chat state must render 3-4 suggested prompts derived from the real top tasks for that surface, not lorem-ipsum examples. If you can't name the top tasks, find them before shipping the input. A blank input with a blinking cursor is a usability cliff.
+
+2. Show the work: stream and status.
+   Every AI response must stream tokens, never appear all at once after a frozen spinner. Surface distinct states (typing, thinking, searching, generating). If a response will take >1s with no output, render a status cue, not silence. Silence reads as broken.
+
+3. Render choices as UI, not prose.
+   When the model's next step is a finite set of options, emit buttons or cards, not a "reply 1, 2, or 3" message. Let users click OR type at every step. Do not force structured decisions through free-text parsing.
+
+4. Design the failure turn.
+   On low confidence or a parse failure, return a specific clarifying question with options ("Did you mean the March or April invoice?"), never a generic "I didn't understand." Cap clarification retries (2), then offer a structured fallback or human handoff.
+
+5. Preserve context on handoff.
+   When the conversation escalates to a human or another flow, pass the transcript and extracted intent so the user never repeats themselves. A conversation that dead-ends is worse than a form.
+
+The trap to avoid: the blank chat box and the over-conversational UI. If a task is faster as a button, ship the button. Conversation is an input method, not a replacement for the interface.
+
+When you're done, output a Markdown report with three sections:
+- Surfaces updated: file path + which of the five moves you applied at each
+- Surfaces flagged but not converted: file path + why (e.g. finite choice, precision task, better as a control)
+- New components / states you added (empty-state prompts, streaming, status cues, clarification UI, handoff payload) and what still needs human sign-off
+
+Ask before adding dependencies.`,
+    takeaways: [
+      {
+        heading: "Never ship a blank chat box.",
+        body: "The empty state is the whole game. Suggested prompts turn 'what can this even do?' into a single click, and they teach users the system's range without a manual. A blank input is not minimalism, it's an unfinished feature."
+      },
+      {
+        heading: "Show the work: typing, thinking, streaming.",
+        body: "Silence reads as broken. Streamed tokens and honest status cues (searching, generating) make latency tolerable and the system feel alive. A frozen spinner is the fastest way to make a capable model feel dead."
+      },
+      {
+        heading: "Mix chat with buttons and cards. Don't force everything into text.",
+        body: "When the next step is a finite choice, render a button, not a sentence the user has to compose and the model has to parse. The best conversational UIs let people click or type at every turn, whichever is faster."
+      },
+      {
+        heading: "Design the misunderstanding, not just the happy path.",
+        body: "A specific clarifying question beats a generic error every time. 'Did you mean X or Y?' keeps the user moving; 'I didn't understand that' sends them away. The recovery turn is where trust is won or lost."
+      },
+      {
+        heading: "Always give an exit.",
+        body: "When the AI hits its limit, hand off to a human or a structured flow with the context preserved. A conversation the user can't escape, and has to restart by repeating themselves, is worse than the form you replaced."
+      }
+    ]
   }
 };

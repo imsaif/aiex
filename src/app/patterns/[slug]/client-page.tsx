@@ -162,7 +162,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         {/* Image Carousel for Examples */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Real-World Examples</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Real-World {pattern.title} Examples</h2>
             <div className="bg-surface-primary rounded-lg p-2 overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
               <Carousel examples={pattern.content.examples} />
             </div>
@@ -218,10 +218,17 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
                   <TakeawaysList items={pattern.content.takeaways} />
                 </div>
                 <div className="lg:col-span-1">
-                  <InstallPatternCTA
-                    patternTitle={pattern.title}
-                    installPrompt={pattern.content.installPrompt}
-                  />
+                  {/* Whole stack sticks as one unit. Cards are in normal flow
+                      (space-y-4), so expanding the install card's "Inspect
+                      before you copy" just pushes the audit card down — no
+                      overlap. */}
+                  <div className="lg:sticky lg:top-24 space-y-4">
+                    <InstallPatternCTA
+                      patternTitle={pattern.title}
+                      installPrompt={pattern.content.installPrompt}
+                    />
+                    <InlineAuditCTA variant="sidebar" />
+                  </div>
                 </div>
               </div>
             ) : (
@@ -230,7 +237,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         ) : (
         <section>
-          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Guidelines & Considerations</h2>
+          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">{pattern.title} Design Patterns & Best Practices</h2>
 
           <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
             <div className="flex flex-col md:flex-row">
@@ -314,10 +321,15 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         </section>
         )}
 
-        {/* Audit CTA */}
-        <section>
-          <InlineAuditCTA variant="pattern-detail" />
-        </section>
+        {/* Audit CTA — full-width banner only on pages that DON'T carry the
+            sidebar audit card (i.e. non-migrated patterns). Migrated pages
+            (takeaways + installPrompt) show it in the sidebar instead, so we
+            skip it here to avoid a duplicate audit CTA. */}
+        {!(pattern.content.takeaways?.length && pattern.content.installPrompt) && (
+          <section>
+            <InlineAuditCTA variant="pattern-detail" />
+          </section>
+        )}
 
         {/* More from Category */}
         {categoryPatterns.length > 0 && (

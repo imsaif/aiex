@@ -38,7 +38,8 @@ type AuditEvent =
   | 'dashboard_pattern_saved'
   | 'dashboard_pattern_removed'
   | 'dashboard_kit_cleared'
-  | 'dashboard_handoff_generated';
+  | 'dashboard_handoff_generated'
+  | 'handoff_file_downloaded';
 
 declare global {
   interface Window {
