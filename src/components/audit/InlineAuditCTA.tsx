@@ -14,7 +14,7 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
       <div className="bg-surface-primary border-2 border-accent-primary/30 rounded-2xl shadow-sm p-6">
         <div className="text-xs font-semibold text-accent-primary uppercase tracking-wide mb-3 flex items-center gap-1.5">
           <BeakerIcon className="w-4 h-4" />
-          Or, have us check it
+          30-second check
         </div>
         <p className="text-lg font-bold text-text-primary leading-snug">
           Check if your product already has this pattern

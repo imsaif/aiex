@@ -2,254 +2,225 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronDownIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import Button from '@/components/ui/Button';
+
+type Classification = 'spam' | 'legitimate';
 
 interface Email {
   id: string;
+  sender: string;
   subject: string;
   preview: string;
-  prediction: 'spam' | 'not-spam';
+  classification: Classification;
+  /** The AI's confidence in its own classification (0-1). */
   confidence: number;
+  reason: string;
 }
 
+// A realistic inbox: mostly legitimate mail, one obvious spam, and one
+// genuinely ambiguous message where the AI is unsure. The AI doesn't flag
+// everything, it flags what it's confident about and asks for help on the rest.
+const emails: Email[] = [
+  {
+    id: '1',
+    sender: 'Sarah Chen',
+    subject: 'Meeting tomorrow at 3pm',
+    preview: "Hi team, let's sync on the Q4 roadmap before the review...",
+    classification: 'legitimate',
+    confidence: 0.98,
+    reason: 'A known contact, continuing a thread you replied to yesterday.'
+  },
+  {
+    id: '2',
+    sender: 'FedEx',
+    subject: 'Your package is delayed',
+    preview: 'We apologize, but your delivery has been rescheduled to...',
+    classification: 'legitimate',
+    confidence: 0.9,
+    reason: "Sent from the carrier's verified domain and matches a recent shipment on your account."
+  },
+  {
+    id: '3',
+    sender: 'rewards-team@winnings-claim.co',
+    subject: 'Congratulations! You won $1,000,000!',
+    preview: 'Click here to claim your prize immediately before it...',
+    classification: 'spam',
+    confidence: 0.97,
+    reason: 'Unverified sender, an urgent money claim, and a link to a domain seen in known scams.'
+  },
+  {
+    id: '4',
+    sender: 'billing@acme-supplies.com',
+    subject: 'Invoice #4821 attached',
+    preview: 'Please find attached your invoice for this month...',
+    classification: 'legitimate',
+    confidence: 0.53,
+    reason: "New sender domain and no prior invoices from them. Could be a real vendor or a lookalike. The AI isn't sure."
+  },
+  {
+    id: '5',
+    sender: 'deals@shopnow.com',
+    subject: 'Limited time offer, 50% off everything',
+    preview: 'Exclusive deal just for you! Expires in 2 hours...',
+    classification: 'spam',
+    confidence: 0.74,
+    reason: "Marketing urgency cues, but from a store you've opened mail from before."
+  }
+];
+
 export default function ConfidenceVisualizationDemo() {
-  const emails: Email[] = [
-    {
-      id: '1',
-      subject: 'Congratulations! You Won $1M!',
-      preview: 'Click here to claim your prize immediately...',
-      prediction: 'spam',
-      confidence: 0.95
-    },
-    {
-      id: '2',
-      subject: 'Meeting Tomorrow at 3pm',
-      preview: 'Hi team, let\'s sync on the Q4 roadmap...',
-      prediction: 'not-spam',
-      confidence: 0.88
-    },
-    {
-      id: '3',
-      subject: 'Check This Out (No Subject)',
-      preview: 'You won\'t believe what happened next...',
-      prediction: 'spam',
-      confidence: 0.62
-    },
-    {
-      id: '4',
-      subject: 'Your Package Is Delayed',
-      preview: 'We apologize, but your delivery has been...',
-      prediction: 'not-spam',
-      confidence: 0.48
-    },
-    {
-      id: '5',
-      subject: 'Limited Time Offer - 50% Off',
-      preview: 'Exclusive deal just for you! Expires in 2 hours...',
-      prediction: 'spam',
-      confidence: 0.71
-    }
-  ];
+  const [expandedId, setExpandedId] = useState<string | null>('4');
 
-  const [selectedId, setSelectedId] = useState<string>('1');
-  const selected = emails.find(e => e.id === selectedId)!;
+  const confidencePct = (c: number) => Math.round(c * 100);
 
-  const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.8) return 'bg-green-500';
-    if (confidence >= 0.6) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
+  const levelLabel = (c: number) =>
+    c >= 0.8 ? 'High confidence' : c >= 0.6 ? 'Medium confidence' : 'Low confidence';
 
-  const getConfidenceBgColor = (confidence: number) => {
-    if (confidence >= 0.8) return 'bg-green-50';
-    if (confidence >= 0.6) return 'bg-yellow-50';
-    return 'bg-red-50';
-  };
+  // Small status dot only. The level is the signal; the bar stays on-brand.
+  const dotClass = (c: number) =>
+    c < 0.6 ? 'bg-status-warning' : c >= 0.8 ? 'bg-status-success' : 'bg-status-warning';
 
-  const getConfidenceLabel = (confidence: number) => {
-    if (confidence >= 0.8) return 'High Confidence';
-    if (confidence >= 0.6) return 'Medium Confidence';
-    return 'Low Confidence';
-  };
-
-  const getPredictionLabel = (prediction: string) => {
-    return prediction === 'spam' ? 'Likely Spam' : 'Likely Legitimate';
+  // The AI's at-a-glance read for the collapsed row. Calm by default; the dot
+  // carries colour, the text stays neutral.
+  const summary = (email: Email) => {
+    if (email.confidence < 0.6) return { dot: 'bg-status-warning', label: 'Needs review' };
+    if (email.classification === 'spam') return { dot: 'bg-status-error', label: 'Likely spam' };
+    return { dot: 'bg-status-success', label: 'Looks safe' };
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Email Spam Detection</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Email List */}
-        <div className="md:col-span-1 space-y-2">
-          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
-            Emails to Analyze
-          </h3>
-          <div className="space-y-2">
-            {emails.map((email) => (
-              <motion.button
-                key={email.id}
-                onClick={() => setSelectedId(email.id)}
-                whileHover={{ x: 4 }}
-                whileTap={{ scale: 0.98 }}
-                className={`w-full text-left p-3 rounded-lg border-2 transition-all ${
-                  selectedId === email.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
-                }`}
-              >
-                <p className="text-sm font-medium text-gray-900 line-clamp-1">
-                  {email.subject}
-                </p>
-                <p className="text-xs text-gray-500 mt-1 line-clamp-1">
-                  {email.preview}
-                </p>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-
-        {/* Prediction Result */}
-        <div className="md:col-span-2">
-          <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
-            AI Analysis
-          </h3>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedId}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className={`rounded-lg border-2 p-6 ${
-                getConfidenceBgColor(selected.confidence)
-              } ${
-                selected.prediction === 'spam'
-                  ? 'border-red-200'
-                  : 'border-green-200'
-              }`}
-            >
-              {/* Email Preview */}
-              <div className="mb-6 pb-6 border-b">
-                <p className="text-sm text-gray-600 mb-1">Selected Email:</p>
-                <p className="font-semibold text-gray-900">{selected.subject}</p>
-                <p className="text-sm text-gray-600 mt-2">{selected.preview}</p>
-              </div>
-
-              {/* Prediction */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-semibold text-gray-700">Prediction</p>
-                  <span
-                    className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                      selected.prediction === 'spam'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-green-100 text-green-700'
-                    }`}
-                  >
-                    {getPredictionLabel(selected.prediction)}
-                  </span>
-                </div>
-                <p className="text-lg font-bold text-gray-900">
-                  {selected.prediction === 'spam' ? '🚫 Spam' : '✅ Not Spam'}
-                </p>
-              </div>
-
-              {/* Confidence Visualization */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <p className="text-sm font-semibold text-gray-700">
-                      Confidence Level
-                    </p>
-                    <p className="text-xs text-gray-600 mt-1">
-                      {getConfidenceLabel(selected.confidence)}
-                    </p>
-                  </div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-2xl font-bold text-gray-900"
-                  >
-                    {Math.round(selected.confidence * 100)}%
-                  </motion.div>
-                </div>
-
-                {/* Confidence Bar */}
-                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden mb-4">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${selected.confidence * 100}%` }}
-                    transition={{ duration: 0.6, ease: 'easeOut' }}
-                    className={`h-3 rounded-full ${getConfidenceColor(
-                      selected.confidence
-                    )}`}
-                  />
-                </div>
-
-                {/* Confidence Gauge Visualization */}
-                <div className="flex items-center gap-2 text-xs text-gray-600">
-                  <span>Low</span>
-                  <div className="flex-1 h-1 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full" />
-                  <span>High</span>
-                </div>
-              </div>
-
-              {/* Warnings for Low Confidence */}
-              {selected.confidence < 0.7 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-4 bg-yellow-100 border border-yellow-300 rounded-lg"
-                >
-                  <p className="text-sm text-yellow-800">
-                    <span className="font-semibold">⚠️ Low Confidence</span> -
-                    This prediction may not be reliable. We recommend manual
-                    verification before taking action.
-                  </p>
-                </motion.div>
-              )}
-
-              {selected.confidence >= 0.85 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 p-4 bg-green-100 border border-green-300 rounded-lg"
-                >
-                  <p className="text-sm text-green-800">
-                    <span className="font-semibold">✓ High Confidence</span> -
-                    This prediction is reliable. You can trust this
-                    classification.
-                  </p>
-                </motion.div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+    <div className="max-w-2xl mx-auto p-6">
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold text-text-primary">Inbox</h2>
+        <p className="text-sm text-text-secondary mt-1">
+          The AI sorts your mail and shows how sure it is. Tap a message to see the score and why.
+        </p>
       </div>
 
-      {/* Instructions */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
-        <p className="text-sm font-semibold text-blue-900">How it works:</p>
-        <ul className="text-sm text-blue-900 space-y-1 ml-4 list-disc">
-          <li>
-            Click on any email to see AI confidence in its classification
-          </li>
-          <li>
-            The confidence bar shows how certain the AI is about the prediction
-          </li>
-          <li>
-            High confidence (80%+) means you can trust the result with minimal
-            verification
-          </li>
-          <li>
-            Low confidence (&lt;70%) indicates you should manually review before
-            taking action
-          </li>
-          <li>
-            This transparency helps you know when to trust AI and when to be
-            skeptical
-          </li>
+      <div className="space-y-2">
+        {emails.map((email) => {
+          const isOpen = expandedId === email.id;
+          const s = summary(email);
+          return (
+            <div
+              key={email.id}
+              className={`rounded-card border bg-surface-primary overflow-hidden transition-colors ${
+                isOpen ? 'border-accent-primary' : 'border-border-primary hover:border-border-secondary'
+              }`}
+            >
+              {/* Collapsed row */}
+              <button
+                type="button"
+                onClick={() => setExpandedId(isOpen ? null : email.id)}
+                aria-expanded={isOpen}
+                className="w-full text-left p-4 flex items-center gap-4"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-text-primary truncate">{email.sender}</p>
+                  </div>
+                  <p className="text-sm text-text-primary truncate">{email.subject}</p>
+                  <p className="text-xs text-text-tertiary truncate mt-0.5">{email.preview}</p>
+                </div>
+
+                {/* Subtle AI read */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className={`h-2 w-2 rounded-full ${s.dot}`} aria-hidden="true" />
+                  <span className="text-xs text-text-secondary hidden sm:inline">{s.label}</span>
+                  <ChevronDownIcon
+                    className={`w-4 h-4 text-text-tertiary transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    aria-hidden="true"
+                  />
+                </div>
+              </button>
+
+              {/* Expanded AI analysis */}
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-4 pb-4 pt-1 border-t border-border-primary">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-accent-primary uppercase tracking-wide mt-4 mb-3">
+                        <SparklesIcon className="w-4 h-4" aria-hidden="true" />
+                        AI assessment
+                      </div>
+
+                      {/* Classification + confidence number */}
+                      <div className="flex items-end justify-between mb-2">
+                        <div>
+                          <p className="text-sm text-text-secondary">Classified as</p>
+                          <p className="text-lg font-bold text-text-primary">
+                            {email.classification === 'spam' ? 'Spam' : 'Legitimate'}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-text-primary leading-none">
+                            {confidencePct(email.confidence)}%
+                          </p>
+                          <div className="flex items-center justify-end gap-1.5 mt-1">
+                            <span className={`h-2 w-2 rounded-full ${dotClass(email.confidence)}`} aria-hidden="true" />
+                            <span className="text-xs text-text-secondary">{levelLabel(email.confidence)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Confidence bar (brand accent, neutral track) */}
+                      <div className="w-full bg-background-secondary rounded-full h-2 overflow-hidden mb-3">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${email.confidence * 100}%` }}
+                          transition={{ duration: 0.5, ease: 'easeOut' }}
+                          className="h-2 rounded-full bg-accent-primary"
+                        />
+                      </div>
+
+                      {/* Why */}
+                      <p className="text-sm text-text-secondary">
+                        <span className="font-semibold text-text-primary">Why: </span>
+                        {email.reason}
+                      </p>
+
+                      {/* Action tied to the confidence level */}
+                      {email.confidence < 0.6 ? (
+                        <div className="mt-4 p-3 rounded-card bg-status-warning/10 border border-warning flex flex-col sm:flex-row sm:items-center gap-3">
+                          <p className="text-sm text-text-primary flex-1">
+                            <span className="font-semibold">Low confidence.</span> Review this one yourself before it&apos;s filed automatically.
+                          </p>
+                          <Button size="sm" className="flex-shrink-0">Review email</Button>
+                        </div>
+                      ) : email.classification === 'spam' ? (
+                        <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                          <p className="text-sm text-text-secondary flex-1">Filed to Spam. You can override if this looks wrong.</p>
+                          <Button variant="secondary" size="sm" className="flex-shrink-0">Not spam</Button>
+                        </div>
+                      ) : (
+                        <p className="mt-4 text-sm text-text-secondary">
+                          Delivered to your inbox. No action needed.
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* How it works */}
+      <div className="mt-6 bg-accent-subtle border border-border-primary rounded-card p-4 space-y-2">
+        <p className="text-sm font-semibold text-text-primary">How it works:</p>
+        <ul className="text-sm text-text-secondary space-y-1 ml-4 list-disc">
+          <li>The AI shows a confidence score for its read on each email, not a yes/no verdict.</li>
+          <li>High confidence (80%+) is filed automatically. You can trust it with minimal checking.</li>
+          <li>Low confidence (&lt;60%) is surfaced for review instead of being acted on silently.</li>
+          <li>The score is tied to an action, so confidence changes what happens, it isn&apos;t just decoration.</li>
         </ul>
       </div>
     </div>
