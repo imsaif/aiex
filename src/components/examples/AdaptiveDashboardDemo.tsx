@@ -16,10 +16,11 @@ import {
 /**
  * Adaptive Interfaces demo.
  *
- * The lesson is "adapt the edges, never the anchors". So the main menu is a
- * FIXED core that never reorders, and only a "Suggested for you" rail adapts.
- * The adaptation is labelled with its reason and is reversible (dismiss a
- * suggestion, or pause personalization entirely).
+ * The real intent: the interface LEARNS from what you do and surfaces it. So
+ * here you actually use the actions, and the ones you reach for most get
+ * promoted into a "Quick access" rail once they cross a usage threshold.
+ * The guardrail (the lesson) rides along: the core menu is a fixed anchor that
+ * never reorders, and every promotion is labelled and reversible.
  */
 
 const CORE_NAV = [
@@ -30,47 +31,61 @@ const CORE_NAV = [
   { id: 'settings', label: 'Settings', Icon: Cog6ToothIcon },
 ];
 
-// Shown before any personalization, and whenever personalization is paused.
-const DEFAULT_SHORTCUTS = [
-  { id: 'templates', label: 'Browse templates', reason: 'A good place to start' },
-  { id: 'import', label: 'Import data', reason: 'A good place to start' },
-  { id: 'invite', label: 'Invite a teammate', reason: 'A good place to start' },
+const INITIAL_ACTIONS = [
+  { id: 'invoice', label: 'New invoice', count: 0 },
+  { id: 'export', label: 'Export report', count: 0 },
+  { id: 'expense', label: 'Add expense', count: 0 },
+  { id: 'standup', label: 'Start standup', count: 0 },
+  { id: 'task', label: 'Create task', count: 0 },
+  { id: 'share', label: 'Share a file', count: 0 },
 ];
 
-// The user's real behaviour over a simulated week. The rail ranks by this.
-const USAGE = [
-  { id: 'invoice', label: 'New invoice', count: 14 },
-  { id: 'export', label: 'Export report', count: 11 },
-  { id: 'standup', label: 'Start team standup', count: 9 },
-  { id: 'expense', label: 'Add expense', count: 6 },
-];
+// How strong the signal has to be before the interface adapts. Earn the change.
+const THRESHOLD = 3;
 
 export default function AdaptiveDashboardDemo() {
-  const [simulated, setSimulated] = useState(false);
-  const [personalizing, setPersonalizing] = useState(true);
+  const [actions, setActions] = useState(INITIAL_ACTIONS);
   const [dismissed, setDismissed] = useState<string[]>([]);
+  const [personalizing, setPersonalizing] = useState(true);
 
-  const showPersonalized = simulated && personalizing;
+  const use = (id: string) =>
+    setActions((prev) => prev.map((a) => (a.id === id ? { ...a, count: a.count + 1 } : a)));
 
-  const shortcuts = showPersonalized
-    ? [...USAGE]
+  const promoted = personalizing
+    ? [...actions]
+        .filter((a) => a.count >= THRESHOLD && !dismissed.includes(a.id))
         .sort((a, b) => b.count - a.count)
-        .filter((u) => !dismissed.includes(u.id))
-        .map((u) => ({ id: u.id, label: u.label, reason: `Used ${u.count} times this week` }))
-    : DEFAULT_SHORTCUTS;
+    : [];
+
+  const reset = () => {
+    setActions(INITIAL_ACTIONS);
+    setDismissed([]);
+    setPersonalizing(true);
+  };
 
   return (
     <div className="w-full p-6">
-      <div className="mb-5">
-        <h2 className="text-2xl font-bold text-text-primary">Adapt the edges, not the anchors</h2>
-        <p className="text-sm text-text-secondary mt-1">
-          Simulate a week of use. The menu on the left never moves. Only the suggestions adapt, and you can always undo them.
-        </p>
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-text-primary">An interface that learns what you use</h2>
+          <p className="text-sm text-text-secondary mt-1">
+            Use the actions a few times. The ones you reach for most get promoted to Quick access, the main menu never moves.
+          </p>
+        </div>
+        {(promoted.length > 0 || actions.some((a) => a.count > 0)) && (
+          <button
+            type="button"
+            onClick={reset}
+            className="flex-shrink-0 text-sm text-text-secondary hover:text-text-primary transition-colors"
+          >
+            Reset
+          </button>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[200px_minmax(0,1fr)]">
-        {/* Fixed core: the anchors that never move */}
-        <nav className="rounded-card border border-border-primary bg-surface-primary p-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[180px_minmax(0,1fr)]">
+        {/* Fixed core: the anchor that never reorders */}
+        <nav className="rounded-card border border-border-primary bg-surface-primary p-2 lg:self-start">
           <div className="flex items-center gap-1.5 px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-text-secondary">
             <LockClosedIcon className="h-3.5 w-3.5" aria-hidden="true" />
             Main menu
@@ -85,106 +100,116 @@ export default function AdaptiveDashboardDemo() {
               </li>
             ))}
           </ul>
-          <p className="px-2 pt-2 text-xs text-text-tertiary">Always here, in the same order.</p>
+          <p className="px-2 pt-2 text-xs text-text-tertiary">Always here, never reorders.</p>
         </nav>
 
-        {/* The only adaptive zone */}
-        <div className="rounded-card border border-border-primary bg-surface-primary p-4">
-          <div className="flex items-center justify-between gap-3 mb-3">
-            <div className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
-              <SparklesIcon className="h-4 w-4 text-accent-primary" aria-hidden="true" />
-              Suggested for you
-            </div>
-            <label className="flex items-center gap-2 text-xs text-text-secondary cursor-pointer">
-              Personalize
-              <button
-                type="button"
-                role="switch"
-                aria-checked={personalizing}
-                onClick={() => setPersonalizing((v) => !v)}
-                className={`relative h-5 w-9 rounded-pill transition-colors ${
-                  personalizing ? 'bg-accent-primary' : 'bg-background-secondary border border-border-primary'
-                }`}
-              >
-                <span
-                  className={`absolute top-0.5 h-4 w-4 rounded-full bg-surface-primary shadow-card transition-transform ${
-                    personalizing ? 'translate-x-4' : 'translate-x-0.5'
+        <div className="space-y-4">
+          {/* The adaptive zone, fed by real usage */}
+          <div className="rounded-card border border-border-primary bg-surface-primary p-4">
+            <div className="flex items-center justify-between gap-3 mb-3">
+              <div className="flex items-center gap-1.5 text-sm font-semibold text-text-primary">
+                <SparklesIcon className="h-4 w-4 text-accent-primary" aria-hidden="true" />
+                Quick access
+              </div>
+              <label className="flex items-center gap-2 text-xs text-text-secondary cursor-pointer">
+                Personalize
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={personalizing}
+                  aria-label="Personalize"
+                  onClick={() => setPersonalizing((v) => !v)}
+                  className={`relative h-5 w-9 rounded-pill border transition-colors ${
+                    personalizing
+                      ? 'bg-accent-primary border-accent-primary'
+                      : 'bg-background-secondary border-border-secondary'
                   }`}
-                />
-              </button>
-            </label>
-          </div>
-
-          <div className="space-y-2 min-h-[150px]">
-            <AnimatePresence initial={false} mode="popLayout">
-              {shortcuts.map((s) => (
-                <motion.div
-                  key={s.id}
-                  layout
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex items-center justify-between gap-3 rounded-card border border-border-primary bg-background-secondary px-3 py-2.5"
                 >
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-text-primary truncate">{s.label}</p>
-                    <p className="text-xs text-text-tertiary truncate">{s.reason}</p>
-                  </div>
-                  {showPersonalized && (
-                    <button
-                      type="button"
-                      onClick={() => setDismissed((d) => [...d, s.id])}
-                      aria-label={`Remove ${s.label} suggestion`}
-                      className="flex-shrink-0 rounded-full p-1 text-text-tertiary hover:bg-surface-primary hover:text-text-primary transition-colors"
-                    >
-                      <XMarkIcon className="h-4 w-4" aria-hidden="true" />
-                    </button>
-                  )}
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+                  <span
+                    className={`absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full bg-surface-primary border border-border-secondary shadow-card transition-all ${
+                      personalizing ? 'left-[1.125rem]' : 'left-0.5'
+                    }`}
+                  />
+                </button>
+              </label>
+            </div>
 
-          <div className="mt-4 flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setSimulated(true)}
-              className="rounded-input bg-accent-primary px-3 py-1.5 text-sm font-medium text-white hover:opacity-90 transition-opacity"
-            >
-              Simulate a week of use
-            </button>
-            {(simulated || dismissed.length > 0) && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSimulated(false);
-                  setDismissed([]);
-                  setPersonalizing(true);
-                }}
-                className="text-sm text-text-secondary hover:text-text-primary transition-colors"
-              >
-                Reset
-              </button>
+            {promoted.length === 0 ? (
+              <p className="rounded-card border border-dashed border-border-primary px-3 py-6 text-center text-xs text-text-tertiary">
+                {personalizing
+                  ? `Use an action ${THRESHOLD} times and it gets promoted here.`
+                  : 'Personalization is paused. Turn it on to surface your most-used actions.'}
+              </p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                <AnimatePresence initial={false}>
+                  {promoted.map((a) => (
+                    <motion.div
+                      key={a.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                      className="inline-flex items-center gap-2 rounded-pill bg-accent-subtle border border-border-primary py-1.5 pl-3 pr-1.5"
+                    >
+                      <span className="text-sm font-medium text-text-primary">{a.label}</span>
+                      <span className="text-xs text-text-tertiary">used {a.count}&times;</span>
+                      <button
+                        type="button"
+                        onClick={() => setDismissed((d) => [...d, a.id])}
+                        aria-label={`Remove ${a.label} from Quick access`}
+                        className="rounded-full p-0.5 text-text-tertiary hover:bg-surface-primary hover:text-text-primary transition-colors"
+                      >
+                        <XMarkIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
             )}
           </div>
 
-          {showPersonalized && (
-            <p className="mt-3 text-xs text-text-tertiary">
-              Your main menu didn&apos;t move. Only these suggestions changed, and you can dismiss any of them.
-            </p>
-          )}
+          {/* All actions: clicking these is the behaviour the interface observes */}
+          <div className="rounded-card border border-border-primary bg-surface-primary p-4">
+            <p className="text-sm font-semibold text-text-primary mb-3">All actions</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {actions.map((a) => {
+                const isPromoted = a.count >= THRESHOLD && !dismissed.includes(a.id) && personalizing;
+                const remaining = THRESHOLD - a.count;
+                return (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => use(a.id)}
+                    className="rounded-card border border-border-primary bg-background-secondary px-3 py-3 text-left hover:border-accent-primary transition-colors"
+                  >
+                    <span className="block text-sm font-medium text-text-primary">{a.label}</span>
+                    <span className="block text-xs text-text-tertiary mt-0.5">
+                      {a.count === 0
+                        ? 'Tap to use'
+                        : isPromoted
+                          ? 'In Quick access'
+                          : a.count >= THRESHOLD
+                            ? `Used ${a.count}×`
+                            : `Used ${a.count}× · ${remaining} more to pin`}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* How it works: one calm note */}
+      {/* How it works */}
       <div className="mt-5 rounded-card border border-border-primary bg-accent-subtle p-4">
         <p className="text-sm font-semibold text-text-primary mb-2">How it works</p>
         <ul className="ml-4 list-disc space-y-1.5 text-sm text-text-secondary">
-          <li>The core menu is an anchor. It never reorders, so your muscle memory keeps working.</li>
-          <li>Only the periphery adapts: a &ldquo;Suggested for you&rdquo; rail, ranked by what you actually use.</li>
-          <li>Each suggestion says why it&apos;s there, and one click removes it or pauses personalization.</li>
-          <li>The trap this avoids is <em>the rug-pull</em>: moving the things people have already memorized.</li>
+          <li>The interface watches what you actually use and surfaces it, the way Netflix reorders around what you watch.</li>
+          <li>It only adapts after a real signal ({THRESHOLD} uses), not on a single click, so noise doesn&apos;t reshuffle anything.</li>
+          <li>The core menu is a fixed anchor. It never reorders, so your muscle memory keeps working.</li>
+          <li>Every promotion says why it&apos;s there and is reversible, dismiss it or pause personalization. The trap this avoids is <em>the rug-pull</em>.</li>
         </ul>
       </div>
     </div>
