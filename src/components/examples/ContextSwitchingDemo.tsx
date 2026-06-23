@@ -2,254 +2,218 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 /**
  * Context Switching Pattern Demo
  *
- * This component demonstrates how to manage multiple conversation contexts,
- * allowing users to switch between different topics while maintaining relevant
- * history for each context. This pattern is essential for:
- * - Reducing context loss when switching between tasks
- * - Improving user productivity by preserving conversation history
- * - Maintaining semantic coherence in multi-topic conversations
+ * The point of the pattern is not "a sidebar of chats". It is that each thread
+ * carries its own memory, so the SAME question gets a thread-specific answer and
+ * one thread's facts never leak into another. This demo makes that visible:
+ * a "Remembers" chip per thread, and quick questions that resolve against the
+ * active thread only.
  */
+
+type Role = 'user' | 'ai';
 
 interface Message {
   id: string;
+  role: Role;
   text: string;
-  sender: 'user' | 'ai';
-  timestamp: Date;
 }
 
-interface Context {
+interface Thread {
   id: string;
   name: string;
-  topic: string;
+  subtitle: string;
+  // The one fact this thread holds. Shown as a chip so isolation is legible.
+  remembers: string;
   messages: Message[];
-  lastActive: Date;
+  // Grounded answers, resolved only against this thread.
+  answers: { when: string; catchUp: string };
 }
 
-export default function ContextSwitchingDemo() {
-  // Initialize with multiple contexts to demonstrate context isolation
-  const [contexts, setContexts] = useState<Context[]>([
-    {
-      id: '1',
-      name: 'Project Planning',
-      topic: 'Discussing project timeline',
-      messages: [
-        { id: '1-1', text: "Let's plan the project timeline", sender: 'user', timestamp: new Date() },
-        { id: '1-2', text: "I'll help you create a timeline. What's your deadline?", sender: 'ai', timestamp: new Date() }
-      ],
-      lastActive: new Date()
+const INITIAL_THREADS: Thread[] = [
+  {
+    id: 'launch',
+    name: 'Q3 launch plan',
+    subtitle: 'Shipping the new dashboard',
+    remembers: 'Ships Friday',
+    messages: [
+      { id: 'launch-1', role: 'user', text: "Let's lock the Q3 launch plan." },
+      { id: 'launch-2', role: 'ai', text: 'Got it. We are targeting Friday to ship the new dashboard.' },
+    ],
+    answers: {
+      when: 'The Q3 launch ships this Friday.',
+      catchUp: 'We are locking the Q3 launch plan, aiming to ship the dashboard on Friday.',
     },
-    {
-      id: '2',
-      name: 'Code Review',
-      topic: 'Reviewing React components',
-      messages: [
-        { id: '2-1', text: "Can you review this component?", sender: 'user', timestamp: new Date() },
-        { id: '2-2', text: "Sure! I'll analyze the code structure and best practices.", sender: 'ai', timestamp: new Date() }
-      ],
-      lastActive: new Date()
-    }
-  ]);
+  },
+  {
+    id: 'japan',
+    name: 'Trip to Japan',
+    subtitle: 'Spring travel planning',
+    remembers: 'Going in April',
+    messages: [
+      { id: 'japan-1', role: 'user', text: 'Help me plan the Japan trip.' },
+      { id: 'japan-2', role: 'ai', text: 'Happy to. You are going in April, so I will plan around cherry-blossom season.' },
+    ],
+    answers: {
+      when: 'Your Japan trip is in April.',
+      catchUp: 'We are planning your April trip to Japan, around cherry-blossom season.',
+    },
+  },
+];
 
-  const [activeContextId, setActiveContextId] = useState('1');
-  const [newMessage, setNewMessage] = useState('');
+// The same question in every thread. The answer is what differs, because it is
+// grounded in the active thread alone.
+const QUICK_ASKS: { key: 'when' | 'catchUp' | 'isolation'; label: string; question: string }[] = [
+  { key: 'when', label: 'When is it?', question: 'When is it again?' },
+  { key: 'catchUp', label: 'Catch me up', question: 'Catch me up on this.' },
+  { key: 'isolation', label: 'Anything from my other chats?', question: 'Anything from my other chats?' },
+];
 
-  const activeContext = contexts.find(c => c.id === activeContextId);
+const ISOLATION_ANSWER =
+  "I only see this conversation. Open the other thread and I'll pick that up there.";
 
-  /**
-   * Switch to a different context
-   * This action:
-   * - Updates the active context ID
-   * - Updates the lastActive timestamp (useful for sorting/organizing contexts)
-   * - Preserves all history in non-active contexts
-   */
-  const switchContext = (contextId: string) => {
-    setActiveContextId(contextId);
-    setContexts(prev => prev.map(c =>
-      c.id === contextId ? { ...c, lastActive: new Date() } : c
-    ));
-  };
+export default function ContextSwitchingDemo() {
+  const [threads, setThreads] = useState<Thread[]>(INITIAL_THREADS);
+  const [activeId, setActiveId] = useState('launch');
 
-  /**
-   * Send a message to the current context
-   * Important: Messages are added to the specific context only,
-   * other contexts remain completely unaffected.
-   */
-  const sendMessage = () => {
-    if (!newMessage.trim() || !activeContext) return;
+  const active = threads.find((t) => t.id === activeId) ?? threads[0];
 
-    const userMessage: Message = {
-      id: `${activeContext.id}-${Date.now()}`,
-      text: newMessage,
-      sender: 'user',
-      timestamp: new Date()
-    };
-
-    const aiResponse: Message = {
-      id: `${activeContext.id}-${Date.now() + 1}`,
-      text: `I understand you're asking about "${newMessage}" in the context of ${activeContext.name}.`,
-      sender: 'ai',
-      timestamp: new Date()
-    };
-
-    // Update only the active context, preserving all other contexts
-    setContexts(prev => prev.map(c =>
-      c.id === activeContextId
-        ? { ...c, messages: [...c.messages, userMessage, aiResponse], lastActive: new Date() }
-        : c
-    ));
-
-    setNewMessage('');
+  const ask = (key: 'when' | 'catchUp' | 'isolation', question: string) => {
+    setThreads((prev) =>
+      prev.map((t) => {
+        if (t.id !== activeId) return t;
+        const n = t.messages.length;
+        const answer = key === 'isolation' ? ISOLATION_ANSWER : t.answers[key];
+        return {
+          ...t,
+          messages: [
+            ...t.messages,
+            { id: `${t.id}-${n + 1}`, role: 'user', text: question },
+            { id: `${t.id}-${n + 2}`, role: 'ai', text: answer },
+          ],
+        };
+      })
+    );
   };
 
   return (
-    <div className="w-full">
-      {/* Educational Header */}
-      <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <p className="text-sm text-blue-800">
-          <strong>📚 Pattern in Action:</strong> Switch between conversation contexts and observe how the AI maintains separate context for each topic. Messages in one context don't affect the others.
+    <div className="w-full p-6">
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold text-text-primary">Two conversations, two memories</h2>
+        <p className="text-sm text-text-secondary mt-1">
+          Ask the same question in each thread. The answer changes, because each one is grounded only in its own history.
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-8 w-full">
-        {/* Context List - Left Sidebar */}
-        <div className="col-span-1 min-w-0">
-          <h3 className="font-semibold mb-3">Conversations</h3>
-
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+        {/* Sidebar: each thread shows the one fact it holds */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-2">Conversations</p>
           <div className="space-y-2">
-            {contexts.map(context => (
-              <motion.div
-                key={context.id}
-                onClick={() => switchContext(context.id)}
-                className={`p-3 rounded-lg cursor-pointer border-2 transition-colors ${
-                  activeContextId === context.id
-                    ? 'bg-blue-100 border-blue-500'
-                    : 'bg-white border-gray-200 hover:border-blue-300'
-                }`}
-                whileHover={{ scale: 1.02 }}
-                title={`Click to switch to ${context.name}`}
-              >
-                <h4 className="font-medium text-sm">{context.name}</h4>
-                <p className="text-xs text-gray-500 mt-1">{context.topic}</p>
-                <p className="text-xs text-gray-400 mt-1">
-                  {context.messages.length} messages
-                </p>
-                {activeContextId === context.id && (
-                  <p className="text-xs text-blue-600 mt-2 font-medium">✓ Active</p>
-                )}
-              </motion.div>
-            ))}
+            {threads.map((t) => {
+              const isActive = t.id === activeId;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setActiveId(t.id)}
+                  aria-pressed={isActive}
+                  className={`w-full text-left rounded-card border p-3 transition-colors ${
+                    isActive
+                      ? 'border-accent-primary bg-accent-subtle'
+                      : 'border-border-primary bg-surface-primary hover:border-border-secondary'
+                  }`}
+                >
+                  <p className="text-sm font-semibold text-text-primary">{t.name}</p>
+                  <p className="text-xs text-text-tertiary mt-0.5">{t.messages.length} messages</p>
+                  <span className="mt-2 inline-flex items-center gap-1 rounded-pill bg-surface-primary border border-border-primary px-2 py-0.5 text-xs text-text-primary">
+                    <span className="text-text-secondary">Remembers:</span>
+                    {t.remembers}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Active Context Display - Right Side */}
-        <div className="col-span-3 min-w-0">
-          <AnimatePresence mode="wait">
-            {activeContext && (
+        {/* Active thread */}
+        <div className="rounded-card border border-border-primary bg-surface-primary overflow-hidden">
+          <div className="flex items-center justify-between gap-3 border-b border-border-primary px-4 py-3">
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-text-primary truncate">{active.name}</p>
+              <p className="text-xs text-text-secondary truncate">{active.subtitle}</p>
+            </div>
+            <span className="flex-shrink-0 inline-flex items-center gap-1 rounded-pill bg-accent-subtle border border-border-primary px-2 py-0.5 text-xs text-text-primary">
+              <span className="text-text-secondary">Remembers:</span>
+              {active.remembers}
+            </span>
+          </div>
+
+          {/* The isolation reminder, stated plainly */}
+          <div className="flex items-center gap-1.5 px-4 py-2 text-xs text-text-tertiary border-b border-border-primary">
+            <ArrowPathIcon className="h-3.5 w-3.5" aria-hidden="true" />
+            Viewing this thread only. The assistant can&apos;t see the other conversation.
+          </div>
+
+          {/* Message history, swapped per active thread */}
+          <div className="p-4 space-y-3 min-h-[220px]">
+            <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={activeContext.id}
-                initial={{ opacity: 0, y: 10 }}
+                key={active.id}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-white rounded-lg border border-gray-200 p-4"
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="space-y-3"
               >
-                {/* Context Header */}
-                <div className="mb-5 pb-4 border-b flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-xl">{activeContext.name}</h3>
-                    <p className="text-sm text-gray-600">{activeContext.topic}</p>
+                {active.messages.map((m) => (
+                  <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div
+                      className={`max-w-[80%] rounded-card px-3 py-2 text-sm ${
+                        m.role === 'user'
+                          ? 'bg-accent-primary text-white'
+                          : 'bg-background-secondary text-text-primary'
+                      }`}
+                    >
+                      {m.text}
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-500">
-                    {activeContext.messages.length} messages
-                  </p>
-                </div>
-
-                {/* Message History */}
-                <div className="space-y-4 mb-5 max-h-96 overflow-y-auto rounded-lg bg-gray-50 p-4">
-                  {activeContext.messages.length === 0 ? (
-                    <p className="text-center text-gray-400 text-base py-6">
-                      No messages yet. Start a conversation!
-                    </p>
-                  ) : (
-                    activeContext.messages.map(message => (
-                      <motion.div
-                        key={message.id}
-                        initial={{ opacity: 0, x: message.sender === 'user' ? 20 : -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[80%] p-4 rounded-lg ${
-                            message.sender === 'user'
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-200 text-gray-800'
-                          }`}
-                        >
-                          <p className="text-base">{message.text}</p>
-                          <p className={`text-xs mt-2 ${
-                            message.sender === 'user' ? 'text-blue-100' : 'text-gray-600'
-                          }`}>
-                            {message.timestamp.toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))
-                  )}
-                </div>
-
-                {/* Message Input */}
-                <div className="flex gap-3">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                    placeholder={`Message ${activeContext.name}...`}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
-                    aria-label={`Message input for ${activeContext.name}`}
-                  />
-                  <button
-                    onClick={sendMessage}
-                    className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
-                    aria-label="Send message"
-                  >
-                    Send
-                  </button>
-                </div>
-
+                ))}
               </motion.div>
-            )}
-          </AnimatePresence>
+            </AnimatePresence>
+          </div>
+
+          {/* Quick asks: same questions, thread-specific answers */}
+          <div className="border-t border-border-primary px-4 py-3">
+            <p className="text-xs text-text-secondary mb-2">Ask this thread:</p>
+            <div className="flex flex-wrap gap-2">
+              {QUICK_ASKS.map((qa) => (
+                <button
+                  key={qa.key}
+                  type="button"
+                  onClick={() => ask(qa.key, qa.question)}
+                  className="rounded-pill border border-border-primary px-3 py-1.5 text-xs text-text-secondary hover:border-accent-primary hover:text-accent-primary transition-colors"
+                >
+                  {qa.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Key Learning Section - Below Demo */}
-      <div className="mt-8 grid grid-cols-2 gap-6">
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="font-semibold text-green-900 mb-2">✨ Pattern Applied</p>
-          <ul className="text-sm text-green-700 space-y-1 list-disc list-inside">
-            <li>Independent message history per context</li>
-            <li>Seamless switching preserves all messages</li>
-            <li>Topic-aware context understanding</li>
-            <li>Zero context bleeding between conversations</li>
-          </ul>
-        </div>
-
-        <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-          <p className="font-semibold text-purple-900 mb-2">🎯 Best Practices</p>
-          <ul className="text-sm text-purple-800 space-y-1 list-disc list-inside">
-            <li>Meaningful context names ("Project Planning" not "Chat 1")</li>
-            <li>Visible context switching indicator</li>
-            <li>Preserve full conversation history</li>
-            <li>Show timestamp of last activity</li>
-          </ul>
-        </div>
+      {/* How it works: one calm note, not three colored boxes */}
+      <div className="mt-5 rounded-card border border-border-primary bg-accent-subtle p-4">
+        <p className="text-sm font-semibold text-text-primary mb-2">How it works</p>
+        <ul className="ml-4 list-disc space-y-1.5 text-sm text-text-secondary">
+          <li>Each conversation keeps its own history and its own memory (the &ldquo;Remembers&rdquo; chip).</li>
+          <li>The same question gets a different answer per thread, grounded only in that thread.</li>
+          <li>Switching preserves everything. Nothing from one thread leaks into another.</li>
+          <li>That leak is the trap: <em>context bleed</em>. Isolation is the whole feature.</li>
+        </ul>
       </div>
     </div>
   );
