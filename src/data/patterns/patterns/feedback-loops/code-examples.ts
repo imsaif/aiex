@@ -2,96 +2,83 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Response Feedback Interface",
-    description: "A simple feedback interface that asks users to rate AI responses with thumbs up/down, showing a confirmation message to reinforce the feedback loop.",
+    title: "A feedback loop that actually closes",
+    description: "Feedback only matters if it changes what the user sees next. This recommendation feed re-ranks in front of the user, names the consequence instead of saying a generic thanks, and exposes what it learned as an undoable profile, the opposite of a thumbs-up that just fires a toast.",
     language: "tsx",
     componentId: "feedback-loops-demo",
     code: `'use client';
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useMemo, useState } from 'react';
 
-interface Response {
-  id: number;
-  content: string;
+interface Story {
+  id: string;
+  title: string;
+  topic: string;
 }
 
+const POOL: Story[] = [
+  { id: 'ai-1', title: 'A faster AI model ships', topic: 'AI' },
+  { id: 'sp-1', title: 'The underdog run that broke the bracket', topic: 'Sports' },
+  { id: 'fi-1', title: 'What the rate cut means for savers', topic: 'Finance' },
+  { id: 'de-1', title: 'The quiet death of the hamburger menu', topic: 'Design' },
+  { id: 'ai-2', title: 'How small teams ship with AI agents', topic: 'AI' },
+  { id: 'sp-2', title: 'Why marathon times keep falling', topic: 'Sports' },
+];
+
 export default function FeedbackLoopsDemo() {
-  const [responses] = useState<Response[]>([
-    { id: 1, content: 'This response was helpful and answered my question clearly.' },
-    { id: 2, content: 'Great explanation with practical examples included.' },
-    { id: 3, content: 'Detailed breakdown of the concept with code samples.' },
-  ]);
+  // The learned preference IS the loop: one weight per topic.
+  const [affinity, setAffinity] = useState<Record<string, number>>({});
 
-  const [feedback, setFeedback] = useState<Record<number, 'helpful' | 'not-helpful'>>({});
-  const [showConfirmation, setShowConfirmation] = useState<number | null>(null);
+  // The feed re-ranks by what the user taught it. This is the output that
+  // visibly changes after feedback, not a thank-you message.
+  const feed = useMemo(() => {
+    return [...POOL]
+      .sort((a, b) => (affinity[b.topic] ?? 0) - (affinity[a.topic] ?? 0))
+      .slice(0, 4);
+  }, [affinity]);
 
-  const handleFeedback = (id: number, reaction: 'helpful' | 'not-helpful') => {
-    setFeedback(prev => ({ ...prev, [id]: reaction }));
-    setShowConfirmation(id);
-    setTimeout(() => setShowConfirmation(null), 3000);
-  };
+  const taught = Object.keys(affinity).filter((t) => affinity[t] !== 0);
 
-  const feedbackCount = Object.keys(feedback).length;
+  const nudge = (topic: string, dir: 1 | -1) =>
+    setAffinity((p) => ({ ...p, [topic]: (p[topic] ?? 0) + dir }));
+
+  const reset = (topic: string) =>
+    setAffinity((p) => ({ ...p, [topic]: 0 }));
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
-      {responses.map(response => (
-        <div key={response.id} className="border border-gray-200 rounded-lg p-4 bg-white">
-          <p className="text-gray-700 mb-4">{response.content}</p>
-
-          <div className="space-y-3">
-            <p className="text-sm text-gray-600">How is the AI doing?</p>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleFeedback(response.id, 'helpful')}
-                className={\`flex-1 px-4 py-2 rounded-lg font-medium transition-all \${
-                  feedback[response.id] === 'helpful'
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }\`}
-              >
-                👍 Helpful
-              </button>
-              <button
-                onClick={() => handleFeedback(response.id, 'not-helpful')}
-                className={\`flex-1 px-4 py-2 rounded-lg font-medium transition-all \${
-                  feedback[response.id] === 'not-helpful'
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }\`}
-              >
-                👎 Not Helpful
-              </button>
-            </div>
-          </div>
-
-          <AnimatePresence>
-            {showConfirmation === response.id && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
-                className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg"
-              >
-                <p className="text-green-700 text-sm font-medium">
-                  ✓ Thank you for making our app improve!
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      ))}
-
-      {feedbackCount > 0 && (
-        <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-blue-800 text-sm">
-            <span className="font-semibold">{feedbackCount}</span> feedback{feedbackCount !== 1 ? 's' : ''} received • We're learning from your responses
-          </p>
+    <div className="max-w-xl mx-auto p-6 space-y-4">
+      {/* The dent, visible and undoable */}
+      {taught.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {taught.map((t) => (
+            <span key={t} className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-800">
+              {affinity[t] > 0 ? 'More' : 'Less'} {t}
+              <button onClick={() => reset(t)} aria-label={\`Undo \${t}\`} className="text-gray-400 hover:text-gray-700">×</button>
+            </span>
+          ))}
         </div>
       )}
+
+      {/* The feed re-ranks in place after every nudge */}
+      {feed.map((story) => (
+        <div key={story.id} className="flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-4">
+          <div>
+            <span className="text-xs text-gray-500">{story.topic}</span>
+            <p className="text-sm font-semibold text-gray-900">{story.title}</p>
+            {affinity[story.topic] > 0 && (
+              <p className="text-xs text-gray-500">Because you asked for more {story.topic}</p>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => nudge(story.topic, 1)} className="rounded-md border border-gray-200 px-3 py-1.5 text-sm hover:border-gray-900">
+              👍 More
+            </button>
+            <button onClick={() => nudge(story.topic, -1)} className="rounded-md border border-gray-200 px-3 py-1.5 text-sm hover:border-gray-900">
+              👎 Less
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }`
