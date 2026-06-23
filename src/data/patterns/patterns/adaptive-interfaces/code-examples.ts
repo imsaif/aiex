@@ -2,59 +2,65 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Adaptive Dashboard with Usage-Based Layout",
-    description: "A simple dashboard that reorders widgets based on how often you interact with them.",
+    title: "Adapt the periphery, anchor the core",
+    description: "The naive version sorts everything by usage and destroys muscle memory, the rug-pull. This keeps the main menu fixed and adapts only a 'Suggested for you' rail, ranked by what the user actually uses, with each suggestion labelled by reason and removable.",
     language: "tsx",
     componentId: "adaptive-dashboard",
     code: `'use client';
 
 import React, { useState } from 'react';
 
-interface Widget {
-  id: string;
-  title: string;
-  usage: number;
-}
+// The core never reorders. Muscle memory depends on it staying put.
+const CORE_NAV = ['Home', 'Inbox', 'Calendar', 'Reports', 'Settings'];
 
-const initialWidgets: Widget[] = [
-  { id: 'sales', title: 'Sales', usage: 0 },
-  { id: 'analytics', title: 'Analytics', usage: 0 },
-  { id: 'tasks', title: 'Tasks', usage: 0 },
-  { id: 'messages', title: 'Messages', usage: 0 }
+// The user's real behaviour. Only the suggestion rail ranks by this.
+const USAGE = [
+  { id: 'invoice', label: 'New invoice', count: 14 },
+  { id: 'export', label: 'Export report', count: 11 },
+  { id: 'standup', label: 'Start team standup', count: 9 },
 ];
 
 export default function AdaptiveDashboard() {
-  const [widgets, setWidgets] = useState<Widget[]>(initialWidgets);
+  const [dismissed, setDismissed] = useState<string[]>([]);
 
-  const handleClick = (id: string) => {
-    setWidgets(prev => {
-      const updated = prev.map(w =>
-        w.id === id ? { ...w, usage: w.usage + 1 } : w
-      );
-      // Sort by usage (most used first)
-      return updated.sort((a, b) => b.usage - a.usage);
-    });
-  };
+  const suggestions = [...USAGE]
+    .sort((a, b) => b.count - a.count)
+    .filter((u) => !dismissed.includes(u.id));
 
   return (
-    <div className="p-6 space-y-4">
-      <h2 className="text-2xl font-bold">Adaptive Dashboard</h2>
-      <p className="text-gray-600">Click widgets to see them reorder by usage</p>
-
-      <div className="grid grid-cols-2 gap-4">
-        {widgets.map((widget) => (
-          <div
-            key={widget.id}
-            onClick={() => handleClick(widget.id)}
-            className="p-4 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600"
-          >
-            <h3 className="font-semibold">{widget.title}</h3>
-            <p className="text-sm">Clicks: {widget.usage}</p>
-          </div>
+    <div className="grid grid-cols-3 gap-4 p-4">
+      {/* Fixed anchor: same place, same order, every time */}
+      <nav className="rounded-lg border border-gray-200 p-2">
+        <p className="px-2 py-1 text-xs font-semibold uppercase text-gray-500">Main menu</p>
+        {CORE_NAV.map((label) => (
+          <div key={label} className="rounded px-2 py-2 text-sm text-gray-900">{label}</div>
         ))}
+      </nav>
+
+      {/* The only adaptive zone */}
+      <div className="col-span-2 rounded-lg border border-gray-200 p-4">
+        <p className="mb-3 text-sm font-semibold text-gray-900">Suggested for you</p>
+        <div className="space-y-2">
+          {suggestions.map((s) => (
+            <div key={s.id} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
+              <div>
+                <p className="text-sm font-medium text-gray-900">{s.label}</p>
+                <p className="text-xs text-gray-500">Used {s.count} times this week</p>
+              </div>
+              {/* Reversible: the user can always remove a suggestion */}
+              <button
+                onClick={() => setDismissed((d) => [...d, s.id])}
+                aria-label={\`Remove \${s.label}\`}
+                className="text-gray-400 hover:text-gray-700"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }`
   }
-]; 
+];
