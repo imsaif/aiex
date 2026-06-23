@@ -251,16 +251,16 @@ export default function PredictiveAnticipationDemo() {
                 <motion.button
                   key={item.id}
                   onClick={() => handleContentClick(item.id)}
-                  disabled={isLoading === item.id}
+                  disabled={!!isLoading}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="p-4 rounded-card border border-accent-primary bg-accent-subtle text-left transition-all relative overflow-hidden group"
-                  whileHover={isLoading === item.id ? {} : { y: -4 }}
-                  whileTap={isLoading === item.id ? {} : { scale: 0.96 }}
+                  className="p-4 rounded-card border border-accent-primary bg-accent-subtle text-left transition-all relative overflow-hidden group disabled:cursor-wait"
+                  whileHover={isLoading ? {} : { y: -4 }}
+                  whileTap={isLoading ? {} : { scale: 0.96 }}
                 >
-                  {/* Shimmer animation */}
+                  {/* Shimmer animation (decorative, must not capture clicks) */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-surface-primary/60 to-transparent"
+                    className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-surface-primary/60 to-transparent"
                     animate={{ x: ['-100%', '100%'] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
@@ -311,21 +311,21 @@ export default function PredictiveAnticipationDemo() {
             <motion.button
               key={item.id}
               onClick={() => handleContentClick(item.id)}
-              disabled={isLoading === item.id}
+              disabled={!!isLoading}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className={`p-3 rounded-card border text-left transition-all relative overflow-hidden group ${
                 item.isPreloaded
                   ? 'bg-accent-subtle border-accent-primary'
                   : 'bg-surface-primary border-border-primary hover:border-border-secondary'
-              } ${isLoading === item.id ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
-              whileHover={isLoading === item.id ? {} : { y: -2 }}
-              whileTap={isLoading === item.id ? {} : { scale: 0.98 }}
+              } ${isLoading === item.id ? 'cursor-wait' : 'cursor-pointer'} disabled:opacity-60`}
+              whileHover={isLoading ? {} : { y: -2 }}
+              whileTap={isLoading ? {} : { scale: 0.98 }}
             >
-              {/* Shimmer animation for pre-loaded items */}
+              {/* Shimmer animation for pre-loaded items (decorative, must not capture clicks) */}
               {item.isPreloaded && !viewedIds.includes(item.id) && (
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-surface-primary/60 to-transparent"
+                  className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-surface-primary/60 to-transparent"
                   animate={{ x: ['-100%', '100%'] }}
                   transition={{ duration: 2.5, repeat: Infinity }}
                 />
