@@ -261,10 +261,10 @@ export default function HumanInTheLoopModeration() {
             <p className="mb-4 p-4 bg-surface-secondary rounded-lg text-text-primary text-base">{currentItem.content}</p>
 
             <div className="flex flex-wrap items-center gap-3 mb-5">
-              <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+              <span className={`px-3 py-1 rounded-full text-sm font-medium text-text-primary border ${
                 currentItem.aiModeration.decision === 'flagged'
-                  ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-                  : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                  ? 'bg-status-error/10 border-error'
+                  : 'bg-status-success/10 border-success'
               }`}>
                 {currentItem.aiModeration.decision === 'flagged' ? 'AI Flagged' : 'AI Approved'}
               </span>
