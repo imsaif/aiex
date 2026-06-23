@@ -53,9 +53,9 @@ export default function AgentStatusMonitoringDemo() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'running': return { icon: '\u{25B6}', color: 'text-green-500', bg: 'bg-green-100 dark:bg-green-900/30' };
-      case 'paused': return { icon: '\u{23F8}', color: 'text-amber-500', bg: 'bg-amber-100 dark:bg-amber-900/30' };
-      case 'completed': return { icon: '\u{2713}', color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/30' };
+      case 'running': return { icon: '\u{25B6}', color: 'text-status-success', bg: 'bg-status-success/10' };
+      case 'paused': return { icon: '\u{23F8}', color: 'text-status-warning', bg: 'bg-status-warning/10' };
+      case 'completed': return { icon: '\u{2713}', color: 'text-accent-primary', bg: 'bg-accent-subtle' };
       default: return { icon: '?', color: 'text-text-secondary', bg: 'bg-surface-secondary' };
     }
   };
@@ -108,15 +108,15 @@ export default function AgentStatusMonitoringDemo() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-surface-primary border border-amber-300 dark:border-amber-600 rounded-xl p-4 shadow-lg"
+            className="bg-surface-primary border border-warning rounded-xl p-4 shadow-lg"
           >
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600">!</span>
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-status-warning/10 flex items-center justify-center text-text-primary font-semibold">!</span>
               <div className="flex-1">
                 <p className="font-medium text-text-primary text-sm">Agent needs your input</p>
                 <p className="text-xs text-text-secondary mt-1">Scheduling team syncs: Need confirmation on Thursday 2pm slot</p>
                 <div className="flex gap-2 mt-3">
-                  <button onClick={() => resolveTask(2)} className="text-xs px-3 py-1.5 bg-text-primary text-white rounded-lg">Confirm 2pm</button>
+                  <button onClick={() => resolveTask(2)} className="text-xs px-3 py-1.5 bg-accent-primary text-white rounded-lg">Confirm 2pm</button>
                   <button onClick={dismissNotification} className="text-xs px-3 py-1.5 bg-surface-secondary text-text-secondary rounded-lg">Later</button>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function AgentStatusMonitoringDemo() {
                 <motion.span
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center text-[9px] text-white font-bold"
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-accent-primary rounded-full flex items-center justify-center text-[9px] text-white font-bold"
                 >
                   {activeCount}
                 </motion.span>
@@ -186,7 +186,7 @@ export default function AgentStatusMonitoringDemo() {
                         <div className="ml-8">
                           <div className="w-full bg-surface-secondary rounded-full h-1.5 mb-1">
                             <motion.div
-                              className={`h-1.5 rounded-full ${task.status === 'running' ? 'bg-green-500' : 'bg-amber-500'}`}
+                              className={`h-1.5 rounded-full ${task.status === 'running' ? 'bg-accent-primary' : 'bg-status-warning'}`}
                               animate={{ width: `${task.progress}%` }}
                               transition={{ duration: 0.3 }}
                             />
