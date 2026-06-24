@@ -1,11 +1,21 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 
-// Require secret in production, use fallback only in development
-const TOKEN_SECRET = process.env.GUIDE_TOKEN_SECRET || process.env.HANDBOOK_TOKEN_SECRET;
-if (!TOKEN_SECRET && process.env.NODE_ENV === 'production') {
-  throw new Error('GUIDE_TOKEN_SECRET environment variable is required in production');
+/**
+ * Resolve the signing secret at call time, not module-load time.
+ *
+ * Resolving this at import time throws during `next build` page-data collection
+ * (NODE_ENV is 'production' there, but Preview/CI may not have the secret set),
+ * failing every Preview deployment even though no token is ever signed at build.
+ * Checking lazily keeps the production guarantee — a real request without the
+ * secret still throws — while letting the build import this module safely.
+ */
+function getEffectiveSecret(): string {
+  const tokenSecret = process.env.GUIDE_TOKEN_SECRET || process.env.HANDBOOK_TOKEN_SECRET;
+  if (!tokenSecret && process.env.NODE_ENV === 'production') {
+    throw new Error('GUIDE_TOKEN_SECRET environment variable is required in production');
+  }
+  return tokenSecret || 'dev-only-guide-secret-not-for-production';
 }
-const EFFECTIVE_SECRET = TOKEN_SECRET || 'dev-only-guide-secret-not-for-production';
 
 const TOKEN_EXPIRY = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
 
@@ -31,7 +41,7 @@ export function generateGuideToken(email: string, guideSlug: string): string {
 
   // Create a JSON string and sign it with HMAC
   const payloadStr = JSON.stringify(payload);
-  const signature = createHmac('sha256', EFFECTIVE_SECRET)
+  const signature = createHmac('sha256', getEffectiveSecret())
     .update(payloadStr)
     .digest('hex');
 
@@ -57,7 +67,7 @@ export function validateGuideToken(token: string): { email: string; guideSlug: s
     const payload: TokenPayload = JSON.parse(decodedPayload);
 
     // Verify signature using timing-safe comparison
-    const expectedSignature = createHmac('sha256', EFFECTIVE_SECRET)
+    const expectedSignature = createHmac('sha256', getEffectiveSecret())
       .update(decodedPayload)
       .digest('hex');
 
