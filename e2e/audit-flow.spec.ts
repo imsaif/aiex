@@ -21,8 +21,17 @@ test.describe('audit funnel — happy path', () => {
     // No per-iteration content assertion — `runOneAudit` already awaited
     // the analyze response; count persistence is verified at the end.
 
-    // After the free audit completes, the unlock modal auto-opens
-    // (AuditClient defers ~600ms before firing).
+    // The redesigned results view deliberately does NOT auto-open the unlock
+    // modal — it lets the user explore their results first (see the comment in
+    // AuditClient.runAnalysis). First confirm the results rendered.
+    await expect(
+      page.getByRole('heading', { name: /your audit results/i })
+    ).toBeVisible({ timeout: 10_000 });
+
+    // Then attempt a second audit. With the free limit reached (count = 1),
+    // "New audit" routes through handleClear, which gates on isPaywalled and
+    // surfaces the unlock modal — the paywall's natural trigger point now.
+    await page.getByRole('button', { name: /new audit/i }).click();
     await expect(
       page.getByRole('heading', { name: /3 more audits/i }).first()
     ).toBeVisible({ timeout: 10_000 });
@@ -32,7 +41,7 @@ test.describe('audit funnel — happy path', () => {
     // would otherwise pick first.
     const emailField = page.getByPlaceholder(/you@company.com|your email/i).first();
     await emailField.fill('e2e@example.com');
-    await page.getByRole('button', { name: /unlock 3 more audits/i }).click();
+    await page.getByRole('button', { name: /^unlock audits$/i }).click();
     await expect(page.getByRole('heading', { name: /^unlocked$/i })).toBeVisible({ timeout: 10_000 });
     await page.getByRole('button', { name: /^continue$/i }).click();
 
