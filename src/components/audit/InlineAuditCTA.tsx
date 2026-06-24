@@ -2,10 +2,36 @@ import Link from 'next/link';
 import { BeakerIcon } from '@heroicons/react/24/outline';
 
 interface InlineAuditCTAProps {
-  variant: 'hero' | 'pattern-detail';
+  variant: 'hero' | 'pattern-detail' | 'sidebar';
 }
 
 export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
+  // Vertical card sized to sit in the pattern sidebar under InstallPatternCTA.
+  // Mirrors that card's chrome (border-2 accent/30, rounded-2xl) so the two
+  // read as a paired "two ways forward": apply it yourself, or have us audit it.
+  if (variant === 'sidebar') {
+    return (
+      <div className="bg-surface-primary border-2 border-accent-primary/30 rounded-2xl shadow-sm p-6">
+        <div className="text-xs font-semibold text-accent-primary uppercase tracking-wide mb-3 flex items-center gap-1.5">
+          <BeakerIcon className="w-4 h-4" />
+          30-second check
+        </div>
+        <p className="text-lg font-bold text-text-primary leading-snug">
+          Check if your product already has this pattern
+        </p>
+        <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+          Upload a screenshot. We&apos;ll tell you which of the 36 patterns your AI interface uses and where the gaps are.
+        </p>
+        <Link
+          href="/"
+          className="mt-4 w-full inline-flex items-center justify-center px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors"
+        >
+          Audit My Design
+        </Link>
+      </div>
+    );
+  }
+
   if (variant === 'hero') {
     return (
       <div className="flex justify-center">

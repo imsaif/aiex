@@ -53,7 +53,7 @@ export default function InstallPatternCTA({ patternTitle, installPrompt }: Props
   }, [installPrompt, patternTitle]);
 
   return (
-    <div className="bg-surface-primary border-2 border-accent-primary/30 rounded-2xl overflow-hidden shadow-sm lg:sticky lg:top-24">
+    <div className="bg-surface-primary border-2 border-accent-primary/30 rounded-2xl overflow-hidden shadow-sm">
       <div className="p-6">
         <div className="text-xs font-semibold text-accent-primary uppercase tracking-wide mb-3">
           Apply with Claude Code

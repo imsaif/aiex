@@ -11,6 +11,7 @@ export const progressivedisclosure: Pattern = {
   introduction: "Progressive Disclosure is an AI design pattern that reveals complexity gradually. It shows simple features first, then unveils advanced capabilities as needed. Instead of overwhelming users with every AI setting and option upfront, this pattern starts with essentials and expands on demand. It's ideal for powerful AI tools with many features, onboarding new users, or preventing decision paralysis. Think of how Loom shows basic video tools first, then reveals AI transcription when you click 'more options,' or how ChatGPT starts simple but offers advanced settings in a menu.",
   datePublished: "2024-01-15",
   dateModified: "2025-11-18",
+  hideFAQ: true,
   content: {
     problem: "Complex AI features shown all at once can overwhelm users, causing abandonment or difficulty finding advanced options.",
     solution: "Progressively reveal information and AI features. Start with essentials, then offer advanced features as users interact or request more.",
@@ -294,6 +295,70 @@ Include clear expand/collapse triggers (chevrons, "Show more" buttons) and smoot
         "Design all states: collapsed → partial → expanded",
         "Test that users can easily discover hidden features"
       ]
-    }
+    },
+    judgmentCall: {
+      explainWhen: [
+        "The feature set is genuinely tiered: most users need a few things and a minority need the deep surface. Hiding the long tail keeps the common path clean.",
+        "Showing everything at once would cause decision paralysis or bury the primary action in noise.",
+        "The hidden depth is revealed on demand, at the moment of need, through an obvious trigger, not buried in a distant menu."
+      ],
+      dontWhen: [
+        "The 'advanced' option is something most users actually need. Putting a core action behind 'more options' is friction dressed as minimalism, and it's dark-pattern adjacent.",
+        "The total option set is small (3-5 items). Disclosure adds a click without reducing real load. Just show them.",
+        "The reveal isn't discoverable. If users can't find the hidden feature, you didn't disclose progressively, you hid it."
+      ],
+      trap: "Hiding the important thing to make the UI look simple. Clean is not the same as usable: a screenshot-perfect interface that buries the one action a user came for has optimized for the demo, not the person. Progressive disclosure is for the rare, never the necessary."
+    },
+    installPrompt: `You are implementing the Progressive Disclosure design pattern in this codebase.
+
+The pattern in one line: reveal complexity gradually, hiding the rare so the common path stays clean, never hiding what users actually need.
+
+Apply the following moves wherever this codebase shows a dense set of features, options, or AI settings. DO NOT apply to small option sets (3-5 items) or to primary actions. There, disclosure adds cost without reducing load.
+
+1. Separate core from long-tail by real usage, not taste.
+   For each dense surface, identify which actions most users need (core, always visible) versus a minority (long-tail, behind a reveal). If you don't have usage data, instrument the surface first. Do not guess what to hide based on what looks clean.
+
+2. Never hide a primary action.
+   The main thing a user came to do must be reachable without a click. Audit every "more options" / overflow menu; if it contains something most users need, promote it out into the visible layer.
+
+3. Label the trigger.
+   Every reveal needs a discoverable, labeled affordance ("Show 3 more", "Advanced settings"), not a bare icon. Where possible, show the count of hidden items in the label so users know depth exists.
+
+4. Cap nesting at two layers.
+   collapsed → expanded is the default. A third nested layer needs explicit justification; flag any surface that nests deeper, because users lose track of where things live past two.
+
+5. Reveal in context, and remember the choice.
+   Put the "show more" next to the content it expands, not in a global settings page. Persist each user's expanded/collapsed preference per surface so they don't re-dig every visit.
+
+The trap to avoid: using disclosure to bury functionality so the UI looks simple. If a user can't find the thing they need, you hid it, you didn't disclose it. Hide the rare, never the necessary.
+
+When you're done, output a Markdown report with three sections:
+- Surfaces updated: file path + which of the five moves you applied at each
+- Surfaces flagged but not changed: file path + why (e.g. small option set, contains a primary action, no usage data yet)
+- New instrumentation / state you added (usage tracking, per-surface preference persistence, trigger labels) and what still needs human sign-off
+
+Ask before adding dependencies.`,
+    takeaways: [
+      {
+        heading: "Hide the rare, never the necessary.",
+        body: "Progressive disclosure is for the long tail, not the core action. If most users need it, it isn't 'advanced', and putting it behind a click is friction pretending to be minimalism. Clean UI that buries what people came for has optimized for the screenshot, not the user."
+      },
+      {
+        heading: "Make the door obvious.",
+        body: "A reveal users can't find isn't disclosure, it's a hidden feature. A labeled trigger ('Show 4 more') beats a mystery chevron. Discoverability is the entire contract: the moment depth becomes invisible, you've broken the pattern and the user's trust."
+      },
+      {
+        heading: "Cap the depth at two layers.",
+        body: "collapsed → expanded. Past that, users lose the map of where things live. Each layer should answer a question the previous one raised, not nest for its own sake. If you need a third layer, the information architecture is the real problem."
+      },
+      {
+        heading: "Default to the data, not to white space.",
+        body: "What you hide by default should be driven by real usage, not a designer's taste for empty margins. Watch the analytics: if people keep expanding to reach the same thing, it has earned a place in the visible layer. Promote it."
+      },
+      {
+        heading: "Reveal at the moment of need, in context.",
+        body: "The best disclosure appears right where and when the user needs it, next to the thing it expands, not in a distant settings menu. Proximity is what makes depth feel effortless instead of buried."
+      }
+    ]
   }
 };

@@ -2,179 +2,106 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Multi-Context Conversation Manager",
-    description: "This React component demonstrates how to manage multiple conversation contexts, allowing users to switch between different topics while maintaining relevant history for each context.",
+    title: "Threads that keep their own memory",
+    description: "Context switching is not just a list of chats, it is isolation. Each thread holds its own history, so the same question gets a thread-specific answer and one thread's facts never leak into another. Switching preserves continuity within a thread and keeps the others sealed off.",
     language: "tsx",
     componentId: "context-switching-demo",
     code: `'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface Message {
   id: string;
+  role: 'user' | 'ai';
   text: string;
-  sender: 'user' | 'ai';
-  timestamp: Date;
 }
 
-interface Context {
+interface Thread {
   id: string;
   name: string;
-  topic: string;
+  remembers: string;          // the one fact this thread holds
   messages: Message[];
-  lastActive: Date;
+  answerWhen: string;         // grounded in THIS thread only
 }
 
+const INITIAL: Thread[] = [
+  {
+    id: 'launch',
+    name: 'Q3 launch plan',
+    remembers: 'Ships Friday',
+    messages: [{ id: 'l1', role: 'ai', text: 'We are targeting Friday to ship.' }],
+    answerWhen: 'The Q3 launch ships this Friday.',
+  },
+  {
+    id: 'japan',
+    name: 'Trip to Japan',
+    remembers: 'Going in April',
+    messages: [{ id: 'j1', role: 'ai', text: 'You are going in April.' }],
+    answerWhen: 'Your Japan trip is in April.',
+  },
+];
+
 export default function ContextSwitchingDemo() {
-  const [contexts, setContexts] = useState<Context[]>([
-    {
-      id: '1',
-      name: 'Project Planning',
-      topic: 'Discussing project timeline',
-      messages: [
-        { id: '1-1', text: "Let's plan the project timeline", sender: 'user', timestamp: new Date() },
-        { id: '1-2', text: "I'll help you create a timeline. What's your deadline?", sender: 'ai', timestamp: new Date() }
-      ],
-      lastActive: new Date()
-    },
-    {
-      id: '2',
-      name: 'Code Review',
-      topic: 'Reviewing React components',
-      messages: [
-        { id: '2-1', text: "Can you review this component?", sender: 'user', timestamp: new Date() },
-        { id: '2-2', text: "Sure! I'll analyze the code structure and best practices.", sender: 'ai', timestamp: new Date() }
-      ],
-      lastActive: new Date()
-    }
-  ]);
+  const [threads, setThreads] = useState<Thread[]>(INITIAL);
+  const [activeId, setActiveId] = useState('launch');
+  const active = threads.find((t) => t.id === activeId)!;
 
-  const [activeContextId, setActiveContextId] = useState('1');
-  const [newMessage, setNewMessage] = useState('');
-
-  const activeContext = contexts.find(c => c.id === activeContextId);
-
-  const switchContext = (contextId: string) => {
-    setActiveContextId(contextId);
-    setContexts(prev => prev.map(c =>
-      c.id === contextId ? { ...c, lastActive: new Date() } : c
-    ));
-  };
-
-  const sendMessage = () => {
-    if (!newMessage.trim() || !activeContext) return;
-
-    const userMessage: Message = {
-      id: \`\${activeContext.id}-\${Date.now()}\`,
-      text: newMessage,
-      sender: 'user',
-      timestamp: new Date()
-    };
-
-    const aiResponse: Message = {
-      id: \`\${activeContext.id}-\${Date.now() + 1}\`,
-      text: \`I understand you're asking about "\${newMessage}" in the context of \${activeContext.name}.\`,
-      sender: 'ai',
-      timestamp: new Date()
-    };
-
-    setContexts(prev => prev.map(c =>
-      c.id === activeContextId
-        ? { ...c, messages: [...c.messages, userMessage, aiResponse], lastActive: new Date() }
-        : c
-    ));
-
-    setNewMessage('');
-  };
+  // The answer is resolved against the ACTIVE thread, never the others.
+  const askWhen = () =>
+    setThreads((prev) =>
+      prev.map((t) =>
+        t.id === activeId
+          ? {
+              ...t,
+              messages: [
+                ...t.messages,
+                { id: \`\${t.id}-q\${t.messages.length}\`, role: 'user', text: 'When is it again?' },
+                { id: \`\${t.id}-a\${t.messages.length}\`, role: 'ai', text: t.answerWhen },
+              ],
+            }
+          : t // other threads are untouched: no context bleed
+      )
+    );
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-        <p className="text-sm text-blue-800">
-          <strong>Try this:</strong> Switch between conversation contexts and see how the AI maintains separate context for each topic
-        </p>
+    <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto p-4">
+      {/* Each thread advertises the one fact it remembers */}
+      <div className="space-y-2">
+        {threads.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setActiveId(t.id)}
+            className={\`w-full text-left rounded-lg border p-3 \${
+              t.id === activeId ? 'border-gray-900 bg-gray-50' : 'border-gray-200'
+            }\`}
+          >
+            <p className="text-sm font-semibold text-gray-900">{t.name}</p>
+            <span className="mt-1 inline-block rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+              Remembers: {t.remembers}
+            </span>
+          </button>
+        ))}
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {/* Context List */}
-        <div className="col-span-1 space-y-2">
-          <h3 className="font-semibold mb-2">Conversations</h3>
-          {contexts.map(context => (
-            <motion.div
-              key={context.id}
-              onClick={() => switchContext(context.id)}
-              className={\`p-3 rounded-lg cursor-pointer border-2 transition-colors \${
-                activeContextId === context.id
-                  ? 'bg-blue-100 border-blue-500'
-                  : 'bg-white border-gray-200 hover:border-blue-300'
-              }\`}
-              whileHover={{ scale: 1.02 }}
-            >
-              <h4 className="font-medium text-sm">{context.name}</h4>
-              <p className="text-xs text-gray-500 mt-1">{context.topic}</p>
-              <p className="text-xs text-gray-400 mt-1">
-                {context.messages.length} messages
-              </p>
-            </motion.div>
+      {/* The active thread, swapped in on switch with its own history intact */}
+      <div className="col-span-2 rounded-lg border border-gray-200 p-4">
+        <p className="text-xs text-gray-500 mb-3">
+          Viewing {active.name} only. The assistant can&apos;t see the other thread.
+        </p>
+        <div className="space-y-2 mb-4">
+          {active.messages.map((m) => (
+            <div key={m.id} className={m.role === 'user' ? 'text-right' : 'text-left'}>
+              <span className={\`inline-block rounded-lg px-3 py-2 text-sm \${
+                m.role === 'user' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800'
+              }\`}>
+                {m.text}
+              </span>
+            </div>
           ))}
         </div>
-
-        {/* Active Context */}
-        <div className="col-span-2">
-          <AnimatePresence mode="wait">
-            {activeContext && (
-              <motion.div
-                key={activeContext.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-white rounded-lg border border-gray-200 p-4"
-              >
-                <div className="mb-4 pb-3 border-b">
-                  <h3 className="font-semibold">{activeContext.name}</h3>
-                  <p className="text-sm text-gray-600">{activeContext.topic}</p>
-                </div>
-
-                <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
-                  {activeContext.messages.map(message => (
-                    <div
-                      key={message.id}
-                      className={\`flex \${message.sender === 'user' ? 'justify-end' : 'justify-start'}\`}
-                    >
-                      <div
-                        className={\`max-w-[80%] p-3 rounded-lg \${
-                          message.sender === 'user'
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-100 text-gray-800'
-                        }\`}
-                      >
-                        <p className="text-sm">{message.text}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                    placeholder="Type a message..."
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    onClick={sendMessage}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                  >
-                    Send
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        <button onClick={askWhen} className="rounded-full border border-gray-200 px-3 py-1.5 text-xs text-gray-700 hover:border-gray-900">
+          When is it?
+        </button>
       </div>
     </div>
   );

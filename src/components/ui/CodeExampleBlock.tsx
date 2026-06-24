@@ -543,7 +543,7 @@ export default function CodeExampleBlock({
   ].includes(componentId)
     ? 'max-w-6xl'
     : [
-        'augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo',
+        'augmented-creation-demo', 'adaptive-dashboard', 'multimodal-search', 'error-recovery-demo', 'safe-exploration-demo', 'explainable-ai-demo', 'predictive-anticipation-demo', 'intelligent-caching-demo', 'privacy-first-design-demo', 'progressive-enhancement-demo', 'contextual-assistance-editor', 'progressive-disclosure-email-demo', 'progressive-disclosure-email', 'intent-preview-demo', 'plan-summary-demo', 'escalation-pathways-demo', 'trust-calibration-demo', 'agent-status-monitoring-demo', 'feedback-loops-demo',
       ].includes(componentId)
       ? 'max-w-4xl'
       : ['session-degradation-prevention-example-0', 'anti-manipulation-safeguards-demo'].includes(componentId)

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SparklesIcon, BoltIcon } from '@heroicons/react/24/outline';
 
 interface ContentItem {
   id: string;
@@ -87,7 +88,7 @@ export default function PredictiveAnticipationDemo() {
         category: categoryName,
         count: count,
         percentage: Math.round((count / viewedIds.length) * 100)
-      } as any);
+      });
 
       // Pre-load items in that category
       setContents(prev => prev.map(item => ({
@@ -96,10 +97,10 @@ export default function PredictiveAnticipationDemo() {
       })));
 
       // Show notification
-      setNotification(`🧠 AI detected your preference for ${categoryName} content!`);
+      setNotification(`AI detected your preference for ${categoryName} content.`);
       setTimeout(() => setNotification(''), 4000);
     }
-  }, [viewedIds]);
+  }, [viewedIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleContentClick = async (id: string) => {
     const item = contents.find(c => c.id === id);
@@ -133,19 +134,22 @@ export default function PredictiveAnticipationDemo() {
   const categories = ['action', 'comedy', 'drama', 'sci-fi'];
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6">
+    <div className="max-w-5xl mx-auto p-6 space-y-5">
       {/* Header with Reset Button */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Predictive Content Loading</h2>
+        <div>
+          <h2 className="text-2xl font-bold text-text-primary">Predictive content loading</h2>
+          <p className="text-sm text-text-secondary mt-1">
+            Watch a few movies in one genre. The system notices, then prepares more of that genre so it loads instantly.
+          </p>
+        </div>
         {viewedIds.length > 0 && (
-          <motion.button
+          <button
             onClick={handleReset}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 rounded-lg text-sm font-medium transition-colors"
+            className="flex-shrink-0 text-sm text-text-secondary hover:text-text-primary transition-colors"
           >
-            ↻ Reset Demo
-          </motion.button>
+            Reset
+          </button>
         )}
       </div>
 
@@ -156,8 +160,9 @@ export default function PredictiveAnticipationDemo() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-700 text-purple-900 dark:text-purple-200 px-4 py-3 rounded-lg text-sm"
+            className="flex items-center gap-2 rounded-card bg-accent-subtle border border-border-primary px-4 py-3 text-sm text-text-primary"
           >
+            <SparklesIcon className="h-4 w-4 text-accent-primary flex-shrink-0" aria-hidden="true" />
             {notification}
           </motion.div>
         )}
@@ -167,19 +172,21 @@ export default function PredictiveAnticipationDemo() {
       <AnimatePresence>
         {detectedPattern && (
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: -10 }}
+            initial={{ scale: 0.98, opacity: 0, y: -10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/30 dark:to-blue-900/30 border-2 border-purple-300 dark:border-purple-700 rounded-lg p-5"
+            exit={{ scale: 0.98, opacity: 0 }}
+            className="rounded-card bg-accent-subtle border border-accent-primary p-5"
           >
-            <div className="flex items-start gap-4">
-              <span className="text-3xl flex-shrink-0">🧠</span>
+            <div className="flex items-start gap-3">
+              <SparklesIcon className="h-6 w-6 text-accent-primary flex-shrink-0" aria-hidden="true" />
               <div className="flex-1">
-                <p className="font-semibold text-gray-900 dark:text-white text-lg">Pattern Detected!</p>
-                <p className="text-gray-700 dark:text-gray-300 mt-1">
-                  You've viewed <span className="font-bold text-purple-600 dark:text-purple-400">{detectedPattern.count}</span> {detectedPattern.category} movies ({detectedPattern.percentage}% of your views)
+                <p className="font-semibold text-text-primary">Pattern detected</p>
+                <p className="text-text-secondary mt-1 text-sm">
+                  You&apos;ve viewed <span className="font-bold text-accent-primary">{detectedPattern.count}</span> {detectedPattern.category} movies ({detectedPattern.percentage}% of your views).
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">→ Pre-loading more {detectedPattern.category} content for faster loading...</p>
+                <p className="text-sm text-text-tertiary mt-2">
+                  Preparing more {detectedPattern.category} content so it loads instantly. Nothing plays on its own, you still choose.
+                </p>
               </div>
             </div>
           </motion.div>
@@ -191,21 +198,19 @@ export default function PredictiveAnticipationDemo() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4"
+          className="rounded-card bg-background-secondary p-4"
         >
-          <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-3">Your Viewing Pattern</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-3">Your viewing pattern</p>
           <div className="grid grid-cols-4 gap-3">
             {categories.map(category => (
               <div key={category} className="text-center">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">{preferences[category] || 0}</div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 capitalize">{category}</p>
+                <div className="text-2xl font-bold text-text-primary">{preferences[category] || 0}</div>
+                <p className="text-xs text-text-tertiary capitalize">{category}</p>
                 {preferences[category] && (
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-2">
+                  <div className="w-full bg-surface-primary rounded-full h-1 mt-2 overflow-hidden">
                     <div
                       className={`h-1 rounded-full transition-all ${
-                        detectedPattern?.category === category
-                          ? 'bg-purple-500'
-                          : 'bg-gray-400 dark:bg-gray-500'
+                        detectedPattern?.category === category ? 'bg-accent-primary' : 'bg-border-secondary'
                       }`}
                       style={{
                         width: `${Math.min(100, (preferences[category] / viewedIds.length) * 100)}%`
@@ -229,15 +234,15 @@ export default function PredictiveAnticipationDemo() {
             className="space-y-3"
           >
             <div className="flex items-center gap-2">
-              <span className="text-lg">🎯</span>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                Recommended For You
+              <SparklesIcon className="h-4 w-4 text-accent-primary" aria-hidden="true" />
+              <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide">
+                Recommended for you
               </h3>
-              <span className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/50 px-2 py-1 rounded">
-                AI Pick
+              <span className="text-xs font-semibold text-accent-primary bg-accent-subtle px-2 py-0.5 rounded-pill">
+                AI pick
               </span>
             </div>
-            <p className="text-xs text-gray-600 dark:text-gray-400">
+            <p className="text-xs text-text-tertiary">
               Based on your preference for <span className="font-semibold capitalize">{detectedPattern.category}</span> movies
             </p>
 
@@ -246,45 +251,39 @@ export default function PredictiveAnticipationDemo() {
                 <motion.button
                   key={item.id}
                   onClick={() => handleContentClick(item.id)}
-                  disabled={isLoading === item.id}
+                  disabled={!!isLoading}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="p-4 rounded-lg border-2 border-green-400 dark:border-green-600 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 text-left transition-all relative overflow-hidden group hover:shadow-lg"
-                  whileHover={isLoading === item.id ? {} : { y: -4 }}
-                  whileTap={isLoading === item.id ? {} : { scale: 0.96 }}
+                  className="p-4 rounded-card border border-accent-primary bg-accent-subtle text-left transition-all relative overflow-hidden group disabled:cursor-wait"
+                  whileHover={isLoading ? {} : { y: -4 }}
+                  whileTap={isLoading ? {} : { scale: 0.96 }}
                 >
-                  {/* Shimmer animation */}
+                  {/* Shimmer animation (decorative, must not capture clicks) */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 dark:via-white/10 to-transparent"
-                    animate={{ x: ['−100%', '100%'] }}
+                    className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-surface-primary/60 to-transparent"
+                    animate={{ x: ['-100%', '100%'] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
 
-                  <div className="relative z-10">
+                  <div className="relative">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
-                        <p className="font-semibold text-gray-900 dark:text-white text-sm line-clamp-2">{item.title}</p>
-                        <span className="inline-block text-xs text-green-700 dark:text-green-300 capitalize bg-green-200/50 dark:bg-green-800/50 px-2 py-0.5 rounded mt-2">
+                        <p className="font-semibold text-text-primary text-sm line-clamp-2">{item.title}</p>
+                        <span className="inline-block text-xs text-text-secondary capitalize bg-surface-primary px-2 py-0.5 rounded-pill mt-2">
                           {item.category}
                         </span>
                       </div>
                       {isLoading === item.id ? (
                         <motion.div
-                          className="w-5 h-5 border-2 border-green-400 border-t-green-600 rounded-full flex-shrink-0 mt-1"
+                          className="w-5 h-5 border-2 border-border-secondary border-t-accent-primary rounded-full flex-shrink-0 mt-1"
                           animate={{ rotate: 360 }}
                           transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                         />
                       ) : (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="text-green-600 dark:text-green-400 text-lg flex-shrink-0 mt-1"
-                        >
-                          ⚡
-                        </motion.div>
+                        <BoltIcon className="h-5 w-5 text-accent-primary flex-shrink-0 mt-1" aria-hidden="true" />
                       )}
                     </div>
-                    <p className="text-xs text-green-700 dark:text-green-300 font-semibold mt-2">
+                    <p className="text-xs text-accent-primary font-semibold mt-2">
                       {isLoading === item.id ? 'Loading...' : 'Instant load'}
                     </p>
                   </div>
@@ -298,12 +297,12 @@ export default function PredictiveAnticipationDemo() {
       {/* Content Grid - 3 columns */}
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wide">
             {regularContent.length > 0
-              ? `Browse More (${regularContent.length}/${contents.length - preloadedContent.length})`
+              ? `Browse more (${regularContent.length}/${contents.length - preloadedContent.length})`
               : preloadedContent.length === 0
-              ? 'All Content Viewed'
-              : 'All Browsable Content Viewed'}
+              ? 'All content viewed'
+              : 'All browsable content viewed'}
           </h3>
         </div>
 
@@ -312,53 +311,47 @@ export default function PredictiveAnticipationDemo() {
             <motion.button
               key={item.id}
               onClick={() => handleContentClick(item.id)}
-              disabled={isLoading === item.id}
+              disabled={!!isLoading}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`p-3 rounded-lg border-2 text-left transition-all relative overflow-hidden group ${
+              className={`p-3 rounded-card border text-left transition-all relative overflow-hidden group ${
                 item.isPreloaded
-                  ? 'bg-green-50 dark:bg-green-900/30 border-green-400 dark:border-green-600 hover:bg-green-100 dark:hover:bg-green-900/50 shadow-md'
-                  : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
-              } ${isLoading === item.id ? 'opacity-60 cursor-wait' : 'cursor-pointer'}`}
-              whileHover={isLoading === item.id ? {} : { y: -2 }}
-              whileTap={isLoading === item.id ? {} : { scale: 0.98 }}
+                  ? 'bg-accent-subtle border-accent-primary'
+                  : 'bg-surface-primary border-border-primary hover:border-border-secondary'
+              } ${isLoading === item.id ? 'cursor-wait' : 'cursor-pointer'} disabled:opacity-60`}
+              whileHover={isLoading ? {} : { y: -2 }}
+              whileTap={isLoading ? {} : { scale: 0.98 }}
             >
-              {/* Shimmer animation for pre-loaded items */}
+              {/* Shimmer animation for pre-loaded items (decorative, must not capture clicks) */}
               {item.isPreloaded && !viewedIds.includes(item.id) && (
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent"
-                  animate={{ x: ['−100%', '100%'] }}
+                  className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-surface-primary/60 to-transparent"
+                  animate={{ x: ['-100%', '100%'] }}
                   transition={{ duration: 2.5, repeat: Infinity }}
                 />
               )}
 
-              <div className="relative z-10">
-                <p className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2">{item.title}</p>
+              <div className="relative">
+                <p className="font-medium text-text-primary text-sm line-clamp-2">{item.title}</p>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs text-gray-600 dark:text-gray-400 capitalize bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                  <span className="text-xs text-text-secondary capitalize bg-background-secondary px-2 py-1 rounded-pill">
                     {item.category}
                   </span>
                   {isLoading === item.id ? (
                     <motion.div
-                      className="w-4 h-4 border-2 border-amber-400 border-t-amber-600 rounded-full flex-shrink-0"
+                      className="w-4 h-4 border-2 border-border-secondary border-t-accent-primary rounded-full flex-shrink-0"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                     />
                   ) : item.isPreloaded ? (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      className="text-green-600 dark:text-green-400 text-sm font-semibold"
-                    >
-                      ✓
-                    </motion.div>
+                    <BoltIcon className="h-4 w-4 text-accent-primary flex-shrink-0" aria-hidden="true" />
                   ) : (
-                    <span className="text-xs text-gray-400 dark:text-gray-500">Pending</span>
+                    <span className="text-xs text-text-tertiary">Pending</span>
                   )}
                 </div>
                 {!viewedIds.includes(item.id) && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    {item.isPreloaded ? '⚡ Instant' : '⏱️ ~1.8s'}
+                  <p className="text-xs text-text-tertiary mt-2">
+                    {item.isPreloaded ? 'Instant' : '~1.8s'}
                   </p>
                 )}
               </div>
@@ -370,30 +363,28 @@ export default function PredictiveAnticipationDemo() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-12 text-gray-500 dark:text-gray-400"
+            className="text-center py-12 text-text-secondary"
           >
-            <p className="text-lg font-semibold mb-2">You've viewed all content! 🎉</p>
-            <p className="text-sm mb-4">Try the reset button to explore different patterns.</p>
-            <motion.button
+            <p className="text-lg font-semibold mb-2">You&apos;ve viewed all content.</p>
+            <p className="text-sm mb-4">Reset to explore a different pattern.</p>
+            <button
               onClick={handleReset}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg text-sm font-medium transition-colors"
+              className="px-4 py-2 bg-accent-primary text-white rounded-input text-sm font-medium hover:opacity-90 transition-opacity"
             >
-              ↻ Start Over
-            </motion.button>
+              Start over
+            </button>
           </motion.div>
         )}
       </div>
 
       {/* Instructions */}
-      <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 space-y-2">
-        <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">How it works:</p>
-        <ul className="text-sm text-blue-900 dark:text-blue-300 space-y-1 ml-4 list-disc">
-          <li>View 3+ movies from the same genre to trigger the AI detection</li>
-          <li>Watch as the system identifies your preference and pre-loads similar content</li>
-          <li>Pre-loaded content loads instantly (⚡) instead of the normal ~1.8 seconds</li>
-          <li>Click "Reset Demo" anytime to try a different pattern</li>
+      <div className="rounded-card bg-accent-subtle border border-border-primary p-4 space-y-2">
+        <p className="text-sm font-semibold text-text-primary">How it works</p>
+        <ul className="text-sm text-text-secondary space-y-1 ml-4 list-disc">
+          <li>View 3+ movies from one genre and the system detects the pattern (it waits for a real signal, not one click).</li>
+          <li>It <em>prepares</em> more of that genre so it loads instantly, but never plays anything on its own.</li>
+          <li>Prepared content loads instantly instead of the usual ~1.8s. A wrong guess just sits there, ignored, at no cost.</li>
+          <li>That is the line this pattern walks: prepare the next step, let the user take it. The trap is the silent autopilot.</li>
         </ul>
       </div>
     </div>

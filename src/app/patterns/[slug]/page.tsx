@@ -81,9 +81,17 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
     }));
 
   // Guides that teach this pattern in practice (cross-link for SEO)
+  // Cap "Practice in Courses" at 3 so generic patterns (which are listed in
+  // many guides for SEO link-equity) don't render a crowded, low-relevance
+  // grid. getGuidesForPattern returns guides in GUIDE_TO_PATTERNS order
+  // (generic tool/skill courses first, topic-specific build-guides last), so
+  // the top 3 are the most broadly relevant; a pattern's own dedicated guide
+  // is never dropped because it's the only guide that lists that pattern.
+  const MAX_RELATED_GUIDES = 3;
   const relatedGuideData = getGuidesForPattern(pattern.slug)
     .map(slug => guides.find(g => g.slug === slug))
     .filter((g): g is typeof guides[number] => g != null)
+    .slice(0, MAX_RELATED_GUIDES)
     .map(g => ({
       slug: g.slug,
       title: g.title,
