@@ -2,126 +2,73 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Universal Access AI Interface",
-    description: "A minimal AI assistant that adapts its interface based on user accessibility needs. Switch between interaction modes and languages to see how the UI adapts for universal access.",
+    title: "Access built in, not bolted on",
+    description: "The same task — send a message using only the keyboard — built two ways: a bolt-on overlay that performs accessibility with a badge and a floating widget over div-soup controls, versus real semantics (a labelled input, a real button, an aria-live status region) that a keyboard or screen-reader user can actually operate.",
     language: "tsx",
     componentId: "universal-access-patterns-demo",
     code: `'use client';
 
 import React, { useState } from 'react';
 
-type Mode = 'text' | 'voice' | 'simplified';
-type Language = 'en' | 'es' | 'fr' | 'zh';
+type Mode = 'overlay' | 'builtin';
 
+// The same task — "send a message using only the keyboard" — built two ways.
+// The bolt-on overlay performs accessibility (a badge + a floating widget over
+// div-soup controls); the real version uses semantics a keyboard or screen
+// reader can operate. Access lives in the DOM, not a costume on top of it.
 export default function UniversalAccessDemo() {
-  const [mode, setMode] = useState<Mode>('text');
-  const [language, setLanguage] = useState<Language>('en');
+  const [mode, setMode] = useState<Mode>('overlay');
+  const [draft, setDraft] = useState('');
+  const [status, setStatus] = useState('');
 
-  const messages = {
-    en: {
-      title: 'AI Assistant',
-      prompt: 'How can I help?',
-      placeholder: 'Type message...'
-    },
-    es: {
-      title: 'Asistente de IA',
-      prompt: '¿Cómo puedo ayudar?',
-      placeholder: 'Escribe mensaje...'
-    },
-    fr: {
-      title: 'Assistant IA',
-      prompt: 'Comment puis-je aider?',
-      placeholder: 'Tapez le message...'
-    },
-    zh: {
-      title: 'AI助手',
-      prompt: '我能如何帮助?',
-      placeholder: '输入消息...'
-    }
-  };
+  function handleSend(e: React.FormEvent) {
+    e.preventDefault();
+    if (!draft.trim()) return;
+    setStatus('Message sent: ' + draft.trim());
+    setDraft('');
+  }
 
-  const modeStyles = {
-    text: { icon: '⌨️', label: 'Text Mode' },
-    voice: { icon: '🎤', label: 'Voice Mode' },
-    simplified: { icon: '📱', label: 'Simplified' }
-  };
+  // THE TRAP: a visual-only mockup. Rendered aria-hidden with no focusable
+  // controls, so a keyboard / screen-reader user is genuinely locked out — yet
+  // a badge in the corner claims it is compliant. Worse than an honest gap.
+  if (mode === 'overlay') {
+    return (
+      <div>
+        <ModeToggle mode={mode} onChange={setMode} />
+        <div aria-hidden="true">
+          <div>Type message...</div>     {/* a div, not an <input> */}
+          <div>Send</div>                {/* a div, not a <button> */}
+          <span>WCAG AA Certified</span> {/* the alibi */}
+        </div>
+        <p>Try to Tab to Send: focus never lands on it. No control is real.</p>
+      </div>
+    );
+  }
 
-  const t = messages[language];
-  const currentMode = modeStyles[mode];
-
+  // THE FIX: real semantics. A linked label, a real button, and an aria-live
+  // region that announces the result — reachable and operable by assistive tech.
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-4">
-      {/* Info Banner */}
-      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-        <p className="text-sm text-blue-800">
-          Try switching modes and languages to see the interface adapt!
-        </p>
-      </div>
+    <div>
+      <ModeToggle mode={mode} onChange={setMode} />
+      <form onSubmit={handleSend}>
+        <label htmlFor="msg">Your message</label>
+        <input id="msg" value={draft} onChange={(e) => setDraft(e.target.value)} />
+        <button type="submit" aria-label="Send message">Send</button>
+      </form>
+      <p aria-live="polite">{status}</p>
+    </div>
+  );
+}
 
-      {/* Main Interface */}
-      <div className="rounded-lg border-2 border-gray-300 p-4 bg-white space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold">{t.title}</h2>
-          <div className="text-2xl">{currentMode.icon}</div>
-        </div>
-
-        {/* Message Display */}
-        <div className={\`p-4 rounded-lg \${
-          mode === 'text' ? 'bg-gray-100 text-base' :
-          mode === 'voice' ? 'bg-blue-100 text-sm' :
-          'bg-green-100 text-lg font-semibold'
-        }\`}>
-          {mode === 'voice' ? '🔊 ' : ''}{t.prompt}
-        </div>
-
-        {/* Input */}
-        <input
-          type="text"
-          placeholder={t.placeholder}
-          className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      {/* Controls */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Mode</label>
-          <select
-            value={mode}
-            onChange={(e) => setMode(e.target.value as Mode)}
-            className="w-full px-3 py-2 border rounded-lg text-sm"
-          >
-            <option value="text">Text</option>
-            <option value="voice">Voice</option>
-            <option value="simplified">Simplified</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Language</label>
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as Language)}
-            className="w-full px-3 py-2 border rounded-lg text-sm"
-          >
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="zh">中文</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Accessibility Features */}
-      <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-        <p className="text-sm font-semibold mb-2">✓ Accessible Features</p>
-        <ul className="text-xs space-y-1 text-green-800">
-          <li>• Keyboard navigation</li>
-          <li>• ARIA labels</li>
-          <li>• Multiple interaction modes</li>
-          <li>• Multilingual support</li>
-        </ul>
-      </div>
+function ModeToggle({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void }) {
+  return (
+    <div role="group" aria-label="Choose implementation">
+      <button type="button" aria-pressed={mode === 'overlay'} onClick={() => onChange('overlay')}>
+        Bolt-on overlay
+      </button>
+      <button type="button" aria-pressed={mode === 'builtin'} onClick={() => onChange('builtin')}>
+        Fix the DOM
+      </button>
     </div>
   );
 }`
