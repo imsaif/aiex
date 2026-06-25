@@ -1838,12 +1838,19 @@ async function runGeneration(
   }
 
   const claudeController = new AbortController();
-  const claudeTimeoutMs = type === 'weekly' ? 45000 : 25000;
+  // Sonnet 4.6 (not Haiku) for the selection call — Haiku was a latency pick for
+  // the 60s Vercel cap, but it routinely ignored the multi-constraint selection
+  // rules (max-2-per-company, max-1-opinion, product-news floor). Sonnet follows
+  // them far better. Measured median ~18s on a representative daily prompt vs the
+  // budget below (Haiku was ~4.5s), so timeouts are bumped from 25s/45s to give
+  // headroom while staying under the 60s function cap. One call/day, so the cost
+  // delta is negligible.
+  const claudeTimeoutMs = type === 'weekly' ? 50000 : 40000;
   const claudeTimeout = setTimeout(() => claudeController.abort(), claudeTimeoutMs);
   let response;
   try {
     response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'claude-sonnet-4-6',
       max_tokens: type === 'weekly' ? 4096 : 2048,
       messages: [{ role: 'user', content: prompt }],
     }, { signal: claudeController.signal });
@@ -1902,10 +1909,11 @@ async function runGeneration(
     if (addendum) {
       console.warn(`[newsletter] Selection rule violated on first pass: ${qa.selectionRuleViolation}. Retrying with hardened prompt.`);
       const retryController = new AbortController();
-      const retryTimeout = setTimeout(() => retryController.abort(), 25000);
+      // Sequential second call (~18s on Sonnet) — 40s + 40s stays under the 60s cap.
+      const retryTimeout = setTimeout(() => retryController.abort(), 40000);
       try {
         const retryResponse = await anthropic.messages.create({
-          model: 'claude-haiku-4-5-20251001',
+          model: 'claude-sonnet-4-6',
           max_tokens: 2048,
           messages: [{ role: 'user', content: prompt + addendum }],
         }, { signal: retryController.signal });
