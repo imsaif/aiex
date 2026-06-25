@@ -9,6 +9,7 @@ type Decision = 'interview' | 'rejected' | null;
 // The lesson, in plain terms: a badge that says "fair" doesn't make something
 // fair — a check that can actually stop the unfair thing does. Told as a short
 // story about two equally-qualified people so a non-technical audience feels it.
+// Type sizes lean large for comfortable reading, matching the other demos.
 export default function ResponsibleAiDesignDemo() {
   const [step, setStep] = useState<Step>(0);
 
@@ -24,13 +25,13 @@ export default function ResponsibleAiDesignDemo() {
         : '';
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-5">
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
       {/* Setup */}
-      <div className="space-y-1">
-        <p className="text-sm font-semibold text-text-primary">
+      <div className="space-y-2">
+        <p className="text-lg font-semibold text-text-primary">
           An AI helps a company decide who to interview.
         </p>
-        <p className="text-sm text-text-secondary">
+        <p className="text-base text-text-secondary">
           Two people apply with the exact same experience. Watch what happens.
         </p>
       </div>
@@ -40,7 +41,7 @@ export default function ResponsibleAiDesignDemo() {
         <CandidateCard emoji="👩" name="Maria" decision={mariaDecision} />
         <CandidateCard emoji="👨" name="John" decision={johnDecision} />
       </div>
-      <p className="text-center text-sm text-text-tertiary">Same experience. Both applied.</p>
+      <p className="text-center text-base text-text-tertiary">Same experience. Both applied.</p>
 
       {/* The trap: a "fairness" badge that sits next to an unfair result */}
       {step === 1 && (
@@ -54,24 +55,24 @@ export default function ResponsibleAiDesignDemo() {
 
       {/* The fix: a real check that stops the unfair result */}
       {step === 2 && (
-        <div className="rounded-card border border-border-primary bg-surface-primary p-4 text-center">
-          <p className="text-sm font-semibold text-text-primary">Hold on — these two are equal.</p>
-          <p className="mt-1 text-sm text-text-secondary">
+        <div className="rounded-card border border-border-primary bg-surface-primary p-5 text-center">
+          <p className="text-base font-semibold text-text-primary">Hold on — these two are equal.</p>
+          <p className="mt-1 text-base text-text-secondary">
             The AI can&rsquo;t reject one and keep the other. Both are invited to interview.
           </p>
         </div>
       )}
 
       {/* Caption + action */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {step === 1 && (
-          <p className="text-sm text-text-secondary">
+          <p className="text-base leading-relaxed text-text-secondary">
             Same experience &mdash; but Maria&rsquo;s rejected. That badge says this was
             &ldquo;checked for fairness.&rdquo; It&rsquo;s just a sticker. It changed nothing for Maria.
           </p>
         )}
         {step === 2 && (
-          <p className="text-sm text-text-secondary">
+          <p className="text-base leading-relaxed text-text-secondary">
             A real check actually stopped the unfair decision. That&rsquo;s the whole difference:
             saying you&rsquo;re fair, versus being fair.
           </p>
@@ -102,8 +103,8 @@ export default function ResponsibleAiDesignDemo() {
       </p>
 
       {/* Takeaway */}
-      <div className="rounded-card border border-border-primary bg-background-secondary p-4">
-        <p className="text-sm text-text-primary">
+      <div className="rounded-card border border-border-primary bg-background-secondary p-5">
+        <p className="text-base leading-relaxed text-text-primary">
           <span className="font-semibold">The lesson:</span> a badge that says &ldquo;fair&rdquo;
           doesn&rsquo;t make it fair. A check that can stop the unfair thing does.
         </p>
@@ -130,15 +131,15 @@ function CandidateCard({
 
   return (
     <div className={`flex items-center gap-3 rounded-card border p-4 transition-colors ${tone}`}>
-      <span className="text-2xl" aria-hidden="true">
+      <span className="text-3xl" aria-hidden="true">
         {emoji}
       </span>
       <div className="flex-1">
-        <span className="block text-sm font-semibold text-text-primary">{name}</span>
-        <span className="block text-sm text-text-secondary">5 years experience</span>
+        <span className="block text-base font-semibold text-text-primary">{name}</span>
+        <span className="block text-base text-text-secondary">5 years experience</span>
       </div>
       {decision && (
-        <span className="text-sm font-semibold text-text-primary">
+        <span className="text-base font-semibold text-text-primary">
           {decision === 'interview' ? '✓ Interview' : '✗ Rejected'}
         </span>
       )}
