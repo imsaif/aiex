@@ -1533,7 +1533,8 @@ async function sendFailureAlert(type: NewsletterType, error: unknown) {
 // Read by the admin review screen so a human can see source mix and the
 // design-light flag at a glance before clicking Publish.
 interface NewsletterQA {
-  sourceCounts: Record<string, number>; // post-Claude final selection
+  sourceCounts: Record<string, number>; // post-Claude final selection, keyed by RSS source
+  productCounts: Record<string, number>; // post-Claude final selection, keyed by Claude's product label (company-cap signal)
   designNativeCount: number;            // items from design-pub/design-tool tiers OR with >=2 design keywords
   designLightWarning: boolean;          // true iff designNativeCount === 0
   poolSize: number;                     // items Claude saw after pool-cap filter
@@ -1542,6 +1543,14 @@ interface NewsletterQA {
   productNewsCount: number;             // items from ai-lab or design-tool tiers (concrete product launches)
   selectionRuleViolation: string | null; // non-null when a hard selection rule failed; triggers auto-quiet
 }
+
+// Company cap enforced at QA time. The prompt rule "max 2 per company or domain"
+// lives only in the prompt and Claude Haiku routinely ignores it (2026-06-25: 3/4
+// daily items were all labeled "Figma", one of them sourced from TechCrunch — so
+// the source-level pool cap, which keys on the RSS feed, didn't catch it). This is
+// the same bypass class as the Apr 2026 Vercel-attribution incident, just on the
+// product field instead of the source field. Mirrors the prompt's value of 2.
+const MAX_ITEMS_PER_COMPANY = 2;
 
 // Opinion-domain detection. The prompt already names uxdesign.cc/uxplanet.org/
 // lennysnewsletter.com but Claude routinely picks Substack pieces (which slip
@@ -1571,6 +1580,15 @@ function isOpinionUrl(url: string): boolean {
 // pass violates the selection rules but the pool actually contained eligible
 // product-news items. Names the URLs explicitly so Claude can't ignore them.
 function buildSelectionRetryAddendum(pool: NewsItem[], violation: string): string {
+  // company_cap needs its own instruction — the product-news / opinion addendum
+  // below is irrelevant to (and would mislead on) a same-company concentration.
+  if (violation.startsWith('company_cap')) {
+    return `
+
+CRITICAL RETRY — your previous selection violated the rules: ${violation}.
+
+You selected more than ${MAX_ITEMS_PER_COMPANY} stories about the same company or product. Replace the surplus ones so that NO single company or product appears in more than ${MAX_ITEMS_PER_COMPANY} of your selected items. Pick the replacements from DIFFERENT companies already present in the pool you were given — do not invent items. Return the same JSON shape as before.`;
+  }
   const productNewsItems = pool
     .filter((it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool')
     .slice(0, 12);
@@ -1625,6 +1643,16 @@ function buildQABlock(
   };
 
   const sourceCounts: Record<string, number> = {};
+  // Company-cap signal: count by Claude's own product label, normalized. This is
+  // the dimension sourceCounts misses — an item sourced from TechCrunch but
+  // labeled "Figma" counts toward TechCrunch in sourceCounts yet reads to the
+  // subscriber as another Figma story. Exact-normalized match is deliberately
+  // conservative: identical label ⇒ genuinely the same company, so it never
+  // wrongly quiets a diverse issue; it can only miss a label-splitting dodge
+  // ("Figma" / "Figma Make"), which isn't happening yet. Harden with token
+  // extraction only if Claude starts gaming the field.
+  const productCounts: Record<string, number> = {};
+  const productDisplay: Record<string, string> = {};
   let designNativeCount = 0;
   let opinionCount = 0;
   let productNewsCount = 0;
@@ -1634,6 +1662,9 @@ function buildQABlock(
     // when we can't resolve back (e.g. compilation path from daily items).
     const sourceLabel = original?.source || sel.product || 'Unknown';
     sourceCounts[sourceLabel] = (sourceCounts[sourceLabel] || 0) + 1;
+    const productKey = (sel.product || 'Unknown').trim().toLowerCase();
+    productCounts[productKey] = (productCounts[productKey] || 0) + 1;
+    if (!productDisplay[productKey]) productDisplay[productKey] = (sel.product || 'Unknown').trim();
     if (original && isDesignNativeItem(original, original.sourceTier)) {
       designNativeCount += 1;
     }
@@ -1660,15 +1691,27 @@ function buildQABlock(
   const poolHadProductNews = pool.some(
     (it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool',
   );
+  // Company-cap violation: any single product label appears more than twice.
+  let companyCapViolation: string | null = null;
+  for (const [key, count] of Object.entries(productCounts)) {
+    if (count > MAX_ITEMS_PER_COMPANY) {
+      companyCapViolation = `company_cap (${productDisplay[key]}: ${count}, max ${MAX_ITEMS_PER_COMPANY})`;
+      break;
+    }
+  }
+
   let selectionRuleViolation: string | null = null;
   if (productNewsCount < 1 && poolHadProductNews) {
     selectionRuleViolation = `no_product_news (pool had ${pool.filter((it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool').length} product-news items but Claude picked 0)`;
   } else if (opinionCount > 0) {
     selectionRuleViolation = `opinion_present (${opinionCount} opinion items, max 0)`;
+  } else if (companyCapViolation) {
+    selectionRuleViolation = companyCapViolation;
   }
 
   return {
     sourceCounts,
+    productCounts,
     designNativeCount,
     designLightWarning: designNativeCount === 0,
     poolSize: pool.length,
