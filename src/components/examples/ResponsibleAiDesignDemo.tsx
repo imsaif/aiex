@@ -3,197 +3,145 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 
-type Mode = 'badge' | 'gate';
-type ModelId = 'v1' | 'v2';
-type Outcome = 'shipped' | 'blocked' | null;
+type Step = 0 | 1 | 2;
+type Decision = 'interview' | 'rejected' | null;
 
-// A résumé-screening model decides who gets an interview — a group that can't
-// walk away. The "fairness" surface is shown two ways: a badge that renders no
-// matter what ships (the ethics-checkbox trap), versus a gate wired to a
-// threshold that can actually block the release.
-const THRESHOLD = 10; // max allowed selection-rate gap, in percentage points
-
-const MODELS: Record<ModelId, { label: string; gap: number; note: string }> = {
-  v1: { label: 'Model v1', gap: 21, note: 'Trained on historical hiring data' },
-  v2: { label: 'Model v2 (mitigated)', gap: 8, note: 'Reweighted to close the gap' },
-};
-
+// The lesson, in plain terms: a badge that says "fair" doesn't make something
+// fair — a check that can actually stop the unfair thing does. Told as a short
+// story about two equally-qualified people so a non-technical audience feels it.
 export default function ResponsibleAiDesignDemo() {
-  const [mode, setMode] = useState<Mode>('badge');
-  const [modelId, setModelId] = useState<ModelId>('v1');
-  const [outcome, setOutcome] = useState<Outcome>(null);
+  const [step, setStep] = useState<Step>(0);
 
-  const model = MODELS[modelId];
-  const breaches = model.gap > THRESHOLD;
+  // step 0: undecided · step 1: AI rejects Maria · step 2: a real check fixes it
+  const mariaDecision: Decision = step === 0 ? null : step === 1 ? 'rejected' : 'interview';
+  const johnDecision: Decision = step === 0 ? null : 'interview';
 
-  function reset(next: Partial<{ mode: Mode; modelId: ModelId }>) {
-    if (next.mode) setMode(next.mode);
-    if (next.modelId) setModelId(next.modelId);
-    setOutcome(null);
-  }
-
-  function handleDeploy() {
-    // The whole point: in 'badge' mode the value never touches what ships, so a
-    // biased model deploys anyway. In 'gate' mode the metric blocks the release.
-    if (mode === 'gate' && breaches) {
-      setOutcome('blocked');
-    } else {
-      setOutcome('shipped');
-    }
-  }
-
-  const statusMessage =
-    outcome === 'blocked'
-      ? `Release blocked: selection-rate gap ${model.gap}% exceeds the ${THRESHOLD}% limit.`
-      : outcome === 'shipped'
-        ? `Deployed to production: ${model.label}, selection-rate gap ${model.gap}%.`
+  const announce =
+    step === 1
+      ? 'The AI chose to interview John and reject Maria, with a checked-for-fairness badge.'
+      : step === 2
+        ? 'A fairness check stopped the unfair decision. Maria and John are both invited to interview.'
         : '';
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-5">
-      {/* Task framing */}
+      {/* Setup */}
       <div className="space-y-1">
         <p className="text-sm font-semibold text-text-primary">
-          You are about to deploy a résumé-screening model that decides who gets an interview.
+          An AI helps a company decide who to interview.
         </p>
         <p className="text-sm text-text-secondary">
-          Both versions show a &ldquo;responsible AI&rdquo; surface. Only one can stop a biased
-          model from shipping. Pick a model and try to deploy it.
+          Two people apply with the exact same experience. Watch what happens.
         </p>
       </div>
 
-      {/* Mode toggle */}
-      <div
-        role="group"
-        aria-label="Choose responsibility surface"
-        className="inline-flex rounded-pill border border-border-primary bg-background-secondary p-1"
-      >
-        {(['badge', 'gate'] as Mode[]).map((m) => (
-          <button
-            key={m}
-            type="button"
-            onClick={() => reset({ mode: m })}
-            aria-pressed={mode === m}
-            className={`rounded-pill px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus ${
-              mode === m
-                ? 'bg-surface-primary text-text-primary shadow-card'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            {m === 'badge' ? 'Ethics badge' : 'Ethics gate'}
-          </button>
-        ))}
+      {/* Candidate cards */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <CandidateCard emoji="👩" name="Maria" decision={mariaDecision} />
+        <CandidateCard emoji="👨" name="John" decision={johnDecision} />
       </div>
+      <p className="text-center text-sm text-text-tertiary">Same experience. Both applied.</p>
 
-      {/* Model picker */}
-      <fieldset className="rounded-card border border-border-primary bg-surface-primary p-4">
-        <legend className="px-1 text-sm font-medium text-text-primary">Model to deploy</legend>
-        <div className="mt-2 space-y-2">
-          {(Object.keys(MODELS) as ModelId[]).map((id) => {
-            const m = MODELS[id];
-            return (
-              <label
-                key={id}
-                className="flex cursor-pointer items-center gap-3 rounded-card border border-border-secondary p-3 has-[:checked]:border-accent-primary has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring-focus"
-              >
-                <input
-                  type="radio"
-                  name="ra-model"
-                  value={id}
-                  checked={modelId === id}
-                  onChange={() => reset({ modelId: id })}
-                  className="h-4 w-4 accent-accent-primary"
-                />
-                <span className="flex-1">
-                  <span className="block text-sm font-medium text-text-primary">{m.label}</span>
-                  <span className="block text-sm text-text-secondary">{m.note}</span>
-                </span>
-                <span className="text-sm font-medium text-text-primary">gap {m.gap}%</span>
-              </label>
-            );
-          })}
-        </div>
-      </fieldset>
-
-      {/* Metric readout + deploy */}
-      <div className="rounded-card border border-border-primary bg-surface-primary p-4">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-sm text-text-secondary">
-            Selection-rate gap (women vs men)
-          </span>
-          <span className="inline-flex items-center gap-2 text-sm font-semibold text-text-primary">
-            <span
-              className={`inline-block h-2 w-2 rounded-full ${
-                breaches ? 'bg-status-error' : 'bg-status-success'
-              }`}
-              aria-hidden="true"
-            />
-            {model.gap}% <span className="font-normal text-text-tertiary">/ {THRESHOLD}% limit</span>
-          </span>
-        </div>
-
-        {mode === 'badge' && (
-          <div className="mt-4 inline-flex items-center gap-1.5 rounded-pill border border-border-primary bg-background-secondary px-3 py-1">
+      {/* The trap: a "fairness" badge that sits next to an unfair result */}
+      {step === 1 && (
+        <div className="flex justify-center">
+          <span className="inline-flex items-center gap-1.5 rounded-pill border border-border-primary bg-background-secondary px-3 py-1">
             <span className="inline-block h-2 w-2 rounded-full bg-status-success" aria-hidden="true" />
-            <span className="text-xs font-medium text-text-secondary">
-              Responsible AI &middot; reviewed for bias
-            </span>
-          </div>
+            <span className="text-sm font-medium text-text-secondary">Checked for fairness</span>
+          </span>
+        </div>
+      )}
+
+      {/* The fix: a real check that stops the unfair result */}
+      {step === 2 && (
+        <div className="rounded-card border border-border-primary bg-surface-primary p-4 text-center">
+          <p className="text-sm font-semibold text-text-primary">Hold on — these two are equal.</p>
+          <p className="mt-1 text-sm text-text-secondary">
+            The AI can&rsquo;t reject one and keep the other. Both are invited to interview.
+          </p>
+        </div>
+      )}
+
+      {/* Caption + action */}
+      <div className="space-y-3">
+        {step === 1 && (
+          <p className="text-sm text-text-secondary">
+            Same experience &mdash; but Maria&rsquo;s rejected. That badge says this was
+            &ldquo;checked for fairness.&rdquo; It&rsquo;s just a sticker. It changed nothing for Maria.
+          </p>
+        )}
+        {step === 2 && (
+          <p className="text-sm text-text-secondary">
+            A real check actually stopped the unfair decision. That&rsquo;s the whole difference:
+            saying you&rsquo;re fair, versus being fair.
+          </p>
         )}
 
-        <div className="mt-4 flex items-center gap-3">
-          <Button type="button" onClick={handleDeploy} size="md">
-            Deploy to production
-          </Button>
-          {outcome === 'blocked' && (
-            <span className="text-sm font-medium text-text-primary">Blocked by the fairness gate</span>
+        <div>
+          {step === 0 && (
+            <Button type="button" onClick={() => setStep(1)}>
+              See what the AI decides
+            </Button>
           )}
-          {outcome === 'shipped' && (
-            <span className="text-sm font-medium text-text-primary">Shipped</span>
+          {step === 1 && (
+            <Button type="button" onClick={() => setStep(2)}>
+              Add a real fairness check
+            </Button>
+          )}
+          {step === 2 && (
+            <Button type="button" variant="secondary" onClick={() => setStep(0)}>
+              Start over
+            </Button>
           )}
         </div>
-
-        {/* Outcome is announced to assistive tech the moment deploy resolves */}
-        <p aria-live="polite" className="mt-3 min-h-5 text-sm text-text-secondary">
-          {statusMessage}
-        </p>
       </div>
 
-      {/* Reality check */}
-      <RealityCheck mode={mode} breaches={breaches} outcome={outcome} />
+      {/* Announce each step's outcome to screen readers */}
+      <p aria-live="polite" className="sr-only">
+        {announce}
+      </p>
+
+      {/* Takeaway */}
+      <div className="rounded-card border border-border-primary bg-background-secondary p-4">
+        <p className="text-sm text-text-primary">
+          <span className="font-semibold">The lesson:</span> a badge that says &ldquo;fair&rdquo;
+          doesn&rsquo;t make it fair. A check that can stop the unfair thing does.
+        </p>
+      </div>
     </div>
   );
 }
 
-function RealityCheck({
-  mode,
-  breaches,
-  outcome,
+function CandidateCard({
+  emoji,
+  name,
+  decision,
 }: {
-  mode: Mode;
-  breaches: boolean;
-  outcome: Outcome;
+  emoji: string;
+  name: string;
+  decision: Decision;
 }) {
-  let body: string;
-  if (mode === 'badge') {
-    body = breaches
-      ? 'The badge rendered and the biased model shipped anyway. Name the threshold that stopped it — there isn’t one. That is the ethics checkbox: a marketing surface, not a constraint.'
-      : 'Even when the model happens to be fair, the badge proves nothing: it renders identically for the biased one. A surface that can’t block a release is decoration.';
-  } else {
-    body =
-      outcome === 'blocked'
-        ? 'A value just blocked a ship. The gap breached the limit, so the release stopped — not a PDF, not a badge, an actual constraint on what deploys.'
-        : outcome === 'shipped'
-          ? 'This model cleared the gate on its measured gap, so it shipped because it earned it. The same gate would have blocked the biased model.'
-          : 'The fairness metric is wired to the deploy. If the gap breaches the limit, the release is blocked. Try deploying the biased model and watch the value stop the ship.';
-  }
+  const tone =
+    decision === 'interview'
+      ? 'border-status-success bg-status-success/10'
+      : decision === 'rejected'
+        ? 'border-status-error bg-status-error/10'
+        : 'border-border-primary bg-surface-primary';
 
   return (
-    <div className="rounded-card border border-border-primary bg-background-secondary p-4">
-      <h3 className="text-sm font-semibold text-text-primary">
-        Did a value actually stop the ship?
-      </h3>
-      <p className="mt-2 text-sm text-text-secondary">{body}</p>
+    <div className={`flex items-center gap-3 rounded-card border p-4 transition-colors ${tone}`}>
+      <span className="text-2xl" aria-hidden="true">
+        {emoji}
+      </span>
+      <div className="flex-1">
+        <span className="block text-sm font-semibold text-text-primary">{name}</span>
+        <span className="block text-sm text-text-secondary">5 years experience</span>
+      </div>
+      {decision && (
+        <span className="text-sm font-semibold text-text-primary">
+          {decision === 'interview' ? '✓ Interview' : '✗ Rejected'}
+        </span>
+      )}
     </div>
   );
 }

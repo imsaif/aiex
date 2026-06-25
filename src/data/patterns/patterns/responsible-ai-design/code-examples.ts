@@ -2,69 +2,53 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "An ethics gate that can block a ship",
-    description: "The same fairness metric shown two ways: a badge that renders no matter what deploys (the ethics-checkbox trap), versus a gate that blocks the release when the selection-rate gap breaches the threshold. The test of responsible AI is whether a value can actually stop a ship.",
+    title: "A fairness badge vs. a fairness check",
+    description: "Two people apply with the same experience. A 'checked for fairness' badge sits next to the AI rejecting one of them and changes nothing — until a real check steps in and stops the unfair decision. Saying you're fair is not the same as being fair.",
     language: "tsx",
     componentId: "responsible-ai-design-demo",
     code: `'use client';
 
 import React, { useState } from 'react';
 
-type Mode = 'badge' | 'gate';
+type Step = 0 | 1 | 2;
 
-// A résumé-screening model decides who gets an interview. The "responsibility"
-// surface is shown two ways. A badge renders no matter what ships (the ethics-
-// checkbox trap). A gate wires the fairness metric to a threshold that can
-// actually block the release. The test: name the last time a value stopped a ship.
-const THRESHOLD = 10; // max allowed selection-rate gap (percentage points)
-
+// The lesson: a badge that says "fair" doesn't make it fair — a check that can
+// actually stop the unfair decision does. Two equally-qualified people apply.
 export default function ResponsibleAiDesignDemo() {
-  const [mode, setMode] = useState<Mode>('badge');
-  const [gap] = useState(21); // measured selection-rate gap for the chosen model
-  const [outcome, setOutcome] = useState<'shipped' | 'blocked' | null>(null);
+  const [step, setStep] = useState<Step>(0);
 
-  function handleDeploy() {
-    // THE TRAP vs THE FIX, in one branch:
-    // 'badge' never inspects the metric, so a biased model deploys anyway.
-    // 'gate' blocks the release when the gap breaches the threshold.
-    if (mode === 'gate' && gap > THRESHOLD) {
-      setOutcome('blocked');
-    } else {
-      setOutcome('shipped');
-    }
-  }
+  // What the AI does to Maria at each step:
+  //   step 1 (badge only) -> rejected, while a "fairness" badge sits beside it
+  //   step 2 (real check) -> the check stops it, so she is interviewed too
+  const maria = step === 0 ? 'pending' : step === 1 ? 'rejected' : 'interview';
+  const john = step === 0 ? 'pending' : 'interview';
 
   return (
     <div>
-      <ModeToggle mode={mode} onChange={(m) => { setMode(m); setOutcome(null); }} />
+      <p>Maria and John apply with the exact same experience.</p>
 
-      <p>Selection-rate gap: {gap}% / {THRESHOLD}% limit</p>
+      <Candidate name="Maria" decision={maria} />
+      <Candidate name="John" decision={john} />
 
-      {/* The trap: a badge that renders regardless of what deploys */}
-      {mode === 'badge' && <span>Responsible AI · reviewed for bias</span>}
+      {/* The trap: a sticker that sits beside an unfair result and stops nothing */}
+      {step === 1 && <span>Checked for fairness</span>}
 
-      <button type="button" onClick={handleDeploy}>Deploy to production</button>
+      {/* The fix: a real check that actually stops the unfair decision */}
+      {step === 2 && <p>Hold on — these two are equal. Both are interviewed.</p>}
 
-      <p aria-live="polite">
-        {outcome === 'blocked'
-          ? 'Release blocked: gap ' + gap + '% exceeds the ' + THRESHOLD + '% limit. A value stopped the ship.'
-          : outcome === 'shipped'
-            ? 'Deployed to production with a ' + gap + '% gap.'
-            : ''}
-      </p>
+      {step === 0 && <button onClick={() => setStep(1)}>See what the AI decides</button>}
+      {step === 1 && <button onClick={() => setStep(2)}>Add a real fairness check</button>}
+      {step === 2 && <button onClick={() => setStep(0)}>Start over</button>}
     </div>
   );
 }
 
-function ModeToggle({ mode, onChange }: { mode: Mode; onChange: (m: Mode) => void }) {
+function Candidate({ name, decision }: { name: string; decision: string }) {
   return (
-    <div role="group" aria-label="Choose responsibility surface">
-      <button type="button" aria-pressed={mode === 'badge'} onClick={() => onChange('badge')}>
-        Ethics badge
-      </button>
-      <button type="button" aria-pressed={mode === 'gate'} onClick={() => onChange('gate')}>
-        Ethics gate
-      </button>
+    <div>
+      {name} — 5 years experience
+      {decision === 'rejected' && ' ✗ Rejected'}
+      {decision === 'interview' && ' ✓ Interview'}
     </div>
   );
 }`
