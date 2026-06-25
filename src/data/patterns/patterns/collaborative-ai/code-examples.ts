@@ -2,97 +2,47 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Collaborative AI Workspace",
-    description: "A simple example showing how AI can assist teams working together on shared documents by providing suggestions that anyone can apply.",
+    title: "A yes-man in the group chat vs. a real teammate",
+    description: "A team is converging on a risky call. A yes-man AI just piles on more agreement and the group barrels ahead; a real collaborator holds the context the team missed and helps them decide. Collaborative AI is a participant in the shared decision, not a cheerleader.",
     language: "tsx",
     componentId: "collaborative-ai-demo",
     code: `'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-interface Suggestion {
-  id: string;
-  text: string;
-}
+type Step = 0 | 1 | 2;
 
-const teamMembers = ['Alice 👩‍💼', 'Bob 👨‍💻', 'You 👤'];
+// Collaborative AI is AI as a real participant in a TEAM's shared decision. The
+// yes-man trap bites in a group: three people already agree, the AI piles on,
+// and nobody fills the "wait, are we sure?" role. A real collaborator holds the
+// context the team missed and helps them decide.
+const TEAM = [
+  'Priya: Let us skip user testing and launch Friday',
+  'Marco: Love it, I am in!',
+  'Dev: Same — let us ship it.',
+];
 
-export default function CollaborativeAIDemo() {
-  const [document, setDocument] = useState('');
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+export default function CollaborativeAiDemo() {
+  const [step, setStep] = useState<Step>(0);
 
-  useEffect(() => {
-    // Generate AI suggestion when document has content
-    if (document.length > 20 && suggestions.length === 0) {
-      const timer = setTimeout(() => {
-        setSuggestions([
-          {
-            id: '1',
-            text: 'Consider adding specific examples to strengthen your points'
-          }
-        ]);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [document, suggestions.length]);
-
-  const applySuggestion = (id: string) => {
-    const suggestion = suggestions.find(s => s.id === id);
-    if (suggestion) {
-      setDocument(prev => prev + ' [AI suggestion applied]');
-      setSuggestions(prev => prev.filter(s => s.id !== id));
-    }
-  };
-
-  const dismissSuggestion = (id: string) => {
-    setSuggestions(prev => prev.filter(s => s.id !== id));
-  };
+  const ai =
+    step === 1
+      ? 'Amazing plan, team — you have got this!' // yes-man: just more agreement
+      : step === 2
+        ? 'Before we lock it in: we have not tested signup, and Friday is our busiest day. Want me to flag the riskiest paths?' // real collaborator
+        : '';
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-4">
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Team Document</h2>
-        <p className="text-gray-600">Collaborate with your team and get AI suggestions</p>
-      </div>
+    <div>
+      {TEAM.map((line, i) => (
+        <p key={i}>{line}</p>
+      ))}
 
-      <div className="flex gap-2 items-center">
-        <span className="text-sm text-gray-600">Team:</span>
-        {teamMembers.map((member, i) => (
-          <span key={i} className="text-sm">{member}</span>
-        ))}
-      </div>
+      {step >= 1 && <p>AI teammate: {ai}</p>}
 
-      <textarea
-        value={document}
-        onChange={(e) => setDocument(e.target.value)}
-        placeholder="Start typing to collaborate... AI will suggest improvements"
-        className="w-full h-40 p-4 border rounded-lg resize-none"
-      />
-
-      {suggestions.length > 0 && (
-        <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-          <h3 className="font-semibold text-purple-900 mb-3">🤖 AI Suggestion</h3>
-          {suggestions.map(suggestion => (
-            <div key={suggestion.id} className="space-y-2">
-              <p className="text-sm text-gray-700">{suggestion.text}</p>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => applySuggestion(suggestion.id)}
-                  className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
-                >
-                  Apply
-                </button>
-                <button
-                  onClick={() => dismissSuggestion(suggestion.id)}
-                  className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300"
-                >
-                  Dismiss
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      {step === 0 && <button onClick={() => setStep(1)}>See what the AI adds</button>}
+      {step === 1 && <button onClick={() => setStep(2)}>Make it a real collaborator</button>}
+      {step === 2 && <button onClick={() => setStep(0)}>Start over</button>}
     </div>
   );
 }`
