@@ -1,0 +1,49 @@
+# Pattern Redo Tracker
+
+Living tracker for the two-layer effort to redo every pattern page, sequenced by **Google Search Console impressions** (highest-traffic first). Not auto-loaded — read/update when working the redo.
+
+_Last updated: 2026-06-25._
+
+## Layer 1 — New page structure (value-forward)
+
+Each pattern's `index.ts` gains `judgmentCall` (a named trap + explainWhen/dontWhen), ranked `takeaways`, a paste-ready `installPrompt`, and `hideFAQ: true`.
+
+**Progress: 31 / 38 done — all live in production (merged via PR #40).**
+
+Check status anytime:
+```bash
+for d in src/data/patterns/patterns/*/; do grep -q judgmentCall "$d/index.ts" && echo "DONE  $(basename $d)" || echo "TODO  $(basename $d)"; done | sort
+```
+
+### Remaining (7), by GSC impressions
+| # | Pattern | Impressions |
+|---|---|---|
+| 1 | safe-exploration | 235 |
+| 2 | session-degradation-prevention | 176 |
+| 3 | guided-learning | 159 |
+| 4 | plan-summary | 106 |
+| 5 | augmented-creation | 64 |
+| 6 | vulnerable-user-protection | 14 |
+| 7 | autonomy-spectrum | ~0 (not in export) |
+
+## Layer 2 — Interactive demo rebuilds
+
+Rebuild the demo to **embody its trap** in **plain language for designers/founders** (no dev jargon — see [[feedback_demos_non_technical_audience]]), dead-click-safe (see [[feedback_demos_no_dead_clicks]]), tokenized, accessible, readable type. Guided 2-step trap→resolution format.
+
+A demo audit flagged **5 demos** that were still teaching the *anti-pattern*. (Many other demos were already rebuilt/tokenized during the migration: feedback-loops, context-switching, adaptive-interfaces, privacy-first-design, confidence-visualization + predictive-anticipation/agent-status-monitoring/human-in-the-loop tokenized.)
+
+**Progress: 2 / 5 flagged demos done — both live in production (PR #43).**
+
+| Pattern | Impressions | Status |
+|---|---|---|
+| collaborative-ai | 644 | 🔲 in progress |
+| ambient-intelligence | 551 | 🔲 |
+| crisis-detection-escalation | 315 | 🔲 |
+| universal-access-patterns | 315 | ✅ shipped (PR #43) |
+| responsible-ai-design | — | ✅ shipped (PR #43) |
+
+## Held / parked
+- `anti-manipulation-safeguards/index.ts` — structure edit written but **held**: the new fields read "protect user from the product's dark patterns" while the existing body+demo read "jailbreak/bad-actor detection." Needs a coherence decision (realign / split / accept both) before committing. Tracked as a separate task.
+
+## Working setup
+- Demo rebuilds happen on branch `demo-rebuilds-embody-traps` in an isolated git worktree (`.claude/worktrees/demo-rebuilds`, dev on :3001) so they don't collide with parallel work in the main folder.
