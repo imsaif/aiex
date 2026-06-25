@@ -3,250 +3,127 @@
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 
-type Mode = 'overlay' | 'builtin';
+type Step = 0 | 1 | 2;
 
-/**
- * Universal Access Patterns demo.
- *
- * Embodies the pattern's trap, "the compliance overlay": a bolt-on widget and a
- * footer badge that perform accessibility while the underlying flow stays broken.
- *
- * The same task ("send a message using only your keyboard") is shown two ways:
- *  - "Bolt-on overlay": a visual-only, aria-hidden mockup. The Send control is a
- *    <div>, the field has no label, status is silent, but a widget floats in the
- *    corner and a badge claims WCAG AA. A keyboard / screen-reader user is locked
- *    out. It is rendered as an inert specimen so it never traps a real AT user.
- *  - "Fix the DOM": a real <label>, a real <button>, and an aria-live status
- *    region. Tab reaches the controls, Enter sends, the result is announced.
- */
+// Plain-language demo of the "compliance overlay" trap: an "Accessible" badge
+// that performs accessibility while a blind person still can't use the page.
+// We show what a screen reader reads aloud — vague and useless when the controls
+// are unlabeled ("edit text, button"), clear once they have real labels.
+// Type sizes lean large on purpose: this is the accessibility demo, so it should
+// be comfortably readable, not sit on the text-sm floor.
+const VAGUE = ['Heading: AI Assistant.', 'Edit text.', 'Button.'];
+const CLEAR = ['Heading: AI Assistant.', 'Message to the assistant. Edit text.', 'Send message. Button.'];
+
 export default function UniversalAccessDemo() {
-  const [mode, setMode] = useState<Mode>('overlay');
-  const [draft, setDraft] = useState('');
-  const [sent, setSent] = useState<string | null>(null);
-  const [status, setStatus] = useState('');
-
-  function switchMode(next: Mode) {
-    setMode(next);
-    setSent(null);
-    setStatus('');
-    setDraft('');
-  }
-
-  function handleSend(e: React.FormEvent) {
-    e.preventDefault();
-    const message = draft.trim();
-    if (!message) return;
-    setSent(message);
-    setDraft('');
-    setStatus(`Message sent: ${message}`);
-  }
+  const [step, setStep] = useState<Step>(0);
+  const lines = step === 1 ? VAGUE : step === 2 ? CLEAR : [];
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-5">
-      {/* Task framing */}
-      <div className="space-y-1">
-        <p className="text-sm font-semibold text-text-primary">
-          Task: send a message to the assistant using only your keyboard.
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      {/* Setup */}
+      <div className="space-y-2">
+        <p className="text-lg font-semibold text-text-primary">
+          Some people can&rsquo;t see the screen. A screen reader reads the page aloud so they can use it.
         </p>
-        <p className="text-sm text-text-secondary">
-          Both versions look accessible. Only one lets a keyboard or screen-reader
-          user finish the task. Switch between them and try to Tab to Send, then press Enter.
+        <p className="text-base text-text-secondary">
+          This chat looks perfectly fine. Listen to what a blind person actually hears.
         </p>
       </div>
 
-      {/* Mode toggle */}
-      <div
-        role="group"
-        aria-label="Choose implementation"
-        className="inline-flex rounded-pill border border-border-primary bg-background-secondary p-1"
-      >
-        {(['overlay', 'builtin'] as Mode[]).map((m) => (
-          <button
-            key={m}
-            type="button"
-            onClick={() => switchMode(m)}
-            aria-pressed={mode === m}
-            className={`rounded-pill px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus ${
-              mode === m
-                ? 'bg-surface-primary text-text-primary shadow-card'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            {m === 'overlay' ? 'Bolt-on overlay' : 'Fix the DOM'}
-          </button>
-        ))}
-      </div>
-
-      {mode === 'overlay' ? (
-        <OverlaySpecimen />
-      ) : (
-        <BuiltinChat
-          draft={draft}
-          setDraft={setDraft}
-          sent={sent}
-          status={status}
-          onSend={handleSend}
-        />
-      )}
-
-      {/* AT reality check — real, accessible content describing the surface above */}
-      <RealityCheck mode={mode} />
-    </div>
-  );
-}
-
-/**
- * A visual-only mockup of a bolt-on accessibility overlay. The whole block is
- * aria-hidden and contains no focusable elements, so a keyboard / screen-reader
- * user genuinely skips it: nothing here can be reached or activated. That inertia
- * IS the point, and it keeps the demo from trapping a real assistive-tech user.
- */
-function OverlaySpecimen() {
-  return (
-    <div>
+      {/* Mock chat — an illustration of the screen, not a real control.
+          pointer-events-none + no pointer cursor so it never reads as a dead click. */}
       <div
         aria-hidden="true"
-        className="relative rounded-card border border-border-primary bg-surface-primary p-4"
+        className="pointer-events-none select-none rounded-card border border-border-primary bg-surface-primary p-5"
       >
-        {/* Floating "accessibility" widget — pure decoration */}
-        <div className="absolute -right-2 -top-2 flex h-9 w-9 items-center justify-center rounded-full bg-accent-subtle text-base text-accent-primary shadow-card">
-          <span aria-hidden="true">&#9855;</span>
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-bold text-text-primary">AI Assistant</span>
+          {step === 1 && (
+            <span className="inline-flex items-center gap-1.5 rounded-pill border border-border-primary bg-background-secondary px-3 py-1">
+              <span className="inline-block h-2 w-2 rounded-full bg-status-success" />
+              <span className="text-sm font-medium text-text-secondary">Accessible</span>
+            </span>
+          )}
         </div>
-
-        <span className="text-base font-bold text-text-primary">AI Assistant</span>
-
-        <div className="mt-3 rounded-card bg-background-secondary p-3 text-sm text-text-secondary">
-          How can I help?
+        <div className="mt-3 rounded-pill border border-border-secondary px-4 py-2.5 text-base text-text-tertiary">
+          Type your message
         </div>
-
-        {/* Fake input: a div, not an <input> — no name for a screen reader */}
-        <div className="mt-3 flex gap-2">
-          <div className="flex-1 rounded-pill border border-border-secondary px-3 py-2 text-sm text-text-tertiary">
-            Type message...
-          </div>
-          {/* Fake Send: a div, not a <button> — no role, no keyboard handler */}
-          <div className="rounded-pill bg-accent-subtle px-4 py-2 text-sm font-medium text-accent-primary">
+        <div className="mt-3 flex justify-end">
+          <span className="rounded-pill bg-accent-subtle px-5 py-2.5 text-base font-medium text-accent-primary">
             Send
-          </div>
-        </div>
-
-        {/* The compliance badge that makes the team think the box is checked */}
-        <div className="mt-3 inline-flex items-center gap-1.5 rounded-pill border border-border-primary bg-background-secondary px-3 py-1">
-          <span className="inline-block h-2 w-2 rounded-full bg-status-success" aria-hidden="true" />
-          <span className="text-xs font-medium text-text-secondary">WCAG AA Certified</span>
+          </span>
         </div>
       </div>
 
-      <p className="mt-2 text-sm text-text-secondary">
-        A mockup of a bolt-on overlay. Try to Tab to its Send button: your focus never
-        lands on it, because nothing here is a real control.
-      </p>
-    </div>
-  );
-}
-
-interface BuiltinChatProps {
-  draft: string;
-  setDraft: (value: string) => void;
-  sent: string | null;
-  status: string;
-  onSend: (e: React.FormEvent) => void;
-}
-
-/**
- * The same surface built on real semantics: a labelled input, a real button, and
- * an aria-live region. Reachable by keyboard, announced to screen readers, with
- * no badge or widget — access is part of the same DOM everyone uses.
- */
-function BuiltinChat({ draft, setDraft, sent, status, onSend }: BuiltinChatProps) {
-  return (
-    <div className="rounded-card border border-border-primary bg-surface-primary p-4">
-      <span className="text-base font-bold text-text-primary">AI Assistant</span>
-
-      <div className="mt-3 space-y-2">
-        <div className="rounded-card bg-background-secondary p-3 text-sm text-text-secondary">
-          How can I help?
+      {/* Screen-reader transcript — the real, readable content (the focal point) */}
+      {step >= 1 && (
+        <div className="rounded-card border border-border-primary bg-background-secondary p-5">
+          <p className="mb-4 text-base font-semibold text-text-primary">
+            What their screen reader says out loud:
+          </p>
+          <ul className="space-y-3">
+            {lines.map((line, i) => (
+              <li key={i} className="flex items-start gap-3 text-lg leading-relaxed">
+                <span className="text-xl leading-tight" aria-hidden="true">
+                  🔊
+                </span>
+                <span className="text-text-primary">&ldquo;{line}&rdquo;</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        {sent && (
-          <div className="ml-auto max-w-[80%] rounded-card bg-accent-subtle p-3 text-sm text-text-primary">
-            {sent}
-          </div>
+      )}
+
+      {/* Caption + action */}
+      <div className="space-y-4">
+        {step === 1 && (
+          <p className="text-base leading-relaxed text-text-secondary">
+            There&rsquo;s an &ldquo;Accessible&rdquo; badge on this page. But a blind person just hears
+            &ldquo;edit text&hellip; button&rdquo; &mdash; no idea what to type or what the button does. The badge
+            didn&rsquo;t help them.
+          </p>
         )}
+        {step === 2 && (
+          <p className="text-base leading-relaxed text-text-secondary">
+            Now the screen reader says what each thing is, so they can actually use it. That&rsquo;s real
+            access &mdash; not a badge, but labels a person can hear.
+          </p>
+        )}
+        <div>
+          {step === 0 && (
+            <Button type="button" onClick={() => setStep(1)}>
+              Hear what a blind user hears
+            </Button>
+          )}
+          {step === 1 && (
+            <Button type="button" onClick={() => setStep(2)}>
+              Add real labels
+            </Button>
+          )}
+          {step === 2 && (
+            <Button type="button" variant="secondary" onClick={() => setStep(0)}>
+              Start over
+            </Button>
+          )}
+        </div>
       </div>
 
-      <form onSubmit={onSend} className="mt-3 flex items-end gap-2">
-        <div className="flex-1">
-          <label htmlFor="universal-access-message" className="mb-1 block text-sm font-medium text-text-primary">
-            Your message
-          </label>
-          <input
-            id="universal-access-message"
-            type="text"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            placeholder="Type message..."
-            className="w-full rounded-pill border border-border-secondary bg-surface-primary px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus"
-          />
-        </div>
-        <Button type="submit" size="md" aria-label="Send message">
-          Send
-        </Button>
-      </form>
-
-      {/* Live status: announced to screen readers the moment a message sends */}
-      <p aria-live="polite" className="mt-2 min-h-5 text-sm text-text-secondary">
-        {status}
+      {/* Announce each step's outcome to screen readers */}
+      <p aria-live="polite" className="sr-only">
+        {step === 1
+          ? 'With an accessibility badge but no labels, the screen reader only says: edit text, button.'
+          : step === 2
+            ? 'With real labels, the screen reader says: message to the assistant, and send message button.'
+            : ''}
       </p>
-    </div>
-  );
-}
 
-const OVERLAY_CHECKS = [
-  { ok: false, text: 'The Send control is a <div>, not a <button>. Keyboard focus skips it and Enter does nothing.' },
-  { ok: false, text: 'The input is a <div> with no <label>. A screen reader finds no field to type in.' },
-  { ok: false, text: 'Sending is silent. There is no aria-live region, so a screen-reader user never hears it worked.' },
-  { ok: true, text: 'But a widget floats in the corner and a footer badge says WCAG AA Certified.' },
-];
-
-const BUILTIN_CHECKS = [
-  { ok: true, text: 'Send is a real <button> named "Send message". Tab reaches it; Enter and Space activate it.' },
-  { ok: true, text: 'The input has a linked <label>, so screen readers announce its name.' },
-  { ok: true, text: 'An aria-live region announces "Message sent" the moment it happens.' },
-  { ok: true, text: 'No badge, no widget. Access lives in the same DOM everyone uses.' },
-];
-
-function RealityCheck({ mode }: { mode: Mode }) {
-  const checks = mode === 'overlay' ? OVERLAY_CHECKS : BUILTIN_CHECKS;
-  const locked = mode === 'overlay';
-
-  return (
-    <div className="rounded-card border border-border-primary bg-background-secondary p-4">
-      <h3 className="text-sm font-semibold text-text-primary">
-        What an assistive-tech user actually experiences
-      </h3>
-      <ul className="mt-3 space-y-2">
-        {checks.map((check, i) => (
-          <li key={i} className="flex items-start gap-2.5">
-            <span
-              className={`mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full border bg-surface-primary text-xs font-bold text-text-primary ${
-                check.ok ? 'border-status-success' : 'border-status-error'
-              }`}
-              aria-hidden="true"
-            >
-              {check.ok ? '✓' : '✗'}
-            </span>
-            <span className="text-sm text-text-secondary">
-              <span className="sr-only">{check.ok ? 'Pass: ' : 'Fail: '}</span>
-              {check.text}
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-3 text-sm font-medium text-text-primary">
-        {locked
-          ? 'The badge is checked. The user is still locked out. That is the compliance overlay.'
-          : 'No badge to defend, because the task actually works. Access is the product, not a costume on top of it.'}
-      </p>
+      {/* Takeaway */}
+      <div className="rounded-card border border-border-primary bg-background-secondary p-5">
+        <p className="text-base leading-relaxed text-text-primary">
+          <span className="font-semibold">The lesson:</span> a badge that says &ldquo;accessible&rdquo;
+          doesn&rsquo;t make it usable. Labels a real person can hear and use do.
+        </p>
+      </div>
     </div>
   );
 }
