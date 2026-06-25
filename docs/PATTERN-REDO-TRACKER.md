@@ -2,7 +2,7 @@
 
 Living tracker for the two-layer effort to redo every pattern page, sequenced by **Google Search Console impressions** (highest-traffic first). Not auto-loaded — read/update when working the redo.
 
-_Last updated: 2026-06-25._
+_Last updated: 2026-06-25 (collaborative-ai done; resume at ambient-intelligence)._
 
 ## Layer 1 — New page structure (value-forward)
 
@@ -32,15 +32,18 @@ Rebuild the demo to **embody its trap** in **plain language for designers/founde
 
 A demo audit flagged **5 demos** that were still teaching the *anti-pattern*. (Many other demos were already rebuilt/tokenized during the migration: feedback-loops, context-switching, adaptive-interfaces, privacy-first-design, confidence-visualization + predictive-anticipation/agent-status-monitoring/human-in-the-loop tokenized.)
 
-**Progress: 2 / 5 flagged demos done — both live in production (PR #43).**
+**Progress: 3 / 5 flagged demos done.** (responsible-ai + universal-access live via PR #43; collaborative-ai committed on this branch, not yet PR'd.)
 
 | Pattern | Impressions | Status |
 |---|---|---|
-| collaborative-ai | 644 | 🔲 in progress |
-| ambient-intelligence | 551 | 🔲 |
-| crisis-detection-escalation | 315 | 🔲 |
+| ambient-intelligence | 551 | 🔲 **NEXT** |
+| crisis-detection-escalation | 315 | 🔲 (sensitive — get explicit sign-off) |
+| collaborative-ai | 644 | ✅ committed on branch (team yes-man vs real collaborator) |
 | universal-access-patterns | 315 | ✅ shipped (PR #43) |
 | responsible-ai-design | — | ✅ shipped (PR #43) |
+
+### Demo rebuild recipe (apply to each)
+Guided 2-step trap→resolution story; plain language (no dev jargon); concrete human scenario; dead-click-safe (inert mockups `pointer-events-none`, only `<Button>`s clickable); tokenized (`brand:check` 0); readable type (lead `text-lg`, body `text-base`); real buttons + `aria-live`; regenerate paired `code-examples.ts`; verify with a scoped Playwright pass on the live page; commit component + code-examples only (leave anti-manipulation).
 
 ## Held / parked
 - `anti-manipulation-safeguards/index.ts` — structure edit written but **held**: the new fields read "protect user from the product's dark patterns" while the existing body+demo read "jailbreak/bad-actor detection." Needs a coherence decision (realign / split / accept both) before committing. Tracked as a separate task.
