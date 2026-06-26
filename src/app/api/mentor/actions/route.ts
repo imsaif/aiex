@@ -9,6 +9,7 @@ import type {
   Annotation,
   MentorAPIError,
 } from '@/types/mentor';
+import type { Priority } from '@/types/audit';
 import { getFixPromptLimit, type UserTier } from '@/lib/mentor-tier';
 
 const anthropic = new Anthropic({
@@ -110,7 +111,7 @@ ${i + 1}. **${ann.patternName}** (${ann.severity})
 
 function generateMarkdownChecklist(tasks: ChecklistTask[]): string {
   const sortedTasks = [...tasks].sort((a, b) => {
-    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    const priorityOrder: Record<Priority, number> = { high: 0, medium: 1, low: 2, none: 3 };
     return priorityOrder[a.priority] - priorityOrder[b.priority];
   });
 

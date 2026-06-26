@@ -249,7 +249,7 @@ export async function POST(request: NextRequest) {
 
     // If session data provided in request, use it (for new sessions)
     if (body.session) {
-      session = body.session;
+      session = body.session as MentorSession;
       sessions.set(sessionId, session);
     }
 

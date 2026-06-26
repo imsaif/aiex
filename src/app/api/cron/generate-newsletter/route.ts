@@ -684,7 +684,7 @@ async function getRecentlyUsedUrls(deduplicationDays = 7, excludeWeekly = true):
   const usedUrls = new Set<string>();
   for (const newsletter of recentNewsletters) {
     // Extract URLs from href attributes in the content
-    const urlMatches = newsletter.content?.matchAll(/href="([^"]+)"/g) || [];
+    const urlMatches = Array.from(newsletter.content?.matchAll(/href="([^"]+)"/g) || []);
     for (const match of urlMatches) {
       usedUrls.add(match[1]);
     }
@@ -776,6 +776,7 @@ const MAX_ITEMS_PER_SOURCE_WEEKEND = 3;
 const MAX_ITEMS_PER_SOURCE_BY_TIER: Partial<Record<SourceTier, number>> = {
   'design-opinion': 1,
   'designer-voice': 1,  // one tweet per practitioner per day max — keep mix diverse
+  'design-tool': 1,     // one item per design tool per day (Jun 26) — Figma's first-party blog routinely landed 2 posts in the pool, both scored top-tier (+35 baseline), and Sonnet picked both, filling 2 of 4 slots with Figma day after day. The company cap (max 2) allowed it, but 2-of-4 reads as over-represented. Capping the source to 1 keeps Figma's strongest item without the double. Note: ignores the weekend +1, which is intended — design-tool stays at 1 even on thin weekends.
 };
 function isWeekendUTC(now: Date = new Date()): boolean {
   const day = now.getUTCDay();

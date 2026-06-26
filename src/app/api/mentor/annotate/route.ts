@@ -6,7 +6,7 @@ import type {
   Annotation,
   MentorAPIError,
 } from '@/types/mentor';
-import type { PatternResult } from '@/types/audit';
+import type { PatternResult, Priority } from '@/types/audit';
 import { getAnnotationLimit, type UserTier } from '@/lib/mentor-tier';
 
 const anthropic = new Anthropic({
@@ -37,7 +37,7 @@ function buildAnnotationPrompt(
     ...missingPatterns.map((p) => ({ ...p, type: 'missing' })),
   ].sort((a, b) => {
     // Sort by priority (high > medium > low), then by type (missing > weak)
-    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    const priorityOrder: Record<Priority, number> = { high: 0, medium: 1, low: 2, none: 3 };
     const typeOrder = { missing: 0, weak: 1 };
     const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
     if (priorityDiff !== 0) return priorityDiff;
