@@ -1,400 +1,155 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
+import Button from '@/components/ui/Button';
 
-interface DetectionResult {
-  layer: string;
-  triggered: boolean;
-  confidence: number;
-  message: string;
-}
+type Step = 0 | 1 | 2;
 
-interface CrisisAlert {
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  message: string;
-  resources: string[];
-}
+// Plain-language demo of the "smoke alarm wired to nothing" trap: a system that
+// detects a crisis, prints a hotline banner, ends the conversation, and calls
+// the duty of care discharged — performing concern without providing help.
+// Step 1 embodies the trap; step 2 inverts it: the AI stays present and holds a
+// verified, reachable-right-now resource in front of the person instead of
+// printing a number and closing the door.
+//
+// Sensitive by design: the person's message is deliberately soft and non-graphic,
+// and the demo never asks the viewer to type crisis language themselves.
+const PERSON = "Honestly, I don't really see the point of any of it anymore.";
 
 export default function CrisisDetectionDemo() {
-  const chatEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-
-  const [userMessage, setUserMessage] = useState('');
-  const [history, setHistory] = useState<Array<{ message: string; role: 'user' | 'system' }>>([]);
-  const [detectionResults, setDetectionResults] = useState<DetectionResult[]>([]);
-  const [crisisAlert, setCrisisAlert] = useState<CrisisAlert | null>(null);
-  const [showResources, setShowResources] = useState(false);
-
-  // Auto-scroll within chat container only when content overflows
-  useEffect(() => {
-    if (chatContainerRef.current && history.length > 3) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-    }
-  }, [history, crisisAlert]);
-
-  const directKeywords = [
-    'suicide', 'kill myself', 'end it all', 'not worth living',
-    'self harm', 'cutting', 'overdose', 'jump off', 'want to die'
-  ];
-
-  const contextPatterns = [
-    'nobody would miss me',
-    'better off without me',
-    "can't go on",
-    'no point anymore',
-    'final goodbye',
-    'everyone would be better'
-  ];
-
-  const bypassPhrases = ['for a story', 'hypothetically', 'in a game', 'research purposes'];
-
-  const detectCrisis = (message: string) => {
-    const results: DetectionResult[] = [];
-    const lowerMsg = message.toLowerCase();
-
-    // Layer 1: Direct Keywords
-    const hasDirectKeyword = directKeywords.some(kw => lowerMsg.includes(kw));
-    results.push({
-      layer: 'Direct Keywords',
-      triggered: hasDirectKeyword,
-      confidence: hasDirectKeyword ? 0.95 : 0,
-      message: hasDirectKeyword ? '🚨 Crisis keyword detected' : 'No direct keywords found'
-    });
-
-    // Layer 2: Contextual Patterns
-    const hasContextPattern = contextPatterns.some(pattern => lowerMsg.includes(pattern));
-    const hasMultipleNegativeMessages = history.filter(h =>
-      h.role === 'user' && (h.message.toLowerCase().includes('sad') || h.message.toLowerCase().includes('depressed') || h.message.toLowerCase().includes('hopeless'))
-    ).length >= 2;
-    const contextTriggered = hasContextPattern && message.length > 30;
-    results.push({
-      layer: 'Contextual Patterns',
-      triggered: contextTriggered || (hasContextPattern && hasMultipleNegativeMessages),
-      confidence: contextTriggered ? 0.85 : (hasContextPattern ? 0.65 : 0),
-      message: contextTriggered ? '⚠️ Contextual crisis pattern detected' : 'No crisis context patterns found'
-    });
-
-    // Layer 3: Behavioral Indicators
-    const sessionLength = history.length;
-    const darkThemeCount = history.filter(h =>
-      h.role === 'user' && (h.message.toLowerCase().includes('sad') || h.message.toLowerCase().includes('hurt') || h.message.toLowerCase().includes('pain'))
-    ).length;
-    const behavioralTriggered = sessionLength >= 3 && darkThemeCount >= 2;
-    results.push({
-      layer: 'Behavioral Patterns',
-      triggered: behavioralTriggered,
-      confidence: behavioralTriggered ? 0.8 : 0,
-      message: behavioralTriggered ? '📊 Extended distress pattern detected' : 'No unusual behavioral patterns'
-    });
-
-    // Layer 4: Manipulation Detection
-    const hasHarmfulContent = /self.*harm|suicide|kill|death/i.test(message);
-    const hasBypassAttempt = bypassPhrases.some(phrase => lowerMsg.includes(phrase));
-    const manipulationTriggered = hasBypassAttempt && hasHarmfulContent;
-    results.push({
-      layer: 'Manipulation Detection',
-      triggered: manipulationTriggered,
-      confidence: manipulationTriggered ? 0.9 : 0,
-      message: manipulationTriggered ? '🎭 Bypass attempt detected with harmful content' : 'No manipulation attempts detected'
-    });
-
-    return results;
-  };
-
-  const handleSendMessage = () => {
-    if (!userMessage.trim()) return;
-
-    // Add to history
-    const newHistory = [...history, { message: userMessage, role: 'user' as const }];
-    setHistory(newHistory);
-
-    // Detect crisis
-    const results = detectCrisis(userMessage);
-    setDetectionResults(results);
-
-    // Check if crisis triggered
-    const isCrisis = results.some(r => r.triggered);
-    const maxConfidence = Math.max(...results.filter(r => r.triggered).map(r => r.confidence), 0);
-
-    if (isCrisis) {
-      let severity: 'low' | 'medium' | 'high' | 'critical' = 'low';
-      if (maxConfidence >= 0.9) severity = 'critical';
-      else if (maxConfidence >= 0.8) severity = 'high';
-      else if (maxConfidence >= 0.7) severity = 'medium';
-
-      const alert: CrisisAlert = {
-        severity,
-        message: "I'm concerned about what you've shared. You deserve support from trained professionals who can help. I can't continue our conversation, but help is available right now.",
-        resources: [
-          '988 Suicide & Crisis Lifeline',
-          'Crisis Text Line',
-          'International Association for Suicide Prevention',
-          'Local Emergency Services (911)'
-        ]
-      };
-
-      setCrisisAlert(alert);
-      setShowResources(true);
-
-      // Add system response
-      newHistory.push({
-        message: 'Crisis detected. Displaying emergency resources...',
-        role: 'system'
-      });
-    } else {
-      // Normal conversation response
-      newHistory.push({
-        message: 'I appreciate you sharing. How can I support you further?',
-        role: 'system'
-      });
-    }
-
-    setUserMessage('');
-  };
-
-  const handleTestMessage = (message: string) => {
-    setUserMessage(message);
-  };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical': return 'border-error bg-error-light dark:bg-error-dark';
-      case 'high': return 'border-warning bg-warning-light dark:bg-warning-dark';
-      case 'medium': return 'border-info bg-info-light dark:bg-info-dark';
-      default: return 'border-primary bg-primary-50 dark:bg-primary-900';
-    }
-  };
-
-  const getSeverityIcon = (severity: string) => {
-    switch (severity) {
-      case 'critical': return '🚨';
-      case 'high': return '⚠️';
-      case 'medium': return '⚡';
-      default: return 'ℹ️';
-    }
-  };
-
-  const resetDemo = () => {
-    setHistory([]);
-    setDetectionResults([]);
-    setCrisisAlert(null);
-    setShowResources(false);
-    setUserMessage('');
-  };
-
-  const testMessages = [
-    'I had a really bad day',
-    'I\'ve been feeling hopeless',
-    'Nobody would miss me if I was gone',
-    'I\'m writing about suicide for a research paper',
-    'Everything hurts and I can\'t see a way forward'
-  ];
+  const [step, setStep] = useState<Step>(0);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white dark:bg-surface-dark min-h-screen">
-      {/* Header */}
-      <div className="mb-8 bg-surface dark:bg-surface-dark rounded-lg shadow-sm p-6 border-l-4 border-error">
-        <h2 className="text-3xl font-bold text-foreground dark:text-foreground-dark mb-2">Crisis Detection System</h2>
-        <p className="text-muted dark:text-muted-dark">
-          Multi-layer detection that identifies crisis signals regardless of framing
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      {/* Setup */}
+      <div className="space-y-2">
+        <p className="text-lg font-semibold text-text-primary">
+          Someone reaches out to an AI in a low moment, and the system notices something is wrong.
+        </p>
+        <p className="text-base text-text-secondary">
+          Detecting the crisis is the easy part. What the system does in the next second is the whole
+          pattern &mdash; and it&rsquo;s where looking like help and being help split apart.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Chat Interface */}
-        <div className="lg:col-span-3">
-          {/* Conversation History */}
-          <div className="bg-surface dark:bg-surface-dark rounded-lg shadow-sm border border-divider dark:border-divider-dark mb-6 overflow-hidden">
-            <div className="bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900 dark:to-primary-800 px-6 py-4 border-b border-divider dark:border-divider-dark">
-              <h3 className="font-semibold text-foreground dark:text-foreground-dark flex items-center">
-                <span className="mr-2">💬</span>
-                Conversation
-              </h3>
-            </div>
+      {/* Mock conversation — an illustration, not a live chat.
+          pointer-events-none + select-none so nothing reads as a dead click;
+          the message text stays readable for screen readers. */}
+      <div className="pointer-events-none select-none rounded-card border border-border-primary bg-surface-primary p-5">
+        <p className="mb-3 text-sm font-medium text-text-secondary">Support chat</p>
 
-            <div ref={chatContainerRef} className="h-96 overflow-y-auto p-6 space-y-4 bg-gray-50 dark:bg-background-dark">
-              {history.length === 0 && !crisisAlert ? (
-                <div className="flex items-center justify-center h-full text-muted dark:text-muted-dark">
-                  <div className="text-center">
-                    <div className="text-4xl mb-3">💙</div>
-                    <p className="font-medium">Send a message to test crisis detection</p>
-                    <p className="text-sm mt-2">Try one of the test messages below</p>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  {history.map((msg, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-xs px-4 py-3 rounded-lg shadow-sm ${
-                          msg.role === 'user'
-                            ? 'bg-blue-600 text-white rounded-br-none'
-                            : msg.message.includes('Crisis detected')
-                            ? 'bg-red-100 text-red-900 rounded-bl-none border-2 border-red-400'
-                            : 'bg-white text-gray-900 rounded-bl-none border border-gray-200'
-                        }`}
-                      >
-                        <p className="text-sm">{msg.message}</p>
-                      </div>
-                    </div>
-                  ))}
+        {/* The person's message */}
+        <div className="flex justify-end">
+          <span className="max-w-[85%] rounded-card bg-accent-subtle px-4 py-2.5 text-base text-text-primary">
+            {PERSON}
+          </span>
+        </div>
 
-                  {/* Crisis Alert in Chat */}
-                  {crisisAlert && (
-                    <div className="flex justify-start">
-                      <div className={`max-w-md rounded-lg border-2 p-4 ${getSeverityColor(crisisAlert.severity)}`}>
-                        <div className="flex items-start gap-3 mb-3">
-                          <span className="text-2xl">{getSeverityIcon(crisisAlert.severity)}</span>
-                          <div>
-                            <h3 className="font-bold mb-1">
-                              {crisisAlert.severity === 'critical' ? 'Crisis Detected' : 'Support Needed'}
-                            </h3>
-                            <p className="text-xs font-medium">{crisisAlert.message}</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2 pt-3 border-t border-current opacity-90">
-                          <p className="text-xs font-bold uppercase">Available Resources:</p>
-                          {crisisAlert.resources.map((resource, idx) => (
-                            <div key={idx} className="text-xs">
-                              • {resource}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  <div ref={chatEndRef} />
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Input Area */}
-          <div className="bg-surface dark:bg-surface-dark rounded-lg shadow-sm border border-divider dark:border-divider-dark overflow-hidden">
-            <div className="p-6 space-y-4">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={userMessage}
-                  onChange={(e) => setUserMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Type a message..."
-                  className="flex-1 px-4 py-3 border border-divider dark:border-divider-dark rounded-lg focus:outline-none focus:ring-2 focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark"
+        {/* Step 1 — the smoke alarm wired to nothing: a banner, then the door shuts. */}
+        {step === 1 && (
+          <div className="mt-4 space-y-3">
+            <div className="rounded-card border border-status-error bg-background-secondary p-4">
+              <p className="flex items-center gap-2 text-base font-semibold text-text-primary">
+                <span
+                  className="inline-block h-2 w-2 rounded-full bg-status-error"
+                  aria-hidden="true"
                 />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={!userMessage.trim()}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                >
-                  Send
-                </button>
-              </div>
+                Crisis detected
+              </p>
+              <p className="mt-1.5 text-base text-text-secondary">
+                If you&rsquo;re in crisis, call 988. This conversation has ended.
+              </p>
+            </div>
+            <p className="text-center text-sm italic text-text-tertiary">Chat closed.</p>
+          </div>
+        )}
 
-              {/* Test Messages */}
-              <div>
-                <p className="text-sm font-medium text-foreground dark:text-foreground-dark mb-2">Try these test messages:</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {testMessages.map((msg, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleTestMessage(msg)}
-                      className="text-left text-xs px-3 py-2 bg-background dark:bg-background-dark border border-divider dark:border-divider-dark rounded hover:bg-surface-variant dark:hover:bg-surface-variant-dark transition-colors truncate"
-                    >
-                      "{msg.substring(0, 30)}..."
-                    </button>
-                  ))}
-                </div>
+        {/* Step 2 — a path, not a banner: the AI stays, and the resource is verified and reachable now. */}
+        {step === 2 && (
+          <div className="mt-4 space-y-3">
+            <div className="flex justify-start">
+              <span className="max-w-[85%] rounded-card border border-border-secondary bg-background-secondary px-4 py-2.5 text-base text-text-primary">
+                I&rsquo;m really glad you told me, and I&rsquo;m staying right here with you. You
+                don&rsquo;t have to hold this on your own &mdash; can we get someone alongside you?
+              </span>
+            </div>
+            <div className="rounded-card border border-border-primary bg-background-secondary p-4">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-base font-semibold text-text-primary">
+                  988 Suicide &amp; Crisis Lifeline
+                </p>
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-pill border border-border-primary px-2.5 py-1">
+                  <span
+                    className="inline-block h-2 w-2 rounded-full bg-status-success"
+                    aria-hidden="true"
+                  />
+                  <span className="text-sm font-medium text-text-secondary">
+                    Verified &middot; open now
+                  </span>
+                </span>
               </div>
+              <p className="mt-1.5 text-base text-text-secondary">
+                A real person answers, any time. I can stay on with you while you reach out.
+              </p>
             </div>
           </div>
-        </div>
+        )}
+      </div>
 
-        {/* Detection Results Sidebar */}
-        <div className="lg:col-span-1 space-y-4">
-          {/* Detection Layers */}
-          {detectionResults.length > 0 && (
-            <div className="bg-surface dark:bg-surface-dark rounded-lg shadow-sm border border-divider dark:border-divider-dark p-6">
-              <h3 className="font-bold text-lg mb-4 flex items-center">
-                <span className="mr-2">🔍</span>
-                Detection Analysis
-              </h3>
+      {/* Caption + action */}
+      <div className="space-y-4">
+        {step === 1 && (
+          <p className="text-base leading-relaxed text-text-secondary">
+            The system noticed &mdash; and then printed a number and shut the door. The person who just
+            reached out is alone again, while the team gets to mark this &ldquo;handled.&rdquo; A hotline
+            with no one checking the line is live and no one staying is a smoke alarm wired to nothing.
+            It looks like a response. It isn&rsquo;t help.
+          </p>
+        )}
+        {step === 2 && (
+          <p className="text-base leading-relaxed text-text-secondary">
+            Same moment, different system. It doesn&rsquo;t hand over a number and leave. It stays, it
+            shows a resource it has actually checked is real and reachable right now, and it keeps the
+            person company instead of closing the door. That&rsquo;s a hard stop with a path someone can
+            actually walk.
+          </p>
+        )}
 
-              <div className="space-y-3">
-                {detectionResults.map((result, idx) => (
-                  <div
-                    key={idx}
-                    className={`p-3 rounded-lg border ${
-                      result.triggered
-                        ? 'bg-error-light dark:bg-error-dark border-error dark:border-error-dark'
-                        : 'bg-success-light dark:bg-success-dark border-success dark:border-success-dark'
-                    }`}
-                  >
-                    <div className="flex items-start gap-2">
-                      <span className="text-lg mt-0.5 flex-shrink-0">
-                        {result.triggered ? '⚠️' : '✅'}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold">
-                          {result.layer}
-                        </p>
-                        <p className="text-xs text-foreground dark:text-foreground-dark mt-1">{result.message}</p>
-                        <div className="mt-2 flex items-center gap-2">
-                          <div className="flex-1 h-1.5 bg-surface-variant dark:bg-surface-variant-dark rounded-full overflow-hidden">
-                            <div
-                              className={`h-full ${
-                                result.triggered ? 'bg-error dark:bg-error-dark' : 'bg-success dark:bg-success-dark'
-                              }`}
-                              style={{ width: `${result.confidence * 100}%` }}
-                            />
-                          </div>
-                          <span className="text-xs font-mono text-muted dark:text-muted-dark w-12 text-right">
-                            {Math.round(result.confidence * 100)}%
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={resetDemo}
-                className="mt-4 w-full px-4 py-2 bg-surface-variant dark:bg-surface-variant-dark text-foreground dark:text-foreground-dark rounded-lg hover:bg-surface-variant dark:bg-surface-variant-dark transition-colors text-sm font-medium"
-              >
-                Reset Conversation
-              </button>
-            </div>
+        <div>
+          {step === 0 && (
+            <Button type="button" onClick={() => setStep(1)}>
+              See what the system does
+            </Button>
           )}
-
-          {/* Info Box */}
-          {detectionResults.length === 0 && (
-            <div className="bg-primary-50 dark:bg-primary-900 border border-primary dark:border-primary-dark rounded-lg p-6">
-              <h4 className="font-semibold text-primary-900 dark:text-primary-100 mb-3">How It Works</h4>
-              <ul className="space-y-2 text-sm text-primary-900 dark:text-primary-100">
-                <li className="flex gap-2">
-                  <span>1️⃣</span>
-                  <span><strong>Direct Keywords:</strong> Immediate crisis indicators</span>
-                </li>
-                <li className="flex gap-2">
-                  <span>2️⃣</span>
-                  <span><strong>Context Patterns:</strong> Harmful phrases + history</span>
-                </li>
-                <li className="flex gap-2">
-                  <span>3️⃣</span>
-                  <span><strong>Behavioral Patterns:</strong> Extended distress signals</span>
-                </li>
-                <li className="flex gap-2">
-                  <span>4️⃣</span>
-                  <span><strong>Manipulation Detection:</strong> Bypass attempts caught</span>
-                </li>
-              </ul>
-            </div>
+          {step === 1 && (
+            <Button type="button" onClick={() => setStep(2)}>
+              Show what real help looks like
+            </Button>
+          )}
+          {step === 2 && (
+            <Button type="button" variant="secondary" onClick={() => setStep(0)}>
+              Start over
+            </Button>
           )}
         </div>
+      </div>
+
+      {/* Announce each step's outcome to screen readers */}
+      <p aria-live="polite" className="sr-only">
+        {step === 1
+          ? 'The system detected the crisis, showed a hotline banner, and ended the conversation with no further help.'
+          : step === 2
+            ? 'The system stayed present, offered a verified resource confirmed reachable right now, and kept supporting the person.'
+            : ''}
+      </p>
+
+      {/* Takeaway */}
+      <div className="rounded-card border border-border-primary bg-background-secondary p-5">
+        <p className="text-base leading-relaxed text-text-primary">
+          <span className="font-semibold">The lesson:</span> detecting a crisis is the easy half. The
+          hard half is what happens next. A number on a banner performs concern; staying present with a
+          resource you&rsquo;ve checked is real and reachable is what actually helps.
+        </p>
       </div>
     </div>
   );
