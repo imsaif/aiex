@@ -2,7 +2,7 @@
 
 Living tracker for the two-layer effort to redo every pattern page, sequenced by **Google Search Console impressions** (highest-traffic first). Not auto-loaded — read/update when working the redo.
 
-_Last updated: 2026-06-25 (ambient-intelligence done; resume at crisis-detection-escalation — sensitive, get sign-off)._
+_Last updated: 2026-07-01 (crisis-detection-escalation done — all 5 flagged demos rebuilt; Layer 2 complete)._
 
 ## Layer 1 — New page structure (value-forward)
 
@@ -32,13 +32,13 @@ Rebuild the demo to **embody its trap** in **plain language for designers/founde
 
 A demo audit flagged **5 demos** that were still teaching the *anti-pattern*. (Many other demos were already rebuilt/tokenized during the migration: feedback-loops, context-switching, adaptive-interfaces, privacy-first-design, confidence-visualization + predictive-anticipation/agent-status-monitoring/human-in-the-loop tokenized.)
 
-**Progress: 4 / 5 flagged demos done.** (responsible-ai + universal-access live via PR #43; collaborative-ai + ambient-intelligence committed on this branch, not yet PR'd.)
+**Progress: 5 / 5 flagged demos done. 🎉** (responsible-ai + universal-access live via PR #43; collaborative-ai + ambient-intelligence in PR #45; crisis-detection-escalation committed on branch, folds into the PR #45 branch.)
 
 | Pattern | Impressions | Status |
 |---|---|---|
-| ambient-intelligence | 551 | ✅ committed on branch (surveillance hum vs. ambient that shows its work) |
-| crisis-detection-escalation | 315 | 🔲 **NEXT** (sensitive — get explicit sign-off) |
-| collaborative-ai | 644 | ✅ committed on branch (team yes-man vs real collaborator) |
+| ambient-intelligence | 551 | ✅ PR #45 (surveillance hum vs. ambient that shows its work) |
+| crisis-detection-escalation | 315 | ✅ committed on branch (smoke alarm wired to nothing vs. a system that stays; verified-resource resolution, soft depiction) |
+| collaborative-ai | 644 | ✅ PR #45 (team yes-man vs real collaborator) |
 | universal-access-patterns | 315 | ✅ shipped (PR #43) |
 | responsible-ai-design | — | ✅ shipped (PR #43) |
 
