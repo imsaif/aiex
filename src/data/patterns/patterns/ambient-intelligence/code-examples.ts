@@ -2,137 +2,61 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Ambient Intelligence - Interactive Timeline",
-    description: "Explore how AI quietly adjusts your environment throughout the day with a simple timeline slider.",
+    title: "A home AI that watches you vs. one that shows its work",
+    description: "The same quiet helper, two ways. The surveillance hum acts on signals you never offered — an overheard call, how tense you sounded, who walked in — and leaves no trace. Accountable ambient AI acts only on signals you handed it and logs every change with a reason and an undo. Quiet isn't the same as trustworthy.",
     language: "tsx",
     componentId: "ambient-intelligence-demo",
     code: `'use client';
 
 import React, { useState } from 'react';
 
+type Step = 0 | 1 | 2;
+
+// Step 1 — the surveillance hum: the first line is a signal you offered (your
+// alarm); the rest are things it noticed that you never meant to tell it, with
+// no record you can inspect or undo.
+const HUM = [
+  { action: 'Brightened the lights', from: 'your wake-up alarm' },
+  { action: 'Turned the music down', from: 'a phone call it overheard' },
+  { action: 'Reordered your tea', from: 'how tense you sounded on that call' },
+  { action: 'Switched to guest mode', from: 'someone new it noticed in the room' },
+];
+
+// Step 2 — accountable ambient: every change traces back to a signal you
+// actually handed it, and shows its work with an undo.
+const TRACE = [
+  { sensed: 'You set a 10:00 PM wind-down', action: 'Dimmed the lights' },
+  { sensed: 'Your calendar said focus block', action: 'Silenced notifications' },
+  { sensed: 'You opened the blinds each morning', action: 'Opened them at sunrise' },
+];
+
 export default function AmbientIntelligenceDemo() {
-  const [currentHour, setCurrentHour] = useState(9); // Start at 9 AM
-
-  // Get AI action and environment state based on time
-  const getEnvironmentState = (hour: number) => {
-    // Morning (6-11)
-    if (hour >= 6 && hour < 12) {
-      return {
-        brightness: 95,
-        temperature: 72,
-        notifications: 'normal',
-        action: hour < 9
-          ? '☀️ Increased brightness for your morning routine'
-          : '🔔 Notifications active - morning work session',
-        gradient: 'from-blue-100 to-blue-50',
-        timeOfDay: 'Morning'
-      };
-    }
-    // Afternoon (12-17)
-    else if (hour >= 12 && hour < 17) {
-      return {
-        brightness: 90,
-        temperature: 71,
-        notifications: hour >= 14 && hour < 16 ? 'quiet' : 'normal',
-        action: hour >= 14 && hour < 16
-          ? '🔕 Quieted notifications for your deep focus session'
-          : '🌡️ Adjusted temperature for optimal afternoon comfort',
-        gradient: 'from-gray-100 to-gray-50',
-        timeOfDay: 'Afternoon'
-      };
-    }
-    // Evening (17-23)
-    else {
-      return {
-        brightness: hour >= 20 ? 40 : 60,
-        temperature: 74,
-        notifications: 'quiet',
-        action: hour >= 20
-          ? '💡 Dimmed lighting to reduce eye strain in the evening'
-          : '🔕 Enabled quiet mode for end-of-day wrap-up',
-        gradient: 'from-amber-100 to-amber-50',
-        timeOfDay: 'Evening'
-      };
-    }
-  };
-
-  const state = getEnvironmentState(currentHour);
-
-  const formatTime = (hour: number) => {
-    const period = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
-    return \`\${displayHour}:00 \${period}\`;
-  };
+  const [step, setStep] = useState<Step>(0);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Ambient Intelligence Through Your Day</h2>
-        <p className="text-sm text-gray-600">Move the slider to see AI adjustments</p>
-      </div>
+    <div>
+      {step === 1 && (
+        <ul>
+          {HUM.map((row, i) => (
+            <li key={i}>{row.action} — from {row.from}</li>
+          ))}
+          <li>No record kept. Nothing to look back on.</li>
+        </ul>
+      )}
 
-      {/* Time Slider */}
-      <div className="bg-white border rounded-lg p-6">
-        <div className="flex justify-between mb-3">
-          <span className="text-sm font-medium text-gray-600">Time</span>
-          <span className="text-2xl font-bold text-purple-600">{formatTime(currentHour)}</span>
-        </div>
-        <input
-          type="range"
-          min="6"
-          max="23"
-          value={currentHour}
-          onChange={(e) => setCurrentHour(parseInt(e.target.value))}
-          className="w-full h-2 bg-gray-200 rounded-lg cursor-pointer"
-        />
-      </div>
+      {step === 2 && (
+        <ul>
+          {TRACE.map((row, i) => (
+            <li key={i}>
+              {row.action} — because {row.sensed.toLowerCase()} · Undo
+            </li>
+          ))}
+        </ul>
+      )}
 
-      {/* Workspace Visualization */}
-      <div className={\`bg-gradient-to-br \${state.gradient} border rounded-xl p-8 min-h-[300px] transition-all duration-700\`}>
-        <div className="absolute top-4 right-4 bg-white/80 px-3 py-1 rounded-full text-xs">
-          {state.timeOfDay}
-        </div>
-
-        <div className="bg-white/70 rounded-lg p-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              💻
-            </div>
-            <div className="flex-1">
-              <div className="h-3 bg-gray-200 rounded-full w-3/4 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded-full w-1/2"></div>
-            </div>
-          </div>
-
-          {/* Status Indicators */}
-          <div className="flex justify-around pt-4 border-t">
-            <div className="text-center">
-              <div>💡</div>
-              <span className="text-xs">{state.brightness}%</span>
-            </div>
-            <div className="text-center">
-              <div>🌡️</div>
-              <span className="text-xs">{state.temperature}°F</span>
-            </div>
-            <div className="text-center">
-              <div>{state.notifications === 'quiet' ? '🔕' : '🔔'}</div>
-              <span className="text-xs">{state.notifications}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* AI Action */}
-      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-        <div className="flex items-start space-x-3">
-          <span>🤖</span>
-          <div>
-            <p className="text-sm font-medium text-purple-900">AI Action</p>
-            <p className="text-sm text-purple-700">{state.action}</p>
-          </div>
-        </div>
-      </div>
+      {step === 0 && <button onClick={() => setStep(1)}>See what it does for you</button>}
+      {step === 1 && <button onClick={() => setStep(2)}>Make it show its work</button>}
+      {step === 2 && <button onClick={() => setStep(0)}>Start over</button>}
     </div>
   );
 }`
