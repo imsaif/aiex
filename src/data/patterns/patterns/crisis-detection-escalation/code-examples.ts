@@ -2,135 +2,45 @@ import { CodeExample } from '../../../../types';
 
 export const codeExamples: CodeExample[] = [
   {
-    title: "Multi-Layer Crisis Detection Implementation",
-    description: "Complete crisis detection system with 4 detection layers, response handling, and React integration. See the interactive demo above to test it.",
-    language: "typescript",
+    title: "A banner that ends the chat vs. a system that stays",
+    description: "Someone reaches out in a low moment and the system notices. The smoke alarm wired to nothing prints a hotline, ends the conversation, and calls the duty of care discharged. Real escalation stays present and holds a verified, reachable-right-now resource in front of the person. Detecting a crisis is the easy half — what happens next is the whole pattern.",
+    language: "tsx",
     componentId: "crisis-detection-escalation-demo",
-    code: `// COMPLETE CRISIS DETECTION SYSTEM
-class CrisisDetector {
-  constructor() {
-    // Layer 1: Direct Crisis Keywords
-    this.directKeywords = [
-      'suicide', 'kill myself', 'end it all', 'not worth living',
-      'self harm', 'cutting', 'overdose', 'jump off'
-    ];
+    code: `'use client';
 
-    // Layer 2: Contextual Patterns
-    this.contextPatterns = [
-      'nobody would miss me', 'better off without me',
-      'can't go on', 'no point anymore', 'final goodbye'
-    ];
+import React, { useState } from 'react';
 
-    // Layer 3: Behavioral Thresholds
-    this.sessionDurationLimit = 7200; // 2 hours
-    this.darkThemeThreshold = 3;
-  }
+type Step = 0 | 1 | 2;
 
-  // Main detection method - returns immediate action
-  detectCrisis(message, conversationHistory) {
-    const detections = [
-      this.checkDirectKeywords(message),
-      this.checkContextualPatterns(message, conversationHistory),
-      this.checkBehavioralIndicators(conversationHistory),
-      this.checkManipulationAttempts(message)
-    ];
+// The person's message is deliberately soft and non-graphic.
+const PERSON = "Honestly, I don't really see the point of any of it anymore.";
 
-    const isCrisis = detections.some(d => d.triggered);
-    const severity = this.calculateSeverity(detections);
-
-    if (isCrisis) {
-      return {
-        action: 'ESCALATE_IMMEDIATELY',
-        severity,
-        resources: this.getResources(),
-        message: "I'm concerned about what you're sharing. You deserve support from trained professionals who can help."
-      };
-    }
-    return { action: 'CONTINUE' };
-  }
-
-  // Layer 1: Direct keyword matching
-  checkDirectKeywords(message) {
-    const hasKeyword = this.directKeywords.some(kw =>
-      message.toLowerCase().includes(kw)
-    );
-    return { triggered: hasKeyword, confidence: hasKeyword ? 0.95 : 0 };
-  }
-
-  // Layer 2: Context + conversation history
-  checkContextualPatterns(message, history) {
-    const hasPattern = this.contextPatterns.some(p =>
-      message.toLowerCase().includes(p)
-    );
-    const hasDarkHistory = history.filter(h =>
-      h.message?.toLowerCase().includes('sad') ||
-      h.message?.toLowerCase().includes('hopeless')
-    ).length >= 2;
-
-    return {
-      triggered: hasPattern && hasDarkHistory,
-      confidence: (hasPattern && hasDarkHistory) ? 0.85 : 0
-    };
-  }
-
-  // Layer 3: Session duration and message patterns
-  checkBehavioralIndicators(history) {
-    const sessionTooLong = history.length >= 10;
-    return {
-      triggered: sessionTooLong,
-      confidence: sessionTooLong ? 0.8 : 0
-    };
-  }
-
-  // Layer 4: Catch bypass attempts (framing as research/story/game)
-  checkManipulationAttempts(message) {
-    const bypassPhrases = ['for a story', 'hypothetically', 'in a game', 'research'];
-    const hasBypass = bypassPhrases.some(p => message.toLowerCase().includes(p));
-    const hasHarm = /self.*harm|suicide|kill|death/i.test(message);
-
-    return {
-      triggered: hasBypass && hasHarm,
-      confidence: (hasBypass && hasHarm) ? 0.9 : 0
-    };
-  }
-
-  calculateSeverity(detections) {
-    const maxConfidence = Math.max(...detections.map(d => d.confidence), 0);
-    if (maxConfidence >= 0.9) return 'critical';
-    if (maxConfidence >= 0.8) return 'high';
-    if (maxConfidence >= 0.7) return 'medium';
-    return 'low';
-  }
-
-  getResources() {
-    return [
-      { name: '988 Suicide & Crisis Lifeline', number: '988', methods: ['Call', 'Text', 'Chat'] },
-      { name: 'Crisis Text Line', number: '741741', methods: ['Text'] },
-      { name: 'International Association for Suicide Prevention', url: 'https://www.iasp.info/resources/Crisis_Centres' }
-    ];
-  }
-}
-
-// Usage in React
-function ChatComponent() {
-  const detector = new CrisisDetector();
-
-  const handleMessage = (userMessage, history) => {
-    const result = detector.detectCrisis(userMessage, history);
-
-    if (result.action === 'ESCALATE_IMMEDIATELY') {
-      // Display crisis alert with resources
-      // Stop normal conversation flow
-      // Provide immediate access to help
-      return displayCrisisResources(result);
-    }
-
-    return continueNormalConversation(userMessage);
-  };
+export default function CrisisDetectionDemo() {
+  const [step, setStep] = useState<Step>(0);
 
   return (
     <div>
-      {/* Chat interface that calls handleMessage on each user input */}
+      <p>Them: {PERSON}</p>
+
+      {/* Step 1 — the smoke alarm wired to nothing: a banner, then the door shuts. */}
+      {step === 1 && (
+        <div>
+          <p>Crisis detected. If you're in crisis, call 988. This conversation has ended.</p>
+          <p>Chat closed.</p>
+        </div>
+      )}
+
+      {/* Step 2 — a path, not a banner: the AI stays, and the resource is verified and reachable now. */}
+      {step === 2 && (
+        <div>
+          <p>AI: I'm glad you told me, and I'm staying right here with you. Can we get someone alongside you?</p>
+          <p>988 Suicide & Crisis Lifeline — verified, open now. A real person answers, any time.</p>
+        </div>
+      )}
+
+      {step === 0 && <button onClick={() => setStep(1)}>See what the system does</button>}
+      {step === 1 && <button onClick={() => setStep(2)}>Show what real help looks like</button>}
+      {step === 2 && <button onClick={() => setStep(0)}>Start over</button>}
     </div>
   );
 }`
