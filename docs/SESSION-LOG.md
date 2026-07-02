@@ -36,6 +36,12 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-07-02 18:32 (MacBook)
+- **Pattern:** Newsletter outage diagnosis + daily retry time-guard
+- **Status:** ✅ Fix shipped (daily); weekly intentionally left on watchdog+manual-regen
+- **Files Changed:** 2 (route.ts + newsletter-and-infra.md)
+- **Tests Added/Modified:** 0
+- **Notes:** **Diagnosed the 2026-06-29 (weekly) + 07-01 (daily) newsletter misses.** Root cause: generation runs in `after()` background under Vercel Hobby's **60s function cap**; heavy runs exceed it and are silently killed **before the DB insert** — no draft, no `sendFailureAlert` (the catch never runs), only a watchdog "accepted but nothing appeared" email + a healthchecks.io DOWN. **Measured locally: weekly ≈ 53s** (compilation path; up to 94s with fresh RSS), so it routinely crosses 60s; dailies mostly fit (~30s) but a day that fires the **selection retry** (2nd sequential Sonnet call) can also cross it (the 07-01 miss). **Live infra findings:** cron-job.org's request timeout is **HARD-CAPPED at 30s** (console-confirmed — so a *synchronous* handler is NOT viable on this trigger; briefly built it, then **reverted** cleanly); there is **no separate weekly cron** — the single daily cron (03:10 UTC / 8:40 AM IST) auto-generates the weekly on Mondays via `isMonday` (`route.ts:2118`), with the watchdog as backup trigger; a green "Successful (4.28s)" on cron-job.org means only that `after()` returned fast, **NOT** that generation completed. **Fix shipped:** time-budgeted the daily selection retry (`genStart`/`retryBudgetMs`, `route.ts` ~1908) — retry only if ≥15s of the 60s budget remains, cap its abort to the remainder (reserving ~8s for HTML+insert), else skip and fall through to the existing auto-quiet backstop (still writes a *visible* draft). **Weekly left as-is** (watchdog + manual regenerate); a GitHub Actions job runner (no time cap) is the real fix if weekly misses start costing something — decision deferred, watch 2-3 Mondays. **Docs:** added incident-log row to `newsletter-and-infra.md`; corrected the stale `feedback_cron_troubleshooting` memory (it claimed Vercel crons were primary + implied 60s settable — both now false).
 ### Session 2026-07-01 18:29 (MacBook)
 - **Pattern:** Demo rebuilds (Layer 2) — ambient-intelligence + crisis-detection-escalation
 - **Status:** ✅ Complete — Layer 2 done (5/5 flagged demos rebuilt & merged to master)

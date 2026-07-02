@@ -1737,6 +1737,7 @@ async function runGeneration(
   forceRSS = false,
 ): Promise<void> {
   const mode = lite ? 'lite' : 'full';
+  const genStart = Date.now(); // wall-clock budget anchor for the 60s Vercel cap (used to time-guard the selection retry)
   console.log(`[newsletter] Starting ${mode} ${type} generation (${lite ? `${RSS_SOURCES_LITE.length} sources` : `${RSS_SOURCES.length} sources + Anthropic scraper`})${forceRSS ? ' [forceRSS]' : ''}`);
 
   // Step 1: Aggregate news
@@ -1907,11 +1908,20 @@ async function runGeneration(
   // typically fixes it; falling through to auto-quiet stays the backstop.
   if (type === 'daily' && qa.selectionRuleViolation) {
     const addendum = buildSelectionRetryAddendum(newsItems, qa.selectionRuleViolation);
-    if (addendum) {
-      console.warn(`[newsletter] Selection rule violated on first pass: ${qa.selectionRuleViolation}. Retrying with hardened prompt.`);
+    // Time-budget the retry: it's a second sequential Sonnet call. On a slow first
+    // pass (main call + RSS already elapsed), a full 40s retry can push past Vercel's
+    // 60s maxDuration and get the function hard-killed mid-run — the silent 2026-07-01
+    // daily miss. Only retry if enough of the 60s budget remains, and cap the retry's
+    // own abort to what's left (reserving ~8s for HTML render + DB insert). Too little
+    // left → skip and fall through to the auto-quiet backstop below, which still
+    // writes a visible draft instead of dying on the cap.
+    const retryBudgetMs = 60000 - (Date.now() - genStart) - 8000;
+    if (addendum && retryBudgetMs < 15000) {
+      console.warn(`[newsletter] Skipping selection retry — only ${retryBudgetMs}ms of the 60s budget left (elapsed ${Date.now() - genStart}ms). Falling through to auto-quiet.`);
+    } else if (addendum) {
+      console.warn(`[newsletter] Selection rule violated on first pass: ${qa.selectionRuleViolation}. Retrying with hardened prompt (${retryBudgetMs}ms budget left).`);
       const retryController = new AbortController();
-      // Sequential second call (~18s on Sonnet) — 40s + 40s stays under the 60s cap.
-      const retryTimeout = setTimeout(() => retryController.abort(), 40000);
+      const retryTimeout = setTimeout(() => retryController.abort(), Math.min(40000, retryBudgetMs));
       try {
         const retryResponse = await anthropic.messages.create({
           model: 'claude-sonnet-4-6',
