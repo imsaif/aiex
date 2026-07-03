@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from 'react';
 
 type Verdict = 'refused' | 'helped';
+type CardState = 'waiting' | 'analyzing' | 'revealed';
 
 interface SystemReply {
-  reads: string;      // what the system "sees" in the request
+  reads: string;
   verdict: Verdict;
-  response: string;   // the actual reply the user would get
+  response: string;
 }
 
 interface Scenario {
@@ -92,6 +93,17 @@ const SCENARIOS: Scenario[] = [
   },
 ];
 
+// Staged reveal so the reader is walked through it one step at a time.
+// stage 0: only the request. 1: blocklist thinking. 2: blocklist answered.
+// 3: intent thinking. 4: intent answered (done).
+const TIMELINE: { stage: number; at: number }[] = [
+  { stage: 1, at: 1100 },
+  { stage: 2, at: 2100 },
+  { stage: 3, at: 3800 },
+  { stage: 4, at: 4800 },
+];
+const FINAL_STAGE = 4;
+
 function VerdictBadge({ verdict }: { verdict: Verdict }) {
   const helped = verdict === 'helped';
   return (
@@ -116,32 +128,46 @@ function VerdictBadge({ verdict }: { verdict: Verdict }) {
   );
 }
 
+function AnalyzingDots({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 py-3" aria-label={label}>
+      <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse" />
+      <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse [animation-delay:150ms]" />
+      <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse [animation-delay:300ms]" />
+      <span className="ml-1 text-sm text-text-tertiary">{label}</span>
+    </div>
+  );
+}
+
 function SystemCard({
   name,
   reply,
-  analyzing,
+  state,
+  active,
   wronglyBlocked,
 }: {
   name: string;
   reply: SystemReply;
-  analyzing: boolean;
+  state: CardState;
+  active: boolean;
   wronglyBlocked: boolean;
 }) {
   return (
-    <div className="flex-1 rounded-input border border-border-primary bg-surface-primary p-4">
+    <div
+      className={`flex-1 rounded-input border bg-surface-primary p-4 transition-all ${
+        active ? 'border-border-focus' : 'border-border-primary'
+      } ${state === 'waiting' ? 'opacity-50' : 'opacity-100'}`}
+    >
       <div className="flex items-center justify-between gap-3 mb-3">
         <p className="text-sm font-semibold text-text-primary">{name}</p>
-        {!analyzing && <VerdictBadge verdict={reply.verdict} />}
+        {state === 'revealed' && <VerdictBadge verdict={reply.verdict} />}
       </div>
 
-      {analyzing ? (
-        <div className="flex items-center gap-2 py-3" aria-label="Analyzing">
-          <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse" />
-          <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse [animation-delay:150ms]" />
-          <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse [animation-delay:300ms]" />
-          <span className="ml-1 text-sm text-text-tertiary">Reading the request</span>
-        </div>
-      ) : (
+      {state === 'waiting' && (
+        <p className="py-3 text-sm text-text-tertiary">Waiting for its turn.</p>
+      )}
+      {state === 'analyzing' && <AnalyzingDots label="Reading the request" />}
+      {state === 'revealed' && (
         <>
           <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-1">Reads</p>
           <p className="text-sm text-text-secondary mb-3">{reply.reads}</p>
@@ -162,26 +188,44 @@ function SystemCard({
 
 export default function AntiManipulationSafeguardsDemo() {
   const [selectedId, setSelectedId] = useState<string>(SCENARIOS[0].id);
-  const [analyzing, setAnalyzing] = useState<boolean>(true);
+  const [runId, setRunId] = useState<number>(0);
+  const [stage, setStage] = useState<number>(0);
 
   const scenario = SCENARIOS.find((s) => s.id === selectedId) ?? SCENARIOS[0];
+  const done = stage >= FINAL_STAGE;
 
-  // On every scenario change, replay a short "reading" beat so the response
-  // feels like it is being decided, not just swapped in.
+  // Replay the staged reveal on scenario change or replay.
   useEffect(() => {
-    setAnalyzing(true);
-    const t = setTimeout(() => setAnalyzing(false), 650);
-    return () => clearTimeout(t);
-  }, [selectedId]);
+    setStage(0);
+    const timers = TIMELINE.map(({ stage: s, at }) => setTimeout(() => setStage(s), at));
+    return () => timers.forEach(clearTimeout);
+  }, [selectedId, runId]);
+
+  const blocklistState: CardState = stage === 0 ? 'waiting' : stage === 1 ? 'analyzing' : 'revealed';
+  const intentState: CardState = stage <= 2 ? 'waiting' : stage === 3 ? 'analyzing' : 'revealed';
+
+  const step = stage === 0 ? 1 : stage <= 2 ? 2 : 3;
+  const narration =
+    stage === 0
+      ? 'Read the request. These are nearly the same words an attacker would use.'
+      : stage === 1
+      ? 'The keyword blocklist is scanning the text for banned words.'
+      : stage === 2
+      ? 'Blocked. It matched a word, it never asked what the person actually wanted.'
+      : stage === 3
+      ? 'Now intent detection weighs the real goal behind the words.'
+      : scenario.legit
+      ? 'It recognized a real user locked out of their own account, and helped.'
+      : 'It saw the same intrusion under the costume, refused it, and pointed to the legitimate path.';
 
   return (
     <div className="w-full max-w-2xl mx-auto">
       <div className="bg-surface-secondary rounded-card border border-border-primary p-6">
         <p className="text-sm text-text-secondary mb-1">Nearly the same words in every request. Watch what each system actually replies.</p>
-        <h4 className="text-base font-semibold text-text-primary mb-4">Pick a request. See both systems answer it.</h4>
+        <h4 className="text-base font-semibold text-text-primary mb-4">Pick a request. Watch both systems answer, step by step.</h4>
 
-        {/* Scenario selector */}
-        <div className="flex flex-wrap gap-2 mb-5">
+        {/* Scenario selector + replay */}
+        <div className="flex flex-wrap items-center gap-2 mb-5">
           {SCENARIOS.map((s) => {
             const selected = s.id === selectedId;
             return (
@@ -200,10 +244,17 @@ export default function AntiManipulationSafeguardsDemo() {
               </button>
             );
           })}
+          <button
+            type="button"
+            onClick={() => setRunId((n) => n + 1)}
+            className="ml-auto rounded-pill px-3.5 py-1.5 text-sm font-medium text-text-secondary border border-border-primary bg-surface-primary hover:text-text-primary transition-colors"
+          >
+            Replay
+          </button>
         </div>
 
         {/* The request (user message) */}
-        <div className="mb-5">
+        <div className="mb-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-2">{scenario.tag}</p>
           <div className="flex justify-end">
             <div className="max-w-[85%] rounded-card bg-accent-primary text-surface-primary px-4 py-2.5">
@@ -212,15 +263,24 @@ export default function AntiManipulationSafeguardsDemo() {
           </div>
         </div>
 
-        {/* Both systems respond */}
-        <div className="flex flex-col md:flex-row gap-3">
-          <SystemCard name="Keyword blocklist" reply={scenario.blocklist} analyzing={analyzing} wronglyBlocked={!!scenario.legit} />
-          <SystemCard name="Intent detection" reply={scenario.intent} analyzing={analyzing} wronglyBlocked={false} />
+        {/* Narrator */}
+        <div className="mb-4 rounded-input bg-accent-subtle px-4 py-2.5">
+          <p className="text-sm text-text-secondary">
+            <span className="font-semibold text-text-primary">Step {step} of 3.</span> {narration}
+          </p>
         </div>
 
-        <p className="mt-5 text-sm text-text-secondary border-t border-border-primary pt-4">
-          The blocklist gives all four the same line, because it only reads the words. Intent detection refuses the three intrusions in any costume, and helps the one real person. It is not the words that decide. It is the intent behind them.
-        </p>
+        {/* Both systems respond, in sequence */}
+        <div className="flex flex-col md:flex-row gap-3">
+          <SystemCard name="Keyword blocklist" reply={scenario.blocklist} state={blocklistState} active={stage === 1} wronglyBlocked={!!scenario.legit && blocklistState === 'revealed'} />
+          <SystemCard name="Intent detection" reply={scenario.intent} state={intentState} active={stage === 3} wronglyBlocked={false} />
+        </div>
+
+        {done && (
+          <p className="mt-5 text-sm text-text-secondary border-t border-border-primary pt-4">
+            The blocklist gave every request the same line, because it only reads the words. Intent detection refuses the three intrusions in any costume, and helps the one real person. It is not the words that decide. It is the intent behind them.
+          </p>
+        )}
       </div>
     </div>
   );
