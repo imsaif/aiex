@@ -253,13 +253,24 @@ export default function AntiManipulationSafeguardsDemo() {
           </button>
         </div>
 
-        {/* The request (user message) */}
+        {/* The request, shown as a chat message the user just sent. */}
         <div className="mb-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-2">{scenario.tag}</p>
-          <div className="flex justify-end">
-            <div className="max-w-[85%] rounded-card bg-accent-primary text-surface-primary px-4 py-2.5">
-              <p className="text-sm">{scenario.message}</p>
+          <div key={`${selectedId}-${runId}`} className="flex justify-end items-end gap-2 animate-scale-in">
+            <div className="flex flex-col items-end min-w-0">
+              <span className="text-xs text-text-tertiary mb-1 mr-1">You</span>
+              <div className="max-w-full rounded-card rounded-br-sm bg-accent-primary text-surface-primary px-4 py-2.5">
+                <p className="text-sm">{scenario.message}</p>
+              </div>
             </div>
+            <span
+              className="shrink-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary text-surface-primary"
+              aria-hidden="true"
+            >
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                <path d="M10 10a4 4 0 100-8 4 4 0 000 8zm0 2c-3.4 0-6 1.8-6 4v1h12v-1c0-2.2-2.6-4-6-4z" />
+              </svg>
+            </span>
           </div>
         </div>
 
