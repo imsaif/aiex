@@ -228,7 +228,7 @@ export default function AntiManipulationSafeguardsDemo() {
       : 'It saw the same intrusion under the costume, refused it, and pointed to the legitimate path.';
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full">
       <div className="bg-surface-secondary rounded-card border border-border-primary p-6">
         <p className="text-sm text-text-secondary mb-1">Nearly the same words in every request. Watch what each system actually replies.</p>
         <h4 className="text-base font-semibold text-text-primary mb-4">Pick a request. Watch both systems answer, step by step.</h4>
@@ -313,7 +313,7 @@ export default function AntiManipulationSafeguardsDemo() {
         {/* Both systems respond, in sequence. Held back until the walkthrough
             starts so the request lands on its own first. */}
         {stage >= 1 && (
-          <div className="flex flex-col md:flex-row gap-3 animate-fade-in">
+          <div className="flex flex-col gap-3 animate-fade-in">
             <SystemCard name="Keyword blocklist" reply={scenario.blocklist} state={blocklistState} active={stage === 1} wronglyBlocked={!!scenario.legit && blocklistState === 'revealed'} />
             <SystemCard name="Intent detection" reply={scenario.intent} state={intentState} active={stage === 3} wronglyBlocked={false} />
           </div>
