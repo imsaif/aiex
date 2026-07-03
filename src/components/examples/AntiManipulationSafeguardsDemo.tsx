@@ -97,12 +97,14 @@ const SCENARIOS: Scenario[] = [
 // stage 0: the request appears alone (read it first). 1: blocklist thinking.
 // 2: blocklist answered. 3: intent thinking. 4: intent answered (done).
 const TIMELINE: { stage: number; at: number }[] = [
-  { stage: 1, at: 2400 },
-  { stage: 2, at: 4200 },
-  { stage: 3, at: 7000 },
-  { stage: 4, at: 8800 },
+  { stage: 1, at: 3600 },
+  { stage: 2, at: 5400 },
+  { stage: 3, at: 8200 },
+  { stage: 4, at: 10000 },
 ];
 const FINAL_STAGE = 4;
+// The request shows a brief "sending" beat, then lands, before anything else.
+const SENT_AT = 1000;
 
 function VerdictBadge({ verdict }: { verdict: Verdict }) {
   const helped = verdict === 'helped';
@@ -190,15 +192,22 @@ export default function AntiManipulationSafeguardsDemo() {
   const [selectedId, setSelectedId] = useState<string>(SCENARIOS[0].id);
   const [runId, setRunId] = useState<number>(0);
   const [stage, setStage] = useState<number>(0);
+  const [sent, setSent] = useState<boolean>(false);
 
   const scenario = SCENARIOS.find((s) => s.id === selectedId) ?? SCENARIOS[0];
   const done = stage >= FINAL_STAGE;
 
-  // Replay the staged reveal on scenario change or replay.
+  // Replay the staged reveal on scenario change or replay: the request "sends"
+  // first, then the systems answer one at a time.
   useEffect(() => {
     setStage(0);
+    setSent(false);
+    const sentTimer = setTimeout(() => setSent(true), SENT_AT);
     const timers = TIMELINE.map(({ stage: s, at }) => setTimeout(() => setStage(s), at));
-    return () => timers.forEach(clearTimeout);
+    return () => {
+      clearTimeout(sentTimer);
+      timers.forEach(clearTimeout);
+    };
   }, [selectedId, runId]);
 
   const blocklistState: CardState = stage === 0 ? 'waiting' : stage === 1 ? 'analyzing' : 'revealed';
@@ -256,12 +265,25 @@ export default function AntiManipulationSafeguardsDemo() {
         {/* The request, shown as a chat message the user just sent. */}
         <div className="mb-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-2">{scenario.tag}</p>
-          <div key={`${selectedId}-${runId}`} className="flex justify-end items-end gap-2 animate-scale-in">
+          <div key={`${selectedId}-${runId}`} className="flex justify-end items-end gap-2">
             <div className="flex flex-col items-end min-w-0">
               <span className="text-xs text-text-tertiary mb-1 mr-1">You</span>
-              <div className="max-w-full rounded-card rounded-br-sm bg-accent-primary text-surface-primary px-4 py-2.5">
-                <p className="text-sm">{scenario.message}</p>
-              </div>
+              {sent ? (
+                <div
+                  className="max-w-full rounded-card rounded-br-sm bg-accent-primary text-surface-primary px-4 py-2.5"
+                  style={{ animation: 'scaleIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) both' }}
+                >
+                  <p className="text-sm">{scenario.message}</p>
+                </div>
+              ) : (
+                <div className="rounded-card rounded-br-sm bg-accent-primary px-4 py-3.5" aria-label="Sending">
+                  <span className="flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-pill bg-surface-primary/70 animate-pulse" />
+                    <span className="h-1.5 w-1.5 rounded-pill bg-surface-primary/70 animate-pulse [animation-delay:150ms]" />
+                    <span className="h-1.5 w-1.5 rounded-pill bg-surface-primary/70 animate-pulse [animation-delay:300ms]" />
+                  </span>
+                </div>
+              )}
             </div>
             <span
               className="shrink-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary text-surface-primary"
@@ -274,12 +296,14 @@ export default function AntiManipulationSafeguardsDemo() {
           </div>
         </div>
 
-        {/* Narrator */}
-        <div className="mb-4 rounded-input bg-accent-subtle px-4 py-2.5">
-          <p className="text-sm text-text-secondary">
-            <span className="font-semibold text-text-primary">Step {step} of 3.</span> {narration}
-          </p>
-        </div>
+        {/* Narrator (after the request has landed) */}
+        {sent && (
+          <div className="mb-4 rounded-input bg-accent-subtle px-4 py-2.5 animate-fade-in">
+            <p className="text-sm text-text-secondary">
+              <span className="font-semibold text-text-primary">Step {step} of 3.</span> {narration}
+            </p>
+          </div>
+        )}
 
         {/* Both systems respond, in sequence. Held back until the walkthrough
             starts so the request lands on its own first. */}
