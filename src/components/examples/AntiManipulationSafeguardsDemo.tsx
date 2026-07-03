@@ -132,7 +132,7 @@ function VerdictBadge({ verdict }: { verdict: Verdict }) {
 
 function AnalyzingDots({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-2 py-3" aria-label={label}>
+    <div className="pointer-events-none flex items-center gap-2 py-3" aria-label={label}>
       <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse" />
       <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse [animation-delay:150ms]" />
       <span className="h-2 w-2 rounded-pill bg-text-tertiary animate-pulse [animation-delay:300ms]" />
@@ -242,7 +242,12 @@ export default function AntiManipulationSafeguardsDemo() {
                 key={s.id}
                 type="button"
                 aria-pressed={selected}
-                onClick={() => setSelectedId(s.id)}
+                onClick={() => {
+                  // Always react, even when re-clicking the active tab, so the
+                  // click never registers as a dead click in Clarity.
+                  setSelectedId(s.id);
+                  setRunId((n) => n + 1);
+                }}
                 className={`rounded-pill px-3.5 py-1.5 text-sm font-medium transition-colors ${
                   selected
                     ? 'bg-accent-primary text-surface-primary'
@@ -276,7 +281,7 @@ export default function AntiManipulationSafeguardsDemo() {
                   <p className="text-sm">{scenario.message}</p>
                 </div>
               ) : (
-                <div className="rounded-card rounded-br-sm bg-accent-primary px-4 py-3.5" aria-label="Sending">
+                <div className="pointer-events-none rounded-card rounded-br-sm bg-accent-primary px-4 py-3.5" aria-label="Sending">
                   <span className="flex gap-1">
                     <span className="h-1.5 w-1.5 rounded-pill bg-surface-primary/70 animate-pulse" />
                     <span className="h-1.5 w-1.5 rounded-pill bg-surface-primary/70 animate-pulse [animation-delay:150ms]" />
@@ -286,7 +291,7 @@ export default function AntiManipulationSafeguardsDemo() {
               )}
             </div>
             <span
-              className="shrink-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary text-surface-primary"
+              className="pointer-events-none shrink-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary text-surface-primary"
               aria-hidden="true"
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
