@@ -320,9 +320,29 @@ export default function AntiManipulationSafeguardsDemo() {
         )}
 
         {done && (
-          <p className="mt-5 text-sm text-text-secondary border-t border-border-primary pt-4">
-            The blocklist gave every request the same line, because it only reads the words. Intent detection refuses the three intrusions in any costume, and helps the one real person. It is not the words that decide. It is the intent behind them.
-          </p>
+          <div className="mt-5 border-t border-border-primary pt-5 animate-fade-in">
+            <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-1">What the user actually sees</p>
+            <p className="text-sm text-text-secondary mb-3">Only one system ships. This pattern is intent detection, so the intent reply is the single message the user gets. The blocklist column is the trap, shown for contrast, never sent.</p>
+            <div className="flex items-end gap-2">
+              <span
+                className="pointer-events-none shrink-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-subtle text-text-secondary"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                  <path fillRule="evenodd" d="M10 1.5l6 2.2v4.6c0 3.7-2.5 7.1-6 8.2-3.5-1.1-6-4.5-6-8.2V3.7l6-2.2zm2.7 5.4l-3.4 3.4-1.5-1.5a.9.9 0 10-1.3 1.3l2.1 2.1c.36.36.94.36 1.3 0l4-4a.9.9 0 10-1.3-1.3z" clipRule="evenodd" />
+                </svg>
+              </span>
+              <div className="flex flex-col items-start min-w-0">
+                <span className="text-xs text-text-tertiary mb-1 ml-1">Assistant</span>
+                <div className="max-w-full rounded-card rounded-bl-sm bg-surface-primary border border-border-primary px-4 py-2.5">
+                  <p className="text-sm text-text-primary whitespace-pre-line">{scenario.intent.response}</p>
+                </div>
+              </div>
+            </div>
+            <p className="mt-5 text-sm text-text-secondary border-t border-border-primary pt-4">
+              It is not the words that decide. It is the intent behind them.
+            </p>
+          </div>
         )}
       </div>
     </div>
