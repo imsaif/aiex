@@ -93,14 +93,14 @@ const SCENARIOS: Scenario[] = [
   },
 ];
 
-// Staged reveal so the reader is walked through it one step at a time.
-// stage 0: only the request. 1: blocklist thinking. 2: blocklist answered.
-// 3: intent thinking. 4: intent answered (done).
+// Staged reveal so the reader is walked through it one step at a time, slowly.
+// stage 0: the request appears alone (read it first). 1: blocklist thinking.
+// 2: blocklist answered. 3: intent thinking. 4: intent answered (done).
 const TIMELINE: { stage: number; at: number }[] = [
-  { stage: 1, at: 1100 },
-  { stage: 2, at: 2100 },
-  { stage: 3, at: 3800 },
-  { stage: 4, at: 4800 },
+  { stage: 1, at: 2400 },
+  { stage: 2, at: 4200 },
+  { stage: 3, at: 7000 },
+  { stage: 4, at: 8800 },
 ];
 const FINAL_STAGE = 4;
 
@@ -270,11 +270,14 @@ export default function AntiManipulationSafeguardsDemo() {
           </p>
         </div>
 
-        {/* Both systems respond, in sequence */}
-        <div className="flex flex-col md:flex-row gap-3">
-          <SystemCard name="Keyword blocklist" reply={scenario.blocklist} state={blocklistState} active={stage === 1} wronglyBlocked={!!scenario.legit && blocklistState === 'revealed'} />
-          <SystemCard name="Intent detection" reply={scenario.intent} state={intentState} active={stage === 3} wronglyBlocked={false} />
-        </div>
+        {/* Both systems respond, in sequence. Held back until the walkthrough
+            starts so the request lands on its own first. */}
+        {stage >= 1 && (
+          <div className="flex flex-col md:flex-row gap-3 animate-fade-in">
+            <SystemCard name="Keyword blocklist" reply={scenario.blocklist} state={blocklistState} active={stage === 1} wronglyBlocked={!!scenario.legit && blocklistState === 'revealed'} />
+            <SystemCard name="Intent detection" reply={scenario.intent} state={intentState} active={stage === 3} wronglyBlocked={false} />
+          </div>
+        )}
 
         {done && (
           <p className="mt-5 text-sm text-text-secondary border-t border-border-primary pt-4">
