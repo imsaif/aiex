@@ -95,7 +95,7 @@ function VerdictBadge({ verdict }: { verdict: Verdict }) {
   const helped = verdict === 'helped';
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-1.5 rounded-pill px-3 py-1 text-xs font-semibold text-text-primary ${
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-pill px-3 py-1 text-sm font-semibold text-text-primary ${
         helped ? 'bg-status-success/10 border border-status-success/40' : 'bg-status-error/10 border border-status-error/40'
       }`}
     >
@@ -176,10 +176,10 @@ export default function AntiManipulationSafeguardsDemo() {
 
         {/* The request, shown as a chat message the user just sent. */}
         <div className="mb-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-2">{scenario.tag}</p>
+          <p className="text-sm font-semibold uppercase tracking-wide text-text-secondary mb-2">{scenario.tag}</p>
           <div key={`${selectedId}-${runId}`} className="flex justify-end items-end gap-2">
             <div className="flex flex-col items-end min-w-0">
-              <span className="text-xs text-text-tertiary mb-1 mr-1">You</span>
+              <span className="text-sm text-text-secondary mb-1 mr-1">You</span>
               {sent ? (
                 <div
                   className="max-w-full rounded-card rounded-br-sm bg-accent-primary text-surface-primary px-4 py-2.5"
@@ -222,7 +222,7 @@ export default function AntiManipulationSafeguardsDemo() {
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs text-text-tertiary ml-1">Assistant</span>
+                <span className="text-sm text-text-secondary ml-1">Assistant</span>
                 {stage >= 3 && <VerdictBadge verdict={scenario.verdict} />}
               </div>
 
@@ -246,7 +246,7 @@ export default function AntiManipulationSafeguardsDemo() {
               {/* How the intent was read, revealed below the reply. */}
               {stage >= 4 && (
                 <div className="mt-4 rounded-input bg-accent-subtle p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-3">How it read your intent</p>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-text-secondary mb-3">How it read your intent</p>
                   <ol className="space-y-3">
                     {scenario.steps.map((step, i) => (
                       <li
