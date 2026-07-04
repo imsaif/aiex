@@ -120,11 +120,27 @@ export default function AntiManipulationSafeguardsDemo() {
   const [runId, setRunId] = useState<number>(0);
   const [stage, setStage] = useState<number>(0);
   const [sent, setSent] = useState<boolean>(false);
+  const [reducedMotion, setReducedMotion] = useState<boolean>(false);
 
   const scenario = SCENARIOS.find((s) => s.id === selectedId) ?? SCENARIOS[0];
   const done = stage >= FINAL_STAGE;
 
+  // Honor prefers-reduced-motion (WCAG 2.3.3 / vestibular safety).
   useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const apply = () => setReducedMotion(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      // No motion: show the full result at once, skip the staged sequence.
+      setSent(true);
+      setStage(FINAL_STAGE);
+      return;
+    }
     setStage(0);
     setSent(false);
     const sentTimer = setTimeout(() => setSent(true), SENT_AT);
@@ -133,7 +149,7 @@ export default function AntiManipulationSafeguardsDemo() {
       clearTimeout(sentTimer);
       timers.forEach(clearTimeout);
     };
-  }, [selectedId, runId]);
+  }, [selectedId, runId, reducedMotion]);
 
   return (
     <div className="w-full">
@@ -183,7 +199,7 @@ export default function AntiManipulationSafeguardsDemo() {
               {sent ? (
                 <div
                   className="max-w-full rounded-card rounded-br-sm bg-accent-primary text-surface-primary px-4 py-2.5"
-                  style={{ animation: 'scaleIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) both' }}
+                  style={reducedMotion ? undefined : { animation: 'scaleIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) both' }}
                 >
                   <p className="text-sm">{scenario.message}</p>
                 </div>
@@ -210,7 +226,7 @@ export default function AntiManipulationSafeguardsDemo() {
 
         {/* The assistant: composing, then reply, then how it decided. */}
         {stage >= 2 && (
-          <div className="flex items-start gap-2 animate-fade-in">
+          <div className={`flex items-start gap-2 ${reducedMotion ? '' : 'animate-fade-in'}`}>
             <span
               className="pointer-events-none shrink-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-subtle text-text-secondary"
               aria-hidden="true"
@@ -237,7 +253,7 @@ export default function AntiManipulationSafeguardsDemo() {
               ) : (
                 <div
                   className="max-w-full rounded-card rounded-bl-sm bg-surface-primary border border-border-primary px-4 py-2.5"
-                  style={{ animation: 'scaleIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) both' }}
+                  style={reducedMotion ? undefined : { animation: 'scaleIn 0.5s cubic-bezier(0.32, 0.72, 0, 1) both' }}
                 >
                   <p className="text-sm text-text-primary whitespace-pre-line">{scenario.reply}</p>
                 </div>
@@ -252,7 +268,7 @@ export default function AntiManipulationSafeguardsDemo() {
                       <li
                         key={i}
                         className="flex gap-3"
-                        style={{ animation: 'fadeIn 0.4s ease-out both', animationDelay: `${i * 260}ms` }}
+                        style={reducedMotion ? undefined : { animation: 'fadeIn 0.4s ease-out both', animationDelay: `${i * 260}ms` }}
                       >
                         <span className="pointer-events-none shrink-0 flex h-5 w-5 items-center justify-center rounded-pill bg-accent-primary text-surface-primary text-xs font-semibold">
                           {i + 1}
