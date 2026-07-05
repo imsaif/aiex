@@ -1568,8 +1568,12 @@ function isOpinionUrl(url: string): boolean {
     if (host === 'medium.com' || host.endsWith('.medium.com')) return true;
     if (host === 'substack.com' || host.endsWith('.substack.com')) return true;
     // Custom-domain Substack ghosthosts use /p/<slug> path. Block them unless
-    // they're a known design-tool domain (e.g. figma.com/blog/p/...).
-    const KNOWN_PRODUCT_HOSTS = new Set(['figma.com', 'framer.com', 'vercel.com', 'github.com', 'openai.com', 'anthropic.com']);
+    // they're a known first-party host we trust (design tools, AI labs, or a
+    // curated source we deliberately subscribe to). latent.space is a Substack
+    // (/p/ paths) but is our sole `curator`-tier source — without this exemption
+    // the ghosthost rule strips 100% of its items before scoring, silently
+    // killing the curator tier (see newsletter-and-infra incident log).
+    const KNOWN_PRODUCT_HOSTS = new Set(['figma.com', 'framer.com', 'vercel.com', 'github.com', 'openai.com', 'anthropic.com', 'latent.space']);
     if (!KNOWN_PRODUCT_HOSTS.has(host) && /^\/p\/[a-z0-9-]+/.test(parsed.pathname)) return true;
     return false;
   } catch {
