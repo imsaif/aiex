@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 export type AuditOutcome =
   | 'success'
   | 'empty_gaps'
+  | 'no_ai_surface' // 0 applicable AI patterns — user audited a non-AI surface
   | 'parse_error'
   | 'api_error'
   | 'rate_limited'
@@ -29,7 +30,7 @@ export interface RecordAuditSampleInput {
   role?: string | null;
 }
 
-function hashIp(ip: string | null | undefined): string | null {
+export function hashIp(ip: string | null | undefined): string | null {
   if (!ip || ip === 'unknown') return null;
   const salt = process.env.AUDIT_SAMPLE_IP_SALT || process.env.HANDBOOK_TOKEN_SECRET || 'aiux';
   return createHash('sha256').update(`${salt}:${ip}`).digest('hex').slice(0, 16);

@@ -11,6 +11,7 @@ import {
   XMarkIcon,
   ArrowPathIcon,
   CommandLineIcon,
+  LightBulbIcon,
 } from '@heroicons/react/24/outline';
 import { composeHandoffPrompt, productTypeLabel } from '@/lib/audit/handoff';
 import SaveAuditButton from './SaveAuditButton';
@@ -36,6 +37,7 @@ interface ExtendedResults extends AnalysisResults {
   productTypeSummary?: string;
   surfaceDescription?: string;
   applicablePatterns?: string[];
+  generalObservations?: string[];
 }
 
 interface FullPageResultsProps {
@@ -235,11 +237,13 @@ function EmptyAuditState({
   surfaceDescription,
   screenshotUrl,
   productType,
+  generalObservations,
   onTryAgain,
 }: {
   surfaceDescription?: string;
   screenshotUrl?: string;
   productType?: string;
+  generalObservations?: string[];
   onTryAgain: () => void;
 }) {
   const [intent, setIntent] = useState('');
@@ -363,6 +367,19 @@ function EmptyAuditState({
                       <p className="text-base text-text-secondary leading-relaxed line-clamp-5">{surfaceDescription}</p>
                     </div>
                   )}
+                </div>
+              )}
+              {generalObservations && generalObservations.length > 0 && (
+                <div className="px-5 py-5 rounded-xl bg-background-secondary border border-border-primary">
+                  <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-3">A few general UX notes</p>
+                  <ul className="space-y-2.5">
+                    {generalObservations.map((note, i) => (
+                      <li key={i} className="flex gap-2.5 text-base text-text-secondary leading-relaxed">
+                        <LightBulbIcon className="w-5 h-5 flex-shrink-0 text-text-tertiary mt-0.5" />
+                        <span>{note}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
               <div>
@@ -497,6 +514,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   // Analysis loading state
   const [messageIndex, setMessageIndex] = useState(0);
   const [scanIndex, setScanIndex] = useState(0);
+  const [analyzeElapsedMs, setAnalyzeElapsedMs] = useState(0);
 
   // Handoff copy state
   const [handoffCopied, setHandoffCopied] = useState(false);
@@ -533,6 +551,17 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     const interval = setInterval(() => {
       setScanIndex((i) => Math.min(i + 1, SCAN_PATTERNS.length));
     }, 400);
+    return () => clearInterval(interval);
+  }, [isAnalyzing]);
+
+  // Track elapsed analysis time so the progress bar can pace itself against the
+  // REAL median (~40s, p90 ~58s) instead of the pattern checklist, which filled
+  // to 100% in ~12s and then sat there — the classic "stuck at 100%, must be
+  // frozen" perceived-hang that drives abandonment on a genuinely slow call.
+  useEffect(() => {
+    if (!isAnalyzing) { setAnalyzeElapsedMs(0); return; }
+    const startedAt = Date.now();
+    const interval = setInterval(() => setAnalyzeElapsedMs(Date.now() - startedAt), 250);
     return () => clearInterval(interval);
   }, [isAnalyzing]);
 
@@ -734,7 +763,10 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             <div className="mt-4 h-1 bg-white/10 rounded-full overflow-hidden">
               <div
                 className="h-full bg-accent-primary rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${Math.min((scanIndex / SCAN_PATTERNS.length) * 100, 100)}%` }}
+                // Asymptotic ease toward ~95% keyed to elapsed time (median run ~40s),
+                // so the bar keeps visibly moving for the whole wait and never parks
+                // at 100% before results land. Reaches ~60% at 20s, ~82% at 40s.
+                style={{ width: `${Math.round(95 * (1 - Math.exp(-analyzeElapsedMs / 20000)))}%` }}
               />
             </div>
           </div>
@@ -768,7 +800,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           <p className="text-base font-medium text-white mb-1.5">
             {ANALYSIS_MESSAGES[messageIndex]}
           </p>
-          <p className="text-sm text-white/40">This usually takes 10-15 seconds</p>
+          <p className="text-sm text-white/40">This usually takes 30-45 seconds — we check every pattern properly</p>
         </div>
       </div>
     );
@@ -960,6 +992,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         surfaceDescription={surfaceDescription}
         screenshotUrl={heroScreenshotUrl}
         productType={results?.productContext?.productType}
+        generalObservations={(results as ExtendedResults | null)?.generalObservations}
         onTryAgain={onNewAudit}
       />
     );
@@ -1117,7 +1150,10 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                     )}
                   </button>
                   <button
-                    onClick={() => setShowHandoffSource((v) => !v)}
+                    onClick={() => {
+                      setShowHandoffSource((v) => !v);
+                      trackAuditEvent('audit_inspect_prompt_toggled', { opened: !showHandoffSource });
+                    }}
                     aria-expanded={showHandoffSource}
                     className="mt-2 w-full inline-flex items-center justify-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
                   >
@@ -1138,7 +1174,10 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               <div className="rounded-2xl border border-border-primary bg-background-primary p-4">
                 <button
                   type="button"
-                  onClick={() => setShowScreenshot((v) => !v)}
+                  onClick={() => {
+                    setShowScreenshot((v) => !v);
+                    if (!showScreenshot) trackAuditEvent('audit_screenshot_locations_opened');
+                  }}
                   aria-expanded={showScreenshot}
                   className="w-full inline-flex items-center justify-between gap-1.5 text-sm font-medium text-text-secondary hover:text-text-primary cursor-pointer"
                 >
@@ -1240,7 +1279,10 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               </button>
               <button
                 type="button"
-                onClick={onNewAudit}
+                onClick={() => {
+                  trackAuditEvent('audit_new_audit_clicked');
+                  onNewAudit();
+                }}
                 className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
               >
                 <ArrowPathIcon className="w-4 h-4" />

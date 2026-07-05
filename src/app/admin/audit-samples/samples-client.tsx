@@ -64,6 +64,7 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
   const [isAuthenticated] = useState(initialAuth);
   const [samples, setSamples] = useState<Sample[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
+  const [events, setEvents] = useState<{ name: string; count: number }[]>([]);
   const [days, setDays] = useState(14);
   const [outcome, setOutcome] = useState('all');
   const [includeTest, setIncludeTest] = useState(false);
@@ -85,6 +86,15 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
       }
       setSamples(data.samples);
       setStats(data.stats);
+
+      // Event-counts (post-audit CTA + funnel usage) from the UiEvent log.
+      const evParams = new URLSearchParams({ days: String(days) });
+      if (includeTest) evParams.set('includeTest', '1');
+      const evRes = await fetch(`/api/admin/events?${evParams}`);
+      if (evRes.ok) {
+        const evData = await evRes.json();
+        setEvents(evData.events ?? []);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load');
     } finally {
@@ -180,6 +190,37 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
           ))}
         </div>
       )}
+
+      {/* Event counts — post-audit CTA + funnel usage from the UiEvent log. */}
+      <div className="mb-6">
+        <h2 className="text-sm font-semibold text-text-primary mb-2">
+          Event counts <span className="font-normal text-text-secondary">(last {days}d, real users)</span>
+        </h2>
+        {events.length === 0 ? (
+          <p className="text-xs text-text-secondary">
+            No events in range. (The UiEvent table populates once this build is deployed and the client beacons start firing.)
+          </p>
+        ) : (
+          <div className="overflow-x-auto border border-border-primary rounded">
+            <table className="w-full text-xs">
+              <thead className="bg-background-secondary text-left">
+                <tr>
+                  <th className="px-3 py-2">Event</th>
+                  <th className="px-3 py-2 text-right">Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                {events.map((e) => (
+                  <tr key={e.name} className="border-t border-border-primary">
+                    <td className="px-3 py-1.5 font-mono">{e.name}</td>
+                    <td className="px-3 py-1.5 text-right tabular-nums">{e.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
       <div className="overflow-x-auto border border-border-primary rounded">
         <table className="w-full text-xs">

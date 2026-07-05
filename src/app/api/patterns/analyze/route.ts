@@ -4,6 +4,7 @@ import { buildContextAwarePrompt } from '@/lib/patterns/detection-prompts';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
 import { parseAnalysisResponse } from '@/lib/audit/parseAnalysis';
 import { recordAuditSample } from '@/lib/audit/sample';
+import { clampScore } from '@/lib/audit/score';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
@@ -251,15 +252,17 @@ export async function POST(request: NextRequest) {
 
     if (isContextFirst) {
       // Return context-aware results format
+      const csMaxScore = analysisData.maxScore ?? 36;
       const results = {
         id,
-        score: analysisData.score ?? 0,
-        maxScore: analysisData.maxScore ?? 36,
+        score: clampScore(analysisData.score ?? 0, csMaxScore),
+        maxScore: csMaxScore,
         productTypeSummary: analysisData.productTypeSummary || '',
         surfaceDescription: analysisData.surfaceDescription || '',
         applicablePatterns: analysisData.applicablePatterns || [],
         topGaps: analysisData.topGaps || [],
         quickWins: analysisData.quickWins || [],
+        generalObservations: analysisData.generalObservations || [],
         chatContext: analysisData.chatContext || '',
         productContext: {
           productType: productType!,
@@ -280,9 +283,20 @@ export async function POST(request: NextRequest) {
 
       console.log('[Pattern Audit] Context-first analysis complete. Score:', results.score, '/', results.maxScore);
 
+      // 0 applicable patterns => the user audited a non-AI surface. Distinguish it
+      // from a genuine no-gaps run so we can measure it (it was ~22% of real audits,
+      // all with applicablePatternCount 0) and render the hybrid "not an AI surface
+      // + general UX notes" state instead of a blank result.
+      const outcome: 'no_ai_surface' | 'empty_gaps' | 'success' =
+        results.applicablePatterns.length === 0
+          ? 'no_ai_surface'
+          : results.topGaps.length === 0
+            ? 'empty_gaps'
+            : 'success';
+
       after(() =>
         recordAuditSample({
-          outcome: results.topGaps.length === 0 ? 'empty_gaps' : 'success',
+          outcome,
           isContextFirst: true,
           productType: productType ?? null,
           deviceType: deviceType ?? null,
@@ -310,11 +324,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Legacy results format
+    const legacyMaxScore = analysisData.maxScore || (analysisData.applicablePatterns?.length ?? 0) || 28;
     const results: AnalysisResults = {
       id,
       context,
-      score: analysisData.score || 0,
-      maxScore: analysisData.maxScore || (analysisData.applicablePatterns?.length ?? 0) || 28,
+      score: clampScore(analysisData.score || 0, legacyMaxScore),
+      maxScore: legacyMaxScore,
       detectedComponent: analysisData.detectedComponent || 'unknown',
       componentDescription: analysisData.componentDescription || '',
       patterns: (analysisData.patterns as AnalysisResults['patterns']) || {},

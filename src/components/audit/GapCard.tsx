@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ExclamationTriangleIcon, XCircleIcon, CheckCircleIcon, LightBulbIcon } from '@heroicons/react/24/outline';
 import type { TopGap } from '@/types/audit';
 import { resolvePatternSlug } from '@/lib/audit/pattern-link';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 interface GapCardProps {
   gap: TopGap;
@@ -90,6 +91,7 @@ export function GapCard({ gap, index, isHighlighted, prominent, onMouseEnter, on
                   href={`/patterns/${slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackAuditEvent('audit_resource_clicked', { pattern: gap.pattern, slug })}
                   className="inline-flex items-center gap-1 mt-3 text-xs text-text-tertiary hover:text-accent-primary hover:underline"
                 >
                   See how {gap.pattern} solves this &rarr;
@@ -102,6 +104,7 @@ export function GapCard({ gap, index, isHighlighted, prominent, onMouseEnter, on
                   href={gap.resource}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackAuditEvent('audit_resource_clicked', { pattern: gap.pattern, external: true })}
                   className="inline-flex items-center gap-1 mt-3 text-xs text-text-tertiary hover:text-accent-primary hover:underline"
                 >
                   Learn more about this pattern &rarr;

@@ -163,6 +163,10 @@ export const ClaudeAnalysisResponseSchema = z.object({
   applicablePatterns: z.array(z.string()).optional().default([]),
   topGaps: z.array(TopGapSchema).optional().default([]),
   quickWins: z.array(z.string()).optional().default([]),
+  // Plain-language general UX observations, populated when the screenshot is NOT
+  // an AI product interface (0 applicable patterns) so the run still returns value
+  // instead of a blank "0 gaps". See the no_ai_surface handling in the analyze route.
+  generalObservations: z.array(z.string()).optional().default([]),
   chatContext: z.string().optional().default(''),
   // Legacy fields the route still passes through for backward compat
   detectedComponent: z.string().optional(),

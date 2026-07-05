@@ -205,3 +205,23 @@ model WebVitalMetric {
   @@index([metric, createdAt])
   @@index([path, metric, createdAt])
 }
+
+// Server-side UI event log. Client mirror of the Clarity custom events fired by
+// trackAuditEvent() (src/lib/audit/analytics.ts), beaconed to /api/events so the
+// audit funnel + CTA usage is queryable in Postgres — not just in Clarity (which
+// is client-side, sampled, prod-only). `name` is allowlisted server-side to the
+// known event set. `properties` holds the small tag bag (gapCount, source, etc.).
+model UiEvent {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  name       String //  allowlisted event name, e.g. audit_handoff_copied
+  sessionId  String? //  audit session id when present (results.id)
+  properties Json? //   filterable dimensions passed with the event
+  path       String? //  pathname the event fired on
+  role       String? //  admin | test excluded from real-user analysis
+  ipHash     String? //  salted SHA-256, 16 chars (mirrors AuditSample)
+  userAgent  String?
+
+  @@index([name, createdAt])
+  @@index([createdAt])
+}
