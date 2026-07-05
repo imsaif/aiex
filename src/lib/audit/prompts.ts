@@ -104,6 +104,7 @@ Quality over quantity. Two grounded findings beat ten padded ones. If the surfac
     }
   ],
   "quickWins": ["short item team can implement in <1 day", ...],
+  "generalObservations": ["2-3 plain-language general UX notes — ONLY when applicablePatterns is empty (the surface is not an AI product interface). Otherwise []"],
   "chatContext": "2-3 sentence summary of findings to seed the design chat session"
 }
 
@@ -115,6 +116,7 @@ Quality over quantity. Two grounded findings beat ten padded ones. If the surfac
 - \`applicablePatterns\` MUST contain AT MOST 8 entries. No exceptions.
 - Return 0 to 10 \`topGaps\` total, NOT a fixed count. An empty array is a valid, useful answer for a surface that doesn't invoke AI UX patterns.
 - Never list a pattern in \`topGaps\` if it isn't in \`applicablePatterns\`.
+- When \`applicablePatterns\` is empty (the surface is NOT an AI product interface — e.g. a marketing page, checkout, blog, generic website), populate \`generalObservations\` with 2-3 concise, genuinely useful general UX notes about what you see, so the user still gets value. Leave \`generalObservations\` empty (\`[]\`) whenever any AI pattern applies.
 - For multi-screenshot uploads, distribute findings across the screenshots they actually apply to via \`screenshotIndex\`. Do not duplicate the same finding across screens.
 - Resource URLs should point to real pattern pages: aiuxdesign.guide/patterns/<pattern-slug>
 - Return ONLY valid JSON. No preamble, no markdown fences.
