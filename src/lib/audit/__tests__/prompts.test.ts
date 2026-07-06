@@ -40,6 +40,21 @@ describe('buildSystemPrompt', () => {
     expect(out).toMatch(/No evidence → drop the finding/);
   });
 
+  it('requires ranked, de-duplicated findings with impact + effort (P0 output rewrite)', () => {
+    const out = buildSystemPrompt('chat-interface');
+    // New per-gap fields are in the JSON schema...
+    expect(out).toMatch(/"impact"/);
+    expect(out).toMatch(/"effort"/);
+    // ...and required as hard rules.
+    expect(out).toMatch(/Every finding needs an `impact` and an `effort`/);
+    // Ranking: best-first, don't lead with the most generic finding.
+    expect(out).toMatch(/ordered best-first/);
+    // De-duplication of same-root-cause findings.
+    expect(out).toMatch(/Merge findings that share one root cause/);
+    // Severity is argued, not just labelled.
+    expect(out).toMatch(/Reserve `status: "missing"`/);
+  });
+
   it('documents the strict JSON output schema', () => {
     const out = buildSystemPrompt('chat-interface');
     expect(out).toMatch(/Output format \(strict JSON\)/);
