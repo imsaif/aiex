@@ -207,7 +207,9 @@ export async function POST(request: NextRequest) {
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 512,
-      system: systemPrompt,
+      // The system prompt is stable for the life of an audit chat session, so
+      // every follow-up turn re-reads this prefix from cache instead of re-billing it.
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       messages: claudeMessages,
     });
 
