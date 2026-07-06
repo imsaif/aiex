@@ -42,6 +42,30 @@ paths:
 | **`curator` tier was structurally dead — Latent Space silently stripped from every pool** | Jul 2026 | Latent Space was added Apr 2026 as the sole `curator`-tier source (+25 baseline). But it's a Substack — every article is `latent.space/p/<slug>` — and the later-added opinion pre-filter (`route.ts:909`, `sorted.filter(item => !isOpinionUrl(item.link))`) treats any non-allowlisted host with a `/^\/p\/[a-z0-9-]+/` path as a Substack ghosthost and drops it **before scoring**. Since `latent.space` wasn't in `KNOWN_PRODUCT_HOSTS`, 100% of its items were filtered out every run — the curator tier could never contribute, and it was invisible in QA telemetry because the drop happens before `poolSize` is computed (reads as "Latent Space had nothing fresh"). Same class as the Apr/Jun bypass incidents: a later guard silently negated an earlier source-mix decision. Surfaced 2026-07-04 while auditing an opinion-heavy pool. **Fix (Jul 4):** added `'latent.space'` to `KNOWN_PRODUCT_HOSTS` in `isOpinionUrl` — exempts it from the `/p/` ghosthost rule while `*.substack.com` and other custom-domain `/p/` hosts stay filtered. Verified: latent.space kept, `someguy.substack.com/p/…` still dropped. **If you ever want a `/p/` Substack treated as a live first-party source (not opinion), allowlist its host here — don't loosen the `/p/` regex.** |
 | **Regenerating today's weekly with new logic when daily items are stale** | Apr 2026 | Weekly normally compiles from the past 7 daily newsletters (`getDailyNewsletterItems(7)`). After source/scoring changes, those daily items still reflect the old pipeline. Use `?forceRSS=true` on a weekly run to bypass the compilation path and pull a fresh RSS pool through the new tiered scoring. Combine with `?force=true` to delete an existing draft for today: `curl -H "Authorization: Bearer $CRON_SECRET" "https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly&force=true&forceRSS=true"`. |
 
+### Manual weekly regeneration (standing runbook)
+
+**When to use:** the weekly is missing (no `type: 'weekly'` row for this Monday — check with the DB snippet below). Production can't reliably generate it — the weekly's Claude compile call routinely exceeds Vercel Hobby's 60s function cap (see the 60s-cap row above), so the Monday auto-weekly silently dies before the DB insert with no alert. We accept manual regen as the standing fallback until the weekly moves to a job runner with no time cap. Confirmed recurring: 2026-06-29 and 2026-07-06 both missed.
+
+**Why local works when production doesn't:** run off-Vercel and there is no 60s function cap. The only remaining limit is the route's own `claudeTimeoutMs` (50s weekly), which the `NEWSLETTER_CLAUDE_TIMEOUT_MS` env var lifts (`route.ts` ~1854). That var is **unset in production**, so prod behavior is unchanged — it exists solely for this runbook. `.env.local` already points at the **prod** Neon DB, so the draft lands in production as `pending_review`, same as a normal cron run.
+
+**Steps** (from repo root; a dev server on :3000 works — no `npm run build`, it clobbers `.next/`):
+
+```bash
+# 1. Start dev with the abort lifted (inline, not persisted). Kill any existing :3000 first.
+lsof -ti:3000 | xargs kill -9 2>/dev/null
+NEWSLETTER_CLAUDE_TIMEOUT_MS=180000 npm run dev   # wait for "Ready"
+
+# 2. Trigger the weekly (uses the LOCAL .env.local CRON_SECRET, not the prod value).
+SECRET=$(grep -h '^CRON_SECRET=' .env.local | head -1 | cut -d= -f2- | tr -d '"')
+curl -s -H "Authorization: Bearer $SECRET" "http://localhost:3000/api/cron/generate-newsletter?type=weekly"
+# → returns immediately; generation runs in after(), takes ~60-90s. Watch the dev log
+#   for "compiling from N daily items" then the "INSERT INTO ... NewsletterDraft".
+```
+
+Then verify the draft (reuse the DB snippet below with `where: { type: "weekly" }`), and follow the normal publish flow: review at **`/admin/newsletter`** → Publish → Copy HTML → paste into a new Beehiiv post → send.
+
+**Notes:** it takes the **compilation path** (summarizes the week's ~7-13 daily items into one weekly) as long as recent dailies exist — no `forceRSS` needed. If both the full and lite passes abort with "Request was aborted," the env var didn't reach the server (restart dev with it set). No `?force=true` needed unless a partial draft already exists for today.
+
 **cron-job.org Setup:**
 - Daily newsletter: `0 3 * * *` (3 AM UTC / 8:30 AM IST) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter`
 - Weekly newsletter: `0 2 * * 1` (2 AM UTC / 7:30 AM IST Mon) → `https://www.aiuxdesign.guide/api/cron/generate-newsletter?type=weekly`
