@@ -311,7 +311,10 @@ export async function POST(request: NextRequest) {
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 1024,
-      system: systemPrompt,
+      // Stable within a mentor chat session (tools + system are identical every
+      // turn), so multi-turn conversations and the tool-use continuation below
+      // read this prefix from cache. Breakpoint on system also covers the tools.
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       tools: TOOL_DEFINITIONS,
       messages: claudeMessages,
     });

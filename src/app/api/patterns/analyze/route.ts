@@ -187,7 +187,12 @@ export async function POST(request: NextRequest) {
       model: 'claude-sonnet-4-6',
       max_tokens: 4096,
       temperature: 0,
-      ...(systemPrompt ? { system: systemPrompt } : {}),
+      // Cache the large, static analysis rubric (36-pattern library + process +
+      // output format). It's identical for a given productType, so repeat audits
+      // and the eval harness (which loops many fixtures) read it from cache.
+      ...(systemPrompt
+        ? { system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }] }
+        : {}),
       messages: [
         {
           role: 'user',

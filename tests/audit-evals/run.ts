@@ -90,7 +90,9 @@ async function callAnalyze(opts: {
       model: ANALYZE_MODEL,
       max_tokens: 4096,
       temperature: 0,
-      system: systemPrompt,
+      // Same rubric as the production analyze route; the harness loops many
+      // fixtures per run, so fixtures sharing a productType reuse this cached prefix.
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       messages: [
         {
           role: 'user',
