@@ -10,7 +10,7 @@ import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-aud
 import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
 import { useAuditCount } from '@/hooks/useAuditCount';
 import type { AnalysisResults, AuditStep, ProductType } from '@/types/audit';
-import { trackAuditEvent } from '@/lib/audit/analytics';
+import { trackAuditEvent, setAuditSessionId } from '@/lib/audit/analytics';
 
 // Lazy load heavy components that aren't needed on initial paint
 
@@ -91,6 +91,7 @@ export default function AuditClient({
     }
     setIsDemoMode(false);
     setAnalysisResults(null);
+    setAuditSessionId(null);
     setUploadedImages([]);
     setProductType(null);
     setStep('screenshot');
@@ -149,6 +150,10 @@ export default function AuditClient({
       }
 
       setAnalysisResults(data as AnalysisResults);
+      // Stamp every subsequent results-page event (CTAs, chat, gap links) with
+      // this audit's id so the funnel is session-attributable. Must be set before
+      // the audit_session_completed / audit_gap_found events fire below.
+      setAuditSessionId((data as AnalysisResults).id ?? null);
       // Only burn a free-audit credit when the run actually surfaced findings.
       // Empty runs (the audit returned no applicable gaps — usually because the
       // screenshot isn't an AI product surface) shouldn't count against the
@@ -210,6 +215,7 @@ export default function AuditClient({
     }
     setUploadedImages([]);
     setAnalysisResults(null);
+    setAuditSessionId(null);
     setIsAnalyzing(false);
     setIsDemoMode(false);
     setStep('screenshot');
@@ -236,6 +242,9 @@ export default function AuditClient({
   // Fire demo-viewed analytics once on mount when landing on demo
   useEffect(() => {
     if (step === 'demo') {
+      // Fresh demo view — ensure no stale real-audit session id leaks onto
+      // demo events if this mounts after a prior audit in the same SPA session.
+      setAuditSessionId(null);
       trackAuditEvent('audit_demo_viewed', {
         source:
           typeof window !== 'undefined' && window.location.pathname === '/'
@@ -286,6 +295,7 @@ export default function AuditClient({
                     deviceType: 'desktop',
                   }]);
                   setAnalysisResults(DEMO_ANALYSIS_RESULTS);
+                  setAuditSessionId(null);
                   setIsDemoMode(true);
                   setProductType(null);
                 }}

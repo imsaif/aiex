@@ -58,6 +58,19 @@ declare global {
   }
 }
 
+// The current audit's session id (= the analysis `results.id`). Set once when a
+// real analysis produces results so EVERY subsequent event — CTA clicks, chat,
+// per-gap links — is stamped with the same id without each call site threading
+// it through `properties`. Cleared when a new audit starts. This fixes the
+// funnel bug where `UiEvent.sessionId` was always null (no results-page event
+// passed `properties.sessionId`), which made "distinct sessions reaching
+// results" and "audits with >=1 chat message" uncomputable.
+let currentAuditSessionId: string | null = null;
+
+export function setAuditSessionId(id: string | null) {
+  currentAuditSessionId = id;
+}
+
 // Fire-and-forget beacon to our own event log. Best-effort: never throws into a
 // click handler. Mirrors the sendBeacon pattern in WebVitalsReporter.tsx. Only
 // runs in production so dev/self-test clicks don't pollute the funnel data.
@@ -70,8 +83,11 @@ function beaconEvent(event: AuditEvent, properties?: Record<string, unknown>) {
     } catch {
       /* private mode / blocked storage */
     }
-    const sessionId =
-      properties && typeof properties.sessionId === 'string' ? properties.sessionId : undefined;
+    // Prefer an explicit per-event sessionId; otherwise fall back to the active
+    // audit session so results-page events aren't stored with a null sessionId.
+    const explicitSessionId =
+      properties && typeof properties.sessionId === 'string' ? properties.sessionId : null;
+    const sessionId = explicitSessionId ?? currentAuditSessionId ?? undefined;
     const payload = JSON.stringify({
       name: event,
       properties: properties ?? null,
