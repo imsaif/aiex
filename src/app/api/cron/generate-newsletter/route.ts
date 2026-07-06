@@ -1851,7 +1851,11 @@ async function runGeneration(
   // budget below (Haiku was ~4.5s), so timeouts are bumped from 25s/45s to give
   // headroom while staying under the 60s function cap. One call/day, so the cost
   // delta is negligible.
-  const claudeTimeoutMs = type === 'weekly' ? 50000 : 40000;
+  // Local manual-regen escape hatch: when running generation off-Vercel (no 60s
+  // function cap), NEWSLETTER_CLAUDE_TIMEOUT_MS lifts the abort so the slower
+  // weekly compile call can finish. Unset in production → defaults are unchanged.
+  // See the "Manual weekly regeneration" runbook in newsletter-and-infra.md.
+  const claudeTimeoutMs = Number(process.env.NEWSLETTER_CLAUDE_TIMEOUT_MS) || (type === 'weekly' ? 50000 : 40000);
   const claudeTimeout = setTimeout(() => claudeController.abort(), claudeTimeoutMs);
   let response;
   try {
