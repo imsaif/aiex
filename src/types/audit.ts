@@ -117,6 +117,10 @@ export interface TopGap {
   resource: string | null;
   /** Quote of the visible UI element this finding is grounded in. Required for honest findings. */
   evidence?: string;
+  /** One-line business/UX consequence of the gap — why it matters, honestly hedged (no fabricated metrics). */
+  impact?: string;
+  /** Rough implementation effort, used to rank fixes (quickest high-impact gap leads). */
+  effort?: 'quick' | 'medium' | 'involved';
   /** 1-based index of the screenshot this finding refers to (when multiple were uploaded). */
   screenshotIndex?: number;
 }
@@ -152,6 +156,8 @@ export const TopGapSchema = z.object({
   evidence: z.string().optional(),
   recommendation: z.string().optional().default(''),
   resource: z.string().nullable().optional(),
+  impact: z.string().optional(),
+  effort: z.enum(['quick', 'medium', 'involved']).optional(),
   screenshotIndex: z.number().int().positive().optional(),
 });
 

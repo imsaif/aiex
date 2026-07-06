@@ -181,4 +181,35 @@ describe('parseAnalysisResponse', () => {
       expect(result.raw).toBe(garbage);
     }
   });
+
+  // P0 output rewrite — gaps now carry an impact line and an effort tag.
+  it('preserves the new impact + effort fields on a gap', () => {
+    const gap = { ...validGap, impact: 'Users stall before their first success.', effort: 'quick' as const };
+    const result = parseAnalysisResponse(
+      JSON.stringify({ ...minimalClaudeResponse, topGaps: [gap] }),
+    );
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.topGaps[0].impact).toBe('Users stall before their first success.');
+      expect(result.data.topGaps[0].effort).toBe('quick');
+    }
+  });
+
+  it('accepts gaps with no impact/effort (backward compatible with old results)', () => {
+    const result = parseAnalysisResponse(JSON.stringify(minimalClaudeResponse));
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.topGaps[0].impact).toBeUndefined();
+      expect(result.data.topGaps[0].effort).toBeUndefined();
+    }
+  });
+
+  it('rejects an effort value outside the allowed set', () => {
+    const gap = { ...validGap, effort: 'trivial' };
+    const result = parseAnalysisResponse(
+      JSON.stringify({ ...minimalClaudeResponse, topGaps: [gap] }),
+    );
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe('schema-mismatch');
+  });
 });

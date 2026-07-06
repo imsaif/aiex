@@ -10,9 +10,17 @@ interface GapCardProps {
   isHighlighted?: boolean;
   /** Larger treatment for the lead "top priority" gap. */
   prominent?: boolean;
+  /** Marks the single highest-priority gap — shows a "Start here" badge. */
+  isTopPriority?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }
+
+const effortConfig: Record<NonNullable<TopGap['effort']>, string> = {
+  quick: 'Quick win',
+  medium: 'Medium effort',
+  involved: 'Involved',
+};
 
 const severityConfig = {
   missing: {
@@ -35,16 +43,20 @@ const severityConfig = {
   },
 };
 
-export function GapCard({ gap, index, isHighlighted, prominent, onMouseEnter, onMouseLeave }: GapCardProps) {
+export function GapCard({ gap, index, isHighlighted, prominent, isTopPriority, onMouseEnter, onMouseLeave }: GapCardProps) {
   const config = severityConfig[gap.status] || severityConfig.missing;
   const Icon = config.icon;
+  // The gap list is rendered best-first, so the #1 card is the "fix this first"
+  // gap. Callers can override with isTopPriority; otherwise index 1 leads.
+  const isTop = isTopPriority ?? index === 1;
+  const useProminent = prominent || isTop;
 
   return (
     <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className={`rounded-xl border ${config.border} bg-background-primary transition-all ${
-        prominent ? 'p-6 sm:p-7 shadow-card' : 'p-5'
+        useProminent ? 'p-6 sm:p-7 shadow-card' : 'p-5'
       } ${
         isHighlighted ? 'ring-2 ring-accent-primary border-accent-primary shadow-md' : ''
       }`}
@@ -58,15 +70,34 @@ export function GapCard({ gap, index, isHighlighted, prominent, onMouseEnter, on
         <div className="flex-1 min-w-0">
           {/* Header — pattern name leads, severity is a quieter tag beside it */}
           <div className="flex items-center gap-2 flex-wrap mb-2.5">
+            {isTop && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-accent-subtle text-accent-primary">
+                Start here
+              </span>
+            )}
             <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${config.badge}`}>
               <Icon className="w-3.5 h-3.5" />
               {config.label}
             </span>
-            <h3 className={`font-semibold text-text-primary leading-tight ${prominent ? 'text-xl' : 'text-lg'}`}>{gap.pattern}</h3>
+            <h3 className={`font-semibold text-text-primary leading-tight ${useProminent ? 'text-xl' : 'text-lg'}`}>{gap.pattern}</h3>
+            {gap.effort && (
+              <span className="ml-auto inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-background-secondary text-text-secondary">
+                {effortConfig[gap.effort]}
+              </span>
+            )}
           </div>
 
           {/* Finding — the problem */}
           <p className="text-base text-text-secondary leading-relaxed">{gap.finding}</p>
+
+          {/* Impact — why the gap matters, so the finding reads as a diagnosis
+              (with consequences) rather than a bare observation. */}
+          {gap.impact && (
+            <p className="mt-2 text-sm text-text-secondary leading-relaxed">
+              <span className="font-semibold text-text-primary">Why it matters: </span>
+              {gap.impact}
+            </p>
+          )}
 
           {/* Fix — the action, in its own block so the card reads as
               problem → fix instead of one undifferentiated wall of text. */}
