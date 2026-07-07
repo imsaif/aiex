@@ -17,8 +17,10 @@ interface ContinuationOption {
   tone: 'formal' | 'casual' | 'neutral';
 }
 
+const INITIAL_CONTENT = 'I think AI is very good for helping people write better. It catches the mistakes I would miss and suggests clearer ways to say what I mean. But the words still have to be mine, so I keep the ideas and let the tool sharpen the edges.';
+
 export default function AugmentedCreationDemo() {
-  const [content, setContent] = useState('I think AI is very good for helping people write better. It catches the mistakes I would miss and suggests clearer ways to say what I mean. But the words still have to be mine, so I keep the ideas and let the tool sharpen the edges.');
+  const [content, setContent] = useState(INITIAL_CONTENT);
   const [tone, setTone] = useState<'formal' | 'casual' | 'neutral'>('neutral');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [continuations, setContinuations] = useState<ContinuationOption[]>([]);
@@ -109,6 +111,13 @@ export default function AugmentedCreationDemo() {
     setAcceptedCount(prev => prev + 1);
   };
 
+  const resetDemo = () => {
+    setContent(INITIAL_CONTENT);
+    setTone('neutral');
+    setAcceptedCount(0);
+    setRejectedCount(0);
+  };
+
   const renderContentWithHighlights = () => {
     if (suggestions.length === 0) {
       return <div className="whitespace-pre-wrap">{content}</div>;
@@ -165,9 +174,20 @@ export default function AugmentedCreationDemo() {
 
   return (
     <div className="max-w-5xl mx-auto p-6 bg-surface-primary rounded-card shadow-card">
-      <header className="mb-6">
-        <h2 className="text-2xl font-bold text-text-primary mb-2">AI Writing Assistant</h2>
-        <p className="text-text-secondary">Real-time suggestions to enhance your writing</p>
+      <header className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-text-primary mb-2">AI Writing Assistant</h2>
+          <p className="text-text-secondary">Real-time suggestions to enhance your writing</p>
+        </div>
+        <button
+          onClick={resetDemo}
+          className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-text-secondary border border-border-primary rounded-input hover:bg-surface-secondary transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M4.6 9a8 8 0 0114.9-2M19.4 15a8 8 0 01-14.9 2" />
+          </svg>
+          Reset
+        </button>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
