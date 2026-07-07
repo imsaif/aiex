@@ -136,13 +136,13 @@ export default function AugmentedCreationDemo() {
           key={`suggestion-${idx}`}
           className="relative inline-block group cursor-pointer"
         >
-          <span className="line-through text-red-600 bg-red-50 px-1 rounded">
+          <span className="line-through text-status-error bg-status-error/10 px-1 rounded-input">
             {suggestion.original}
           </span>
-          <span className="text-green-600 bg-green-50 px-1 ml-1 rounded font-medium">
+          <span className="text-status-success bg-status-success/10 px-1 ml-1 rounded-input font-medium">
             {suggestion.replacement}
           </span>
-          <span className="invisible group-hover:visible absolute bottom-full left-0 mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+          <span className="invisible group-hover:visible absolute bottom-full left-0 mb-2 w-64 p-2 bg-text-primary text-surface-primary text-xs rounded-input shadow-elevated z-tooltip">
             {suggestion.reason}
           </span>
         </span>
@@ -164,23 +164,23 @@ export default function AugmentedCreationDemo() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-5xl mx-auto p-6 bg-surface-primary rounded-card shadow-card">
       <header className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">AI Writing Assistant</h2>
-        <p className="text-gray-600">Real-time suggestions to enhance your writing</p>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">AI Writing Assistant</h2>
+        <p className="text-text-secondary">Real-time suggestions to enhance your writing</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Editor */}
         <div className="lg:col-span-2 space-y-4">
           {/* Tone Slider */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-medium text-gray-700">Writing Tone</label>
-              <span className="text-sm text-gray-600 capitalize">{tone}</span>
+              <label className="text-sm font-medium text-text-secondary">Writing Tone</label>
+              <span className="text-sm text-text-secondary capitalize">{tone}</span>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-xs text-gray-500">Casual</span>
+              <span className="text-xs text-text-tertiary">Casual</span>
               <input
                 type="range"
                 min="0"
@@ -190,20 +190,20 @@ export default function AugmentedCreationDemo() {
                   const value = parseInt(e.target.value);
                   setTone(value === 0 ? 'casual' : value === 1 ? 'neutral' : 'formal');
                 }}
-                className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                className="flex-1 h-2 bg-background-tertiary rounded-pill appearance-none cursor-pointer accent-accent-primary"
               />
-              <span className="text-xs text-gray-500">Formal</span>
+              <span className="text-xs text-text-tertiary">Formal</span>
             </div>
           </div>
 
           {/* Text Editor with Inline Suggestions */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
-            <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-              <span className="text-sm font-medium text-gray-700">Your Content</span>
+          <div className="border border-border-primary rounded-card overflow-hidden">
+            <div className="bg-surface-secondary px-4 py-2 border-b border-border-primary">
+              <span className="text-sm font-medium text-text-secondary">Your Content</span>
             </div>
-            <div className="bg-white p-4 min-h-[300px]">
+            <div className="bg-surface-primary p-4 min-h-[300px]">
               <textarea
-                className="w-full h-full min-h-[250px] resize-none focus:outline-none text-gray-800"
+                className="w-full h-full min-h-[250px] resize-none focus:outline-none bg-transparent text-text-primary"
                 placeholder="Start writing... AI will suggest improvements as you type"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -213,12 +213,12 @@ export default function AugmentedCreationDemo() {
 
           {/* Preview with Highlights */}
           {suggestions.length > 0 && (
-            <div className="border border-blue-200 bg-blue-50 rounded-lg p-4">
+            <div className="border border-border-primary bg-accent-subtle rounded-card p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-blue-900">Preview with Suggestions</h3>
-                <span className="text-xs text-blue-600">Hover over highlights for details</span>
+                <h3 className="text-sm font-medium text-text-primary">Preview with Suggestions</h3>
+                <span className="text-xs text-accent-primary">Hover over highlights for details</span>
               </div>
-              <div className="bg-white rounded-md p-4 text-gray-800">
+              <div className="bg-surface-primary rounded-input p-4 text-text-primary">
                 {renderContentWithHighlights()}
               </div>
             </div>
@@ -228,11 +228,11 @@ export default function AugmentedCreationDemo() {
         {/* Sidebar with Suggestions and Stats */}
         <div className="space-y-4">
           {/* Active Suggestions */}
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+          <div className="bg-accent-subtle border border-border-primary rounded-card p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium text-purple-900">AI Suggestions</h3>
+              <h3 className="font-medium text-text-primary">AI Suggestions</h3>
               {isAnalyzing && (
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>
+                <div className="animate-spin rounded-pill h-4 w-4 border-b-2 border-accent-primary"></div>
               )}
             </div>
 
@@ -241,33 +241,33 @@ export default function AugmentedCreationDemo() {
                 {suggestions.map((suggestion) => (
                   <div
                     key={suggestion.id}
-                    className="bg-white border border-purple-200 rounded-md p-3"
+                    className="bg-surface-primary border border-border-primary rounded-input p-3"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <span className={`text-xs font-medium uppercase px-2 py-1 rounded ${
+                      <span className={`text-xs font-medium uppercase px-2 py-1 rounded-input ${
                         suggestion.type === 'grammar'
-                          ? 'bg-red-100 text-red-700'
-                          : 'bg-blue-100 text-blue-700'
+                          ? 'bg-status-error/10 text-status-error'
+                          : 'bg-accent-subtle text-accent-primary'
                       }`}>
                         {suggestion.type}
                       </span>
                     </div>
                     <div className="text-sm mb-2">
-                      <span className="line-through text-gray-500">{suggestion.original}</span>
-                      <span className="mx-2">→</span>
-                      <span className="font-medium text-green-700">{suggestion.replacement}</span>
+                      <span className="line-through text-text-tertiary">{suggestion.original}</span>
+                      <span className="mx-2">&rarr;</span>
+                      <span className="font-medium text-status-success">{suggestion.replacement}</span>
                     </div>
-                    <p className="text-xs text-gray-600 mb-3">{suggestion.reason}</p>
+                    <p className="text-xs text-text-secondary mb-3">{suggestion.reason}</p>
                     <div className="flex space-x-2">
                       <button
                         onClick={() => applySuggestion(suggestion)}
-                        className="flex-1 px-3 py-1.5 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors"
+                        className="flex-1 px-3 py-1.5 bg-accent-primary text-surface-primary text-xs rounded-input hover:bg-accent-hover transition-colors"
                       >
                         Apply
                       </button>
                       <button
                         onClick={() => rejectSuggestion(suggestion.id)}
-                        className="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs rounded hover:bg-gray-300 transition-colors"
+                        className="px-3 py-1.5 bg-background-secondary text-text-secondary text-xs rounded-input hover:bg-background-tertiary transition-colors"
                       >
                         Dismiss
                       </button>
@@ -276,7 +276,7 @@ export default function AugmentedCreationDemo() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-purple-600 italic">
+              <p className="text-sm text-text-secondary italic">
                 {isAnalyzing ? 'Analyzing...' : 'No suggestions yet. Keep writing!'}
               </p>
             )}
@@ -284,24 +284,24 @@ export default function AugmentedCreationDemo() {
 
           {/* Continuation Options */}
           {continuations.length > 0 && content.endsWith('.') && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <h3 className="font-medium text-green-900 mb-3">Continue Writing</h3>
+            <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
+              <h3 className="font-medium text-text-primary mb-3">Continue Writing</h3>
               <div className="space-y-2">
                 {continuations.map((continuation) => (
                   <button
                     key={continuation.id}
                     onClick={() => applyContinuation(continuation)}
-                    className="w-full text-left p-3 bg-white border border-green-200 rounded-md hover:bg-green-50 transition-colors group"
+                    className="w-full text-left p-3 bg-surface-primary border border-border-primary rounded-input hover:bg-surface-secondary transition-colors group"
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-green-700 uppercase">
+                      <span className="text-xs font-medium text-text-secondary uppercase">
                         {continuation.tone}
                       </span>
-                      <svg className="w-4 h-4 text-green-600 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="w-4 h-4 text-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                       </svg>
                     </div>
-                    <p className="text-sm text-gray-700 line-clamp-3">{continuation.text}</p>
+                    <p className="text-sm text-text-secondary line-clamp-3">{continuation.text}</p>
                   </button>
                 ))}
               </div>
@@ -309,28 +309,28 @@ export default function AugmentedCreationDemo() {
           )}
 
           {/* Statistics */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <h3 className="font-medium text-gray-900 mb-3">Session Stats</h3>
+          <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
+            <h3 className="font-medium text-text-primary mb-3">Session Stats</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Words:</span>
-                <span className="font-medium">{content.split(/\s+/).filter(w => w.length > 0).length}</span>
+                <span className="text-text-secondary">Words:</span>
+                <span className="font-medium text-text-primary">{content.split(/\s+/).filter(w => w.length > 0).length}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Characters:</span>
-                <span className="font-medium">{content.length}</span>
+                <span className="text-text-secondary">Characters:</span>
+                <span className="font-medium text-text-primary">{content.length}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Accepted:</span>
-                <span className="font-medium text-green-600">{acceptedCount}</span>
+                <span className="text-text-secondary">Accepted:</span>
+                <span className="font-medium text-status-success">{acceptedCount}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Rejected:</span>
-                <span className="font-medium text-red-600">{rejectedCount}</span>
+                <span className="text-text-secondary">Rejected:</span>
+                <span className="font-medium text-status-error">{rejectedCount}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Active Suggestions:</span>
-                <span className="font-medium text-purple-600">{suggestions.length}</span>
+                <span className="text-text-secondary">Active Suggestions:</span>
+                <span className="font-medium text-accent-primary">{suggestions.length}</span>
               </div>
             </div>
           </div>
