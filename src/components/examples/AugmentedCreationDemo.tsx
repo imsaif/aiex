@@ -211,25 +211,6 @@ export default function AugmentedCreationDemo() {
             </div>
           </div>
 
-          {/* Session Stats */}
-          <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
-            <h3 className="font-medium text-text-primary mb-3">Session Stats</h3>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
-              {[
-                { label: 'Words', value: content.split(/\s+/).filter(w => w.length > 0).length, tone: 'text-text-primary' },
-                { label: 'Characters', value: content.length, tone: 'text-text-primary' },
-                { label: 'Accepted', value: acceptedCount, tone: 'text-status-success' },
-                { label: 'Rejected', value: rejectedCount, tone: 'text-status-error' },
-                { label: 'Active', value: suggestions.length, tone: 'text-accent-primary' },
-              ].map((stat) => (
-                <div key={stat.label} className="flex flex-col">
-                  <span className={`text-2xl font-semibold ${stat.tone}`}>{stat.value}</span>
-                  <span className="text-xs text-text-secondary mt-0.5">{stat.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Preview with Highlights */}
           {suggestions.length > 0 && (
             <div className="border border-border-primary bg-accent-subtle rounded-card p-4">
@@ -242,6 +223,19 @@ export default function AugmentedCreationDemo() {
               </div>
             </div>
           )}
+
+          {/* Session stats (quiet footer, not the point) */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-xs text-text-tertiary">
+            <span><span className="font-medium text-text-secondary">{content.split(/\s+/).filter(w => w.length > 0).length}</span> words</span>
+            <span aria-hidden="true">&middot;</span>
+            <span><span className="font-medium text-text-secondary">{content.length}</span> characters</span>
+            <span aria-hidden="true">&middot;</span>
+            <span><span className="font-medium text-text-secondary">{acceptedCount}</span> accepted</span>
+            <span aria-hidden="true">&middot;</span>
+            <span><span className="font-medium text-text-secondary">{rejectedCount}</span> rejected</span>
+            <span aria-hidden="true">&middot;</span>
+            <span><span className="font-medium text-text-secondary">{suggestions.length}</span> active</span>
+          </div>
         </div>
 
         {/* Sidebar with Suggestions and Stats */}
