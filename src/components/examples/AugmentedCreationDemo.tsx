@@ -18,7 +18,7 @@ interface ContinuationOption {
 }
 
 export default function AugmentedCreationDemo() {
-  const [content, setContent] = useState('I think AI is very good for helping people write better.');
+  const [content, setContent] = useState('I think AI is very good for helping people write better. It catches the mistakes I would miss and suggests clearer ways to say what I mean. But the words still have to be mine, so I keep the ideas and let the tool sharpen the edges.');
   const [tone, setTone] = useState<'formal' | 'casual' | 'neutral'>('neutral');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [continuations, setContinuations] = useState<ContinuationOption[]>([]);
@@ -201,13 +201,32 @@ export default function AugmentedCreationDemo() {
             <div className="bg-surface-secondary px-4 py-2 border-b border-border-primary">
               <span className="text-sm font-medium text-text-secondary">Your Content</span>
             </div>
-            <div className="bg-surface-primary p-4 min-h-[300px]">
+            <div className="bg-surface-primary p-4 min-h-[180px]">
               <textarea
-                className="w-full h-full min-h-[250px] resize-none focus:outline-none bg-transparent text-text-primary"
+                className="w-full h-full min-h-[150px] resize-none focus:outline-none bg-transparent text-text-primary leading-relaxed"
                 placeholder="Start writing... AI will suggest improvements as you type"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
+            </div>
+          </div>
+
+          {/* Session Stats */}
+          <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
+            <h3 className="font-medium text-text-primary mb-3">Session Stats</h3>
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-4">
+              {[
+                { label: 'Words', value: content.split(/\s+/).filter(w => w.length > 0).length, tone: 'text-text-primary' },
+                { label: 'Characters', value: content.length, tone: 'text-text-primary' },
+                { label: 'Accepted', value: acceptedCount, tone: 'text-status-success' },
+                { label: 'Rejected', value: rejectedCount, tone: 'text-status-error' },
+                { label: 'Active', value: suggestions.length, tone: 'text-accent-primary' },
+              ].map((stat) => (
+                <div key={stat.label} className="flex flex-col">
+                  <span className={`text-2xl font-semibold ${stat.tone}`}>{stat.value}</span>
+                  <span className="text-xs text-text-secondary mt-0.5">{stat.label}</span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -307,33 +326,6 @@ export default function AugmentedCreationDemo() {
               </div>
             </div>
           )}
-
-          {/* Statistics */}
-          <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
-            <h3 className="font-medium text-text-primary mb-3">Session Stats</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-text-secondary">Words:</span>
-                <span className="font-medium text-text-primary">{content.split(/\s+/).filter(w => w.length > 0).length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-secondary">Characters:</span>
-                <span className="font-medium text-text-primary">{content.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-secondary">Accepted:</span>
-                <span className="font-medium text-status-success">{acceptedCount}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-secondary">Rejected:</span>
-                <span className="font-medium text-status-error">{rejectedCount}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-text-secondary">Active Suggestions:</span>
-                <span className="font-medium text-accent-primary">{suggestions.length}</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
