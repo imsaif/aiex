@@ -4,17 +4,11 @@ import React, { useState, useEffect } from 'react';
 
 interface Suggestion {
   id: string;
-  type: 'grammar' | 'style' | 'continuation';
+  type: 'grammar' | 'style';
   original: string;
   replacement: string;
   reason: string;
   position: number;
-}
-
-interface ContinuationOption {
-  id: string;
-  text: string;
-  tone: 'formal' | 'casual' | 'neutral';
 }
 
 const INITIAL_CONTENT = 'I think AI is very good for helping people write better. It catches the mistakes I would miss and suggests clearer ways to say what I mean. But the words still have to be mine, so I keep the ideas and let the tool sharpen the edges.';
@@ -23,7 +17,6 @@ export default function AugmentedCreationDemo() {
   const [content, setContent] = useState(INITIAL_CONTENT);
   const [tone, setTone] = useState<'formal' | 'casual' | 'neutral'>('neutral');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [continuations, setContinuations] = useState<ContinuationOption[]>([]);
   const [acceptedCount, setAcceptedCount] = useState(0);
   const [rejectedCount, setRejectedCount] = useState(0);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -32,7 +25,6 @@ export default function AugmentedCreationDemo() {
   useEffect(() => {
     if (content.length < 5) {
       setSuggestions([]);
-      setContinuations([]);
       return;
     }
 
@@ -64,27 +56,6 @@ export default function AugmentedCreationDemo() {
       }
 
       setSuggestions(newSuggestions);
-
-      // Generate continuation options based on tone
-      const continuationOptions: ContinuationOption[] = [
-        {
-          id: 'c1',
-          tone: 'formal',
-          text: ' Furthermore, artificial intelligence systems demonstrate remarkable capability in enhancing written communication through contextual analysis and stylistic refinement.'
-        },
-        {
-          id: 'c2',
-          tone: 'casual',
-          text: ' Plus, it catches those embarrassing typos and helps you sound way more professional without even trying!'
-        },
-        {
-          id: 'c3',
-          tone: 'neutral',
-          text: ' It can improve clarity, fix grammar mistakes, and suggest better phrasing in real-time.'
-        }
-      ];
-
-      setContinuations(continuationOptions);
       setIsAnalyzing(false);
     }, 800);
 
@@ -103,12 +74,6 @@ export default function AugmentedCreationDemo() {
   const rejectSuggestion = (suggestionId: string) => {
     setSuggestions(suggestions.filter(s => s.id !== suggestionId));
     setRejectedCount(prev => prev + 1);
-  };
-
-  const applyContinuation = (continuation: ContinuationOption) => {
-    setContent(prev => prev + continuation.text);
-    setContinuations([]);
-    setAcceptedCount(prev => prev + 1);
   };
 
   const resetDemo = () => {
@@ -335,32 +300,6 @@ export default function AugmentedCreationDemo() {
               </p>
             )}
           </div>
-
-          {/* Continuation Options */}
-          {continuations.length > 0 && content.endsWith('.') && (
-            <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
-              <h3 className="font-medium text-text-primary mb-3">Continue Writing</h3>
-              <div className="space-y-2">
-                {continuations.map((continuation) => (
-                  <button
-                    key={continuation.id}
-                    onClick={() => applyContinuation(continuation)}
-                    className="w-full text-left p-3 bg-surface-primary border border-border-primary rounded-input hover:bg-surface-secondary transition-colors group"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-text-secondary uppercase">
-                        {continuation.tone}
-                      </span>
-                      <svg className="w-4 h-4 text-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                      </svg>
-                    </div>
-                    <p className="text-sm text-text-secondary line-clamp-3">{continuation.text}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
