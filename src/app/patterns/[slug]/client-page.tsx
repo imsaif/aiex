@@ -112,6 +112,19 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             >
               {pattern.category}
             </Link>
+            {pattern.tags?.includes('agentic') && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-accent-subtle text-accent-primary border border-border-primary">
+                <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 8V4H8" />
+                  <rect width="16" height="12" x="4" y="8" rx="2" />
+                  <path d="M2 14h2" />
+                  <path d="M20 14h2" />
+                  <path d="M15 13v2" />
+                  <path d="M9 13v2" />
+                </svg>
+                Agentic
+              </span>
+            )}
           </div>
         </div>
         <h1 className="text-5xl font-bold mt-6 mb-4 text-text-primary">{pattern.title}</h1>
