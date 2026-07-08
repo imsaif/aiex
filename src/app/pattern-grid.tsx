@@ -146,7 +146,7 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                       : 'bg-surface-primary text-text-secondary border-primary hover:border-accent-primary hover:text-accent-primary'
                   }`}
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
                   Agentic
                 </button>
               </div>
@@ -171,9 +171,30 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                     <div className="bg-surface-primary rounded-2xl p-8 border border-gray-200 shadow-card
                                   hover:shadow-card-hover hover:border-gray-200 transition-all duration-300 h-full
                                   flex flex-col">
-                      {/* Title */}
+                      {/* Title (agentic patterns get a trailing bot icon glued to the last word so it never wraps alone) */}
                       <h3 className="text-lg font-semibold text-text-primary mb-4 transition-colors">
-                        {pattern.title}
+                        {pattern.tags?.includes('agentic') ? (() => {
+                          const words = pattern.title.split(' ');
+                          const lastWord = words.pop();
+                          const lead = words.join(' ');
+                          return (
+                            <>
+                              {lead && `${lead} `}
+                              <span className="whitespace-nowrap">
+                                {lastWord}
+                                <svg className="inline-block align-middle ml-1.5 w-3.5 h-3.5 text-accent-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" role="img" aria-label="Agentic pattern">
+                                  <title>Agentic pattern</title>
+                                  <path d="M12 8V4H8" />
+                                  <rect width="16" height="12" x="4" y="8" rx="2" />
+                                  <path d="M2 14h2" />
+                                  <path d="M20 14h2" />
+                                  <path d="M15 13v2" />
+                                  <path d="M9 13v2" />
+                                </svg>
+                              </span>
+                            </>
+                          );
+                        })() : pattern.title}
                       </h3>
 
                       {/* Description */}
