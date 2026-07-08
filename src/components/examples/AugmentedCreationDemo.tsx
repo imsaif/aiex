@@ -173,7 +173,7 @@ export default function AugmentedCreationDemo() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-surface-primary rounded-card shadow-card">
+    <div className="max-w-5xl mx-auto p-6 bg-surface-primary rounded-card border border-border-primary">
       <header className="mb-6 flex items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-text-primary mb-2">AI Writing Assistant</h2>
@@ -196,23 +196,26 @@ export default function AugmentedCreationDemo() {
           {/* Tone Slider */}
           <div className="bg-surface-secondary border border-border-primary rounded-card p-4">
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-medium text-text-secondary">Writing Tone</label>
-              <span className="text-sm text-text-secondary capitalize">{tone}</span>
+              <label htmlFor="writing-tone" className="text-sm font-medium text-text-secondary">Writing Tone</label>
+              <span className="text-xs font-medium capitalize px-2 py-0.5 rounded-pill bg-accent-subtle text-accent-primary">{tone}</span>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-xs text-text-tertiary">Casual</span>
+              <span className="text-xs text-text-tertiary shrink-0">Casual</span>
               <input
+                id="writing-tone"
                 type="range"
-                min="0"
-                max="2"
+                min={0}
+                max={2}
+                step={1}
                 value={tone === 'casual' ? 0 : tone === 'neutral' ? 1 : 2}
+                aria-valuetext={tone.charAt(0).toUpperCase() + tone.slice(1)}
                 onChange={(e) => {
                   const value = parseInt(e.target.value);
                   setTone(value === 0 ? 'casual' : value === 1 ? 'neutral' : 'formal');
                 }}
-                className="flex-1 h-2 bg-background-tertiary rounded-pill appearance-none cursor-pointer accent-accent-primary"
+                className="flex-1 h-6 bg-transparent appearance-none cursor-pointer rounded-pill focus:outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-secondary [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:rounded-pill [&::-webkit-slider-runnable-track]:bg-background-tertiary [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:-mt-1.5 [&::-webkit-slider-thumb]:rounded-pill [&::-webkit-slider-thumb]:bg-accent-primary [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-surface-primary [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-track]:h-2 [&::-moz-range-track]:rounded-pill [&::-moz-range-track]:bg-background-tertiary [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:rounded-pill [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-solid [&::-moz-range-thumb]:border-surface-primary [&::-moz-range-thumb]:bg-accent-primary [&::-moz-range-thumb]:cursor-pointer"
               />
-              <span className="text-xs text-text-tertiary">Formal</span>
+              <span className="text-xs text-text-tertiary shrink-0">Formal</span>
             </div>
           </div>
 
