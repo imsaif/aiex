@@ -18,10 +18,10 @@ export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: {
-    absolute: '36 AI UX Design Patterns — A Framework for Designing AI Products',
+    absolute: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
   },
   description:
-    '36 AI UX design patterns documented from ChatGPT, Claude, GitHub Copilot, Midjourney, Figma, Linear, and 50+ shipped AI products. Each pattern has real examples, code demos, and implementation guidance — use them to design AI experiences users actually trust.',
+    `${patterns.length} AI UX design patterns documented from ChatGPT, Claude, GitHub Copilot, Midjourney, Figma, Linear, and 50+ shipped AI products. Each pattern has real examples, code demos, and implementation guidance — use them to design AI experiences users actually trust.`,
   keywords: [
     'AI UX patterns',
     'AI design patterns',
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${siteConfig.url}/patterns`,
-    title: '36 AI UX Design Patterns — A Framework for Designing AI Products',
+    title: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
     description:
-      '36 AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products. Real examples, code demos, implementation guidance.',
+      `${patterns.length} AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products. Real examples, code demos, implementation guidance.`,
     siteName: siteConfig.name,
     images: [
       {
@@ -55,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: '36 AI UX Design Patterns — A Framework for Designing AI Products',
+    title: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
     description:
-      '36 AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products.',
+      `${patterns.length} AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products.`,
     images: [`${siteConfig.url}/images/og/og-home.png`],
     creator: siteConfig.creator.twitter,
   },
@@ -84,7 +84,7 @@ const collectionPageJsonLd = {
   '@type': 'CollectionPage',
   name: 'AI UX Design Patterns',
   url: `${siteConfig.url}/patterns`,
-  description: '36 AI UX design patterns documented from 50+ real shipped AI products.',
+  description: `${patterns.length} AI UX design patterns documented from 50+ real shipped AI products.`,
   isPartOf: {
     '@type': 'WebSite',
     name: siteConfig.name,
@@ -141,7 +141,7 @@ export default function PatternsIndexPage() {
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
                 style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
               >
-                36 AI UX Design Patterns
+                {patterns.length} AI UX Design Patterns
               </h1>
 
               <p className="text-2xl md:text-3xl text-text-secondary mb-12">

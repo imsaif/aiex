@@ -127,7 +127,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  // Pattern pages - 36 AI design patterns
+  // Pattern pages - 38 AI design patterns
   const patternPages: MetadataRoute.Sitemap = patterns.map((pattern) => ({
     url: `${baseUrl}/patterns/${pattern.slug}`,
     lastModified: patternLastModified(pattern),
