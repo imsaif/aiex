@@ -28,6 +28,7 @@ export interface RecordAuditSampleInput {
   ip?: string | null;
   userAgent?: string | null;
   role?: string | null;
+  sessionId?: string | null; // results.id — join key to UiEvent.sessionId
 }
 
 export function hashIp(ip: string | null | undefined): string | null {
@@ -61,6 +62,7 @@ export async function recordAuditSample(input: RecordAuditSampleInput): Promise<
         ipHash: hashIp(input.ip),
         userAgent: input.userAgent ? input.userAgent.slice(0, UA_MAX) : null,
         role: input.role && /^[a-z0-9_-]{1,32}$/i.test(input.role) ? input.role.toLowerCase() : null,
+        sessionId: input.sessionId ?? null,
       },
     });
   } catch (err) {
