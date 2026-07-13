@@ -8,7 +8,7 @@ import type { ProductType } from '@/types/audit';
  * Visualization" on a billing/usage page because the product type was chat).
  */
 export function buildSystemPrompt(productType: ProductType): string {
-  const basePatterns = `You are a senior AI UX auditor. You evaluate AI product interfaces against a library of 36 research-backed AI UX patterns from aiuxdesign.guide.
+  const basePatterns = `You are a senior AI UX auditor. You evaluate AI product interfaces against a library of 38 research-backed AI UX patterns from aiuxdesign.guide.
 
 Your job is to be HONEST about what you can and cannot see. A grounded "this surface doesn't need that pattern" is more useful than a fabricated finding. Padding the report with irrelevant patterns destroys trust in the audit.
 
@@ -45,7 +45,9 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
 - **Vulnerable User Protection**: Safeguards for vulnerable populations.
 `;
 
-  const agentPatterns = `
+  // Autonomous-action agent patterns — only surfaced for `ai-agent`, so they
+  // aren't over-applied to passive surfaces.
+  const autonomousAgentPatterns = `
 ### Agentic patterns (only for agentic / autonomous-action surfaces)
 - **Autonomy Spectrum**: Graduated autonomy per task type (auto / approval / human-only).
 - **Intent Preview**: Show what the agent plans to do before executing.
@@ -60,6 +62,36 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
 - Agent Readability Audit: aiuxdesign.guide/agent-readability-audit-kit
 - Agentic UX Checklist: aiuxdesign.guide/agentic-ux-checklist
 `;
+
+  // Embedded / learning agent patterns — relevant to agents AND to AI features
+  // embedded inside an existing tool (copilots, side panels, inline assist).
+  const embeddedAgentPatterns = `
+### Embedded / learning-agent patterns
+- **Workspace-Native Agent Integration**: AI embedded inside existing tools so users never leave their working context. Applies to copilots, side panels, inline assist within a host app.
+- **Agent Reflection & Learning**: Show users what the AI learned from their corrections so trust builds through visible, cumulative improvement.
+`;
+
+  // Per-type emphasis — steers which patterns the model weighs first for this
+  // surface. It does NOT force selection; the "only if it genuinely applies" +
+  // 8-pattern cap rules in the process still govern the final list.
+  const emphasisByType: Record<ProductType, string[]> = {
+    'chat-interface': ['Conversational UI', 'Confidence Visualization', 'Error Recovery', 'Explainable AI', 'Session Degradation Prevention'],
+    'ai-agent': ['Intent Preview', 'Action Audit Trail', 'Escalation Pathways', 'Autonomy Spectrum', 'Agent Status & Monitoring', 'Agent Reflection & Learning'],
+    'recommendation-system': ['Explainable AI', 'Feedback Loops', 'Adaptive Interfaces', 'Confidence Visualization', 'Predictive Anticipation'],
+    'content-generation': ['Augmented Creation', 'Safe Exploration', 'Human-in-the-Loop', 'Feedback Loops', 'Error Recovery'],
+    'dashboard-analytics': ['Confidence Visualization', 'Explainable AI', 'Progressive Disclosure', 'Predictive Anticipation', 'Feedback Loops'],
+    'embedded-ai-feature': ['Workspace-Native Agent Integration', 'Contextual Assistance', 'Ambient Intelligence', 'Augmented Creation', 'Progressive Enhancement', 'Human-in-the-Loop'],
+    'search-discovery': ['Explainable AI', 'Confidence Visualization', 'Feedback Loops', 'Predictive Anticipation', 'Guided Learning'],
+    'reports-documents': ['Explainable AI', 'Confidence Visualization', 'Human-in-the-Loop', 'Feedback Loops', 'Progressive Disclosure'],
+    general: [],
+  };
+  const emphasisList = emphasisByType[productType] ?? [];
+  const emphasis = emphasisList.length
+    ? `
+### Emphasis for this surface type
+For this ${productType.replace(/-/g, ' ')} surface, pay special attention to these patterns FIRST — but only include a pattern in \`applicablePatterns\` if it genuinely applies to the specific surface shown: ${emphasisList.join(', ')}.
+`
+    : '';
 
   const process = `
 ## Required analysis process
@@ -135,11 +167,10 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - Return ONLY valid JSON. No preamble, no markdown fences.
 `;
 
-  if (productType === 'ai-agent') {
-    return basePatterns + agentPatterns + process + outputFormat;
-  }
+  const autonomous = productType === 'ai-agent' ? autonomousAgentPatterns : '';
+  const embedded = productType === 'ai-agent' || productType === 'embedded-ai-feature' ? embeddedAgentPatterns : '';
 
-  return basePatterns + process + outputFormat;
+  return basePatterns + autonomous + embedded + emphasis + process + outputFormat;
 }
 
 /**
@@ -157,12 +188,18 @@ export function buildUserPrompt(
     'ai-agent': 'an AI agent / autonomous workflow product',
     'recommendation-system': 'a recommendation system',
     'content-generation': 'a content generation tool',
-    other: 'an AI-powered product',
+    'dashboard-analytics': 'an AI dashboard / analytics product',
+    'embedded-ai-feature': 'an AI feature embedded inside an existing tool',
+    'search-discovery': 'an AI search / discovery product',
+    'reports-documents': 'an AI reports / document / data-extraction product',
+    general: 'an AI-powered product',
   };
 
   const productCaveat = productType === 'ai-agent'
     ? 'Because this is an agentic product, the agentic pattern set may apply — but only to surfaces that actually show agent action, planning, or status. Do not flag agentic patterns on settings or billing surfaces.'
-    : 'The agentic pattern set probably does NOT apply unless the surface clearly shows autonomous agent activity.';
+    : productType === 'embedded-ai-feature'
+      ? 'This is AI embedded inside a host tool, so Workspace-Native Agent Integration and related embedded patterns may apply — but the autonomous-agent pattern set (Intent Preview, Plan Summary, Action Audit Trail, etc.) probably does NOT unless the surface clearly shows autonomous action.'
+      : 'The agentic pattern set probably does NOT apply unless the surface clearly shows autonomous agent activity.';
 
   // User-supplied description is informative context only. The system prompt's
   // evidence-first rules still apply: findings must reference visible UI, and

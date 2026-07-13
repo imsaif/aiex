@@ -4,7 +4,10 @@ import {
   CpuChipIcon,
   SparklesIcon,
   DocumentTextIcon,
-  CubeTransparentIcon,
+  ChartBarIcon,
+  PuzzlePieceIcon,
+  MagnifyingGlassIcon,
+  DocumentChartBarIcon,
 } from '@heroicons/react/24/outline';
 import type { ComponentType, SVGProps } from 'react';
 
@@ -46,10 +49,31 @@ export const productOptions: ProductOption[] = [
     examplePatterns: ['Augmented Creation', 'Safe Exploration', 'Human-in-the-Loop'],
   },
   {
-    id: 'other',
-    label: 'Something else',
-    desc: 'Other AI-powered products',
-    icon: CubeTransparentIcon,
-    examplePatterns: ['Confidence Visualization', 'Explainable AI', 'Error Recovery'],
+    id: 'dashboard-analytics',
+    label: 'Dashboard & analytics',
+    desc: 'AI insights, metrics, admin overviews',
+    icon: ChartBarIcon,
+    examplePatterns: ['Confidence Visualization', 'Explainable AI', 'Progressive Disclosure'],
+  },
+  {
+    id: 'embedded-ai-feature',
+    label: 'Embedded AI feature',
+    desc: 'AI copilot or assist inside an existing tool',
+    icon: PuzzlePieceIcon,
+    examplePatterns: ['Workspace-Native Agent Integration', 'Contextual Assistance', 'Ambient Intelligence'],
+  },
+  {
+    id: 'search-discovery',
+    label: 'Search & discovery',
+    desc: 'AI or semantic search, discovery feeds',
+    icon: MagnifyingGlassIcon,
+    examplePatterns: ['Explainable AI', 'Feedback Loops', 'Predictive Anticipation'],
+  },
+  {
+    id: 'reports-documents',
+    label: 'Reports & documents',
+    desc: 'AI-generated reports, extraction, enrichment',
+    icon: DocumentChartBarIcon,
+    examplePatterns: ['Explainable AI', 'Confidence Visualization', 'Human-in-the-Loop'],
   },
 ];

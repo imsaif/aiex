@@ -12,7 +12,11 @@ export const ExpectedFixtureSchema = z.object({
     'ai-agent',
     'recommendation-system',
     'content-generation',
-    'other',
+    'dashboard-analytics',
+    'embedded-ai-feature',
+    'search-discovery',
+    'reports-documents',
+    'general',
   ]),
   productDescription: z.string().default(''),
   /** Patterns the audit MUST surface (in topGaps) for this fixture. */

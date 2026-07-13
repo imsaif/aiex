@@ -38,6 +38,18 @@ interface Stats {
   includeTest: boolean;
 }
 
+interface Funnel {
+  windowDays: number;
+  spine: { demoViewed: number; startRealClicked: number; started: number; completedWithValue: number };
+  outcomes: { success: number; empty_gaps: number; no_ai_surface: number; errors: number };
+  postResult: {
+    joinableSuccess: number;
+    successWithAnyAction: number;
+    actionRate: number | null;
+    byAction: Record<string, number>;
+  };
+}
+
 const OUTCOMES = ['all', 'success', 'empty_gaps', 'parse_error', 'api_error', 'rate_limited', 'bad_request'];
 
 function pct(n: number): string {
@@ -65,6 +77,7 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
   const [samples, setSamples] = useState<Sample[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [events, setEvents] = useState<{ name: string; count: number }[]>([]);
+  const [funnel, setFunnel] = useState<Funnel | null>(null);
   const [days, setDays] = useState(14);
   const [outcome, setOutcome] = useState('all');
   const [includeTest, setIncludeTest] = useState(false);
@@ -94,6 +107,12 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
       if (evRes.ok) {
         const evData = await evRes.json();
         setEvents(evData.events ?? []);
+      }
+
+      // Funnel — spine from AuditSample (server truth) + post-result actions joined by sessionId.
+      const fRes = await fetch(`/api/admin/audit-funnel?${evParams}`);
+      if (fRes.ok) {
+        setFunnel(await fRes.json());
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load');
@@ -191,6 +210,66 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
         </div>
       )}
 
+      {/* Funnel — spine is server truth (AuditSample); branches are client events joined by sessionId. */}
+      {funnel && (
+        <div className="mb-6">
+          <h2 className="text-sm font-semibold text-text-primary mb-2">
+            Funnel <span className="font-normal text-text-secondary">(last {days}d, real users)</span>
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
+            <FunnelStep
+              label="Demo viewed"
+              value={funnel.spine.demoViewed}
+              note="client · lower-bound"
+            />
+            <FunnelStep
+              label="Start-real clicked"
+              value={funnel.spine.startRealClicked}
+              note="client · lower-bound"
+            />
+            <FunnelStep
+              label="Audit started"
+              value={funnel.spine.started}
+              note="server truth"
+              solid
+            />
+            <FunnelStep
+              label="Completed w/ value"
+              value={funnel.spine.completedWithValue}
+              note="server truth · success"
+              solid
+            />
+          </div>
+
+          {/* Post-result action rate — the lever. Denominator is server-side (joinable success rows). */}
+          <div className="border border-border-primary rounded p-3">
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="text-[10px] uppercase tracking-wide text-text-secondary">Post-result action rate</span>
+              <span className="text-lg font-bold">
+                {funnel.postResult.actionRate != null ? pct(funnel.postResult.actionRate) : '—'}
+              </span>
+              <span className="text-xs text-text-secondary">
+                {funnel.postResult.successWithAnyAction} of {funnel.postResult.joinableSuccess} completed audits took a next step
+              </span>
+            </div>
+            {funnel.postResult.joinableSuccess === 0 ? (
+              <p className="text-xs text-text-secondary mt-2">
+                No joinable completed audits yet. The <code>sessionId</code> join key was added 2026-07-13, so this
+                rate populates as new audits run (older success rows have no join key).
+              </p>
+            ) : (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {Object.entries(funnel.postResult.byAction).map(([name, count]) => (
+                  <span key={name} className="text-xs px-2 py-1 rounded bg-background-secondary text-text-secondary font-mono">
+                    {name.replace(/^audit_/, '')}: {count}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Event counts — post-audit CTA + funnel usage from the UiEvent log. */}
       <div className="mb-6">
         <h2 className="text-sm font-semibold text-text-primary mb-2">
@@ -267,6 +346,16 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+function FunnelStep({ label, value, note, solid }: { label: string; value: number; note: string; solid?: boolean }) {
+  return (
+    <div className={`border rounded p-3 ${solid ? 'border-green-300 bg-green-50' : 'border-border-primary border-dashed'}`}>
+      <div className="text-[10px] uppercase tracking-wide text-text-secondary">{label}</div>
+      <div className="text-lg font-bold mt-0.5 tabular-nums">{value}</div>
+      <div className="text-[10px] text-text-secondary mt-0.5">{note}</div>
     </div>
   );
 }

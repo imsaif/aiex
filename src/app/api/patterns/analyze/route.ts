@@ -119,19 +119,25 @@ export async function POST(request: NextRequest) {
     }
 
     if (!imageBase64) {
-      after(() =>
-        recordAuditSample({
-          outcome: 'bad_request',
-          productType: productType ?? null,
-          deviceType: deviceType ?? null,
-          isContextFirst: !!productType,
-          errorReason: 'missing_image',
-          latencyMs: Date.now() - startedAt,
-          ip,
-          userAgent,
-          role,
-        })
-      );
+      // The hourly health monitor pings this route with an empty body purely to
+      // assert it still returns 400 (see api/health/audit/route.ts). Don't record
+      // a sample for it — it only checks the status code, and writing one bloats
+      // the table (was 98.6% of all rows) and skews raw queries.
+      if (role !== 'monitor') {
+        after(() =>
+          recordAuditSample({
+            outcome: 'bad_request',
+            productType: productType ?? null,
+            deviceType: deviceType ?? null,
+            isContextFirst: !!productType,
+            errorReason: 'missing_image',
+            latencyMs: Date.now() - startedAt,
+            ip,
+            userAgent,
+            role,
+          })
+        );
+      }
       return NextResponse.json(
         { error: 'Missing required field: imageBase64' },
         { status: 400 }
@@ -316,6 +322,7 @@ export async function POST(request: NextRequest) {
           ip,
           userAgent,
           role,
+          sessionId: id,
         })
       );
 
@@ -363,6 +370,7 @@ export async function POST(request: NextRequest) {
         latencyMs: Date.now() - startedAt,
         ip,
         userAgent,
+        sessionId: id,
       })
     );
 

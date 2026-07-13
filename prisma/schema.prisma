@@ -123,11 +123,13 @@ model AuditSample {
   ipHash                 String?
   userAgent              String?
   role                   String?
+  sessionId              String? // results.id — join key to UiEvent.sessionId (post-result actions)
 
   @@index([createdAt])
   @@index([outcome])
   @@index([productType])
   @@index([role])
+  @@index([sessionId])
 }
 
 model PatternIntent {
