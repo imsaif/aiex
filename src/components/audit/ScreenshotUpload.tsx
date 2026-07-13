@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ProductType } from '@/types/audit';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
-import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon, ChartBarIcon, ExclamationTriangleIcon, ListBulletIcon } from '@heroicons/react/24/outline';
+import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon, ChartBarIcon, ExclamationTriangleIcon, ListBulletIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { productOptions } from './productOptions';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { processImageFile } from '@/lib/audit/image';
@@ -72,11 +72,14 @@ function DeviceFrame({ src, alt, deviceType }: { src: string; alt: string; devic
   );
 }
 
+type StepState = 'done' | 'active' | 'pending';
+
 export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }: ScreenshotUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [stagedImages, setStagedImages] = useState<UploadedImage[]>([]);
   const [limitMessage, setLimitMessage] = useState(false);
   const [isClassifying, setIsClassifying] = useState(false);
+  const [showPicker, setShowPicker] = useState(false); // reveal manual type tiles (auto-detect is default)
   const [activeIndex, setActiveIndex] = useState(0);
   const hasAutoClassifiedRef = useRef(false);
   const productTypeRef = useRef(productType);
@@ -187,7 +190,15 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
 
   const hasImages = stagedImages.length > 0;
   const canAddMore = stagedImages.length < 4;
-  const canAnalyze = hasImages && !!productType;
+  // Auto-detect-first: the type is classified from the screenshot (or falls back
+  // to 'general'), so a manual pick is no longer required to analyze.
+  const canAnalyze = hasImages;
+  const detectedOption = productType ? productOptions.find((o) => o.id === productType) : undefined;
+
+  // Progress-stepper states for the right-rail card.
+  const step1State: StepState = hasImages ? 'done' : 'active';
+  const step2State: StepState = isClassifying ? 'active' : detectedOption ? 'done' : hasImages ? 'active' : 'pending';
+  const step3State: StepState = canAnalyze ? 'active' : 'pending';
 
   return (
     <div className="w-full max-w-7xl mx-auto">
@@ -349,66 +360,133 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
           )}
         </div>
 
-        {/* RIGHT: Product picker + Analyze */}
-        <aside className="w-full lg:w-[360px] lg:h-[660px] flex-shrink-0 flex flex-col gap-4 text-left">
-          <div>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2 text-text-primary">Audit your interface</h2>
-            <p className="text-text-secondary text-sm">
-              Score your design against 36 AI UX patterns.
+        {/* RIGHT: floating cards — Progress stepper advances as the user acts. */}
+        <aside className="w-full lg:w-[360px] flex-shrink-0 flex flex-col gap-3 text-left">
+          <div className="mb-0.5">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">Audit your interface</h2>
+            <p className="text-text-secondary text-sm mt-1">
+              Score your design against 38 AI UX patterns.
             </p>
           </div>
 
-          {isClassifying && (
-            <span className="text-xs text-text-tertiary italic">Detecting product type…</span>
-          )}
-
-          <div className="grid grid-cols-2 gap-2">
-            {productOptions.map((option) => {
-              const Icon = option.icon;
-              const isSelected = productType === option.id;
-              const spanBoth = option.id === 'other';
-              return (
-                <button
-                  key={option.id}
-                  onClick={() => {
-                    trackAuditEvent('audit_product_type_selected', { productType: option.id });
-                    onProductTypeChange(option.id);
-                  }}
-                  className={`${spanBoth ? 'col-span-2' : ''} flex flex-col gap-1 px-3 py-2.5 rounded-lg border text-left transition-all cursor-pointer ${
-                    isSelected
-                      ? 'border-accent-primary bg-accent-primary/5 shadow-sm'
-                      : 'border-border-primary bg-background-primary hover:border-accent-primary/50 hover:bg-background-secondary'
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <Icon className={`w-5 h-5 flex-shrink-0 ${isSelected ? 'text-accent-primary' : 'text-text-secondary'}`} />
-                    <span className={`text-sm font-semibold ${isSelected ? 'text-text-primary' : 'text-text-primary'}`}>{option.label}</span>
+          {showPicker ? (
+            /* Manual override — reveal the 8 type tiles as its own card. */
+            <div className="rounded-card border border-border-primary bg-background-secondary p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-semibold uppercase tracking-wide text-text-tertiary">Pick your product type</span>
+                {detectedOption && (
+                  <button onClick={() => setShowPicker(false)} className="text-xs text-accent-primary hover:underline cursor-pointer">Cancel</button>
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {productOptions.map((option) => {
+                  const Icon = option.icon;
+                  const isSelected = productType === option.id;
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => {
+                        trackAuditEvent('audit_product_type_selected', { productType: option.id });
+                        onProductTypeChange(option.id);
+                        setShowPicker(false);
+                      }}
+                      className={`flex flex-col gap-1 px-3 py-2.5 rounded-lg border text-left transition-all cursor-pointer ${
+                        isSelected
+                          ? 'border-accent-primary bg-accent-primary/5 shadow-sm'
+                          : 'border-border-primary bg-background-primary hover:border-accent-primary/50 hover:bg-background-secondary'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-5 h-5 flex-shrink-0 ${isSelected ? 'text-accent-primary' : 'text-text-secondary'}`} />
+                        <span className="text-sm font-semibold text-text-primary">{option.label}</span>
+                      </div>
+                      <span className="text-xs text-text-tertiary leading-snug">{option.desc}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* Progress card — the three steps advance as you act. */
+            <div className="rounded-card border border-border-primary bg-background-secondary p-4">
+              <div className="text-xs font-semibold uppercase tracking-wide text-text-tertiary mb-3">Progress</div>
+              <ol className="flex flex-col">
+                <StepRow state={step1State} last={false}>
+                  <div className="text-sm font-semibold text-text-primary">Add a screenshot</div>
+                  <div className="text-xs text-text-secondary mt-0.5">
+                    {hasImages
+                      ? `${stagedImages.length} ${stagedImages.length === 1 ? 'image' : 'images'} added`
+                      : 'Drop, paste, or try a sample'}
                   </div>
-                  <span className="text-xs text-text-tertiary leading-snug">{option.desc}</span>
-                </button>
-              );
-            })}
-          </div>
+                </StepRow>
 
-          {productType && (
-            <div className="rounded-lg border border-border-primary bg-background-secondary px-3 py-2.5 text-xs text-text-secondary leading-relaxed">
-              <span className="text-text-tertiary">Includes </span>
-              <span className="font-medium text-text-primary">
-                {productOptions.find((o) => o.id === productType)?.examplePatterns.join(', ')}
-              </span>
-              <span className="text-text-tertiary"> + more.</span>
+                <StepRow state={step2State} last={false}>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="text-sm font-semibold text-text-primary">Product type</div>
+                    {detectedOption && !isClassifying && (
+                      <button onClick={() => setShowPicker(true)} className="text-xs text-accent-primary hover:underline flex-shrink-0 cursor-pointer">
+                        Change
+                      </button>
+                    )}
+                  </div>
+                  <div className="text-xs text-text-secondary mt-0.5">
+                    {isClassifying ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="w-3 h-3 rounded-full border-2 border-text-tertiary border-t-transparent animate-spin" aria-hidden />
+                        Detecting…
+                      </span>
+                    ) : detectedOption ? (
+                      <span><span className="font-medium text-text-primary">{detectedOption.label}</span> · {detectedOption.examplePatterns.slice(0, 2).join(', ')} + more</span>
+                    ) : (
+                      <button onClick={() => setShowPicker(true)} className="cursor-pointer text-left">
+                        Auto-detected from your screenshot · <span className="text-accent-primary hover:underline">pick manually</span>
+                      </button>
+                    )}
+                  </div>
+                </StepRow>
+
+                <StepRow state={step3State} last>
+                  <div className="text-sm font-semibold text-text-primary">Analyze</div>
+                  <div className="text-xs text-text-secondary mt-0.5">Score, top gaps &amp; fixes you can ship</div>
+                </StepRow>
+              </ol>
             </div>
           )}
 
-          <div className="mt-auto pt-2 hidden lg:block">
+          {/* What you'll get — secondary floating card. */}
+          <div className="rounded-card border border-border-primary bg-background-primary p-1">
+            <p className="px-3 pt-2 pb-1.5 text-xs font-medium uppercase tracking-wide text-text-tertiary">
+              What you&apos;ll get
+            </p>
+            <ul className="divide-y divide-border-primary">
+              <li className="flex items-start gap-2.5 px-3 py-2">
+                <ChartBarIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
+                <div className="text-xs leading-snug">
+                  <span className="font-semibold text-text-primary">Score</span>
+                  <span className="text-text-secondary"> out of applicable patterns</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-2.5 px-3 py-2">
+                <ExclamationTriangleIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
+                <div className="text-xs leading-snug">
+                  <span className="font-semibold text-text-primary">Top gaps</span>
+                  <span className="text-text-secondary"> and patterns to add</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-2.5 px-3 py-2">
+                <ListBulletIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
+                <div className="text-xs leading-snug">
+                  <span className="font-semibold text-text-primary">Actions</span>
+                  <span className="text-text-secondary"> you can ship today</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          {/* Analyze CTA (desktop). */}
+          <div className="hidden lg:block mt-0.5">
             {!canAnalyze && (
-              <p className="mb-2 text-xs text-text-tertiary">
-                {!hasImages && !productType
-                  ? 'Add a screenshot and pick a type.'
-                  : !hasImages
-                    ? 'Add a screenshot.'
-                    : 'Pick a type.'}
-              </p>
+              <p className="mb-2 text-xs text-text-tertiary">Add a screenshot to analyze.</p>
             )}
             <button
               onClick={() => canAnalyze && onAnalyze(stagedImages)}
@@ -419,35 +497,6 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                 ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`
                 : 'Analyze'}
             </button>
-
-            <div className="mt-4 rounded-lg border border-border-primary bg-background-primary">
-              <p className="px-3 pt-2.5 pb-2 text-xs font-medium uppercase tracking-wider text-text-tertiary">
-                What you&apos;ll get
-              </p>
-              <ul className="divide-y divide-border-primary">
-                <li className="flex items-start gap-2.5 px-3 py-2.5">
-                  <ChartBarIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
-                  <div className="text-xs leading-snug">
-                    <span className="font-semibold text-text-primary">Score</span>
-                    <span className="text-text-secondary"> out of applicable patterns</span>
-                  </div>
-                </li>
-                <li className="flex items-start gap-2.5 px-3 py-2.5">
-                  <ExclamationTriangleIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
-                  <div className="text-xs leading-snug">
-                    <span className="font-semibold text-text-primary">Top gaps</span>
-                    <span className="text-text-secondary"> and patterns to add</span>
-                  </div>
-                </li>
-                <li className="flex items-start gap-2.5 px-3 py-2.5">
-                  <ListBulletIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
-                  <div className="text-xs leading-snug">
-                    <span className="font-semibold text-text-primary">Actions</span>
-                    <span className="text-text-secondary"> you can ship today</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
           </div>
         </aside>
       </div>
@@ -456,13 +505,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
           screens so the action is always thumb-reachable. */}
       <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
         {!canAnalyze && (
-          <p className="mb-2 text-xs text-text-tertiary text-center">
-            {!hasImages && !productType
-              ? 'Add a screenshot and pick a type.'
-              : !hasImages
-                ? 'Add a screenshot.'
-                : 'Pick a type.'}
-          </p>
+          <p className="mb-2 text-xs text-text-tertiary text-center">Add a screenshot to analyze.</p>
         )}
         <button
           onClick={() => canAnalyze && onAnalyze(stagedImages)}
@@ -488,5 +531,36 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         }}
       />
     </div>
+  );
+}
+
+/**
+ * A single step in the right-rail Progress card: an indicator dot (done /
+ * active / pending) with a connector line, and freeform content.
+ */
+function StepRow({ state, last, children }: { state: StepState; last?: boolean; children: React.ReactNode }) {
+  return (
+    <li className="flex gap-3">
+      <div className="flex flex-col items-center pt-0.5">
+        <span
+          className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+            state === 'done'
+              ? 'bg-accent-primary text-white dark:text-gray-900'
+              : state === 'active'
+                ? 'border-2 border-accent-primary'
+                : 'border-2 border-border-primary'
+          }`}
+          aria-hidden
+        >
+          {state === 'done' ? (
+            <CheckIcon className="w-3 h-3" strokeWidth={3} />
+          ) : state === 'active' ? (
+            <span className="w-2 h-2 rounded-full bg-accent-primary" />
+          ) : null}
+        </span>
+        {!last && <span className="w-px flex-1 min-h-[1rem] bg-border-primary my-1" />}
+      </div>
+      <div className={`min-w-0 flex-1 ${last ? '' : 'pb-4'}`}>{children}</div>
+    </li>
   );
 }

@@ -99,7 +99,11 @@ export type ProductType =
   | 'ai-agent'
   | 'recommendation-system'
   | 'content-generation'
-  | 'other';
+  | 'dashboard-analytics'
+  | 'embedded-ai-feature'
+  | 'search-discovery'
+  | 'reports-documents'
+  | 'general'; //  internal fallback (auto-classify miss / "not sure") — not a picker tile
 
 export type AuditStep = 'demo' | 'product-type' | 'screenshot' | 'results';
 

@@ -9,7 +9,10 @@ const VALID_TYPES: ProductType[] = [
   'ai-agent',
   'recommendation-system',
   'content-generation',
-  'other',
+  'dashboard-analytics',
+  'embedded-ai-feature',
+  'search-discovery',
+  'reports-documents',
 ];
 
 function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif' {
@@ -48,9 +51,12 @@ export async function POST(request: NextRequest) {
 - ai-agent (autonomous task agents, browser agents, coding agents)
 - recommendation-system (feeds, suggestions, personalized lists)
 - content-generation (image/video/text generation tools)
-- other (anything else)
+- dashboard-analytics (AI insights, metrics, admin overviews)
+- embedded-ai-feature (an AI copilot/assist inside an existing tool, e.g. a side panel)
+- search-discovery (AI or semantic search, discovery feeds)
+- reports-documents (AI-generated reports, data extraction, enrichment)
 
-Respond with ONLY the slug, nothing else.`,
+Respond with ONLY the slug, nothing else. If none fit, respond with: general`,
             },
           ],
         },
@@ -65,7 +71,7 @@ Respond with ONLY the slug, nothing else.`,
       .toLowerCase();
 
     const match = VALID_TYPES.find((t) => text.includes(t));
-    return NextResponse.json({ productType: match ?? 'other' });
+    return NextResponse.json({ productType: match ?? 'general' });
   } catch (err) {
     console.error('[classify-product] error:', err);
     return NextResponse.json({ error: 'Classification failed' }, { status: 500 });
