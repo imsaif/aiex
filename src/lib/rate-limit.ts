@@ -61,8 +61,9 @@ if (typeof setInterval !== 'undefined') {
 }
 
 /**
- * Check and increment analysis rate limit
- * @returns Object with allowed status and remaining count
+ * @deprecated In-memory analysis limiter — does NOT hold on Vercel serverless
+ * (per-instance Map, wiped on cold starts). Use the durable DB-backed limiter in
+ * `@/lib/audit/analysis-rate-limit` instead. Kept only so nothing breaks; unused.
  */
 export function checkAnalysisRateLimit(ip: string): {
   allowed: boolean;
@@ -154,7 +155,8 @@ export function checkChatRateLimit(sessionId: string): {
 }
 
 /**
- * Get current usage without incrementing
+ * @deprecated In-memory usage read — superseded by the DB-backed `getAnalysisUsage`
+ * in `@/lib/audit/analysis-rate-limit`. Kept only so nothing breaks; unused.
  */
 export function getAnalysisUsage(ip: string): {
   used: number;

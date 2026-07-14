@@ -7,7 +7,8 @@ import { recordAuditSample } from '@/lib/audit/sample';
 import { clampScore } from '@/lib/audit/score';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock';
-import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
+import { formatTimeUntilReset } from '@/lib/rate-limit';
+import { checkAnalysisRateLimit } from '@/lib/audit/analysis-rate-limit';
 import { runVerificationLoop } from '@/lib/audit/verifyLoop';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -80,8 +81,8 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Check rate limit
-    const rateLimit = checkAnalysisRateLimit(ip);
+    // Check rate limit (durable, DB-backed by salted ipHash — see analysis-rate-limit.ts)
+    const rateLimit = await checkAnalysisRateLimit(ip, role);
     if (!rateLimit.allowed) {
       const timeUntilReset = formatTimeUntilReset(rateLimit.resetAt);
       after(() =>
