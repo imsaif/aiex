@@ -16,15 +16,16 @@ import {
 import { composeHandoffPrompt, productTypeLabel } from '@/lib/audit/handoff';
 import SaveAuditButton from './SaveAuditButton';
 import type { SavedAudit } from '@/hooks/useSavedAudits';
-import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
+import type { AnalysisResults, TopGap, ProductContext, ProductType } from '@/types/audit';
 import { GapCard } from './GapCard';
+import { AnalyzingView } from './AnalyzingView';
 import { EmailReportModal } from './EmailReportModal';
 import { DemoProductMockup, DEMO_PINS } from './DemoProductMockup';
 import { LaptopFrame } from './LaptopFrame';
 import { PhoneFrame } from './PhoneFrame';
 import { DemoChatMockup } from './DemoChatMockup';
 import { trackAuditEvent } from '@/lib/audit/analytics';
-import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
+import { CHAT_SUGGESTIONS } from './shared';
 import { PaywallInlineCapture } from './PaywallInlineCapture';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
@@ -54,40 +55,13 @@ interface FullPageResultsProps {
   isPaywalled?: boolean;
   auditCount?: number;
   isUnlocked?: boolean;
+  productType?: ProductType | null;
 }
 
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
 }
-
-const SCAN_PATTERNS = [
-  'Conversational UI', 'Error Recovery', 'Confidence Visualization',
-  'Explainable AI', 'Progressive Disclosure', 'Human-in-the-Loop',
-  'Feedback Loops', 'Graceful Handoff', 'Safe Exploration',
-  'Privacy-First Design', 'Adaptive Interfaces', 'Contextual Assistance',
-  'Augmented Creation', 'Responsible AI Design', 'Collaborative AI',
-  'Ambient Intelligence', 'Predictive Anticipation', 'Multimodal Interaction',
-  'Guided Learning', 'Selective Memory', 'Context Switching',
-  'Universal Access Patterns', 'Trust Calibration', 'Intent Preview',
-  'Autonomy Spectrum', 'Action Audit Trail', 'Escalation Pathways',
-  'Agent Status & Monitoring', 'Crisis Detection', 'Anti-Manipulation',
-];
-
-const PRODUCT_LOGOS = [
-  { src: '/images/logos/simple-icons/openai.svg', alt: 'OpenAI' },
-  { src: '/images/logos/simple-icons/anthropic.svg', alt: 'Anthropic' },
-  { src: '/images/logos/simple-icons/googlegemini.svg', alt: 'Gemini' },
-  { src: '/images/logos/simple-icons/githubcopilot.svg', alt: 'GitHub Copilot' },
-  { src: '/images/logos/simple-icons/perplexity.svg', alt: 'Perplexity' },
-  { src: '/images/logos/simple-icons/notion.svg', alt: 'Notion' },
-  { src: '/images/logos/simple-icons/figma.svg', alt: 'Figma' },
-  { src: '/images/logos/simple-icons/cursor.svg', alt: 'Cursor' },
-  { src: '/images/logos/simple-icons/midjourney.svg', alt: 'Midjourney' },
-  { src: '/images/logos/simple-icons/grammarly.svg', alt: 'Grammarly' },
-  { src: '/images/logos/simple-icons/duolingo.svg', alt: 'Duolingo' },
-  { src: '/images/logos/simple-icons/huggingface.svg', alt: 'Hugging Face' },
-];
 
 // Deterministic pin positions overlaid on the user's uploaded screenshot.
 // We don't have AI-detected coordinates, so we distribute up to 5 pins evenly
@@ -502,7 +476,7 @@ function EmptyAuditState({
   );
 }
 
-export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled, auditCount, isUnlocked }: FullPageResultsProps) {
+export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled, auditCount, isUnlocked, productType }: FullPageResultsProps) {
   // Normalize: prefer the multi-screenshot prop, fall back to the single-screenshot props for backwards compat.
   const allScreenshots = screenshots && screenshots.length > 0
     ? screenshots
@@ -512,10 +486,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const heroScreenshotUrl = activeScreenshot?.url ?? screenshotUrl;
   const heroDeviceType = activeScreenshot?.deviceType ?? screenshotDeviceType;
   const showDemoCTA = isDemoMode && !!onStartRealAudit;
-  // Analysis loading state
-  const [messageIndex, setMessageIndex] = useState(0);
-  const [scanIndex, setScanIndex] = useState(0);
-  const [analyzeElapsedMs, setAnalyzeElapsedMs] = useState(0);
 
   // Handoff copy state
   const [handoffCopied, setHandoffCopied] = useState(false);
@@ -536,35 +506,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   // Pin → side panel (demo mode)
   const [openPin, setOpenPin] = useState<number | null>(null);
   const [hoveredPin, setHoveredPin] = useState<number | null>(null);
-
-  // Rotate analysis messages
-  useEffect(() => {
-    if (!isAnalyzing) return;
-    const interval = setInterval(() => {
-      setMessageIndex((i) => (i + 1) % ANALYSIS_MESSAGES.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [isAnalyzing]);
-
-  // Advance pattern scan checklist
-  useEffect(() => {
-    if (!isAnalyzing) { setScanIndex(0); return; }
-    const interval = setInterval(() => {
-      setScanIndex((i) => Math.min(i + 1, SCAN_PATTERNS.length));
-    }, 400);
-    return () => clearInterval(interval);
-  }, [isAnalyzing]);
-
-  // Track elapsed analysis time so the progress bar can pace itself against the
-  // REAL median (~40s, p90 ~58s) instead of the pattern checklist, which filled
-  // to 100% in ~12s and then sat there — the classic "stuck at 100%, must be
-  // frozen" perceived-hang that drives abandonment on a genuinely slow call.
-  useEffect(() => {
-    if (!isAnalyzing) { setAnalyzeElapsedMs(0); return; }
-    const startedAt = Date.now();
-    const interval = setInterval(() => setAnalyzeElapsedMs(Date.now() - startedAt), 250);
-    return () => clearInterval(interval);
-  }, [isAnalyzing]);
 
   // Bring the latest message into view. The conversation now flows in the page
   // (no inner scroll container) with a sticky input, so scrolling the window to
@@ -674,137 +615,9 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     }
   };
 
-  // Analyzing state — screenshot overlay with pattern scanner
+  // Analyzing state — Cowork-style narration feed + live right-rail cards.
   if (isAnalyzing && !results) {
-    // Show a fixed list of 8 patterns, update their state in place — no scrolling/jumping
-    const displayPatterns = SCAN_PATTERNS.slice(0, 8);
-
-    return (
-      <div className="min-h-[70vh] relative overflow-hidden rounded-2xl mx-4 sm:mx-6 mt-6">
-        {/* Screenshot background */}
-        {screenshotUrl && (
-          <img
-            src={screenshotUrl}
-            alt="Your interface being analyzed"
-            className="absolute inset-0 w-full h-full object-cover object-top"
-          />
-        )}
-
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-
-        {/* Scanning line animation */}
-        <div
-          className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-accent-primary to-transparent opacity-60"
-          style={{
-            animation: 'scanLine 2.5s ease-in-out infinite',
-            top: '0%',
-          }}
-        />
-        <style>{`
-          @keyframes scanLine {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { top: 100%; opacity: 0; }
-          }
-          @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-        `}</style>
-
-        {/* Center overlay content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] px-4 py-12">
-
-          {/* Pattern scanner card */}
-          <div className="w-full max-w-sm rounded-2xl bg-white/10 backdrop-blur-xl border border-white/10 p-5 mb-8">
-            <p className="text-[11px] font-medium uppercase tracking-widest text-white/50 mb-4">Checking patterns</p>
-            <div className="space-y-2.5">
-              {displayPatterns.map((pattern, i) => {
-                // Each slot cycles through the full list: the pattern name shown
-                // rotates based on scanIndex, while the state (checked/active/pending)
-                // stays positionally stable
-                const isChecked = i < (scanIndex % (displayPatterns.length + 1));
-                const isActive = i === (scanIndex % (displayPatterns.length + 1));
-
-                // Swap in new pattern names as scan progresses through batches
-                const batch = Math.floor(scanIndex / displayPatterns.length);
-                const patternIdx = (batch * displayPatterns.length + i) % SCAN_PATTERNS.length;
-                const patternName = SCAN_PATTERNS[patternIdx];
-
-                return (
-                  <div
-                    key={i}
-                    className={`flex items-center gap-3 transition-all duration-300 ${
-                      isActive ? 'opacity-100' : isChecked ? 'opacity-60' : 'opacity-30'
-                    }`}
-                  >
-                    {isChecked ? (
-                      <CheckCircleIcon className="w-4 h-4 text-status-success flex-shrink-0" />
-                    ) : isActive ? (
-                      <div className="w-4 h-4 flex-shrink-0 flex items-center justify-center">
-                        <div className="w-2.5 h-2.5 rounded-full bg-accent-primary animate-pulse" />
-                      </div>
-                    ) : (
-                      <div className="w-4 h-4 flex-shrink-0 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-white/20" />
-                      </div>
-                    )}
-                    <span className={`text-sm transition-all duration-200 ${
-                      isActive ? 'text-white font-medium' : isChecked ? 'text-white/60' : 'text-white/30'
-                    }`}>
-                      {patternName}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-            {/* Progress bar */}
-            <div className="mt-4 h-1 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-accent-primary rounded-full transition-all duration-300 ease-out"
-                // Asymptotic ease toward ~95% keyed to elapsed time (median run ~40s),
-                // so the bar keeps visibly moving for the whole wait and never parks
-                // at 100% before results land. Reaches ~60% at 20s, ~82% at 40s.
-                style={{ width: `${Math.round(95 * (1 - Math.exp(-analyzeElapsedMs / 20000)))}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Logo ticker */}
-          <div className="w-full max-w-md mb-8 overflow-hidden">
-            <p className="text-[10px] font-medium uppercase tracking-widest text-white/30 text-center mb-3">
-              Comparing against top AI products
-            </p>
-            <div className="overflow-hidden">
-              <div
-                className="flex gap-6 items-center"
-                style={{ animation: 'marquee 15s linear infinite', width: 'max-content' }}
-              >
-                {/* Double the logos for seamless loop */}
-                {[...PRODUCT_LOGOS, ...PRODUCT_LOGOS].map((logo, i) => (
-                  <img
-                    key={`${logo.alt}-${i}`}
-                    src={logo.src}
-                    alt={logo.alt}
-                    className="w-5 h-5 opacity-40 invert flex-shrink-0"
-                    width={20}
-                    height={20}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Status message */}
-          <p className="text-base font-medium text-white mb-1.5">
-            {ANALYSIS_MESSAGES[messageIndex]}
-          </p>
-          <p className="text-sm text-white/40">This usually takes 30-45 seconds — we check every pattern properly</p>
-        </div>
-      </div>
-    );
+    return <AnalyzingView screenshots={allScreenshots} productType={productType} />;
   }
 
   if (!results) return null;
@@ -1290,16 +1103,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 New audit
               </button>
             </div>
-
-            {/* Done-for-you upsell — non-blocking secondary offer */}
-            <a
-              href="/services?from=post-audit-cta"
-              onClick={() => trackAuditEvent('service_cta_clicked', { source: 'results_rail' })}
-              className="block rounded-2xl border border-border-primary bg-background-primary px-5 py-4 hover:bg-background-secondary transition-colors"
-            >
-              <span className="block text-sm font-semibold text-text-primary mb-0.5">Want us to audit your whole product?</span>
-              <span className="block text-sm text-text-secondary">A senior, done-for-you AI-UX audit with a detailed report, prioritized recommendations, and a walkthrough with your team. <span className="text-accent-primary">Learn more →</span></span>
-            </a>
 
             {/* What we audited — optional details */}
             {(surfaceDescription || results.applicablePatterns?.length) && (

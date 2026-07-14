@@ -362,13 +362,6 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
 
         {/* RIGHT: floating cards — Progress stepper advances as the user acts. */}
         <aside className="w-full lg:w-[360px] flex-shrink-0 flex flex-col gap-3 text-left">
-          <div className="mb-0.5">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">Audit your interface</h2>
-            <p className="text-text-secondary text-sm mt-1">
-              Score your design against 38 AI UX patterns.
-            </p>
-          </div>
-
           {showPicker ? (
             /* Manual override — reveal the 8 type tiles as its own card. */
             <div className="rounded-card border border-border-primary bg-background-secondary p-4">

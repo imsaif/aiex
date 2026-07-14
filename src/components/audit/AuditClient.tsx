@@ -302,7 +302,7 @@ export default function AuditClient({
       )}
 
       {isIntakeFlow && (
-        <section className="pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern">
+        <section className="pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-background-primary min-h-[82vh]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             {/* Back. Two different meanings depending on how the user got here,
                 and conflating them was a live bug: the demo-state reset below
@@ -379,7 +379,7 @@ export default function AuditClient({
       )}
 
       {isResultsView && (
-        <section className="bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern">
+        <section className={step === 'demo' ? 'bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern' : 'bg-background-primary'}>
           <FullPageResults
             results={analysisResults}
             onNewAudit={handleClear}
@@ -393,6 +393,7 @@ export default function AuditClient({
             isPaywalled={isPaywalled}
             auditCount={auditCount}
             isUnlocked={isUnlocked}
+            productType={productType}
           />
         </section>
       )}
