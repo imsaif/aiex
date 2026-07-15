@@ -60,6 +60,7 @@ const RSS_SOURCES: RssSource[] = [
   { name: 'Smashing Magazine', url: 'https://www.smashingmagazine.com/feed/', color: '#d33a2c', tier: 'design-pub' },
   { name: 'A List Apart', url: 'https://alistapart.com/main/feed/', color: '#bf3f3f', tier: 'design-pub' },
   { name: 'TLDR Design', url: 'https://tldr.tech/api/rss/design', color: '#1a73e8', tier: 'design-pub' },
+  { name: 'Design Systems Collective', url: 'https://designsystemscollective.substack.com/feed', color: '#2563eb', tier: 'design-pub' }, // design systems x AI (added Jul 15 2026)
 
   // Design opinion — Medium-style think-pieces and strategy essays. Lower
   // baseline (+28) and capped to 1-2 per issue via the prompt: opinion is
@@ -67,12 +68,19 @@ const RSS_SOURCES: RssSource[] = [
   { name: 'UX Collective', url: 'https://uxdesign.cc/feed', color: '#000000', tier: 'design-opinion' },
   { name: 'UX Planet', url: 'https://uxplanet.org/feed', color: '#0066cc', tier: 'design-opinion' },
   { name: "Lenny's Newsletter", url: 'https://www.lennysnewsletter.com/feed', color: '#ff6900', tier: 'design-opinion' },
+  { name: 'Jim Nielsen', url: 'https://blog.jim-nielsen.com/feed.xml', color: '#005a9c', tier: 'design-opinion' }, // near-daily design-engineering craft (added Jul 15 2026)
+  { name: 'The Looking Glass', url: 'https://lg.substack.com/feed', color: '#7c3aed', tier: 'design-opinion' }, // Julie Zhuo (ex-FB VP Design)
+  { name: 'One Useful Thing', url: 'https://www.oneusefulthing.org/feed', color: '#16a34a', tier: 'design-opinion' }, // Ethan Mollick, practical AI
+  { name: 'The Shape of AI', url: 'https://shapeofai.substack.com/feed', color: '#db2777', tier: 'design-opinion' }, // Emily Campbell, AI-UX pattern reference
 
   // Design tools
   // NOTE: Framer has no public RSS feed at any of the standard paths
   // (verified Apr 20 2026: /blog/rss.xml, /blog/feed/, /blog/atom.xml all 404).
   // Revisit if they ship one or via an aggregator.
   { name: 'Figma', url: 'https://www.figma.com/blog/feed/atom.xml', color: '#f24e1e', tier: 'design-tool' },
+  // First-party design-tool blogs with real RSS (added Jul 15 2026 to thicken this tier — was Figma-only)
+  { name: 'UXPin', url: 'https://www.uxpin.com/studio/feed/', color: '#00c9a7', tier: 'design-tool' }, // AI-native design tool, near-daily
+  { name: 'Dovetail', url: 'https://dovetail.com/blog/rss.xml', color: '#6b4eff', tier: 'design-tool' }, // AI UX-research platform
 
   // Design tools (Google News searches — no direct RSS feeds)
   // Queries are scoped to avoid generic-word collisions (e.g. "arc" → many false hits).
@@ -84,7 +92,8 @@ const RSS_SOURCES: RssSource[] = [
   // AI labs (direct blogs)
   { name: 'OpenAI', url: 'https://openai.com/blog/rss.xml', color: '#10a37f', tier: 'ai-lab' },
   { name: 'Google AI', url: 'https://blog.google/technology/ai/rss/', color: '#4285f4', tier: 'ai-lab' },
-  { name: 'Microsoft AI', url: 'https://blogs.microsoft.com/ai/feed/', color: '#00a4ef', tier: 'ai-lab' },
+  { name: 'Microsoft AI', url: 'https://www.microsoft.com/en-us/ai/blog/feed/', color: '#00a4ef', tier: 'ai-lab' }, // blogs.microsoft.com/ai/feed 410 Gone (Jul 15 2026)
+  { name: 'Hugging Face', url: 'https://huggingface.co/blog/feed.xml', color: '#ffd21e', tier: 'ai-lab' }, // very active open-model/product feed (added Jul 15 2026)
 
   // AI labs (Google News searches for AI products)
   { name: 'Cursor', url: 'https://news.google.com/rss/search?q=Cursor+AI+editor+OR+Cursor+code+editor&hl=en-US&gl=US&ceid=US:en', color: '#7c3aed', tier: 'ai-lab' },
@@ -96,18 +105,31 @@ const RSS_SOURCES: RssSource[] = [
 
   // Curators / aggregators (do the X-recap and AI-synthesis work for us)
   { name: 'Latent Space', url: 'https://www.latent.space/feed', color: '#7c3aed', tier: 'curator' },
+  // Added Jul 15 2026 (verified live via rss-parser) — high signal-per-item design/AI digests
+  { name: 'Sidebar', url: 'https://sidebar.io/feed.xml', color: '#0b0b0b', tier: 'curator' }, // daily hand-picked 5-link design digest
+  { name: 'TLDR AI', url: 'https://tldr.tech/api/rss/ai', color: '#1a73e8', tier: 'curator' }, // daily AI digest (distinct from TLDR Design)
+  { name: 'Import AI', url: 'https://jack-clark.net/feed/', color: '#111111', tier: 'curator' }, // weekly high-signal model/research roundup
+  { name: 'Pixels of the Week', url: 'https://stephaniewalter.design/feed/', color: '#d6336c', tier: 'curator' }, // weekly design + a11y + AI digest
+  { name: 'Exponential View', url: 'https://www.exponentialview.co/feed', color: '#f59e0b', tier: 'curator' }, // Azeem Azhar, top-tier AI analysis
 
-  // Designer voices (X/Twitter via RSS.app bridge — direct X RSS doesn't exist post-API change)
-  // RSS.app trial cap is 2 X feeds; remaining 6 handles below stay commented until plan upgrade.
-  // Capped at 1 item/source/day (see MAX_ITEMS_PER_SOURCE_BY_TIER).
-  { name: '@rauchg',  url: 'https://rss.app/feeds/D7jrLkS9L8Cbqq6H.xml', color: '#000000', tier: 'designer-voice' },
-  { name: '@meng_to', url: 'https://rss.app/feeds/wK4b14K9sr22PHdF.xml', color: '#000000', tier: 'designer-voice' },
-  // { name: '@amelia_wattenberger', url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
-  // { name: '@addyosmani',        url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
-  // { name: '@brian_lovin',       url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
-  // { name: '@soleio',            url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
-  // { name: '@joellewenstein',    url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' },
-  // { name: '@jiholimm',          url: 'https://rss.app/feeds/XXXX.xml', color: '#000000', tier: 'designer-voice' }, // Jiho Lim, Mobbin founder
+  // Designer voices — the X/Twitter/rss.app bridges were RETIRED Jul 15 2026 (both
+  // live bridges went 402, the other 6 handles never bridged). Replaced with durable
+  // first-party RSS feeds from named practitioners (verified live via rss-parser
+  // Jul 15 2026). These are the AI-meets-craft voices the old tier was meant to carry.
+  { name: 'Jakob Nielsen (UX Tigers)', url: 'https://jakobnielsenphd.substack.com/feed', color: '#f57c00', tier: 'designer-voice' }, // NN/g co-founder, now all AI interfaces
+  { name: 'LukeW', url: 'https://www.lukew.com/ff/rss.asp', color: '#0a66c2', tier: 'designer-voice' }, // veteran product designer on AI product UX
+  { name: 'Addy Osmani', url: 'https://addyosmani.com/rss.xml', color: '#4285f4', tier: 'designer-voice' }, // agentic engineering + AI craft
+  { name: 'Amelia Wattenberger', url: 'https://wattenberger.com/rss.xml', color: '#e91e63', tier: 'designer-voice' }, // novel AI UIs / tools-for-thought
+  { name: 'Geoffrey Litt', url: 'https://www.geoffreylitt.com/feed.xml', color: '#2d6cdf', tier: 'designer-voice' }, // canonical AI-interface essays
+  { name: 'AI/UX Playground', url: 'https://aiuxplayground.substack.com/feed', color: '#7c3aed', tier: 'designer-voice' }, // practical AI-UX patterns
+  { name: 'Dive Club', url: 'https://media.rss.com/diveclub/feed.xml', color: '#00b4d8', tier: 'designer-voice' }, // deep product-designer interviews (podcast)
+  // Substack practitioner voices (added Jul 15 2026; verified live + predominantly free via rss-parser; paywalled items dropped by isPaywalled)
+  { name: 'Proof of Concept', url: 'https://www.proofofconcept.pub/feed', color: '#111111', tier: 'designer-voice' }, // David Hoang, design leader
+  { name: 'Behind the Craft', url: 'https://creatoreconomy.so/feed', color: '#ff6b35', tier: 'designer-voice' }, // Peter Yang, product+AI craft
+  { name: 'UX + AI', url: 'https://ileanamarcut.substack.com/feed', color: '#6d28d9', tier: 'designer-voice' }, // Ileana Marcut
+  { name: 'Design with AI', url: 'https://designwithai.substack.com/feed', color: '#0ea5e9', tier: 'designer-voice' }, // Xinran Ma, ~20k subs
+  { name: 'UX Movement', url: 'https://uxmovement.substack.com/feed', color: '#e11d48', tier: 'designer-voice' }, // Anthony Tseng, UX craft
+  { name: 'Christine Vallaure', url: 'https://christinevallaure.substack.com/feed', color: '#0891b2', tier: 'designer-voice' }, // Figma-to-code AI
 
   // NOTE: Reddit dropped Apr 20 2026. All 4 candidate subreddits
   // (r/UXDesign, r/userexperience, r/web_design, r/Figma) returned 403 from
@@ -120,10 +142,10 @@ const RSS_SOURCES: RssSource[] = [
   { name: 'Replit', url: 'https://blog.replit.com/feed.xml', color: '#f26207', tier: 'dev-platform' },
   { name: 'Vercel', url: 'https://vercel.com/atom', color: '#000000', tier: 'dev-platform' },
   { name: 'GitHub', url: 'https://github.blog/feed/', color: '#333333', tier: 'dev-platform' },
-  { name: 'Supabase', url: 'https://supabase.com/blog/rss.xml', color: '#3ecf8e', tier: 'dev-platform' },
+  { name: 'Supabase', url: 'https://supabase.com/rss.xml', color: '#3ecf8e', tier: 'dev-platform' }, // /blog/rss.xml 404 (Jul 15 2026)
 
   // Tech news (keyword-only scoring — no source baseline)
-  { name: 'The Verge', url: 'https://www.theverge.com/ai-artificial-intelligence/rss/index.xml', color: '#e5127d', tier: 'tech-news' },
+  { name: 'The Verge', url: 'https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', color: '#e5127d', tier: 'tech-news' }, // old path 404 (Jul 15 2026)
   { name: 'TechCrunch', url: 'https://techcrunch.com/category/artificial-intelligence/feed/', color: '#0a9e01', tier: 'tech-news' },
   { name: 'Ars Technica', url: 'https://feeds.arstechnica.com/arstechnica/technology-lab', color: '#ff4e00', tier: 'tech-news' },
   { name: 'Wired', url: 'https://www.wired.com/feed/tag/ai/latest/rss', color: '#000000', tier: 'tech-news' },
@@ -433,6 +455,35 @@ function scoreRelevance(item: Parser.Item, sourceTier?: SourceTier): number {
 
 function isRelevant(item: Parser.Item, sourceTier?: SourceTier): boolean {
   return scoreRelevance(item, sourceTier) >= 10; // Minimum threshold
+}
+
+// Never link a reader to a paywalled post. Substack (and similar) gate a paid
+// post by TRUNCATING its RSS body to a short teaser — it does NOT reliably print
+// a marker string (verified Jul 2026: "keep reading with a trial" / "this post
+// is for paid subscribers" are usually absent; the body just gets short). So the
+// reliable signal is the length of the full body (`content:encoded`, the field
+// carrying the real article — `item.content` is only the subtitle on Substack).
+// A very short body means either a truncated paywall teaser or an empty stub;
+// both are unworthy of a link, so we drop either way. Explicit markers are also
+// checked as a cheap belt-and-suspenders for feeds that do print them.
+// Threshold 400 sits below every recommended free source's typical body length
+// (the shortest, UX Movement, medians ~680) so no whole free source is nuked,
+// while catching the ~300-400 char gated teasers. The admin still reviews every
+// draft in pending_review as the final check.
+const PAYWALL_MIN_BODY_CHARS = 400;
+const PAYWALL_MARKERS = [
+  'this post is for paid subscribers',
+  'this post is for paying subscribers',
+  'this episode is for paid subscribers',
+  'keep reading with a',
+];
+function isPaywalled(item: Parser.Item): boolean {
+  const bodyHtml =
+    (item as unknown as Record<string, string>)['content:encoded'] || item.content || '';
+  const bodyText = bodyHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (bodyText.length < PAYWALL_MIN_BODY_CHARS) return true;
+  const lower = bodyText.toLowerCase();
+  return PAYWALL_MARKERS.some((m) => lower.includes(m));
 }
 
 // Code-side design-native check (not a Claude self-report). Passes when the
@@ -839,6 +890,7 @@ async function aggregateNews(
 
           return (feed.items || [])
             .filter((item) => isRecent(item, lookbackHours) && isRelevant(item, source.tier))
+            .filter((item) => !isPaywalled(item)) // never link readers to a paywalled post
             .filter((item) => !item.link || !usedUrls.has(item.link))
             .filter((item) => !item.title || !isTitleAlreadyUsed(item.title.trim()))
             .map((item) => ({
