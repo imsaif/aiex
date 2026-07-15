@@ -36,6 +36,10 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-07-15 (MacBook)
+- **Pattern:** Newsletter source overhaul + paywall guard (feed-rot repair)
+- **Files:** `src/app/api/cron/generate-newsletter/route.ts` (+67/-15), committed `ab0fbdb` → master → deployed
+- **Notes:** Diagnosed thin newsletter days as feed rot + a dead source tier + a publish gap (Jul 13–15 drafts were generated but sat unpublished/quiet in `pending_review`, not missing — confirmed by reading the prod drafts API with `ADMIN_APPROVE_SECRET` as bearer). Fixed 3 dead feed URLs (Microsoft AI 410, Supabase 404, The Verge 404), removed the dead rss.app/X `designer-voice` tier, and added 26 durable RSS/Substack sources (47→58; designer-voice rebuilt 0→13) found via two multi-agent workflow sweeps and each verified live with rss-parser. Added `isPaywalled()` — drops truncated/gated feed items (body < 400 chars; Substack gates by truncation, not a marker string) so readers are never linked to a paywall. Local generation timed ~8s (well under the 60s Vercel cap). Deployed and prod force-regenerated today's Jul 15 draft from the new sources.
 ### Session 2026-07-08 12:25 (MacBook)
 - **Pattern:** autonomy-spectrum migration + augmented-creation demo polish + agentic badge + live pattern count (migration now 33/38, all merged to master)
 - **Status:** ✅ Complete — 4 focused PRs (#56–#59) squash-merged to master
