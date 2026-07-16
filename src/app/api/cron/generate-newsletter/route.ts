@@ -22,8 +22,23 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aiuxdesign.gui
 const FEED_USER_AGENT =
   'AIUX-Newsletter-Bot/1.0 (+https://www.aiuxdesign.guide; contact: misaif20@gmail.com)';
 
+// RSS per-feed timeout. Hardcoded 3s in prod to fit the 60s Vercel function cap.
+// NEWSLETTER_RSS_TIMEOUT_MS lifts it for off-Vercel manual runs (no function cap)
+// so slow first-party feeds actually load — mirrors NEWSLETTER_CLAUDE_TIMEOUT_MS.
+// Unset in production, so prod behavior is unchanged.
+const RSS_TIMEOUT_MS = process.env.NEWSLETTER_RSS_TIMEOUT_MS
+  ? parseInt(process.env.NEWSLETTER_RSS_TIMEOUT_MS, 10)
+  : 3000;
+
+// Total generation budget that gates the selection retry (protects Vercel's 60s
+// function cap). NEWSLETTER_GEN_BUDGET_MS lifts it for off-Vercel manual runs so
+// the retry isn't aborted mid-call. Unset in production → prod behavior unchanged.
+const GEN_BUDGET_MS = process.env.NEWSLETTER_GEN_BUDGET_MS
+  ? parseInt(process.env.NEWSLETTER_GEN_BUDGET_MS, 10)
+  : 60000;
+
 const parser = new Parser({
-  timeout: 3000,
+  timeout: RSS_TIMEOUT_MS,
   headers: {
     'User-Agent': FEED_USER_AGENT,
   },
@@ -1154,7 +1169,8 @@ YOUR TASK:
 
    AUDIENCE FILTER (strict — this overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not write a strained Designer's Takeaway to bolt design relevance onto a dev story. Returning 3 strong design-relevant items is better than 5 mixed items.
-   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), Lenny's Newsletter, *.substack.com, and medium.com are opinion. Count opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com) in your final selection — this count MUST be 0. If you have any candidates from these domains, drop them; do not include any opinion items.
+   - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), Lenny's Newsletter (lennysnewsletter.com), and medium.com are opinion. Count these opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com) in your final selection — this count MUST be 0. If you have any candidates from these domains, drop them.
+   - PRACTITIONER VOICES (REQUIRED WHEN AVAILABLE): The pool may include named practitioners and analysts we deliberately curate (e.g. Jakob Nielsen, Latent Space, AI/UX Playground, Julie Zhuo, Emily Campbell, Design Systems Collective). If ANY such item genuinely covers AI's impact on design work (agentic UX, AI workflows, AI skills for designers, interface patterns, the design-engineer shift), you MUST include exactly one of them in your final selection — even if that means dropping a fourth general news item to make room. These first-person practitioner perspectives are this newsletter's signature and are what differentiate it from a plain news roundup. Cap practitioner voices at 2 so concrete product/research news still leads. ONLY skip this if NO practitioner item in the pool is genuinely relevant to designers.
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
@@ -1592,7 +1608,7 @@ interface NewsletterQA {
   designLightWarning: boolean;          // true iff designNativeCount === 0
   poolSize: number;                     // items Claude saw after pool-cap filter
   duplicateSourceClipped: string[];     // sources trimmed by MAX_ITEMS_PER_SOURCE
-  opinionCount: number;                 // items from known opinion domains (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com)
+  opinionCount: number;                 // items from opinion domains (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com, non-subscribed *.substack.com); curated practitioner Substacks are exempt (see isOpinionUrl)
   productNewsCount: number;             // items from ai-lab or design-tool tiers (concrete product launches)
   selectionRuleViolation: string | null; // non-null when a hard selection rule failed; triggers auto-quiet
 }
@@ -1605,10 +1621,31 @@ interface NewsletterQA {
 // product field instead of the source field. Mirrors the prompt's value of 2.
 const MAX_ITEMS_PER_COMPANY = 2;
 
+// Hosts we DELIBERATELY subscribe to (derived from RSS_SOURCES so it never drifts
+// out of sync). Used by isOpinionUrl to exempt our curated practitioner Substacks
+// (Jakob Nielsen, Julie Zhuo, Emily Campbell, Design Systems Collective, etc.) from
+// the blanket *.substack.com opinion strip. Without this, every *.substack.com feed
+// we added on purpose is filtered out before scoring — the same structural-dead-source
+// failure that killed the curator tier (latent.space) until it was allowlisted. This
+// generalizes that one-off exemption: trust what we subscribe to, keep blocking the
+// rest. The classic opinion mills (uxdesign.cc, uxplanet.org, lennysnewsletter.com)
+// are custom domains caught by the explicit checks below, so they stay blocked even
+// though they're in RSS_SOURCES.
+const SUBSCRIBED_FEED_HOSTS: ReadonlySet<string> = new Set(
+  RSS_SOURCES.map((s) => {
+    try {
+      return new URL(s.url).hostname.toLowerCase().replace(/^www\./, '');
+    } catch {
+      return '';
+    }
+  }).filter(Boolean),
+);
+
 // Opinion-domain detection. The prompt already names uxdesign.cc/uxplanet.org/
 // lennysnewsletter.com but Claude routinely picks Substack pieces (which slip
-// through because they aren't on the named list). Treat all Substack and Medium
-// hosts as opinion since they're personal-publishing platforms. Also catch
+// through because they aren't on the named list). Treat Substack and Medium hosts
+// as opinion since they're personal-publishing platforms — EXCEPT the practitioner
+// Substacks we deliberately curate (see SUBSCRIBED_FEED_HOSTS). Also catch
 // custom-domain personal newsletters that use the Substack /p/ path pattern
 // (e.g. unknownarts.co/p/how-i-rebuilt-my-portfolio — custom domain, not
 // blocked by hostname, but the /p/ path is a Substack ghosthost signal).
@@ -1618,15 +1655,23 @@ function isOpinionUrl(url: string): boolean {
     const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
     if (host === 'uxdesign.cc' || host === 'uxplanet.org' || host === 'lennysnewsletter.com') return true;
     if (host === 'medium.com' || host.endsWith('.medium.com')) return true;
-    if (host === 'substack.com' || host.endsWith('.substack.com')) return true;
+    if (host === 'substack.com' || host.endsWith('.substack.com')) {
+      // Random Substack = opinion; a Substack we deliberately subscribe to is a
+      // trusted curated voice (Nielsen, Zhuo, Campbell, DSC, ...), not opinion.
+      return !SUBSCRIBED_FEED_HOSTS.has(host);
+    }
     // Custom-domain Substack ghosthosts use /p/<slug> path. Block them unless
     // they're a known first-party host we trust (design tools, AI labs, or a
     // curated source we deliberately subscribe to). latent.space is a Substack
     // (/p/ paths) but is our sole `curator`-tier source — without this exemption
     // the ghosthost rule strips 100% of its items before scoring, silently
     // killing the curator tier (see newsletter-and-infra incident log).
+    // A subscribed host is trusted whether it's on shared *.substack.com or its
+    // own custom domain (e.g. oneusefulthing.org/p/…, proofofconcept.pub/p/…).
+    // This subsumes the latent.space special-case (it's in SUBSCRIBED_FEED_HOSTS
+    // via its feed URL) and resurrects every custom-domain subscribed Substack.
     const KNOWN_PRODUCT_HOSTS = new Set(['figma.com', 'framer.com', 'vercel.com', 'github.com', 'openai.com', 'anthropic.com', 'latent.space']);
-    if (!KNOWN_PRODUCT_HOSTS.has(host) && /^\/p\/[a-z0-9-]+/.test(parsed.pathname)) return true;
+    if (!KNOWN_PRODUCT_HOSTS.has(host) && !SUBSCRIBED_FEED_HOSTS.has(host) && /^\/p\/[a-z0-9-]+/.test(parsed.pathname)) return true;
     return false;
   } catch {
     return false;
@@ -1661,7 +1706,7 @@ You MUST include AT LEAST ONE item from this list of concrete product-news sourc
 
 ${lines}
 
-You MUST exclude all opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, *.substack.com, medium.com) from your final selection — opinion count MUST be 0. Return the same JSON shape as before.`;
+You MUST exclude all opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com) from your final selection — opinion count MUST be 0. Curated practitioner voices (e.g. Jakob Nielsen, Julie Zhuo) are NOT opinion-source URLs and may stay, but include at most 2. Return the same JSON shape as before.`;
 }
 
 function buildQABlock(
@@ -1975,7 +2020,7 @@ async function runGeneration(
     // own abort to what's left (reserving ~8s for HTML render + DB insert). Too little
     // left → skip and fall through to the auto-quiet backstop below, which still
     // writes a visible draft instead of dying on the cap.
-    const retryBudgetMs = 60000 - (Date.now() - genStart) - 8000;
+    const retryBudgetMs = GEN_BUDGET_MS - (Date.now() - genStart) - 8000;
     if (addendum && retryBudgetMs < 15000) {
       console.warn(`[newsletter] Skipping selection retry — only ${retryBudgetMs}ms of the 60s budget left (elapsed ${Date.now() - genStart}ms). Falling through to auto-quiet.`);
     } else if (addendum) {
