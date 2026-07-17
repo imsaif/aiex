@@ -26,6 +26,11 @@ const PAGE_CONFIG: Record<string, { title: string; subtitle: string; icon: strin
     subtitle: 'An 8-pattern checklist for designing trustworthy AI agents. Free PDF download.',
     icon: 'CheckSquare',
   },
+  'accessibility-checklist': {
+    title: 'Accessibility Checklist\nfor AI Design',
+    subtitle: 'A 10-point accessibility review for AI-generated interfaces, ordered by failure rate. Free PDF download.',
+    icon: 'ClipboardCheck',
+  },
   prompts: {
     title: '36 Figma Make\nPrompts',
     subtitle: 'Copy-paste ready Figma Make prompts for 36 AI design patterns. Generate interfaces with one click.',

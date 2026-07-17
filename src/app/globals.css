@@ -65,6 +65,17 @@ body {
   --accent-hover: #1e2a42;
   --accent-subtle: #f5f5f5;
 
+  /* Severity heat scale — failure-rate chips on the accessibility checklist.
+   * Data-visualization colors (highest failure rate → lowest), theme-independent.
+   * Consume via inline `style={{ backgroundColor: 'var(--severity-N)' }}`. */
+  --severity-1: #dc2626; /* critical — deepened from #ef4444 so white chip text meets WCAG AA */
+  --severity-2: #f97316;
+  --severity-3: #f59e0b;
+  --severity-4: #4f46e5; /* deepened from #6366f1 so white chip text meets WCAG AA */
+  --severity-5: #14b8a6;
+  --severity-6: #10b981; /* low */
+  --severity-7: #162036; /* baseline / always-include (also used as dark chip text) */
+
   /* Legacy variables for backward compatibility */
   --background: var(--background-primary);
   --foreground: var(--text-primary);

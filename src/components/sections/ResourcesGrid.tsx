@@ -119,6 +119,18 @@ const RESOURCES: Resource[] = [
     linkType: 'internal',
   },
   {
+    id: 'accessibility-checklist',
+    title: 'Accessibility Checklist',
+    description: 'A 10-point accessibility review for AI-generated interfaces, ordered by failure rate. Skip links, landmarks, labels, heading structure, and more.',
+    icon: <ClipboardDocumentCheckIcon className={ICON_CLASS} />,
+    category: 'Downloads',
+    type: 'PDF',
+    tags: ['accessibility', 'a11y', 'checklist', 'audit'],
+    href: '/accessibility-checklist-for-ai-designs',
+    ctaText: 'Get Checklist',
+    linkType: 'internal',
+  },
+  {
     id: 'pattern-checklist',
     title: 'AIUX Design Checklist',
     description: '28 patterns across 7 categories in a printable audit checklist. Use during design reviews to score your AI product.',
@@ -162,7 +174,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
   const isDownload = resource.linkType === 'download';
 
   const cardContent = (
-    <div className="group bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 flex flex-col h-full">
+    <div className="group bg-surface-primary border border-primary rounded-2xl shadow-card hover:shadow-card-hover transition-all duration-200 hover:-translate-y-0.5 flex flex-col h-full">
       <div className="p-6 flex flex-col flex-1">
         {/* Top: Icon + Type Badge */}
         <div className="flex items-start justify-between mb-4">
@@ -252,7 +264,7 @@ export default function ResourcesGrid() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
+            <div className="bg-surface-primary rounded-2xl p-6 border border-primary shadow-card sticky top-24">
               <h3 className="font-semibold text-lg mb-4 text-text-primary">Categories</h3>
               <ul className="space-y-2">
                 <li>
@@ -291,7 +303,7 @@ export default function ResourcesGrid() {
           {/* Resources Grid */}
           <div className="flex-1">
             {/* Search */}
-            <div className="mb-6 bg-surface-primary rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card">
+            <div className="mb-6 bg-surface-primary rounded-2xl p-5 border border-primary shadow-card">
               <UnifiedSearchBar
                 placeholder="Search resources..."
                 value={searchQuery}

@@ -17,6 +17,7 @@ export const NEWSLETTER_SOURCES = [
   'audit-report',
   'audit-waitlist',
   'agentic-checklist',
+  'accessibility-checklist',
   'design-with-claude',
   'guides',
   'homepage-hero',
@@ -30,4 +31,5 @@ export const PDF_DOWNLOAD_SOURCES: NewsletterSource[] = [
   'handbook',
   'audit-kit',
   'agentic-checklist',
+  'accessibility-checklist',
 ];

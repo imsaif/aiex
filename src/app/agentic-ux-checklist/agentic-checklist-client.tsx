@@ -263,8 +263,10 @@ export function AgenticChecklistClient() {
                     <p className="text-sm text-red-400 text-center">{errorMessage}</p>
                   )}
                 </form>
-                <p className="text-xs text-gray-400 text-center mt-3">
-                  Enter email · Instant download · No spam
+                <p className="text-xs text-gray-400 text-center mt-3 leading-relaxed">
+                  Downloads instantly. You&apos;ll also join{' '}
+                  <span className="font-medium text-white">AI UX Daily</span>, our free newsletter.
+                  Unsubscribe anytime.
                 </p>
               </div>
             ) : (

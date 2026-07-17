@@ -133,6 +133,10 @@ const exemptedFiles = [
   /guides\/chat-previews/,
   // Pattern demo components that render branded third-party UIs (e.g., real Slack/Notion mockups)
   /scaffolded\/.*-demo\.tsx$/,
+  // Lead-magnet landing pages render an intentionally-inverted, always-dark accent
+  // panel (navy + fixed gray cards) that must NOT flip with the theme — fixed gray
+  // utilities are deliberate here, same rationale as the branded demos above.
+  /(agentic-ux-checklist|accessibility-checklist-for-ai-designs)\/.*-client\.tsx$/,
 ];
 
 function isExemptedFile(filePath) {
