@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import {
   AdjustmentsHorizontalIcon,
@@ -43,6 +43,7 @@ const useCases = [
 ];
 
 export function AgenticChecklistClient() {
+  const reduce = useReducedMotion();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -146,7 +147,7 @@ export function AgenticChecklistClient() {
                   </div>
                   <div>
                     <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">Newsletter</span>
-                    <span className="text-xs text-text-tertiary">Daily AI UX news</span>
+                    <span className="text-xs text-text-secondary">Daily AI UX news</span>
                   </div>
                 </Link>
                 <Link
@@ -158,7 +159,7 @@ export function AgenticChecklistClient() {
                   </div>
                   <div>
                     <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">36 Patterns</span>
-                    <span className="text-xs text-text-tertiary">Browse the full library</span>
+                    <span className="text-xs text-text-secondary">Browse the full library</span>
                   </div>
                 </Link>
                 <Link
@@ -170,7 +171,7 @@ export function AgenticChecklistClient() {
                   </div>
                   <div>
                     <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">Pattern Audit Tool</span>
-                    <span className="text-xs text-text-tertiary">Audit your AI patterns</span>
+                    <span className="text-xs text-text-secondary">Audit your AI patterns</span>
                   </div>
                 </Link>
               </div>
@@ -180,7 +181,7 @@ export function AgenticChecklistClient() {
           {/* Back Link (desktop) */}
           <Link
             href="/"
-            className="hidden lg:inline-flex items-center gap-2 text-sm text-text-tertiary hover:text-text-primary transition mt-10"
+            className="hidden lg:inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition mt-10"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             Back to Home
@@ -192,20 +193,20 @@ export function AgenticChecklistClient() {
           <div className="max-w-lg mx-auto w-full">
             {/* What's Inside - Cards */}
             <div className="mb-10">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-4">
-                What&apos;s Inside &mdash; 8 Patterns
-              </p>
+              <h2 className="text-xs text-gray-300 font-semibold uppercase tracking-wide mb-4">
+                What&apos;s Inside: 8 Patterns
+              </h2>
               <div className="grid grid-cols-2 gap-3">
                 {checklistPatterns.map((item) => (
                   <motion.div
                     key={item.number}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: item.number * 0.06 }}
+                    initial={reduce ? false : { opacity: 0, y: 10 }}
+                    animate={reduce ? undefined : { opacity: 1, y: 0 }}
+                    transition={reduce ? { duration: 0 } : { duration: 0.3, delay: item.number * 0.06 }}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-4 hover:border-gray-500 transition flex flex-col items-center text-center gap-2"
                   >
                     <div className="w-9 h-9 rounded-lg bg-gray-800 text-white flex items-center justify-center">
-                      <item.icon className="w-5 h-5" />
+                      <item.icon className="w-5 h-5" aria-hidden="true" />
                     </div>
                     <h3 className="text-sm font-medium text-white leading-tight">{item.name}</h3>
                   </motion.div>
@@ -230,14 +231,21 @@ export function AgenticChecklistClient() {
                   />
                   <div className="flex gap-2">
                     <div className="relative flex-1">
-                      <EnvelopeIcon className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <label htmlFor="agentic-email" className="sr-only">
+                        Email address
+                      </label>
+                      <EnvelopeIcon
+                        className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"
+                        aria-hidden="true"
+                      />
                       <input
+                        id="agentic-email"
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="your@email.com"
                         disabled={status === 'loading'}
-                        className="w-full pl-12 pr-4 py-4 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder:text-gray-500 focus:outline-none focus:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="w-full pl-12 pr-4 py-4 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-white focus:ring-2 focus:ring-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         required
                       />
                     </div>
@@ -342,7 +350,7 @@ export function AgenticChecklistClient() {
               </div>
               <div>
                 <span className="text-sm font-medium text-text-primary block">Newsletter</span>
-                <span className="text-xs text-text-tertiary">Daily AI UX news</span>
+                <span className="text-xs text-text-secondary">Daily AI UX news</span>
               </div>
             </Link>
             <Link
@@ -354,7 +362,7 @@ export function AgenticChecklistClient() {
               </div>
               <div>
                 <span className="text-sm font-medium text-text-primary block">36 Patterns</span>
-                <span className="text-xs text-text-tertiary">Browse the full library</span>
+                <span className="text-xs text-text-secondary">Browse the full library</span>
               </div>
             </Link>
             <Link
@@ -366,7 +374,7 @@ export function AgenticChecklistClient() {
               </div>
               <div>
                 <span className="text-sm font-medium text-text-primary block">Pattern Audit Tool</span>
-                <span className="text-xs text-text-tertiary">Audit your AI patterns</span>
+                <span className="text-xs text-text-secondary">Audit your AI patterns</span>
               </div>
             </Link>
           </div>
@@ -374,7 +382,7 @@ export function AgenticChecklistClient() {
 
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-text-tertiary"
+          className="inline-flex items-center gap-2 text-sm text-text-secondary"
         >
           <ArrowLeftIcon className="w-4 h-4" />
           Back to Home

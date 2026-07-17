@@ -24,5 +24,10 @@ export const metadata: Metadata = {
 };
 
 export default function AgenticChecklistPage() {
-  return <AgenticChecklistClient />;
+  // <main> gives the page the labeled landmark it was missing (a11y).
+  return (
+    <main id="main-content">
+      <AgenticChecklistClient />
+    </main>
+  );
 }
