@@ -11,7 +11,7 @@ export const guides: Guide[] = [
     slug: 'claude-code-learning-path',
     title: "Claude Code Course for Designers",
     description:
-      'Master Claude Code for design and prototyping with AI-powered assistance. Now with bidirectional Figma MCP integration — design-to-code and code-to-design.',
+      'Master Claude Code for design and prototyping with AI-powered assistance. Now with bidirectional Figma MCP integration: design-to-code and code-to-design.',
     excerpt:
       'Your complete Claude Code education: 23 sequential lessons covering setup, bidirectional Figma workflows, prototyping, version control, and professional best practices. Go from zero to confident in one comprehensive course.',
     tool: 'Claude Code',
@@ -21,7 +21,7 @@ export const guides: Guide[] = [
     readTime: 39,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    lastUpdatedDate: '2026-02-18',
+    lastUpdatedDate: '2026-07-20',
     status: 'ready',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Claude_AI_symbol.svg',
     tags: ['claude-code', 'learning-path', 'getting-started', 'course', 'comprehensive', 'figma-mcp', 'design-to-code'],
@@ -29,15 +29,39 @@ export const guides: Guide[] = [
       // Setup Lessons (1-3)
       {
         id: 'lesson-1',
-        title: 'Get Your Anthropic API Key',
+        title: 'Sign In to Claude Code',
         duration: 2,
         order: 1,
         module: 'setup',
         sections: [
           {
             type: 'intro',
-            content: 'Claude Code needs an API key to connect to the Claude AI service. Your API key is like a secret password that tells Anthropic it\'s really you.',
+            content: 'Claude Code connects to Claude using your Anthropic account. There are two ways to sign in. Pick whichever fits you; most individual designers use Option A.',
             icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option A: Sign in with your Claude subscription (simplest)',
+          },
+          {
+            type: 'text',
+            content: 'If you have a Claude Pro or Max plan, you don\'t need an API key at all. Right after you install Claude Code (Lesson 3), you\'ll run the claude command, a browser window opens, and you sign in with the same Claude.ai account you already use. That\'s it: nothing to copy, store, or bill separately.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            content: 'Claude Code is included with Pro, Max, Team, and Enterprise plans. Note: the free Claude.ai plan does not include Claude Code. If you\'re on Pro or Max, you can skip straight to Lesson 2; you\'ll sign in during setup.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option B: Use an API key (usage-based billing)',
+          },
+          {
+            type: 'text',
+            content: 'Prefer pay-as-you-go billing, or on a team that provisions keys through the Console? Create an API key instead:',
           },
           {
             type: 'steps',
@@ -83,13 +107,13 @@ export const guides: Guide[] = [
           },
           {
             type: 'completion',
-            title: 'API key ready',
+            title: 'Ready to sign in',
             items: [
-              'Created an Anthropic Console account',
-              'Generated and copied your first API key',
-              'Stored it somewhere safe and out of any code files',
+              'Chose how you\'ll sign in: Claude subscription or an API key',
+              'If using an API key: generated it and stored it somewhere safe, out of any code files',
+              'If using a subscription: nothing to do yet, you\'ll sign in during setup',
             ],
-            message: 'Next up: getting Node.js running so Claude Code has somewhere to live.',
+            message: 'Next up: getting Node.js installed so the prototypes you build have somewhere to run.',
           },
         ],
       },
@@ -102,7 +126,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Node.js is what lets your computer actually run Claude Code. If you\'ve never installed it before, that\'s fine — most designers haven\'t. You\'ll either confirm it\'s already there or grab it in two minutes.',
+            content: 'Node.js runs the prototypes and web apps you\'ll build with Claude Code. (The native installer means Claude Code itself doesn\'t need it, but your projects will.) If you\'ve never installed it before, that\'s fine, most designers haven\'t. You\'ll either confirm it\'s already there or grab it in two minutes.',
             icon: 'download',
           },
           {
@@ -222,18 +246,24 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Copy and paste this command, then press Enter:',
+            content: 'The recommended way to install is the native installer: one command, and it keeps itself up to date automatically. Copy the line for your system, paste it, and press Enter:',
           },
           {
             type: 'code',
-            code: 'npm install -g claude-code',
+            code: 'curl -fsSL https://claude.ai/install.sh | bash',
             language: 'bash',
-            label: 'Terminal',
+            label: 'Terminal (Mac / Linux)',
+          },
+          {
+            type: 'code',
+            code: 'irm https://claude.ai/install.ps1 | iex',
+            language: 'powershell',
+            label: 'Windows (PowerShell)',
           },
           {
             type: 'callout',
             calloutType: 'info',
-            content: 'This takes 1-2 minutes. You\'ll see lots of text in the terminal—that\'s completely normal and means it\'s working!',
+            content: 'This takes 1-2 minutes. You\'ll see lots of text in the terminal. That\'s completely normal and means it\'s working! Already use Node.js and prefer npm? npm install -g @anthropic-ai/claude-code also works (Node.js 22+).',
             icon: 'info',
           },
           {
@@ -253,15 +283,37 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'You should see a version number. If you do, you\'re ready to move on!',
+            content: 'You should see a version number. If you do, you\'re ready to sign in!',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Sign In',
+          },
+          {
+            type: 'text',
+            content: 'Start Claude Code from your terminal with the claude command. What happens next depends on the sign-in method you picked in Lesson 1:',
+          },
+          {
+            type: 'code',
+            code: 'claude',
+            language: 'bash',
+            label: 'Terminal',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Claude subscription (Option A):** a browser window opens. Sign in with your Claude.ai account, then return to the terminal. Done.',
+              '**API key (Option B):** if you\'ve set your key as the ANTHROPIC_API_KEY environment variable, Claude Code asks you to approve it once instead of opening a browser.',
+            ],
           },
           {
             type: 'completion',
             title: 'Setup Complete!',
             items: [
-              'An Anthropic account with an API key',
+              'A Claude subscription or an Anthropic API key',
               'Node.js installed on your computer',
-              'Claude Code installed and verified',
+              'Claude Code installed, verified, and signed in',
             ],
             message: 'You\'re ready to start building! Let\'s move on to creating your first prototype.',
           },
@@ -277,7 +329,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'The Figma MCP server connects your Figma designs directly to Claude Code. Instead of describing your designs in words, Claude Code can read your actual Figma files — components, colors, spacing, layout — and generate accurate code from them.',
+            content: 'The Figma MCP server connects your Figma designs directly to Claude Code. Instead of describing your designs in words, Claude Code can read your actual Figma files (components, colors, spacing, layout) and generate accurate code from them.',
             icon: 'info',
           },
           {
@@ -290,11 +342,11 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
-            content: 'Option A: Desktop MCP Server (Recommended)',
+            content: 'Option A: Desktop MCP Server (Dev or Full seat)',
           },
           {
             type: 'text',
-            content: 'The desktop server runs locally on your computer and lets you select frames directly in the Figma app. This is the best option for most designers.',
+            content: 'The desktop server runs locally and lets you select frames directly in the Figma app, the fastest workflow. It requires a Dev or Full seat on a paid Figma plan. If you\'re on Free or Pro, skip to Option B, which works on any plan.',
           },
           {
             type: 'steps',
@@ -308,7 +360,7 @@ export const guides: Guide[] = [
               {
                 number: 2,
                 title: 'Open a Design File',
-                content: 'Open any Design file in the Figma desktop app (not FigJam — you need a Design file for the MCP toggle).',
+                content: 'Open any Design file in the Figma desktop app (not FigJam; you need a Design file for the MCP toggle).',
                 icon: 'monitor',
               },
               {
@@ -343,11 +395,11 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
-            content: 'Option B: Remote MCP Server',
+            content: 'Option B: Remote MCP Server (works on any plan, recommended starting point)',
           },
           {
             type: 'text',
-            content: 'If you don\'t have the desktop app or prefer a cloud connection, you can use the remote server instead. This works with any Figma plan.',
+            content: 'The remote server is Figma\'s preferred method and works on every seat and plan, including Free and Pro. It\'s the simplest way to start: no desktop app required. You reference designs by pasting Figma URLs instead of selecting frames.',
           },
           {
             type: 'code',
@@ -359,7 +411,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'warning',
             title: 'Desktop vs Remote',
-            content: 'The desktop server lets you select frames directly in the app — a faster workflow. The remote server requires you to paste Figma URLs. Use desktop if you can.',
+            content: 'Start with Remote: it works on any plan and needs no setup beyond the command above. Upgrade to Desktop if you have a Dev or Full seat and want to select frames directly in the app instead of pasting URLs, which is the faster workflow.',
             icon: 'warning',
           },
           {
@@ -385,8 +437,8 @@ export const guides: Guide[] = [
             type: 'completion',
             title: 'Figma MCP connected',
             items: [
-              'Enabled the desktop MCP server in Figma\'s Dev Mode',
-              'Added the figma-desktop transport to Claude Code',
+              'Connected a Figma MCP server: remote (any plan) or desktop (Dev/Full seat)',
+              'Added the server to Claude Code with claude mcp add',
               'Verified the connection by listing the available Figma tools',
             ],
             message: 'Claude Code can now read your actual Figma files. Next: turning a selected frame into working code.',
@@ -402,7 +454,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Now that Figma is connected, you can select any frame in Figma and ask Claude Code to turn it into working code. No more describing hex codes and spacing — Claude Code reads your actual design.',
+            content: 'Now that Figma is connected, you can select any frame in Figma and ask Claude Code to turn it into working code. No more describing hex codes and spacing. Claude Code reads your actual design.',
             icon: 'info',
           },
           {
@@ -430,7 +482,7 @@ export const guides: Guide[] = [
                 title: 'Ask Claude Code to Implement It',
                 content: [
                   'Switch to your Claude Code terminal',
-                  'Tell Claude Code what you want — it can see your Figma selection',
+                  'Tell Claude Code what you want, it can see your Figma selection',
                 ],
                 icon: 'terminal',
               },
@@ -474,12 +526,12 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Layout structure — how elements are arranged (rows, columns, grids)',
-              'Colors — exact hex/RGB values from your design tokens',
-              'Typography — font family, size, weight, line height',
-              'Spacing — padding, margins, gaps between elements',
-              'Components — reusable design system components',
-              'Design variables — your Figma variables and styles',
+              'Layout structure: how elements are arranged (rows, columns, grids)',
+              'Colors: exact hex/RGB values from your design tokens',
+              'Typography: font family, size, weight, line height',
+              'Spacing: padding, margins, gaps between elements',
+              'Components: reusable design system components',
+              'Design variables: your Figma variables and styles',
             ],
           },
           {
@@ -557,7 +609,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'code',
-            code: '> Here are two Figma frames — the mobile and desktop versions:\n> Mobile: https://www.figma.com/design/abc123/MyProject?node-id=10-200\n> Desktop: https://www.figma.com/design/abc123/MyProject?node-id=10-300\n> Build a responsive component that matches both layouts.',
+            code: '> Here are two Figma frames, the mobile and desktop versions:\n> Mobile: https://www.figma.com/design/abc123/MyProject?node-id=10-200\n> Desktop: https://www.figma.com/design/abc123/MyProject?node-id=10-300\n> Build a responsive component that matches both layouts.',
             language: 'text',
             label: 'Claude Code prompt',
           },
@@ -576,7 +628,7 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Use frame selection (desktop MCP) for quick iteration — select, prompt, repeat',
+              'Use frame selection (desktop MCP) for quick iteration: select, prompt, repeat',
               'Use links when sharing a specific part of a complex file',
               'Use links when working with the remote MCP server (no desktop app)',
               'Use links when referencing multiple frames or states in one prompt',
@@ -614,10 +666,10 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Use Auto Layout — Claude Code translates Auto Layout directly to Flexbox/Grid, giving much cleaner code than absolute positioning',
-              'Name your layers clearly — "hero-section" and "cta-button" produce better code than "Frame 437" and "Rectangle 12"',
-              'Use Figma variables for colors and spacing — Claude Code picks these up and can generate consistent design tokens',
-              'Group related elements into components — Claude Code will create reusable React components from Figma components',
+              'Use Auto Layout: Claude Code translates Auto Layout directly to Flexbox/Grid, giving much cleaner code than absolute positioning',
+              'Name your layers clearly: "hero-section" and "cta-button" produce better code than "Frame 437" and "Rectangle 12"',
+              'Use Figma variables for colors and spacing: Claude Code picks these up and can generate consistent design tokens',
+              'Group related elements into components: Claude Code will create reusable React components from Figma components',
             ],
           },
           {
@@ -690,7 +742,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'tip',
             title: 'Design System Consistency',
-            content: 'Code Connect ensures that a "Primary Button" in Figma maps to your team\'s actual <Button variant="primary" /> component — not a generic button with hardcoded styles.',
+            content: 'Code Connect ensures that a "Primary Button" in Figma maps to your team\'s actual <Button variant="primary" /> component, not a generic button with hardcoded styles.',
             icon: 'info',
           },
           {
@@ -715,14 +767,14 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Figma\'s Code to Canvas feature closes the loop: build UI in Claude Code, then bring it back to Figma as editable frames. This makes the Figma ↔ Code workflow truly bidirectional — not just design-to-code, but code-to-design too.',
+            content: 'Figma\'s Code to Canvas feature closes the loop: build UI in Claude Code, then bring it back to Figma as editable frames. This makes the Figma ↔ Code workflow truly bidirectional, not just design-to-code, but code-to-design too.',
             icon: 'info',
           },
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Not Screenshots — Real Editable Frames',
-            content: 'Code to Canvas doesn\'t just paste images. It converts your built UI into real Figma layers — editable text, vector shapes, and auto-layout frames that your design team can modify directly.',
+            title: 'Not Screenshots: Real Editable Frames',
+            content: 'Code to Canvas doesn\'t just paste images. It converts your built UI into real Figma layers: editable text, vector shapes, and auto-layout frames that your design team can modify directly.',
             icon: 'info',
           },
           {
@@ -742,7 +794,7 @@ export const guides: Guide[] = [
               {
                 number: 2,
                 title: 'Capture the Screen',
-                content: 'Ask Claude Code to capture the current UI state. It takes a structured snapshot of the rendered output — layout, styles, text content, and hierarchy.',
+                content: 'Ask Claude Code to capture the current UI state. It takes a structured snapshot of the rendered output: layout, styles, text content, and hierarchy.',
                 icon: 'monitor',
               },
               {
@@ -754,7 +806,7 @@ export const guides: Guide[] = [
               {
                 number: 4,
                 title: 'Collaborate and Refine',
-                content: 'Your design team can now review, annotate, and refine the built UI directly in Figma. Leave comments, adjust spacing, or propose changes — all in the familiar Figma workflow.',
+                content: 'Your design team can now review, annotate, and refine the built UI directly in Figma. Leave comments, adjust spacing, or propose changes, all in the familiar Figma workflow.',
                 icon: 'user',
               },
             ],
@@ -775,7 +827,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'success',
             title: 'Capture a multi-step flow',
-            content: 'Capture the signup flow — show the email step, the password step, and the confirmation screen as three separate Figma frames.',
+            content: 'Capture the signup flow: show the email step, the password step, and the confirmation screen as three separate Figma frames.',
             icon: 'check',
           },
           {
@@ -837,11 +889,11 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Team review — share built UI with designers who prefer reviewing in Figma over a browser',
-              'Comparing variants — capture multiple implementations side by side for design critique',
-              'Designer feedback on built UI — let the team annotate and comment on actual code output',
-              'Documentation — keep Figma files up to date with what\'s actually been built',
-              'Handoff verification — confirm the code matches the original design by overlaying them in Figma',
+              'Team review: share built UI with designers who prefer reviewing in Figma over a browser',
+              'Comparing variants: capture multiple implementations side by side for design critique',
+              'Designer feedback on built UI: let the team annotate and comment on actual code output',
+              'Documentation: keep Figma files up to date with what\'s actually been built',
+              'Handoff verification: confirm the code matches the original design by overlaying them in Figma',
             ],
           },
           {
@@ -868,7 +920,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Time to actually launch Claude Code. You\'ll open a terminal, run one command, paste your API key, and pick a model. Three minutes from here to a working session.',
+            content: 'Time to actually launch Claude Code. You\'ll open a terminal, run one command, sign in, and pick a model. Three minutes from here to a working session.',
             icon: 'terminal',
           },
           {
@@ -906,16 +958,16 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
-            content: 'Paste Your API Key',
+            content: 'Sign In (if you haven\'t already)',
           },
           {
             type: 'text',
-            content: 'Claude Code will ask for your API key. Paste the one you saved in the setup guide.',
+            content: 'The first time you run claude, you\'ll sign in, either through the browser with your Claude subscription or by pasting the API key you saved. After that, Claude Code remembers you.',
           },
           {
             type: 'callout',
             calloutType: 'info',
-            content: 'Your key won\'t appear as you type—that\'s normal for security!',
+            content: 'If you\'re pasting an API key, it won\'t appear as you type. That\'s normal for security!',
             icon: 'info',
           },
           {
@@ -925,7 +977,14 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Claude Code will ask which model you want. Choose Claude 3.5 Sonnet—it\'s the best balance of speed and power for designers.',
+            content: 'Claude Code uses the sonnet model (Claude Sonnet 5) by default, the best balance of speed and quality for design work. Switch anytime with the /model command; try opus (Claude Opus 4.8) for heavier reasoning, or haiku for quick, simple tasks.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Handy Claude Code Commands',
+            content: 'A few built-in shortcuts worth knowing. Type /model to switch models, /clear to start a fresh chat while keeping your project, /code-review to have Claude Code check your code for issues, and /help to see everything. Press Shift + Tab to toggle plan mode, where Claude Code shows its plan before it changes any files, which is great while you are learning.',
+            icon: 'info',
           },
           {
             type: 'completion',
@@ -933,7 +992,7 @@ export const guides: Guide[] = [
             items: [
               'Opened a terminal session',
               'Launched Claude Code with the claude command',
-              'Pasted your API key and picked a model',
+              'Signed in and chose your model',
             ],
             message: 'Next: giving Claude Code a project folder to work in so your files don\'t end up scattered.',
           },
@@ -1007,7 +1066,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Paste your API key again. Now you\'re inside Claude Code, with your project as the working folder.',
+            content: 'Sign in again if Claude Code prompts you. Now you\'re inside Claude Code, with your project as the working folder.',
           },
           {
             type: 'completion',
@@ -1106,7 +1165,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Code without a preview is just text. You\'ll spin up a local dev server, open localhost:3000 in your browser, and see your prototype rendered in real-time — refreshing automatically every time Claude Code makes a change.',
+            content: 'Code without a preview is just text. You\'ll have Claude Code set up a local project, spin up a dev server, and open localhost:5173 in your browser to see your prototype rendered in real-time, refreshing automatically every time Claude Code makes a change.',
             icon: 'monitor',
           },
           {
@@ -1117,30 +1176,21 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
-            content: 'Exit Claude Code',
+            content: 'Let Claude Code Set Up the Project',
           },
           {
             type: 'text',
-            content: 'Type exit and press Enter to return to Terminal.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Initialize a React App (If Needed)',
-          },
-          {
-            type: 'text',
-            content: 'Run:',
+            content: 'Still inside Claude Code, ask it to make your folder runnable:',
           },
           {
             type: 'code',
-            code: 'npx create-react-app .',
-            language: 'bash',
-            label: 'Terminal',
+            code: 'Set up this folder as a React + Vite project with Tailwind CSS, install the dependencies, and make sure my button component shows on the page.',
+            language: 'text',
+            label: 'Claude Code',
           },
           {
             type: 'text',
-            content: 'This sets up the structure React needs to run.',
+            content: 'Claude Code scaffolds the project, installs what it needs, and wires in your component. Approve the commands if it asks. (Vite is the modern, fast replacement for older tools like create-react-app.)',
           },
           {
             type: 'heading',
@@ -1149,17 +1199,17 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Run:',
+            content: 'Now exit Claude Code (type exit) and start the dev server:',
           },
           {
             type: 'code',
-            code: 'npm start',
+            code: 'npm run dev',
             language: 'bash',
             label: 'Terminal',
           },
           {
             type: 'text',
-            content: 'Your prototype will automatically open in your browser at localhost:3000!',
+            content: 'Your prototype opens in your browser at localhost:5173. Leave this terminal running.',
           },
           {
             type: 'heading',
@@ -1174,9 +1224,9 @@ export const guides: Guide[] = [
             type: 'completion',
             title: 'Live preview running',
             items: [
-              'Set up the React project structure with create-react-app',
-              'Started the dev server with npm start',
-              'Confirmed the prototype renders at localhost:3000 with live reload',
+              'Had Claude Code scaffold a React + Vite + Tailwind project',
+              'Started the dev server with npm run dev',
+              'Confirmed the prototype renders at localhost:5173 with live reload',
             ],
             message: 'Two windows, one workflow. Last lesson in this module: keeping the dev server running while you keep editing.',
           },
@@ -1252,7 +1302,7 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Terminal #1: Your dev server (showing localhost:3000)',
+              'Terminal #1: Your dev server (showing localhost:5173)',
               'Terminal #2: Claude Code (where you edit)',
               'Browser: Your live prototype updating in real-time',
             ],
@@ -1279,7 +1329,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'GitHub is where your code lives in the cloud — backup, history, and collaboration in one place. If you don\'t already have an account, this lesson is sixty seconds of clicking. If you do, skip ahead to the next one.',
+            content: 'GitHub is where your code lives in the cloud: backup, history, and collaboration in one place. If you don\'t already have an account, this lesson is sixty seconds of clicking. If you do, skip ahead to the next one.',
             icon: 'github',
           },
           {
@@ -1346,7 +1396,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'A repository is a project folder that lives on GitHub. You\'ll create one with the same name as your local prototype folder, then keep the setup page open — you\'ll need its commands in the next lesson.',
+            content: 'A repository is a project folder that lives on GitHub. You\'ll create one with the same name as your local prototype folder, then keep the setup page open; you\'ll need its commands in the next lesson.',
             icon: 'github',
           },
           {
@@ -1378,7 +1428,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'GitHub will show you commands. Keep this page open—you\'ll need the commands soon!',
+            content: 'GitHub will show you commands. Keep this page open; you\'ll need the commands soon!',
           },
           {
             type: 'completion',
@@ -1488,7 +1538,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Connecting once isn\'t enough — every meaningful change needs a commit and a push. You\'ll learn the four-step save loop and how to write commit messages your future self will actually thank you for.',
+            content: 'Connecting once isn\'t enough; every meaningful change needs a commit and a push. You\'ll learn the four-step save loop and how to write commit messages your future self will actually thank you for.',
             icon: 'check',
           },
           {
@@ -1544,45 +1594,45 @@ export const guides: Guide[] = [
               'Practiced writing commit messages that describe what changed, not just "stuff"',
               'Treated commits as documentation, not paperwork',
             ],
-            message: 'Manual saves work, but Claude Code can handle most of this for you. Last lesson: the /save command.',
+            message: 'Manual saves work, but Claude Code can handle most of this for you. Last lesson: letting Claude Code do the git work.',
           },
         ],
       },
       {
         id: 'lesson-13',
-        title: 'Share Your Work & Use Claude\'s /save Command',
+        title: 'Share Your Work (Let Claude Code Handle Git)',
         duration: 1,
         order: 18,
         module: 'github',
         sections: [
           {
             type: 'intro',
-            content: 'You don\'t actually have to remember the four-step git loop every time. Claude Code\'s /save command does it for you, and your repo URL is the only thing you need to share work with anyone.',
+            content: 'You don\'t actually have to remember the four-step git loop every time. Just ask Claude Code in plain English to save your work, and your repo URL is the only thing you need to share it with anyone.',
             icon: 'github',
           },
           {
             type: 'heading',
             level: 'h2',
-            content: 'Share Your Work & Use Claude\'s /save Command',
+            content: 'Share Your Work (Let Claude Code Handle Git)',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Pro Tip - Automatic Saving',
+            content: 'Pro Tip: Let Claude Code Save for You',
           },
           {
             type: 'text',
-            content: 'Inside Claude Code, you can type:',
+            content: 'You don\'t need a special command. Inside Claude Code, just ask in plain English:',
           },
           {
             type: 'code',
-            code: '/save',
-            language: 'bash',
+            code: 'Commit my changes and push to GitHub with a clear message.',
+            language: 'text',
             label: 'Claude Code',
           },
           {
             type: 'text',
-            content: 'Claude Code will automatically handle git commands and create meaningful commit messages for you. This saves time!',
+            content: 'Claude Code runs git add, commit, and push for you and writes a meaningful commit message. It may ask you to approve the commands first. No git syntax to memorize.',
           },
           {
             type: 'heading',
@@ -1636,7 +1686,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'The single biggest factor in code quality is how you describe what you want. Vague prompts get vague output. This lesson teaches you the level of detail Claude Code actually needs — colors, sizes, interactions, framework — and what to leave out.',
+            content: 'The single biggest factor in code quality is how you describe what you want. Vague prompts get vague output. This lesson teaches you the level of detail Claude Code actually needs (colors, sizes, interactions, framework) and what to leave out.',
             icon: 'info',
           },
           {
@@ -1648,7 +1698,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'tip',
             title: 'Even Better: Use Figma MCP',
-            content: 'If you use Figma, you can skip manual descriptions entirely. Connect Figma to Claude Code via MCP and let it read your actual designs — colors, spacing, components, everything. See Module 2: Figma ↔ Code for setup instructions.',
+            content: 'If you use Figma, you can skip manual descriptions entirely. Connect Figma to Claude Code via MCP and let it read your actual designs: colors, spacing, components, everything. See Module 2: Figma ↔ Code for setup instructions.',
             icon: 'info',
           },
           {
@@ -1765,9 +1815,9 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Hover over buttons—does the effect work smoothly?',
-              'Click buttons—do they do what you expect?',
-              'Try animations—are they fast enough? Too slow?',
+              'Hover over buttons: does the effect work smoothly?',
+              'Click buttons: do they do what you expect?',
+              'Try animations: are they fast enough? Too slow?',
             ],
           },
           {
@@ -1903,7 +1953,7 @@ export const guides: Guide[] = [
             type: 'list',
             items: [
               'What the prototype is for',
-              'How to run it (e.g., "Run npm start to see the prototype")',
+              'How to run it (e.g., "Run npm install, then npm run dev to see the prototype")',
               'Design notes (e.g., "Button interactions should feel snappy")',
               'Links to design files (Figma, etc.)',
             ],
@@ -1932,7 +1982,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'If your team uses Figma, the Figma MCP server makes handoff seamless. Developers can connect Claude Code to your Figma files and generate code that matches your designs exactly — same colors, spacing, and components. No more "the padding looks off" back-and-forth.',
+            content: 'If your team uses Figma, the Figma MCP server makes handoff seamless. Developers can connect Claude Code to your Figma files and generate code that matches your designs exactly: same colors, spacing, and components. No more "the padding looks off" back-and-forth.',
           },
           {
             type: 'list',
@@ -1951,7 +2001,7 @@ export const guides: Guide[] = [
               'Documented design intent so developers know the why, not just the what',
               'Used Figma MCP to short-circuit the "the padding looks off" loop',
             ],
-            message: 'Last lesson coming up. Things will go wrong eventually — knowing how to fix them keeps the workflow running.',
+            message: 'Last lesson coming up. Things will go wrong eventually; knowing how to fix them keeps the workflow running.',
           },
         ],
       },
@@ -1964,7 +2014,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Three things break most often: Claude Code refusing to start, the dev server failing to launch, and git getting confused. Here are the fixes for each — bookmark this lesson, you\'ll come back to it.',
+            content: 'Three things break most often: Claude Code refusing to start, the dev server failing to launch, and git getting confused. Here are the fixes for each. Bookmark this lesson; you\'ll come back to it.',
             icon: 'warning',
           },
           {
@@ -1980,9 +2030,9 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Check your API key (copy it again if needed)',
-              'Make sure you\'ve updated Node.js: npm install -g npm',
-              'Reinstall Claude Code: npm install -g claude-code@latest',
+              'Check that you\'re signed in (run claude and sign in again if needed)',
+              'Update Claude Code: claude update',
+              'Reinstall with the native installer: curl -fsSL https://claude.ai/install.sh | bash (Mac/Linux) or irm https://claude.ai/install.ps1 | iex (Windows PowerShell)',
             ],
           },
           {
@@ -1994,8 +2044,8 @@ export const guides: Guide[] = [
             type: 'list',
             items: [
               'Press Ctrl + C to stop it',
-              'Run npm start again',
-              'Check if port 3000 is already in use by another program',
+              'Run npm run dev again',
+              'Check if port 5173 is already in use by another program',
             ],
           },
           {
@@ -2035,7 +2085,7 @@ export const guides: Guide[] = [
               'How to save your work on GitHub',
               'Best practices for working with Claude Code',
             ],
-            message: 'Congratulations! Start building! Create a prototype, share it with your team, and iterate. Claude Code is a tool to speed up your ideas—have fun with it!',
+            message: 'Congratulations! Start building! Create a prototype, share it with your team, and iterate. Claude Code is a tool to speed up your ideas, have fun with it!',
           },
         ],
       },
@@ -2043,7 +2093,7 @@ export const guides: Guide[] = [
     lessonCount: 23,
     content: `
       <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to Claude Code Learning Path for Designers</h2>
-      <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Now with bidirectional Figma MCP integration — design-to-code and code-to-design. <strong>Complete this course in 39 minutes and go from zero to confident.</strong></p>
+      <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Now with bidirectional Figma MCP integration: design-to-code and code-to-design. <strong>Complete this course in 39 minutes and go from zero to confident.</strong></p>
 
       <h3 class="text-3xl font-bold text-gray-900 mt-12 mb-3">What You'll Learn</h3>
       <p class="text-lg text-gray-700 mb-8">This learning path is structured in 5 sequential modules that build on each other. Complete all lessons in order for the best learning experience.</p>
@@ -2214,8 +2264,8 @@ export const guides: Guide[] = [
       <ul class="space-y-3 mb-8">
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">New to Claude Code?</strong> Start at the beginning and follow through sequentially to complete all lessons.</li>
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Claude Code installed?</strong> Jump straight to "Your First Prototype" and get hands-on immediately.</li>
-        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Use Figma?</strong> Jump to Module 2 to connect your Figma designs directly to Claude Code via MCP — both design-to-code and code-to-design.</li>
-        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Learn at your own pace</strong> — Pause between sections to practice and experiment with what you learned.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Use Figma?</strong> Jump to Module 2 to connect your Figma designs directly to Claude Code via MCP: both design-to-code and code-to-design.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Learn at your own pace</strong>: Pause between sections to practice and experiment with what you learned.</li>
       </ul>
 
       <div class="p-6 bg-gray-900 text-white rounded-lg">
@@ -3706,8 +3756,8 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              '**Claude 3.5 Sonnet** (Anthropic): Best for analysis and refactoring',
-              '**GPT-4o** (OpenAI): Great for creative code generation',
+              '**Claude Sonnet & Opus** (Anthropic): Best for analysis and refactoring',
+              '**GPT-5** (OpenAI): Great for creative code generation',
               '**Gemini** (Google): Good for general tasks',
               '**xAI models**: Latest experimental models',
             ],
@@ -7068,10 +7118,10 @@ export const guides: Guide[] = [
     readTime: 30,
     author: 'Design Team',
     publishedDate: '2026-04-21',
-    lastUpdatedDate: '2026-04-21',
+    lastUpdatedDate: '2026-07-20',
     status: 'ready',
     thumbnail: '/images/guides/claude-design-learning-path/thumbnail.svg',
-    tags: ['claude-design', 'anthropic', 'learning-path', 'ai-design-tool', 'prototyping', 'design-systems', 'opus-4-7'],
+    tags: ['claude-design', 'anthropic', 'learning-path', 'ai-design-tool', 'prototyping', 'design-systems', 'model-selection'],
     lessons: [
       {
         id: 'lesson-1',
@@ -7082,7 +7132,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: "Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups. You describe what you need; Claude builds a first version in its canvas, and you refine it together through chat, inline comments, or direct edits. It's powered by Claude Opus 4.7 and currently in research preview.",
+            content: "Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups. You describe what you need; Claude builds a first version in its canvas, and you refine it together through chat, inline comments, or direct edits. You choose which Claude model powers your work from the Model selector in the prompt bar, and it's currently in beta (Anthropic Labs).",
             icon: 'info',
           },
           {
@@ -7121,8 +7171,8 @@ export const guides: Guide[] = [
           {
             type: 'table',
             rows: [
-              { label: 'Claude Pro', content: 'Included, with monthly usage limits.' },
-              { label: 'Claude Max', content: 'Included, with higher limits.' },
+              { label: 'Claude Pro', content: 'Included. Since the mid-2026 update, Claude Design draws from your shared Claude usage limits, the same pool as chat, Claude Code, and Cowork, rather than a separate, smaller allowance.' },
+              { label: 'Claude Max', content: 'Included, with higher shared limits.' },
               { label: 'Claude Team', content: 'Included, designers can set up an organization-wide design system that every project inherits.' },
               { label: 'Claude Enterprise', content: 'Off by default. An organization admin enables it in Organization settings → Capabilities → Anthropic Labs.' },
             ],
@@ -7130,7 +7180,7 @@ export const guides: Guide[] = [
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Research preview, not GA',
+            title: 'Beta, not GA',
             content: 'Features, limits, and availability can change. Anthropic has called out some known gaps: comment persistence issues, save errors in compact view (switch to full view), lag with very large repositories, and no data residency or audit log support yet.',
             icon: 'info',
           },
@@ -7149,7 +7199,7 @@ export const guides: Guide[] = [
             items: [
               'Understood the scope, design-focused, not a general AI chat',
               'Checked which plan tier gives you access',
-              'Noted the research-preview caveats',
+              'Noted the beta caveats',
             ],
             message: 'Next up: writing your first prompt so the first output is actually useful.',
           },
@@ -7170,6 +7220,12 @@ export const guides: Guide[] = [
           {
             type: 'text',
             content: "Here's the exact sequence we captured building Lineup, the kanban board used throughout this guide. Claude asks a short round of clarifying questions first, confirms direction, then generates the full board in one pass.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-2/clarifying-questions.webp',
+            alt: "The current Claude Design UI mid-first-prompt: a 'Claude has some questions' panel in the left chat, and the canvas showing a generated set of multiple-choice clarifying questions (design type, submission method, output format) before it commits to a full design.",
+            label: "What this looks like in the current UI (here on a different project). The step-by-step clips below were captured on an earlier build, but the flow, clarifying questions first, then a full first pass, is the same.",
           },
           {
             type: 'image',
@@ -7285,7 +7341,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             type: 'callout',
             calloutType: 'warning',
             title: "Heads up, research-preview navigation bug",
-            content: "In our own testing we hit a recurring issue: while you're in a project with the canvas open, clicking around the UI can unexpectedly snap you back to the Claude Design home screen. Your work isn't lost, the project is saved and you can re-open it from the project picker. Just be aware it can happen and don't panic if it does. Expect this to get fixed as the product moves out of research preview.",
+            content: "Early research-preview builds had a recurring issue where clicking around the UI with the canvas open could snap you back to the Claude Design home screen. Anthropic's mid-2026 updates appear to have addressed it, and it's no longer on their documented list of known limitations. If you ever do get bounced to the home screen, don't panic: your work is saved and you can re-open the project from the project picker.",
             icon: 'warning',
           },
           {
@@ -7485,8 +7541,8 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Opus 4.7 is the vision model behind it',
-            content: "Claude Design uses Claude Opus 4.7, Anthropic's most capable vision model. It reasons about your current canvas while processing your message, so references like 'the second feature card' work without extra context.",
+            title: 'You pick the model that powers it',
+            content: "Claude Design puts a Model selector right in the prompt bar. You choose which Claude model does the work, from Haiku (fastest) through Sonnet, up to Opus 4.8 and Fable 5 (most capable), and you can set an Effort level too. Sonnet is the sweet spot for most design work; reach for Opus or Fable 5 on complex, detail-heavy builds. Whichever you pick reasons about your current canvas while processing your message, so references like 'the second feature card' work without extra context.",
             icon: 'info',
           },
           {
@@ -7495,7 +7551,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             items: [
               'Know what to ask chat vs. other tools',
               'Can frame changes with keep-fix-direction',
-              'Aware of Opus 4.7 vision context',
+              'Aware the model reads your canvas via high-res vision',
             ],
             message: 'Next: targeting specific canvas elements with inline comments.',
           },
@@ -7584,6 +7640,19 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             content: "You can also edit text directly on the canvas, click a heading, change the words, press Enter. This is faster than describing the change in a comment for simple copy edits. Claude picks up the edit and preserves the design around it.",
           },
           {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Want finer control? Open Edit mode',
+            content: "Click Edit in the top toolbar to open a precise editing panel: a layer tree of the page's elements plus Simple, Pro, and Code views. Select any element to adjust its styles directly (the Code view even exposes the raw CSS). Save keeps your changes; Discard reverts them. Reach for this when chat and comments aren't exact enough.",
+            icon: 'tip',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-5/edit-mode.webp',
+            alt: "Claude Design Edit mode. The left panel shows Simple, Pro, Code, and Tweaks tabs with a layer tree (Column, Row, group, Heading, Paragraph) and a live CSS editor for the selected heading; the top toolbar shows Comment, Tweaks, Present, Edit, and Share; the selected 'Audit your AI design' heading has resize handles on the canvas.",
+            label: "Edit mode: select any element to tune its styles directly, with Simple, Pro, and Code views. The Code tab exposes the raw CSS.",
+          },
+          {
             type: 'further-reading',
             title: 'Hands-on perspectives',
             links: [
@@ -7597,7 +7666,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             items: [
               'Can drop an inline comment on any element',
               'Know which changes belong as comments vs. chat',
-              'Can direct-edit text on the canvas',
+              'Can direct-edit text on the canvas, or open Edit mode for precise element control',
             ],
             message: 'Next: custom sliders, a trick that makes design exploration actually fast.',
           },
@@ -7612,7 +7681,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
         sections: [
           {
             type: 'intro',
-            content: "Tweaks is a toggle in the canvas toolbar (next to Comment, Edit, and Draw). Flip it on and a control panel appears, with toggles and sliders Claude auto-generated for this specific design. Click through them and the canvas re-renders live. No chat round-trip, no prompts, no waiting.",
+            content: "Tweaks lives in the top toolbar, next to Comment and Present. Click it and a control panel appears, with toggles and sliders Claude auto-generated for this specific design. Click through them and the canvas re-renders live. No chat round-trip, no prompts, no waiting.",
             icon: 'tip',
           },
           {
@@ -7742,6 +7811,13 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             icon: 'tip',
           },
           {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Faster path: the /design-sync command',
+            content: 'Since the mid-2026 update, you can type /design-sync inside a project to pull in a design system from a GitHub repo, design files, raw uploads, or your local codebase, without walking through the full setup screen. Claude reads your components and auto-corrects its output to match before you see it.',
+            icon: 'tip',
+          },
+          {
             type: 'image',
             src: '/images/guides/claude-design-learning-path/lesson-7/design-system-setup.webp',
             alt: "Claude Design's 'Set up your design system' onboarding screen. Fields include: company name and blurb, link code on GitHub, link code from your computer (drag-folder), upload a .fig file (parsed locally, never uploaded), add fonts / logos / assets, and an 'Any other notes?' free-form field. Back button top-left, Continue to generation top-right.",
@@ -7820,6 +7896,12 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             src: '/images/guides/claude-design-learning-path/lesson-8/design-system-published.webp',
             alt: "Same view after flipping aiuxdesign.guide Design System to Published. The toggle is now blue and labeled 'Published'. The New-prototype panel on the left now shows a 'Design system' dropdown selector above the Wireframe / High fidelity cards, the system is now pickable at project creation.",
             label: "After. Once published, the system shows up as a selectable option in the New-prototype panel.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-8/design-system-picker.webp',
+            alt: "The Design system selector open on the Claude Design home screen. A searchable list shows the org-default 'Design System' (badged 'Org default'), the 'aiuxdesign.guide Design System', and several others, with a 'Multi' toggle for applying more than one at once.",
+            label: "How it looks from the create bar: every published system is a click away when you start a new project, and the 'Multi' toggle lets you combine more than one.",
           },
           {
             type: 'heading',
@@ -8195,6 +8277,13 @@ Audience: Early-stage VCs in the design-tools space.`,
             ],
           },
           {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Code is not the only way out',
+            content: 'Beyond the code handoff, Claude Design exports to standalone HTML, a .zip bundle, PDF, and PPTX (handy for the pitch-deck workflow in Lesson 11), plus one-click sends to tools like Canva, Gamma, Miro, Vercel, and Replit. Pick the format that matches where the work goes next.',
+            icon: 'info',
+          },
+          {
             type: 'heading',
             level: 'h3',
             content: 'Before you hand off',
@@ -8295,13 +8384,13 @@ Audience: Early-stage VCs in the design-tools space.`,
         <figure class="my-8">
           <img
             src="/images/guides/claude-design-learning-path/overview-hero.webp"
-            alt="Claude Design canvas rendering a kanban board (Lineup project task tracker) on the right, with the prompt that produced it visible in the chat panel on the left"
+            alt="The Claude Design home screen titled 'What should we create?' with a prompt bar showing design-system, template, and model selectors, a gallery of templates (Mobile app design, Slides, Document, Wireframe, and more), and a list of recent projects below"
             width="1600"
-            height="886"
+            height="863"
             loading="lazy"
             class="w-full h-auto rounded-lg border border-gray-200"
           />
-          <figcaption class="text-sm text-gray-500 mt-2 text-center">Lineup, a kanban board built in Claude Design from the prompt in this guide.</figcaption>
+          <figcaption class="text-sm text-gray-500 mt-2 text-center">The Claude Design home screen, where every project starts.</figcaption>
         </figure>
 
         <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">What you'll learn</h2>

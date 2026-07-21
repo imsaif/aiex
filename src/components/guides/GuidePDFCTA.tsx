@@ -27,7 +27,7 @@ const GUIDE_CONFIGS: Record<string, GuideConfig> = {
       2: {
         headline: 'Want the full Claude Code guide as a PDF?',
         subhead:
-          "Drop your email — I'll send the latest version + new lessons as they ship.",
+          "Drop your email, and I'll send the latest version + new lessons as they ship.",
         button: 'Get the PDF',
       },
       6: {
@@ -48,7 +48,7 @@ const GUIDE_CONFIGS: Record<string, GuideConfig> = {
       2: {
         headline: 'Want the full Claude Design guide as a PDF?',
         subhead:
-          "Drop your email — I'll send the latest version + new lessons as they ship.",
+          "Drop your email, and I'll send the latest version + new lessons as they ship.",
         button: 'Get the PDF',
       },
       7: {

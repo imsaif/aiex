@@ -48,10 +48,10 @@ export async function generateMetadata({
   }
   const { guide, lesson: currentLesson } = resolved;
 
-  // Build a concrete, query-shaped title: "{Lesson Title} — {Tool} Guide for Designers"
+  // Build a concrete, query-shaped title: "{Lesson Title} | {Tool} for Designers"
   // Capped so the full string (plus the root-layout "| AI Design Patterns" suffix)
   // stays inside Google's ~60-65 char display window whenever possible.
-  const title = `${currentLesson.title} — ${guide.tool} for Designers`;
+  const title = `${currentLesson.title} | ${guide.tool} for Designers`;
 
   // Pull the first intro/text section as the description fallback so each
   // lesson has a unique meta description rather than the parent course's.
@@ -218,7 +218,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
           <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px] lg:gap-10">
             {/* LEFT SIDEBAR — course nav (sticky on desktop) */}
             <aside className="hidden lg:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-2">
+              <div
+                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-r border-border-primary pr-6"
+              >
                 <GuideSidebar guide={guide} currentLessonSlug={lessonSlug} />
               </div>
             </aside>
@@ -376,7 +378,9 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
             {/* RIGHT SIDEBAR — on this page (xl+ only) */}
             <aside className="hidden xl:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pl-2">
+              <div
+                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-l border-border-primary pl-6"
+              >
                 <OnThisPage headings={headings} />
               </div>
             </aside>

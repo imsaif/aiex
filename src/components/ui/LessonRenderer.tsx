@@ -84,6 +84,14 @@ interface LessonRendererProps {
   sections: LessonSection[];
 }
 
+// Restrained "outline" shell for the few blocks that are genuinely set apart
+// from the reading flow (tables, callouts, steps, further-reading). No shadow —
+// a soft-but-visible border + card radius. Elevation is reserved, not sprayed
+// across the page, so nothing reads as a floating card. Everything else (body
+// text, headings) flows on the page; hierarchy comes from type + spacing.
+const CARD_SHELL =
+  'bg-surface-elevated border border-border-secondary rounded-card';
+
 const getIcon = (iconType: IconType) => {
   const iconClass = 'w-6 h-6';
   switch (iconType) {
@@ -139,39 +147,6 @@ const getDefaultCalloutIcon = (
     case 'info':
     default:
       return 'info';
-  }
-};
-
-const getCalloutClasses = (calloutType: 'info' | 'warning' | 'success' | 'error' | 'tip') => {
-  const baseClasses = 'p-4 rounded-lg border-l-4 mb-6';
-  switch (calloutType) {
-    case 'info':
-      return `${baseClasses} bg-blue-50 dark:bg-blue-900/30 border-l-blue-500 text-text-secondary`;
-    case 'warning':
-      return `${baseClasses} bg-amber-50 dark:bg-amber-900/30 border-l-amber-500 text-text-secondary`;
-    case 'success':
-      return `${baseClasses} bg-green-50 dark:bg-green-900/30 border-l-green-500 text-text-secondary`;
-    case 'error':
-      return `${baseClasses} bg-red-50 dark:bg-red-900/30 border-l-red-500 text-text-secondary`;
-    case 'tip':
-      return `${baseClasses} bg-purple-50 dark:bg-purple-900/30 border-l-purple-400 text-text-secondary`;
-    default:
-      return baseClasses;
-  }
-};
-
-const getCalloutIconColor = (calloutType: 'info' | 'warning' | 'success' | 'error' | 'tip') => {
-  switch (calloutType) {
-    case 'warning':
-      return 'text-amber-500';
-    case 'error':
-      return 'text-red-500';
-    case 'success':
-      return 'text-green-500';
-    case 'tip':
-      return 'text-purple-400';
-    default:
-      return 'text-blue-500';
   }
 };
 
@@ -449,10 +424,10 @@ const renderSection = (
       return (
         <div
           key={index}
-          className="flex gap-4 mb-6 p-4 bg-gray-100 dark:bg-gray-800 border-l-4 border-l-gray-500 dark:border-l-gray-400 rounded-lg"
+          className={`flex gap-4 mb-10 p-5 md:p-6 ${CARD_SHELL} border-l-4 border-l-border-secondary`}
         >
           {section.icon && section.icon !== 'none' && (
-            <div className="text-gray-600 dark:text-gray-400 flex-shrink-0">{getIcon(section.icon)}</div>
+            <div className="text-text-secondary flex-shrink-0">{getIcon(section.icon)}</div>
           )}
           <p className="m-0 text-text-secondary">
             {linkifyPatterns(section.content, `intro-${index}`)}
@@ -467,7 +442,7 @@ const renderSection = (
           <h2
             key={index}
             id={id}
-            className="scroll-mt-24 text-[1.75rem] font-bold text-gray-900 dark:text-gray-100 mt-0 mb-6 pb-4 border-b-2 border-gray-200 dark:border-gray-700"
+            className="scroll-mt-24 text-[1.75rem] font-bold text-text-primary mt-14 mb-5 pb-3 border-b border-border-primary"
           >
             {section.content}
           </h2>
@@ -478,7 +453,7 @@ const renderSection = (
           <h3
             key={index}
             id={id}
-            className="scroll-mt-24 text-[1.375rem] font-bold text-gray-900 dark:text-gray-100 mt-10 mb-5"
+            className="scroll-mt-24 text-[1.375rem] font-bold text-text-primary mt-10 mb-4"
           >
             {section.content}
           </h3>
@@ -526,10 +501,12 @@ const renderSection = (
       return (
         <div
           key={index}
-          className="mb-6 p-5 md:p-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-primary"
+          className={`mb-6 p-5 md:p-6 ${CARD_SHELL}`}
         >
           <div className="flex items-start gap-4">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-primary border border-gray-200 dark:border-gray-700 text-text-primary flex-shrink-0">
+            <div
+              className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary border border-border-primary text-text-primary flex-shrink-0"
+            >
               {getIcon(iconType)}
             </div>
             <div className="flex-1 min-w-0">
@@ -553,7 +530,7 @@ const renderSection = (
           {section.steps.map((step) => (
             <div
               key={step.number}
-              className="p-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg"
+              className={`p-5 ${CARD_SHELL}`}
             >
               <div className="flex gap-3 mb-4">
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold text-sm flex-shrink-0">
@@ -587,17 +564,17 @@ const renderSection = (
       return (
         <dl
           key={index}
-          className="mb-8 overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 divide-y divide-gray-200 dark:divide-gray-700"
+          className={`mb-8 overflow-hidden ${CARD_SHELL} divide-y divide-border-primary`}
         >
           {section.rows.map((row, i) => (
             <div
               key={i}
-              className="grid grid-cols-1 md:grid-cols-[minmax(180px,2fr)_minmax(0,3fr)] gap-2 md:gap-6 px-5 py-4"
+              className="grid grid-cols-1 md:grid-cols-[minmax(180px,2fr)_minmax(0,3fr)]"
             >
-              <dt className="font-semibold text-text-primary text-base">
+              <dt className="bg-background-secondary px-5 py-4 font-semibold text-text-primary text-base border-b md:border-b-0 md:border-r border-border-primary">
                 {row.label}
               </dt>
-              <dd className="m-0 text-text-secondary leading-relaxed">
+              <dd className="m-0 px-5 py-4 text-text-secondary leading-relaxed">
                 {row.content}
               </dd>
             </div>
@@ -612,14 +589,14 @@ const renderSection = (
       return (
         <div
           key={index}
-          className="mb-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-primary overflow-hidden"
+          className={`mb-8 ${CARD_SHELL} overflow-hidden`}
         >
-          <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-5 py-4 border-b border-border-primary bg-background-secondary">
             <strong className="text-text-primary text-base">
               {section.title || 'Further reading'}
             </strong>
           </div>
-          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+          <ul className="divide-y divide-border-primary">
             {section.links.map((link, i) => (
               <li key={i}>
                 <a
@@ -694,7 +671,7 @@ const renderSection = (
                   playsInline
                   preload="metadata"
                   aria-label={section.alt}
-                  className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                  className="w-full rounded-card border border-border-secondary"
                 />
               ) : (
                 <img
@@ -702,7 +679,7 @@ const renderSection = (
                   alt={section.alt}
                   width={800}
                   height={450}
-                  className="w-full rounded-lg border border-gray-200 dark:border-gray-700"
+                  className="w-full rounded-card border border-border-secondary"
                 />
               )}
               {section.label && (
@@ -728,7 +705,7 @@ const renderSection = (
       return (
         <div
           key={index}
-          className="mt-8 p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg border border-gray-200 dark:border-gray-700"
+          className="mt-14 p-6 bg-background-secondary border border-border-secondary rounded-card"
         >
           <div className="flex gap-3 mb-4">
             <CheckCircleIcon className="w-6 h-6 text-green-500 flex-shrink-0" />
@@ -755,9 +732,14 @@ const renderSection = (
 
 export default function LessonRenderer({ sections }: LessonRendererProps) {
   const headingIds = buildHeadingIdMap(sections);
+  // No wrapper rhythm — each section carries its own margins (a larger gap
+  // before an h2, tighter within a group) so content visually groups under
+  // its heading.
   return (
-    <div className="space-y-6">
-      {sections.map((section, index) => renderSection(section, index, headingIds))}
+    <div>
+      {sections.map((section, index) =>
+        renderSection(section, index, headingIds)
+      )}
     </div>
   );
 }

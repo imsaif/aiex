@@ -76,10 +76,10 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: {
     absolute:
-      'Free AI Tool Guides for Designers — Claude Code, Cursor, GitHub Copilot',
+      'Free AI Tool Guides for Designers | Claude Code, Cursor, GitHub Copilot',
   },
   description:
-    'Free learning paths for designers using AI tools. Step-by-step courses on Claude Code, Cursor, GitHub Copilot, GitHub, and conversational UI — no coding experience needed. Go from zero to shipping with AI.',
+    'Free learning paths for designers using AI tools. Step-by-step courses on Claude Code, Cursor, GitHub Copilot, GitHub, and conversational UI, no coding experience needed. Go from zero to shipping with AI.',
   keywords: [
     'AI tools for designers',
     'claude code for designers',
@@ -272,7 +272,7 @@ function buildStructuredData() {
           name: 'Are these guides really free?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes, all guides are free. No email required to read them. The tools themselves (Claude Code, Cursor, GitHub Copilot) have free tiers — we recommend starting with those and upgrading only when you hit limits.',
+            text: 'Yes, all guides are free. No email required to read them. The tools themselves (Claude Code, Cursor, GitHub Copilot) have free tiers, so we recommend starting with those and upgrading only when you hit limits.',
           },
         },
       ],
@@ -465,7 +465,7 @@ export default function GuidesPage() {
                 to participate in how your product actually gets built.
               </p>
               <p>
-                These guides teach you the tools that make that possible —
+                These guides teach you the tools that make that possible,
                 whether you want cleaner handoffs with engineers, faster
                 prototypes, a clearer mental model of the technical decisions
                 shaping your product, or just the confidence to make changes
@@ -507,7 +507,7 @@ export default function GuidesPage() {
                 </h3>
                 <p className="text-sm text-text-secondary leading-relaxed">
                   Each course is a focused path you can work through in an
-                  afternoon — no semester-long commitment to get fluent.
+                  afternoon, no semester-long commitment to get fluent.
                 </p>
               </li>
               <li className="flex flex-col items-center text-center">
@@ -521,7 +521,7 @@ export default function GuidesPage() {
                   Bookmark any lesson
                 </h3>
                 <p className="text-sm text-text-secondary leading-relaxed">
-                  Every lesson has its own URL — save, share, or return to
+                  Every lesson has its own URL: save, share, or return to
                   the exact step you need without scrolling through a course.
                 </p>
               </li>
@@ -574,7 +574,7 @@ export default function GuidesPage() {
                 <p className="text-base md:text-lg text-text-secondary leading-relaxed">
                   Yes, all guides are free. No email required to read them.
                   The tools themselves (Claude Code, Cursor, GitHub Copilot)
-                  have free tiers — we recommend starting with those and
+                  have free tiers, so we recommend starting with those and
                   upgrading only when you hit limits.
                 </p>
               </div>
