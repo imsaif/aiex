@@ -1106,11 +1106,11 @@ YOUR TASK:
 4. Identify ONE standout feature for "Steal This Week" - a feature other products should copy.
 5. Identify ONE pattern that appeared multiple times for "Pattern to Know" deep dive.
 6. Write a weekly takeaway that ties the themes together.
-7. Create a compelling title and summary.
+7. Create a title and summary. Keep the "This Week in AIUX:" prefix, then follow it with 4-8 words that name the week's concrete topics using terms a designer would actually type into search: real pattern names, UX concepts, or product categories (e.g. "Consent Patterns and Trust in AI Assistants"). Front-load the single most searchable term. Do NOT use abstract, poetic, or alliterative phrases ("Cumulative Drift", "Trust and Control", "Signals and Noise"). They read well but nobody searches them.
 
 RESPOND IN THIS EXACT JSON FORMAT:
 {
-  "title": "This Week in AIUX: [3-4 word summary of key themes]",
+  "title": "This Week in AIUX: [4-8 searchable words naming the week's real topics: pattern names, UX concepts, or product categories a designer would search for]",
   "summary": "One sentence summary of this week's theme",
   "items": [
     {
@@ -1261,11 +1261,11 @@ YOUR TASK:
 4. Write "Steal This Week" - highlight ONE standout feature that other products should copy
 5. Write "Pattern to Know" - deep dive on one pattern that appeared multiple times this week
 6. Write a weekly takeaway that ties the theme together
-7. Create a title and summary for the newsletter
+7. Create a title and summary for the newsletter. Keep the "This Week in AIUX:" prefix, then follow it with 4-8 words that name the week's concrete topics using terms a designer would actually type into search: real pattern names, UX concepts, or product categories (e.g. "Consent Patterns and Trust in AI Assistants"). Front-load the single most searchable term. Do NOT use abstract, poetic, or alliterative phrases ("Cumulative Drift", "Trust and Control", "Signals and Noise"). They read well but nobody searches them.
 
 RESPOND IN THIS EXACT JSON FORMAT:
 {
-  "title": "This Week in AIUX: [3-4 word summary of key themes]",
+  "title": "This Week in AIUX: [4-8 searchable words naming the week's real topics: pattern names, UX concepts, or product categories a designer would search for]",
   "summary": "One sentence summary of this week's theme",
   "items": [
     {
