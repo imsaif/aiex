@@ -475,16 +475,21 @@ function isRelevant(item: Parser.Item, sourceTier?: SourceTier): boolean {
 // Never link a reader to a paywalled post. Substack (and similar) gate a paid
 // post by TRUNCATING its RSS body to a short teaser — it does NOT reliably print
 // a marker string (verified Jul 2026: "keep reading with a trial" / "this post
-// is for paid subscribers" are usually absent; the body just gets short). So the
-// reliable signal is the length of the full body (`content:encoded`, the field
-// carrying the real article — `item.content` is only the subtitle on Substack).
-// A very short body means either a truncated paywall teaser or an empty stub;
-// both are unworthy of a link, so we drop either way. Explicit markers are also
-// checked as a cheap belt-and-suspenders for feeds that do print them.
-// Threshold 400 sits below every recommended free source's typical body length
-// (the shortest, UX Movement, medians ~680) so no whole free source is nuked,
-// while catching the ~300-400 char gated teasers. The admin still reviews every
-// draft in pending_review as the final check.
+// is for paid subscribers" are usually absent; the body just gets short). So for
+// Substack the reliable signal is the length of the full body (`content:encoded`,
+// the field carrying the real article — `item.content` is only the subtitle on
+// Substack). A very short Substack body means a truncated paywall teaser.
+//
+// CRITICAL SCOPING (2026-07-23): the length heuristic must apply to Substack ONLY.
+// Google News search feeds return a short SNIPPET by design (~60-120 chars), and
+// first-party product blogs (OpenAI, Google AI, etc.) publish short RSS SUMMARIES
+// (~150 chars) — the full article is free on the source site. Applying the length
+// rule to them dropped nearly ALL AI product news before it reached the pool
+// (measured: Claude-AI Google-News items 61-116 chars, OpenAI blog 152-172 chars,
+// all nuked), leaving issues all-practitioner-voice. Same failure class as the
+// curator-dead / substack-blanket-strip incidents: a later guard silently negating
+// an earlier source-mix decision. See newsletter-and-infra.md. Explicit markers
+// still apply to every source; only the length test is Substack-scoped.
 const PAYWALL_MIN_BODY_CHARS = 400;
 const PAYWALL_MARKERS = [
   'this post is for paid subscribers',
@@ -492,13 +497,32 @@ const PAYWALL_MARKERS = [
   'this episode is for paid subscribers',
   'keep reading with a',
 ];
+// A short body signals a paywall only on Substack-family feeds. Matches the
+// shared host (`*.substack.com`) and custom-domain Substacks (which publish at
+// `/p/<slug>` — One Useful Thing, Proof of Concept, Behind the Craft). Same
+// signal isOpinionUrl uses.
+function isSubstackGatedHost(link: string): boolean {
+  try {
+    const parsed = new URL(link);
+    const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+    if (host === 'substack.com' || host.endsWith('.substack.com')) return true;
+    return /^\/p\/[a-z0-9-]+/.test(parsed.pathname);
+  } catch {
+    return false;
+  }
+}
 function isPaywalled(item: Parser.Item): boolean {
   const bodyHtml =
     (item as unknown as Record<string, string>)['content:encoded'] || item.content || '';
   const bodyText = bodyHtml.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  if (bodyText.length < PAYWALL_MIN_BODY_CHARS) return true;
   const lower = bodyText.toLowerCase();
-  return PAYWALL_MARKERS.some((m) => lower.includes(m));
+  // Explicit gate markers apply to every source (cheap, reliable).
+  if (PAYWALL_MARKERS.some((m) => lower.includes(m))) return true;
+  // Body-length heuristic ONLY for Substack-family feeds (see scoping note above).
+  if (isSubstackGatedHost(item.link || '') && bodyText.length < PAYWALL_MIN_BODY_CHARS) {
+    return true;
+  }
+  return false;
 }
 
 // Code-side design-native check (not a Claude self-report). Passes when the
@@ -786,6 +810,45 @@ async function getRecentlyUsedTitles(deduplicationDays = 7, excludeWeekly = true
   return usedTitles;
 }
 
+// Practitioner voices featured in recent daily issues, by publication name. Used
+// to ROTATE the practitioner slot: a voice source featured within the window is
+// excluded from the pool so the same author (e.g. Jakob Nielsen, who publishes
+// ~daily) can't land in every issue. Prefers the injected sourceName/sourceTier
+// (new drafts); falls back to resolving the article host for older drafts.
+async function getRecentlyFeaturedVoices(days = 7): Promise<Set<string>> {
+  const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const recent = await prisma.newsletterDraft.findMany({
+    where: {
+      status: { in: ['published', 'pending_review'] },
+      createdAt: { gte: cutoffDate },
+      type: 'daily',
+    },
+    select: { structuredData: true },
+  });
+  const voices = new Set<string>();
+  for (const nl of recent) {
+    if (!nl.structuredData || typeof nl.structuredData !== 'object') continue;
+    const data = nl.structuredData as {
+      items?: { sourceUrl?: string; sourceName?: string; sourceTier?: SourceTier }[];
+    };
+    for (const item of data.items || []) {
+      let tier = item.sourceTier;
+      let name = item.sourceName;
+      if (!tier || !name) {
+        try {
+          const host = new URL(item.sourceUrl || '').hostname.toLowerCase().replace(/^www\./, '');
+          tier = tier || HOST_TIER.get(host);
+          name = name || HOST_NAME.get(host);
+        } catch {
+          // unresolvable — skip
+        }
+      }
+      if (tier && VOICE_TIERS.has(tier) && name) voices.add(name);
+    }
+  }
+  return voices;
+}
+
 // Detect a pool dominated by a single RSS source. Returns the dominant source if
 // its share of the pool exceeds `threshold` AND the pool has at least `minPoolSize`
 // items (small pools are noisy and handled by the existing quiet-day path).
@@ -863,14 +926,18 @@ interface AggregatedPool {
 async function aggregateNews(
   lookbackHours = 24,
   deduplicationDays = 7,
-  { lite = false }: { lite?: boolean } = {},
+  { lite = false, rotateVoices = false }: { lite?: boolean; rotateVoices?: boolean } = {},
 ): Promise<AggregatedPool> {
   const allItems: NewsItem[] = [];
   const sources = lite ? RSS_SOURCES_LITE : RSS_SOURCES;
-  const [usedUrls, usedTitles] = await Promise.all([
+  const [usedUrls, usedTitles, recentVoices] = await Promise.all([
     getRecentlyUsedUrls(deduplicationDays),
     getRecentlyUsedTitles(deduplicationDays),
+    rotateVoices ? getRecentlyFeaturedVoices(VOICE_ROTATION_DAYS) : Promise.resolve(new Set<string>()),
   ]);
+  if (rotateVoices && recentVoices.size > 0) {
+    console.log(`[newsletter] Voice rotation: excluding recently-featured voices — ${Array.from(recentVoices).join(', ')}`);
+  }
 
   // Helper: check if an item title is too similar to a previously used title
   const isTitleAlreadyUsed = (title: string): boolean => {
@@ -882,6 +949,12 @@ async function aggregateNews(
     Promise.allSettled(
       sources.map(async (source) => {
         try {
+          // Voice rotation: skip a practitioner/opinion/curator source entirely
+          // if it was featured within VOICE_ROTATION_DAYS, so the same author
+          // (e.g. Jakob Nielsen, who publishes ~daily) can't land in every issue.
+          if (rotateVoices && source.tier && VOICE_TIERS.has(source.tier) && recentVoices.has(source.name)) {
+            return [];
+          }
           const feed = await parser.parseURL(source.url);
 
           // TLDR Design: each RSS item is a daily digest with no body. Expand
@@ -999,7 +1072,11 @@ async function aggregateNews(
     );
   }
 
-  return { items: capped, clippedSources: Array.from(clippedSet) };
+  // Resolve Google News redirect links to real publisher URLs (bounded), dropping
+  // any that won't resolve — so Claude never selects, or titles, a dead link.
+  const resolvedPool = await resolvePoolGoogleNewsLinks(capped);
+
+  return { items: resolvedPool, clippedSources: Array.from(clippedSet) };
 }
 
 interface NewsletterItem {
@@ -1010,6 +1087,12 @@ interface NewsletterItem {
   designerTakeaway: string;
   sourceUrl: string;
   patternSlug: string;
+  // Resolved from the pool at generation time (not from Claude). `sourceName` is
+  // the true publisher (for the source badge); `sourceTier` drives lead-ordering
+  // and the voice-badge decision. Optional because the weekly-compilation path
+  // has no pool — those items already carry the fields from their daily run.
+  sourceName?: string;
+  sourceTier?: SourceTier;
 }
 
 interface NewsletterData {
@@ -1020,6 +1103,231 @@ interface NewsletterData {
     title: string;
     body: string;
   };
+}
+
+// Practitioner/opinion "voice" tiers — first-person essays, analyst takes, and
+// digests. Valuable (the practitioner-voice mandate in buildPrompt REQUIRES one),
+// but they should not LEAD the issue over concrete product/research news.
+// Context (newsletter-and-infra.md, Jul 23 2026): the Jul-16 forced-inclusion
+// rule worked but pushed the same near-daily practitioner (Jakob Nielsen, who
+// publishes ~daily on AI interfaces) into slot #1 nearly every day. The selection
+// prompt already asks Claude to lead with concrete news, but — like every
+// prompt-only selection rule in this file (3-Figma, product-news floor,
+// max-2-per-company) — it gets ignored, so we GUARANTEE lead position at render.
+const VOICE_TIERS: ReadonlySet<SourceTier> = new Set<SourceTier>(['designer-voice', 'design-opinion', 'curator']);
+
+// A practitioner voice featured within this many days is excluded from the pool,
+// so no single author (e.g. Jakob Nielsen, who publishes ~daily) repeats issue
+// after issue. The roster is large (~25 voice sources), so a 7-day window rotates
+// through plenty of variety while guaranteeing no back-to-back repeats.
+const VOICE_ROTATION_DAYS = 7;
+
+// feed-host -> tier, for resolving a rendered item's tier from its sourceUrl.
+// The voice-tier sources are all direct first-party/Substack feeds, so an
+// article's host matches its feed host. (Google-News search feeds — ai-lab /
+// design-tool — resolve to a publisher host that won't match, but those are
+// never voice tiers, so the only lookups this guard depends on still hold.)
+const HOST_TIER: ReadonlyMap<string, SourceTier> = new Map(
+  RSS_SOURCES.map((s) => {
+    try {
+      return [new URL(s.url).hostname.toLowerCase().replace(/^www\./, ''), s.tier] as const;
+    } catch {
+      return ['', s.tier] as const;
+    }
+  }).filter(([h]) => h !== ''),
+);
+
+// Resolve an item's tier. Prefer the pool-resolved `sourceTier` (authoritative,
+// keyed by the real article host at generation time); fall back to mapping the
+// feed host for items with no injected tier (weekly compilation from older stored
+// dailies). The feed-host fallback misses aggregator-relayed feeds whose article
+// host differs from the feed host (e.g. Dive Club), which is exactly why the
+// injected `sourceTier` is preferred.
+function itemTier(item: NewsletterItem): SourceTier | undefined {
+  if (item.sourceTier) return item.sourceTier;
+  try {
+    return HOST_TIER.get(new URL(item.sourceUrl).hostname.toLowerCase().replace(/^www\./, ''));
+  } catch {
+    return undefined;
+  }
+}
+
+function isVoiceItem(item: NewsletterItem): boolean {
+  const tier = itemTier(item);
+  return tier !== undefined && VOICE_TIERS.has(tier);
+}
+
+// Guarantee a concrete product/research item leads the issue. If item #1 is a
+// practitioner/opinion voice AND a non-voice item exists later, promote the first
+// non-voice item into slot 1; every other item keeps its relative order. Returns
+// a new array. No-op when the lead is already concrete or the issue is all-voice
+// (a genuinely voice-only day still renders — we never drop the mandated voice).
+function enforceLeadPosition(items: NewsletterItem[]): NewsletterItem[] {
+  if (items.length < 2 || !isVoiceItem(items[0])) return items;
+  const firstConcrete = items.findIndex((it) => !isVoiceItem(it));
+  if (firstConcrete <= 0) return items; // all voice → leave as Claude ordered it
+  const reordered = [...items];
+  const [concrete] = reordered.splice(firstConcrete, 1);
+  reordered.unshift(concrete);
+  return reordered;
+}
+
+// feed-host -> publication name, for correcting a rendered item's SOURCE badge.
+// Claude's `product` field is the SUBJECT of the story (e.g. "Claude / Anthropic"
+// for a post ABOUT Claude), which misattributes practitioner/opinion posts to the
+// company they discuss — e.g. Xinran Ma's "Design with AI" Substack post about
+// Claude skills rendered with the Anthropic name + icon (2026-07-23). For
+// voice-tier items (first-party practitioner feeds where the publisher IS the
+// source), badge the real publication instead. See newsletter-and-infra.md.
+const HOST_NAME: ReadonlyMap<string, string> = new Map(
+  RSS_SOURCES.map((s) => {
+    try {
+      return [new URL(s.url).hostname.toLowerCase().replace(/^www\./, ''), s.name] as const;
+    } catch {
+      return ['', s.name] as const;
+    }
+  }).filter(([h]) => h !== ''),
+);
+
+// The publication name to badge a practitioner/opinion item with, or null if the
+// item isn't a voice-tier source (concrete product news keeps Claude's subject
+// label, which is what the reader wants for a launch/feature badge). Prefers the
+// pool-resolved `sourceName`; falls back to the feed-host map for un-enriched
+// (weekly compilation) items.
+function voicePublisherLabel(item: NewsletterItem): string | null {
+  if (!isVoiceItem(item)) return null;
+  if (item.sourceName) return item.sourceName;
+  try {
+    const host = new URL(item.sourceUrl).hostname.toLowerCase().replace(/^www\./, '');
+    return HOST_NAME.get(host) ?? null;
+  } catch {
+    return null;
+  }
+}
+
+// Resolve a selected item's sourceUrl back to its pool NewsItem (exact link, then
+// article host). The pool carries the authoritative source name + tier keyed by
+// the real ARTICLE host — more reliable than mapping the feed host, which differs
+// for aggregator-relayed feeds (e.g. Dive Club: feed media.rss.com, articles
+// rss.com). Mirrors buildQABlock's resolveOriginal.
+function resolvePoolItem(sourceUrl: string, pool: NewsItem[]): NewsItem | undefined {
+  const direct = pool.find((it) => it.link === sourceUrl);
+  if (direct) return direct;
+  try {
+    const host = new URL(sourceUrl).hostname;
+    return pool.find((it) => {
+      try {
+        return new URL(it.link).hostname === host;
+      } catch {
+        return false;
+      }
+    });
+  } catch {
+    return undefined;
+  }
+}
+
+// Attach the authoritative publisher + tier from the pool onto each selected item,
+// so downstream ordering/rendering never depend on Claude's subject label or on
+// feed-host guessing. No-op for items we can't resolve (e.g. weekly compilation
+// from stored dailies — those already carry the fields from their original run).
+function enrichItemsWithSource(items: NewsletterItem[], pool: NewsItem[]): void {
+  for (const it of items) {
+    const original = resolvePoolItem(it.sourceUrl, pool);
+    if (original) {
+      it.sourceName = original.source;
+      it.sourceTier = original.sourceTier;
+    }
+  }
+}
+
+// Google News RSS links are protobuf-encoded redirect wrappers
+// (news.google.com/rss/articles/CBMi...) that dead-end for readers ("this page is
+// trying to send you to an invalid web address") — verified 2026-07-23. Resolve to
+// the real publisher URL via Google's batchexecute endpoint: fetch the article
+// interstitial for its signature + timestamp, then POST to get the destination.
+// Returns null on ANY failure — the caller drops the item, because shipping a dead
+// link is worse than one fewer story. Fragile (Google can change this), but it
+// degrades gracefully: if it breaks, all Google-News items drop and we fall back
+// to first-party product feeds (which have clean direct links).
+async function resolveGoogleNewsUrl(url: string, timeoutMs = 8000): Promise<string | null> {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const id = url.match(/articles\/([^?]+)/)?.[1];
+    if (!id) return null;
+    const page = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: ctrl.signal });
+    const html = await page.text();
+    const sig = html.match(/data-n-a-sg="([^"]+)"/)?.[1];
+    const ts = html.match(/data-n-a-ts="([^"]+)"/)?.[1];
+    if (!sig || !ts) return null;
+    const payload = [[['Fbv4je', JSON.stringify(['garturlreq', [['X', 'X', ['X', 'X'], null, null, 1, 1, 'US:en', null, 1, null, null, null, null, null, 0, 1], 'X', 'X', 1, [1, 1, 1], 1, 1, null, 0, 0, null, 0], id, ts, sig])]]];
+    const res = await fetch('https://news.google.com/_/DotsSplashUi/data/batchexecute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'User-Agent': 'Mozilla/5.0' },
+      body: 'f.req=' + encodeURIComponent(JSON.stringify(payload)),
+      signal: ctrl.signal,
+    });
+    const text = await res.text();
+    return text.match(/https?:\/\/(?!news\.google)[^\\"]+/)?.[0] || null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// Resolve Google News redirect links in the POOL, before Claude selects, so it
+// only ever sees working links and its title/summary can't reference a story we
+// later drop. Bounded three ways for the Vercel 60s cap: a wall-clock BUDGET, a
+// COUNT cap (resolve only the top-scored Google items — the pool is score-sorted),
+// and limited CONCURRENCY (avoids bursting Google's endpoint into a rate-limit).
+// Any Google item not resolved to a clean, non-opinion URL — failed, un-attempted,
+// or resolved onto an opinion domain — is DROPPED. Graceful degradation: if the
+// endpoint breaks or times out, Google items fall away and the pool leans on
+// first-party feeds (which have clean direct links).
+async function resolvePoolGoogleNewsLinks(
+  pool: NewsItem[],
+  { budgetMs = 12000, maxResolve = 12, concurrency = 3 }: { budgetMs?: number; maxResolve?: number; concurrency?: number } = {},
+): Promise<NewsItem[]> {
+  const isGoogle = (it: NewsItem) => {
+    try {
+      return new URL(it.link).hostname === 'news.google.com';
+    } catch {
+      return false;
+    }
+  };
+  const googleItems = pool.filter(isGoogle);
+  if (googleItems.length === 0) return pool;
+  const toResolve = googleItems.slice(0, maxResolve); // top-scored first (pool is sorted)
+  const deadline = Date.now() + budgetMs;
+  const resolved = new Map<NewsItem, string | null>();
+  let idx = 0;
+  const worker = async () => {
+    while (idx < toResolve.length && Date.now() < deadline) {
+      const it = toResolve[idx++];
+      resolved.set(it, await resolveGoogleNewsUrl(it.link, Math.min(8000, deadline - Date.now())));
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(concurrency, toResolve.length) }, worker));
+
+  const googleSet = new Set(googleItems);
+  const out: NewsItem[] = [];
+  for (const it of pool) {
+    if (!googleSet.has(it)) {
+      out.push(it);
+      continue;
+    }
+    const real = resolved.get(it); // undefined = un-attempted (cap/budget); null = failed
+    if (real && !isOpinionUrl(real)) {
+      it.link = real;
+      out.push(it);
+    }
+    // else: drop — never let a raw Google News redirect reach the reader
+  }
+  const kept = out.length - (pool.length - googleItems.length);
+  console.log(`[newsletter] Google News resolution: kept ${kept}/${googleItems.length} (budget ${budgetMs}ms, cap ${maxResolve})`);
+  return out;
 }
 
 // Weekly newsletter specific interfaces
@@ -1170,7 +1478,7 @@ YOUR TASK:
    AUDIENCE FILTER (strict — this overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not write a strained Designer's Takeaway to bolt design relevance onto a dev story. Returning 3 strong design-relevant items is better than 5 mixed items.
    - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), Lenny's Newsletter (lennysnewsletter.com), and medium.com are opinion. Count these opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com) in your final selection — this count MUST be 0. If you have any candidates from these domains, drop them.
-   - PRACTITIONER VOICES (REQUIRED WHEN AVAILABLE): The pool may include named practitioners and analysts we deliberately curate (e.g. Jakob Nielsen, Latent Space, AI/UX Playground, Julie Zhuo, Emily Campbell, Design Systems Collective). If ANY such item genuinely covers AI's impact on design work (agentic UX, AI workflows, AI skills for designers, interface patterns, the design-engineer shift), you MUST include exactly one of them in your final selection — even if that means dropping a fourth general news item to make room. These first-person practitioner perspectives are this newsletter's signature and are what differentiate it from a plain news roundup. Cap practitioner voices at 2 so concrete product/research news still leads. ONLY skip this if NO practitioner item in the pool is genuinely relevant to designers.
+   - PRACTITIONER VOICES (OPTIONAL — quality-gated, never required): The pool may include named practitioners and analysts we curate (e.g. Latent Space, Julie Zhuo, Emily Campbell, AI/UX Playground, Design Systems Collective, Jakob Nielsen). Include AT MOST ONE such voice, and ONLY if it is genuinely standout for designers — a sharp, specific take on AI's impact on design work (agentic UX, AI workflows, AI skills for designers, interface patterns, the design-engineer shift), not a generic think-piece. Concrete product/research news must LEAD and fill the issue; a practitioner voice is a garnish, not a staple. Including ZERO practitioner voices is completely fine and often correct on a day with strong product news. NEVER include more than one, and never pad the issue with a voice just to have one.
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
@@ -1341,10 +1649,19 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
     ? ''
     : `\n<div style="text-align: center; margin: 40px 0; color: #64748b; letter-spacing: 12px; font-size: 18px;">· · ·</div>`;
 
+  // Source badge: for practitioner/opinion items, show the real publication
+  // (e.g. "Design with AI"), NOT Claude's subject label ("Claude / Anthropic")
+  // which would misread as official company content. These carry no product icon
+  // (a company icon would reintroduce the same misattribution); the product icon
+  // stays only on concrete product-news items where the subject IS the source.
+  const publisherLabel = voicePublisherLabel(item);
+  const badgeLabel = publisherLabel ?? item.product;
+  const badgeIcon = publisherLabel ? '' : getProductIconImg(item.product);
+
   return `
 <div style="margin: 0; padding: 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;"><tr>
-    <td style="font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${getProductIconImg(item.product)}${item.product}</td>
+    <td style="font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${badgeIcon}${badgeLabel}</td>
     <td align="right" style="font-size: 13px; color: ${EMAIL_MUTED};">${item.date}</td>
   </tr></table>
   <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${item.headline}</h3>
@@ -1706,7 +2023,7 @@ You MUST include AT LEAST ONE item from this list of concrete product-news sourc
 
 ${lines}
 
-You MUST exclude all opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com) from your final selection — opinion count MUST be 0. Curated practitioner voices (e.g. Jakob Nielsen, Julie Zhuo) are NOT opinion-source URLs and may stay, but include at most 2. Return the same JSON shape as before.`;
+You MUST exclude all opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com) from your final selection — opinion count MUST be 0. Curated practitioner voices (e.g. Jakob Nielsen, Julie Zhuo) are NOT opinion-source URLs and may stay, but include AT MOST ONE and only if genuinely standout — zero is fine. Return the same JSON shape as before.`;
 }
 
 function buildQABlock(
@@ -1842,7 +2159,7 @@ async function runGeneration(
   console.log(`[newsletter] Starting ${mode} ${type} generation (${lite ? `${RSS_SOURCES_LITE.length} sources` : `${RSS_SOURCES.length} sources + Anthropic scraper`})${forceRSS ? ' [forceRSS]' : ''}`);
 
   // Step 1: Aggregate news
-  const { items: newsItems, clippedSources } = await aggregateNews(lookbackHours, deduplicationDays, { lite });
+  const { items: newsItems, clippedSources } = await aggregateNews(lookbackHours, deduplicationDays, { lite, rotateVoices: type === 'daily' });
 
   // Handle quiet days (only for daily — weekly falls through to daily compilation)
   if (newsItems.length === 0 && type === 'daily') {
@@ -1991,6 +2308,10 @@ async function runGeneration(
     structuredData = weeklyData;
   } else {
     const dailyData = parsedData as NewsletterData;
+    // Attach authoritative publisher + tier from the pool (fixes source badges +
+    // makes lead-ordering reliable), then guarantee concrete news leads a voice.
+    enrichItemsWithSource(dailyData.items, newsItems);
+    dailyData.items = enforceLeadPosition(dailyData.items);
     htmlContent = generateHTML(dailyData);
     title = dailyData.title;
     summary = dailyData.summary;
@@ -2041,6 +2362,8 @@ async function runGeneration(
         const retryQA = buildQABlock(retryParsed.items, newsItems, clippedSources);
         if (!retryQA.selectionRuleViolation) {
           console.log(`[newsletter] Retry succeeded — productNews=${retryQA.productNewsCount}, opinion=${retryQA.opinionCount}`);
+          enrichItemsWithSource(retryParsed.items, newsItems);
+          retryParsed.items = enforceLeadPosition(retryParsed.items);
           structuredData = retryParsed;
           htmlContent = generateHTML(retryParsed);
           title = retryParsed.title;
