@@ -1205,6 +1205,25 @@ function voicePublisherLabel(item: NewsletterItem): string | null {
   }
 }
 
+// Sources whose per-story date is the DIGEST's send-date, NOT the article's true
+// publish date. TLDR Design's digest page exposes each story's title/blurb/URL but
+// no per-article date, so fetchTldrDigestStories stamps every story with the
+// digest's own pubDate (~route.ts:637). Displaying that as the story date is
+// misleading: a Jul-21 article featured in the Jul-23 digest reads as "Jul 23",
+// and an evergreen piece TLDR re-surfaces reads as today. For these items we show
+// provenance ("via TLDR Design") in place of a fabricated date. Only TLDR Design
+// uses the digest scraper today; add any future digest-scraped source here.
+const DIGEST_DATED_SOURCES: ReadonlySet<string> = new Set<string>(['TLDR Design']);
+
+// The right-cell label for a story card: normally the item's date, but for
+// digest-scraped items (see above) the date is not the article's real date, so we
+// return "via <digest>" instead. Returns null when the item's own date is trusted.
+function digestProvenanceLabel(item: NewsletterItem): string | null {
+  return item.sourceName && DIGEST_DATED_SOURCES.has(item.sourceName)
+    ? `via ${item.sourceName}`
+    : null;
+}
+
 // Resolve a selected item's sourceUrl back to its pool NewsItem (exact link, then
 // article host). The pool carries the authoritative source name + tier keyed by
 // the real ARTICLE host — more reliable than mapping the feed host, which differs
@@ -1658,11 +1677,15 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
   const badgeLabel = publisherLabel ?? item.product;
   const badgeIcon = publisherLabel ? '' : getProductIconImg(item.product);
 
+  // Digest-scraped items carry the digest's send-date, not the article's real
+  // date — show provenance instead of a misleading date (see digestProvenanceLabel).
+  const dateLabel = digestProvenanceLabel(item) ?? item.date;
+
   return `
 <div style="margin: 0; padding: 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;"><tr>
     <td style="font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${badgeIcon}${badgeLabel}</td>
-    <td align="right" style="font-size: 13px; color: ${EMAIL_MUTED};">${item.date}</td>
+    <td align="right" style="font-size: 13px; color: ${EMAIL_MUTED};">${dateLabel}</td>
   </tr></table>
   <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${item.headline}</h3>
   <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${item.description}</p>
