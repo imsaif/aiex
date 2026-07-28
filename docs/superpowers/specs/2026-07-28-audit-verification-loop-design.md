@@ -40,7 +40,11 @@ Coverage requirements:
 
 Each fixture's `expected.json` sets `mustFindPatterns`, `mustNotFindPatterns`, `expectEmptyTopGaps`, `maxApplicablePatterns`, `description`, `notes` as appropriate.
 
-**Exit gate for Track 1:** the full grown corpus runs green today (all axis means ≥ 4.0, hard-asserts pass) *without* the loop. This establishes the baseline the loop must beat. If a fixture legitimately fails at baseline, either fix its `expected.json` or record it as a known-hard case — do not silently drop it.
+**Sequencing:** Track 1 and Track 2 may proceed **in parallel**. The two do not share code, so the loop can be built against the 2 existing fixtures while the corpus grows. The trade-off — accepted — is that the *first* with-loop vs without-loop eval read will be noisy (small-N) and must not be treated as the ship decision.
+
+**Baseline before trusting the delta:** capture a without-loop baseline run (`last-run.json`) on whatever corpus exists at each checkpoint. Establishing a meaningful baseline for the ship decision requires the corpus to reach roughly its target size (~15–20 fixtures) — until then, deltas are directional only. If a fixture legitimately fails at baseline, either fix its `expected.json` or record it as a known-hard case; do not silently drop it.
+
+**Ship gate (unchanged):** the final go/no-go still requires the grown corpus (near target size), axis means up-or-hold, and no hard-assert regression. Parallel work changes *when* code gets written, not the bar for shipping.
 
 ## Track 2: the verification critic loop (Option C)
 
