@@ -8,12 +8,21 @@ import { clampScore } from '@/lib/audit/score';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
+import { runVerificationLoop } from '@/lib/audit/verifyLoop';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
+
+// The verify loop can make up to 3 sequential Sonnet vision calls. The default
+// ~15s serverless cap is not enough; raise it (Vercel Pro allows up to 300s).
+export const maxDuration = 60;
+
+// Wall-clock headroom the loop must respect so the function never hard-times-out.
+// Leaves ~5s under maxDuration for JSON serialization + the after() sample write.
+const LOOP_DEADLINE_MS = 55000;
 
 // Detect image media type from base64 data
 function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif' {
@@ -258,23 +267,45 @@ export async function POST(request: NextRequest) {
     }
     const analysisData = parseResult.data;
 
+    // Verification-critic loop (flag-gated). Re-examines the screenshot(s),
+    // drops/sharpens unverifiable findings, and falls back to the draft on any
+    // failure or when the time budget is spent. Context-first flow only.
+    let finalData = analysisData;
+    if (isContextFirst && process.env.AUDIT_VERIFY_LOOP === '1') {
+      try {
+        const loop = await runVerificationLoop({
+          client: anthropic,
+          imageBlocks,
+          systemPrompt,
+          draft: analysisData,
+          deadlineMs: startedAt + LOOP_DEADLINE_MS,
+        });
+        finalData = loop.result;
+        console.log('[Pattern Audit] Verify loop:', loop.revised ? 'revised' : 'kept draft');
+      } catch (loopErr) {
+        // The loop is best-effort; never let it break the response.
+        console.error('[Pattern Audit] Verify loop error (using draft):', loopErr);
+        finalData = analysisData;
+      }
+    }
+
     // Generate a unique ID for this analysis
     const id = `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
     if (isContextFirst) {
       // Return context-aware results format
-      const csMaxScore = analysisData.maxScore ?? 36;
+      const csMaxScore = finalData.maxScore ?? 36;
       const results = {
         id,
-        score: clampScore(analysisData.score ?? 0, csMaxScore),
+        score: clampScore(finalData.score ?? 0, csMaxScore),
         maxScore: csMaxScore,
-        productTypeSummary: analysisData.productTypeSummary || '',
-        surfaceDescription: analysisData.surfaceDescription || '',
-        applicablePatterns: analysisData.applicablePatterns || [],
-        topGaps: analysisData.topGaps || [],
-        quickWins: analysisData.quickWins || [],
-        generalObservations: analysisData.generalObservations || [],
-        chatContext: analysisData.chatContext || '',
+        productTypeSummary: finalData.productTypeSummary || '',
+        surfaceDescription: finalData.surfaceDescription || '',
+        applicablePatterns: finalData.applicablePatterns || [],
+        topGaps: finalData.topGaps || [],
+        quickWins: finalData.quickWins || [],
+        generalObservations: finalData.generalObservations || [],
+        chatContext: finalData.chatContext || '',
         productContext: {
           productType: productType!,
           productDescription: productDescription!,
@@ -282,11 +313,11 @@ export async function POST(request: NextRequest) {
         },
         // Also include legacy fields for backward compat with ResultsPanel
         context: context || { interfaceType: 'other', mainConcern: 'usability', userGoal: 'exploring-options', deviceType },
-        detectedComponent: analysisData.detectedComponent || productType || 'unknown',
-        componentDescription: analysisData.productTypeSummary || productDescription || '',
-        patterns: analysisData.patterns || {},
-        summary: analysisData.chatContext || analysisData.summary || '',
-        criticalMissing: (analysisData.topGaps || [])
+        detectedComponent: finalData.detectedComponent || productType || 'unknown',
+        componentDescription: finalData.productTypeSummary || productDescription || '',
+        patterns: finalData.patterns || {},
+        summary: finalData.chatContext || finalData.summary || '',
+        criticalMissing: (finalData.topGaps || [])
           .filter((g: { status: string }) => g.status === 'missing')
           .map((g: { pattern: string }) => g.pattern),
         timestamp: new Date().toISOString(),
