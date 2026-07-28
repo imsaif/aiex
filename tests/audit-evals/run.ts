@@ -27,6 +27,7 @@ import { parseAnalysisResponse } from '../../src/lib/audit/parseAnalysis';
 import type { ClaudeAnalysisResponse } from '../../src/types/audit';
 import { ExpectedFixtureSchema, JUDGE_AXES, type EvalRunReport, type FixtureResult, type JudgeAxis } from './types';
 import { judgeAudit } from './judge';
+import { runVerificationLoop } from '../../src/lib/audit/verifyLoop';
 
 const FIXTURES_DIR = path.join(__dirname, 'fixtures');
 const REPORT_PATH = path.join(__dirname, 'last-run.json');
@@ -116,7 +117,23 @@ async function callAnalyze(opts: {
   if (!parsed.ok) {
     return { ok: false, error: `${parsed.reason}: ${parsed.detail}`, rawText };
   }
-  return { ok: true, data: parsed.data, rawText };
+
+  let data = parsed.data;
+  if (process.env.EVAL_WITH_LOOP === '1') {
+    const loop = await runVerificationLoop({
+      client: opts.client,
+      imageBlocks: [
+        { type: 'image', source: { type: 'base64', media_type: opts.mediaType, data: opts.imageBase64 } },
+      ],
+      systemPrompt,
+      draft: parsed.data,
+      // Same 55s budget the production route uses, so the eval exercises the
+      // real gating/abort path instead of one that never engages.
+      deadlineMs: Date.now() + 55000,
+    });
+    data = loop.result;
+  }
+  return { ok: true, data, rawText };
 }
 
 function evaluateHardAsserts(
@@ -296,7 +313,10 @@ async function main() {
     passedHardAsserts: passedHard,
     totalFixtures: results.length,
   };
-  fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2));
+  const reportPath = process.env.EVAL_WITH_LOOP === '1'
+    ? path.join(__dirname, 'last-run-loop.json')
+    : REPORT_PATH;
+  fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 
   console.log('\n=== Eval Summary ===');
   console.log(`Fixtures: ${results.length}`);
@@ -307,7 +327,7 @@ async function main() {
     }
   }
   console.log(`Duration: ${(report.durationMs / 1000).toFixed(1)}s`);
-  console.log(`Report: ${REPORT_PATH}`);
+  console.log(`Report: ${reportPath}`);
 
   // Exit criteria
   const hardFail = passedHard < results.length;
