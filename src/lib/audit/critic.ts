@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { extractJsonObject } from './parseAnalysis';
 import type { ClaudeAnalysisResponse } from '@/types/audit';
 import { AUDIT_QUALITY_RUBRIC } from './criticRubric';
+import type Anthropic from '@anthropic-ai/sdk';
 
 export const CriticVerdictSchema = z.object({
   verdicts: z
@@ -83,10 +84,37 @@ Return STRICT JSON only, no fences, no preamble:
 }`;
 }
 
+const CRITIC_MODEL = process.env.AUDIT_CRITIC_MODEL || 'claude-sonnet-4-6';
+
 /**
- * Verify findings using Claude. Declared here; implemented in Task 3.
- * Signature included for callers to know the interface before Task 3 ships.
+ * The verification critic. Re-examines the screenshot(s) and returns per-finding
+ * verdicts. Narrow by design (verification, not rewriting) because a same-model
+ * self-critic is only reliable on the "does this evidence exist" subtask.
+ * Never throws: returns a CriticResult; the caller falls back to the draft on ok:false.
  */
-export async function verifyFindings(opts: unknown): Promise<CriticResult> {
-  throw new Error('verifyFindings not yet implemented (Task 3)');
+export async function verifyFindings(opts: {
+  client: Anthropic;
+  imageBlocks: Anthropic.ImageBlockParam[];
+  draft: ClaudeAnalysisResponse;
+  model?: string;
+}): Promise<CriticResult> {
+  if ((opts.draft.topGaps ?? []).length === 0) {
+    return { ok: true, data: { verdicts: [], overallNote: '' } };
+  }
+  let response;
+  try {
+    response = await opts.client.messages.create({
+      model: opts.model || CRITIC_MODEL,
+      max_tokens: 1024,
+      temperature: 0,
+      messages: [
+        { role: 'user', content: [...opts.imageBlocks, { type: 'text', text: buildCriticPrompt(opts.draft) }] },
+      ],
+    });
+  } catch (err) {
+    return { ok: false, reason: 'invalid-json', detail: err instanceof Error ? err.message : 'critic call threw' };
+  }
+  const block = response.content.find((b) => b.type === 'text');
+  const raw = block && block.type === 'text' ? block.text : '';
+  return parseCriticResponse(raw);
 }

@@ -57,3 +57,26 @@ describe('buildCriticPrompt', () => {
     expect(prompt).toMatch(/keep.*sharpen.*drop/s);
   });
 });
+
+import type Anthropic from '@anthropic-ai/sdk';
+import { verifyFindings } from '../critic';
+
+function fakeClient(text: string): Anthropic {
+  return { messages: { create: async () => ({ content: [{ type: 'text', text }] }) } } as unknown as Anthropic;
+}
+const DRAFT = { topGaps: [{ pattern: 'Feedback Loops', status: 'missing', finding: 'x', evidence: 'y', recommendation: 'z', resource: null }], applicablePatterns: ['Feedback Loops'] } as never;
+
+describe('verifyFindings', () => {
+  it('returns parsed verdicts on a well-formed critic reply', async () => {
+    const client = fakeClient('{"verdicts":[{"index":1,"verdict":"keep","evidenceVisible":true}],"overallNote":""}');
+    const r = await verifyFindings({ client, imageBlocks: [], draft: DRAFT });
+    expect(r.ok).toBe(true);
+  });
+
+  it('returns ok:false when the critic call throws', async () => {
+    const client = { messages: { create: async () => { throw new Error('boom'); } } } as unknown as Anthropic;
+    const r = await verifyFindings({ client, imageBlocks: [], draft: DRAFT });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toBe('invalid-json');
+  });
+});
