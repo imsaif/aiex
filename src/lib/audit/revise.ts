@@ -39,21 +39,26 @@ export async function reviseAudit(opts: {
   draft: ClaudeAnalysisResponse;
   verdicts: CriticVerdict;
   model?: string;
+  /** Optional abort budget in ms, so a slow/retrying call can't blow the caller's deadline. */
+  timeoutMs?: number;
 }): Promise<ClaudeAnalysisResponse> {
   const draftGapCount = (opts.draft.topGaps ?? []).length;
   let response;
   try {
-    response = await opts.client.messages.create({
-      model: opts.model || REVISE_MODEL,
-      max_tokens: 4096,
-      temperature: 0,
-      ...(opts.systemPrompt
-        ? { system: [{ type: 'text', text: opts.systemPrompt, cache_control: { type: 'ephemeral' } }] }
-        : {}),
-      messages: [
-        { role: 'user', content: [...opts.imageBlocks, { type: 'text', text: buildRevisePrompt(opts.draft, opts.verdicts) }] },
-      ],
-    });
+    response = await opts.client.messages.create(
+      {
+        model: opts.model || REVISE_MODEL,
+        max_tokens: 4096,
+        temperature: 0,
+        ...(opts.systemPrompt
+          ? { system: [{ type: 'text', text: opts.systemPrompt, cache_control: { type: 'ephemeral' } }] }
+          : {}),
+        messages: [
+          { role: 'user', content: [...opts.imageBlocks, { type: 'text', text: buildRevisePrompt(opts.draft, opts.verdicts) }] },
+        ],
+      },
+      { maxRetries: 0, ...(opts.timeoutMs ? { signal: AbortSignal.timeout(opts.timeoutMs) } : {}) },
+    );
   } catch {
     return opts.draft;
   }
@@ -64,5 +69,7 @@ export async function reviseAudit(opts: {
   // Reject an empty-out: if the draft had findings but the revise returned none,
   // that is almost always over-dropping, not a legitimately clean surface.
   if (draftGapCount > 0 && (parsed.data.topGaps ?? []).length === 0) return opts.draft;
-  return parsed.data;
+  // Only topGaps may change. Preserve every other field from the draft so a
+  // misbehaving revise call can't alter score, maxScore, applicablePatterns, etc.
+  return { ...opts.draft, topGaps: parsed.data.topGaps ?? [] };
 }

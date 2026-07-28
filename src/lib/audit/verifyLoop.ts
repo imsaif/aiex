@@ -24,11 +24,13 @@ export async function runVerificationLoop(opts: {
     return { result: opts.draft, revised: false, verdict: null };
   }
 
+  const criticTimeoutMs = Math.max(0, opts.deadlineMs - now());
   const critic = await verifyFindings({
     client: opts.client,
     imageBlocks: opts.imageBlocks,
     draft: opts.draft,
     model: opts.criticModel,
+    timeoutMs: criticTimeoutMs,
   });
   if (!critic.ok) return { result: opts.draft, revised: false, verdict: null };
   if (!needsRevision(critic.data)) return { result: opts.draft, revised: false, verdict: critic.data };
@@ -38,6 +40,7 @@ export async function runVerificationLoop(opts: {
     return { result: opts.draft, revised: false, verdict: critic.data };
   }
 
+  const reviseTimeoutMs = Math.max(0, opts.deadlineMs - now());
   const revised = await reviseAudit({
     client: opts.client,
     imageBlocks: opts.imageBlocks,
@@ -45,6 +48,7 @@ export async function runVerificationLoop(opts: {
     draft: opts.draft,
     verdicts: critic.data,
     model: opts.reviseModel,
+    timeoutMs: reviseTimeoutMs,
   });
   const changed = revised !== opts.draft;
   return { result: revised, revised: changed, verdict: critic.data };

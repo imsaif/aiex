@@ -46,4 +46,17 @@ describe('reviseAudit', () => {
     const out = await reviseAudit({ client: throwing, imageBlocks: [], draft: DRAFT, verdicts: VERDICTS });
     expect(out.topGaps).toHaveLength(2);
   });
+
+  it('preserves all non-topGaps fields from the draft, taking only topGaps from the revise', async () => {
+    const revisedText = JSON.stringify({
+      ...JSON.parse(JSON.stringify(DRAFT)),
+      score: 99,
+      applicablePatterns: [],
+      topGaps: [DRAFT.topGaps[0]],
+    });
+    const out = await reviseAudit({ client: client(revisedText), imageBlocks: [], draft: DRAFT, verdicts: VERDICTS });
+    expect(out.topGaps).toHaveLength(1);
+    expect(out.score).toBe(DRAFT.score);
+    expect(out.applicablePatterns).toEqual(DRAFT.applicablePatterns);
+  });
 });

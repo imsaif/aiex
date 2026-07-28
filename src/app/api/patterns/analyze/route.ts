@@ -16,8 +16,11 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
-// The verify loop can make up to 3 sequential Sonnet vision calls. The default
-// ~15s serverless cap is not enough; raise it (Vercel Pro allows up to 300s).
+// The verify loop can make up to 3 sequential Sonnet vision calls (analyze,
+// critic, revise). This project runs on Vercel Hobby, where 60s is a hard
+// ceiling, not a raisable default. What keeps the function under that cap is
+// the per-call abort budgets threaded through runVerificationLoop (see
+// LOOP_DEADLINE_MS below), not a higher maxDuration.
 export const maxDuration = 60;
 
 // Wall-clock headroom the loop must respect so the function never hard-times-out.
@@ -281,7 +284,15 @@ export async function POST(request: NextRequest) {
           deadlineMs: startedAt + LOOP_DEADLINE_MS,
         });
         finalData = loop.result;
-        console.log('[Pattern Audit] Verify loop:', loop.revised ? 'revised' : 'kept draft');
+        // Structured log for the prod signal on whether the loop fired, whether
+        // it revised the draft, and whether the critic produced a verdict at
+        // all (false means the critic call failed or was skipped on budget).
+        // Persisting fired/revised onto AuditSample is a deferred follow-up
+        // for when the AUDIT_VERIFY_LOOP flag is enabled by default.
+        console.log(
+          '[Pattern Audit] Verify loop:',
+          JSON.stringify({ fired: true, revised: loop.revised, hadVerdict: loop.verdict !== null }),
+        );
       } catch (loopErr) {
         // The loop is best-effort; never let it break the response.
         console.error('[Pattern Audit] Verify loop error (using draft):', loopErr);

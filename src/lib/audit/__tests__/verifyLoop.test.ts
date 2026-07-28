@@ -58,4 +58,24 @@ describe('runVerificationLoop', () => {
     expect(out.revised).toBe(false);
     expect(out.result.topGaps).toHaveLength(2);
   });
+
+  it('threads a per-call abort budget into the critic call', async () => {
+    let secondArg: unknown;
+    const client = {
+      messages: {
+        create: async (_body: unknown, options: unknown) => {
+          secondArg = options;
+          return { content: [{ type: 'text', text: ALL_KEEP }] };
+        },
+      },
+    } as unknown as Anthropic;
+    const out = await runVerificationLoop({
+      client, imageBlocks: [], draft: DRAFT,
+      deadlineMs: 1_000_000, now: () => 0,
+    });
+    expect(out.revised).toBe(false);
+    expect(secondArg).toBeDefined();
+    expect((secondArg as { maxRetries?: number }).maxRetries).toBe(0);
+    expect((secondArg as { signal?: AbortSignal }).signal).toBeDefined();
+  });
 });

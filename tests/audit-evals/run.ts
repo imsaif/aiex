@@ -125,8 +125,11 @@ async function callAnalyze(opts: {
       imageBlocks: [
         { type: 'image', source: { type: 'base64', media_type: opts.mediaType, data: opts.imageBase64 } },
       ],
+      systemPrompt,
       draft: parsed.data,
-      deadlineMs: Date.now() + 300000, // eval is offline; give it plenty of room
+      // Same 55s budget the production route uses, so the eval exercises the
+      // real gating/abort path instead of one that never engages.
+      deadlineMs: Date.now() + 55000,
     });
     data = loop.result;
   }

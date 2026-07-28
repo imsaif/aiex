@@ -97,20 +97,25 @@ export async function verifyFindings(opts: {
   imageBlocks: Anthropic.ImageBlockParam[];
   draft: ClaudeAnalysisResponse;
   model?: string;
+  /** Optional abort budget in ms, so a slow/retrying call can't blow the caller's deadline. */
+  timeoutMs?: number;
 }): Promise<CriticResult> {
   if ((opts.draft.topGaps ?? []).length === 0) {
     return { ok: true, data: { verdicts: [], overallNote: '' } };
   }
   let response;
   try {
-    response = await opts.client.messages.create({
-      model: opts.model || CRITIC_MODEL,
-      max_tokens: 1024,
-      temperature: 0,
-      messages: [
-        { role: 'user', content: [...opts.imageBlocks, { type: 'text', text: buildCriticPrompt(opts.draft) }] },
-      ],
-    });
+    response = await opts.client.messages.create(
+      {
+        model: opts.model || CRITIC_MODEL,
+        max_tokens: 1024,
+        temperature: 0,
+        messages: [
+          { role: 'user', content: [...opts.imageBlocks, { type: 'text', text: buildCriticPrompt(opts.draft) }] },
+        ],
+      },
+      { maxRetries: 0, ...(opts.timeoutMs ? { signal: AbortSignal.timeout(opts.timeoutMs) } : {}) },
+    );
   } catch (err) {
     return { ok: false, reason: 'invalid-json', detail: err instanceof Error ? err.message : 'critic call threw' };
   }
