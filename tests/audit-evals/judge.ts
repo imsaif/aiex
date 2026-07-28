@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { JudgeScoresSchema, type JudgeScores } from './types';
+import { AUDIT_QUALITY_RUBRIC } from '../../src/lib/audit/criticRubric';
 
 const JUDGE_MODEL = 'claude-sonnet-4-6';
 
@@ -28,6 +29,9 @@ ${opts.auditJson}
 3. **patternFit** — Are the patterns in \`applicablePatterns\` and \`topGaps\` actually relevant to the surface shown? Penalize agentic patterns flagged on chat surfaces, error-recovery flagged on settings pages, etc. 5 = every pattern fits the surface; 0 = clearly wrong patterns dominate.
 4. **actionability** — Is each \`recommendation\` a concrete fix a designer can act on this week, or is it a generic restatement of the pattern? 5 = every recommendation is specific and shippable; 0 = recommendations are pattern definitions.
 5. **noFabrication** — Are there any findings, evidence quotes, or UI elements that are simply not in the screenshot? This is the most important axis. Penalize hard: even one fabricated finding drops this to 2 or below.
+
+## Reference: what a good finding is
+${AUDIT_QUALITY_RUBRIC}
 
 ## Output
 
