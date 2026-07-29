@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { XMarkIcon, CheckIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { UNLOCKED_AUDIT_LIMIT } from '@/lib/audit/constants';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 interface PaywallModalProps {
   onClose: () => void;
@@ -13,7 +14,7 @@ interface PaywallModalProps {
 }
 
 const UNLOCK_BENEFITS = [
-  '3 more audits — score AI surfaces against 36 patterns',
+  `3 more audits — score AI surfaces against ${PATTERN_COUNT} patterns`,
   'Upload up to 2 screenshots per audit',
   'Daily AI UX newsletter (unsubscribe anytime)',
 ];

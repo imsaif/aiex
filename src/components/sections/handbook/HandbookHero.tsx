@@ -10,6 +10,7 @@ import {
   BeakerIcon,
   ArrowLeftIcon,
 } from '@heroicons/react/24/outline';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export function HandbookHero() {
   const [email, setEmail] = useState('');
@@ -134,7 +135,7 @@ export function HandbookHero() {
                   <Squares2X2Icon className="w-5 h-5 text-accent-primary" />
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">36 Patterns</span>
+                  <span className="text-sm font-medium text-text-primary group-hover:text-accent-primary transition block">{PATTERN_COUNT} Patterns</span>
                   <span className="text-xs text-text-tertiary">Browse the full library</span>
                 </div>
               </Link>
@@ -354,7 +355,7 @@ export function HandbookHero() {
               <Squares2X2Icon className="w-5 h-5 text-accent-primary" />
             </div>
             <div>
-              <span className="text-sm font-medium text-text-primary block">36 Patterns</span>
+              <span className="text-sm font-medium text-text-primary block">{PATTERN_COUNT} Patterns</span>
               <span className="text-xs text-text-tertiary">Browse the full library</span>
             </div>
           </Link>

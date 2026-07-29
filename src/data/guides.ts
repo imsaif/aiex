@@ -1,4 +1,5 @@
 import { Guide, GuideFilter } from '@/types';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 /**
  * Complete Claude Code Learning Path Course for Designers
@@ -6699,7 +6700,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Once your core chat UI is solid, these AIUX design patterns will take it to the next level. Each one is a documented pattern with real-world examples, code demos, and implementation guidelines:\n\n[Multimodal Interaction](/patterns/multimodal-interaction) - Let users drag images, PDFs, or code files into the chat. Design for voice + text + visual input simultaneously.\n\n[Graceful Handoff](/patterns/graceful-handoff) - When the AI can\'t help, transfer to a human agent with full conversation context preserved. Critical for customer support.\n\n[Progressive Disclosure](/patterns/progressive-disclosure) - Start with a simple chat, then reveal advanced features (system prompts, temperature controls, model selection) as users become power users.\n\n[Context Switching](/patterns/context-switching) - Help users manage multiple conversations and switch between them without losing context.\n\n[Confidence Visualization](/patterns/confidence-visualization) - Show users how confident the AI is in its response. Especially important for high-stakes domains like healthcare or finance.\n\n[Feedback Loops](/patterns/feedback-loops) - Add thumbs up/down, regenerate, and edit mechanisms that help users correct the AI and improve responses over time.\n\nWant to see how your conversational UI stacks up? Use the free [AI UX Audit Tool](/audit) to score your interface against all 36 patterns.',
+            content: 'Once your core chat UI is solid, these AIUX design patterns will take it to the next level. Each one is a documented pattern with real-world examples, code demos, and implementation guidelines:\n\n[Multimodal Interaction](/patterns/multimodal-interaction) - Let users drag images, PDFs, or code files into the chat. Design for voice + text + visual input simultaneously.\n\n[Graceful Handoff](/patterns/graceful-handoff) - When the AI can\'t help, transfer to a human agent with full conversation context preserved. Critical for customer support.\n\n[Progressive Disclosure](/patterns/progressive-disclosure) - Start with a simple chat, then reveal advanced features (system prompts, temperature controls, model selection) as users become power users.\n\n[Context Switching](/patterns/context-switching) - Help users manage multiple conversations and switch between them without losing context.\n\n[Confidence Visualization](/patterns/confidence-visualization) - Show users how confident the AI is in its response. Especially important for high-stakes domains like healthcare or finance.\n\n[Feedback Loops](/patterns/feedback-loops) - Add thumbs up/down, regenerate, and edit mechanisms that help users correct the AI and improve responses over time.\n\nWant to see how your conversational UI stacks up? Use the free [AI UX Audit Tool](/audit) to score your interface against all ' + PATTERN_COUNT + ' patterns.',
           },
           {
             type: 'heading',
@@ -7028,7 +7029,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Test your conversational UI: Use the free [AI UX Audit Tool](/audit) to score your interface against all 36 AIUX design patterns - including the agentic patterns covered in this lesson. Upload a screenshot and get instant feedback on which patterns are strong, weak, or missing.',
+            content: 'Test your conversational UI: Use the free [AI UX Audit Tool](/audit) to score your interface against all ' + PATTERN_COUNT + ' AIUX design patterns - including the agentic patterns covered in this lesson. Upload a screenshot and get instant feedback on which patterns are strong, weak, or missing.',
           },
           {
             type: 'further-reading',

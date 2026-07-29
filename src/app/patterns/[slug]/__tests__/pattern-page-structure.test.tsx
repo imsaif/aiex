@@ -8,7 +8,7 @@ import type { Pattern } from '@/types';
  * Why this exists: on 2026-05-29 an "inline interactive demo slot" was added with
  * a default placement of 'after-problem-solution'. Because no pattern overrode the
  * default, EVERY pattern page silently rendered the same demo twice — once under a
- * "See it in action" heading and again under "Implementation" — across all 36 pages,
+ * "See it in action" heading and again under "Implementation" — across every pattern page,
  * with no signal of what caused it. This test locks the canonical section order and
  * fails loudly if a duplicate demo section (or any structural drift) reappears.
  *

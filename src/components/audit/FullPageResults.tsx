@@ -28,6 +28,7 @@ import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
 import { PaywallInlineCapture } from './PaywallInlineCapture';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 interface ExtendedResults extends AnalysisResults {
   topGaps?: TopGap[];
@@ -254,7 +255,7 @@ function EmptyAuditState({
 
   const STATUS_MESSAGES = [
     'Reading your intent…',
-    'Scanning 36 patterns in the library…',
+    `Scanning ${PATTERN_COUNT} patterns in the library…`,
     'Matching against your use case…',
     'Ranking by relevance…',
   ];
@@ -331,7 +332,7 @@ function EmptyAuditState({
           <div className="grid lg:grid-cols-5 gap-6 sm:gap-10 lg:gap-12 items-center lg:min-h-[360px]">
             <div className="lg:col-span-3">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-primary leading-tight mb-4 sm:mb-6">
-                We scanned for 36 AI UX patterns
+                We scanned for {PATTERN_COUNT} AI UX patterns
               </h2>
               <p className="text-lg text-text-secondary leading-relaxed mb-8">
                 These patterns cover behaviors like confidence cues, error recovery, and explainability. None showed up in your screenshot, which usually means the surface isn&apos;t displaying AI output yet.
@@ -837,7 +838,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 Free AI UX Audit Tool
               </h1>
               <p className="text-sm sm:text-base md:text-lg text-text-secondary mb-8 sm:mb-10">
-                Score AI interfaces against 36 proven patterns and get specific fixes you can ship today.
+                Score AI interfaces against {PATTERN_COUNT} proven patterns and get specific fixes you can ship today.
               </p>
 
               {/* CTA — moved into the hero text zone so the email form sits

@@ -7,9 +7,9 @@ paths:
 # Patterns: status, structure, and development workflow
 
 ## Pattern Status Summary
-- **✅ All Patterns Complete (36/36)**: Every pattern has complete implementations with code examples, interactive demos, real-world examples, guidelines, considerations, and Figma design prompts
+- **✅ All Patterns Complete (38/38)**: Every pattern has complete implementations with code examples, interactive demos, real-world examples, guidelines, considerations, and Figma design prompts
 
-### All Patterns - Complete (36/36)
+### All Patterns - Complete (38/38)
 1. ✅ Adaptive Interfaces
 2. ✅ Ambient Intelligence (Oct 17)
 3. ✅ Anti-Manipulation Safeguards (Nov 11)
@@ -46,6 +46,8 @@ paths:
 34. ✅ Trust Calibration (Feb 16) 🤖
 35. ✅ Mixed-Initiative Control (Feb 16) 🤖
 36. ✅ Agent Status & Monitoring (Feb 16) 🤖
+37. ✅ Workspace-Native Agent Integration (May) 🤖
+38. ✅ Agent Reflection & Learning (May) 🤖
 
 ### Pattern Categories (8 Total)
 
@@ -148,14 +150,14 @@ When working on a pattern, ensure ALL of these are completed:
 
 **⚠️ Important Rule**: Stay focused on ONE pattern. Don't jump to another pattern until current one is 100% complete with all checklist items done.
 
-## Pattern Structure (36/36 Complete ✅)
+## Pattern Structure (38/38 Complete ✅)
 Pattern implementation follows this structured format:
 1. Each pattern has its own directory in `src/data/patterns/patterns/[pattern-name]/`
 2. Consistent structure with index.ts, code-examples.ts, considerations.ts, guidelines.ts, examples.ts, figma-prompt.ts
 3. All patterns imported in `src/data/patterns.ts`
 4. Patterns validated with `npm run test:patterns`
 5. Interactive demos for all patterns with working code previews
-6. **Current Status**: All 36 patterns fully completed with comprehensive implementations
+6. **Current Status**: All 38 patterns fully completed with comprehensive implementations
 
 ## Pattern Structure Requirements
 - `id` and `slug` must match and use kebab-case

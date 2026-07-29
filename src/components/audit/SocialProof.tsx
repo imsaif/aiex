@@ -11,6 +11,7 @@ import {
   PlayCircleIcon,
 } from '@heroicons/react/24/outline';
 import OptimizedMedia from '@/components/ui/OptimizedMedia';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 const PATTERN_DEMOS = [
   {
@@ -50,7 +51,7 @@ export function SocialProof() {
             What is an AI UX audit?
           </h2>
           <p className="text-base md:text-lg text-text-secondary leading-relaxed">
-            Score your interface against 36 patterns built for AI products. Upload a screenshot of any chatbot, code assistant, or dashboard and get instant, actionable fixes.
+            Score your interface against {PATTERN_COUNT} patterns built for AI products. Upload a screenshot of any chatbot, code assistant, or dashboard and get instant, actionable fixes.
           </p>
         </div>
 
@@ -88,7 +89,7 @@ export function SocialProof() {
             href="/patterns"
             className="inline-flex items-center gap-1.5 mt-6 text-sm font-semibold text-accent-primary hover:underline"
           >
-            See all 36 patterns
+            See all {PATTERN_COUNT} patterns
             <ArrowRightIcon className="w-4 h-4" />
           </Link>
         </div>
@@ -113,7 +114,7 @@ export function SocialProof() {
             <p className="text-sm font-semibold text-accent-primary mb-1">Step 2</p>
             <p className="text-base font-semibold text-text-primary mb-2">Analyze</p>
             <p className="text-sm text-text-secondary leading-relaxed">
-              Scored against 36 patterns from ChatGPT, Copilot, and Notion.
+              Scored against {PATTERN_COUNT} patterns from ChatGPT, Copilot, and Notion.
             </p>
           </div>
           <div className="rounded-2xl border border-border-primary bg-background-grain p-6">
@@ -147,7 +148,7 @@ export function SocialProof() {
                 <Squares2X2Icon className="w-7 h-7 text-accent-primary" />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-accent-primary bg-background-primary border border-border-primary px-3 py-1.5 rounded-full">
-                36 patterns
+                {PATTERN_COUNT} patterns
               </span>
             </div>
             <h4 className="text-xl md:text-2xl font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">

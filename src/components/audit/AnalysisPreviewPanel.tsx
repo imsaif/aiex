@@ -7,6 +7,7 @@ import {
   ChevronDownIcon,
 } from '@heroicons/react/24/outline';
 import { ShieldCheckIcon, SparklesIcon } from '@heroicons/react/24/solid';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 /**
  * A preview/placeholder panel that shows users what the analysis will look like
@@ -57,7 +58,7 @@ export function AnalysisPreviewPanel() {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <div className="text-2xl font-semibold text-text-tertiary">
-              ?<span className="text-lg">/36</span>
+              ?<span className="text-lg">/{PATTERN_COUNT}</span>
             </div>
           </div>
         </div>

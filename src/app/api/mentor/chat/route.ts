@@ -80,7 +80,7 @@ function buildSystemPrompt(session: MentorSession): string {
     contextInfo = `
 ## Current Design Analysis
 
-**Overall Score:** ${overallScore}/36 patterns well-implemented
+**Overall Score:** ${overallScore}/${patternResults.detected.length + patternResults.weak.length + patternResults.missing.length} patterns well-implemented
 
 **Summary:** ${summary}
 
@@ -102,7 +102,7 @@ ${session.annotations!.map((a, i) => `${i + 1}. [${a.severity.toUpperCase()}] ${
 `;
   }
 
-  return `You are an expert AI Design Mentor helping a designer improve their interface based on 36 AI UX design patterns.
+  return `You are an expert AI Design Mentor helping a designer improve their interface based on the AI UX design pattern library.
 
 Your role is to:
 1. **Educate** - Explain patterns clearly with practical examples

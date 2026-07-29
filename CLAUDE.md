@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Next.js 15 app (React 19, TypeScript, Tailwind CSS v4) showcasing **36 AI design patterns** across 8 categories, each with code examples, interactive demos, real-world examples, and design guidance. Plus a newsletter, a done-for-you audit service, and a paid audit funnel. Deployed on Vercel at **aiuxdesign.guide**.
+Next.js 15 app (React 19, TypeScript, Tailwind CSS v4) showcasing **38 AI design patterns** across 8 categories, each with code examples, interactive demos, real-world examples, and design guidance. Plus a newsletter, a done-for-you audit service, and a paid audit funnel. Deployed on Vercel at **aiuxdesign.guide**.
 
 ## Core Development Commands
 

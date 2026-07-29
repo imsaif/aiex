@@ -10,6 +10,7 @@ import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
 import { runVerificationLoop } from '@/lib/audit/verifyLoop';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 // Initialize Anthropic client
 const anthropic = new Anthropic({
@@ -205,7 +206,7 @@ export async function POST(request: NextRequest) {
       model: 'claude-sonnet-4-6',
       max_tokens: 4096,
       temperature: 0,
-      // Cache the large, static analysis rubric (36-pattern library + process +
+      // Cache the large, static analysis rubric (full pattern library + process +
       // output format). It's identical for a given productType, so repeat audits
       // and the eval harness (which loops many fixtures) read it from cache.
       ...(systemPrompt
@@ -305,7 +306,7 @@ export async function POST(request: NextRequest) {
 
     if (isContextFirst) {
       // Return context-aware results format
-      const csMaxScore = finalData.maxScore ?? 36;
+      const csMaxScore = finalData.maxScore ?? PATTERN_COUNT;
       const results = {
         id,
         score: clampScore(finalData.score ?? 0, csMaxScore),

@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { z } from 'zod';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 const SONNET_MODEL = 'claude-sonnet-4-6';
 
@@ -191,7 +192,7 @@ Typography hierarchy:
 - text-sm for body
 - text-xs for metadata
 
-Build the component to look like it belongs on the same page as the existing 36 patterns. Editorial, calm, hairline borders, generous whitespace. Not flashy.`,
+Build the component to look like it belongs on the same page as the existing ${PATTERN_COUNT} patterns. Editorial, calm, hairline borders, generous whitespace. Not flashy.`,
       messages: [{
         role: 'user',
         content: `Write an interactive React component that demonstrates the "${title}" pattern.

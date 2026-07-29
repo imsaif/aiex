@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import ResourcesGrid from '../../components/sections/ResourcesGrid';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export const metadata: Metadata = {
   title: 'Resources | AI UX Design Patterns, Tools, Downloads & Guides',
@@ -50,7 +51,7 @@ export default function ResourcesPage() {
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">Not sure where to start?</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl mx-auto">
-            Run a quick audit of your AI product against all 36 patterns. You&apos;ll get a
+            Run a quick audit of your AI product against all {PATTERN_COUNT} patterns. You&apos;ll get a
             prioritized report with the highest-impact improvements.
           </p>
           <Link

@@ -27,7 +27,7 @@ paths:
   - Lines: 48.28% ✅
   - Functions: 39% ✅
   - Branches: 36.19% ✅
-- **✅ 36/36 AI design patterns fully completed** with comprehensive content, interactive demos, and code examples
+- **✅ 38/38 AI design patterns fully completed** with comprehensive content, interactive demos, and code examples
 - **100% component test coverage** - every component has comprehensive tests
 - Data validation with 83% coverage: Patterns, Categories
 - Advanced test infrastructure with proper mocking for Next.js, framer-motion, and browser APIs
@@ -60,6 +60,12 @@ paths:
 - Use React Testing Library best practices
 - Mock external dependencies (Next.js components, APIs)
 - Maintain coverage thresholds
+
+## Gotcha: `.gitignore` ignores `**/__tests__/`
+
+`.gitignore` has `**/__tests__/`, `**/*.test.*` and `**/*.spec.*` (only `e2e/**/*.spec.ts` is negated). A new test therefore runs locally, passes, and is then **silently dropped by `git add .`** — it never reaches the repo or CI. Some suites are tracked (`src/lib/audit/__tests__/*`, `src/app/patterns/[slug]/__tests__/*`) because they were force-added; others (`src/data/__tests__/patterns.test.ts`) are local-only.
+
+**Any test that is a safeguard rather than a scratch check must be `git add -f`'d**, and you should confirm it with `git ls-files <path>` before claiming it protects anything. A guard that only exists on one machine is not a guard.
 
 ## Component Testing Agent
 - Generates comprehensive test suites, follows testing best practices, creates snapshots and interaction tests.

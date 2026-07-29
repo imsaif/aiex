@@ -2,13 +2,14 @@ import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import AuditClient from '@/components/audit/AuditClient';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: 'AI UX Audit: Free Tool to Score Designs Against 36 Patterns',
+  title: `AI UX Audit: Free Tool to Score Designs Against ${PATTERN_COUNT} Patterns`,
   description:
-    'Upload any AI interface screenshot. Get instant feedback scored against 36 patterns from 50+ shipped products like ChatGPT, GitHub Copilot, and Notion. Free, no signup.',
+    `Upload any AI interface screenshot. Get instant feedback scored against ${PATTERN_COUNT} patterns from 50+ shipped products like ChatGPT, GitHub Copilot, and Notion. Free, no signup.`,
   keywords: [
     'ai ux audit',
     'ai ux audit tool',
@@ -27,9 +28,9 @@ export const metadata: Metadata = {
     canonical: 'https://www.aiuxdesign.guide/',
   },
   openGraph: {
-    title: 'AI UX Audit: Free Tool to Score Designs Against 36 Patterns',
+    title: `AI UX Audit: Free Tool to Score Designs Against ${PATTERN_COUNT} Patterns`,
     description:
-      'Upload any AI interface. Get instant feedback scored against 36 patterns from 50+ shipped products. Free, no signup.',
+      `Upload any AI interface. Get instant feedback scored against ${PATTERN_COUNT} patterns from 50+ shipped products. Free, no signup.`,
     url: 'https://www.aiuxdesign.guide/',
     siteName: 'AI UX Design Guide',
     type: 'website',
@@ -38,15 +39,15 @@ export const metadata: Metadata = {
         url: '/images/og/og-pattern-default.png',
         width: 1200,
         height: 630,
-        alt: 'AI UX Audit Tool — Score your AI interface against 36 proven design patterns',
+        alt: `AI UX Audit Tool — Score your AI interface against ${PATTERN_COUNT} proven design patterns`,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI UX Audit Tool — 36 Pattern Analysis',
+    title: `AI UX Audit Tool — ${PATTERN_COUNT} Pattern Analysis`,
     description:
-      'Upload any AI interface. Get instant feedback against 36 patterns from 50+ products. Free.',
+      `Upload any AI interface. Get instant feedback against ${PATTERN_COUNT} patterns from 50+ products. Free.`,
     images: ['/images/og/og-pattern-default.png'],
     creator: '@aiuxdesignguide',
   },
@@ -61,7 +62,7 @@ const faqJsonLd = {
       name: 'What is an AI UX audit?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'An AI UX audit analyzes your AI interface design against proven UX patterns. It identifies which patterns your product implements well, which need improvement, and which are missing — giving you a score and actionable recommendations. Try the free AI UX audit tool at aiuxdesign.guide to score your design against 36 research-backed patterns.',
+        text: `An AI UX audit analyzes your AI interface design against proven UX patterns. It identifies which patterns your product implements well, which need improvement, and which are missing — giving you a score and actionable recommendations. Try the free AI UX audit tool at aiuxdesign.guide to score your design against ${PATTERN_COUNT} research-backed patterns.`,
       },
     },
     {
@@ -69,7 +70,7 @@ const faqJsonLd = {
       name: 'How does the AI UX audit tool work?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Upload a screenshot of your AI interface (chatbot, code assistant, dashboard, etc.) and the tool instantly analyzes it against 36 research-backed AI UX patterns. You get a score, pattern-by-pattern breakdown, and can chat with an AI design mentor for deeper insights. See real-world examples from ChatGPT, GitHub Copilot, and more.',
+        text: `Upload a screenshot of your AI interface (chatbot, code assistant, dashboard, etc.) and the tool instantly analyzes it against ${PATTERN_COUNT} research-backed AI UX patterns. You get a score, pattern-by-pattern breakdown, and can chat with an AI design mentor for deeper insights. See real-world examples from ChatGPT, GitHub Copilot, and more.`,
       },
     },
     {
@@ -97,7 +98,7 @@ const webAppJsonLd = {
   name: 'AI UX Audit Tool',
   url: 'https://www.aiuxdesign.guide/',
   description:
-    'Free tool that scores AI interface designs against 36 proven UX patterns. Upload a screenshot, get instant feedback on usability strengths and gaps.',
+    `Free tool that scores AI interface designs against ${PATTERN_COUNT} proven UX patterns. Upload a screenshot, get instant feedback on usability strengths and gaps.`,
   applicationCategory: 'DesignApplication',
   operatingSystem: 'Any',
   offers: {
@@ -107,7 +108,7 @@ const webAppJsonLd = {
   },
   featureList: [
     'Screenshot-based AI interface analysis',
-    'Scores against 36 AI UX design patterns',
+    `Scores against ${PATTERN_COUNT} AI UX design patterns`,
     'Pattern-by-pattern breakdown with recommendations',
     'AI design mentor chat for deeper insights',
     'Support for desktop and mobile screenshots',

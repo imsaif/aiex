@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { BeakerIcon } from '@heroicons/react/24/outline';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 interface InlineAuditCTAProps {
   variant: 'hero' | 'pattern-detail' | 'sidebar';
@@ -20,7 +21,7 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
           Check if your product already has this pattern
         </p>
         <p className="text-sm text-text-secondary mt-2 leading-relaxed">
-          Upload a screenshot. We&apos;ll tell you which of the 36 patterns your AI interface uses and where the gaps are.
+          Upload a screenshot. We&apos;ll tell you which of the {PATTERN_COUNT} patterns your AI interface uses and where the gaps are.
         </p>
         <Link
           href="/"
@@ -39,7 +40,7 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
           <div className="flex items-center gap-2">
             <BeakerIcon className="w-5 h-5 text-accent-primary" />
             <p className="text-text-secondary text-sm sm:text-base">
-              <span className="font-semibold text-text-primary">New:</span> Audit your AI interface against 36 patterns
+              <span className="font-semibold text-text-primary">New:</span> Audit your AI interface against {PATTERN_COUNT} patterns
             </p>
           </div>
           <Link
@@ -59,7 +60,7 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
       <div className="flex-1 text-center sm:text-left">
         <p className="font-semibold text-text-primary">Check if your product already has this pattern</p>
         <p className="text-sm text-text-secondary mt-1">
-          Upload a screenshot. We&apos;ll tell you which of the 36 patterns your AI interface uses and where the gaps are.
+          Upload a screenshot. We&apos;ll tell you which of the {PATTERN_COUNT} patterns your AI interface uses and where the gaps are.
         </p>
       </div>
       <Link

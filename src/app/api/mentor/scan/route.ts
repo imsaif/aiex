@@ -8,7 +8,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
-// All 36 AI UX patterns
+// The patterns the mentor scan evaluates. NOTE: still short of the full library.
 const PATTERNS = [
   { id: 'adaptive-interfaces', name: 'Adaptive Interfaces' },
   { id: 'ambient-intelligence', name: 'Ambient Intelligence' },
@@ -51,7 +51,7 @@ ${userGoal ? `- User Goal: ${userGoal}` : ''}
 
 1. **Identify UI Elements**: List the key interactive elements you see (buttons, inputs, cards, modals, etc.) with their approximate locations.
 
-2. **Pattern Analysis**: For each of the 36 AI UX patterns, determine:
+2. **Pattern Analysis**: For each of the ${PATTERNS.length} AI UX patterns, determine:
    - Status: "well-implemented", "weak", or "missing"
    - Evidence: What you see (or don't see) in the screenshot
    - Priority: "high", "medium", or "low" based on product type

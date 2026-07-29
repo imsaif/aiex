@@ -3,14 +3,15 @@ import Footer from '../../components/layout/Footer';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import { AboutNewsletter } from './about-newsletter';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export const metadata: Metadata = {
   title: 'What is AIUX? | AI UX Design Patterns Framework – aiuxdesign.guide',
-  description: 'AIUX is a framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products like ChatGPT, Claude, and GitHub Copilot. The practical reference for designing AI-powered experiences.',
+  description: `AIUX is a framework of ${PATTERN_COUNT} validated AI/UX design patterns documented from 50+ shipped AI products like ChatGPT, Claude, and GitHub Copilot. The practical reference for designing AI-powered experiences.`,
   keywords: ['AI UX framework', 'AI design patterns', 'AIUX', 'AI UX design guide', 'AI product design', 'UX patterns for AI'],
   openGraph: {
     title: 'What is AIUX? | AI UX Design Patterns Framework',
-    description: 'A framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products. Learn how the best AI products are designed.',
+    description: `A framework of ${PATTERN_COUNT} validated AI/UX design patterns documented from 50+ shipped AI products. Learn how the best AI products are designed.`,
     url: 'https://www.aiuxdesign.guide/about',
     siteName: 'AI UX Design Guide',
     type: 'website',
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'What is AIUX? | AI UX Design Patterns Framework',
-    description: 'A framework of 36 validated AI/UX design patterns documented from 50+ shipped AI products.',
+    description: `A framework of ${PATTERN_COUNT} validated AI/UX design patterns documented from 50+ shipped AI products.`,
     images: ['/images/og/og-home.png'],
   },
   alternates: {
@@ -87,7 +88,7 @@ const STATS = [
 const TOOLS = [
   {
     name: 'Gist.design',
-    description: 'An AI design thinking partner. Clarify briefs, map user journeys, critique decisions, and prepare for stakeholder reviews all powered by the 36 patterns documented here.',
+    description: `An AI design thinking partner. Clarify briefs, map user journeys, critique decisions, and prepare for stakeholder reviews all powered by the ${PATTERN_COUNT} patterns documented here.`,
     href: 'https://gist.design',
     external: true,
     icon: (
@@ -168,7 +169,7 @@ export default function AboutPage() {
         <section className="mb-20">
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">The Pattern Framework</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-10">
-            36 patterns organized into 8 strategic categories, each addressing a distinct challenge in AI product design.
+            {PATTERN_COUNT} patterns organized into 8 strategic categories, each addressing a distinct challenge in AI product design.
           </p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
             {STATS.map((stat) => (
@@ -194,7 +195,7 @@ export default function AboutPage() {
           </div>
           <div className="mt-8 text-center">
             <Link href="/" className="inline-flex items-center gap-2 text-accent-primary hover:text-accent-hover transition-colors font-medium">
-              Browse all 36 patterns
+              Browse all {PATTERN_COUNT} patterns
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>

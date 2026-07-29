@@ -99,29 +99,35 @@ ${inner}
 }
 
 // --- Content ---
-const LEAD = `The AI news wire is quiet today, no major launches or research worth your inbox. So instead of forcing it, here is what we have shipped on aiuxdesign.guide lately.`;
+const LEAD = `Today's pool was almost entirely opinion pieces. Nothing concrete cleared the bar for your inbox, and we would rather skip a day than pad one. So here is what we have shipped on aiuxdesign.guide since the last catch-up.`;
 
 const CARDS = [
   {
-    kicker: 'Product · audit',
-    headline: 'A redesigned, easier-to-read audit',
-    body: 'We rebuilt how your audit results read. Instead of a dense report, you now get a two-column conversational layout that walks you through each UX gap and the specific fix, one point at a time.',
-    links: [{ label: 'Run an audit', href: SITE_URL, primary: true }],
+    kicker: 'Patterns · now 38',
+    headline: 'The pattern library is rebuilt around what you actually decide',
+    body: 'Pattern pages no longer stop at "here is the pattern." Each one now closes with the takeaways worth remembering and a copy-able prompt you can paste straight into Claude Code or Cursor to build the pattern into your own product. Several of the interactive demos were rebuilt too, so the demo shows the trap the pattern exists to avoid, not just the happy path.',
+    links: [{ label: 'Browse all 38 patterns', href: `${SITE_URL}/patterns`, primary: true }],
   },
   {
-    kicker: 'Product',
-    headline: 'A dashboard to save and hand off your audits',
-    body: 'Save your audits, revisit them anytime, and export one combined developer handoff so your engineers get every fix in a single doc.',
-    links: [{ label: 'Open the dashboard', href: `${SITE_URL}/dashboard`, primary: false }],
+    kicker: 'Free download',
+    headline: 'An accessibility checklist for AI-generated designs',
+    body: 'We reviewed 123 AI-generated designs and 74% failed at least one accessibility check. The result is a 10-point review, ordered by how often each item actually breaks: skip links (95%), a labeled main region (53%), real labels on form fields (49%), heading structure (42%). It is the pass a handoff now has to survive when the UI was generated rather than drawn.',
+    links: [{ label: 'Get the checklist', href: `${SITE_URL}/accessibility-checklist-for-ai-designs`, primary: false }],
   },
   {
-    kicker: 'New patterns · now 38',
-    headline: 'Two new patterns for agentic products',
-    body: 'Workspace-Native Agent Integration covers designing agents that live where the work already happens, instead of in a separate tab. Agent Reflection &amp; Learning covers agents that improve from their own outputs and user corrections.',
+    kicker: 'Courses',
+    headline: 'The Claude Code and Claude Design guides are current again',
+    body: 'Both learning paths were rewritten against what the products actually do today, not what they did at launch. Onboarding, the model lineup, and the walkthroughs were corrected, and the screenshots were replaced with stills from the current UI. Free, and no signup.',
     links: [
-      { label: 'Workspace-Native Agents', href: `${SITE_URL}/patterns/workspace-native-agents`, primary: false },
-      { label: 'Agent Reflection &amp; Learning', href: `${SITE_URL}/patterns/agent-reflection-learning`, primary: false },
+      { label: 'Claude Code path', href: `${SITE_URL}/guides/claude-code-learning-path`, primary: false },
+      { label: 'Claude Design path', href: `${SITE_URL}/guides/claude-design-learning-path`, primary: false },
     ],
+  },
+  {
+    kicker: 'New · done-for-you',
+    headline: 'Want your whole product audited, not one screen?',
+    body: 'The free tool reads a screenshot. If you want your real screens reviewed end to end, we now do that as a service: a severity-ranked report, a specific fix for each gap, a walkthrough call, and an engineering handoff spec with a Claude Code or Cursor prompt. Priced per product, quote first, no payment up front.',
+    links: [{ label: 'Request an audit', href: `${SITE_URL}/services`, primary: false }],
   },
 ];
 
@@ -129,9 +135,9 @@ function buildContent() {
   const cards = CARDS.map((c, i) => renderUpdateCard(c, i === CARDS.length - 1)).join('\n\n');
   const audit = renderDarkCallout({
     kicker: 'Try it',
-    title: 'Run a free AI UX audit of your product',
-    body: 'Our audit tool now gives you up to 4 free audits, and the whole flow works properly on mobile. Point it at your product and get concrete, pattern-backed UX gaps.',
-    cta: { label: 'Run a free audit', href: `${SITE_URL}/audit` },
+    title: 'Score your interface against the pattern library, free',
+    body: 'Upload a screenshot of any chatbot, code assistant, or AI dashboard and get a score plus the specific gaps worth fixing, each tied to a pattern. No signup, and your screenshots are never stored.',
+    cta: { label: 'Run a free audit', href: SITE_URL },
   });
   const body = `
 ${renderMasthead()}
@@ -158,8 +164,8 @@ const envIdx = args.indexOf('--env');
 const envFile = envIdx >= 0 ? args[envIdx + 1] : null;
 
 const content = buildContent();
-const title = 'A quiet news day, so here is what we shipped';
-const summary = 'No big AI launches today, so a catch-up from our side: a redesigned, easier-to-read audit, a dashboard to save and hand off your audits, and two new agentic patterns (now 38).';
+const title = 'The wire was all opinion today, so here is what we shipped';
+const summary = 'Nothing concrete cleared the bar in today\'s pool, so a catch-up from our side: 38 pattern pages rebuilt with copy-able install prompts, a free accessibility checklist for AI-generated designs, refreshed Claude Code and Claude Design guides, and a done-for-you audit for whole products.';
 const slug = `ai-ux-daily-${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).replace(' ', '-').toLowerCase()}-team-updates`;
 
 const outFile = path.join(process.cwd(), `newsletter-team-update-${slug}.html`);

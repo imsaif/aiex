@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 type FieldId = 'headline' | 'subhead' | 'cta';
 
@@ -27,7 +28,7 @@ const FIELDS: Field[] = [
     variants: [
       'Tested patterns from 50+ shipped AI products, in one library.',
       'Stop reinventing AI UX. Start from what already works.',
-      '36 patterns drawn from real shipped AI tools.',
+      `${PATTERN_COUNT} patterns drawn from real shipped AI tools.`,
     ],
   },
   {

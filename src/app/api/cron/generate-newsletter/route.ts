@@ -6,6 +6,7 @@ import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend';
 import { patterns } from '@/data/patterns';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 // Initialize clients
 const anthropic = new Anthropic({
@@ -1750,7 +1751,7 @@ function renderAnnouncementBanner(campaign: string): string {
 <div style="background-color: ${GRAIN_BG}; padding: 28px; border-radius: 20px; margin: 0 0 40px;">
   <div style="background-color: #ffffff; padding: 32px; border-radius: 14px; border: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
     <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
-    <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against 36 patterns</h2>
+    <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against ${PATTERN_COUNT} patterns</h2>
     <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
     <a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;">Audit your design →</a>
   </div>

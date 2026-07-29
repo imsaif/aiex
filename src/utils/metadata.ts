@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { siteConfig } from '@/config/seo';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 interface GenerateMetadataProps {
   title: string;
@@ -296,7 +297,7 @@ export function generateHomeMetadata(): Metadata {
   return generateMetadata({
     title: 'AI UX Design Patterns: 36 Examples from ChatGPT, Claude & More',
     description:
-      'The AI UX pattern library. 36 patterns documented from ChatGPT, Claude, Figma, Notion, GitHub Copilot, and 45+ shipped products. Code, demos, real examples.',
+      `The AI UX pattern library. ${PATTERN_COUNT} patterns documented from ChatGPT, Claude, Figma, Notion, GitHub Copilot, and 45+ shipped products. Code, demos, real examples.`,
     url: '/',
     keywords: [
       'AI design patterns',

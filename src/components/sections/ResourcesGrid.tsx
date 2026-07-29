@@ -17,6 +17,7 @@ import {
   PencilSquareIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 interface Resource {
   id: string;
@@ -37,7 +38,7 @@ const RESOURCES: Resource[] = [
   {
     id: 'pattern-audit',
     title: 'Pattern Audit',
-    description: 'Score your AI product against 36 validated design patterns. Get a prioritized report with quick wins and recommendations.',
+    description: `Score your AI product against ${PATTERN_COUNT} validated design patterns. Get a prioritized report with quick wins and recommendations.`,
     icon: <MagnifyingGlassCircleIcon className={ICON_CLASS} />,
     category: 'Interactive Tools',
     type: 'Web App',

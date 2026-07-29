@@ -1,4 +1,5 @@
 import type { Pattern } from '@/types';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 /**
  * Builds a Claude Code / Cursor handoff file from a set of saved patterns.
@@ -93,7 +94,7 @@ export function composeHandoffFile(patterns: Pattern[]): string {
   const footer = [
     '---',
     '',
-    `_These ${count} pattern${count === 1 ? '' : 's'} came from [aiuxdesign.guide](${SITE}) — a library of 36 AI UX patterns with real product examples. Audit your own AI UX against all 36 at ${SITE}._`,
+    `_These ${count} pattern${count === 1 ? '' : 's'} came from [aiuxdesign.guide](${SITE}) — a library of ${PATTERN_COUNT} AI UX patterns with real product examples. Audit your own AI UX against all ${PATTERN_COUNT} at ${SITE}._`,
   ].join('\n');
 
   return [intro, ...blocks, closing, footer].join('\n\n');

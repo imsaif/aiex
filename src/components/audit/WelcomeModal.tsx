@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 interface WelcomeModalProps {
   onStartAudit: () => void;
@@ -29,7 +30,7 @@ export function WelcomeModal({ onStartAudit }: WelcomeModalProps) {
             <h2 className="text-3xl font-bold" style={{ color: 'var(--text-hero)' }}>AI UX Design Audit</h2>
           </div>
           <p className="text-base text-text-secondary leading-relaxed max-w-xl mx-auto">
-            We analyze your design against 36 research-backed AI/UX patterns derived from the world&apos;s best products.
+            We analyze your design against {PATTERN_COUNT} research-backed AI/UX patterns derived from the world&apos;s best products.
           </p>
         </div>
 
@@ -58,7 +59,7 @@ export function WelcomeModal({ onStartAudit }: WelcomeModalProps) {
           <div className="text-center p-5 rounded-2xl bg-background-secondary/50">
             <MagnifyingGlassIcon className="w-8 h-8 text-text-secondary mx-auto mb-3" />
             <h3 className="font-semibold text-text-primary mb-2">The Solution</h3>
-            <p className="text-sm text-text-secondary leading-relaxed">We analyze against 36 patterns from world-class AI products.</p>
+            <p className="text-sm text-text-secondary leading-relaxed">We analyze against {PATTERN_COUNT} patterns from world-class AI products.</p>
           </div>
 
           <div className="text-center p-5 rounded-2xl bg-background-secondary/50">

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 type Band = 'cautious' | 'moderate' | 'confident' | 'bold';
 
@@ -60,8 +61,8 @@ const SUGGESTIONS: Suggestion[] = [
     band: 'confident',
     scope: 'paragraph',
     rationale: "Reorder for stronger hook — outcome before method",
-    before: "By analyzing 50+ products, we extracted 36 patterns covering trust, safety, and collaboration.",
-    after: "36 patterns covering trust, safety, and collaboration — extracted from 50+ shipped AI products.",
+    before: `By analyzing 50+ products, we extracted ${PATTERN_COUNT} patterns covering trust, safety, and collaboration.`,
+    after: `${PATTERN_COUNT} patterns covering trust, safety, and collaboration — extracted from 50+ shipped AI products.`,
   },
   {
     id: 's7',

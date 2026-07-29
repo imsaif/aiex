@@ -13,6 +13,7 @@ import {
   Squares2X2Icon,
   BeakerIcon,
 } from '@heroicons/react/24/outline';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 type Check = {
   number: string;
@@ -278,7 +279,7 @@ export function AccessibilityChecklistClient() {
                   </div>
                   <div>
                     <span className="block text-sm font-medium text-text-primary transition group-hover:text-accent-primary">
-                      36 Patterns
+                      {PATTERN_COUNT} Patterns
                     </span>
                     <span className="text-xs text-text-secondary">Browse the full library</span>
                   </div>
@@ -510,7 +511,7 @@ export function AccessibilityChecklistClient() {
                 <Squares2X2Icon className="h-5 w-5 text-accent-primary" />
               </div>
               <div>
-                <span className="block text-sm font-medium text-text-primary">36 Patterns</span>
+                <span className="block text-sm font-medium text-text-primary">{PATTERN_COUNT} Patterns</span>
                 <span className="text-xs text-text-secondary">Browse the full library</span>
               </div>
             </Link>

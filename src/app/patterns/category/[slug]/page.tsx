@@ -8,6 +8,7 @@ import patterns from '@/data/patterns';
 import categories from '@/data/categories';
 import { siteConfig } from '@/config/seo';
 import type { Category } from '@/types';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export const revalidate = 86400;
 export const dynamicParams = false;
@@ -318,7 +319,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             href="/patterns"
             className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary"
           >
-            ← Browse all 36 AI UX patterns
+            ← Browse all {PATTERN_COUNT} AI UX patterns
           </Link>
         </section>
 

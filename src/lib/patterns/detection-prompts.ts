@@ -5,7 +5,9 @@ import type { ContextData, InterfaceType, MainConcern } from '@/types/audit';
  * Context-aware analysis that only evaluates RELEVANT patterns
  */
 
-// All 36 AI UX patterns with their applicable UI contexts
+// Every AI UX pattern in the library, with its applicable UI contexts.
+// Keep this in step with src/data/patterns — src/data/__tests__/pattern-count.test.ts
+// fails if this list, the library, and PATTERN_COUNT ever drift apart.
 const patterns = [
   { id: 'adaptive-interfaces', name: 'Adaptive Interfaces', description: 'Interface adapts to user behavior and preferences', appliesTo: ['dashboard', 'settings', 'main-interface'] },
   { id: 'ambient-intelligence', name: 'Ambient Intelligence', description: 'Subtle, non-intrusive assistance in the background', appliesTo: ['main-interface', 'editor', 'workspace'] },
@@ -43,7 +45,12 @@ const patterns = [
   { id: 'trust-calibration', name: 'Trust Calibration', description: 'Progressive trust building through demonstrated competence', appliesTo: ['settings', 'dashboard', 'automation', 'ai-output'] },
   { id: 'mixed-initiative-control', name: 'Mixed-Initiative Control', description: 'Fluid control transitions between human and agent', appliesTo: ['editor', 'content-creation', 'workspace', 'canvas'] },
   { id: 'agent-status-monitoring', name: 'Agent Status & Monitoring', description: 'Layered status system for long-running agent tasks', appliesTo: ['dashboard', 'automation', 'workspace', 'main-interface'] },
+  { id: 'workspace-native-agents', name: 'Workspace-Native Agent Integration', description: 'AI lives inside the tool the user already works in, not in a separate destination', appliesTo: ['main-interface', 'editor', 'sidebar', 'dashboard', 'workspace'] },
+  { id: 'agent-reflection-learning', name: 'Agent Reflection & Learning', description: 'Agent visibly learns from corrections and applies them to later work', appliesTo: ['chat-response', 'ai-output', 'settings', 'automation'] },
 ];
+
+/** How many patterns the audit actually evaluates. Read by the drift test. */
+export const DETECTION_PATTERN_COUNT = patterns.length;
 
 // Context-specific priorities
 const contextPriorities: Record<InterfaceType, string[]> = {
@@ -152,9 +159,9 @@ Return a valid JSON object with this exact structure:
 
 **Scoring Rules:**
 - score = count of well-implemented patterns that APPLY to this component
-- maxScore = total patterns that APPLY to this component (not 28!)
+- maxScore = total patterns that APPLY to this component (not ${patterns.length}!)
 - "not-applicable" patterns do NOT count toward score or maxScore
-- For a sidebar with 6 applicable patterns, a perfect score is 6/6, not 6/28
+- For a sidebar with 6 applicable patterns, a perfect score is 6/6, not 6/${patterns.length}
 
 **Be Practical:**
 - A chat history sidebar showing past conversations is doing its job well if it has good context switching

@@ -3,6 +3,7 @@ import type { SavedAudit } from '@/hooks/useSavedAudits';
 import { gapBlock, productTypeLabel } from '@/lib/audit/handoff';
 import { patternBlock, SITE } from '@/lib/handoff/composeHandoff';
 import { resolvePatternSlug } from '@/lib/audit/pattern-link';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 /**
  * Combined handoff: ONE markdown file the user hands to Claude Code / Cursor,
@@ -38,7 +39,7 @@ function footer(): string {
   return [
     '---',
     '',
-    `_From [aiuxdesign.guide](${SITE}): a library of 36 AI UX patterns with real product examples, plus a free audit tool. Audit your own AI UX at ${SITE}._`,
+    `_From [aiuxdesign.guide](${SITE}): a library of ${PATTERN_COUNT} AI UX patterns with real product examples, plus a free audit tool. Audit your own AI UX at ${SITE}._`,
   ].join('\n');
 }
 

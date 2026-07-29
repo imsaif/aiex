@@ -10,6 +10,7 @@ import {
 import { ShieldCheckIcon } from '@heroicons/react/24/solid';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 /**
  * Welcome panel for the audit tool - shows intro content in the right panel
@@ -37,7 +38,7 @@ export function WelcomePanel() {
         <div className="flex items-center justify-center gap-2 mb-4 py-2.5 px-4 rounded-full bg-white/80 dark:bg-white/10">
           <ShieldCheckIcon className="w-4 h-4 text-text-primary dark:text-white" />
           <p className="text-sm text-text-secondary">
-            <span className="font-semibold text-text-primary dark:text-white">36 patterns</span> from{' '}
+            <span className="font-semibold text-text-primary dark:text-white">{PATTERN_COUNT} patterns</span> from{' '}
             <span className="font-semibold text-text-primary dark:text-white">50+ products</span>
           </p>
         </div>

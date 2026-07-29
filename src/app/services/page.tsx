@@ -8,15 +8,16 @@ import {
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import ServiceIntakeForm from './ServiceIntakeForm';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export const metadata: Metadata = {
   title: 'Audit My Product | Done-for-You AI UX Audit',
   description:
-    'A senior, done-for-you AI-UX audit of your product. We score your real surfaces against 36 research-backed patterns and deliver a detailed report with prioritized recommendations, a walkthrough call, and an implementation-ready handoff for your engineers.',
+    `A senior, done-for-you AI-UX audit of your product. We score your real surfaces against ${PATTERN_COUNT} research-backed patterns and deliver a detailed report with prioritized recommendations, a walkthrough call, and an implementation-ready handoff for your engineers.`,
   openGraph: {
     title: 'Audit My Product | Done-for-You AI UX Audit',
     description:
-      'A senior, done-for-you AI-UX audit of your product: a detailed report scored against 36 patterns, prioritized recommendations, a walkthrough call, and an implementation-ready handoff.',
+      `A senior, done-for-you AI-UX audit of your product: a detailed report scored against ${PATTERN_COUNT} patterns, prioritized recommendations, a walkthrough call, and an implementation-ready handoff.`,
     url: 'https://www.aiuxdesign.guide/services',
     siteName: 'aiuxdesign.guide',
     type: 'website',
@@ -28,7 +29,7 @@ const DELIVERABLES = [
   {
     Icon: DocumentMagnifyingGlassIcon,
     title: 'A detailed report',
-    body: 'Your real screens scored against 36 patterns, annotated and ranked by severity.',
+    body: `Your real screens scored against ${PATTERN_COUNT} patterns, annotated and ranked by severity.`,
   },
   {
     Icon: ListBulletIcon,
@@ -68,7 +69,7 @@ export default function ServicesPage() {
               Get an AI-UX audit of your product
             </h1>
             <p className="text-lg md:text-xl text-text-secondary mb-8">
-              An AI design engineer reviews your whole product against 36 research-backed patterns
+              An AI design engineer reviews your whole product against {PATTERN_COUNT} research-backed patterns
               and hands your team a report they can act on.
             </p>
             <a

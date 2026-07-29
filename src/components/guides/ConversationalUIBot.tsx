@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 // --- Types ---
 
@@ -252,7 +253,7 @@ const CONVERSATION: Record<string, ConversationNode> = {
       'Here is everything on AIUX that can help you build:\n\n' +
       'Design resources:\n' +
       '- AI Interaction Toolkit: a 2-page framework for deciding when AI should talk vs act\n' +
-      '- AIUX Design Checklist: printable PDF with all 36 patterns for design reviews\n' +
+      `- AIUX Design Checklist: printable PDF with all ${PATTERN_COUNT} patterns for design reviews\n` +
       '- Agentic UX Checklist: 8-pattern checklist for AI agents\n' +
       '- Agent Readability Audit Kit: test how AI agents read your product\n\n' +
       'Development resources:\n' +
@@ -304,7 +305,7 @@ const CONVERSATION: Record<string, ConversationNode> = {
   // --- Audit ---
   'How do I audit my chat UI?': {
     response:
-      'Use the free AI UX Audit Tool. Upload a screenshot of your conversational interface and it scores your design against all 36 AIUX patterns. You get:\n\n' +
+      `Use the free AI UX Audit Tool. Upload a screenshot of your conversational interface and it scores your design against all ${PATTERN_COUNT} AIUX patterns. You get:\n\n` +
       '- An overall score\n' +
       '- Pattern-by-pattern breakdown (strong, weak, missing)\n' +
       '- Top gaps with specific recommendations\n' +

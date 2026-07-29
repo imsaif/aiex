@@ -9,6 +9,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from '@heroicons/react/24/outline';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export type PatternStatus = 'ready' | 'checking' | 'success' | 'warning' | 'error';
 
@@ -18,7 +19,8 @@ interface PatternCheckingPanelProps {
   isAnalyzing: boolean;
 }
 
-// All 36 AI UX patterns grouped by category
+// Every AI UX pattern grouped by category. Ids must match src/lib/patterns/detection-prompts.ts,
+// otherwise a card renders permanently "ready" because no status ever keys to it.
 const patternsByCategory = [
   {
     category: 'Trustworthy AI',
@@ -31,6 +33,7 @@ const patternsByCategory = [
       { id: 'plan-summary', name: 'Plan Summary' },
       { id: 'action-audit-trail', name: 'Action Audit Trail' },
       { id: 'trust-calibration', name: 'Trust Calibration' },
+      { id: 'agent-reflection-learning', name: 'Agent Reflection & Learning' },
     ],
   },
   {
@@ -46,6 +49,7 @@ const patternsByCategory = [
       { id: 'intent-preview', name: 'Intent Preview' },
       { id: 'escalation-pathways', name: 'Escalation Pathways' },
       { id: 'mixed-initiative-control', name: 'Mixed-Initiative Control' },
+      { id: 'workspace-native-agents', name: 'Workspace-Native Agent Integration' },
     ],
   },
   {
@@ -97,6 +101,9 @@ const patternsByCategory = [
     ],
   },
 ];
+
+/** How many patterns the checking panel lists. Read by the drift test. */
+export const PANEL_PATTERN_COUNT = patternsByCategory.reduce((n, c) => n + c.patterns.length, 0);
 
 function StatusIcon({ status }: { status: PatternStatus }) {
   if (status === 'ready') {
@@ -151,7 +158,7 @@ export function PatternCheckingPanel({ patternStatuses, checkingPatternIndex, is
             Pattern Analysis
           </h2>
           <p className="text-xs text-text-secondary">
-            36 patterns ready to evaluate
+            {PATTERN_COUNT} patterns ready to evaluate
           </p>
         </div>
 
