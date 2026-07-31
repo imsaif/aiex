@@ -128,7 +128,7 @@ function spineSteps(f: Funnel) {
       label: 'Asked for a quote',
       value: f.spine.revenue,
       meaning: 'Submitted the service intake form. This is the money step.',
-      measure: `Counted in the browser, so treat it as a minimum. ${raw.serviceCtaClicked} people clicked through to the service page first.`,
+      measure: `Counted in the browser, so treat it as a minimum. ${raw.serviceCtaClicked} ${raw.serviceCtaClicked === 1 ? 'person' : 'people'} clicked through to the service page first.`,
       basis: 2,
     },
   ];
@@ -156,7 +156,11 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
   const [stats, setStats] = useState<Stats | null>(null);
   const [events, setEvents] = useState<{ name: string; count: number }[]>([]);
   const [funnel, setFunnel] = useState<Funnel | null>(null);
-  const [days, setDays] = useState(14);
+  // 30d default. At current volume (~1 audit/day) a 24h or 7d window puts most
+  // spine cards at 0-1, where ordinary variance reads as a trend. 30d is the
+  // shortest window where the five numbers mean anything; use the shorter ones
+  // to answer "did something just break", not "is this working".
+  const [days, setDays] = useState(30);
   const [outcome, setOutcome] = useState('all');
   const [includeTest, setIncludeTest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
