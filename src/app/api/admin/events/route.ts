@@ -14,11 +14,30 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
   const includeTest = searchParams.get('includeTest') === '1';
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
-  const excludeTestClause = includeTest
-    ? {}
-    : { OR: [{ role: null }, { role: { notIn: ['test', 'admin', 'monitor'] } }] };
+  // Role tagging alone is NOT enough to exclude our own activity: `role` comes
+  // from a per-origin localStorage flag, so the same machine shows up tagged on
+  // one origin and untagged on another (confirmed: one admin ipHash has produced
+  // both `admin` and `null` rows). ipHash exclusion is the durable filter, so it
+  // must apply here too — this route feeds the admin event table.
+  //
+  // Structured as AND rather than spread: both clauses need a top-level `OR`,
+  // and spreading them into one object would silently drop the first.
+  // Commas OR whitespace — Vercel's value box is a textarea and one-hash-per-line
+  // is a natural way to paste it. See the matching note in audit-funnel/route.ts.
+  const adminHashes = (process.env.ADMIN_AUDIT_IP_HASHES || '')
+    .split(/[\s,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
 
-  const where = { createdAt: { gte: since }, ...excludeTestClause };
+  const where = includeTest
+    ? { createdAt: { gte: since } }
+    : {
+        AND: [
+          { createdAt: { gte: since } },
+          { OR: [{ role: null }, { role: { notIn: ['test', 'admin', 'monitor'] } }] },
+          adminHashes.length > 0 ? { OR: [{ ipHash: null }, { ipHash: { notIn: adminHashes } }] } : {},
+        ],
+      };
 
   const grouped = await prisma.uiEvent.groupBy({
     by: ['name'],

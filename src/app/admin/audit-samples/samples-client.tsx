@@ -40,7 +40,26 @@ interface Stats {
 
 interface Funnel {
   windowDays: number;
-  spine: { demoViewed: number; startRealClicked: number; started: number; completedWithValue: number };
+  spine: {
+    reached: number;
+    started: number;
+    completedWithValue: number;
+    engaged: number;
+    revenue: number;
+    raw: {
+      reachedOpens: number;
+      auditsRun: number;
+      auditsWithValue: number;
+      chatMessages: number;
+      serviceCtaClicked: number;
+    };
+  };
+  reachDetail: {
+    startRealClicked: number;
+    productTypeSelected: number;
+    emptyStateShown: number;
+  };
+  guards: { counts: Record<string, number>; breached: string[] };
   outcomes: { success: number; empty_gaps: number; no_ai_surface: number; errors: number };
   postResult: {
     joinableSuccess: number;
@@ -54,6 +73,65 @@ const OUTCOMES = ['all', 'success', 'empty_gaps', 'parse_error', 'api_error', 'r
 
 function pct(n: number): string {
   return `${(n * 100).toFixed(1)}%`;
+}
+
+// Step-to-step conversion. Null when the denominator is 0 so the UI renders a
+// dash rather than a misleading 0.0% or NaN.
+function rate(value: number, previous: number): number | null {
+  return previous > 0 ? value / previous : null;
+}
+
+// The five spine steps, in funnel order. Kept as data (not JSX) so the
+// conversion between consecutive steps can be computed generically.
+//
+// Labels describe what a PERSON did, not which event fired. `meaning` is the
+// plain-English definition and `measure` says how much to trust the number —
+// both render on the card, so nobody has to read this file to use the page.
+function spineSteps(f: Funnel) {
+  const { raw } = f.spine;
+  return [
+    {
+      key: 'reached',
+      label: 'Opened the audit',
+      value: f.spine.reached,
+      meaning: 'Landed on the audit page.',
+      measure: `Counted in the browser, so treat it as a minimum. ${raw.reachedOpens} opens in total.`,
+    },
+    {
+      key: 'started',
+      label: 'Uploaded a screenshot',
+      value: f.spine.started,
+      meaning: 'Actually ran an audit, not just looked at the page.',
+      measure: `Counted in our database, so it's exact. ${raw.auditsRun} audits run.`,
+      solid: true,
+    },
+    {
+      key: 'value',
+      label: 'Got a real result',
+      value: f.spine.completedWithValue,
+      meaning: 'The audit came back with patterns and gaps, not an error or a blank.',
+      measure: `Counted in our database, so it's exact. ${raw.auditsWithValue} audits.`,
+      solid: true,
+    },
+    {
+      key: 'engaged',
+      label: 'Asked a follow-up',
+      value: f.spine.engaged,
+      meaning:
+        'Typed a question into the chat about their results. The clearest sign someone actually cares about their gaps rather than glancing and leaving.',
+      measure: `Counted in the browser, so treat it as a minimum. ${raw.chatMessages} messages sent.`,
+      // Branches off "got a real result", not off the card to its left.
+      basis: 2,
+    },
+    {
+      key: 'revenue',
+      label: 'Asked for a quote',
+      value: f.spine.revenue,
+      meaning: 'Submitted the service intake form. This is the money step.',
+      measure: `Counted in the browser, so treat it as a minimum. ${raw.serviceCtaClicked} people clicked through to the service page first.`,
+      basis: 2,
+    },
+  ];
 }
 
 function outcomeStyle(outcome: string): string {
@@ -187,119 +265,199 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
         <div className="bg-status-error/10 border border-status-error/20 text-status-error rounded p-3 mb-4 text-sm">{error}</div>
       )}
 
-      {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <StatCard label="Total" value={stats.total.toString()} />
-          <StatCard label="Success rate" value={pct(stats.successRate)} />
-          <StatCard label="Empty-gaps rate" value={pct(stats.emptyGapsRate)} tone={stats.emptyGapsRate > 0.2 ? 'warn' : undefined} />
-          <StatCard label="Error rate" value={pct(stats.errorRate)} tone={stats.errorRate > 0.05 ? 'bad' : undefined} />
-          <StatCard label="Avg score" value={stats.avgScore != null ? `${stats.avgScore.toFixed(1)} / ${(stats.avgMaxScore ?? 0).toFixed(0)}` : '—'} />
-          <StatCard label="Avg gaps" value={stats.avgGapCount != null ? stats.avgGapCount.toFixed(1) : '—'} />
-          <StatCard label="Avg latency" value={stats.avgLatencyMs != null ? `${(stats.avgLatencyMs / 1000).toFixed(1)}s` : '—'} />
-          <StatCard label="Window" value={`${stats.windowDays}d`} />
-        </div>
-      )}
-
-      {stats && (
-        <div className="mb-6 flex flex-wrap gap-2">
-          {Object.entries(stats.byOutcome).map(([k, v]) => (
-            <span key={k} className={`text-xs px-2 py-1 rounded ${outcomeStyle(k)}`}>
-              {k}: {v}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Funnel — spine is server truth (AuditSample); branches are client events joined by sessionId. */}
+      {/* ── SPINE ────────────────────────────────────────────────────────────
+          The only five numbers worth a weekly look: reach → started → value →
+          revenue interest → revenue. Everything else on this page is diagnostic
+          and lives behind the disclosure below, so a quiet guard event can never
+          again sit next to the headline number looking equally important. */}
       {funnel && (
         <div className="mb-6">
-          <h2 className="text-sm font-semibold text-text-primary mb-2">
-            Funnel <span className="font-normal text-text-secondary">(last {days}d, real users)</span>
+          <h2 className="text-sm font-semibold text-text-primary mb-1">
+            The five numbers <span className="font-normal text-text-secondary">(last {days}d, real visitors)</span>
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-            <FunnelStep
-              label="Demo viewed"
-              value={funnel.spine.demoViewed}
-              note="client · lower-bound"
-            />
-            <FunnelStep
-              label="Start-real clicked"
-              value={funnel.spine.startRealClicked}
-              note="client · lower-bound"
-            />
-            <FunnelStep
-              label="Audit started"
-              value={funnel.spine.started}
-              note="server truth"
-              solid
-            />
-            <FunnelStep
-              label="Completed w/ value"
-              value={funnel.spine.completedWithValue}
-              note="server truth · success"
-              solid
-            />
+          <p className="text-xs text-text-secondary mb-3 max-w-3xl">
+            One person&apos;s journey from landing on the audit to paying for one. Every figure is a count of{' '}
+            <strong className="text-text-primary">people</strong>, not clicks, so the percentages between steps
+            are comparable. If none of these moved this week, nothing happened.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+            {spineSteps(funnel).map((s, i, arr) => {
+              // Most steps rate against the one before them. The last two both
+              // branch off "got a real result" instead — you don't have to ask a
+              // follow-up before requesting a quote, so chaining them would
+              // invent a funnel step that doesn't exist.
+              const basisIdx = s.basis ?? i - 1;
+              const basis = i === 0 ? null : arr[basisIdx];
+              return (
+                <SpineStep
+                  key={s.key}
+                  label={s.label}
+                  value={s.value}
+                  meaning={s.meaning}
+                  measure={s.measure}
+                  solid={s.solid}
+                  conversion={basis ? rate(s.value, basis.value) : null}
+                  fromLabel={basis ? basis.label : null}
+                />
+              );
+            })}
           </div>
+        </div>
+      )}
 
-          {/* Post-result action rate — the lever. Denominator is server-side (joinable success rows). */}
-          <div className="border border-border-primary rounded p-3">
-            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="text-[10px] uppercase tracking-wide text-text-secondary">Post-result action rate</span>
-              <span className="text-lg font-bold">
-                {funnel.postResult.actionRate != null ? pct(funnel.postResult.actionRate) : '—'}
-              </span>
-              <span className="text-xs text-text-secondary">
-                {funnel.postResult.successWithAnyAction} of {funnel.postResult.joinableSuccess} completed audits took a next step
-              </span>
+      {/* ── GUARDS ───────────────────────────────────────────────────────────
+          Expected to read zero. One all-clear row when they do, so "quiet" is
+          visibly different from "unused" — the distinction the flat volume-sorted
+          list destroys. */}
+      {funnel && (
+        <div className="mb-6">
+          {funnel.guards.breached.length === 0 ? (
+            <div className="border border-status-success/30 bg-status-success/10 rounded p-3 text-xs text-text-secondary">
+              <span className="font-semibold text-text-primary">Nothing broke.</span> All{' '}
+              {Object.keys(funnel.guards.counts).length} failure check
+              {Object.keys(funnel.guards.counts).length === 1 ? '' : 's'} sat at zero, which is what you want.
+              These only ever count things going wrong, so zero is good news.
             </div>
-            {funnel.postResult.joinableSuccess === 0 ? (
-              <p className="text-xs text-text-secondary mt-2">
-                No joinable completed audits yet. The <code>sessionId</code> join key was added 2026-07-13, so this
-                rate populates as new audits run (older success rows have no join key).
-              </p>
-            ) : (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {Object.entries(funnel.postResult.byAction).map(([name, count]) => (
-                  <span key={name} className="text-xs px-2 py-1 rounded bg-background-secondary text-text-secondary font-mono">
-                    {name.replace(/^audit_/, '')}: {count}
+          ) : (
+            <div className="border border-status-error/30 bg-status-error/10 rounded p-3">
+              <div className="text-xs font-semibold text-text-primary mb-1.5">
+                Something broke. These count failures, so anything above zero needs a look.
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {funnel.guards.breached.map((g) => (
+                  <span key={g} className="text-xs px-2 py-1 rounded bg-surface-primary text-text-primary font-mono">
+                    {g}: {funnel.guards.counts[g]}
                   </span>
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Event counts — post-audit CTA + funnel usage from the UiEvent log. */}
-      <div className="mb-6">
-        <h2 className="text-sm font-semibold text-text-primary mb-2">
-          Event counts <span className="font-normal text-text-secondary">(last {days}d, real users)</span>
-        </h2>
-        {events.length === 0 ? (
-          <p className="text-xs text-text-secondary">
-            No events in range. (The UiEvent table populates once this build is deployed and the client beacons start firing.)
+      {/* ── DIAGNOSTICS ──────────────────────────────────────────────────────
+          Consult only when a spine number moves and you need to know why.
+          Collapsed by default: this is reference material, not a dashboard. */}
+      <details className="mb-6 border border-border-primary rounded">
+        <summary className="px-3 py-2 text-sm font-semibold text-text-primary cursor-pointer select-none">
+          Detail{' '}
+          <span className="font-normal text-text-secondary">
+            — open this only when one of the five numbers moves and you need to know why
+          </span>
+        </summary>
+
+        <div className="p-3 border-t border-border-primary">
+          {stats && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <StatCard label="Total" value={stats.total.toString()} />
+              <StatCard label="Success rate" value={pct(stats.successRate)} />
+              <StatCard label="Empty-gaps rate" value={pct(stats.emptyGapsRate)} tone={stats.emptyGapsRate > 0.2 ? 'warn' : undefined} />
+              <StatCard label="Error rate" value={pct(stats.errorRate)} tone={stats.errorRate > 0.05 ? 'bad' : undefined} />
+              <StatCard label="Avg score" value={stats.avgScore != null ? `${stats.avgScore.toFixed(1)} / ${(stats.avgMaxScore ?? 0).toFixed(0)}` : '—'} />
+              <StatCard label="Avg gaps" value={stats.avgGapCount != null ? stats.avgGapCount.toFixed(1) : '—'} />
+              <StatCard label="Avg latency" value={stats.avgLatencyMs != null ? `${(stats.avgLatencyMs / 1000).toFixed(1)}s` : '—'} />
+              <StatCard label="Window" value={`${stats.windowDays}d`} />
+            </div>
+          )}
+
+          {stats && (
+            <div className="mb-6 flex flex-wrap gap-2">
+              {Object.entries(stats.byOutcome).map(([k, v]) => (
+                <span key={k} className={`text-xs px-2 py-1 rounded ${outcomeStyle(k)}`}>
+                  {k}: {v}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Reach→started detail. Pulled out of the spine but kept first here,
+              because that step is historically where most people are lost. */}
+          {funnel && (
+            <div className="mb-6">
+              <h3 className="text-xs font-semibold text-text-primary mb-2">Reach → started detail</h3>
+              <div className="flex flex-wrap gap-2">
+                <span className="text-xs px-2 py-1 rounded bg-background-secondary text-text-secondary font-mono">
+                  start_real_clicked: {funnel.reachDetail.startRealClicked}
+                </span>
+                <span className="text-xs px-2 py-1 rounded bg-background-secondary text-text-secondary font-mono">
+                  product_type_selected: {funnel.reachDetail.productTypeSelected}
+                </span>
+                <span className="text-xs px-2 py-1 rounded bg-background-secondary text-text-secondary font-mono">
+                  empty_state_shown: {funnel.reachDetail.emptyStateShown}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Post-result action rate. Denominator is server-side (joinable success rows). */}
+          {funnel && (
+            <div className="border border-border-primary rounded p-3 mb-6">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="text-[10px] uppercase tracking-wide text-text-secondary">Post-result action rate</span>
+                <span className="text-lg font-bold">
+                  {funnel.postResult.actionRate != null ? pct(funnel.postResult.actionRate) : '—'}
+                </span>
+                <span className="text-xs text-text-secondary">
+                  {funnel.postResult.successWithAnyAction} of {funnel.postResult.joinableSuccess} completed audits took a next step
+                </span>
+              </div>
+              {funnel.postResult.joinableSuccess === 0 ? (
+                <p className="text-xs text-text-secondary mt-2">
+                  No joinable completed audits yet. The <code>sessionId</code> join key was added 2026-07-13, so this
+                  rate populates as new audits run (older success rows have no join key).
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {Object.entries(funnel.postResult.byAction).map(([name, count]) => (
+                    <span key={name} className="text-xs px-2 py-1 rounded bg-background-secondary text-text-secondary font-mono">
+                      {name.replace(/^audit_/, '')}: {count}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          <h3 className="text-xs font-semibold text-text-primary mb-2">
+            All event counts <span className="font-normal text-text-secondary">(last {days}d, real users)</span>
+          </h3>
+          {/* Absence here is NOT zero. Some events fire straight to Clarity and
+              never beacon to UiEvent, so they can't appear in this table at all.
+              Stated on the page rather than in a code comment, because reading a
+              structural blind spot as a real zero is exactly how the pattern-page
+              CTA looked untracked-and-therefore-unused. */}
+          <p className="text-xs text-text-secondary mb-2">
+            Sourced from <code>UiEvent</code>. Clarity-only events never reach this table, so their absence
+            means <em>not recorded here</em>, not zero. Known: <code>install_prompt_copied</code> (fires via{' '}
+            <code>window.clarity</code> directly, bypassing <code>trackAuditEvent</code>) — read it in Clarity.
+            The pattern-page audit CTA fires nothing at all and is invisible to both.
           </p>
-        ) : (
-          <div className="overflow-x-auto border border-border-primary rounded">
-            <table className="w-full text-xs">
-              <thead className="bg-background-secondary text-left">
-                <tr>
-                  <th className="px-3 py-2">Event</th>
-                  <th className="px-3 py-2 text-right">Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {events.map((e) => (
-                  <tr key={e.name} className="border-t border-border-primary">
-                    <td className="px-3 py-1.5 font-mono">{e.name}</td>
-                    <td className="px-3 py-1.5 text-right tabular-nums">{e.count}</td>
+          {events.length === 0 ? (
+            <p className="text-xs text-text-secondary">
+              No events in range. (The UiEvent table populates once this build is deployed and the client beacons start firing.)
+            </p>
+          ) : (
+            <div className="overflow-x-auto border border-border-primary rounded">
+              <table className="w-full text-xs">
+                <thead className="bg-background-secondary text-left">
+                  <tr>
+                    <th className="px-3 py-2">Event</th>
+                    <th className="px-3 py-2 text-right">Count</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody>
+                  {events.map((e) => (
+                    <tr key={e.name} className="border-t border-border-primary">
+                      <td className="px-3 py-1.5 font-mono">{e.name}</td>
+                      <td className="px-3 py-1.5 text-right tabular-nums">{e.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </details>
 
       <div className="overflow-x-auto border border-border-primary rounded">
         <table className="w-full text-xs">
@@ -350,12 +508,40 @@ export default function AuditSamplesClient({ initialAuth = false }: { initialAut
   );
 }
 
-function FunnelStep({ label, value, note, solid }: { label: string; value: number; note: string; solid?: boolean }) {
+function SpineStep({
+  label,
+  value,
+  meaning,
+  measure,
+  solid,
+  conversion,
+  fromLabel,
+}: {
+  label: string;
+  value: number;
+  meaning: string;
+  measure: string;
+  solid?: boolean;
+  conversion: number | null;
+  fromLabel: string | null;
+}) {
   return (
-    <div className={`border rounded p-3 ${solid ? 'border-green-300 bg-green-50' : 'border-border-primary border-dashed'}`}>
-      <div className="text-[10px] uppercase tracking-wide text-text-secondary">{label}</div>
-      <div className="text-lg font-bold mt-0.5 tabular-nums">{value}</div>
-      <div className="text-[10px] text-text-secondary mt-0.5">{note}</div>
+    <div
+      className={`border rounded p-3 flex flex-col ${
+        solid ? 'border-status-success/40 bg-status-success/10' : 'border-border-primary border-dashed'
+      }`}
+    >
+      <div className="text-xs font-semibold text-text-primary">{label}</div>
+      <div className="text-2xl font-bold mt-1 tabular-nums text-text-primary">{value}</div>
+      {fromLabel ? (
+        <div className="text-xs text-text-secondary mt-0.5 tabular-nums">
+          {conversion != null ? pct(conversion) : '—'} of those who {fromLabel.toLowerCase()}
+        </div>
+      ) : (
+        <div className="text-xs text-text-secondary mt-0.5">starting point</div>
+      )}
+      <p className="text-xs text-text-secondary mt-2 flex-1">{meaning}</p>
+      <p className="text-xs text-text-secondary mt-2 pt-2 border-t border-border-primary/60">{measure}</p>
     </div>
   );
 }
