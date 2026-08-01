@@ -19,6 +19,16 @@ export const AUDIT_EVENT_NAMES = [
   'audit_save_nudge_shown',
   'audit_demo_viewed',
   'audit_demo_start_real_clicked',
+  // Arrival on the upload screen, from any entry point. Since `/audit` shipped,
+  // this — not audit_demo_viewed — is "reached the tool": a pattern reader can
+  // now land on upload without ever seeing the homepage, so counting homepage
+  // views as the funnel entry would miss them entirely (and let later steps
+  // exceed 100% of it).
+  'audit_upload_viewed',
+  // The "Audit My Design" card on pattern pages. Untracked until now, which is
+  // why "do pattern readers ignore the CTA, or click it and bounce?" was
+  // unanswerable. Carries the pattern slug so we learn which patterns convert.
+  'pattern_audit_cta_clicked',
   'audit_empty_state_shown',
   'audit_empty_state_retry_clicked',
   'audit_intent_submitted',

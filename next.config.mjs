@@ -185,11 +185,15 @@ const nextConfig = {
       },
       // /audit → / (audit-first reposition May 2026: homepage IS the audit)
       // No wildcard /audit/:path* — would break /audit/results/[id] email deep-links.
-      {
-        source: '/audit',
-        destination: '/',
-        permanent: true,
-      },
+      //
+      // The `/audit` -> `/` redirect that lived here (added Apr 2026 when the
+      // legacy multi-step flow was removed) is gone: `/audit` is a real page
+      // again, the upload screen every CTA now points at. Note it was
+      // `permanent: true`, so browsers that hit the old URL cached a 308
+      // indefinitely — a returning visitor may still be bounced to `/` until
+      // their cache clears. That degrades to exactly today's behaviour (they
+      // land on the homepage), and new visitors, who are the ones clicking the
+      // pattern CTAs, have nothing cached.
       // Deleted audit sub-routes (legacy multi-step flow removed Apr 2026; now repointed direct to / to avoid chained 301s)
       {
         source: '/audit/context',

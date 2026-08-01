@@ -1,12 +1,41 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { BeakerIcon } from '@heroicons/react/24/outline';
 import { PATTERN_COUNT } from '@/data/pattern-count';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 interface InlineAuditCTAProps {
   variant: 'hero' | 'pattern-detail' | 'sidebar';
 }
 
+// Links to `/audit`, not `/`. The copy promises "check if your product has this
+// pattern"; sending that intent to the marketing homepage made the reader find
+// and click a second CTA to reach the upload screen they had already asked for.
+const AUDIT_HREF = '/audit';
+
 export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
+  // Slug read from the URL rather than passed down as a prop. Threading it from
+  // client-page.tsx would have meant staging that file, and the brand validator
+  // scores WHOLE staged files, so a 2-line edit there pulls in 24 pre-existing
+  // token violations and blocks the commit. CLAUDE.md is explicit that the
+  // legacy-violation backlog migrates deliberately, not as a side effect of an
+  // unrelated change. Reading the path avoids the prop drilling too.
+  const pathname = usePathname();
+  const patternSlug = pathname?.startsWith('/patterns/')
+    ? pathname.split('/')[2] || undefined
+    : undefined;
+
+  // Fires on every placement. Until this existed we could not tell "readers
+  // ignore the CTA" apart from "readers click it and bounce" — the same
+  // homepage arrival either way, but completely different fixes.
+  const track = () =>
+    trackAuditEvent('pattern_audit_cta_clicked', {
+      variant,
+      ...(patternSlug ? { patternSlug } : {}),
+    });
+
   // Vertical card sized to sit in the pattern sidebar under InstallPatternCTA.
   // Mirrors that card's chrome (border-2 accent/30, rounded-2xl) so the two
   // read as a paired "two ways forward": apply it yourself, or have us audit it.
@@ -24,8 +53,9 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
           Upload a screenshot. We&apos;ll tell you which of the {PATTERN_COUNT} patterns your AI interface uses and where the gaps are.
         </p>
         <Link
-          href="/"
-          className="mt-4 w-full inline-flex items-center justify-center px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors"
+          href={AUDIT_HREF}
+          onClick={track}
+          className="mt-4 w-full inline-flex items-center justify-center px-5 py-2.5 bg-accent-primary text-background-primary rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors"
         >
           Audit My Design
         </Link>
@@ -44,8 +74,9 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
             </p>
           </div>
           <Link
-            href="/"
-            className="px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors whitespace-nowrap"
+            href={AUDIT_HREF}
+          onClick={track}
+            className="px-5 py-2.5 bg-accent-primary text-background-primary rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors whitespace-nowrap"
           >
             Try the Audit
           </Link>
@@ -64,8 +95,9 @@ export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
         </p>
       </div>
       <Link
-        href="/"
-        className="px-5 py-2.5 bg-accent-primary text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors whitespace-nowrap"
+        href={AUDIT_HREF}
+          onClick={track}
+        className="px-5 py-2.5 bg-accent-primary text-background-primary rounded-full text-sm font-semibold hover:bg-accent-hover transition-colors whitespace-nowrap"
       >
         Audit My Design
       </Link>

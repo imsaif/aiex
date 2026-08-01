@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
 import { SocialProof } from '@/components/audit/SocialProof';
@@ -49,6 +50,7 @@ export default function AuditClient({
   const [step, setStep] = useState<AuditStep>(initialStep);
   const [productType, setProductType] = useState<ProductType | null>(null);
 
+  const router = useRouter();
   const startsOnDemo = initialStep === 'demo';
 
   // Existing state — preload demo so the landing paints a real result
@@ -83,19 +85,20 @@ export default function AuditClient({
   const hasAutoOpenedPaywallRef = useRef(false);
   const paywallMode: 'unlock' | 'final' = atFinalCap ? 'final' : 'unlock';
 
-  // User clicked "Start your own audit" on the landing demo — drop into upload
+  // User clicked "Audit your design" on the homepage. Navigates to /audit
+  // rather than switching step in place, so the tool has one canonical URL that
+  // every entry point (homepage CTA, both pattern-page CTAs) shares and that can
+  // be measured by pathname. Costs a page navigation the in-place switch didn't.
+  //
+  // The paywall check stays here: if they're capped, show the modal on the page
+  // they're already on instead of navigating them somewhere to be blocked.
   const handleStartRealAudit = useCallback(() => {
     if (isPaywalled) {
       setShowPaywall(true);
       return;
     }
-    setIsDemoMode(false);
-    setAnalysisResults(null);
-    setAuditSessionId(null);
-    setUploadedImages([]);
-    setProductType(null);
-    setStep('screenshot');
-  }, [isPaywalled]);
+    router.push('/audit');
+  }, [isPaywalled, router]);
 
   // Run analysis against the API
   const runAnalysis = useCallback(async (images: UploadedImage[]) => {
@@ -252,6 +255,25 @@ export default function AuditClient({
             : 'audit-page',
       });
     }
+    // Landing straight on the upload screen (i.e. /audit). This is the real
+    // "reached the tool" signal now: a pattern reader can arrive here without
+    // ever loading the homepage, so counting homepage views as the funnel entry
+    // would miss them entirely and let later steps exceed 100% of step one.
+    if (step === 'screenshot') {
+      setAuditSessionId(null);
+      trackAuditEvent('audit_upload_viewed', {
+        referrerHost:
+          typeof document !== 'undefined' && document.referrer
+            ? (() => {
+                try {
+                  return new URL(document.referrer).host;
+                } catch {
+                  return 'unknown';
+                }
+              })()
+            : 'direct',
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -282,12 +304,31 @@ export default function AuditClient({
       {isIntakeFlow && (
         <section className="pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            {/* Back to demo — visible whenever the user reached the
-                intake from the demo screen (i.e., the canonical / flow). */}
+            {/* Back. Two different meanings depending on how the user got here,
+                and conflating them was a live bug: the demo-state reset below
+                was rendered unconditionally, so on /audit (where nobody passed
+                through the demo step) Back would drop the user into the
+                homepage's sample audit of a product they'd never seen, while
+                the URL still read /audit.
+
+                On /audit, Back means "return where you came from" — the pattern
+                page, the homepage, wherever — which the browser already knows.
+                router.back() handles every entry point without threading a
+                ?from= param around; the fallback covers direct links and
+                bookmarks, where there is no same-origin history to return to. */}
             <div className="mb-4 sm:mb-6">
               <button
                 type="button"
                 onClick={() => {
+                  if (!startsOnDemo) {
+                    const cameFromThisSite =
+                      typeof document !== 'undefined' &&
+                      document.referrer &&
+                      new URL(document.referrer).origin === window.location.origin;
+                    if (cameFromThisSite) router.back();
+                    else router.push('/');
+                    return;
+                  }
                   setStep('demo');
                   setUploadedImages([{
                     base64: DEMO_SCREENSHOT_FALLBACK,
