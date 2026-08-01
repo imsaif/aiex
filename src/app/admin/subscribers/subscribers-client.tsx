@@ -11,6 +11,7 @@ interface Subscriber {
   emailFrequency: string;
   unsubscribeReason: string | null;
   unsubscribedAt: string | null;
+  source: string | null;
 }
 
 interface Pagination {
@@ -28,6 +29,9 @@ interface Stats {
   total: number;
 }
 
+/** Signups per acquisition surface. `unknown` = rows predating the `source` column. */
+type SourceBreakdown = Record<string, { active: number; inactive: number }>;
+
 interface SubscribersClientProps {
   initialAuth?: boolean;
 }
@@ -43,6 +47,8 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
   const [isLoading, setIsLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [frequencyFilter, setFrequencyFilter] = useState<string>('all_frequencies');
+  const [sourceFilter, setSourceFilter] = useState<string>('all_sources');
+  const [bySource, setBySource] = useState<SourceBreakdown>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -55,6 +61,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
       });
       if (statusFilter !== 'all') params.set('status', statusFilter);
       if (frequencyFilter !== 'all_frequencies') params.set('frequency', frequencyFilter);
+      if (sourceFilter !== 'all_sources') params.set('source', sourceFilter);
       if (searchQuery) params.set('search', searchQuery);
 
       const response = await fetch(`/api/newsletter/subscribers?${params}`);
@@ -64,6 +71,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
         setSubscribers(data.subscribers);
         setPagination(data.pagination);
         if (data.stats) setStats(data.stats);
+        if (data.bySource) setBySource(data.bySource);
       } else {
         setMessage({ type: 'error', text: data.error || 'Failed to fetch subscribers' });
       }
@@ -72,7 +80,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, frequencyFilter, searchQuery]);
+  }, [statusFilter, frequencyFilter, sourceFilter, searchQuery]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -346,6 +354,20 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
               <option value="weekly">Weekly Only</option>
               <option value="none">Unsubscribed</option>
             </select>
+            <select
+              value={sourceFilter}
+              onChange={(e) => setSourceFilter(e.target.value)}
+              className="px-4 py-2 border border-border-primary rounded-md bg-background-secondary text-text-primary focus:ring-2 focus:ring-accent-primary"
+            >
+              <option value="all_sources">All Sources</option>
+              {Object.entries(bySource)
+                .sort((a, b) => b[1].active + b[1].inactive - (a[1].active + a[1].inactive))
+                .map(([source, counts]) => (
+                  <option key={source} value={source}>
+                    {source} ({counts.active + counts.inactive})
+                  </option>
+                ))}
+            </select>
             <button
               onClick={() => fetchSubscribers(1)}
               className="px-4 py-2 bg-accent-primary text-white rounded-md hover:bg-accent-primary/90 transition-colors"
@@ -444,6 +466,9 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                     Subscribed
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                    Source
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
@@ -466,6 +491,9 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
                         {new Date(subscriber.subscribedAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">
+                        {subscriber.source ?? <span className="text-text-tertiary">unknown</span>}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span

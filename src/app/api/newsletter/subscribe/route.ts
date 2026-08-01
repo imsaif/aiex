@@ -65,10 +65,12 @@ export async function POST(request: NextRequest) {
     }
 
     if (existingSubscriber && !existingSubscriber.active) {
-      // Reactivate soft-deleted subscriber
-      await prisma.subscriber.update({ where: { email }, data: { active: true } });
+      // Reactivate soft-deleted subscriber. Overwrite `source` with the surface
+      // that won them back — the re-acquisition is the more actionable signal
+      // than whatever first acquired them.
+      await prisma.subscriber.update({ where: { email }, data: { active: true, source } });
     } else {
-      await prisma.subscriber.create({ data: { email } });
+      await prisma.subscriber.create({ data: { email, source } });
     }
 
     // Sync to Beehiiv synchronously — guarantees the sync completes before the

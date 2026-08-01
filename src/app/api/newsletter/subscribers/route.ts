@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
+import { NEWSLETTER_SOURCES } from '@/types/newsletter';
+import type { NewsletterSource } from '@/types/newsletter';
 
 // GET - List all subscribers (requires admin auth)
 export async function GET(request: NextRequest) {
@@ -19,6 +21,7 @@ export async function GET(request: NextRequest) {
       active?: boolean;
       email?: { contains: string; mode: 'insensitive' };
       emailFrequency?: string | { not: string };
+      source?: string | null;
     } = {};
 
     // status options:
@@ -44,6 +47,12 @@ export async function GET(request: NextRequest) {
       where.emailFrequency = frequency;
     }
 
+    // Filter by signup surface. 'unknown' selects the pre-2026-08 rows that
+    // predate the `source` column.
+    const source = searchParams.get('source');
+    if (source === 'unknown') where.source = null;
+    else if (source && NEWSLETTER_SOURCES.includes(source as NewsletterSource)) where.source = source;
+
     const [
       subscribers,
       total,
@@ -66,6 +75,7 @@ export async function GET(request: NextRequest) {
           emailFrequency: true,
           unsubscribeReason: true,
           unsubscribedAt: true,
+          source: true,
         },
       }),
       prisma.subscriber.count({ where }),
@@ -74,6 +84,19 @@ export async function GET(request: NextRequest) {
       prisma.subscriber.count({ where: { active: false, emailFrequency: 'none' } }),
       prisma.subscriber.count({ where: { active: false, emailFrequency: { not: 'none' } } }),
     ]);
+
+    // Acquisition mix: signups and churn per surface, across the whole list (not
+    // the current page or filter). `null` source = rows predating the column.
+    const bySourceRaw = await prisma.subscriber.groupBy({
+      by: ['source', 'active'],
+      _count: { _all: true },
+    });
+    const bySource: Record<string, { active: number; inactive: number }> = {};
+    for (const row of bySourceRaw) {
+      const key = row.source ?? 'unknown';
+      bySource[key] = bySource[key] || { active: 0, inactive: 0 };
+      bySource[key][row.active ? 'active' : 'inactive'] += row._count._all;
+    }
 
     return NextResponse.json({
       subscribers,
@@ -90,6 +113,7 @@ export async function GET(request: NextRequest) {
         beehiivRemoved: beehiivRemovedCount,
         total: activeCount + inactiveCount,
       },
+      bySource,
     });
   } catch (error) {
     console.error('Failed to fetch subscribers:', error);

@@ -406,7 +406,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 shadow-card animate-fade-in">
             <InlineNewsletterSignup
               variant="pattern-detail"
-              source="direct"
+              source="patterns"
               customHeading="Want More Patterns Like This?"
               customSubheading="Daily AI UX news and new pattern breakdowns, straight to your inbox. Unsubscribe anytime."
               customButtonText="Subscribe"

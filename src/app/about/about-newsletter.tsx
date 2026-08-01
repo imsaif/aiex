@@ -8,7 +8,7 @@ export function AboutNewsletter() {
       variant="pattern-detail"
       customButtonText="Subscribe"
       customSuccessMessage="You're in! Look out for next week's analysis."
-      source="direct"
+      source="about"
     />
   );
 }

@@ -18,6 +18,15 @@ model Subscriber {
   emailFrequency    String    @default("all")
   unsubscribeReason String?
   unsubscribedAt    DateTime?
+
+  // Signup surface (a NEWSLETTER_SOURCES value). Nullable because rows created
+  // before 2026-08-01 predate this column — Beehiiv's `signup_source` custom
+  // field is the only record for those, and only from mid-April 2026 onward.
+  // Kept locally so churn-by-source (source x unsubscribedAt x unsubscribeReason)
+  // is queryable without Beehiiv, and so it survives the Beehiiv migration.
+  source            String?
+
+  @@index([source])
 }
 
 model NewsletterDraft {

@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
     const existingSubscriber = await prisma.subscriber.findUnique({ where: { email } });
 
     if (existingSubscriber && !existingSubscriber.active) {
-      await prisma.subscriber.update({ where: { email }, data: { active: true } });
+      await prisma.subscriber.update({ where: { email }, data: { active: true, source: 'guides' } });
     } else if (!existingSubscriber) {
-      await prisma.subscriber.create({ data: { email } });
+      await prisma.subscriber.create({ data: { email, source: 'guides' } });
     }
 
     // Await so the Beehiiv sync completes before the HTTP response returns.

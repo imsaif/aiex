@@ -325,7 +325,7 @@ export default function GuidesPage() {
               <div className="mt-10 max-w-md mx-auto">
                 <InlineNewsletterSignup
                   variant="hero"
-                  source="direct"
+                  source="guides"
                   customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
                   customButtonText="Solve my AI design overload →"
                   customSuccessMessage="You're in! Watch for our next issue."

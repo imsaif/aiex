@@ -5,6 +5,14 @@
  * with email capture.
  *
  * To add a new source: add it here → everything else picks it up.
+ *
+ * Every `source` literal the app sends to /api/newsletter/subscribe MUST be in
+ * this list. The route validates with `z.enum(NEWSLETTER_SOURCES)`, so an
+ * unlisted value is a 400 "Invalid email address" on a perfectly valid email,
+ * and the caller never completes. This happened: `audit-unlock` shipped in
+ * ce7632e (2026-05-25) without being added here, and the audit paywall captured
+ * zero emails for two months (31 modal views, 0 submissions).
+ * `newsletter-sources.test.ts` scans the codebase and fails if it recurs.
  */
 export const NEWSLETTER_SOURCES = [
   'footer',
@@ -16,10 +24,13 @@ export const NEWSLETTER_SOURCES = [
   'audit-kit',
   'audit-report',
   'audit-waitlist',
+  'audit-unlock',
   'agentic-checklist',
   'accessibility-checklist',
   'design-with-claude',
   'guides',
+  'patterns',
+  'about',
   'homepage-hero',
   'homepage-hero-pre-audit',
 ] as const;

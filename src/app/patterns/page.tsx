@@ -161,7 +161,7 @@ export default function PatternsIndexPage() {
               <div className="mt-10 max-w-md mx-auto">
                 <InlineNewsletterSignup
                   variant="hero"
-                  source="direct"
+                  source="patterns"
                   customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
                   customButtonText="Solve my AI design overload →"
                   customSuccessMessage="You're in! Watch for our next issue."
@@ -189,7 +189,7 @@ export default function PatternsIndexPage() {
           <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-3">
             Daily AI UX news
           </h2>
-          <InlineNewsletterSignup variant="hero" source="direct" />
+          <InlineNewsletterSignup variant="hero" source="patterns" />
         </section>
 
         {/* SEO — keyword-rich server-rendered text for Googlebot */}
