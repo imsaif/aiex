@@ -23,6 +23,14 @@ const PATTERN_NAMES = [
 ];
 const PATTERN_COUNT = PATTERN_NAMES.length;
 
+/**
+ * How many patterns the analyzing narration lists. Read by the pattern-count drift
+ * test, which inherited this guard from PatternCheckingPanel when AnalyzingView
+ * replaced it. The names above are display strings, so they cannot derive from
+ * the library directly — this export is what keeps them from silently drifting.
+ */
+export const PANEL_PATTERN_COUNT = PATTERN_COUNT;
+
 // The products we benchmark patterns against — shown as a quiet logo strip so the
 // wait has something concrete to look at (and signals "we compare against the best").
 const BENCHMARK_LOGOS = [

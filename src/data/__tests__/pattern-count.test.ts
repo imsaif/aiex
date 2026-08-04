@@ -1,7 +1,7 @@
 import patterns from '@/data/patterns';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { DETECTION_PATTERN_COUNT } from '@/lib/patterns/detection-prompts';
-import { PANEL_PATTERN_COUNT } from '@/components/audit/PatternCheckingPanel';
+import { PANEL_PATTERN_COUNT } from '@/components/audit/AnalyzingView';
 
 /**
  * Guards the three places a pattern count can live. In May 2026 two patterns
