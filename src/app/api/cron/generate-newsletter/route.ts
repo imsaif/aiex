@@ -1954,6 +1954,19 @@ interface NewsletterQA {
   selectionRuleViolation: string | null; // non-null when a hard selection rule failed; triggers auto-quiet
 }
 
+// Retry/timing telemetry merged onto the stored qa at insert time (NOT produced by
+// buildQABlock, which only sees a selection). Added 2026-08-04: `qa` is reassigned
+// only when the retry SUCCEEDS, so a held draft could never tell you whether the
+// retry was skipped for budget, ran and failed again, or threw — three different
+// bugs with three different fixes. All 9 holds to date are unexplainable for want
+// of this. `elapsedMs` is the number the budget guard keys off, so a run of held
+// days makes it obvious whether the retry is structurally reachable in production.
+interface NewsletterQATelemetry {
+  retryOutcome: 'not_needed' | 'no_addendum' | 'skipped_budget' | 'succeeded' | 'still_violating' | 'errored';
+  retryBudgetLeftMs: number | null; // GEN_BUDGET_MS - elapsed - 8000 at the guard; null if no violation
+  elapsedMs: number;                // wall-clock from generation start to draft insert
+}
+
 // Company cap enforced at QA time. The prompt rule "max 2 per company or domain"
 // lives only in the prompt and Claude Haiku routinely ignores it (2026-06-25: 3/4
 // daily items were all labeled "Figma", one of them sourced from TechCrunch — so
@@ -2356,6 +2369,22 @@ async function runGeneration(
   // ignores the prompt's product-news floor / opinion cap on first pass even
   // when the pool has eligible items. Re-prompting once with explicit URLs
   // typically fixes it; falling through to auto-quiet stays the backstop.
+  // Why the retry did or didn't rescue the issue. Persisted onto the stored qa so a
+  // held day is diagnosable after the fact. Without this, "the retry never ran" and
+  // "the retry ran and Sonnet ignored it again" are indistinguishable in the DB —
+  // `qa` is only reassigned on retry SUCCESS — and Vercel Hobby keeps ~1h of logs,
+  // so all 9 holds from 2026-05-09 to 2026-08-04 are permanently unexplained. These
+  // are two very different bugs with two different fixes; stop guessing which one.
+  let retryOutcome:
+    | 'not_needed'          // first pass was clean, no retry required
+    | 'no_addendum'         // violation had no actionable retry prompt (empty product-news pool)
+    | 'skipped_budget'      // time-guard fired: not enough of the 60s budget left
+    | 'succeeded'           // retry produced a compliant selection
+    | 'still_violating'     // retry ran, Sonnet broke the same or another rule again
+    | 'errored'             // retry threw or aborted
+    = 'not_needed';
+  let retryBudgetLeftMs: number | null = null;
+
   if (type === 'daily' && qa.selectionRuleViolation) {
     const addendum = buildSelectionRetryAddendum(newsItems, qa.selectionRuleViolation);
     // Time-budget the retry: it's a second sequential Sonnet call. On a slow first
@@ -2366,7 +2395,12 @@ async function runGeneration(
     // left → skip and fall through to the auto-quiet backstop below, which still
     // writes a visible draft instead of dying on the cap.
     const retryBudgetMs = GEN_BUDGET_MS - (Date.now() - genStart) - 8000;
+    retryBudgetLeftMs = retryBudgetMs;
+    if (!addendum) {
+      retryOutcome = 'no_addendum';
+    }
     if (addendum && retryBudgetMs < 15000) {
+      retryOutcome = 'skipped_budget';
       console.warn(`[newsletter] Skipping selection retry — only ${retryBudgetMs}ms of the 60s budget left (elapsed ${Date.now() - genStart}ms). Falling through to auto-quiet.`);
     } else if (addendum) {
       console.warn(`[newsletter] Selection rule violated on first pass: ${qa.selectionRuleViolation}. Retrying with hardened prompt (${retryBudgetMs}ms budget left).`);
@@ -2385,6 +2419,7 @@ async function runGeneration(
         const retryParsed = JSON.parse(retryMatch[1] || retryText) as NewsletterData;
         const retryQA = buildQABlock(retryParsed.items, newsItems, clippedSources);
         if (!retryQA.selectionRuleViolation) {
+          retryOutcome = 'succeeded';
           console.log(`[newsletter] Retry succeeded — productNews=${retryQA.productNewsCount}, opinion=${retryQA.opinionCount}`);
           enrichItemsWithSource(retryParsed.items, newsItems);
           retryParsed.items = enforceLeadPosition(retryParsed.items);
@@ -2394,9 +2429,11 @@ async function runGeneration(
           summary = retryParsed.summary;
           qa = retryQA;
         } else {
+          retryOutcome = 'still_violating';
           console.warn(`[newsletter] Retry still violating: ${retryQA.selectionRuleViolation}. Falling through to auto-quiet.`);
         }
       } catch (retryError) {
+        retryOutcome = 'errored';
         console.warn(`[newsletter] Retry failed: ${(retryError as Error).message}. Falling through to auto-quiet.`);
       } finally {
         clearTimeout(retryTimeout);
@@ -2447,24 +2484,35 @@ async function runGeneration(
         "Held for review: one company or source dominated the selection past the per-issue cap. Re-run for a more diverse pick.";
     }
 
+    // Keep the rendered HTML instead of storing `content: ''`. The daily path above
+    // already built `htmlContent` from this very selection, so this costs nothing —
+    // the old code threw it away. That made held drafts unpublishable BY
+    // CONSTRUCTION: `/news/[slug]` bails on empty content, so a held day holding 4
+    // perfectly good stories could not be recovered without extracting generateHTML
+    // out of this route file (which is what blocked recovering the 07-29 and 07-31
+    // drafts on 2026-08-03). A selection that failed one rule is usually still most
+    // of a real issue — 2026-08-04 was one swap from shippable — so keeping the HTML
+    // turns "the day is gone" into "review it and decide". Status stays
+    // `pending_review`: nothing reaches a subscriber without a human clicking
+    // Publish, and the stored QA records exactly why it was flagged.
     await prisma.newsletterDraft.create({
       data: {
         title: titleMsg,
         slug,
         summary: summaryMsg,
-        content: '',
+        content: htmlContent,
         publishDate: new Date(),
         status: 'pending_review',
         type: 'daily',
         sources: newsItems.map((item) => item.link),
-        structuredData: { ...structuredData, qa } as object,
+        structuredData: { ...structuredData, qa: { ...qa, retryOutcome, retryBudgetLeftMs, elapsedMs: Date.now() - genStart } } as object,
       },
     });
-    console.log(`[newsletter] Held entry created (pending_review): ${titleMsg}`);
+    console.log(`[newsletter] Held entry created (pending_review): ${titleMsg} [retry=${retryOutcome}, budgetLeft=${retryBudgetLeftMs}ms, elapsed=${Date.now() - genStart}ms]`);
     return;
   }
 
-  const structuredDataWithQA = { ...structuredData, qa };
+  const structuredDataWithQA = { ...structuredData, qa: { ...qa, retryOutcome, retryBudgetLeftMs, elapsedMs: Date.now() - genStart } };
 
   // Save draft (re-check for duplicates to guard against race conditions from concurrent triggers)
   const slug = generateSlug(title, type);
