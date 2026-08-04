@@ -94,9 +94,8 @@ export function AnalyzingView({ screenshots, productType, previewElapsedMs }: An
           <main>
             {/* Header — kept in the left column so the right-rail cards top-align with the title. */}
             <div className="mb-10">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent-primary mb-3">
-                <Spinner accent /> Analyzing
-              </div>
+              {/* No "Analyzing" eyebrow: the h1 already says it, and the pattern
+                  progress bar below carries the in-progress signal a spinner would. */}
               <h1 className="type-h2 font-bold text-text-primary">Analyzing your design</h1>
               <p className="text-text-secondary text-base mt-2 leading-relaxed">{statusMessage}</p>
             </div>
@@ -211,10 +210,10 @@ export function AnalyzingView({ screenshots, productType, previewElapsedMs }: An
   );
 }
 
-function Spinner({ accent }: { accent?: boolean }) {
+function Spinner() {
   return (
     <span
-      className={`w-3 h-3 rounded-full border-2 border-t-transparent animate-spin inline-block flex-shrink-0 ${accent ? 'border-accent-primary' : 'border-text-tertiary'}`}
+      className="w-3 h-3 rounded-full border-2 border-t-transparent animate-spin inline-block flex-shrink-0 border-text-tertiary"
       aria-hidden
     />
   );
