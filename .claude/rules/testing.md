@@ -61,6 +61,19 @@ paths:
 - Mock external dependencies (Next.js components, APIs)
 - Maintain coverage thresholds
 
+## Gotcha: `jest.setup.js` is gitignored but required — the suite cannot run from a fresh clone
+
+`.gitignore:32` ignores `jest.setup.js`, but `jest.config.js` (which IS tracked) lists it in `setupFilesAfterEnv`. Jest refuses to start with a hard validation error:
+
+```
+● Validation Error:
+  Module <rootDir>/jest.setup.js in the setupFilesAfterEnv option was not found.
+```
+
+This is invisible on the machine that authored the file, because the untracked copy just sits there. Surfaced 2026-08-04: a `git worktree` of this repo could not run a single test until `jest.setup.js` was hand-copied in from the main checkout. **A fresh clone, a worktree, and CI are all in the same position** — `npm test` fails at startup rather than on an assertion, so it reads as a config problem rather than a missing file. This is one level worse than the `__tests__/` gotcha below: that one silently drops *individual* guards, this one disarms the *entire* suite.
+
+**If you touch CI or add a test-running workflow, confirm `jest.setup.js` exists in the runner first.** The real fix is to track it (`git add -f jest.setup.js`, drop the ignore line) since it holds only mock/setup boilerplate and no secrets. Not done yet because it changes what CI actually runs, which deserves its own pass rather than a drive-by during unrelated work.
+
 ## Gotcha: `.gitignore` ignores `**/__tests__/`
 
 `.gitignore` has `**/__tests__/`, `**/*.test.*` and `**/*.spec.*` (only `e2e/**/*.spec.ts` is negated). A new test therefore runs locally, passes, and is then **silently dropped by `git add .`** — it never reaches the repo or CI. Some suites are tracked (`src/lib/audit/__tests__/*`, `src/app/patterns/[slug]/__tests__/*`) because they were force-added; others (`src/data/__tests__/patterns.test.ts`) are local-only.
