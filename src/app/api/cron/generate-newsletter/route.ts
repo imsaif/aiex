@@ -2412,21 +2412,44 @@ async function runGeneration(
     console.warn(`[newsletter] Selection rule violated: ${qa.selectionRuleViolation}. Auto-quieting today.`);
     const date = new Date();
     const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-opinion-heavy-day`;
+    // Violation-neutral slug. It used to be hardcoded `-opinion-heavy-day`, which
+    // was wrong on all 9 held days ever generated (2026-05-09 → 2026-08-04): every
+    // one fired `no_product_news`, none fired `opinion_present`. The label sent a
+    // debugging session down the wrong path on 08-04, so the slug no longer claims
+    // a cause and the title below names the real one. Still the idempotency key for
+    // the `existing` check — historical `-opinion-heavy-day` rows keep their slugs.
+    const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-held`;
 
     const existing = await prisma.newsletterDraft.findFirst({ where: { slug } });
     if (existing) {
-      console.log('[newsletter] Opinion-heavy-day entry already exists for today');
+      console.log('[newsletter] Held entry already exists for today');
       return;
     }
 
-    const summaryMsg = qa.productNewsCount < 1
-      ? "Today's pool didn't surface a concrete AI product launch worth your inbox. We're sitting this one out — back tomorrow with real news."
-      : "Today's mix leaned heavily on opinion pieces over product news. Rather than circulate filler, we're sitting this one out.";
+    // Title + summary branch on the ACTUAL violation. Note `no_product_news` only
+    // fires when the pool DID contain product news and the model skipped it (the
+    // `poolHadProductNews` guard above) — so it means selection failed, NOT that
+    // the news was thin. Never describe that case as a quiet day: on 2026-08-04 the
+    // pool held an OpenAI continuous-voice launch and the issue was held anyway.
+    let titleMsg: string;
+    let summaryMsg: string;
+    if (qa.productNewsCount < 1) {
+      titleMsg = 'AI UX Daily Held: Selection Skipped Available Product News';
+      summaryMsg =
+        "Held for review: the pool carried concrete product news but the selection pass picked none of it. This is a selection failure, not a quiet news day. Re-run before assuming there was nothing to send.";
+    } else if (qa.opinionCount > 0) {
+      titleMsg = 'AI UX Daily Held: Opinion Items in Selection';
+      summaryMsg =
+        "Held for review: the selection included opinion-domain items, which the daily is not allowed to carry. Re-run rather than circulate filler.";
+    } else {
+      titleMsg = 'AI UX Daily Held: Source Concentration';
+      summaryMsg =
+        "Held for review: one company or source dominated the selection past the per-issue cap. Re-run for a more diverse pick.";
+    }
 
     await prisma.newsletterDraft.create({
       data: {
-        title: 'AI UX Daily: Quiet Day — Opinion-Heavy Pool',
+        title: titleMsg,
         slug,
         summary: summaryMsg,
         content: '',
@@ -2437,7 +2460,7 @@ async function runGeneration(
         structuredData: { ...structuredData, qa } as object,
       },
     });
-    console.log('[newsletter] Opinion-heavy-day entry created (pending_review)');
+    console.log(`[newsletter] Held entry created (pending_review): ${titleMsg}`);
     return;
   }
 
