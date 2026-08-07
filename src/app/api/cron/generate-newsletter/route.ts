@@ -653,6 +653,45 @@ interface NewsItem {
   relevanceScore?: number;
 }
 
+// Does this pool item count as "concrete product news" for the daily's
+// product-news floor (`qa.productNewsCount` and its `poolHadProductNews`
+// escape hatch)?
+//
+// `ai-lab` and `design-tool` always count — those feeds are launches by
+// definition. `dev-platform` (Vercel, GitHub, Replit, Supabase) counts too,
+// MINUS pure-infrastructure posts, because a designer does need to know when
+// v0 ships an API that generates UIs; they do not need to know that Vercel
+// added project avatars or a new AI Gateway trace drain.
+//
+// Why the tier alone wasn't enough (2026-08-07): the daily was held with
+// `no_product_news` while its own selection carried the v0 API launch. The
+// counter only recognised ai-lab/design-tool, so a real launch scored zero and
+// the floor fired on an issue that met it. Editorial rule from that session:
+// dev-platform counts when it's something a designer would need to know.
+//
+// The gate is the existing conditional infra penalty (INFRA_KEYWORDS present
+// AND no DESIGN_KEYWORDS_SET hit), not `isDesignNativeItem`. Measured against
+// the live Vercel feed: `isDesignNativeItem` returns FALSE on the v0 API launch,
+// so gating on it would have reproduced the same false hold. The infra test
+// admits v0 (it names "design system") and rejects avatars / trace drains /
+// marketplace integrations.
+//
+// This is deliberately permissive on the remaining edge (a GitHub npm-security
+// post passes). That's acceptable: this runs over items Claude ALREADY selected,
+// not over the pool, so an off-topic pick is a selection failure with its own
+// guards (`designNativeCount`, the company cap). Tightening the gate to catch it
+// re-creates the false hold, which is the more expensive error.
+function isProductNewsItem(item: Pick<NewsItem, 'sourceTier' | 'title' | 'description'>): boolean {
+  const tier = item.sourceTier;
+  if (tier === 'ai-lab' || tier === 'design-tool') return true;
+  if (tier !== 'dev-platform') return false;
+
+  const text = `${item.title} ${item.description}`.toLowerCase();
+  const hasInfraKeyword = INFRA_KEYWORDS.some((k) => text.includes(k));
+  const hasDesignKeyword = Array.from(DESIGN_KEYWORDS_SET).some((k) => text.includes(k));
+  return !(hasInfraKeyword && !hasDesignKeyword);
+}
+
 // Basic word stemming — reduces common suffixes so "compares" matches "compare", etc.
 function stemWord(word: string): string {
   if (word.length <= 3) return word;
@@ -2127,11 +2166,10 @@ function buildQABlock(
     if (isOpinionUrl(sel.sourceUrl)) {
       opinionCount += 1;
     }
-    // Concrete product news = items from an ai-lab or design-tool feed. The
-    // prompt names these as the eligible "product launch" sources. Use the
-    // pool's tier rather than Claude's product label so we can't be fooled
-    // by a hand-tagged "OpenAI" item that's actually a Medium opinion piece.
-    if (original && (original.sourceTier === 'ai-lab' || original.sourceTier === 'design-tool')) {
+    // Concrete product news — see isProductNewsItem. Keyed on the POOL item, not
+    // Claude's product label, so we can't be fooled by a hand-tagged "OpenAI"
+    // item that's actually a Medium opinion piece.
+    if (original && isProductNewsItem(original)) {
       productNewsCount += 1;
     }
   }
@@ -2141,12 +2179,15 @@ function buildQABlock(
   // Two violation types:
   //   1) productNewsCount < 1 → no concrete launch in the issue at all.
   //   2) opinionCount > 0 → any opinion item disqualifies the issue.
-  // Pool-aware escape hatch: if the pool genuinely contained zero ai-lab or
-  // design-tool items, rule (1) doesn't fire — there's nothing better Claude
-  // could have picked, and shipping 4 design-pub items is acceptable.
-  const poolHadProductNews = pool.some(
-    (it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool',
-  );
+  // Pool-aware escape hatch: if the pool genuinely contained zero product-news
+  // items, rule (1) doesn't fire — there's nothing better Claude could have
+  // picked, and shipping 4 design-pub items is acceptable.
+  //
+  // MUST use the same predicate as the counter above. When the numerator and
+  // this hatch disagree, a day whose pool carries product news ONLY from the
+  // tier one side recognises slips through un-guarded.
+  const poolProductNews = pool.filter(isProductNewsItem);
+  const poolHadProductNews = poolProductNews.length > 0;
   // Company-cap violation: any single product label appears more than twice.
   let companyCapViolation: string | null = null;
   for (const [key, count] of Object.entries(productCounts)) {
@@ -2158,7 +2199,7 @@ function buildQABlock(
 
   let selectionRuleViolation: string | null = null;
   if (productNewsCount < 1 && poolHadProductNews) {
-    selectionRuleViolation = `no_product_news (pool had ${pool.filter((it) => it.sourceTier === 'ai-lab' || it.sourceTier === 'design-tool').length} product-news items but Claude picked 0)`;
+    selectionRuleViolation = `no_product_news (pool had ${poolProductNews.length} product-news items but Claude picked 0)`;
   } else if (opinionCount > 0) {
     selectionRuleViolation = `opinion_present (${opinionCount} opinion items, max 0)`;
   } else if (companyCapViolation) {
