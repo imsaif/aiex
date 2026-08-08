@@ -121,3 +121,6 @@ docs/medium-ux-collective-aiux-audit-story.md
 # Local-only tool output / scratch
 .claude/worktrees/
 .dwic/
+
+# Superpowers SDD scratch workspace (ledgers, briefs, review packages)
+.superpowers/
