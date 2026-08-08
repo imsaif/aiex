@@ -239,7 +239,7 @@ export function normaliseUrl(url: string): string {
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `npx jest src/lib/newsletter/__tests__/click-attribution.test.ts`
-Expected: PASS, 12 tests.
+Expected: PASS, 11 tests (5 parseCsv + 6 normaliseUrl).
 
 - [ ] **Step 5: Type check**
 
@@ -412,7 +412,7 @@ Then fix the stray comment: the date in the docblock must read `2026-07-23` only
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `npx jest src/lib/newsletter/__tests__/click-attribution.test.ts`
-Expected: PASS, 17 tests.
+Expected: PASS, 16 tests.
 
 - [ ] **Step 5: Commit**
 
@@ -580,7 +580,7 @@ export function aggregateBySource(
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `npx jest src/lib/newsletter/__tests__/click-attribution.test.ts`
-Expected: PASS, 22 tests.
+Expected: PASS, 21 tests.
 
 - [ ] **Step 5: Commit**
 
