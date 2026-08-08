@@ -1345,9 +1345,20 @@ async function resolveGoogleNewsUrl(url: string, timeoutMs = 8000): Promise<stri
 // or resolved onto an opinion domain — is DROPPED. Graceful degradation: if the
 // endpoint breaks or times out, Google items fall away and the pool leans on
 // first-party feeds (which have clean direct links).
+// Budget trimmed 12s→6s and the count cap 12→8 on 2026-08-08 to buy retry
+// headroom, NOT because resolution was misbehaving. The 08-08 hold recorded
+// `retryOutcome: "errored"` with `retryBudgetLeftMs: 15398` and `elapsedMs: 52653`:
+// the first pass burned 36.6s, so the retry's abort was capped at 15.4s against a
+// Sonnet call whose measured median is ~18s. It could not finish, and ~16s was
+// spent proving that. This 12s stage was the only soft cost in the first pass, so
+// halving it lifts the retry budget to ~21s — above the median — and gives the
+// retry a real chance to land. Cost: fewer Google items resolve within the window,
+// and unresolved ones are DROPPED, so the pool narrows. Accepted deliberately:
+// pool size has been 38-51 recently while the floor keeps failing on selection,
+// not on supply. If product news dries up, raise these back FIRST.
 async function resolvePoolGoogleNewsLinks(
   pool: NewsItem[],
-  { budgetMs = 12000, maxResolve = 12, concurrency = 3 }: { budgetMs?: number; maxResolve?: number; concurrency?: number } = {},
+  { budgetMs = 6000, maxResolve = 8, concurrency = 3 }: { budgetMs?: number; maxResolve?: number; concurrency?: number } = {},
 ): Promise<NewsItem[]> {
   const isGoogle = (it: NewsItem) => {
     try {
@@ -2440,7 +2451,16 @@ async function runGeneration(
     if (!addendum) {
       retryOutcome = 'no_addendum';
     }
-    if (addendum && retryBudgetMs < 15000) {
+    // Floor raised 15000→20000 on 2026-08-08. At 15s the guard was admitting
+    // retries it could not fund: the abort below is capped at the remaining
+    // budget, and Sonnet's measured median on this prompt is ~18s, so any run
+    // landing between 15s and 18s of headroom started a call that was certain to
+    // abort. That is exactly what the 08-08 hold recorded (budget 15398ms,
+    // `errored` ~16s later). Skipping is strictly better than aborting: same
+    // outcome, ~16s of the 60s cap handed back. Keep this floor ABOVE the
+    // selection model's median latency — if the model or prompt changes, re-measure
+    // and move it, don't leave it stale.
+    if (addendum && retryBudgetMs < 20000) {
       retryOutcome = 'skipped_budget';
       console.warn(`[newsletter] Skipping selection retry — only ${retryBudgetMs}ms of the 60s budget left (elapsed ${Date.now() - genStart}ms). Falling through to auto-quiet.`);
     } else if (addendum) {
