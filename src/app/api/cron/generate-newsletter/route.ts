@@ -110,6 +110,7 @@ const RSS_SOURCES: RssSource[] = [
   { name: 'Google AI', url: 'https://blog.google/technology/ai/rss/', color: '#4285f4', tier: 'ai-lab' },
   { name: 'Microsoft AI', url: 'https://www.microsoft.com/en-us/ai/blog/feed/', color: '#00a4ef', tier: 'ai-lab' }, // blogs.microsoft.com/ai/feed 410 Gone (Jul 15 2026)
   { name: 'Hugging Face', url: 'https://huggingface.co/blog/feed.xml', color: '#ffd21e', tier: 'ai-lab' }, // very active open-model/product feed (added Jul 15 2026)
+  { name: 'Apple Newsroom', url: 'https://www.apple.com/newsroom/rss-feed.rss', color: '#000000', tier: 'ai-lab' }, // added Aug 8 2026: Apple had no feed, so iOS 27 AI features only ever reached us via TLDR Design. `ai-lab` is deliberate: it makes Apple launches count toward the product-news floor. Feed also carries retail/finance items; the relevance threshold is expected to drop those, verify after a week.
 
   // AI labs (Google News searches for AI products)
   { name: 'Cursor', url: 'https://news.google.com/rss/search?q=Cursor+AI+editor+OR+Cursor+code+editor&hl=en-US&gl=US&ceid=US:en', color: '#7c3aed', tier: 'ai-lab' },
@@ -127,6 +128,7 @@ const RSS_SOURCES: RssSource[] = [
   { name: 'Import AI', url: 'https://jack-clark.net/feed/', color: '#111111', tier: 'curator' }, // weekly high-signal model/research roundup
   { name: 'Pixels of the Week', url: 'https://stephaniewalter.design/feed/', color: '#d6336c', tier: 'curator' }, // weekly design + a11y + AI digest
   { name: 'Exponential View', url: 'https://www.exponentialview.co/feed', color: '#f59e0b', tier: 'curator' }, // Azeem Azhar, top-tier AI analysis
+  { name: 'Interconnects', url: 'https://www.interconnects.ai/feed', color: '#7c3aed', tier: 'curator' }, // added Aug 8 2026: substantive AI analysis, closest in kind to Latent Space. Substack on a custom domain: exempt from the /p/ ghosthost opinion rule automatically via SUBSCRIBED_FEED_HOSTS.
 
   // Designer voices — the X/Twitter/rss.app bridges were RETIRED Jul 15 2026 (both
   // live bridges went 402, the other 6 handles never bridged). Replaced with durable
@@ -146,6 +148,7 @@ const RSS_SOURCES: RssSource[] = [
   { name: 'Design with AI', url: 'https://designwithai.substack.com/feed', color: '#0ea5e9', tier: 'designer-voice' }, // Xinran Ma, ~20k subs
   { name: 'UX Movement', url: 'https://uxmovement.substack.com/feed', color: '#e11d48', tier: 'designer-voice' }, // Anthony Tseng, UX craft
   { name: 'Christine Vallaure', url: 'https://christinevallaure.substack.com/feed', color: '#0891b2', tier: 'designer-voice' }, // Figma-to-code AI
+  { name: 'Simon Willison', url: 'https://simonwillison.net/atom/everything/', color: '#ff6600', tier: 'designer-voice' }, // added Aug 8 2026: near-daily AI tooling coverage. `designer-voice` is already capped at 1/day by MAX_ITEMS_PER_SOURCE_BY_TIER, so no extra cap is needed.
 
   // NOTE: Reddit dropped Apr 20 2026. All 4 candidate subreddits
   // (r/UXDesign, r/userexperience, r/web_design, r/Figma) returned 403 from
