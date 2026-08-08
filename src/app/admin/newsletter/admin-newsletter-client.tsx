@@ -21,6 +21,16 @@ interface NewsletterQA {
   designLightWarning?: boolean;
   poolSize?: number;
   duplicateSourceClipped?: string[];
+  // Set when the selection broke a counted rule (product-news floor, opinion
+  // items, per-company cap) and the retry didn't fix it. Before 2026-08-08 this
+  // suppressed the draft's real title and summary; now the draft ships intact and
+  // this banner is the ONLY signal the reviewer gets. Don't remove it without
+  // restoring some other surface for the flag.
+  selectionRuleViolation?: string | null;
+  productNewsCount?: number;
+  opinionCount?: number;
+  retryOutcome?: string;
+  elapsedMs?: number;
 }
 
 interface NewsletterDraft extends NewsletterDraftSummary {
@@ -498,6 +508,31 @@ export default function AdminNewsletterClient({
                   const totalSelected = sortedSources.reduce((sum, [, count]) => sum + count, 0);
                   return (
                     <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-3 md:p-4">
+                      {/* Selection-rule flag. Before 2026-08-08 a violation replaced
+                          the draft's title and summary with "Held for review" text;
+                          the draft now arrives intact and this is the only signal, so
+                          it leads the strip. Tinted background + border with
+                          text-text-primary rather than status-coloured text, which
+                          fails contrast as body copy (see design-system rule), and the
+                          "Flagged" label carries the meaning so it never rests on
+                          colour alone. */}
+                      {qa.selectionRuleViolation && (
+                        <div className="mb-3 p-2.5 rounded-md bg-status-warning/10 border border-status-warning/40 text-text-primary text-xs md:text-sm">
+                          <span className="font-semibold">⚠ Flagged &mdash; selection rule broken:</span>{' '}
+                          <span className="font-mono">{qa.selectionRuleViolation}</span>
+                          <div className="mt-1 text-text-secondary">
+                            {qa.selectionRuleViolation.startsWith('no_product_news')
+                              ? 'The pool carried concrete product news and the selection took none of it. Often the issue is still fine, so read it before deciding. This counts source feeds, not stories, so a launch relayed via TechCrunch or TLDR Design will not register.'
+                              : qa.selectionRuleViolation.startsWith('opinion_present')
+                                ? 'The selection includes opinion-domain items the daily is not meant to carry. Swap them or re-run.'
+                                : 'One company or source exceeded the per-issue cap. Re-run for a more diverse pick.'}
+                            {qa.retryOutcome && qa.retryOutcome !== 'not_needed' && (
+                              <> Retry: <span className="font-mono">{qa.retryOutcome}</span>
+                                {typeof qa.elapsedMs === 'number' && <> &middot; run took {(qa.elapsedMs / 1000).toFixed(1)}s</>}.</>
+                            )}
+                          </div>
+                        </div>
+                      )}
                       {qa.designLightWarning && (
                         <div className="mb-3 p-2.5 rounded-md bg-status-warning/10 text-status-warning text-xs md:text-sm font-medium">
                           ⚠ Design-light: 0 design-native items in this selection. Review carefully before publishing.

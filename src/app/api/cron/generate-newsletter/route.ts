@@ -2502,75 +2502,42 @@ async function runGeneration(
     }
   }
 
-  // Selection-rule guard (daily only): if Claude ignored its own counted rules
-  // for opinion/product-news mix even after retry, auto-quiet the day instead
-  // of shipping filler. Weekly compilations re-pick from already-curated daily
-  // items, so the rule doesn't apply there.
+  // Selection-rule guard (daily only): a violation that survives the retry is now
+  // FLAGGED, not suppressed. The draft keeps its real title, summary, slug and HTML
+  // and falls through to the normal create path below.
+  //
+  // Why this stopped being a "hold" (2026-08-08). The branch was written to stop
+  // filler reaching subscribers, but nothing here ever reached a subscriber: BOTH
+  // paths write `status: 'pending_review'` and a human clicks Publish in
+  // `/admin/newsletter` and then pastes into Beehiiv. Once `8251845` made the held
+  // branch keep its rendered HTML, suppression bought nothing and cost four things:
+  // it overwrote the real title and summary (so the reviewer could not tell what the
+  // issue actually was), used an off-pattern `-held` slug, skipped
+  // `sendAdminNotification` so nobody was told a draft existed, and skipped the
+  // `revalidatePath` calls plus the concurrent-trigger `duplicateCheck` that the
+  // normal path runs. Net effect: a guard whose whole job was already done by the
+  // human gate, which made the drafts it touched HARDER to review.
+  //
+  // The evidence it was miscalibrated, not just redundant: across every hold ever
+  // generated (2026-05-09 → 2026-08-08) `no_product_news` fired every time and
+  // `opinion_present` never did, and the rule only fires when the pool DID carry
+  // product news — so it has never once fired on a genuinely quiet day. It fires on
+  // selection failure. And it is wrong often: 07-31 and 08-07 both held on launches
+  // the tier list didn't recognise (fixed 08-07), and 08-08 held an issue carrying an
+  // Airbnb AI-search rollout and iOS 27 AI features that the user then published
+  // as-is.
+  //
+  // This is also why `productNewsCount` stays a feed-tier proxy instead of growing a
+  // story-level keyword classifier. Chasing "iOS 27 adds AI photo extension" while
+  // excluding "NN/g publishes the PROVE framework" is a heuristic with real false
+  // positives, and it is not worth building now that a miscount costs a review banner
+  // instead of an issue. Do not re-open that unless the banner starts crying wolf.
+  //
+  // `qa.selectionRuleViolation` still lands in `structuredData` and IS rendered in
+  // the admin QA strip. If that banner is ever removed, this guard goes silent — the
+  // flag and its display are one feature.
   if (type === 'daily' && qa.selectionRuleViolation) {
-    console.warn(`[newsletter] Selection rule violated: ${qa.selectionRuleViolation}. Auto-quieting today.`);
-    const date = new Date();
-    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    // Violation-neutral slug. It used to be hardcoded `-opinion-heavy-day`, which
-    // was wrong on all 9 held days ever generated (2026-05-09 → 2026-08-04): every
-    // one fired `no_product_news`, none fired `opinion_present`. The label sent a
-    // debugging session down the wrong path on 08-04, so the slug no longer claims
-    // a cause and the title below names the real one. Still the idempotency key for
-    // the `existing` check — historical `-opinion-heavy-day` rows keep their slugs.
-    const slug = `ai-ux-daily-${dateStr.replace(' ', '-').toLowerCase()}-held`;
-
-    const existing = await prisma.newsletterDraft.findFirst({ where: { slug } });
-    if (existing) {
-      console.log('[newsletter] Held entry already exists for today');
-      return;
-    }
-
-    // Title + summary branch on the ACTUAL violation. Note `no_product_news` only
-    // fires when the pool DID contain product news and the model skipped it (the
-    // `poolHadProductNews` guard above) — so it means selection failed, NOT that
-    // the news was thin. Never describe that case as a quiet day: on 2026-08-04 the
-    // pool held an OpenAI continuous-voice launch and the issue was held anyway.
-    let titleMsg: string;
-    let summaryMsg: string;
-    if (qa.productNewsCount < 1) {
-      titleMsg = 'AI UX Daily Held: Selection Skipped Available Product News';
-      summaryMsg =
-        "Held for review: the pool carried concrete product news but the selection pass picked none of it. This is a selection failure, not a quiet news day. Re-run before assuming there was nothing to send.";
-    } else if (qa.opinionCount > 0) {
-      titleMsg = 'AI UX Daily Held: Opinion Items in Selection';
-      summaryMsg =
-        "Held for review: the selection included opinion-domain items, which the daily is not allowed to carry. Re-run rather than circulate filler.";
-    } else {
-      titleMsg = 'AI UX Daily Held: Source Concentration';
-      summaryMsg =
-        "Held for review: one company or source dominated the selection past the per-issue cap. Re-run for a more diverse pick.";
-    }
-
-    // Keep the rendered HTML instead of storing `content: ''`. The daily path above
-    // already built `htmlContent` from this very selection, so this costs nothing —
-    // the old code threw it away. That made held drafts unpublishable BY
-    // CONSTRUCTION: `/news/[slug]` bails on empty content, so a held day holding 4
-    // perfectly good stories could not be recovered without extracting generateHTML
-    // out of this route file (which is what blocked recovering the 07-29 and 07-31
-    // drafts on 2026-08-03). A selection that failed one rule is usually still most
-    // of a real issue — 2026-08-04 was one swap from shippable — so keeping the HTML
-    // turns "the day is gone" into "review it and decide". Status stays
-    // `pending_review`: nothing reaches a subscriber without a human clicking
-    // Publish, and the stored QA records exactly why it was flagged.
-    await prisma.newsletterDraft.create({
-      data: {
-        title: titleMsg,
-        slug,
-        summary: summaryMsg,
-        content: htmlContent,
-        publishDate: new Date(),
-        status: 'pending_review',
-        type: 'daily',
-        sources: newsItems.map((item) => item.link),
-        structuredData: { ...structuredData, qa: { ...qa, retryOutcome, retryBudgetLeftMs, elapsedMs: Date.now() - genStart } } as object,
-      },
-    });
-    console.log(`[newsletter] Held entry created (pending_review): ${titleMsg} [retry=${retryOutcome}, budgetLeft=${retryBudgetLeftMs}ms, elapsed=${Date.now() - genStart}ms]`);
-    return;
+    console.warn(`[newsletter] Selection rule violated: ${qa.selectionRuleViolation}. Flagging for review (draft still created) [retry=${retryOutcome}, budgetLeft=${retryBudgetLeftMs}ms, elapsed=${Date.now() - genStart}ms]`);
   }
 
   const structuredDataWithQA = { ...structuredData, qa: { ...qa, retryOutcome, retryBudgetLeftMs, elapsedMs: Date.now() - genStart } };
