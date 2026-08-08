@@ -23,9 +23,9 @@ interface NewsletterQA {
   duplicateSourceClipped?: string[];
   // Set when the selection broke a counted rule (product-news floor, opinion
   // items, per-company cap) and the retry didn't fix it. Before 2026-08-08 this
-  // suppressed the draft's real title and summary; now the draft ships intact and
-  // this banner is the ONLY signal the reviewer gets. Don't remove it without
-  // restoring some other surface for the flag.
+  // suppressed the draft's real title and summary; the draft now ships intact.
+  // Only `opinion_present` and `company_cap` render a banner — see the note at the
+  // render site for why `no_product_news` is stored but not shown.
   selectionRuleViolation?: string | null;
   productNewsCount?: number;
   opinionCount?: number;
@@ -508,24 +508,43 @@ export default function AdminNewsletterClient({
                   const totalSelected = sortedSources.reduce((sum, [, count]) => sum + count, 0);
                   return (
                     <div className="bg-surface-primary rounded-lg shadow-sm border border-border-primary p-3 md:p-4">
-                      {/* Selection-rule flag. Before 2026-08-08 a violation replaced
-                          the draft's title and summary with "Held for review" text;
-                          the draft now arrives intact and this is the only signal, so
-                          it leads the strip. Tinted background + border with
-                          text-text-primary rather than status-coloured text, which
-                          fails contrast as body copy (see design-system rule), and the
+                      {/* Selection-rule flag, shown ONLY for `opinion_present` and
+                          `company_cap`.
+
+                          `no_product_news` is deliberately not surfaced. Measured
+                          2026-08-08 over every daily ever generated (~210 drafts): the
+                          selection guard fired 10 times and was `no_product_news` all
+                          10; `opinion_present` and `company_cap` have never fired. Of
+                          those 10, eight were rejected — but each had already been
+                          stripped to `content: ''` with its title replaced, so the
+                          rejection judged an empty husk, not the issue. The single
+                          flagged draft that ever reached the reviewer intact (08-08)
+                          was PUBLISHED. So the rule is 0-for-1 on verified accuracy and
+                          the banner was pure noise; it says only "no pick came from one
+                          of the 21 company-blog feeds," which is silent on quality. The
+                          value stays in `structuredData.qa` for debugging a run.
+
+                          The other two are kept because each marks a real defect with a
+                          real precedent: an opinion-mill item reaching the daily, and
+                          the June "three Figma stories in one issue" complaint that
+                          `company_cap` was written for. Both are unproven only because
+                          neither has ever fired.
+
+                          If `no_product_news` is ever made story-aware rather than
+                          feed-aware, re-evaluate showing it. Styling note: tinted
+                          background and border with `text-text-primary`, since
+                          status-coloured text fails contrast as body copy, and the
                           "Flagged" label carries the meaning so it never rests on
                           colour alone. */}
-                      {qa.selectionRuleViolation && (
+                      {qa.selectionRuleViolation &&
+                        !qa.selectionRuleViolation.startsWith('no_product_news') && (
                         <div className="mb-3 p-2.5 rounded-md bg-status-warning/10 border border-status-warning/40 text-text-primary text-xs md:text-sm">
                           <span className="font-semibold">⚠ Flagged &mdash; selection rule broken:</span>{' '}
                           <span className="font-mono">{qa.selectionRuleViolation}</span>
                           <div className="mt-1 text-text-secondary">
-                            {qa.selectionRuleViolation.startsWith('no_product_news')
-                              ? 'The pool carried concrete product news and the selection took none of it. Often the issue is still fine, so read it before deciding. This counts source feeds, not stories, so a launch relayed via TechCrunch or TLDR Design will not register.'
-                              : qa.selectionRuleViolation.startsWith('opinion_present')
-                                ? 'The selection includes opinion-domain items the daily is not meant to carry. Swap them or re-run.'
-                                : 'One company or source exceeded the per-issue cap. Re-run for a more diverse pick.'}
+                            {qa.selectionRuleViolation.startsWith('opinion_present')
+                              ? 'The selection includes opinion-domain items the daily is not meant to carry. Swap them or re-run.'
+                              : 'One company or source exceeded the per-issue cap. Re-run for a more diverse pick.'}
                             {qa.retryOutcome && qa.retryOutcome !== 'not_needed' && (
                               <> Retry: <span className="font-mono">{qa.retryOutcome}</span>
                                 {typeof qa.elapsedMs === 'number' && <> &middot; run took {(qa.elapsedMs / 1000).toFixed(1)}s</>}.</>
