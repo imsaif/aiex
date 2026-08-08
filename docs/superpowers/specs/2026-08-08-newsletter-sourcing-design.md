@@ -79,7 +79,7 @@ Only items published from 2026-07-23 onward carry `sourceName`. Earlier items fa
 
 **Mechanical requirements**
 
-- Simon Willison publishes near daily. He needs a per-source cap of 1 via `MAX_ITEMS_PER_SOURCE_BY_TIER`, or he will flood the pool. This is the same failure the Jakob Nielsen rotation fix addressed.
+- Simon Willison publishes near daily, which would normally flood the pool (the failure the Jakob Nielsen rotation fix addressed). **No change is needed:** `MAX_ITEMS_PER_SOURCE_BY_TIER` already sets `designer-voice` to 1, so the `designer-voice` assignment caps him automatically. Verified against `route.ts:945-949` on 2026-08-08.
 - Interconnects is Substack on a custom domain, so the `/p/` ghosthost rule in `isOpinionUrl` would normally block it. Adding it to `RSS_SOURCES` exempts it automatically through `SUBSCRIBED_FEED_HOSTS`, so no separate allowlisting is needed. Verify this rather than assume it.
 - **Two of the three additions land in voice tiers, which caps their real effect.** `designer-voice` and `curator` are both in `VOICE_TIERS`, so Simon Willison and Interconnects are subject to the 7-day voice rotation and to the prompt guidance allowing at most one practitioner voice per issue. They enlarge the pool but compete for a single slot, so they will rarely both appear. Only Apple Newsroom adds unconstrained supply. This shrinks Section B's expected effect further than the feed count suggests.
 
