@@ -77,10 +77,13 @@ export function normaliseUrl(url: string): string {
     }
   }
 
-  let out = parsed.toString();
-  out = out.replace(/\?$/, '');
-  // Drop a trailing slash on the path, but never turn "https://a.com/" into
-  // "https://a.com" plus a dangling query.
-  out = out.replace(/\/(?=$|\?)/, '');
-  return out;
+  // Strip the trailing slash on the parsed pathname itself, before serialising.
+  // Scoping the strip to pathname (rather than regex-ing the serialised string)
+  // keeps it from ever touching the query string or host: a root path with a
+  // surviving query ("https://a.com/?x=1") keeps its path separator instead of
+  // becoming "https://a.com?x=1". The URL setter also refuses to drop the
+  // leading "/" on a root path, so this is a no-op there, which is correct.
+  parsed.pathname = parsed.pathname.replace(/\/$/, '');
+
+  return parsed.toString();
 }

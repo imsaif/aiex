@@ -56,4 +56,21 @@ describe('normaliseUrl', () => {
     const b = normaliseUrl('https://nngroup.com/articles/prove');
     expect(a).toBe(b);
   });
+
+  it('keeps the path separator on a root path with a surviving query', () => {
+    expect(normaliseUrl('https://a.com/?x=1')).toBe('https://a.com/?x=1');
+  });
+
+  it('is idempotent across bare origin, trailing-slash path, and root-plus-query shapes', () => {
+    const shapes = [
+      'https://a.com',
+      'https://a.com/b/',
+      'https://a.com/?x=1',
+    ];
+    for (const shape of shapes) {
+      const once = normaliseUrl(shape);
+      const twice = normaliseUrl(once);
+      expect(twice).toBe(once);
+    }
+  });
 });
