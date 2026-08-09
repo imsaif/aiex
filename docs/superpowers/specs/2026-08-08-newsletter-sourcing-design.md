@@ -101,8 +101,38 @@ Because Section B has a low ceiling, a web-search step is the only lever with re
 
 **Gate for starting it:** Section A shows that stories from the current top of the pool underperform. If clicks show existing top-of-pool stories land well, the bottleneck is selection rather than supply, and more supply will not help.
 
+## OUTCOME (2026-08-09): Section A is CLOSED, blocked on data. Section B shipped.
+
+**Section A cannot proceed via Beehiiv.** Both the per-link CSV export AND the
+dashboard "Clicks report" are behind a paid tier on the current Launch plan. The
+risk listed below materialised. Task 1's gate did its job: it stopped the work
+before an aggregator and CLI were built against data that does not exist.
+
+What was built before the stop, and kept: the pure join-key helpers
+(`parseCsv`, `normaliseUrl`) in `src/lib/newsletter/click-attribution.ts`,
+13 tests. They are reusable under any future data route. `extractStories`,
+`aggregateBySource` and the CLI script were NOT built.
+
+**Do not re-attempt Section A via Beehiiv without a plan upgrade.** The remaining
+routes, in rough order of cost:
+
+1. First-party outbound-click tracking on `/news` story links, using the EXISTING
+   `/api/events` + `UiEvent` pipeline (allowlisted event names, `role` filtering,
+   salted `ipHash`, already live for the audit funnel). Measures site visitors, not
+   email subscribers, and collects nothing historical.
+2. Upgrade the Beehiiv plan.
+
+**What issue-level data DID reveal** (readable free from the Posts list, captured
+in the SDD workspace at `beehiiv-issue-level.md`, 46 issues): open rate is stable
+at 30-42% while click rate swings 0% to 10.94%, and at the extremes the two are
+INVERTED (Jul 11: 42.04% open / 3.16% click; Jun 23: 33.33% open / 0.00% click).
+The best-opened issues are among the worst-clicked. That points at subject lines
+promising more than the stories deliver, which is a CONTENT problem rather than a
+sourcing one, and it is measurable from data already on hand. It is a better lead
+than the sourcing hunch that started this spec.
+
 ## Risks
 
-- **Beehiiv export shape is unverified.** The Section A design assumes the dashboard can produce per-link click counts in CSV form. If it cannot, Section A needs rework before any code is written. Confirm the export first.
+- **Beehiiv export shape is unverified.** The Section A design assumes the dashboard can produce per-link click counts in CSV form. If it cannot, Section A needs rework before any code is written. Confirm the export first. **CONFIRMED BLOCKED 2026-08-09: it is paid, as is the Clicks report.**
 - **Join rate may be too low to use.** Newsletter platforms commonly rewrite links for click tracking. If Beehiiv reports its own wrapped URLs rather than the destinations, normalisation will not be enough and the join needs a different key. Check a handful of rows by hand before building the full script.
 - **285 subscribers is a small base.** Even aggregated, the ranking may not separate mid-table sources. The script should report appearance counts alongside clicks so weak evidence is visible rather than hidden.
