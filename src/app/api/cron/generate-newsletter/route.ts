@@ -1424,6 +1424,11 @@ interface WeeklyNewsletterData {
 
 type NewsletterType = 'daily' | 'weekly';
 
+// Hard ceiling on weekly story count. The prompt asks for exactly this many;
+// this constant is what actually enforces it at render time. Raising it means
+// raising the prompt too, or the model will keep returning this number.
+const WEEKLY_MAX_ITEMS = 5;
+
 // Get items from daily newsletters for weekly compilation
 async function getDailyNewsletterItems(days = 7): Promise<NewsletterItem[]> {
   const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -1466,7 +1471,7 @@ WRITING STYLE:
 - Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
 - Be specific and concrete, not vague or hyperbolic
 
-I have collected items from this week's daily newsletters. Your job is to curate the BEST 5-8 items and create a comprehensive weekly roundup.
+I have collected items from this week's daily newsletters. Your job is to curate the BEST 5 items and create a tight weekly roundup.
 
 ITEMS FROM THIS WEEK'S DAILY NEWSLETTERS:
 ${JSON.stringify(dailyItems, null, 2)}
@@ -1475,7 +1480,7 @@ AVAILABLE PATTERNS (for reference):
 ${patternList}
 
 YOUR TASK:
-1. Select the 5-8 most design-significant items from the daily newsletters.
+1. Select the 5 most design-significant items from the daily newsletters. Exactly 5, not more.
 
    AUDIENCE FILTER (strict):
    - If a daily item turned out to be a pure infrastructure / deployment / devops story (regardless of how it was framed in the daily Designer's Takeaway), DROP IT from the weekly. The weekly is the chance to re-curate, not to compound prior bias. A leaner roundup of 5 design-relevant items beats 8 mixed ones.
@@ -1498,8 +1503,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name",
       "date": "Dec 21",
       "headline": "Short headline",
-      "description": "Description from daily newsletter (keep or enhance)",
-      "designerTakeaway": "Actionable insight for designers",
+      "description": "Max 40 words. Tighten the daily description down; do not expand it.",
+      "designerTakeaway": "ONE sentence, max 25 words. What a designer should DO differently.",
       "sourceUrl": "Original URL",
       "patternSlug": "pattern-slug"
     }
@@ -1580,8 +1585,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name (e.g., ChatGPT, Claude, Gemini)",
       "date": "Dec 21",
       "headline": "Short headline describing the update",
-      "description": "2-3 sentences explaining what happened",
-      "designerTakeaway": "Actionable insight for designers - what can they learn or apply from this?",
+      "description": "Max 40 words. What happened, concretely. No preamble.",
+      "designerTakeaway": "ONE sentence, max 25 words. What a designer should DO differently.",
       "sourceUrl": "URL from the news item",
       "patternSlug": "pattern-slug-from-list"
     }
@@ -1618,7 +1623,7 @@ AVAILABLE PATTERNS (use these slugs for pattern matching):
 ${patternList}
 
 YOUR TASK:
-1. Select the 5-8 most design-significant items from this week's news.
+1. Select the 5 most design-significant items from this week's news. Exactly 5, not more.
 
    AUDIENCE FILTER (strict — overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not bolt design relevance onto a dev story with a strained Designer's Takeaway. A leaner roundup of 5 strong design stories beats 8 mixed ones.
@@ -1653,8 +1658,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name (e.g., ChatGPT, Claude, Gemini, Cursor)",
       "date": "Dec 21",
       "headline": "Short headline describing the update",
-      "description": "2-3 sentences explaining what happened",
-      "designerTakeaway": "Actionable insight for designers - what can they learn or apply from this?",
+      "description": "Max 40 words. What happened, concretely. No preamble.",
+      "designerTakeaway": "ONE sentence, max 25 words. What a designer should DO differently.",
       "sourceUrl": "URL from the news item",
       "patternSlug": "pattern-slug-from-list"
     }
@@ -2409,6 +2414,18 @@ async function runGeneration(
 
   if (type === 'weekly') {
     const weeklyData = parsedData as WeeklyNewsletterData;
+    // Render-level guarantee, same class as enforceLeadPosition above. The
+    // prompt says "Exactly 5, not more", but EVERY prompt-only selection rule
+    // in this route's history has eventually been ignored by the model (the
+    // 3-Figma incident, the product-news floor, the soft practitioner voice).
+    // Cap BEFORE generateWeeklyHTML so the email HTML and the stored
+    // structuredData that /news renders can never disagree.
+    if (weeklyData.items.length > WEEKLY_MAX_ITEMS) {
+      console.log(
+        `[newsletter] Weekly: capping ${weeklyData.items.length} selected items to ${WEEKLY_MAX_ITEMS}`
+      );
+      weeklyData.items = weeklyData.items.slice(0, WEEKLY_MAX_ITEMS);
+    }
     htmlContent = generateWeeklyHTML(weeklyData);
     title = weeklyData.title;
     summary = weeklyData.summary;
