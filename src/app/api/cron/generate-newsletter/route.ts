@@ -1722,6 +1722,40 @@ function renderSectionHeader(kicker: string, title: string): string {
 <h2 style="margin: 0 0 40px; font-size: 26px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.4px; line-height: 1.25;">${ICON_NEWSPAPER}${title}</h2>`.trim();
 }
 
+// Strip the SOURCE FEED's utm_* params off an outbound link before it reaches a
+// reader. Curated items keep whatever the feed attached — measured 2026-08-10 on
+// a beehiiv Link Clicks export: 16% of clicks carried `utm_source=tldrdesign`
+// and 4% `utm_source=rss`, inherited from the feeds we scraped them out of.
+//
+// The cost is not cosmetic. beehiiv auto-appends its own
+// `utm_source=beehiiv&utm_medium=newsletter&utm_campaign=<issue-slug>` ONLY to
+// links that arrive untagged; a link that already carries a utm_source is left
+// alone. So a passed-through feed UTM SUPPRESSES beehiiv's campaign tagging
+// entirely. Those 20% of clicks reached the destination with no utm_campaign at
+// all, unattributable to an issue in our analytics or the publisher's, while
+// TLDR Design took the referral credit for traffic we sent.
+//
+// Deliberately NOT `normaliseUrl` from src/lib/newsletter/click-attribution.ts.
+// That function is a JOIN KEY builder: it also lowercases the host, drops the
+// trailing slash, and strips `ref`/`source`, which are safe when comparing two
+// URLs but not when handing one to a reader (`source` and `ref` are meaningful
+// query params on some sites, and a trailing slash is significant to some
+// servers). This strips utm_* and nothing else.
+//
+// Fails open: an unparseable href is returned untouched rather than dropped, so
+// a malformed URL still renders as a (broken) link instead of vanishing.
+function stripFeedUtm(url: string): string {
+  try {
+    const parsed = new URL(url);
+    for (const key of Array.from(parsed.searchParams.keys())) {
+      if (key.toLowerCase().startsWith('utm_')) parsed.searchParams.delete(key);
+    }
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
   const separator = isLast
     ? ''
@@ -1748,7 +1782,7 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
   </tr></table>
   <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${item.headline}</h3>
   <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${item.description}</p>
-  <p style="margin: 0 0 24px;"><a href="${item.sourceUrl}" target="_blank" rel="noopener" style="display: inline-block; font-size: 13px; color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read the source →</a></p>
+  <p style="margin: 0 0 24px;"><a href="${stripFeedUtm(item.sourceUrl)}" target="_blank" rel="noopener" style="display: inline-block; font-size: 13px; color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read the source →</a></p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 24px;">
     <tr>
       <td valign="top" style="width: 32px; padding: 0; font-size: 40px; line-height: 1; color: ${EMAIL_INK}; font-weight: 700; font-family: Georgia, 'Times New Roman', serif;">&ldquo;</td>
@@ -1798,8 +1832,25 @@ function renderCallout(opts: {
 </div>`.trim();
 }
 
+// Points at `/audit`, NOT `/`. The reader has already expressed intent by
+// clicking a button that says "Audit your design" — `/audit` renders
+// AuditClient with initialStep="screenshot" and drops them straight into
+// upload, while `/` opens on the marketing demo step. Every other
+// intent-expressing entry point (homepage CTA, both pattern-page
+// InlineAuditCTA placements) was migrated to `/audit` when it was added; the
+// newsletter was the one that was missed and kept sending readers through the
+// demo, which Clarity measured at an ~80% drop to audit-start (Jun 2026).
+//
+// Measured cost of the miss: this CTA is the single most-clicked link in the
+// newsletter (12 verified clicks / 90 days, beehiiv Posts Click Dashboard
+// 2026-08-10) and the only monetized destination we link to at all.
+//
+// Second, quieter reason to keep it off `/`: `/audit` is noindex, so it takes
+// no organic search traffic. Newsletter-sourced audit starts are therefore
+// cleanly attributable there, where on `/` they are mixed in with the organic
+// traffic that page earns for "AI UX audit tool".
 function auditUrl(campaign: string): string {
-  return `${SITE_URL}/?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
+  return `${SITE_URL}/audit?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
 }
 
 // Unified sign-off. Absorbs what used to be a separate renderAnnouncementBanner
