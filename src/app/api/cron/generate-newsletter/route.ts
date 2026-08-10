@@ -371,26 +371,28 @@ function getProductIconImg(productName: string): string {
 // the absolute values.
 const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
   // Research/news/case studies (NN/g, Smashing, A List Apart, TLDR Design).
-  // History: 50 → 30 (Apr 28) → 25 (May 7), both cuts made so concrete product
-  // news would outrank design-pub keyword stacking. Restored to 35 (parity with
-  // ai-lab and design-tool) on 2026-08-10 after the first click-level read of
-  // the newsletter measured what each tier actually earns per story:
+  // 50 → 30 (Apr 28) → 25 (May 7), both cuts so product news would outrank
+  // design-pub keyword stacking. STAYS AT 25. It was raised to 35 on 2026-08-10
+  // and reverted the same day; the reasoning was wrong twice over and the
+  // numbers are kept here so nobody re-derives it:
   //
-  //     design-tool 1.33 (n=6)   design-pub 0.95 (n=19)
-  //     ai-lab      0.58 (n=12)  tech-news  0.18 (n=11)
+  // (1) design-pub was never being crowded out. Measured across 22 published
+  //     dailies (2026-07-05 → 08-09): design-pub is 33% of all stories, appears
+  //     in 82% of issues, averaging 1.41 per ~4.2-story issue. The low baseline
+  //     is a COUNTERWEIGHT to its keyword-stacking advantage, not suppression —
+  //     it gets picked on relevance regardless. Raising it over-corrects back
+  //     into the exact problem the Apr/May cuts were made to fix.
   //
-  // design-pub is the second-best performing tier and was scored second from
-  // bottom; ai-lab sat 10 points above it while earning ~40% fewer clicks. The
-  // two cuts were aimed at a real problem (keyword stacking inflating design-pub
-  // scores) but the instrument was blunt — it demoted the CONTENT to fix a
-  // SCORING artifact. If issues start reading like keyword bait, revert this
-  // line first rather than re-tuning anything else.
+  // (2) Source mix cannot move clicks anyway. Measured 82 clicks across 93
+  //     stories (0.88/story, 3.7 per issue). If EVERY story were design-pub at
+  //     its measured 0.95/story that is 88 clicks, 4.0 per issue, +8%. The
+  //     ceiling is set by list size and open rate (205 delivered, ~73 opened,
+  //     ~1.3% of openers click any given story), not by tier weighting.
   //
-  // Expect NO measurable click signal from this: at ~4 clicks/issue a real
-  // improvement is worth about +1 click, invisible against noise for months.
-  // What IS checkable within ~5 issues is the source mix — whether NN/g and
-  // Smashing items actually appear more often.
-  'design-pub': 35,
+  // Do not re-tune this to chase engagement. The lever is subscriber count, or
+  // accepting that this newsletter's value is not measured in story clicks. The
+  // audit CTA in renderFooterCTA is where the funnel actually lives.
+  'design-pub': 25,
   'design-tool': 35,       // first-party design product news — at parity with ai-lab (May 17) after expanding from 1 → 5 sources to avoid same-day mix swing
   'ai-lab': 35,            // concrete AI product launches — bumped 30→35 (May 7) to compete with design-pub keyword density
   'design-opinion': 28,    // think-pieces — useful but capped to 1-2 per issue via prompt
