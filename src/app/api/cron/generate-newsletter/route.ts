@@ -1507,13 +1507,13 @@ RESPOND IN THIS EXACT JSON FORMAT:
   "stealThisWeek": {
     "product": "Product with the standout feature",
     "feature": "Feature name",
-    "insight": "2-3 sentences on why this matters and is worth copying"
+    "insight": "ONE sentence, max 25 words. What to copy and why. No preamble."
   },
   "patternToKnow": {
     "patternSlug": "pattern-slug",
     "title": "Why [Pattern Name] dominated this week",
-    "explanation": "2-3 sentences on why this pattern appeared multiple times",
-    "whenToUse": "When to apply this pattern"
+    "explanation": "ONE sentence, max 25 words on why this pattern kept showing up.",
+    "whenToUse": "A short fragment, max 12 words. Do not start with the word When; it follows the label Use it when."
   },
   "weeklyTakeaway": "One sentence theme tying everything together"
 }`;
@@ -1662,13 +1662,13 @@ RESPOND IN THIS EXACT JSON FORMAT:
   "stealThisWeek": {
     "product": "Product name with the standout feature",
     "feature": "Name of the feature to steal",
-    "insight": "2-3 sentences on why this matters for UX and what makes it worth copying"
+    "insight": "ONE sentence, max 25 words. What to copy and why. No preamble."
   },
   "patternToKnow": {
     "patternSlug": "pattern-slug-from-list",
     "title": "Why [Pattern Name] dominated this week",
-    "explanation": "2-3 sentences explaining why this pattern appeared multiple times",
-    "whenToUse": "When designers should apply this pattern in their own products"
+    "explanation": "ONE sentence, max 25 words on why this pattern kept showing up.",
+    "whenToUse": "A short fragment, max 12 words. Do not start with the word When; it follows the label Use it when."
   },
   "weeklyTakeaway": "One sentence theme that ties everything together this week"
 }`;
@@ -1757,25 +1757,39 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
 </div>${separator}`.trim();
 }
 
-function renderDarkCallout(opts: {
+// Two callouts used to render as identical dark blocks stacked back to back
+// ("Steal this week" then "Pattern deep-dive"), which read as one long slab and
+// gave the reader no hierarchy. `variant` differentiates them: 'light' is a
+// hairline-bordered card on white, 'dark' stays the navy anchor. Only ONE dark
+// block per issue — it marks the block that carries the CTA.
+function renderCallout(opts: {
   kicker: string;
   title: string;
   body: string;
   subBody?: string;
   cta?: { label: string; href: string };
+  variant?: 'dark' | 'light';
 }): string {
+  const isLight = opts.variant === 'light';
+  const canvas = isLight ? '#ffffff' : DARK_CANVAS;
+  const border = isLight ? `border: 1px solid ${EMAIL_HAIRLINE};` : '';
+  const kickerColor = isLight ? EMAIL_SUBTLE : 'rgba(255, 255, 255, 0.6)';
+  const titleColor = isLight ? EMAIL_INK : DARK_STRONG;
+  const bodyColor = isLight ? EMAIL_TEXT : DARK_TEXT;
+  const linkColor = isLight ? EMAIL_INK : DARK_LINK;
+
   const subBodyHTML = opts.subBody
-    ? `\n  <p style="margin: 16px 0 0; font-size: 16px; line-height: 1.7; color: ${DARK_TEXT};"><strong style="color: ${DARK_STRONG};">When to use it:</strong> ${opts.subBody}</p>`
+    ? `\n  <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.6; color: ${bodyColor};"><strong style="color: ${titleColor};">Use it when:</strong> ${opts.subBody}</p>`
     : '';
   const ctaHTML = opts.cta
-    ? `\n  <p style="margin: 20px 0 0;"><a href="${opts.cta.href}" target="_blank" rel="noopener" style="color: ${DARK_LINK}; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 500;">${opts.cta.label} →</a></p>`
+    ? `\n  <p style="margin: 20px 0 0;"><a href="${opts.cta.href}" target="_blank" rel="noopener" style="color: ${linkColor} !important; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 500; font-style: normal !important;"><span style="color: ${linkColor} !important; font-style: normal !important;">${opts.cta.label} →</span></a></p>`
     : '';
 
   return `
-<div style="background-color: ${DARK_CANVAS}; padding: 32px; border-radius: 16px; margin: 0 0 32px;">
-  <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, 0.6); letter-spacing: 2px; text-transform: uppercase;">${opts.kicker}</p>
-  <h2 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: ${DARK_STRONG}; letter-spacing: -0.3px; line-height: 1.3;">${opts.title}</h2>
-  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: ${DARK_TEXT};">${opts.body}</p>${subBodyHTML}${ctaHTML}
+<div style="background-color: ${canvas}; ${border} padding: 32px; border-radius: 16px; margin: 0 0 24px;">
+  <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: ${kickerColor}; letter-spacing: 2px; text-transform: uppercase;">${opts.kicker}</p>
+  <h2 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${titleColor}; letter-spacing: -0.3px; line-height: 1.3;">${opts.title}</h2>
+  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: ${bodyColor};">${opts.body}</p>${subBodyHTML}${ctaHTML}
 </div>`.trim();
 }
 
@@ -1783,32 +1797,33 @@ function auditUrl(campaign: string): string {
   return `${SITE_URL}/?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
 }
 
-function renderFooterCTA(type: NewsletterType): string {
-  const wordmark = type === 'weekly' ? 'AI UX WEEKLY' : 'AI UX DAILY';
+// Unified sign-off. Absorbs what used to be a separate renderAnnouncementBanner
+// block so the email has ONE ending instead of two stacked closing blocks
+// (the old order was callout → grey CTA box → footer → beehiiv footer, which
+// gave the reader four "this is ending" signals in a row).
+//
+// The identity block (wordmark / "Curated by Imran" / "Read past issues" /
+// permission line) was REMOVED 2026-08-10: it repeated what beehiiv's own
+// appended footer already says, and it pushed a second ending below the CTA.
+// beehiiv's footer supplies the unsubscribe link and physical postal address,
+// which is what CAN-SPAM actually requires — the "you're getting this because"
+// line was best-practice, not law, so dropping it is legally safe.
+//
+// The email now ends on the audit CTA. Set NEWSLETTER_ANNOUNCEMENT=off to drop
+// the CTA, which leaves beehiiv's footer as the only ending.
+function renderFooterCTA(_type: NewsletterType, campaign: string): string {
+  if (process.env.NEWSLETTER_ANNOUNCEMENT === 'off') return '';
   return `
 <div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
-  <p style="margin: 0 0 6px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">${wordmark}</p>
-  <p style="margin: 0 0 10px; font-size: 14px; color: ${EMAIL_MUTED};">Curated by Imran at aiuxdesign.guide</p>
-  <p style="margin: 0; font-size: 13px;"><a href="${SITE_URL}/news" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read past issues →</a></p>
-</div>`.trim();
-}
-
-// Announcement banner — single-CTA block promoting the audit. Toggle by
-// setting NEWSLETTER_ANNOUNCEMENT=off in env to disable, or remove the call
-// site in generateHTML/generateWeeklyHTML when this campaign ends. Campaign
-// string is parameterized so daily vs weekly attribution can be compared.
-function renderAnnouncementBanner(campaign: string): string {
-  if (process.env.NEWSLETTER_ANNOUNCEMENT === 'off') return '';
-  const GRAIN_BG = '#F0F1F5';
-  return `
-<div style="background-color: ${GRAIN_BG}; padding: 28px; border-radius: 20px; margin: 0 0 40px;">
-  <div style="background-color: #ffffff; padding: 32px; border-radius: 14px; border: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
-    <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
-    <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against ${PATTERN_COUNT} patterns</h2>
-    <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
-    <a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;">Audit your design →</a>
-  </div>
-</div>`.trim();
+  <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
+  <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against ${PATTERN_COUNT} patterns</h2>
+  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
+  <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Audit your design →</span></a></p>
+</div>
+<!-- POLL SLOT: beehiiv will not let you insert a block INTO pasted HTML, so the
+     poll block lands here, after everything. Question: "Was this issue worth your
+     time?" with the optional comment box enabled. Read results back via
+     GET /v2/publications/{pubId}/polls?expand[]=stats&expand[]=poll_responses -->`.trim();
 }
 
 function wrapEmailShell(inner: string): string {
@@ -1822,7 +1837,7 @@ function generateHTML(data: NewsletterData): string {
     .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
     .join('\n\n');
 
-  const takeaway = renderDarkCallout({
+  const takeaway = renderCallout({
     kicker: "Today's Idea",
     title: data.takeaway.title,
     body: data.takeaway.body,
@@ -1844,9 +1859,7 @@ ${items}
 
 ${takeaway}
 
-${renderAnnouncementBanner('daily-banner')}
-
-${renderFooterCTA('daily')}
+${renderFooterCTA('daily', 'daily-banner')}
   `.trim();
 
   return wrapEmailShell(body);
@@ -1857,19 +1870,23 @@ function generateWeeklyHTML(data: WeeklyNewsletterData): string {
     .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
     .join('\n\n');
 
-  const stealThis = renderDarkCallout({
+  const stealThis = renderCallout({
     kicker: 'Steal this week',
     title: `${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}`,
     body: data.stealThisWeek.insight,
+    variant: 'light',
   });
 
-  const patternToKnow = renderDarkCallout({
+  // Stays dark: it's the one block carrying a CTA, so it should be the anchor.
+  // CTA label was `Deep dive on ${title}` which restated the heading directly
+  // above it word for word.
+  const patternToKnow = renderCallout({
     kicker: 'Pattern deep-dive',
     title: getPatternTitle(data.patternToKnow.patternSlug),
     body: data.patternToKnow.explanation,
     subBody: data.patternToKnow.whenToUse,
     cta: {
-      label: `Deep dive on ${getPatternTitle(data.patternToKnow.patternSlug)}`,
+      label: 'See the pattern',
       href: `${SITE_URL}/patterns/${data.patternToKnow.patternSlug}`,
     },
   });
@@ -1893,9 +1910,7 @@ ${stealThis}
 
 ${patternToKnow}
 
-${renderAnnouncementBanner('weekly-banner')}
-
-${renderFooterCTA('weekly')}
+${renderFooterCTA('weekly', 'weekly-banner')}
   `.trim();
 
   return wrapEmailShell(body);
