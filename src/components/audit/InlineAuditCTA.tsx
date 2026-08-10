@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { BeakerIcon } from '@heroicons/react/24/outline';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { AUDIT_PATH } from '@/lib/audit/constants';
 
 interface InlineAuditCTAProps {
   variant: 'hero' | 'pattern-detail' | 'sidebar';
@@ -13,7 +14,9 @@ interface InlineAuditCTAProps {
 // Links to `/audit`, not `/`. The copy promises "check if your product has this
 // pattern"; sending that intent to the marketing homepage made the reader find
 // and click a second CTA to reach the upload screen they had already asked for.
-const AUDIT_HREF = '/audit';
+// Imported, not hardcoded: see the note on AUDIT_PATH for the drift this caused
+// the last time this string lived in more than one place.
+const AUDIT_HREF = AUDIT_PATH;
 
 export function InlineAuditCTA({ variant }: InlineAuditCTAProps) {
   // Slug read from the URL rather than passed down as a prop. Threading it from

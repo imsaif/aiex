@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend';
 import { patterns } from '@/data/patterns';
 import { PATTERN_COUNT } from '@/data/pattern-count';
+import { AUDIT_PATH } from '@/lib/audit/constants';
 
 // Initialize clients
 const anthropic = new Anthropic({
@@ -1850,7 +1851,7 @@ function renderCallout(opts: {
 // cleanly attributable there, where on `/` they are mixed in with the organic
 // traffic that page earns for "AI UX audit tool".
 function auditUrl(campaign: string): string {
-  return `${SITE_URL}/audit?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
+  return `${SITE_URL}${AUDIT_PATH}?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
 }
 
 // Unified sign-off. Absorbs what used to be a separate renderAnnouncementBanner
