@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { Resend } from 'resend';
 import { patterns } from '@/data/patterns';
 import { PATTERN_COUNT } from '@/data/pattern-count';
+import { AUDIT_PATH } from '@/lib/audit/constants';
 
 // Initialize clients
 const anthropic = new Anthropic({
@@ -369,7 +370,27 @@ function getProductIconImg(productName: string): string {
 // out lower ones for a given keyword profile, so the gaps matter as much as
 // the absolute values.
 const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
-  'design-pub': 25,        // research/news/case studies — narrowed 50→30 (Apr 28) and 30→25 (May 7) so concrete product news outranks design-pub keyword stacking
+  // Research/news/case studies (NN/g, Smashing, A List Apart, TLDR Design).
+  // History: 50 → 30 (Apr 28) → 25 (May 7), both cuts made so concrete product
+  // news would outrank design-pub keyword stacking. Restored to 35 (parity with
+  // ai-lab and design-tool) on 2026-08-10 after the first click-level read of
+  // the newsletter measured what each tier actually earns per story:
+  //
+  //     design-tool 1.33 (n=6)   design-pub 0.95 (n=19)
+  //     ai-lab      0.58 (n=12)  tech-news  0.18 (n=11)
+  //
+  // design-pub is the second-best performing tier and was scored second from
+  // bottom; ai-lab sat 10 points above it while earning ~40% fewer clicks. The
+  // two cuts were aimed at a real problem (keyword stacking inflating design-pub
+  // scores) but the instrument was blunt — it demoted the CONTENT to fix a
+  // SCORING artifact. If issues start reading like keyword bait, revert this
+  // line first rather than re-tuning anything else.
+  //
+  // Expect NO measurable click signal from this: at ~4 clicks/issue a real
+  // improvement is worth about +1 click, invisible against noise for months.
+  // What IS checkable within ~5 issues is the source mix — whether NN/g and
+  // Smashing items actually appear more often.
+  'design-pub': 35,
   'design-tool': 35,       // first-party design product news — at parity with ai-lab (May 17) after expanding from 1 → 5 sources to avoid same-day mix swing
   'ai-lab': 35,            // concrete AI product launches — bumped 30→35 (May 7) to compete with design-pub keyword density
   'design-opinion': 28,    // think-pieces — useful but capped to 1-2 per issue via prompt
@@ -1424,6 +1445,11 @@ interface WeeklyNewsletterData {
 
 type NewsletterType = 'daily' | 'weekly';
 
+// Hard ceiling on weekly story count. The prompt asks for exactly this many;
+// this constant is what actually enforces it at render time. Raising it means
+// raising the prompt too, or the model will keep returning this number.
+const WEEKLY_MAX_ITEMS = 5;
+
 // Get items from daily newsletters for weekly compilation
 async function getDailyNewsletterItems(days = 7): Promise<NewsletterItem[]> {
   const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -1466,7 +1492,7 @@ WRITING STYLE:
 - Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
 - Be specific and concrete, not vague or hyperbolic
 
-I have collected items from this week's daily newsletters. Your job is to curate the BEST 5-8 items and create a comprehensive weekly roundup.
+I have collected items from this week's daily newsletters. Your job is to curate the BEST 5 items and create a tight weekly roundup.
 
 ITEMS FROM THIS WEEK'S DAILY NEWSLETTERS:
 ${JSON.stringify(dailyItems, null, 2)}
@@ -1475,7 +1501,7 @@ AVAILABLE PATTERNS (for reference):
 ${patternList}
 
 YOUR TASK:
-1. Select the 5-8 most design-significant items from the daily newsletters.
+1. Select the 5 most design-significant items from the daily newsletters. Exactly 5, not more.
 
    AUDIENCE FILTER (strict):
    - If a daily item turned out to be a pure infrastructure / deployment / devops story (regardless of how it was framed in the daily Designer's Takeaway), DROP IT from the weekly. The weekly is the chance to re-curate, not to compound prior bias. A leaner roundup of 5 design-relevant items beats 8 mixed ones.
@@ -1498,8 +1524,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name",
       "date": "Dec 21",
       "headline": "Short headline",
-      "description": "Description from daily newsletter (keep or enhance)",
-      "designerTakeaway": "Actionable insight for designers",
+      "description": "Max 40 words. Tighten the daily description down; do not expand it.",
+      "designerTakeaway": "ONE sentence, max 25 words. What a designer should DO differently.",
       "sourceUrl": "Original URL",
       "patternSlug": "pattern-slug"
     }
@@ -1507,13 +1533,13 @@ RESPOND IN THIS EXACT JSON FORMAT:
   "stealThisWeek": {
     "product": "Product with the standout feature",
     "feature": "Feature name",
-    "insight": "2-3 sentences on why this matters and is worth copying"
+    "insight": "ONE sentence, max 25 words. What to copy and why. No preamble."
   },
   "patternToKnow": {
     "patternSlug": "pattern-slug",
     "title": "Why [Pattern Name] dominated this week",
-    "explanation": "2-3 sentences on why this pattern appeared multiple times",
-    "whenToUse": "When to apply this pattern"
+    "explanation": "ONE sentence, max 25 words on why this pattern kept showing up.",
+    "whenToUse": "A short fragment, max 12 words. Do not start with the word When; it follows the label Use it when."
   },
   "weeklyTakeaway": "One sentence theme tying everything together"
 }`;
@@ -1551,7 +1577,11 @@ YOUR TASK:
    AUDIENCE FILTER (strict — this overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not write a strained Designer's Takeaway to bolt design relevance onto a dev story. Returning 3 strong design-relevant items is better than 5 mixed items.
    - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), Lenny's Newsletter (lennysnewsletter.com), and medium.com are opinion. Count these opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com) in your final selection — this count MUST be 0. If you have any candidates from these domains, drop them.
-   - PRACTITIONER VOICES (OPTIONAL — quality-gated, never required): The pool may include named practitioners and analysts we curate (e.g. Latent Space, Julie Zhuo, Emily Campbell, AI/UX Playground, Design Systems Collective, Jakob Nielsen). Include AT MOST ONE such voice, and ONLY if it is genuinely standout for designers — a sharp, specific take on AI's impact on design work (agentic UX, AI workflows, AI skills for designers, interface patterns, the design-engineer shift), not a generic think-piece. Concrete product/research news must LEAD and fill the issue; a practitioner voice is a garnish, not a staple. Including ZERO practitioner voices is completely fine and often correct on a day with strong product news. NEVER include more than one, and never pad the issue with a voice just to have one.
+   - PRACTITIONER VOICES (OPTIONAL — quality-gated, never required): The pool may include named practitioners and analysts we curate (e.g. Latent Space, Julie Zhuo, Emily Campbell, AI/UX Playground, Design Systems Collective, Jakob Nielsen). Include AT MOST ONE such voice, and ONLY if it is genuinely standout for designers — a sharp, specific take on AI's impact on design work (agentic UX, AI workflows, AI skills for designers, interface patterns, the design-engineer shift), not a generic think-piece. Concrete product/research news should still make up the bulk of the issue, and a practitioner voice is never required. Including ZERO practitioner voices is completely fine. NEVER include more than one, and never pad the issue with a voice just to have one.
+
+   WHAT EARNS A CLICK (apply when choosing between similarly relevant items):
+   - Prefer an item a designer could ACT ON this week over an item that only tells them something happened. A story whose headline already contains the entire point ("X raised $7.9M", "agents use 600x more energy", "iOS 27 adds generative wallpapers") gives a reader no reason to open the source. A story that promises something withheld — a named framework, a numbered list, a method, a measured result, a fix for a problem they recognise — does.
+   - This is measured, not a hunch: across 93 stories, items from design-research publications and design tools earned roughly 1.0-1.3 clicks each, while general industry news earned 0.18.
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
@@ -1580,8 +1610,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name (e.g., ChatGPT, Claude, Gemini)",
       "date": "Dec 21",
       "headline": "Short headline describing the update",
-      "description": "2-3 sentences explaining what happened",
-      "designerTakeaway": "Actionable insight for designers - what can they learn or apply from this?",
+      "description": "Max 40 words. What happened, concretely. No preamble.",
+      "designerTakeaway": "ONE sentence, max 25 words. What a designer should DO differently.",
       "sourceUrl": "URL from the news item",
       "patternSlug": "pattern-slug-from-list"
     }
@@ -1618,7 +1648,7 @@ AVAILABLE PATTERNS (use these slugs for pattern matching):
 ${patternList}
 
 YOUR TASK:
-1. Select the 5-8 most design-significant items from this week's news.
+1. Select the 5 most design-significant items from this week's news. Exactly 5, not more.
 
    AUDIENCE FILTER (strict — overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not bolt design relevance onto a dev story with a strained Designer's Takeaway. A leaner roundup of 5 strong design stories beats 8 mixed ones.
@@ -1653,8 +1683,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "product": "Product Name (e.g., ChatGPT, Claude, Gemini, Cursor)",
       "date": "Dec 21",
       "headline": "Short headline describing the update",
-      "description": "2-3 sentences explaining what happened",
-      "designerTakeaway": "Actionable insight for designers - what can they learn or apply from this?",
+      "description": "Max 40 words. What happened, concretely. No preamble.",
+      "designerTakeaway": "ONE sentence, max 25 words. What a designer should DO differently.",
       "sourceUrl": "URL from the news item",
       "patternSlug": "pattern-slug-from-list"
     }
@@ -1662,13 +1692,13 @@ RESPOND IN THIS EXACT JSON FORMAT:
   "stealThisWeek": {
     "product": "Product name with the standout feature",
     "feature": "Name of the feature to steal",
-    "insight": "2-3 sentences on why this matters for UX and what makes it worth copying"
+    "insight": "ONE sentence, max 25 words. What to copy and why. No preamble."
   },
   "patternToKnow": {
     "patternSlug": "pattern-slug-from-list",
     "title": "Why [Pattern Name] dominated this week",
-    "explanation": "2-3 sentences explaining why this pattern appeared multiple times",
-    "whenToUse": "When designers should apply this pattern in their own products"
+    "explanation": "ONE sentence, max 25 words on why this pattern kept showing up.",
+    "whenToUse": "A short fragment, max 12 words. Do not start with the word When; it follows the label Use it when."
   },
   "weeklyTakeaway": "One sentence theme that ties everything together this week"
 }`;
@@ -1717,6 +1747,40 @@ function renderSectionHeader(kicker: string, title: string): string {
 <h2 style="margin: 0 0 40px; font-size: 26px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.4px; line-height: 1.25;">${ICON_NEWSPAPER}${title}</h2>`.trim();
 }
 
+// Strip the SOURCE FEED's utm_* params off an outbound link before it reaches a
+// reader. Curated items keep whatever the feed attached — measured 2026-08-10 on
+// a beehiiv Link Clicks export: 16% of clicks carried `utm_source=tldrdesign`
+// and 4% `utm_source=rss`, inherited from the feeds we scraped them out of.
+//
+// The cost is not cosmetic. beehiiv auto-appends its own
+// `utm_source=beehiiv&utm_medium=newsletter&utm_campaign=<issue-slug>` ONLY to
+// links that arrive untagged; a link that already carries a utm_source is left
+// alone. So a passed-through feed UTM SUPPRESSES beehiiv's campaign tagging
+// entirely. Those 20% of clicks reached the destination with no utm_campaign at
+// all, unattributable to an issue in our analytics or the publisher's, while
+// TLDR Design took the referral credit for traffic we sent.
+//
+// Deliberately NOT `normaliseUrl` from src/lib/newsletter/click-attribution.ts.
+// That function is a JOIN KEY builder: it also lowercases the host, drops the
+// trailing slash, and strips `ref`/`source`, which are safe when comparing two
+// URLs but not when handing one to a reader (`source` and `ref` are meaningful
+// query params on some sites, and a trailing slash is significant to some
+// servers). This strips utm_* and nothing else.
+//
+// Fails open: an unparseable href is returned untouched rather than dropped, so
+// a malformed URL still renders as a (broken) link instead of vanishing.
+function stripFeedUtm(url: string): string {
+  try {
+    const parsed = new URL(url);
+    for (const key of Array.from(parsed.searchParams.keys())) {
+      if (key.toLowerCase().startsWith('utm_')) parsed.searchParams.delete(key);
+    }
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+}
+
 function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
   const separator = isLast
     ? ''
@@ -1743,7 +1807,7 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
   </tr></table>
   <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${item.headline}</h3>
   <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${item.description}</p>
-  <p style="margin: 0 0 24px;"><a href="${item.sourceUrl}" target="_blank" rel="noopener" style="display: inline-block; font-size: 13px; color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read the source →</a></p>
+  <p style="margin: 0 0 24px;"><a href="${stripFeedUtm(item.sourceUrl)}" target="_blank" rel="noopener" style="display: inline-block; font-size: 13px; color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read the source →</a></p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 24px;">
     <tr>
       <td valign="top" style="width: 32px; padding: 0; font-size: 40px; line-height: 1; color: ${EMAIL_INK}; font-weight: 700; font-family: Georgia, 'Times New Roman', serif;">&ldquo;</td>
@@ -1757,58 +1821,90 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
 </div>${separator}`.trim();
 }
 
-function renderDarkCallout(opts: {
+// Two callouts used to render as identical dark blocks stacked back to back
+// ("Steal this week" then "Pattern deep-dive"), which read as one long slab and
+// gave the reader no hierarchy. `variant` differentiates them: 'light' is a
+// hairline-bordered card on white, 'dark' stays the navy anchor. Only ONE dark
+// block per issue — it marks the block that carries the CTA.
+function renderCallout(opts: {
   kicker: string;
   title: string;
   body: string;
   subBody?: string;
   cta?: { label: string; href: string };
+  variant?: 'dark' | 'light';
 }): string {
+  const isLight = opts.variant === 'light';
+  const canvas = isLight ? '#ffffff' : DARK_CANVAS;
+  const border = isLight ? `border: 1px solid ${EMAIL_HAIRLINE};` : '';
+  const kickerColor = isLight ? EMAIL_SUBTLE : 'rgba(255, 255, 255, 0.6)';
+  const titleColor = isLight ? EMAIL_INK : DARK_STRONG;
+  const bodyColor = isLight ? EMAIL_TEXT : DARK_TEXT;
+  const linkColor = isLight ? EMAIL_INK : DARK_LINK;
+
   const subBodyHTML = opts.subBody
-    ? `\n  <p style="margin: 16px 0 0; font-size: 16px; line-height: 1.7; color: ${DARK_TEXT};"><strong style="color: ${DARK_STRONG};">When to use it:</strong> ${opts.subBody}</p>`
+    ? `\n  <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.6; color: ${bodyColor};"><strong style="color: ${titleColor};">Use it when:</strong> ${opts.subBody}</p>`
     : '';
   const ctaHTML = opts.cta
-    ? `\n  <p style="margin: 20px 0 0;"><a href="${opts.cta.href}" target="_blank" rel="noopener" style="color: ${DARK_LINK}; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 500;">${opts.cta.label} →</a></p>`
+    ? `\n  <p style="margin: 20px 0 0;"><a href="${opts.cta.href}" target="_blank" rel="noopener" style="color: ${linkColor} !important; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 500; font-style: normal !important;"><span style="color: ${linkColor} !important; font-style: normal !important;">${opts.cta.label} →</span></a></p>`
     : '';
 
   return `
-<div style="background-color: ${DARK_CANVAS}; padding: 32px; border-radius: 16px; margin: 0 0 32px;">
-  <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, 0.6); letter-spacing: 2px; text-transform: uppercase;">${opts.kicker}</p>
-  <h2 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: ${DARK_STRONG}; letter-spacing: -0.3px; line-height: 1.3;">${opts.title}</h2>
-  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: ${DARK_TEXT};">${opts.body}</p>${subBodyHTML}${ctaHTML}
+<div style="background-color: ${canvas}; ${border} padding: 32px; border-radius: 16px; margin: 0 0 24px;">
+  <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: ${kickerColor}; letter-spacing: 2px; text-transform: uppercase;">${opts.kicker}</p>
+  <h2 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${titleColor}; letter-spacing: -0.3px; line-height: 1.3;">${opts.title}</h2>
+  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: ${bodyColor};">${opts.body}</p>${subBodyHTML}${ctaHTML}
 </div>`.trim();
 }
 
+// Points at `/audit`, NOT `/`. The reader has already expressed intent by
+// clicking a button that says "Audit your design" — `/audit` renders
+// AuditClient with initialStep="screenshot" and drops them straight into
+// upload, while `/` opens on the marketing demo step. Every other
+// intent-expressing entry point (homepage CTA, both pattern-page
+// InlineAuditCTA placements) was migrated to `/audit` when it was added; the
+// newsletter was the one that was missed and kept sending readers through the
+// demo, which Clarity measured at an ~80% drop to audit-start (Jun 2026).
+//
+// Measured cost of the miss: this CTA is the single most-clicked link in the
+// newsletter (12 verified clicks / 90 days, beehiiv Posts Click Dashboard
+// 2026-08-10) and the only monetized destination we link to at all.
+//
+// Second, quieter reason to keep it off `/`: `/audit` is noindex, so it takes
+// no organic search traffic. Newsletter-sourced audit starts are therefore
+// cleanly attributable there, where on `/` they are mixed in with the organic
+// traffic that page earns for "AI UX audit tool".
 function auditUrl(campaign: string): string {
-  return `${SITE_URL}/?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
+  return `${SITE_URL}${AUDIT_PATH}?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
 }
 
-function renderFooterCTA(type: NewsletterType): string {
-  const wordmark = type === 'weekly' ? 'AI UX WEEKLY' : 'AI UX DAILY';
+// Unified sign-off. Absorbs what used to be a separate renderAnnouncementBanner
+// block so the email has ONE ending instead of two stacked closing blocks
+// (the old order was callout → grey CTA box → footer → beehiiv footer, which
+// gave the reader four "this is ending" signals in a row).
+//
+// The identity block (wordmark / "Curated by Imran" / "Read past issues" /
+// permission line) was REMOVED 2026-08-10: it repeated what beehiiv's own
+// appended footer already says, and it pushed a second ending below the CTA.
+// beehiiv's footer supplies the unsubscribe link and physical postal address,
+// which is what CAN-SPAM actually requires — the "you're getting this because"
+// line was best-practice, not law, so dropping it is legally safe.
+//
+// The email now ends on the audit CTA. Set NEWSLETTER_ANNOUNCEMENT=off to drop
+// the CTA, which leaves beehiiv's footer as the only ending.
+function renderFooterCTA(_type: NewsletterType, campaign: string): string {
+  if (process.env.NEWSLETTER_ANNOUNCEMENT === 'off') return '';
   return `
 <div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
-  <p style="margin: 0 0 6px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">${wordmark}</p>
-  <p style="margin: 0 0 10px; font-size: 14px; color: ${EMAIL_MUTED};">Curated by Imran at aiuxdesign.guide</p>
-  <p style="margin: 0; font-size: 13px;"><a href="${SITE_URL}/news" target="_blank" rel="noopener" style="color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read past issues →</a></p>
-</div>`.trim();
-}
-
-// Announcement banner — single-CTA block promoting the audit. Toggle by
-// setting NEWSLETTER_ANNOUNCEMENT=off in env to disable, or remove the call
-// site in generateHTML/generateWeeklyHTML when this campaign ends. Campaign
-// string is parameterized so daily vs weekly attribution can be compared.
-function renderAnnouncementBanner(campaign: string): string {
-  if (process.env.NEWSLETTER_ANNOUNCEMENT === 'off') return '';
-  const GRAIN_BG = '#F0F1F5';
-  return `
-<div style="background-color: ${GRAIN_BG}; padding: 28px; border-radius: 20px; margin: 0 0 40px;">
-  <div style="background-color: #ffffff; padding: 32px; border-radius: 14px; border: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
-    <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
-    <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against ${PATTERN_COUNT} patterns</h2>
-    <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
-    <a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;">Audit your design →</a>
-  </div>
-</div>`.trim();
+  <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
+  <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against ${PATTERN_COUNT} patterns</h2>
+  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
+  <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Audit your design →</span></a></p>
+</div>
+<!-- POLL SLOT: beehiiv will not let you insert a block INTO pasted HTML, so the
+     poll block lands here, after everything. Question: "Was this issue worth your
+     time?" with the optional comment box enabled. Read results back via
+     GET /v2/publications/{pubId}/polls?expand[]=stats&expand[]=poll_responses -->`.trim();
 }
 
 function wrapEmailShell(inner: string): string {
@@ -1822,7 +1918,7 @@ function generateHTML(data: NewsletterData): string {
     .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
     .join('\n\n');
 
-  const takeaway = renderDarkCallout({
+  const takeaway = renderCallout({
     kicker: "Today's Idea",
     title: data.takeaway.title,
     body: data.takeaway.body,
@@ -1844,9 +1940,7 @@ ${items}
 
 ${takeaway}
 
-${renderAnnouncementBanner('daily-banner')}
-
-${renderFooterCTA('daily')}
+${renderFooterCTA('daily', 'daily-banner')}
   `.trim();
 
   return wrapEmailShell(body);
@@ -1857,19 +1951,23 @@ function generateWeeklyHTML(data: WeeklyNewsletterData): string {
     .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
     .join('\n\n');
 
-  const stealThis = renderDarkCallout({
+  const stealThis = renderCallout({
     kicker: 'Steal this week',
     title: `${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}`,
     body: data.stealThisWeek.insight,
+    variant: 'light',
   });
 
-  const patternToKnow = renderDarkCallout({
+  // Stays dark: it's the one block carrying a CTA, so it should be the anchor.
+  // CTA label was `Deep dive on ${title}` which restated the heading directly
+  // above it word for word.
+  const patternToKnow = renderCallout({
     kicker: 'Pattern deep-dive',
     title: getPatternTitle(data.patternToKnow.patternSlug),
     body: data.patternToKnow.explanation,
     subBody: data.patternToKnow.whenToUse,
     cta: {
-      label: `Deep dive on ${getPatternTitle(data.patternToKnow.patternSlug)}`,
+      label: 'See the pattern',
       href: `${SITE_URL}/patterns/${data.patternToKnow.patternSlug}`,
     },
   });
@@ -1893,9 +1991,7 @@ ${stealThis}
 
 ${patternToKnow}
 
-${renderAnnouncementBanner('weekly-banner')}
-
-${renderFooterCTA('weekly')}
+${renderFooterCTA('weekly', 'weekly-banner')}
   `.trim();
 
   return wrapEmailShell(body);
@@ -2394,6 +2490,18 @@ async function runGeneration(
 
   if (type === 'weekly') {
     const weeklyData = parsedData as WeeklyNewsletterData;
+    // Render-level guarantee, same class as enforceLeadPosition above. The
+    // prompt says "Exactly 5, not more", but EVERY prompt-only selection rule
+    // in this route's history has eventually been ignored by the model (the
+    // 3-Figma incident, the product-news floor, the soft practitioner voice).
+    // Cap BEFORE generateWeeklyHTML so the email HTML and the stored
+    // structuredData that /news renders can never disagree.
+    if (weeklyData.items.length > WEEKLY_MAX_ITEMS) {
+      console.log(
+        `[newsletter] Weekly: capping ${weeklyData.items.length} selected items to ${WEEKLY_MAX_ITEMS}`
+      );
+      weeklyData.items = weeklyData.items.slice(0, WEEKLY_MAX_ITEMS);
+    }
     htmlContent = generateWeeklyHTML(weeklyData);
     title = weeklyData.title;
     summary = weeklyData.summary;
