@@ -370,7 +370,27 @@ function getProductIconImg(productName: string): string {
 // out lower ones for a given keyword profile, so the gaps matter as much as
 // the absolute values.
 const SOURCE_TIER_BASELINE: Record<SourceTier, number> = {
-  'design-pub': 25,        // research/news/case studies — narrowed 50→30 (Apr 28) and 30→25 (May 7) so concrete product news outranks design-pub keyword stacking
+  // Research/news/case studies (NN/g, Smashing, A List Apart, TLDR Design).
+  // History: 50 → 30 (Apr 28) → 25 (May 7), both cuts made so concrete product
+  // news would outrank design-pub keyword stacking. Restored to 35 (parity with
+  // ai-lab and design-tool) on 2026-08-10 after the first click-level read of
+  // the newsletter measured what each tier actually earns per story:
+  //
+  //     design-tool 1.33 (n=6)   design-pub 0.95 (n=19)
+  //     ai-lab      0.58 (n=12)  tech-news  0.18 (n=11)
+  //
+  // design-pub is the second-best performing tier and was scored second from
+  // bottom; ai-lab sat 10 points above it while earning ~40% fewer clicks. The
+  // two cuts were aimed at a real problem (keyword stacking inflating design-pub
+  // scores) but the instrument was blunt — it demoted the CONTENT to fix a
+  // SCORING artifact. If issues start reading like keyword bait, revert this
+  // line first rather than re-tuning anything else.
+  //
+  // Expect NO measurable click signal from this: at ~4 clicks/issue a real
+  // improvement is worth about +1 click, invisible against noise for months.
+  // What IS checkable within ~5 issues is the source mix — whether NN/g and
+  // Smashing items actually appear more often.
+  'design-pub': 35,
   'design-tool': 35,       // first-party design product news — at parity with ai-lab (May 17) after expanding from 1 → 5 sources to avoid same-day mix swing
   'ai-lab': 35,            // concrete AI product launches — bumped 30→35 (May 7) to compete with design-pub keyword density
   'design-opinion': 28,    // think-pieces — useful but capped to 1-2 per issue via prompt
@@ -1557,7 +1577,11 @@ YOUR TASK:
    AUDIENCE FILTER (strict — this overrides everything else):
    - If a story is purely about infrastructure, deployment, backend reliability, devops, or developer ergonomics with no clear design implication, DROP IT. Do not write a strained Designer's Takeaway to bolt design relevance onto a dev story. Returning 3 strong design-relevant items is better than 5 mixed items.
    - Prefer concrete news (product launches, feature releases, research findings, named studies, version numbers, dated announcements) over opinion essays and think-pieces ("The future of...", "Why X matters", "How to think about Y", "What I learned from Z"). Items from UX Collective (uxdesign.cc), UX Planet (uxplanet.org), Lenny's Newsletter (lennysnewsletter.com), and medium.com are opinion. Count these opinion-source URLs (uxdesign.cc, uxplanet.org, lennysnewsletter.com, medium.com) in your final selection — this count MUST be 0. If you have any candidates from these domains, drop them.
-   - PRACTITIONER VOICES (OPTIONAL — quality-gated, never required): The pool may include named practitioners and analysts we curate (e.g. Latent Space, Julie Zhuo, Emily Campbell, AI/UX Playground, Design Systems Collective, Jakob Nielsen). Include AT MOST ONE such voice, and ONLY if it is genuinely standout for designers — a sharp, specific take on AI's impact on design work (agentic UX, AI workflows, AI skills for designers, interface patterns, the design-engineer shift), not a generic think-piece. Concrete product/research news must LEAD and fill the issue; a practitioner voice is a garnish, not a staple. Including ZERO practitioner voices is completely fine and often correct on a day with strong product news. NEVER include more than one, and never pad the issue with a voice just to have one.
+   - PRACTITIONER VOICES (OPTIONAL — quality-gated, never required): The pool may include named practitioners and analysts we curate (e.g. Latent Space, Julie Zhuo, Emily Campbell, AI/UX Playground, Design Systems Collective, Jakob Nielsen). Include AT MOST ONE such voice, and ONLY if it is genuinely standout for designers — a sharp, specific take on AI's impact on design work (agentic UX, AI workflows, AI skills for designers, interface patterns, the design-engineer shift), not a generic think-piece. Concrete product/research news should still make up the bulk of the issue, and a practitioner voice is never required. Including ZERO practitioner voices is completely fine. NEVER include more than one, and never pad the issue with a voice just to have one.
+
+   WHAT EARNS A CLICK (apply when choosing between similarly relevant items):
+   - Prefer an item a designer could ACT ON this week over an item that only tells them something happened. A story whose headline already contains the entire point ("X raised $7.9M", "agents use 600x more energy", "iOS 27 adds generative wallpapers") gives a reader no reason to open the source. A story that promises something withheld — a named framework, a numbered list, a method, a measured result, a fix for a problem they recognise — does.
+   - This is measured, not a hunch: across 93 stories, items from design-research publications and design tools earned roughly 1.0-1.3 clicks each, while general industry news earned 0.18.
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
