@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
 import PatternGrid from '../pattern-grid';
@@ -199,7 +200,9 @@ export default function PatternsIndexPage() {
           </p>
         </div>
 
-        <ScrollToTop />
+        {/* Raised above SavedItemsBar, which is fixed to the bottom on this route. */}
+        <ScrollToTop bottom={88} />
+        <SavedItemsBar />
         <Footer />
       </main>
     </>

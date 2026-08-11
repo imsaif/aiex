@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
 import { siteConfig } from '@/config/seo';
@@ -324,7 +325,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         </section>
 
         <Footer />
-        <ScrollToTop />
+        {/* Raised above SavedItemsBar, which is fixed to the bottom on this route. */}
+        <ScrollToTop bottom={88} />
+        <SavedItemsBar />
       </main>
     </>
   );
