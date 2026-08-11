@@ -97,6 +97,7 @@ export interface PatternContent {
   judgmentCall?: JudgmentCall;  // Opinionated when-to-use; if present, replaces figmaPrompt rendering
   takeaways?: Takeaway[];       // Ordered moves; if present, replaces guidelines/considerations rendering
   installPrompt?: string;       // Paste-ready Claude Code / Cursor prompt that installs THIS pattern into the reader's own codebase
+  skillDescription?: string;    // Hand-tuned trigger line for the generated Claude Code skill; overrides the line derived from `description`
 }
 
 /**

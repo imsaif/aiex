@@ -78,6 +78,7 @@ export const PatternContentSchema = z.object({
   codeExamples: z.array(CodeExampleSchema).default([]),
   relatedPatterns: z.array(z.string().min(1)).default([]),
   figmaPrompt: FigmaPromptSchema.optional(),
+  skillDescription: z.string().min(1).optional(),
 })
 
 // Main pattern schema - matching TypeScript Pattern interface exactly
