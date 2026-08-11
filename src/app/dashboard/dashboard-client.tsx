@@ -15,6 +15,7 @@ import type { Pattern } from '@/types';
 import { useHandoffKit } from '@/hooks/useHandoffKit';
 import { useSavedAudits } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff, combinedHandoffFilename } from '@/lib/handoff/composeCombined';
+import { composeSkillPack, skillPackFilename } from '@/lib/skills/composePack';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { SelectCheckbox } from '@/components/ui/SelectCheckbox';
 import { UndoSnackbar } from '@/components/ui/UndoSnackbar';
@@ -30,6 +31,7 @@ export default function DashboardClient() {
   const { savedSlugs, add: addPattern, remove: removePattern, clear: clearPatterns, isLoading } = useHandoffKit();
   const { savedAudits, save: saveAudit, remove: removeAudit, isLoading: auditsLoading } = useSavedAudits();
   const [copied, setCopied] = useState(false);
+  const [packError, setPackError] = useState<string | null>(null);
   // Undo for accidental deletes: stash a restore closure + show a snackbar.
   // Only the most recent removal is undoable (a new removal replaces it).
   const [undo, setUndo] = useState<{ message: string; restore: () => void } | null>(null);
@@ -138,20 +140,51 @@ export default function DashboardClient() {
     return parts.length ? `Includes ${parts.join(' + ')}.` : 'Select at least one item to include.';
   })();
 
-  const handleDownload = () => {
-    if (!canGenerate) return;
-    const content = composeCombinedHandoff(selectedAudits, selectedPatterns);
-    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+  /** Shared blob-to-disk step for both download shapes. */
+  const saveBlob = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = combinedHandoffFilename();
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    trackAuditEvent('dashboard_handoff_generated', { action: 'download', audits: nA, patterns: nP, count: nA + nP });
-    trackAuditEvent('handoff_file_downloaded', { audits: nA, patterns: nP, count: nA + nP });
+  };
+
+  const handleDownload = async () => {
+    if (!canGenerate) return;
+    setPackError(null);
+
+    // Audits with no patterns: nothing to turn into a skill, so keep the plain
+    // markdown handoff (and its existing events) exactly as it was.
+    if (nP === 0) {
+      const content = composeCombinedHandoff(selectedAudits, selectedPatterns);
+      saveBlob(new Blob([content], { type: 'text/markdown;charset=utf-8' }), combinedHandoffFilename());
+      trackAuditEvent('dashboard_handoff_generated', { action: 'download', audits: nA, patterns: nP, count: nA + nP });
+      trackAuditEvent('handoff_file_downloaded', { audits: nA, patterns: nP, count: nA + nP });
+      return;
+    }
+
+    try {
+      // Loaded on click only. A static import would put the zipper in the
+      // initial dashboard bundle for every visitor who never exports.
+      const { zipSync, strToU8 } = await import('fflate');
+      const files = composeSkillPack(selectedPatterns, selectedAudits);
+      const zippable = Object.fromEntries(
+        Object.entries(files).map(([path, contents]) => [path, strToU8(contents)]),
+      );
+      saveBlob(
+        new Blob([zipSync(zippable, { level: 6 }) as BlobPart], { type: 'application/zip' }),
+        skillPackFilename(),
+      );
+      trackAuditEvent('dashboard_handoff_generated', { action: 'download', audits: nA, patterns: nP, count: nA + nP });
+      trackAuditEvent('skill_pack_downloaded', { audits: nA, patterns: nP, count: nA + nP });
+    } catch (err) {
+      // No partial zips: nothing was saved, so say so and leave the selection intact.
+      console.warn('Failed to build the skill pack:', err);
+      setPackError('We could not build the pack just now. Try again, or copy the handoff text instead.');
+    }
   };
 
   const handleCopy = async () => {
@@ -183,8 +216,8 @@ export default function DashboardClient() {
       </h1>
       <p className="text-lg text-text-secondary max-w-2xl">
         Audits are fixes for your own product. Patterns are reference for what you want to build.
-        Pick what to include, then generate one handoff file for Claude Code, Cursor, or any AI
-        coding agent.
+        Pick what to include, then download a skill pack: one Claude Code skill per pattern, ready
+        to unzip at the root of your repo.
       </p>
       <p className="mt-4 text-base text-text-secondary max-w-2xl">
         Want a senior set of eyes instead?{' '}
@@ -216,7 +249,7 @@ export default function DashboardClient() {
           <p className="text-base text-text-secondary max-w-md mx-auto mb-6">
             Run an audit and tap <span className="font-medium text-text-primary">Save audit</span>, or
             browse the library and tap <span className="font-medium text-text-primary">Save</span> on
-            any pattern. Everything you save collects here, ready to export as a handoff file.
+            any pattern. Everything you save collects here, ready to export as a skill pack.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
@@ -320,11 +353,11 @@ export default function DashboardClient() {
             <div className="rounded-card border border-border-primary bg-background-grain p-6">
               <div className="flex items-center gap-2.5 mb-2">
                 <CommandLineIcon className="h-5 w-5 text-accent-primary shrink-0" aria-hidden="true" />
-                <h2 className="text-lg font-semibold text-text-primary">Generate handoff</h2>
+                <h2 className="text-lg font-semibold text-text-primary">Download skill pack</h2>
               </div>
               <p className="text-sm text-text-secondary mb-4">
-                One Markdown file for Claude Code or Cursor: fixes from your audits plus the patterns
-                you want to build. Drop it in your repo and it implements each item, then reports back.
+                One zip for your repo: a Claude Code skill per pattern you saved, plus a task file
+                of the fixes from your audits.
               </p>
               <p className="text-sm mb-4 text-text-secondary">
                 {summaryText}
@@ -337,8 +370,13 @@ export default function DashboardClient() {
                   className="w-full inline-flex items-center justify-center gap-2 rounded-pill bg-accent-primary px-5 py-2.5 text-base font-medium text-white hover:bg-accent-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <ArrowDownTrayIcon className="h-5 w-5" aria-hidden="true" />
-                  Download handoff file
+                  Download skill pack
                 </button>
+                {packError && (
+                  <p role="alert" className="mt-3 text-sm text-text-secondary">
+                    {packError}
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={handleCopy}

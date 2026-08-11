@@ -62,6 +62,8 @@ export const AUDIT_EVENT_NAMES = [
   // prompt. Both events carry the pattern slug so we learn which patterns get installed.
   'skill_install_command_copied',
   'skill_file_downloaded',
+  // Dashboard: zipped pack of one skill per saved pattern, plus the audit fixes file.
+  'skill_pack_downloaded',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
