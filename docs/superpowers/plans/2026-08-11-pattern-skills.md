@@ -18,6 +18,8 @@ Every task's requirements implicitly include this section.
 - **Design tokens only** in any UI. No raw Tailwind colors, no raw z-index, no arbitrary radii/shadows/spacing under 2rem, no hex. `npm run brand:check` runs pre-commit via husky and blocks violations.
 - **Type-check with `npx tsc --noEmit`. Never run `npm run build` while the dev server is up** (it clobbers `.next/` and breaks the running server). The one exception is the explicit bundle-analysis step in Task 4, which must be run with the dev server stopped.
 - **Test command:** `npm test` for the suite, `npx jest <path>` for one file.
+- **Tests are written and run, but never committed.** `.gitignore` excludes `**/__tests__/`, `**/*.test.*`, and `**/*.spec.*`. Confirmed as intended on 2026-08-11: test files stay local. Write every test the plan specifies and run it, but do not `git add -f` it, and never name a test path in a `git add` command (git errors on an explicitly-named ignored path). Reviewers read test files from disk at the paths given, not from the diff.
+- **The suite is red at this branch's base.** 8 suites / 58 tests fail on `master` for reasons unrelated to this work. Do not try to fix them, and do not treat them as your regression. The two you will meet: `src/data/__tests__/patterns.test.ts` (missing `/images/examples/granola-ask.png`) and `src/app/patterns/[slug]/__tests__/pattern-page-structure.test.tsx` (1 of 2 red, a canonical heading is missing from the rendered page at line 113). Judge your work by the tests you wrote plus the absence of NEW failures.
 - **Accessibility:** no `text-xs` for meaningful content, no `text-text-tertiary` for anything that must be read, never convey meaning by color alone.
 - **Reuse before writing.** `SITE` and the moves-precedence logic already exist in `src/lib/handoff/composeHandoff.ts`. Import, do not duplicate.
 - **Out of scope, do not add:** sitemap entries for `/skills/*`; a Claude Code plugin or marketplace listing; skills generated from audits; hand-authored `skillDescription` lines for the 38 patterns (the field ships empty everywhere and gets filled in later).
@@ -775,12 +777,14 @@ Also update the block comment above the section (lines 216-221) so it stops desc
             the skill-install CTA sticky on the right.
 ```
 
-- [ ] **Step 7: Confirm the structure test still passes without edits**
+- [ ] **Step 7: Confirm the structure test is no worse than before**
 
-Run: `npx jest "src/app/patterns/\[slug\]/__tests__/pattern-page-structure.test.tsx"`
-Expected: PASS, unchanged.
+Run: `npx jest --testPathPattern "pattern-page-structure"`
+Expected: exactly 1 failed, 1 passed. The failure is `renders sections in canonical order with the demo only under Implementation`, failing at line 113 because a canonical heading is missing from the rendered page.
 
-The spec lists this test as needing an update. It does not: the test stubs `next/dynamic` to a no-op, so `InstallPatternCTA` renders as `null` there and the test only asserts section headings and order, which this task does not change. If it fails, something structural moved, so stop and investigate rather than editing the test to match.
+**That failure is pre-existing.** It was verified red at this branch's base commit on 2026-08-11, before any skills work. It is not yours, and fixing it is explicitly out of scope for this branch. What you must confirm is that the count does not get worse: still 1 failed / 1 passed, and the still-passing test (`omits the Implementation section when a pattern has no code examples`) stays green. If a second test goes red, that one IS yours, so stop and investigate.
+
+The spec lists this test as needing an update for the new card. It does not: the test stubs `next/dynamic` to a no-op, so `InstallPatternCTA` renders as `null` there and the test only asserts section headings and order, which this task does not change. Do not edit this test file.
 
 - [ ] **Step 8: Type-check, lint, and run the full suite**
 
@@ -799,7 +803,7 @@ With the dev server running, open `http://localhost:3000/patterns/human-in-the-l
 - [ ] **Step 10: Commit**
 
 ```bash
-git add src/components/Pattern/InstallPatternCTA.tsx src/components/Pattern/__tests__/InstallPatternCTA.test.tsx "src/app/patterns/[slug]/client-page.tsx" src/lib/audit/analytics.ts
+git add src/components/Pattern/InstallPatternCTA.tsx "src/app/patterns/[slug]/client-page.tsx" src/lib/audit/analytics.ts
 git commit -m "feat(skills): pattern page installs a Claude skill instead of copying a prompt"
 ```
 
@@ -1166,7 +1170,7 @@ Expected: `README.md`, one `.claude/skills/aiux-<slug>/SKILL.md` per saved patte
 - [ ] **Step 12: Commit**
 
 ```bash
-git add src/lib/skills/composePack.ts src/lib/skills/__tests__/composePack.test.ts src/app/dashboard/dashboard-client.tsx src/lib/audit/analytics.ts package.json package-lock.json
+git add src/lib/skills/composePack.ts src/app/dashboard/dashboard-client.tsx src/lib/audit/analytics.ts package.json package-lock.json
 git commit -m "feat(skills): dashboard exports a zipped Claude skill pack"
 ```
 
@@ -1176,7 +1180,7 @@ git commit -m "feat(skills): dashboard exports a zipped Claude skill pack"
 
 Run after Task 4, before opening a PR.
 
-- [ ] `npm test` is green.
+- [ ] `npm test` shows no NEW failures against the branch base (8 suites / 58 tests were already failing at `6adbbde`), and every test this plan added passes.
 - [ ] `npx tsc --noEmit` is clean.
 - [ ] `npm run lint` has no new errors.
 - [ ] `npm run brand:check` passes with the changes staged (it reads `--staged`, so an unstaged tree passes vacuously). It also runs pre-commit via husky.
