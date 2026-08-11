@@ -87,7 +87,7 @@ export default function InstallPatternCTA({ patternTitle, patternSlug, skillName
               ? 'bg-status-success/10 text-status-success border-status-success/30'
               : 'bg-accent-primary text-white border-accent-primary hover:bg-accent-hover'
           }`}
-          aria-label="Copy the install command for Claude Code"
+          aria-label="Copy install command"
         >
           {copied ? (
             <>
@@ -132,7 +132,10 @@ export default function InstallPatternCTA({ patternTitle, patternSlug, skillName
 
       {showSkill && (
         <div className="border-t border-primary bg-surface-secondary">
-          <pre className="p-5 text-xs text-text-primary font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-96 overflow-y-auto">
+          {/* text-sm, not text-xs: this is the skill content we tell the reader
+              to inspect before installing, so the design system's accessibility
+              rule against text-xs for meaningful content applies. */}
+          <pre className="p-5 text-sm text-text-primary font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-96 overflow-y-auto">
             {skillMd}
           </pre>
         </div>
