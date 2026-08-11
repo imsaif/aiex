@@ -18,6 +18,8 @@ export const plansummary: Pattern = {
   datePublished: "2026-02-16",
   dateModified: "2026-02-16",
   content: {
+    skillDescription:
+      "Use when users should evaluate an agent's approach before it runs: 'why this plan', goal interpretation, subtask checklists, stated assumptions, strategy review before execution. Plan Summary exposes the reasoning so plans can be judged.",
     problem: "While Intent Preview shows what the agent will do, users also need to understand why and how. When an agent breaks a complex goal into subtasks, users can't evaluate whether the approach is sound without seeing the reasoning and assumptions behind the plan.",
     solution: "Provide a structured plan summary with goal interpretation, strategy explanation, a subtask checklist with real-time progress, explicit editable assumptions, and resource/time estimates. Keep it concise by default with full reasoning available on expansion.",
     examples,

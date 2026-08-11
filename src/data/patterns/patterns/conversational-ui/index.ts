@@ -23,6 +23,8 @@ export const conversationalui: Pattern = {
   dateModified: "2026-05-26",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when designing chat or voice interaction: chatbots, assistants, message threads, composer design, 'talk to the app in plain language', turn-taking and context in conversation. Conversational UI makes dialogue feel natural instead of robotic.",
     problem: "Traditional graphical interfaces require users to learn specific navigation patterns, menu hierarchies, and form layouts. As AI products grow more capable, the gap between what the system can do and what users can discover widens. Users prefer asking for what they need in plain language, but poorly designed conversational interfaces frustrate them with robotic responses, lost context, and dead-end conversations.",
     solution: "Design conversational interfaces that understand natural language, maintain context across multiple turns, and respond in a natural, human-like way. Support both text and voice input where appropriate. Provide conversation starters and suggested prompts to help users get started, use typing indicators and status cues for natural pacing, and design clear fallback paths for when the AI doesn't understand. The best conversational UIs blend chat with structured UI elements like buttons, cards, and carousels, so users can switch between typing and clicking based on what's fastest.",
     examples: [

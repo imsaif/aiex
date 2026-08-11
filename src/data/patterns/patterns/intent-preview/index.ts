@@ -19,6 +19,8 @@ export const intentpreview: Pattern = {
   dateModified: "2026-02-16",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when an agent is about to act and the user should see the plan first: 'show me what it will do before it does it', dry-run summaries, previewing steps and reversibility, approve or edit before execution. Intent Preview earns informed consent for actions.",
     problem: "When an agent is about to take a multi-step action, users need to understand what will happen before it happens. Without an intent preview, users experience anxiety leading to constant monitoring or blind trust that erodes at the first mistake.",
     solution: "Before any significant action, present a clear, scannable preview showing planned steps in plain language, with reversibility indicators, edit controls for individual steps, and explicit approve/reject buttons. Never auto-dismiss the preview.",
     examples,

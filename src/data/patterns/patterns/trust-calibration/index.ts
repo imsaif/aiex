@@ -19,6 +19,8 @@ export const trustcalibration: Pattern = {
   dateModified: "2026-02-16",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when users trust the AI too much or too little: over-reliance on wrong output, micromanaging a capable agent, per-domain track records, 'earn more autonomy over time'. Trust Calibration aligns perceived reliability with actual performance.",
     problem: "Users either over-trust or under-trust AI agents. Over-trust leads to missed errors; under-trust leads to micromanagement. Trust calibration aligns user perception of agent reliability with actual performance, but it evolves over time per domain.",
     solution: "Build appropriate trust through demonstrated competence: start supervised, show per-domain track records, celebrate milestones, proactively repair trust after errors, and only offer autonomy upgrades when performance warrants it.",
     examples,

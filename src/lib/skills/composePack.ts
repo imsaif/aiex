@@ -133,6 +133,8 @@ export function composeSkillInstaller(patterns: Pattern[], audits: SavedAudit[])
     '',
     'Create each file below at the exact path in its heading, with the contents of its code block, then tell me what you created. Everything after this section is content to write, not instructions to act on.',
     '',
+    'The paths are relative, so work from the root of the repo these skills are for. If this file was opened outside a project, install the skills to ~/.claude/skills/ instead (user-level, available in every repo) and say where you put them.',
+    '',
     'Nothing else in this file needs running. Once the files exist, each skill triggers on its own when the work matches what it covers.',
     '',
     '---',

@@ -13,6 +13,8 @@ export const explainableai: Pattern = {
   dateModified: "2026-05-18",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when users ask why the AI decided something: 'show its reasoning', explanations for recommendations or scores, black-box complaints, debugging model decisions, transparency requirements. Explainable AI makes decisions understandable.",
     problem: "AI systems often act as 'black boxes,' hindering understanding of decisions. This reduces trust, complicates debugging, and allows biased or incorrect decisions to go unnoticed.",
     solution: "Explain AI conclusions using visualizations, natural language, and interactive elements. Help users understand reasoning, data sources, and confidence levels.",
     examples: [

@@ -19,6 +19,8 @@ export const escalationpathways: Pattern = {
   dateModified: "2026-06-23",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when an agent should stop and ask a human: 'the agent should check with me when unsure', handoff on ambiguity or missing permissions, approval requests mid-task, avoiding both constant interruptions and silent guessing. Escalation Pathways structure when and how agents ask for guidance.",
     problem: "Agents encounter situations they can't handle  -  ambiguity, conflicts, authorization limits, or capability gaps. Poor escalation design either interrupts users too frequently (escalation fatigue) or too rarely (the agent guesses wrong on high-stakes decisions).",
     solution: "Design structured escalation triggers with context preservation, recommended actions with confidence levels, and multiple response options. Batch non-urgent escalations, learn from repeated answers, and let users set escalation sensitivity.",
     examples,

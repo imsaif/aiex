@@ -19,6 +19,8 @@ export const mixedinitiativecontrol: Pattern = {
   dateModified: "2026-06-23",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when human and AI work on the same thing at the same time: co-editing with an agent, interrupting or redirecting mid-task, 'I want to jump in without stopping it', fluid turn-taking. Mixed-Initiative Control lets control flow both ways.",
     problem: "Traditional AI is turn-based  -  either human or AI is in control. Agentic workflows require fluid back-and-forth where both can work simultaneously on the same artifact, with the human able to interrupt and redirect at any point.",
     solution: "Design interfaces with clear control indicators, interruptible agent activity, parallel work zones, seamless handoffs, and explicit conflict resolution. Human input always takes precedence, and agent activity never blocks the human.",
     examples,

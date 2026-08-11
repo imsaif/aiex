@@ -18,6 +18,8 @@ export const selectivememory: Pattern = {
   dateModified: "2025-11-18",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when users should control what the AI remembers: memory settings, 'forget what I said earlier', viewing and deleting stored context, outdated or sensitive info resurfacing. Selective Memory makes remembering transparent and editable.",
     problem: "AI systems remember information without user visibility or control, risking privacy issues and inappropriate responses based on outdated or sensitive context.",
     solution: "Provide transparent memory controls letting users view, categorize (important/temporary/forget), and understand how stored information influences AI responses.",
     examples,

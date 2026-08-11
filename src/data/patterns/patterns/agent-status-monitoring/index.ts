@@ -19,6 +19,8 @@ export const agentstatusmonitoring: Pattern = {
   dateModified: "2026-02-16",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when users need to follow long-running AI work without watching it: progress for background agents, 'what is the agent doing now', status badges, task dashboards, notifications when input is needed. Agent Status and Monitoring keeps users informed at the right level of attention.",
     problem: "Traditional loading indicators don't work for agentic tasks that take minutes or hours, involve parallel activities, or need occasional user input. Users need to stay informed without being forced to constantly monitor agent activity.",
     solution: "Design a layered status system: ambient badges for background awareness, expandable progress panels for detail, attention notifications only when input is needed, and completion summaries when tasks finish. Support multiple concurrent tasks with estimated times.",
     examples,

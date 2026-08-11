@@ -13,6 +13,8 @@ export const progressivedisclosure: Pattern = {
   dateModified: "2025-11-18",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when a UI shows too much at once or advanced options bury the basics: overwhelming settings, cluttered toolbars, 'simplify this screen', show-more reveals, casual vs power users. Progressive Disclosure reveals complexity only as it is needed.",
     problem: "Complex AI features shown all at once can overwhelm users, causing abandonment or difficulty finding advanced options.",
     solution: "Progressively reveal information and AI features. Start with essentials, then offer advanced features as users interact or request more.",
     examples: [

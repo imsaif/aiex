@@ -19,6 +19,8 @@ export const predictiveanticipation: Pattern = {
   dateModified: "2026-06-23",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when the product should act before the user asks: suggesting next actions, pre-loading likely content, 'it should know what I need next', smart defaults from behavior. Predictive Anticipation moves the product from reactive to anticipatory.",
     problem: "Users waste time waiting for content or searching for next actions. Systems react instead of anticipating needs.",
     solution: "Design AI that learns from behavior patterns to predict next actions. Pre-load content, suggest next steps, and gather resources before users request them.",
     examples,

@@ -19,6 +19,8 @@ export const progressiveenhancement: Pattern = {
   dateModified: "2025-11-18",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when quality output takes time: streaming rough answers that improve, 'users wait with no feedback', instant draft then detail, skeleton results while the model works. Progressive Enhancement gives something useful immediately and better progressively.",
     problem: "AI systems often require significant time to generate high-quality, detailed responses. Users are left waiting with no feedback, leading to frustration and uncertainty about whether the system is working.",
     solution: "Design AI systems that provide immediate basic responses and progressively enhance them with more detail, accuracy, or sophistication. Stream content as it's generated, allowing users to consume information without waiting for complete processing.",
     examples,

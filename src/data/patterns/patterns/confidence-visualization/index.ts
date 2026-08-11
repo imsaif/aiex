@@ -19,6 +19,8 @@ export const confidencevisualization: Pattern = {
   dateModified: "2025-11-18",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when users need to know how sure the AI is: confidence scores, uncertainty indicators, 'should I trust this answer', flagging low-certainty output, deciding when to verify. Confidence Visualization shows reliability so trust is calibrated.",
     problem: "Users don't know how much to trust AI predictions, leading to over-reliance on incorrect outputs or unnecessary verification.",
     solution: "Design visual indicators that communicate AI confidence levels. Use intuitive representations like progress bars, color coding, or percentages to help users gauge reliability.",
     examples,

@@ -17,6 +17,8 @@ export const collaborativeai: Pattern = {
   dateModified: "2026-06-23",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when several people and an AI share one workflow: team workspaces with AI, shared documents or channels, 'AI in our group project', coordinating human and AI contributions. Collaborative AI keeps teams coordinated while AI participates.",
     problem: "Teams need effective AI collaboration while maintaining coordination, shared understanding, and human relationships.",
     solution: "Create AI interfaces that enhance team collaboration via shared decision-making, context maintenance, and group workflow support.",
     examples,

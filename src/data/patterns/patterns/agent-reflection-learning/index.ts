@@ -27,6 +27,8 @@ export const agentReflectionLearning: Pattern = {
   dateModified: "2026-05-20",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when users should see that the AI learns from their corrections: 'why does it keep making the same mistake', showing learned preferences, memory of feedback, improvement over time. Agent Reflection and Learning builds trust through visible improvement.",
     problem: "As AI agents gain autonomy, users struggle to understand what the agent has learned from past interactions and corrections, making it hard to trust the agent over time.",
     solution: "Surface what the agent has learned from corrections and past sessions through visible learning indicators, correction acknowledgements, and improvement summaries that build trust incrementally.",
     examples,

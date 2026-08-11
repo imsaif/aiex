@@ -19,6 +19,8 @@ export const privacyfirstdesign: Pattern = {
   dateModified: "2026-06-23",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when handling user data in an AI product: consent, data minimization, 'what does the AI store about me', transparent privacy controls, trust concerns about collection. Privacy-First Design collects less and explains clearly.",
     problem: "Users are increasingly concerned about AI systems collecting and using their data without clear consent or understanding. Opaque data practices erode trust and create privacy risks, while overly restrictive privacy settings can break functionality.",
     solution: "Design AI systems with privacy as the default, processing data locally when possible, providing granular controls with clear explanations of what each setting means, and making privacy-functionality trade-offs transparent so users can make informed decisions.",
     examples,

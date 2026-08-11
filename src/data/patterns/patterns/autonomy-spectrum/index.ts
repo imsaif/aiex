@@ -19,6 +19,8 @@ export const autonomyspectrum: Pattern = {
   dateModified: "2026-07-08",
   hideFAQ: true,
   content: {
+    skillDescription:
+      "Use when deciding how independently the AI may act: autonomy levels, 'ask before doing vs just do it', per-task permissions, supervised vs autonomous modes. Autonomy Spectrum gives users a dial instead of an on/off switch.",
     problem: "Traditional AI controls are binary  -  the AI is either on or off. But agents operate across a wide range of independence, and users need granular control over how much freedom the agent has per task type. Without this, a single bad experience at high autonomy causes users to abandon the agent entirely.",
     solution: "Provide a spectrum of autonomy levels (Observe & Suggest, Propose & Confirm, Act & Notify, Full Autonomy) that users can adjust per task or domain. Default to lower autonomy for new users and let trust build through demonstrated reliability before offering higher levels.",
     examples,
