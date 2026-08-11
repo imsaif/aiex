@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { InlineAuditCTA } from '@/components/audit/InlineAuditCTA';
 import SaveToDashboardButton from '@/components/handoff/SaveToDashboardButton';
-import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
+import { composeSkillMd } from '@/lib/skills/composeSkill';
 
 // Lazy load heavy components to reduce initial bundle size.
 //
@@ -37,7 +37,7 @@ const ProductsSection = dynamic(() => import('@/components/sections/ProductsSect
 
 const JudgmentCallBlock = dynamic(() => import('@/components/Pattern/JudgmentCallBlock'));
 const TakeawaysList = dynamic(() => import('@/components/Pattern/TakeawaysList'));
-const InstallPatternCTA = dynamic(() => import('@/components/Pattern/InstallPatternCTA'));
+const SavePatternSkillCard = dynamic(() => import('@/components/Pattern/SavePatternSkillCard'));
 
 interface GuideSummary {
   slug: string;
@@ -233,14 +233,12 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
                 </div>
                 <div className="lg:col-span-1">
                   {/* Whole stack sticks as one unit. Cards are in normal flow
-                      (space-y-4), so expanding the install card's "Inspect
-                      before you copy" just pushes the audit card down — no
-                      overlap. */}
+                      (space-y-4), so expanding the save card's "Inspect the
+                      skill" just pushes the audit card down, no overlap. */}
                   <div className="lg:sticky lg:top-24 space-y-4">
-                    <InstallPatternCTA
+                    <SavePatternSkillCard
                       patternTitle={pattern.title}
                       patternSlug={pattern.slug}
-                      skillName={skillName(pattern)}
                       skillMd={composeSkillMd(pattern)}
                     />
                     <InlineAuditCTA variant="sidebar" />

@@ -4,8 +4,6 @@ import { useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import {
   ArrowDownTrayIcon,
-  ClipboardDocumentIcon,
-  CheckCircleIcon,
   XMarkIcon,
   BookmarkIcon,
   CommandLineIcon,
@@ -15,7 +13,13 @@ import type { Pattern } from '@/types';
 import { useHandoffKit } from '@/hooks/useHandoffKit';
 import { useSavedAudits } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff, combinedHandoffFilename } from '@/lib/handoff/composeCombined';
-import { composeSkillPack, skillPackFilename } from '@/lib/skills/composePack';
+import {
+  composeSkillPack,
+  skillPackFilename,
+  composeSkillInstaller,
+  skillInstallerFilename,
+} from '@/lib/skills/composePack';
+import { composeSkillMd, skillFilename } from '@/lib/skills/composeSkill';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { SelectCheckbox } from '@/components/ui/SelectCheckbox';
 import { UndoSnackbar } from '@/components/ui/UndoSnackbar';
@@ -30,8 +34,10 @@ function auditTitle(productLabel: string): string {
 export default function DashboardClient() {
   const { savedSlugs, add: addPattern, remove: removePattern, clear: clearPatterns, isLoading } = useHandoffKit();
   const { savedAudits, save: saveAudit, remove: removeAudit, isLoading: auditsLoading } = useSavedAudits();
-  const [copied, setCopied] = useState(false);
   const [packError, setPackError] = useState<string | null>(null);
+  // Both shapes install the same skills; they differ only in how they arrive.
+  // Shipped together deliberately so real usage decides which one to keep.
+  const [format, setFormat] = useState<'zip' | 'installer'>('zip');
   // Undo for accidental deletes: stash a restore closure + show a snackbar.
   // Only the most recent removal is undoable (a new removal replaces it).
   const [undo, setUndo] = useState<{ message: string; restore: () => void } | null>(null);
@@ -167,63 +173,69 @@ export default function DashboardClient() {
     }
 
     try {
-      // Loaded on click only. A static import would put the zipper in the
-      // initial dashboard bundle for every visitor who never exports.
-      const { zipSync, strToU8 } = await import('fflate');
-      const files = composeSkillPack(selectedPatterns, selectedAudits);
-      const zippable = Object.fromEntries(
-        Object.entries(files).map(([path, contents]) => [path, strToU8(contents)]),
-      );
-      saveBlob(
-        new Blob([zipSync(zippable, { level: 6 }) as BlobPart], { type: 'application/zip' }),
-        skillPackFilename(),
-      );
+      if (format === 'installer') {
+        // One markdown file Claude Code unpacks into the same skill directories.
+        // No zipper needed, so nothing is dynamically imported on this path.
+        saveBlob(
+          new Blob([composeSkillInstaller(selectedPatterns, selectedAudits)], {
+            type: 'text/markdown;charset=utf-8',
+          }),
+          skillInstallerFilename(),
+        );
+      } else {
+        // Loaded on click only. A static import would put the zipper in the
+        // initial dashboard bundle for every visitor who never exports.
+        const { zipSync, strToU8 } = await import('fflate');
+        const files = composeSkillPack(selectedPatterns, selectedAudits);
+        const zippable = Object.fromEntries(
+          Object.entries(files).map(([path, contents]) => [path, strToU8(contents)]),
+        );
+        saveBlob(
+          new Blob([zipSync(zippable, { level: 6 }) as BlobPart], { type: 'application/zip' }),
+          skillPackFilename(),
+        );
+      }
       trackAuditEvent('dashboard_handoff_generated', { action: 'download', audits: nA, patterns: nP, count: nA + nP });
-      trackAuditEvent('skill_pack_downloaded', { audits: nA, patterns: nP, count: nA + nP });
+      // One event name for "a pack left the site", tagged with which shape it
+      // took, so the total stays intact and the two formats stay comparable.
+      trackAuditEvent('skill_pack_downloaded', { audits: nA, patterns: nP, count: nA + nP, format });
     } catch (err) {
       // No partial zips: nothing was saved, so say so and leave the selection intact.
       console.warn('Failed to build the skill pack:', err);
-      setPackError('We could not build the pack just now. Try again, or copy the handoff text instead.');
+      setPackError('We could not build the pack just now. Try again in a moment.');
     }
   };
 
-  const handleCopy = async () => {
-    if (!canGenerate) return;
-    const content = composeCombinedHandoff(selectedAudits, selectedPatterns);
-    try {
-      await navigator.clipboard.writeText(content);
-    } catch {
-      // Fallback for private browsing / older browsers
-      const textarea = document.createElement('textarea');
-      textarea.value = content;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    trackAuditEvent('dashboard_handoff_generated', { action: 'copy', audits: nA, patterns: nP, count: nA + nP });
+  /**
+   * Download one saved pattern's SKILL.md on its own.
+   *
+   * Deliberately ignores the selection checkboxes. Those govern what goes INTO
+   * the pack; this is a direct action on one named row, so disabling it because
+   * the row happens to be unchecked would be inexplicable to someone who just
+   * clicked download on that exact row.
+   *
+   * The filename matches what /skills/aiux-<slug>.md serves, so a user who gets
+   * the same skill either way ends up with an identically named file.
+   */
+  const handleDownloadOne = (pattern: Pattern) => {
+    saveBlob(
+      new Blob([composeSkillMd(pattern)], { type: 'text/markdown;charset=utf-8' }),
+      skillFilename(pattern),
+    );
+    trackAuditEvent('skill_file_downloaded', { slug: pattern.slug, source: 'dashboard' });
   };
 
   const header = (
     <div className="mb-8">
       <p className="type-eyebrow text-accent-primary mb-2">Your dashboard</p>
       <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-text-primary mb-3">
-        Saved audits &amp; patterns
+        Your pack
       </h1>
+      {/* Deliberately short. The right rail already explains what the download
+          contains and how it arrives, so repeating it here just doubles the
+          reading before anyone reaches a control. */}
       <p className="text-lg text-text-secondary max-w-2xl">
-        Audits are fixes for your own product. Patterns are reference for what you want to build.
-        Pick what to include, then download a skill pack: one Claude Code skill per pattern, ready
-        to unzip at the root of your repo.
-      </p>
-      <p className="mt-4 text-base text-text-secondary max-w-2xl">
-        Want a senior set of eyes instead?{' '}
-        <Link href="/services" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
-          Get your whole product audited for you →
-        </Link>
+        Patterns become skills. Audits are fixes for your product. Pick what to include.
       </p>
     </div>
   );
@@ -247,9 +259,7 @@ export default function DashboardClient() {
             Nothing saved yet
           </h2>
           <p className="text-base text-text-secondary max-w-md mx-auto mb-6">
-            Run an audit and tap <span className="font-medium text-text-primary">Save audit</span>, or
-            browse the library and tap <span className="font-medium text-text-primary">Save</span> on
-            any pattern. Everything you save collects here, ready to export as a skill pack.
+            Save a pattern from the library, or save an audit. Whatever you collect lands here.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
@@ -299,7 +309,7 @@ export default function DashboardClient() {
                 </button>
               </div>
               <p className="mt-1 mb-3 text-sm text-text-secondary">
-                Patterns you want to build. Keep for reference.
+                Each one becomes a skill.
               </p>
               <ul className="divide-y divide-border-primary border-t border-border-primary">
                 {savedPatterns.map((pattern) => (
@@ -310,7 +320,7 @@ export default function DashboardClient() {
                     <SelectCheckbox
                       checked={isPatternSelected(pattern.slug)}
                       onChange={() => togglePattern(pattern.slug)}
-                      label={`Include ${pattern.title} in the handoff`}
+                      label={`Include ${pattern.title} in the skill pack`}
                       className="mt-1"
                     />
                     <div className="flex-1 min-w-0">
@@ -330,6 +340,15 @@ export default function DashboardClient() {
                       <p className="text-sm text-text-secondary line-clamp-2">{pattern.description}</p>
                       <p className="mt-1 text-sm text-text-secondary">{pattern.category}</p>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDownloadOne(pattern)}
+                      aria-label={`Download the ${pattern.title} skill`}
+                      title="Download this skill"
+                      className="shrink-0 rounded-full p-2 text-text-secondary hover:text-accent-primary hover:bg-surface-secondary transition-colors"
+                    >
+                      <ArrowDownTrayIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleRemovePattern(pattern.slug)}
@@ -355,13 +374,49 @@ export default function DashboardClient() {
                 <CommandLineIcon className="h-5 w-5 text-accent-primary shrink-0" aria-hidden="true" />
                 <h2 className="text-lg font-semibold text-text-primary">Download skill pack</h2>
               </div>
-              <p className="text-sm text-text-secondary mb-4">
-                One zip for your repo: a Claude Code skill per pattern you saved, plus a task file
-                of the fixes from your audits.
-              </p>
               <p className="text-sm mb-4 text-text-secondary">
                 {summaryText}
               </p>
+
+              {/* Format choice sits above one button rather than becoming two rival
+                  buttons: the default path stays a single obvious click. Both shapes
+                  install the same skills, so this is presentation, not capability.
+                  Only shown when there are patterns to pack; an audits-only export is
+                  a plain markdown file with no format question to ask. */}
+              {nP > 0 && (
+                <fieldset className="mb-4">
+                  <legend className="text-sm font-medium text-text-primary mb-2">
+                    How do you want it?
+                  </legend>
+                  <div className="flex gap-2" role="radiogroup" aria-label="Download format">
+                    {([
+                      { id: 'zip', label: 'Folder (.zip)' },
+                      { id: 'installer', label: 'One file (.md)' },
+                    ] as const).map((option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={format === option.id}
+                        onClick={() => setFormat(option.id)}
+                        className={`flex-1 rounded-pill border px-3 py-2 text-sm font-medium transition-colors ${
+                          format === option.id
+                            ? 'border-accent-primary bg-accent-subtle text-accent-primary'
+                            : 'border-border-primary bg-surface-primary text-text-secondary hover:text-text-primary'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-sm text-text-secondary">
+                    {format === 'zip'
+                      ? 'Unzip it at the root of your repo and the skills are in place. Nothing to run.'
+                      : 'One file to commit. Hand it to Claude Code and it writes the skills for you.'}
+                  </p>
+                </fieldset>
+              )}
+
               <div className="flex flex-col gap-3">
                 <button
                   type="button"
@@ -377,26 +432,16 @@ export default function DashboardClient() {
                     {packError}
                   </p>
                 )}
-                <button
-                  type="button"
-                  onClick={handleCopy}
-                  disabled={!canGenerate}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-pill border border-border-primary bg-surface-primary px-5 py-2.5 text-base font-medium text-text-secondary hover:text-text-primary hover:border-accent-primary transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {copied ? (
-                    <>
-                      <CheckCircleIcon className="h-5 w-5 text-accent-primary" aria-hidden="true" />
-                      Copied
-                    </>
-                  ) : (
-                    <>
-                      <ClipboardDocumentIcon className="h-5 w-5" aria-hidden="true" />
-                      Copy to clipboard
-                    </>
-                  )}
-                </button>
               </div>
-              <p className="mt-3 text-center text-sm text-text-secondary">{combinedHandoffFilename()}</p>
+              {/* The filename is a promise about what the button produces, so it
+                  branches the same way handleDownload does. */}
+              <p className="mt-3 text-center text-sm text-text-secondary">
+                {nP === 0
+                  ? combinedHandoffFilename()
+                  : format === 'installer'
+                    ? skillInstallerFilename()
+                    : skillPackFilename()}
+              </p>
             </div>
           </div>
         </div>
