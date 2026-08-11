@@ -38,13 +38,26 @@ function yamlString(value: string): string {
   return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 }
 
+/**
+ * The trigger line is the only text Claude sees when deciding whether to load
+ * the skill, so it has to read as a condition.
+ *
+ * It names the pattern first and appends the description unchanged. An earlier
+ * version lowercased the description and spliced it in after "Use when", which
+ * produced broken English on essentially every pattern: descriptions in this
+ * codebase are imperative verb phrases ("Balance automation with human
+ * oversight..."), not condition clauses, so the result read "Use when balance
+ * automation with human oversight...". Naming the pattern first is grammatical
+ * no matter how a description is phrased.
+ */
 function skillTrigger(pattern: Pattern): string {
   const authored = pattern.content.skillDescription?.trim();
   if (authored) return oneLine(authored);
 
-  const desc = oneLine(pattern.description || '').replace(/\.+$/, '');
-  const lead = desc ? desc.charAt(0).toLowerCase() + desc.slice(1) : 'working on this surface';
-  return `Use when ${lead}. Apply the ${pattern.title} pattern.`;
+  const lead = `Use when designing ${pattern.title} in an AI product.`;
+  const desc = oneLine(pattern.description || '');
+  if (!desc) return lead;
+  return `${lead} ${desc.replace(/\.*$/, '.')}`;
 }
 
 /**
