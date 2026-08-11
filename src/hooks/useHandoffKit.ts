@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { trackEvent } from '../utils/analytics';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { isKnownPatternSlug } from '@/data/pattern-slugs';
 
 /**
  * Saved-patterns "handoff kit" — the set of pattern slugs a user has saved to
@@ -26,7 +27,13 @@ function readStore(): string[] {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed.filter((s): s is string => typeof s === 'string') : [];
+    if (!Array.isArray(parsed)) return [];
+    // Drop slugs that no longer name a real pattern. Without this, a renamed or
+    // removed pattern lingers in the store forever: the saved count keeps
+    // counting it while the dashboard silently drops it when mapping slugs to
+    // patterns, so the count and the checkout page disagree and the user has no
+    // way to reconcile them.
+    return parsed.filter((s): s is string => typeof s === 'string' && isKnownPatternSlug(s));
   } catch (error) {
     console.warn('Failed to read handoff kit:', error);
     return [];

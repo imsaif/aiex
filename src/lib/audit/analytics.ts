@@ -58,10 +58,17 @@ export const AUDIT_EVENT_NAMES = [
   'dashboard_kit_cleared',
   'dashboard_handoff_generated',
   'handoff_file_downloaded',
-  // Pattern pages: the install card now ships a Claude Code skill, not a one-shot
-  // prompt. Both events carry the pattern slug so we learn which patterns get installed.
+  // RETIRED 2026-08-11: the pattern card became a save card, so nothing copies an
+  // install command any more. Kept in the allowlist so historical queries by this
+  // name keep resolving. Do not fire it from new code.
   'skill_install_command_copied',
+  // One SKILL.md hit disk. Fired from more than one surface, so it carries a
+  // `source` property ('dashboard' at checkout) rather than being split into a
+  // second event name, which would fragment the metric.
   'skill_file_downloaded',
+  // The sticky pack bar on pattern routes, clicked through to checkout. This is
+  // the event that tests whether the browse-save-checkout model actually works.
+  'saved_items_bar_clicked',
   // Dashboard: zipped pack of one skill per saved pattern, plus the audit fixes file.
   'skill_pack_downloaded',
 ] as const;

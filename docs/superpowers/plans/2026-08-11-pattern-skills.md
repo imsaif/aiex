@@ -140,7 +140,7 @@ describe('composeSkillMd frontmatter', () => {
     // The fixture description contains ": keep humans in control", which would
     // break an unquoted single-line YAML scalar.
     const md = composeSkillMd(makePattern());
-    expect(md).toContain('description: "Use when the AI proposes, a person decides: keep humans in control of consequential actions. Apply the Human in the Loop pattern."');
+    expect(md).toContain('description: "Use when designing Human in the Loop in an AI product. The AI proposes, a person decides: keep humans in control of consequential actions."');
   });
 
   it('escapes embedded double quotes', () => {
@@ -154,6 +154,27 @@ describe('composeSkillMd frontmatter', () => {
 });
 
 describe('composeSkillMd trigger line', () => {
+  it('names the pattern first so an imperative description stays grammatical', () => {
+    // Descriptions in this codebase are imperative verb phrases. Splicing one in
+    // after "Use when" produced "Use when balance automation with human oversight".
+    const md = composeSkillMd(makePattern({}, {
+      title: 'Progressive Disclosure',
+      description: 'Gradually reveal information, options, or AI features to reduce cognitive load',
+    }));
+    expect(md).toContain('description: "Use when designing Progressive Disclosure in an AI product. Gradually reveal information, options, or AI features to reduce cognitive load."');
+    expect(md).not.toContain('Use when gradually reveal');
+  });
+
+  it('does not double up the sentence period', () => {
+    const md = composeSkillMd(makePattern({}, { description: 'Ends with a period already.' }));
+    expect(md).toContain('in an AI product. Ends with a period already."');
+  });
+
+  it('falls back to the lead alone when there is no description', () => {
+    const md = composeSkillMd(makePattern({}, { description: '' }));
+    expect(md).toContain('description: "Use when designing Human in the Loop in an AI product."');
+  });
+
   it('uses skillDescription verbatim when authored', () => {
     const md = composeSkillMd(makePattern({ skillDescription: 'Use when adding an approval gate to an agent action.' }));
     expect(md).toContain('description: "Use when adding an approval gate to an agent action."');
@@ -263,13 +284,26 @@ function yamlString(value: string): string {
   return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 }
 
+/**
+ * The trigger line is the only text Claude sees when deciding whether to load
+ * the skill, so it has to read as a condition.
+ *
+ * It names the pattern first and appends the description unchanged. An earlier
+ * version lowercased the description and spliced it in after "Use when", which
+ * produced broken English on essentially every pattern: descriptions in this
+ * codebase are imperative verb phrases ("Balance automation with human
+ * oversight..."), not condition clauses, so the result read "Use when balance
+ * automation with human oversight...". Naming the pattern first is grammatical
+ * no matter how a description is phrased.
+ */
 function skillTrigger(pattern: Pattern): string {
   const authored = pattern.content.skillDescription?.trim();
   if (authored) return oneLine(authored);
 
-  const desc = oneLine(pattern.description || '').replace(/\.+$/, '');
-  const lead = desc ? desc.charAt(0).toLowerCase() + desc.slice(1) : 'working on this surface';
-  return `Use when ${lead}. Apply the ${pattern.title} pattern.`;
+  const lead = `Use when designing ${pattern.title} in an AI product.`;
+  const desc = oneLine(pattern.description || '');
+  if (!desc) return lead;
+  return `${lead} ${desc.replace(/\.*$/, '.')}`;
 }
 
 /**
@@ -326,7 +360,7 @@ export function composeSkillMd(pattern: Pattern): string {
 - [ ] **Step 6: Run the tests to verify they pass**
 
 Run: `npx jest src/lib/skills/__tests__/composeSkill.test.ts`
-Expected: PASS, 13 tests.
+Expected: PASS, 16 tests.
 
 - [ ] **Step 7: Type-check**
 
@@ -553,7 +587,7 @@ describe('InstallPatternCTA', () => {
 
   it('copies the install command and fires the event with the slug', async () => {
     renderCard();
-    fireEvent.click(screen.getByRole('button', { name: /copy the install command/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^copy install command$/i }));
     await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
     const copied = writeText.mock.calls[0][0] as string;
     expect(copied).toContain('mkdir -p .claude/skills/aiux-human-in-the-loop');
@@ -690,7 +724,7 @@ export default function InstallPatternCTA({ patternTitle, patternSlug, skillName
               ? 'bg-status-success/10 text-status-success border-status-success/30'
               : 'bg-accent-primary text-white border-accent-primary hover:bg-accent-hover'
           }`}
-          aria-label="Copy the install command for Claude Code"
+          aria-label="Copy install command"
         >
           {copied ? (
             <>
@@ -735,7 +769,10 @@ export default function InstallPatternCTA({ patternTitle, patternSlug, skillName
 
       {showSkill && (
         <div className="border-t border-primary bg-surface-secondary">
-          <pre className="p-5 text-xs text-text-primary font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-96 overflow-y-auto">
+          {/* text-sm, not text-xs: this is the skill content we tell the reader
+              to inspect before installing, so the design system's accessibility
+              rule against text-xs for meaningful content applies. */}
+          <pre className="p-5 text-sm text-text-primary font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-96 overflow-y-auto">
             {skillMd}
           </pre>
         </div>
@@ -1172,6 +1209,56 @@ Expected: `README.md`, one `.claude/skills/aiux-<slug>/SKILL.md` per saved patte
 ```bash
 git add src/lib/skills/composePack.ts src/app/dashboard/dashboard-client.tsx src/lib/audit/analytics.ts package.json package-lock.json
 git commit -m "feat(skills): dashboard exports a zipped Claude skill pack"
+```
+
+---
+
+### Task 5: Correct the shipped trigger line
+
+**Why this task exists:** Tasks 1 and 2 shipped before anyone read real generated output. Curling the live route on 2026-08-11 showed the fallback trigger line was ungrammatical on essentially every pattern, because pattern descriptions are imperative verb phrases rather than condition clauses. Task 1's section above now carries the corrected `skillTrigger()` and its tests. This task brings the committed code in line with it. No unit test caught this: every test asserted against a fixture whose description happened to read as a clause.
+
+**Files:**
+- Modify: `src/lib/skills/composeSkill.ts` (the `skillTrigger` function)
+- Modify: `src/lib/skills/__tests__/composeSkill.test.ts` (gitignored, not committed)
+
+**Interfaces:** no signature changes. `composeSkillMd`, `skillName`, and `skillFilename` keep their exact contracts, so Tasks 2, 3, and 4 are unaffected. Only the generated text changes.
+
+- [ ] **Step 1: Update the tests first**
+
+In `src/lib/skills/__tests__/composeSkill.test.ts`, replace the colon-escaping expectation and add the three new trigger-line cases, exactly as they now appear in Task 1 Step 3 above. Copy them verbatim from there.
+
+- [ ] **Step 2: Run the tests to verify they fail**
+
+Run: `npx jest src/lib/skills/__tests__/composeSkill.test.ts`
+Expected: FAIL. The new grammar test fails with the old output, `"Use when the ai proposes..."` style, proving the tests actually pin the new behavior.
+
+- [ ] **Step 3: Replace `skillTrigger`**
+
+In `src/lib/skills/composeSkill.ts`, replace the whole `skillTrigger` function, including its new doc comment, with the version in Task 1 Step 5 above. Copy it verbatim. Change nothing else in the file: `oneLine`, `yamlString`, `skillMoves`, and `composeSkillMd` all stay as they are.
+
+- [ ] **Step 4: Run the tests to verify they pass**
+
+Run: `npx jest src/lib/skills/__tests__/composeSkill.test.ts`
+Expected: PASS, 16 tests.
+
+- [ ] **Step 5: Confirm the route still serves all 38**
+
+Run: `npx jest src/app/skills`
+Expected: PASS, 5 tests. The route consumes `composeSkillMd`, so this proves the text change broke nothing downstream.
+
+- [ ] **Step 6: Read the real output**
+
+With the dev server running: `curl -s http://localhost:3000/skills/aiux-human-in-the-loop.md | sed -n '3p'`
+
+Expected, on one line: `description: "Use when designing Human-in-the-Loop in an AI product. Balance automation with human oversight for critical decisions, ensuring AI augments human judgment."`
+
+Read it as a sentence. If it does not parse as English, the fix is not done. This step exists because steps 1 through 5 all passed on the broken version.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add src/lib/skills/composeSkill.ts
+git commit -m "fix(skills): name the pattern first so trigger lines read as English"
 ```
 
 ---

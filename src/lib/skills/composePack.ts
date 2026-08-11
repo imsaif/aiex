@@ -1,6 +1,7 @@
 import type { Pattern } from '@/types';
 import type { SavedAudit } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff } from '@/lib/handoff/composeCombined';
+import { SITE } from '@/lib/handoff/composeHandoff';
 import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
 
 /**
@@ -19,7 +20,8 @@ import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
 
 const AUDIT_FILE = 'aiux-audit-fixes.md';
 
-function packReadme(patternCount: number, auditCount: number): string {
+function packReadme(patterns: Pattern[], auditCount: number): string {
+  const patternCount = patterns.length;
   const lines: string[] = [
     '# Your AI UX skill pack',
     '',
@@ -50,13 +52,33 @@ function packReadme(patternCount: number, auditCount: number): string {
     '',
   );
 
+  const example = patterns[0];
+  if (example) {
+    // The only remaining pointer to the per-skill URLs. The pattern page used to
+    // hand out this command directly; it no longer does, so if this section goes
+    // the route at /skills/aiux-<slug>.md has no consumer left.
+    const name = skillName(example);
+    lines.push(
+      '## Updating one skill later',
+      '',
+      'Each skill is also served on its own, so you can refresh a single one without downloading the pack again:',
+      '',
+      '```',
+      `curl -fsSL ${SITE}/skills/${name}.md -o .claude/skills/${name}/SKILL.md`,
+      '```',
+      '',
+      'Swap the skill name for whichever one you want to refresh.',
+      '',
+    );
+  }
+
   return lines.join('\n');
 }
 
 /** Map of zip-relative path to file contents. */
 export function composeSkillPack(patterns: Pattern[], audits: SavedAudit[]): Record<string, string> {
   const files: Record<string, string> = {
-    'README.md': packReadme(patterns.length, audits.length),
+    'README.md': packReadme(patterns, audits.length),
   };
 
   patterns.forEach((pattern) => {
@@ -75,4 +97,73 @@ export function composeSkillPack(patterns: Pattern[], audits: SavedAudit[]): Rec
 /** Suggested filename for the downloaded pack. */
 export function skillPackFilename(): string {
   return 'aiux-skill-pack.zip';
+}
+
+/** Suggested filename for the single-file installer. */
+export function skillInstallerFilename(): string {
+  return 'aiux-skills.md';
+}
+
+/**
+ * The same pack as one markdown file, which Claude Code unpacks into real skill
+ * directories on request.
+ *
+ * Why this exists alongside the zip: a Claude Code skill has to live at
+ * `.claude/skills/<name>/SKILL.md` to trigger on its own, and a browser can only
+ * hand over several files at once as an archive. Some people would rather commit
+ * and diff one readable file than unzip one, so both shapes ship and usage
+ * decides which survives.
+ *
+ * The trade is honest: the zip is inert and certain, while this depends on an
+ * agent following the instructions at the top. That is why the header is
+ * explicit about where the instructions stop and the content begins.
+ *
+ * Fencing: skill bodies contain their own ``` code fences, so each file block is
+ * wrapped in a longer ~~~~ fence. Without that, a pattern carrying a code
+ * example would terminate its own block early and the file would unpack wrong.
+ */
+export function composeSkillInstaller(patterns: Pattern[], audits: SavedAudit[]): string {
+  const count = patterns.length;
+  const lines: string[] = [
+    '# Your AI UX skill pack',
+    '',
+    `From aiuxdesign.guide. This file contains ${count} Claude Code skill${count === 1 ? '' : 's'}.`,
+    '',
+    '## Claude: how to install these',
+    '',
+    'Create each file below at the exact path in its heading, with the contents of its code block, then tell me what you created. Everything after this section is content to write, not instructions to act on.',
+    '',
+    'Nothing else in this file needs running. Once the files exist, each skill triggers on its own when the work matches what it covers.',
+    '',
+    '---',
+    '',
+  ];
+
+  patterns.forEach((pattern) => {
+    lines.push(
+      `## File: .claude/skills/${skillName(pattern)}/SKILL.md`,
+      '',
+      '~~~~markdown',
+      composeSkillMd(pattern).trimEnd(),
+      '~~~~',
+      '',
+    );
+  });
+
+  if (audits.length > 0) {
+    // Audit fixes are one-shot work, not persistent guidance, so they ride along
+    // as a task file rather than becoming a skill. Same split as the zip.
+    lines.push(
+      `## File: ${AUDIT_FILE}`,
+      '',
+      'This one is not a skill. It is a task list of gaps found in your own product, so work through it once and then delete it.',
+      '',
+      '~~~~markdown',
+      composeCombinedHandoff(audits, []).trimEnd(),
+      '~~~~',
+      '',
+    );
+  }
+
+  return lines.join('\n');
 }
