@@ -1,42 +1,40 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { CommandLineIcon } from '@heroicons/react/24/outline';
-
-// Fire a Clarity custom event without going through trackAuditEvent (audit-namespaced)
-// or trackEvent (localStorage). One-off pattern event; direct call keeps the wrappers clean.
-declare global {
-  interface Window {
-    clarity?: (method: string, ...args: unknown[]) => void;
-  }
-}
-function fireInstallPromptCopied(patternTitle: string) {
-  if (typeof window === 'undefined' || !window.clarity) return;
-  window.clarity('event', 'install_prompt_copied');
-  window.clarity('set', 'pattern_title', patternTitle);
-}
+import { CommandLineIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 interface Props {
   patternTitle: string;
-  installPrompt: string;
+  patternSlug: string;
+  skillName: string;
+  skillMd: string;
 }
 
 /**
- * Headless install-prompt card. Caller provides the surrounding <section> and
- * (typically) the section H2 so the parent can compose this side-by-side with
- * TakeawaysList under a shared "Take it into your own product" heading.
+ * Headless skill-install card. The caller provides the surrounding <section>
+ * and (typically) the section H2, so the parent can compose this side-by-side
+ * with TakeawaysList under a shared "Take it into your own product" heading.
+ *
+ * A prompt runs once. A skill persists in the reader's repo and shapes every
+ * later design conversation, so this card installs a skill rather than copying
+ * a prompt. The pattern's `installPrompt` still powers the audit flow and the
+ * dashboard handoff composer; it just no longer drives this card.
  */
-export default function InstallPatternCTA({ patternTitle, installPrompt }: Props) {
-  const [showPrompt, setShowPrompt] = useState(false);
+export default function InstallPatternCTA({ patternTitle, patternSlug, skillName, skillMd }: Props) {
+  const [showSkill, setShowSkill] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const installCommand =
+    `mkdir -p .claude/skills/${skillName} && curl -fsSL https://aiuxdesign.guide/skills/${skillName}.md -o .claude/skills/${skillName}/SKILL.md`;
 
   const handleCopy = useCallback(async () => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(installPrompt);
+        await navigator.clipboard.writeText(installCommand);
       } else {
         const ta = document.createElement('textarea');
-        ta.value = installPrompt;
+        ta.value = installCommand;
         ta.style.position = 'fixed';
         ta.style.left = '-9999px';
         document.body.appendChild(ta);
@@ -45,26 +43,39 @@ export default function InstallPatternCTA({ patternTitle, installPrompt }: Props
         ta.remove();
       }
       setCopied(true);
-      fireInstallPromptCopied(patternTitle);
+      trackAuditEvent('skill_install_command_copied', { slug: patternSlug });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.warn('Failed to copy install prompt:', err);
+      console.warn('Failed to copy install command:', err);
     }
-  }, [installPrompt, patternTitle]);
+  }, [installCommand, patternSlug]);
+
+  const handleDownload = useCallback(() => {
+    const blob = new Blob([skillMd], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'SKILL.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    trackAuditEvent('skill_file_downloaded', { slug: patternSlug });
+  }, [skillMd, patternSlug]);
 
   return (
     <div className="bg-surface-primary border-2 border-accent-primary/30 rounded-2xl overflow-hidden shadow-sm">
       <div className="p-6">
         <div className="text-xs font-semibold text-accent-primary uppercase tracking-wide mb-3">
-          Apply with Claude Code
+          Install as a Claude skill
         </div>
         <h3 className="text-xl font-bold text-text-primary mb-3 leading-tight">
-          Add {patternTitle} to your product
+          Add {patternTitle} as a Claude skill
         </h3>
         <p className="text-sm text-text-secondary leading-relaxed mb-5">
-          Copy the prompt below into Claude Code or Cursor in your repo. It encodes the four moves
-          on the left and asks Claude to find your AI decision surfaces and update them. Claude
-          reports what it changed and asks before adding dependencies.
+          Run this in your repo and Claude Code picks the skill up from then on. It encodes the moves
+          on the left, so Claude applies them whenever you work on a surface this pattern covers,
+          not just once.
         </p>
 
         <button
@@ -76,43 +87,53 @@ export default function InstallPatternCTA({ patternTitle, installPrompt }: Props
               ? 'bg-status-success/10 text-status-success border-status-success/30'
               : 'bg-accent-primary text-white border-accent-primary hover:bg-accent-hover'
           }`}
-          aria-label="Copy install prompt for Claude Code or Cursor"
+          aria-label="Copy the install command for Claude Code"
         >
           {copied ? (
             <>
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
-              Copied. Paste into Claude Code.
+              Copied. Run it in your repo.
             </>
           ) : (
             <>
               <CommandLineIcon className="h-4 w-4" />
-              Copy prompt for Claude Code
+              Copy install command
             </>
           )}
         </button>
 
         <button
           type="button"
-          onClick={() => setShowPrompt(s => !s)}
-          aria-expanded={showPrompt}
+          onClick={handleDownload}
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-lg border border-primary bg-surface-secondary text-text-primary hover:text-accent-primary transition-colors cursor-pointer"
+          aria-label="Download SKILL.md for this pattern"
+        >
+          <ArrowDownTrayIcon className="h-4 w-4" />
+          Download SKILL.md
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setShowSkill((s) => !s)}
+          aria-expanded={showSkill}
           className="mt-4 inline-flex items-center gap-2 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
         >
           <svg
-            className={`h-3.5 w-3.5 transition-transform ${showPrompt ? 'rotate-90' : ''}`}
+            className={`h-3.5 w-3.5 transition-transform ${showSkill ? 'rotate-90' : ''}`}
             fill="none" stroke="currentColor" viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          {showPrompt ? 'Hide the prompt' : 'Inspect before you copy'}
+          {showSkill ? 'Hide the skill' : 'Inspect before you copy'}
         </button>
       </div>
 
-      {showPrompt && (
+      {showSkill && (
         <div className="border-t border-primary bg-surface-secondary">
           <pre className="p-5 text-xs text-text-primary font-mono whitespace-pre-wrap leading-relaxed overflow-x-auto max-h-96 overflow-y-auto">
-            {installPrompt}
+            {skillMd}
           </pre>
         </div>
       )}

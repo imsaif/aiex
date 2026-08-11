@@ -58,6 +58,10 @@ export const AUDIT_EVENT_NAMES = [
   'dashboard_kit_cleared',
   'dashboard_handoff_generated',
   'handoff_file_downloaded',
+  // Pattern pages: the install card now ships a Claude Code skill, not a one-shot
+  // prompt. Both events carry the pattern slug so we learn which patterns get installed.
+  'skill_install_command_copied',
+  'skill_file_downloaded',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
