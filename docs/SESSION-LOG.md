@@ -36,7 +36,12 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
-### Session 2026-08-10 15:53 (MacBook)
+### Session 2026-08-11 11:25 (MacBook)
+- **Pattern:** Brainstormed + spec'd "patterns as Claude Code skills" (per-pattern skill install + dashboard skill pack)
+- **Status:** ✅ Design spec approved and committed (`0579f86`); no implementation yet — next step is the implementation plan (writing-plans)
+- **Files Changed:** 1 (`docs/superpowers/specs/2026-08-10-pattern-skills-design.md`)
+- **Tests Added/Modified:** 0 (design-only session)
+- **Notes:** User's idea: each pattern becomes a Claude Code skill, dashboard folds saved ones into a "master skill" for the IDE. Groundwork confirmed strong before designing: 33/38 patterns already carry `installPrompt`, and the dashboard already composes a client-side handoff file (`composeHandoff.ts`). Four decisions locked in brainstorming: (1) skills are **persistent design advisors** (trigger whenever relevant UI is being built), not one-shot installers; (2) the dashboard export is a **pack of separate skills** (zip), not one merged master skill — a single description covering many patterns triggers mushily since Claude Code discovers skills by their one-line description; (3) the pattern page's "Copy prompt for Claude Code" card is **replaced** by the skill card (the `installPrompt` data field stays — audit flow + composer fallback still use it); (4) SKILL.md is **generated from existing fields** (takeaways → moves, problem → why) with a new optional `skillDescription` override for hand-tuning weak trigger lines. Approach A chosen over all-client-zips and full-server-API: static route serves each skill at `/skills/<slug>.md` so install is one copyable `mkdir + curl` command (a skill is just a folder with SKILL.md — no zip needed for singles); the dashboard pack is a client-side `fflate` zip structured to unzip at repo root (`.claude/skills/aiux-*/SKILL.md` + README + `aiux-audit-fixes.md` when audits exist). Saved audits deliberately stay handoff-shaped (one-shot fixes, not persistent guidance); audits-only keeps today's plain `.md` download.
 - **Pattern:** First click-level analysis of the newsletter (beehiiv Scale dashboards + Link Clicks CSV) → outbound-link fixes, a 73-row backfill, and a selection re-tune
 - **Status:** ✅ 3 commits on `fix/newsletter-source-attribution` (`a294689`, `e095c94`, `1d46844`). **NOT merged to master — the next cron run generates from deployed code, so none of this takes effect until the branch ships.**
 - **Files Changed:** 3 (`generate-newsletter/route.ts`, `lib/audit/constants.ts`, `components/audit/InlineAuditCTA.tsx`)
