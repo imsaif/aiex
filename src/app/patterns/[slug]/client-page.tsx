@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { InlineAuditCTA } from '@/components/audit/InlineAuditCTA';
 import SaveToDashboardButton from '@/components/handoff/SaveToDashboardButton';
+import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
 
 // Lazy load heavy components to reduce initial bundle size.
 //
@@ -218,7 +219,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             Guidelines/Considerations columns when a pattern has ranked
             takeaways. When an installPrompt is also present, the section
             becomes a two-column layout: numbered moves on the left, the
-            paste-into-Claude-Code CTA sticky on the right. Otherwise we
+            skill-install CTA sticky on the right. Otherwise we
             fall back to the legacy two-column block. */}
         {pattern.content.takeaways && pattern.content.takeaways.length > 0 ? (
           <section>
@@ -238,7 +239,9 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
                   <div className="lg:sticky lg:top-24 space-y-4">
                     <InstallPatternCTA
                       patternTitle={pattern.title}
-                      installPrompt={pattern.content.installPrompt}
+                      patternSlug={pattern.slug}
+                      skillName={skillName(pattern)}
+                      skillMd={composeSkillMd(pattern)}
                     />
                     <InlineAuditCTA variant="sidebar" />
                   </div>
