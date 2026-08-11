@@ -8,6 +8,7 @@ import { getProductsForPattern } from '@/data/utils/product-utils';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
+import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import { PatternSummary } from '@/types';
 import { guides } from '@/data/guides';
 import { getGuidesForPattern } from '@/lib/cross-links';
@@ -123,7 +124,9 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
           relatedGuides={relatedGuideData}
         />
         <Footer />
-        <ScrollToTop />
+        {/* Raised above SavedItemsBar, which is fixed to the bottom on this route. */}
+        <ScrollToTop bottom={88} />
+        <SavedItemsBar />
       </main>
     </>
   );

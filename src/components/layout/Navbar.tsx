@@ -12,8 +12,7 @@ import {
   BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
-import { useHandoffKit } from '@/hooks/useHandoffKit';
-import { useSavedAudits } from '@/hooks/useSavedAudits';
+import { useSavedCount } from '@/hooks/useSavedCount';
 
 // Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
 const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
@@ -21,9 +20,14 @@ const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 const Navbar = () => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { count: savedPatternCount } = useHandoffKit();
-  const { count: savedAuditCount } = useSavedAudits();
-  const savedCount = savedPatternCount + savedAuditCount;
+  const { count: savedCount } = useSavedCount();
+
+  // Pattern routes mount SavedItemsBar, which shows the same number in a sticky
+  // bar. Two live counts of the same thing in one viewport reads as clutter, so
+  // the badge yields there and the bar carries it. The "Saved" nav item itself
+  // stays; only the number is suppressed.
+  const packBarShowsCount = pathname === '/patterns' || pathname.startsWith('/patterns/');
+  const showBadge = savedCount > 0 && !packBarShowsCount;
 
   // Global keyboard shortcut for search (⌘K / Ctrl+K)
   useEffect(() => {
@@ -131,7 +135,7 @@ const Navbar = () => {
             <Link href="/dashboard" className={getLinkClasses('/dashboard')}>
               <span className="relative inline-flex">
                 <BookmarkIcon className="w-5 h-5" />
-                {savedCount > 0 && (
+                {showBadge && (
                   <span
                     className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent-primary px-1 text-xs font-semibold leading-none text-white"
                     aria-hidden="true"

@@ -134,7 +134,7 @@ export default function SavedAuditsSection({ audits, isSelected, onToggleSelect,
         <p className="text-sm font-semibold uppercase tracking-wide text-text-secondary">
           {audits.length} saved audit{audits.length === 1 ? '' : 's'}
         </p>
-        <p className="mt-1 text-sm text-text-secondary">Gaps found in your product. Act on these now.</p>
+        <p className="mt-1 text-sm text-text-secondary">Gaps found in your product.</p>
       </div>
       <ul className="divide-y divide-border-primary border-t border-border-primary">
         {audits.map((audit) => (
