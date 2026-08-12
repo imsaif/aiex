@@ -8,6 +8,7 @@ import { exampleProducts } from '@/lib/skills/usedBy';
 import { SkillsDirectory, type SkillRow } from '@/components/skills/SkillsDirectory';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
 
 export const revalidate = 3600;
@@ -104,6 +105,7 @@ export default function SkillsPage() {
         </div>
       </section>
 
+      <SavedItemsBar />
       <Footer />
     </main>
   );

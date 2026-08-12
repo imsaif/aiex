@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import UnifiedSearchBar from '../ui/UnifiedSearchBar';
+import SaveToDashboardButton from '../handoff/SaveToDashboardButton';
 
 export interface SkillRow {
   slug: string;
@@ -110,6 +111,11 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
               key={row.slug}
               className="relative transition-transform duration-200 ease-out hover:-translate-y-1.5"
             >
+              <SaveToDashboardButton
+                slug={row.slug}
+                variant="icon"
+                className="absolute top-4 right-4"
+              />
               <div
                 className="bg-surface-primary rounded-2xl p-8 border border-border-primary shadow-card
                             hover:shadow-card-hover hover:border-border-primary transition-all duration-300 h-full

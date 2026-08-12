@@ -1,6 +1,17 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { SkillsDirectory, type SkillRow } from '../SkillsDirectory';
 
+const toggle = jest.fn();
+const isSaved = jest.fn().mockReturnValue(false);
+
+jest.mock('@/hooks/useHandoffKit', () => ({
+  useHandoffKit: () => ({
+    isSaved,
+    toggle,
+    isLoading: false,
+  }),
+}));
+
 const rows: SkillRow[] = [
   {
     slug: 'human-in-the-loop',
@@ -32,6 +43,16 @@ describe('SkillsDirectory', () => {
   beforeEach(() => {
     Object.assign(navigator, { clipboard: { writeText: jest.fn().mockResolvedValue(undefined) } });
     window.clarity = jest.fn();
+    toggle.mockClear();
+    isSaved.mockClear();
+    isSaved.mockReturnValue(false);
+  });
+
+  it('saves a skill via the bookmark button without navigating', () => {
+    renderDirectory();
+    const saveButton = screen.getAllByRole('button', { name: 'Save to dashboard' })[0];
+    fireEvent.click(saveButton);
+    expect(toggle).toHaveBeenCalledWith(rows[0].slug);
   });
 
   it('renders one card per skill with name, trigger, and Used-by', () => {
