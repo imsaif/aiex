@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import UnifiedSearchBar from '../ui/UnifiedSearchBar';
 
 export interface SkillRow {
   slug: string;
@@ -20,11 +21,10 @@ interface SkillsDirectoryProps {
 }
 
 export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All Skills');
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
   const [failedSlug, setFailedSlug] = useState<string | null>(null);
-
-  const visible = activeCategory ? rows.filter((r) => r.category === activeCategory) : rows;
 
   async function copyCommand(row: SkillRow) {
     try {
@@ -39,103 +39,165 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
     }
   }
 
+  const filteredRows = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    return rows.filter((row) => {
+      const matchesSearch =
+        row.skillName.toLowerCase().includes(query) ||
+        row.title.toLowerCase().includes(query) ||
+        row.trigger.toLowerCase().includes(query);
+      const matchesCategory = selectedCategory === 'All Skills' || row.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [rows, searchQuery, selectedCategory]);
+
   return (
-    <div>
-      <div className="flex flex-wrap gap-tight" role="group" aria-label="Filter by category">
-        <button
-          type="button"
-          onClick={() => setActiveCategory(null)}
-          aria-pressed={activeCategory === null}
-          className={`rounded-pill border px-snug py-tight text-sm ${
-            activeCategory === null
-              ? 'border-accent-primary font-semibold text-text-primary'
-              : 'border-border-primary text-text-secondary'
-          }`}
-        >
-          All
-        </button>
-        {categories.map((category) => (
-          <button
-            key={category}
-            type="button"
-            onClick={() => setActiveCategory(category)}
-            aria-pressed={activeCategory === category}
-            className={`rounded-pill border px-snug py-tight text-sm ${
-              activeCategory === category
-                ? 'border-accent-primary font-semibold text-text-primary'
-                : 'border-border-primary text-text-secondary'
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+    <div className="flex flex-col lg:flex-row gap-8">
+      {/* Sidebar (stacks above the grid on mobile, fixed rail on desktop) */}
+      <aside className="lg:w-64 flex-shrink-0">
+        <div className="bg-surface-primary dark:bg-surface-elevated rounded-2xl p-6 border border-border-primary shadow-card lg:sticky lg:top-24">
+          <h3 className="font-semibold text-xl mb-4 text-text-primary">Categories</h3>
+          <ul className="space-y-2">
+            <li>
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('All Skills')}
+                aria-pressed={selectedCategory === 'All Skills'}
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
+                  selectedCategory === 'All Skills'
+                    ? 'bg-white font-semibold shadow-sm text-black'
+                    : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
+                }`}
+              >
+                All Skills
+              </button>
+            </li>
+            {categories.map((category) => (
+              <li key={category}>
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategory(category)}
+                  aria-pressed={selectedCategory === category}
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
+                    selectedCategory === category
+                      ? 'bg-white font-semibold shadow-sm text-black'
+                      : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
+                  }`}
+                >
+                  {category}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
 
-      <ol className="mt-loose grid grid-cols-1 gap-default md:grid-cols-2 lg:grid-cols-3">
-        {visible.map((row) => (
-          <li
-            key={row.slug}
-            className="flex flex-col rounded-card border border-border-primary bg-surface-primary p-default shadow-card transition-shadow hover:shadow-card-hover"
-          >
-            <span className="mb-tight self-start rounded-pill border border-border-primary px-tight text-sm text-text-secondary">
-              {row.category}
-            </span>
-            <Link href={`/patterns/${row.slug}`} className="font-medium text-text-primary hover:underline">
-              {row.skillName}
-            </Link>
-            <span className="text-sm text-text-secondary">{row.title}</span>
-            <p className="mt-tight text-sm text-text-secondary" title={row.trigger}>
-              {row.trigger}
-            </p>
+      {/* Skills Grid */}
+      <div className="flex-1">
+        {/* Search Bar */}
+        <div className="mb-6 bg-surface-primary dark:bg-surface-elevated rounded-2xl p-5 border border-border-primary shadow-card">
+          <UnifiedSearchBar
+            placeholder="Search any skill you need"
+            value={searchQuery}
+            onChange={setSearchQuery}
+            size="sm"
+          />
+        </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredRows.map((row) => (
             <div
-              className="mt-default flex flex-wrap items-center gap-tight"
-              role="group"
-              aria-label={`Products using ${row.title}`}
+              key={row.slug}
+              className="relative transition-transform duration-200 ease-out hover:-translate-y-1.5"
             >
-              <span className="text-sm text-text-secondary">Used by</span>
-              {row.products.map((product) =>
-                product.logo ? (
-                  <Image
-                    key={product.name}
-                    src={product.logo}
-                    alt={product.name}
-                    title={product.name}
-                    width={20}
-                    height={20}
-                  />
-                ) : (
-                  <span key={product.name} className="text-sm text-text-secondary">
-                    {product.name}
+              <Link href={`/patterns/${row.slug}`} className="block group">
+                <div
+                  className="bg-surface-primary rounded-2xl p-8 border border-border-primary shadow-card
+                              hover:shadow-card-hover hover:border-border-primary transition-all duration-300 h-full
+                              flex flex-col"
+                >
+                  {/* Title */}
+                  <h3 className="text-lg font-semibold text-text-primary mb-1 transition-colors">
+                    {row.title}
+                  </h3>
+                  <span className="text-sm text-text-secondary mb-4">{row.skillName}</span>
+
+                  {/* Trigger (description) */}
+                  <p className="text-lg text-text-secondary leading-relaxed line-clamp-3 flex-grow mb-8">
+                    {row.trigger}
+                  </p>
+
+                  {/* Divider */}
+                  <div className="border-t border-border-primary mb-6"></div>
+
+                  {/* Category */}
+                  <div className="flex items-center gap-2 mb-6">
+                    <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-accent-subtle dark:bg-surface-elevated text-text-secondary">
+                      {row.category}
+                    </span>
+                  </div>
+
+                  {/* Used By */}
+                  {row.products.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="text-sm text-text-secondary font-medium">Used by:</span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        {row.products.map((product) =>
+                          product.logo ? (
+                            <Image
+                              key={product.name}
+                              src={product.logo}
+                              alt={product.name}
+                              title={product.name}
+                              width={20}
+                              height={20}
+                              className="h-5 w-5"
+                            />
+                          ) : (
+                            <span key={product.name} className="text-sm text-text-secondary">
+                              {product.name}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Link>
+
+              {/* Copy install (skills-specific addition) */}
+              <div className="mt-3 px-1">
+                {failedSlug === row.slug && (
+                  <>
+                    <p className="mb-tight text-sm text-text-secondary">
+                      Copy failed. Select the command below manually.
+                    </p>
+                    <pre className="mb-tight overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary">
+                      {row.command}
+                    </pre>
+                  </>
+                )}
+                <button
+                  type="button"
+                  onClick={() => copyCommand(row)}
+                  className="w-full rounded-input border border-border-primary px-snug py-tight text-sm text-text-primary hover:bg-surface-secondary"
+                >
+                  {copiedSlug === row.slug ? 'Copied' : 'Copy install'}
+                  <span aria-live="polite" className="sr-only">
+                    {copiedSlug === row.slug ? 'Copied' : failedSlug === row.slug ? 'Copy failed' : ''}
                   </span>
-                )
-              )}
+                </button>
+              </div>
             </div>
+          ))}
+        </div>
 
-            {failedSlug === row.slug && (
-              <>
-                <p className="mt-tight text-sm text-text-secondary">
-                  Copy failed. Select the command below manually.
-                </p>
-                <pre className="mt-tight overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary">
-                  {row.command}
-                </pre>
-              </>
-            )}
-
-            <button
-              type="button"
-              onClick={() => copyCommand(row)}
-              className="mt-default w-full rounded-input border border-border-primary px-snug py-tight text-sm text-text-primary hover:bg-surface-secondary"
-            >
-              {copiedSlug === row.slug ? 'Copied' : 'Copy install'}
-              <span aria-live="polite" className="sr-only">
-                {copiedSlug === row.slug ? 'Copied' : failedSlug === row.slug ? 'Copy failed' : ''}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ol>
+        {filteredRows.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-text-secondary">No skills found matching your criteria.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

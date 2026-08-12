@@ -34,31 +34,39 @@ describe('SkillsDirectory', () => {
     window.clarity = jest.fn();
   });
 
-  it('renders one row per skill with name, trigger, and Used-by', () => {
+  it('renders one card per skill with name, trigger, and Used-by', () => {
     renderDirectory();
     expect(screen.getByText('aiux-human-in-the-loop')).toBeInTheDocument();
     expect(screen.getByText('Use when a UI shows too much at once.')).toBeInTheDocument();
     expect(screen.getByText('Obscure Tool')).toBeInTheDocument();
   });
 
-  it('filters rows by category chip', () => {
+  it('filters cards by sidebar category button', () => {
     renderDirectory();
     fireEvent.click(screen.getByRole('button', { name: 'User Experience' }));
     expect(screen.queryByText('aiux-human-in-the-loop')).not.toBeInTheDocument();
     expect(screen.getByText('aiux-progressive-disclosure')).toBeInTheDocument();
   });
 
-  it('marks the active category chip with aria-pressed and a bold cue', () => {
+  it('marks the active category button with aria-pressed and a bold cue', () => {
     renderDirectory();
-    const allChip = screen.getByRole('button', { name: 'All' });
-    const userExperienceChip = screen.getByRole('button', { name: 'User Experience' });
-    expect(allChip).toHaveAttribute('aria-pressed', 'true');
-    expect(userExperienceChip).toHaveAttribute('aria-pressed', 'false');
+    const allButton = screen.getByRole('button', { name: 'All Skills' });
+    const userExperienceButton = screen.getByRole('button', { name: 'User Experience' });
+    expect(allButton).toHaveAttribute('aria-pressed', 'true');
+    expect(userExperienceButton).toHaveAttribute('aria-pressed', 'false');
 
-    fireEvent.click(userExperienceChip);
-    expect(allChip).toHaveAttribute('aria-pressed', 'false');
-    expect(userExperienceChip).toHaveAttribute('aria-pressed', 'true');
-    expect(userExperienceChip.className).toContain('font-semibold');
+    fireEvent.click(userExperienceButton);
+    expect(allButton).toHaveAttribute('aria-pressed', 'false');
+    expect(userExperienceButton).toHaveAttribute('aria-pressed', 'true');
+    expect(userExperienceButton.className).toContain('font-semibold');
+  });
+
+  it('filters cards by search query across skill name, title, and trigger', () => {
+    renderDirectory();
+    const searchInput = screen.getByPlaceholderText('Search any skill you need');
+    fireEvent.change(searchInput, { target: { value: 'progressive' } });
+    expect(screen.queryByText('aiux-human-in-the-loop')).not.toBeInTheDocument();
+    expect(screen.getByText('aiux-progressive-disclosure')).toBeInTheDocument();
   });
 
   it('copies the install command and fires the clarity event', async () => {
