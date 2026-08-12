@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -145,8 +146,15 @@ export default function PatternsIndexPage() {
                 {patterns.length} AI UX Design Patterns & Skills
               </h1>
 
-              <p className="text-2xl md:text-3xl text-text-secondary mb-12">
+              <p className="text-2xl md:text-3xl text-text-secondary mb-6">
                 How the world&apos;s best AI products design their experiences, documented, analyzed, and continuously updated.
+              </p>
+
+              <p className="text-base text-text-secondary mb-12">
+                Every pattern ships as a free Claude Code skill.{' '}
+                <Link href="/skills" className="font-medium text-text-primary underline underline-offset-4">
+                  Browse the skills directory
+                </Link>
               </p>
 
               <div>
