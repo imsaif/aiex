@@ -71,37 +71,29 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
         ))}
       </div>
 
-      <ol className="mt-loose divide-y divide-border-primary">
-        {visible.map((row, index) => (
-          <li key={row.slug} className="flex flex-wrap items-start gap-default py-default">
-            <span className="type-caption w-6 shrink-0 text-text-secondary">{index + 1}</span>
-            <div className="min-w-0 flex-1">
-              <Link href={`/patterns/${row.slug}`} className="font-medium text-text-primary hover:underline">
-                {row.skillName}
-              </Link>
-              <span className="ml-snug text-sm text-text-secondary">{row.title}</span>
-              <span className="ml-snug rounded-pill border border-border-primary px-tight text-sm text-text-secondary">
-                {row.category}
-              </span>
-              <p className="mt-tight text-sm text-text-secondary" title={row.trigger}>
-                {row.trigger}
-              </p>
-              {failedSlug === row.slug && (
-                <>
-                  <p className="mt-tight text-sm text-text-secondary">
-                    Copy failed. Select the command below manually.
-                  </p>
-                  <pre className="mt-tight overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary">
-                    {row.command}
-                  </pre>
-                </>
-              )}
-            </div>
+      <ol className="mt-loose grid grid-cols-1 gap-default md:grid-cols-2 lg:grid-cols-3">
+        {visible.map((row) => (
+          <li
+            key={row.slug}
+            className="flex flex-col rounded-card border border-border-primary bg-surface-primary p-default shadow-card transition-shadow hover:shadow-card-hover"
+          >
+            <span className="mb-tight self-start rounded-pill border border-border-primary px-tight text-sm text-text-secondary">
+              {row.category}
+            </span>
+            <Link href={`/patterns/${row.slug}`} className="font-medium text-text-primary hover:underline">
+              {row.skillName}
+            </Link>
+            <span className="text-sm text-text-secondary">{row.title}</span>
+            <p className="mt-tight text-sm text-text-secondary" title={row.trigger}>
+              {row.trigger}
+            </p>
+
             <div
-              className="flex shrink-0 items-center gap-tight"
+              className="mt-default flex flex-wrap items-center gap-tight"
               role="group"
               aria-label={`Products using ${row.title}`}
             >
+              <span className="text-sm text-text-secondary">Used by</span>
               {row.products.map((product) =>
                 product.logo ? (
                   <Image
@@ -119,10 +111,22 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                 )
               )}
             </div>
+
+            {failedSlug === row.slug && (
+              <>
+                <p className="mt-tight text-sm text-text-secondary">
+                  Copy failed. Select the command below manually.
+                </p>
+                <pre className="mt-tight overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary">
+                  {row.command}
+                </pre>
+              </>
+            )}
+
             <button
               type="button"
               onClick={() => copyCommand(row)}
-              className="shrink-0 rounded-input border border-border-primary px-snug py-tight text-sm text-text-primary hover:bg-surface-secondary"
+              className="mt-default w-full rounded-input border border-border-primary px-snug py-tight text-sm text-text-primary hover:bg-surface-secondary"
             >
               {copiedSlug === row.slug ? 'Copied' : 'Copy install'}
               <span aria-live="polite" className="sr-only">
