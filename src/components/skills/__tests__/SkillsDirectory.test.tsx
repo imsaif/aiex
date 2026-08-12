@@ -20,7 +20,6 @@ const rows: SkillRow[] = [
     category: 'Human-AI Collaboration',
     trigger: 'Use when AI output needs human review.',
     products: [{ name: 'Grammarly', logo: '/images/logos/simple-icons/grammarly.svg' }],
-    command: 'mkdir -p .claude/skills/aiux-human-in-the-loop && curl ...',
   },
   {
     slug: 'progressive-disclosure',
@@ -29,7 +28,6 @@ const rows: SkillRow[] = [
     category: 'User Experience',
     trigger: 'Use when a UI shows too much at once.',
     products: [{ name: 'Obscure Tool' }],
-    command: 'mkdir -p .claude/skills/aiux-progressive-disclosure && curl ...',
   },
 ];
 
@@ -90,22 +88,8 @@ describe('SkillsDirectory', () => {
     expect(screen.getByText('aiux-progressive-disclosure')).toBeInTheDocument();
   });
 
-  it('copies the install command and fires the clarity event', async () => {
+  it('does not render a copy install action on cards', () => {
     renderDirectory();
-    const button = screen.getAllByRole('button', { name: /copy install/i })[0];
-    fireEvent.click(button);
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(rows[0].command);
-    await waitFor(() => expect(button).toHaveTextContent('Copied'));
-    expect(window.clarity).toHaveBeenCalledWith('event', 'skill-copy');
-  });
-
-  it('reveals the command and an explanatory message for manual copy when clipboard write fails', async () => {
-    (navigator.clipboard.writeText as jest.Mock).mockRejectedValue(new Error('denied'));
-    renderDirectory();
-    fireEvent.click(screen.getAllByRole('button', { name: /copy install/i })[0]);
-    expect(await screen.findByText(rows[0].command)).toBeInTheDocument();
-    expect(
-      screen.getByText('Copy failed. Select the command below manually.')
-    ).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /copy install/i })).not.toBeInTheDocument();
   });
 });

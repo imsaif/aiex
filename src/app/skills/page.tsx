@@ -3,7 +3,6 @@ import { patterns } from '@/data/patterns';
 import categories from '@/data/categories';
 import { siteConfig } from '@/config/seo';
 import { skillName } from '@/lib/skills/composeSkill';
-import { skillInstallCommand } from '@/lib/skills/installCommand';
 import { exampleProducts } from '@/lib/skills/usedBy';
 import { SkillsDirectory, type SkillRow } from '@/components/skills/SkillsDirectory';
 import Navbar from '@/components/layout/Navbar';
@@ -16,7 +15,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: 'Free Claude Code Skills for AI UX Design',
   description:
-    'Install free Claude Code skills, one per AI UX pattern. Copy one command and your coding agent gains that pattern\'s design judgment: when it applies and the moves that make it real.',
+    'Install free Claude Code skills, one per AI UX pattern. Save the ones you need and your coding agent gains that pattern\'s design judgment: when it applies and the moves that make it real.',
   alternates: { canonical: `${siteConfig.url}/skills` },
 };
 
@@ -38,7 +37,6 @@ export default function SkillsPage() {
       category: pattern.category,
       trigger: pattern.content.skillDescription ?? pattern.description,
       products: exampleProducts(pattern),
-      command: skillInstallCommand(pattern),
     }));
 
   const itemList = {
@@ -73,8 +71,8 @@ export default function SkillsPage() {
             </h1>
             <p className="text-lg md:text-xl text-text-secondary">
               A skill is persistent design guidance for your coding agent. Install one and it triggers on
-              its own whenever the work matches: no prompting, no reminders. Copy a command, paste it in
-              your terminal at your repo root, done.
+              its own whenever the work matches: no prompting, no reminders. Save the skills you want and
+              download them as one pack, or install any single skill with the command below.
             </p>
             <pre className="max-w-2xl mx-auto mt-8 overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary text-left">
               {GENERIC_COMMAND}

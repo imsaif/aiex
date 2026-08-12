@@ -13,7 +13,6 @@ export interface SkillRow {
   category: string;
   trigger: string;
   products: { name: string; logo?: string }[];
-  command: string;
 }
 
 interface SkillsDirectoryProps {
@@ -24,21 +23,6 @@ interface SkillsDirectoryProps {
 export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Skills');
-  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
-  const [failedSlug, setFailedSlug] = useState<string | null>(null);
-
-  async function copyCommand(row: SkillRow) {
-    try {
-      await navigator.clipboard.writeText(row.command);
-      setCopiedSlug(row.slug);
-      setFailedSlug(null);
-      window.clarity?.('event', 'skill-copy');
-      window.clarity?.('set', 'skill-copy-slug', row.skillName);
-    } catch {
-      setFailedSlug(row.slug);
-      setCopiedSlug(null);
-    }
-  }
 
   const filteredRows = useMemo(() => {
     const query = searchQuery.toLowerCase();
@@ -169,30 +153,6 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                     </div>
                   )}
                 </Link>
-
-                {/* Copy install (skills-specific addition) */}
-                <div className="mt-6">
-                {failedSlug === row.slug && (
-                  <>
-                    <p className="mb-tight text-sm text-text-secondary">
-                      Copy failed. Select the command below manually.
-                    </p>
-                    <pre className="mb-tight overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary">
-                      {row.command}
-                    </pre>
-                  </>
-                )}
-                <button
-                  type="button"
-                  onClick={() => copyCommand(row)}
-                  className="w-full rounded-input border border-border-primary px-snug py-tight text-sm text-text-primary hover:bg-surface-secondary"
-                >
-                  {copiedSlug === row.slug ? 'Copied' : 'Copy install'}
-                  <span aria-live="polite" className="sr-only">
-                    {copiedSlug === row.slug ? 'Copied' : failedSlug === row.slug ? 'Copy failed' : ''}
-                  </span>
-                </button>
-                </div>
               </div>
             </div>
           ))}
