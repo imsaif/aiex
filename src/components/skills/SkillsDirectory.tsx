@@ -110,12 +110,12 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
               key={row.slug}
               className="relative transition-transform duration-200 ease-out hover:-translate-y-1.5"
             >
-              <Link href={`/patterns/${row.slug}`} className="block group">
-                <div
-                  className="bg-surface-primary rounded-2xl p-8 border border-border-primary shadow-card
-                              hover:shadow-card-hover hover:border-border-primary transition-all duration-300 h-full
-                              flex flex-col"
-                >
+              <div
+                className="bg-surface-primary rounded-2xl p-8 border border-border-primary shadow-card
+                            hover:shadow-card-hover hover:border-border-primary transition-all duration-300 h-full
+                            flex flex-col"
+              >
+                <Link href={`/patterns/${row.slug}`} className="group flex flex-col flex-grow">
                   {/* Title */}
                   <h3 className="text-lg font-semibold text-text-primary mb-1 transition-colors">
                     {row.title}
@@ -162,11 +162,10 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                       </div>
                     </div>
                   )}
-                </div>
-              </Link>
+                </Link>
 
-              {/* Copy install (skills-specific addition) */}
-              <div className="mt-3 px-1">
+                {/* Copy install (skills-specific addition) */}
+                <div className="mt-6">
                 {failedSlug === row.slug && (
                   <>
                     <p className="mb-tight text-sm text-text-secondary">
@@ -187,6 +186,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                     {copiedSlug === row.slug ? 'Copied' : failedSlug === row.slug ? 'Copy failed' : ''}
                   </span>
                 </button>
+                </div>
               </div>
             </div>
           ))}
