@@ -112,6 +112,14 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
+                      href="/skills"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Claude Code Skills
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="/toolkit"
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
