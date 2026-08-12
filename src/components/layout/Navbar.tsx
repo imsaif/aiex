@@ -10,6 +10,7 @@ import {
   FolderIcon,
   AcademicCapIcon,
   BookmarkIcon,
+  CommandLineIcon,
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
 import { useSavedCount } from '@/hooks/useSavedCount';
@@ -98,6 +99,16 @@ const Navbar = () => {
                 Patterns
                 <span className="invisible font-semibold block h-0" aria-hidden="true">
                   Patterns
+                </span>
+              </span>
+            </Link>
+
+            <Link href="/skills" className={getLinkClasses('/skills')}>
+              <CommandLineIcon className="w-5 h-5" />
+              <span className="hidden sm:inline relative">
+                Skills
+                <span className="invisible font-semibold block h-0" aria-hidden="true">
+                  Skills
                 </span>
               </span>
             </Link>
