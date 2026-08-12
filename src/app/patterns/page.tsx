@@ -19,7 +19,7 @@ export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: {
-    absolute: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
+    absolute: `${patterns.length} AI UX Design Patterns & Skills: A Framework for Designing AI Products`,
   },
   description:
     `${patterns.length} AI UX design patterns documented from ChatGPT, Claude, GitHub Copilot, Midjourney, Figma, Linear, and 50+ shipped AI products. Each pattern has real examples, code demos, and implementation guidance — use them to design AI experiences users actually trust.`,
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${siteConfig.url}/patterns`,
-    title: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
+    title: `${patterns.length} AI UX Design Patterns & Skills: A Framework for Designing AI Products`,
     description:
       `${patterns.length} AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products. Real examples, code demos, implementation guidance.`,
     siteName: siteConfig.name,
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
+    title: `${patterns.length} AI UX Design Patterns & Skills: A Framework for Designing AI Products`,
     description:
       `${patterns.length} AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products.`,
     images: [`${siteConfig.url}/images/og/og-home.png`],
@@ -142,7 +142,7 @@ export default function PatternsIndexPage() {
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
                 style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
               >
-                {patterns.length} AI UX Design Patterns
+                {patterns.length} AI UX Design Patterns & Skills
               </h1>
 
               <p className="text-2xl md:text-3xl text-text-secondary mb-12">
