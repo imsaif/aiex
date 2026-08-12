@@ -45,9 +45,10 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
         <button
           type="button"
           onClick={() => setActiveCategory(null)}
+          aria-pressed={activeCategory === null}
           className={`rounded-pill border px-snug py-tight text-sm ${
             activeCategory === null
-              ? 'border-accent-primary text-text-primary'
+              ? 'border-accent-primary font-semibold text-text-primary'
               : 'border-border-primary text-text-secondary'
           }`}
         >
@@ -58,9 +59,10 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
             key={category}
             type="button"
             onClick={() => setActiveCategory(category)}
+            aria-pressed={activeCategory === category}
             className={`rounded-pill border px-snug py-tight text-sm ${
               activeCategory === category
-                ? 'border-accent-primary text-text-primary'
+                ? 'border-accent-primary font-semibold text-text-primary'
                 : 'border-border-primary text-text-secondary'
             }`}
           >
@@ -77,6 +79,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
               <Link href={`/patterns/${row.slug}`} className="font-medium text-text-primary hover:underline">
                 {row.skillName}
               </Link>
+              <span className="ml-snug text-sm text-text-secondary">{row.title}</span>
               <span className="ml-snug rounded-pill border border-border-primary px-tight text-sm text-text-secondary">
                 {row.category}
               </span>
@@ -84,12 +87,21 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                 {row.trigger}
               </p>
               {failedSlug === row.slug && (
-                <pre className="mt-tight overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary">
-                  {row.command}
-                </pre>
+                <>
+                  <p className="mt-tight text-sm text-text-secondary">
+                    Copy failed. Select the command below manually.
+                  </p>
+                  <pre className="mt-tight overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary">
+                    {row.command}
+                  </pre>
+                </>
               )}
             </div>
-            <div className="flex shrink-0 items-center gap-tight" aria-label={`Products using ${row.title}`}>
+            <div
+              className="flex shrink-0 items-center gap-tight"
+              role="group"
+              aria-label={`Products using ${row.title}`}
+            >
               {row.products.map((product) =>
                 product.logo ? (
                   <Image
@@ -113,6 +125,9 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
               className="shrink-0 rounded-input border border-border-primary px-snug py-tight text-sm text-text-primary hover:bg-surface-secondary"
             >
               {copiedSlug === row.slug ? 'Copied' : 'Copy install'}
+              <span aria-live="polite" className="sr-only">
+                {copiedSlug === row.slug ? 'Copied' : failedSlug === row.slug ? 'Copy failed' : ''}
+              </span>
             </button>
           </li>
         ))}

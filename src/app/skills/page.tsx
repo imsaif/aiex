@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { patterns } from '@/data/patterns';
 import categories from '@/data/categories';
 import { SITE } from '@/lib/handoff/composeHandoff';
+import { siteConfig } from '@/config/seo';
 import { skillName } from '@/lib/skills/composeSkill';
 import { skillInstallCommand } from '@/lib/skills/installCommand';
 import { exampleProducts } from '@/lib/skills/usedBy';
@@ -14,11 +15,11 @@ export const metadata: Metadata = {
   title: 'Free Claude Code Skills for AI UX Design',
   description:
     'Install free Claude Code skills, one per AI UX pattern. Copy one command and your coding agent gains that pattern\'s design judgment: when it applies and the moves that make it real.',
-  alternates: { canonical: `${SITE}/skills` },
+  alternates: { canonical: `${siteConfig.url}/skills` },
 };
 
 const GENERIC_COMMAND =
-  'mkdir -p .claude/skills/aiux-<pattern> && curl -fsSL https://aiuxdesign.guide/skills/aiux-<pattern>.md -o .claude/skills/aiux-<pattern>/SKILL.md';
+  'mkdir -p .claude/skills/aiux-<slug> && curl -fsSL https://aiuxdesign.guide/skills/aiux-<slug>.md -o .claude/skills/aiux-<slug>/SKILL.md';
 
 export default function SkillsPage() {
   const categoryNames = categories.map((c) => c.title);
@@ -47,7 +48,7 @@ export default function SkillsPage() {
       '@type': 'ListItem',
       position: index + 1,
       name: row.skillName,
-      url: `${SITE}/patterns/${row.slug}`,
+      url: `${siteConfig.url}/patterns/${row.slug}`,
     })),
   };
 
