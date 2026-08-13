@@ -147,20 +147,13 @@ export default function PatternsIndexPage() {
               </h1>
 
               <p className="text-2xl md:text-3xl text-text-secondary mb-6">
-                How the world&apos;s best AI products design their experiences, documented, analyzed, and continuously updated.
+                How the world&apos;s best AI products design their experiences.
               </p>
 
-              <p className="text-base text-text-secondary mb-12">
-                Every pattern ships as a free Claude Code skill.{' '}
-                <Link href="/skills" className="font-medium text-text-primary underline underline-offset-4">
-                  Browse the skills directory
-                </Link>
-              </p>
-
-              {/* Hero stays minimal on purpose: identity, one skills line, quiet
-                  social proof, and a slim email capture (default component copy
-                  is the whole pitch: daily AIUX news disclosure, no extras). */}
-              <div>
+              {/* Hero stays minimal on purpose: identity, quiet social proof,
+                  and a slim email capture (default component copy is the whole
+                  pitch: daily AIUX news disclosure, no extras). */}
+              <div className="mt-12">
                 <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                   Patterns used by leading companies
                 </p>
@@ -173,6 +166,16 @@ export default function PatternsIndexPage() {
             </div>
           </div>
         </section>
+
+        {/* Skills strip — sits with the grid: every pattern below is installable */}
+        <div className="max-w-7xl mx-auto px-6 pt-10 text-center">
+          <p className="text-sm text-text-secondary">
+            Every pattern below ships as a free Claude Code skill.{' '}
+            <Link href="/skills" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+              Browse the skills directory
+            </Link>
+          </p>
+        </div>
 
         {/* Interactive Pattern Grid — search + filters + responsive cards */}
         <PatternGrid
