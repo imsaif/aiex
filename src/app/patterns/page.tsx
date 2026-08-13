@@ -197,6 +197,9 @@ export default function PatternsIndexPage() {
             Daily AI UX news
           </h2>
           <InlineNewsletterSignup variant="hero" source="patterns-grid" />
+          <p className="mt-4 text-sm text-text-secondary">
+            Read by 1,500+ designers every month.
+          </p>
         </section>
 
         {/* SEO — keyword-rich server-rendered text for Googlebot */}
