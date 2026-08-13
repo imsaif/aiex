@@ -168,7 +168,7 @@ export default function PatternsIndexPage() {
               </div>
 
               <div className="mt-10 max-w-md mx-auto">
-                <InlineNewsletterSignup variant="hero" source="patterns" stacked />
+                <InlineNewsletterSignup variant="hero" source="patterns-hero" stacked />
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function PatternsIndexPage() {
           <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-3">
             Daily AI UX news
           </h2>
-          <InlineNewsletterSignup variant="hero" source="patterns" />
+          <InlineNewsletterSignup variant="hero" source="patterns-grid" />
         </section>
 
         {/* SEO — keyword-rich server-rendered text for Googlebot */}
