@@ -77,6 +77,13 @@ export default function SkillsPage() {
             <pre className="max-w-2xl mx-auto mt-8 overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary text-left">
               {GENERIC_COMMAND}
             </pre>
+            <p className="mt-4 text-sm text-text-secondary">
+              New to skills?{' '}
+              <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+                Read how skills work
+              </Link>{' '}
+              (4 lessons, about 10 minutes).
+            </p>
           </div>
         </div>
       </section>
@@ -97,6 +104,10 @@ export default function SkillsPage() {
             . Not sure which patterns your product needs?{' '}
             <Link href="/audit" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
               Run the free audit
+            </Link>
+            . First time using skills?{' '}
+            <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+              Learn how skills work
             </Link>
             .
           </p>
