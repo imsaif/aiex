@@ -157,28 +157,14 @@ export default function PatternsIndexPage() {
                 </Link>
               </p>
 
+              {/* Hero stays minimal on purpose: identity, one skills line, and
+                  quiet social proof, then straight into the grid. Newsletter
+                  capture lives in the signup section below the grid. */}
               <div>
                 <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                   Patterns used by leading companies
                 </p>
                 <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
-              </div>
-
-              {/* Hero email capture — mirrors the /news hero treatment (stacked
-                  form + social proof) so visitors don't have to scroll past the
-                  full grid to subscribe. A second copy lives below the grid. */}
-              <div className="mt-10 max-w-md mx-auto">
-                <InlineNewsletterSignup
-                  variant="hero"
-                  source="patterns"
-                  customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
-                  customButtonText="Solve my AI design overload →"
-                  customSuccessMessage="You're in! Watch for our next issue."
-                  stacked
-                />
-                <p className="text-base font-medium text-text-secondary mt-4">
-                  46,000+ reads · 50+ products analyzed daily
-                </p>
               </div>
             </div>
           </div>
