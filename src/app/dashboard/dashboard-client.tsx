@@ -32,7 +32,15 @@ function auditTitle(productLabel: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export default function DashboardClient() {
+export interface CourseSummary {
+  slug: string;
+  title: string;
+  lessonCount: number;
+  readTime: number;
+  relatedPatterns: string[];
+}
+
+export default function DashboardClient({ courses = [] }: { courses?: CourseSummary[] }) {
   const { savedSlugs, add: addPattern, remove: removePattern, clear: clearPatterns, isLoading } = useHandoffKit();
   const { savedAudits, save: saveAudit, remove: removeAudit, isLoading: auditsLoading } = useSavedAudits();
   const [packError, setPackError] = useState<string | null>(null);
@@ -69,6 +77,22 @@ export default function DashboardClient() {
   const hasPatterns = savedPatterns.length > 0;
   const hasAudits = savedAudits.length > 0;
   const isEmpty = !hasPatterns && !hasAudits;
+
+  // Courses matched to the saved patterns: the skills guide is always pinned
+  // first (it explains the pack itself), then the two guides with the most
+  // overlap with the saved slugs; falls back to the top courses when nothing
+  // is saved yet.
+  const recommendedCourses = useMemo(() => {
+    const pinned = courses.find((c) => c.slug === 'ai-ux-skills-guide');
+    const saved = new Set(savedSlugs);
+    const scored = courses
+      .filter((c) => c.slug !== 'ai-ux-skills-guide')
+      .map((c) => ({ course: c, overlap: c.relatedPatterns.filter((s) => saved.has(s)).length }))
+      .sort((a, b) => b.overlap - a.overlap);
+    const relevant = scored.filter((s) => s.overlap > 0).map((s) => s.course);
+    const fallback = scored.map((s) => s.course);
+    return [...(pinned ? [pinned] : []), ...(relevant.length ? relevant : fallback).slice(0, 2)];
+  }, [courses, savedSlugs]);
 
   const isAuditSelected = (id: string) => !deselectedAuditIds.has(id);
   const isPatternSelected = (slug: string) => !deselectedPatternSlugs.has(slug);
@@ -459,6 +483,39 @@ export default function DashboardClient() {
             </div>
           </div>
         </div>
+        </div>
+      )}
+
+      {recommendedCourses.length > 0 && (
+        <div className="max-w-6xl mx-auto px-6 pb-16">
+          <div className="rounded-card border border-border-primary bg-surface-primary p-6 md:p-8">
+            <div className="flex items-center gap-2.5 mb-1">
+              <AcademicCapIcon className="h-5 w-5 text-accent-primary" aria-hidden="true" />
+              <h2 className="text-xl font-semibold text-text-primary">Courses for your pack</h2>
+            </div>
+            <p className="text-sm text-text-secondary mb-6">
+              Free courses matched to the patterns you save. Learn the thinking behind your skills.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recommendedCourses.map((course) => (
+                <Link
+                  key={course.slug}
+                  href={`/guides/${course.slug}`}
+                  className="group rounded-input border border-border-primary bg-surface-primary p-5 hover:border-accent-primary hover:shadow-card transition-all"
+                >
+                  <span className="inline-flex items-center rounded-pill border border-info bg-accent-subtle px-2.5 py-0.5 text-xs font-medium text-accent-primary">
+                    {course.slug === 'ai-ux-skills-guide' ? 'Start here · Free' : 'Free course'}
+                  </span>
+                  <h3 className="mt-3 font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
+                    {course.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    {course.lessonCount} lessons · {course.readTime} min
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
