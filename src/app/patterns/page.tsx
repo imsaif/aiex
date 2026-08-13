@@ -162,6 +162,9 @@ export default function PatternsIndexPage() {
 
               <div className="mt-10 max-w-md mx-auto">
                 <InlineNewsletterSignup variant="hero" source="patterns-hero" stacked />
+                <p className="mt-3 text-sm font-medium text-text-secondary">
+                  Read by 1,500+ designers every month.
+                </p>
               </div>
             </div>
           </div>
