@@ -8565,6 +8565,13 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             type: 'callout',
             calloutType: 'info',
+            title: 'What is an .md file?',
+            content: 'The extension stands for Markdown: a plain text file with light formatting like headings, lists, and bold. You can open one in any text editor, and it reads like a document rather than code. Skills are markdown on purpose: the exact same file is readable by you and by your coding agent.',
+            icon: 'info',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
             title: 'You never run a skill',
             content: 'There is no command to type and no menu to open. Claude Code reads every skill\'s description at the start of a session, and loads the full file the moment your request matches one. If nothing matches, the skill just sits there, unused and harmless.',
             icon: 'info',
@@ -8742,7 +8749,7 @@ Audience: Early-stage VCs in the design-tools space.`,
               {
                 number: 1,
                 title: 'Download aiux-skills.md',
-                content: 'One markdown file with every saved skill fenced off inside it, plus install instructions at the top.',
+                content: 'One markdown file (the same plain-text format skills themselves use) with every saved skill fenced off inside it, plus install instructions at the top.',
                 icon: 'download',
               },
               {
