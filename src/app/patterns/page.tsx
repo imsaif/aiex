@@ -157,14 +157,18 @@ export default function PatternsIndexPage() {
                 </Link>
               </p>
 
-              {/* Hero stays minimal on purpose: identity, one skills line, and
-                  quiet social proof, then straight into the grid. Newsletter
-                  capture lives in the signup section below the grid. */}
+              {/* Hero stays minimal on purpose: identity, one skills line, quiet
+                  social proof, and a slim email capture (default component copy
+                  is the whole pitch: daily AIUX news disclosure, no extras). */}
               <div>
                 <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                   Patterns used by leading companies
                 </p>
                 <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
+              </div>
+
+              <div className="mt-10 max-w-md mx-auto">
+                <InlineNewsletterSignup variant="hero" source="patterns" stacked />
               </div>
             </div>
           </div>
