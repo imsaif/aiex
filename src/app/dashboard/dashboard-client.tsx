@@ -3,6 +3,7 @@
 import { useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import {
+  AcademicCapIcon,
   ArrowDownTrayIcon,
   XMarkIcon,
   BookmarkIcon,
@@ -442,12 +443,19 @@ export default function DashboardClient() {
                     ? skillInstallerFilename()
                     : skillPackFilename()}
               </p>
-              <p className="mt-3 text-center text-sm text-text-secondary">
-                New to skills?{' '}
-                <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
-                  Learn what they are and how they trigger
-                </Link>
-              </p>
+              <Link
+                href="/guides/ai-ux-skills-guide"
+                className="mt-4 flex items-start gap-2.5 rounded-input border border-info bg-accent-subtle p-snug text-sm text-text-primary hover:border-accent-primary transition-colors"
+              >
+                <AcademicCapIcon className="h-5 w-5 shrink-0 text-accent-primary" aria-hidden="true" />
+                <span>
+                  <span className="font-semibold">New to skills?</span> Learn what they are and how
+                  they trigger in a 10 minute course.
+                  <span className="mt-0.5 block font-medium text-accent-primary">
+                    Read the guide →
+                  </span>
+                </span>
+              </Link>
             </div>
           </div>
         </div>
