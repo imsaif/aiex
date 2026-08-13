@@ -8769,6 +8769,21 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             type: 'heading',
             level: 'h3',
+            content: 'Want everything at once?',
+          },
+          {
+            type: 'text',
+            content: 'The whole library is also published as an open GitHub repo, so one command installs all the skills through the skills CLI. It works with Claude Code, Cursor, GitHub Copilot, and most other coding agents.',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            label: 'Install every skill',
+            code: 'npx skills add imsaif/aiux-skills',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
             content: 'Just one skill?',
           },
           {

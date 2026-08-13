@@ -19,8 +19,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${siteConfig.url}/skills` },
 };
 
-const GENERIC_COMMAND =
-  'mkdir -p .claude/skills/aiux-<slug> && curl -fsSL https://aiuxdesign.guide/skills/aiux-<slug>.md -o .claude/skills/aiux-<slug>/SKILL.md';
+const GENERIC_COMMAND = 'npx skills add imsaif/aiux-skills';
 
 export default function SkillsPage() {
   const categoryNames = categories.map((c) => c.title);
@@ -72,7 +71,7 @@ export default function SkillsPage() {
             <p className="text-lg md:text-xl text-text-secondary">
               A skill is persistent design guidance for your coding agent. Install one and it triggers on
               its own whenever the work matches: no prompting, no reminders. Save the skills you want and
-              download them as one pack, or install any single skill with the command below.
+              download them as one pack, or install all of them with one command.
             </p>
             <pre className="max-w-2xl mx-auto mt-8 overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary text-left">
               {GENERIC_COMMAND}
