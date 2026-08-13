@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useThemeFilter } from '@/hooks/useTheme';
 import UnifiedSearchBar from '../ui/UnifiedSearchBar';
 import SaveToDashboardButton from '../handoff/SaveToDashboardButton';
 
@@ -23,6 +24,9 @@ interface SkillsDirectoryProps {
 export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Skills');
+  // Same monochrome treatment the pattern-grid and ProductsSection logos get:
+  // colored raster brand assets fall in line with the simple-icons set.
+  const logoFilter = useThemeFilter('grayscale(100%)');
 
   const filteredRows = useMemo(() => {
     const query = searchQuery.toLowerCase();
@@ -142,6 +146,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                               width={20}
                               height={20}
                               className="h-5 w-5"
+                              style={{ filter: logoFilter }}
                             />
                           ) : (
                             <span key={product.name} className="text-sm text-text-secondary">

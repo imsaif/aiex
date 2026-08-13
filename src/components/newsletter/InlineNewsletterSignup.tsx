@@ -185,12 +185,6 @@ export function InlineNewsletterSignup({
             </p>
           )}
 
-          {/* Trust Badge */}
-          {(isHero || isPatternDetail || isNews) && (
-            <p className={`text-xs mt-4 ${isNews ? '' : 'text-center'} ${darkBackground ? 'text-gray-400' : 'text-text-secondary'}`}>
-              Daily AIUX news. Unsubscribe anytime.
-            </p>
-          )}
         </form>
       )}
     </div>
