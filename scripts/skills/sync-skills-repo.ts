@@ -1,5 +1,5 @@
 /**
- * Regenerates the public imsaif/aiux-skills repo from the pattern registry.
+ * Regenerates the public imsaif/aiux-skills-claude-code repo from the pattern registry.
  *
  * The skills repo is a build artifact: never hand-edit it. This script owns
  * every file in it (38 skill folders + README + LICENSE). Run after any
@@ -53,7 +53,7 @@ A skill is persistent design guidance for your coding agent: install it once and
 All of them:
 
 \`\`\`bash
-npx skills add imsaif/aiux-skills
+npx skills add imsaif/aiux-skills-claude-code
 \`\`\`
 
 Works with Claude Code, Cursor, GitHub Copilot, and every agent the [skills CLI](https://skills.sh) supports. Prefer a hand-picked set? [Browse and save skills on the site](${SITE}/skills?${UTM}) and download them as one pack.
