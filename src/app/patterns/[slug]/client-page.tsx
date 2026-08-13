@@ -128,16 +128,17 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             )}
           </div>
         </div>
-        <h1 className="text-5xl font-bold mt-6 mb-4 text-text-primary">{pattern.title}</h1>
-        <div className="text-lg text-text-secondary leading-relaxed">
-          {pattern.description}
-        </div>
-        <div className="mt-6">
+        <div className="mt-6 mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-5xl font-bold text-text-primary">{pattern.title}</h1>
           <SaveToDashboardButton
             slug={pattern.slug}
             variant="full"
+            className="self-start sm:shrink-0"
             labels={{ idle: 'Save as skill', saved: 'Saved as skill' }}
           />
+        </div>
+        <div className="text-lg text-text-secondary leading-relaxed">
+          {pattern.description}
         </div>
       </div>
 
@@ -157,15 +158,15 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
       <div className="space-y-12">
         {/* Problem and Solution Side by Side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <section className="bg-surface-primary p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-gray-300 dark:border-gray-600">Problem</h2>
+          <section className="bg-surface-primary p-6 rounded-lg border border-border-primary shadow-sm">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-border-secondary">Problem</h2>
             <div className="prose prose-lg max-w-none text-text-secondary">
               <p>{pattern.content.problem}</p>
             </div>
           </section>
 
-          <section className="bg-surface-primary p-6 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-gray-300 dark:border-gray-600">Solution</h2>
+          <section className="bg-surface-primary p-6 rounded-lg border border-border-primary shadow-sm">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-4 border-b border-border-secondary">Solution</h2>
             <div className="prose prose-lg max-w-none text-text-secondary">
               <p>{pattern.content.solution}</p>
             </div>
@@ -180,8 +181,8 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         {/* Image Carousel for Examples */}
         {pattern.content.examples && pattern.content.examples.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Real-World {pattern.title} Examples</h2>
-            <div className="bg-surface-primary rounded-lg p-2 overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">Real-World {pattern.title} Examples</h2>
+            <div className="bg-surface-primary rounded-lg p-2 overflow-hidden border border-border-primary shadow-sm">
               <Carousel examples={pattern.content.examples} />
             </div>
           </section>
@@ -190,7 +191,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         {/* Code Examples */}
         {pattern.content.codeExamples && pattern.content.codeExamples.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">Implementation</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">Implementation</h2>
 
             <div className="space-y-8">
               {pattern.content.codeExamples.map((example, index) => (
@@ -214,7 +215,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           <JudgmentCallBlock data={pattern.content.judgmentCall} patternTitle={pattern.title} />
         ) : pattern.content.figmaPrompt && (
           <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">AI Design Prompt</h2>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">AI Design Prompt</h2>
             <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
           </section>
         )}
@@ -227,7 +228,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             fall back to the legacy two-column block. */}
         {pattern.content.takeaways && pattern.content.takeaways.length > 0 ? (
           <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">
               Take it into your own product
             </h2>
             {pattern.content.installPrompt ? (
@@ -255,18 +256,18 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         ) : (
         <section>
-          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">{pattern.title} Design Patterns & Best Practices</h2>
+          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">{pattern.title} Design Patterns & Best Practices</h2>
 
-          <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-surface-primary border border-border-primary rounded-lg shadow-sm overflow-hidden">
             <div className="flex flex-col md:flex-row">
-              <div className="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700">
-                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-gray-300 dark:border-gray-600">
+              <div className="flex-1 p-6 md:p-8 border-b md:border-b-0 md:border-r border-border-primary">
+                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-border-secondary">
                   Implementation Guidelines
                 </h3>
                 <div className="space-y-4">
                   {pattern.content.guidelines.map((guideline, i) => (
                     <div key={i} className="flex items-start">
-                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
+                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-border-secondary rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
                         {i + 1}
                       </div>
                       <p className="text-text-secondary">{guideline}</p>
@@ -276,13 +277,13 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
               </div>
 
               <div className="flex-1 p-6 md:p-8 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-gray-300 dark:border-gray-600">
+                <h3 className="text-xl font-semibold text-text-primary mb-5 pb-2 border-b border-border-secondary">
                   Design Considerations
                 </h3>
                 <div className="space-y-4">
                   {pattern.content.considerations.map((consideration, i) => (
                     <div key={i} className="flex items-start">
-                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
+                      <div className="h-6 w-6 flex-shrink-0 bg-background-secondary border border-border-secondary rounded-full flex items-center justify-center font-medium text-text-secondary mr-3 mt-0.5">
                         {i + 1}
                       </div>
                       <p className="text-text-secondary">{consideration}</p>
@@ -305,7 +306,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             "structured data without visible content" penalty. */}
         {!pattern.hideFAQ && (
         <section>
-          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+          <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">
             Frequently Asked Questions
           </h2>
           <div className="space-y-6">
@@ -352,7 +353,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         {/* More from Category */}
         {categoryPatterns.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">
               More in {pattern.category}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -362,7 +363,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
                   href={`/patterns/${catPattern.slug}`}
                   className="group block"
                 >
-                  <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
+                  <div className="bg-surface-primary rounded-2xl p-6 border border-border-primary shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
                     <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
                       {catPattern.title}
                     </h3>
@@ -379,7 +380,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         {/* Practice in Courses — cross-link to courses for SEO */}
         {relatedGuides.length > 0 && (
           <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-gray-300 dark:border-gray-600">
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">
               Practice in Courses
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -389,8 +390,8 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
                   href={`/guides/${guide.slug}`}
                   className="group block"
                 >
-                  <div className="bg-surface-primary rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
-                    <span className="inline-block self-start px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary mb-3">
+                  <div className="bg-surface-primary rounded-2xl p-6 border border-border-primary shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
+                    <span className="inline-block self-start px-2.5 py-1 rounded-full text-xs font-medium bg-surface-secondary text-text-secondary mb-3">
                       {guide.tool}
                     </span>
                     <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
@@ -408,7 +409,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
 
         {/* Newsletter Signup */}
         <section>
-          <div className="bg-surface-primary border border-gray-200 dark:border-gray-700 rounded-2xl p-8 md:p-12 shadow-card animate-fade-in">
+          <div className="bg-surface-primary border border-border-primary rounded-2xl p-8 md:p-12 shadow-card animate-fade-in">
             <InlineNewsletterSignup
               variant="pattern-detail"
               source="patterns"
@@ -421,7 +422,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         </section>
 
         {/* Previous/Next Pattern Navigation */}
-        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-8 mt-12">
+        <div className="flex flex-col sm:flex-row justify-between items-center border-t border-border-primary pt-8 mt-12">
           {previousPattern ? (
             <Link
               href={`/patterns/${previousPattern.slug}`}
