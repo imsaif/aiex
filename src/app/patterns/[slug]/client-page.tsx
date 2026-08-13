@@ -133,7 +133,11 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           {pattern.description}
         </div>
         <div className="mt-6">
-          <SaveToDashboardButton slug={pattern.slug} variant="full" />
+          <SaveToDashboardButton
+            slug={pattern.slug}
+            variant="full"
+            labels={{ idle: 'Save as skill', saved: 'Saved as skill' }}
+          />
         </div>
       </div>
 
