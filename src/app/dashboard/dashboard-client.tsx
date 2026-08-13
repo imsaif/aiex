@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   AcademicCapIcon,
   ArrowDownTrayIcon,
+  CheckIcon,
   XMarkIcon,
   BookmarkIcon,
   CommandLineIcon,
@@ -20,7 +21,6 @@ import {
   composeSkillInstaller,
   skillInstallerFilename,
 } from '@/lib/skills/composePack';
-import { composeSkillMd, skillFilename } from '@/lib/skills/composeSkill';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { SelectCheckbox } from '@/components/ui/SelectCheckbox';
 import { UndoSnackbar } from '@/components/ui/UndoSnackbar';
@@ -231,25 +231,6 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
     }
   };
 
-  /**
-   * Download one saved pattern's SKILL.md on its own.
-   *
-   * Deliberately ignores the selection checkboxes. Those govern what goes INTO
-   * the pack; this is a direct action on one named row, so disabling it because
-   * the row happens to be unchecked would be inexplicable to someone who just
-   * clicked download on that exact row.
-   *
-   * The filename matches what /skills/aiux-<slug>.md serves, so a user who gets
-   * the same skill either way ends up with an identically named file.
-   */
-  const handleDownloadOne = (pattern: Pattern) => {
-    saveBlob(
-      new Blob([composeSkillMd(pattern)], { type: 'text/markdown;charset=utf-8' }),
-      skillFilename(pattern),
-    );
-    trackAuditEvent('skill_file_downloaded', { slug: pattern.slug, source: 'dashboard' });
-  };
-
   const header = (
     <div className="mb-8">
       <p className="type-eyebrow text-accent-primary mb-2">Your dashboard</p>
@@ -367,15 +348,6 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
                     </div>
                     <button
                       type="button"
-                      onClick={() => handleDownloadOne(pattern)}
-                      aria-label={`Download the ${pattern.title} skill`}
-                      title="Download this skill"
-                      className="shrink-0 rounded-full p-2 text-text-secondary hover:text-accent-primary hover:bg-surface-secondary transition-colors"
-                    >
-                      <ArrowDownTrayIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                    <button
-                      type="button"
                       onClick={() => handleRemovePattern(pattern.slug)}
                       aria-label={`Remove ${pattern.title} from dashboard`}
                       title="Remove"
@@ -467,14 +439,33 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
               </p>
               <Link
                 href="/guides/ai-ux-skills-guide"
-                className="mt-4 flex items-center gap-2.5 rounded-input border border-border-primary bg-surface-primary p-snug text-sm text-text-secondary hover:border-accent-primary hover:text-text-primary transition-colors"
+                className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-pill border border-border-primary bg-surface-primary px-5 py-2.5 text-base font-medium text-text-primary hover:border-accent-primary hover:text-accent-primary transition-colors"
               >
-                <AcademicCapIcon className="h-5 w-5 shrink-0 text-accent-primary" aria-hidden="true" />
-                <span>
-                  New to skills?{' '}
-                  <span className="font-medium text-accent-primary">Read the 10 minute guide →</span>
-                </span>
+                <AcademicCapIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                How skills work: 10 minute guide
               </Link>
+            </div>
+
+            {/* Value framing under the download card: what the pack actually
+                delivers. Keep every claim true to the product. */}
+            <div className="mt-4 rounded-card border border-border-primary bg-surface-primary p-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-text-secondary mb-4">
+                What you get
+              </h3>
+              <ul className="space-y-3 text-sm text-text-secondary">
+                <li className="flex items-start gap-2.5">
+                  <CheckIcon className="h-4 w-4 shrink-0 mt-0.5 text-accent-primary" aria-hidden="true" />
+                  One skill per pattern, written to trigger on its own when the work matches
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckIcon className="h-4 w-4 shrink-0 mt-0.5 text-accent-primary" aria-hidden="true" />
+                  Installs in any repo in under a minute, no configuration
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckIcon className="h-4 w-4 shrink-0 mt-0.5 text-accent-primary" aria-hidden="true" />
+                  Your coding agent applies the pattern even when you are not watching
+                </li>
+              </ul>
             </div>
           </div>
         </div>
