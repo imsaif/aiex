@@ -70,9 +70,7 @@ export default function SkillsPage() {
               {rows.length} AI UX Skills for Claude Code
             </h1>
             <p className="text-lg md:text-xl text-text-secondary">
-              A skill is persistent design guidance for your coding agent. Install one and it triggers on
-              its own whenever the work matches: no prompting, no reminders. Save the skills you want and
-              download them as one pack, or install all of them with one command.
+              Design judgment your coding agent applies on its own. Install once, no prompting.
             </p>
             <InstallCommand command={GENERIC_COMMAND} />
             <p className="mt-4 text-sm text-text-secondary">
