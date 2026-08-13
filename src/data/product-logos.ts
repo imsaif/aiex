@@ -63,6 +63,11 @@ export const productLogos: Record<string, string> = {
   'Woebot': '/images/logos/woebot_health_logo.webp',
   'Crisis': '/images/logos/Crisis_Text_Line_logo.webp',
   'Wysa': '/images/logos/wysa_logo.webp',
+
+  // Meeting & Productivity AI
+  Granola: `${SI}/granola.svg`,
+  GPTZero: `${SI}/gptzero.svg`,
+  PinwheelGPT: `${SI}/pinwheel.png`,
 };
 
 /**
