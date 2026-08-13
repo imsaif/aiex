@@ -82,7 +82,7 @@ export default function SkillsPage() {
               <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
                 Read how skills work
               </Link>{' '}
-              (4 lessons, about 10 minutes).
+              (6 lessons, about 20 minutes).
             </p>
           </div>
         </div>

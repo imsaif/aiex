@@ -8424,26 +8424,122 @@ Audience: Early-stage VCs in the design-tools space.`,
     description:
       'Learn what a Claude Code skill is, how it differs from reading a pattern, and how to install and trigger the AI UX skill pack in your own repo.',
     excerpt:
-      'A short course on turning AI UX patterns into persistent design judgment for Claude Code: what a skill file is, how it differs from a pattern, how to install a skill pack, and how triggering works without a slash command.',
+      'A from-zero course on Claude Code and AI UX skills, 6 lessons and about 20 minutes: what Claude Code is if you have never opened a terminal for it, what a skill file is, how it differs from a pattern, how to install a skill pack, how triggering works without a slash command, and how to manage skills day to day.',
     tool: 'Claude Code',
     useCase: 'Skills',
     skillLevel: 'Beginner',
     designDomain: 'UX Design',
-    readTime: 10,
+    readTime: 20,
     author: 'Design Team',
     publishedDate: '2026-08-13',
     status: 'ready',
     thumbnail: '/images/logos/simple-icons/anthropic.svg',
     tags: ['claude-code', 'skills', 'skill-pack', 'agent-skills', 'ai-ux-patterns', 'getting-started'],
     relatedPatterns: ['human-in-the-loop', 'progressive-disclosure', 'error-recovery'],
-    lessonCount: 4,
+    lessonCount: 6,
     content: '',
     lessons: [
       {
         id: 'lesson-1',
-        title: 'What a Claude Code Skill Is',
-        duration: 2,
+        title: 'What Is Claude Code?',
+        duration: 5,
         order: 1,
+        module: 'foundations',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Claude Code is Anthropic\'s AI coding agent. It lives in your terminal or your IDE, and instead of clicking through menus, you describe what you want in plain language. Claude reads your project\'s files, writes new ones, and edits existing ones to make the change happen.',
+            icon: 'info',
+          },
+          {
+            type: 'text',
+            content: 'You do not need to be a developer to use it. Designers use Claude Code to build quick prototypes, adjust the UI of a real product, or just ask questions about a codebase they have never opened before. It works best when it has design judgment available to it, and that is exactly what a skill adds: a standing reference Claude consults so its answers reflect good design practice, not just working code.',
+          },
+          {
+            type: 'list',
+            items: [
+              'Turn a Figma screenshot into a working prototype you can click through',
+              'Change a spacing, color, or copy detail directly in the live app, no ticket needed',
+              'Ask "why does this button do that?" and get an answer grounded in the actual code',
+              'Add a small, well-scoped UI change to a real product without waiting on engineering',
+              'Review a flow for a pattern like Human-in-the-Loop or Progressive Disclosure before it ships',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Get set up',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Install Claude Code',
+                content: 'Follow the official quickstart at code.claude.com/docs. It walks through installation for your operating system.',
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Open a terminal in your project folder',
+                content: 'A terminal is just a text window for typing commands. If you use an editor like VS Code, it usually has one built in already.',
+                icon: 'terminal',
+              },
+              {
+                number: 3,
+                title: 'Run claude',
+                content: 'Type `claude` and press enter. This starts a Claude Code session inside that folder.',
+                icon: 'terminal',
+              },
+              {
+                number: 4,
+                title: 'Sign in with your Claude account',
+                content: 'The first run prompts you to sign in. After that, Claude Code can read and edit files in this project.',
+                icon: 'user',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'What is a repo?',
+            content: 'A repo, short for repository, is just the project folder, usually tracked by version control so changes can be reviewed and undone. If a teammate already set the project up, you do not need to understand version control to get started. You only need to open your terminal there and run Claude Code.',
+            icon: 'info',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'Claude Code product page',
+                url: 'https://claude.com/product/claude-code',
+                source: 'Anthropic',
+                description: 'What Claude Code is and what it can do, in Anthropic\'s own words.',
+              },
+              {
+                title: 'Official docs and quickstart',
+                url: 'https://code.claude.com/docs',
+                source: 'Anthropic',
+                description: 'Installation, first session, and every feature reference.',
+              },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You know what Claude Code is',
+            items: [
+              'Claude Code is an AI coding agent that reads, writes, and edits your project\'s files from the terminal',
+              'You do not need to be a developer to use it for prototypes, UI tweaks, and questions',
+              'It works best with design judgment available, which is what a skill provides',
+            ],
+            message: 'Next: what a Claude Code skill actually is, and how it fits into a session like this.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-2',
+        title: 'What a Claude Code Skill Is',
+        duration: 3,
+        order: 2,
         module: 'foundations',
         sections: [
           {
@@ -8474,22 +8570,31 @@ Audience: Early-stage VCs in the design-tools space.`,
             icon: 'info',
           },
           {
+            type: 'text',
+            content: 'Skills can live in two places. Put them in the project at `.claude/skills/` and the whole team gets them the moment they pull the repo, which is where every skill pack from this site is meant to go. Put them at the user level, in `~/.claude/skills/` on your own machine, and they apply to every project you open, not just this one.',
+          },
+          {
+            type: 'text',
+            content: 'This is different from typing a prompt. A prompt is a one-off instruction you type into a single conversation, and it is gone once that conversation ends. A skill is standing guidance: it sits in the repo across sessions, and Claude consults it on its own whenever a new request matches, without you having to type the instruction again.',
+          },
+          {
             type: 'completion',
             title: 'You understand the shape of a skill',
             items: [
               'A skill is a markdown file at `.claude/skills/aiux-<pattern>/SKILL.md`',
               'The frontmatter `description` is the trigger; the body holds the moves',
-              'Skills load automatically, there is nothing to run',
+              'Project-level skills are shared with your team; user-level skills follow you across projects',
+              'A skill is standing guidance, not a one-off prompt',
             ],
             message: 'Next: how a skill differs from just reading the pattern page.',
           },
         ],
       },
       {
-        id: 'lesson-2',
+        id: 'lesson-3',
         title: 'Patterns Teach You, Skills Teach Your Agent',
-        duration: 2,
-        order: 2,
+        duration: 3,
+        order: 3,
         module: 'foundations',
         sections: [
           {
@@ -8530,11 +8635,16 @@ Audience: Early-stage VCs in the design-tools space.`,
             icon: 'tip',
           },
           {
+            type: 'text',
+            content: 'Take Human-in-the-Loop as a worked example. On the pattern page, you experience it as examples, demos, and written guidance you read at your own pace, deciding whether an approval step belongs in your flow. Your agent experiences the same knowledge as five terse moves it applies while it writes the code for that review flow: add a pending state, block the automatic action until a person responds, surface an approve-or-reject control, log the decision, and default to blocking rather than allowing when the check fails. Same pattern, two very different shapes for two very different readers.',
+          },
+          {
             type: 'completion',
             title: 'You know when to reach for which',
             items: [
               'Pattern pages inform your judgment; skills inform your agent\'s behavior',
               'Skill bodies are generated from the same pattern takeaways, not written separately',
+              'The same knowledge reads as prose to you and as terse moves to your agent',
               'Reading and installing are not substitutes for each other',
             ],
             message: 'Next: actually getting a skill pack installed in your repo.',
@@ -8542,16 +8652,50 @@ Audience: Early-stage VCs in the design-tools space.`,
         ],
       },
       {
-        id: 'lesson-3',
+        id: 'lesson-4',
         title: 'Install a Skill Pack',
-        duration: 3,
-        order: 3,
+        duration: 4,
+        order: 4,
         module: 'setup',
         sections: [
           {
             type: 'intro',
             content: 'Your dashboard offers two ways to download the skills you\'ve saved: a zip you unpack, or a single markdown file you hand to Claude Code directly. If you only want one skill, there\'s a one-line install for that too.',
             icon: 'download',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Get there from the site',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Browse /patterns or /skills',
+                content: 'Find the patterns your product needs. Not sure which ones? Run the free audit first.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Save the ones you want with the bookmark icon',
+                content: 'Each save adds that pattern\'s skill to your dashboard.',
+                icon: 'check',
+              },
+              {
+                number: 3,
+                title: 'Open the Saved bar and choose Review',
+                content: 'This shows every skill you\'ve saved before you download anything.',
+                icon: 'monitor',
+              },
+              {
+                number: 4,
+                title: 'Pick a format and download',
+                content: 'Folder (.zip), the one-file installer, or a single skill, covered next.',
+                icon: 'download',
+              },
+            ],
           },
           {
             type: 'heading',
@@ -8638,6 +8782,13 @@ Audience: Early-stage VCs in the design-tools space.`,
             icon: 'warning',
           },
           {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Skill not loading?',
+            content: 'Check the exact path: it must be `.claude/skills/<name>/SKILL.md`, not a subfolder or a renamed file. Start a fresh Claude Code session, since skills load at the start of a session, not mid-conversation. Then ask Claude directly: "what skills are available?" Its answer confirms exactly what it can see.',
+            icon: 'warning',
+          },
+          {
             type: 'completion',
             title: 'A skill pack is installed',
             items: [
@@ -8650,10 +8801,10 @@ Audience: Early-stage VCs in the design-tools space.`,
         ],
       },
       {
-        id: 'lesson-4',
+        id: 'lesson-5',
         title: 'How Triggering Works',
         duration: 3,
-        order: 4,
+        order: 5,
         module: 'features',
         sections: [
           {
@@ -8685,6 +8836,10 @@ Audience: Early-stage VCs in the design-tools space.`,
             content: 'If a description doesn\'t quite match your phrasing, you can still be explicit: "use the aiux-human-in-the-loop skill" loads it directly, no different from naming any other file in the repo.',
           },
           {
+            type: 'text',
+            content: 'The description line carries all the weight because it is the only text Claude reads to decide whether a skill applies. It never scans the full body of every installed skill up front, that would be slow and wasteful. So each description is written symptom-first on purpose, matching how you would actually describe the problem out loud rather than the pattern\'s formal name.',
+          },
+          {
             type: 'further-reading',
             title: 'Keep going',
             links: [
@@ -8712,6 +8867,91 @@ Audience: Early-stage VCs in the design-tools space.`,
               'Skill descriptions are symptom-first, written for how you\'d actually phrase a problem',
               'Claude Code matches your request against installed skills automatically',
               'You can always name a skill explicitly if it doesn\'t trigger on its own',
+            ],
+            message: 'Next: living with skills day to day, once you have a few installed.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-6',
+        title: 'Working With Skills Day to Day',
+        duration: 2,
+        order: 6,
+        module: 'practices',
+        sections: [
+          {
+            type: 'intro',
+            content: 'A skill is just a file. Managing your skills is file management: seeing what you have, keeping it current, removing what you don\'t need, and sharing it with your team.',
+            icon: 'info',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'See what is installed',
+                content: 'Run `ls .claude/skills` in your terminal, or just ask Claude directly: "what skills are available?"',
+                icon: 'terminal',
+              },
+              {
+                number: 2,
+                title: 'Update a skill',
+                content: 'Download a fresh copy of the pack from your dashboard and replace the old folders under `.claude/skills/`.',
+                icon: 'download',
+              },
+              {
+                number: 3,
+                title: 'Remove a skill',
+                content: 'Delete that skill\'s folder, for example `.claude/skills/aiux-error-recovery/`. Nothing else in the repo depends on it.',
+                icon: 'terminal',
+              },
+              {
+                number: 4,
+                title: 'Share with your team',
+                content: 'Commit `.claude/skills` to the repo. Everyone gets the same skills the next time they pull.',
+                icon: 'github',
+              },
+            ],
+          },
+          {
+            type: 'text',
+            content: 'When should you add more? Run the free audit to find which patterns your product is actually missing, then save those and install them. That keeps your skill set matched to real gaps in the product instead of a generic list of every pattern on the site.',
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'Official Agent Skills docs',
+                url: 'https://code.claude.com/docs/en/skills',
+                source: 'Anthropic',
+                description: 'The full reference for how skills work in Claude Code.',
+              },
+              {
+                title: 'Equipping agents for the real world with Agent Skills',
+                url: 'https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills',
+                source: 'Anthropic Engineering',
+                description: 'Why Anthropic built skills this way, from the team that shipped them.',
+              },
+              {
+                title: 'anthropics/skills on GitHub',
+                url: 'https://github.com/anthropics/skills',
+                source: 'Anthropic',
+                description: 'Anthropic\'s own official skills repo, as a reference for the format.',
+              },
+              {
+                title: 'Run the free audit',
+                url: '/audit',
+                description: 'Find which patterns your product is missing before you save more skills.',
+              },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You can manage skills day to day',
+            items: [
+              'Listing, updating, and removing skills are all plain file operations',
+              'Committing `.claude/skills` shares your skill set with your whole team',
+              'The free audit tells you which patterns are worth adding next',
             ],
             message: 'Head to /skills to see every pattern\'s skill and its trigger description.',
           },

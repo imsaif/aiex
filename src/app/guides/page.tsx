@@ -194,7 +194,7 @@ const guideMeta: Record<
   'ai-ux-skills-guide': {
     tagline: 'Your agent, trained',
     highlights: [
-      'What a skill is and where it lives',
+      'Claude Code from zero: install and first session',
       'Install a pack: zip or one-file installer',
       'Triggering: symptom-first, no prompting',
     ],

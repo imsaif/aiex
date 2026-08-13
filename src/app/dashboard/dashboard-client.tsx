@@ -442,7 +442,7 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
                 className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-pill border border-border-primary bg-surface-primary px-5 py-2.5 text-base font-medium text-text-primary hover:border-accent-primary hover:text-accent-primary transition-colors"
               >
                 <AcademicCapIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
-                How skills work: 10 minute guide
+                How skills work: 20 minute guide
               </Link>
             </div>
 

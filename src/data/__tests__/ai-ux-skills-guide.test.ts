@@ -15,8 +15,8 @@ describe('ai-ux-skills-guide', () => {
     expect(guide).not.toBeNull();
   });
 
-  it('has exactly 4 lessons', () => {
-    expect(guide?.lessons).toHaveLength(4);
+  it('has exactly 6 lessons', () => {
+    expect(guide?.lessons).toHaveLength(6);
   });
 
   it('readTime matches the summed lesson durations', () => {
