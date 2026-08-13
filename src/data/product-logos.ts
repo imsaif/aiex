@@ -48,7 +48,7 @@ export const productLogos: Record<string, string> = {
   IBM: `${SI}/ibm.svg`,
   AWS: `${SI}/aws.svg`,
   Duolingo: `${SI}/duolingo.svg`,
-  'Be': '/images/logos/simple-icons/bemyeyes.svg',
+  'Be': '/images/logos/simple-icons/bemyeyes.png',
   Hugging: `${SI}/huggingface.svg`,
 
   // Automation & Workflow Tools

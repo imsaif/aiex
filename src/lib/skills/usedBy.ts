@@ -15,6 +15,7 @@ const LOGO_DIR = '/images/logos/simple-icons';
  * boundaries so 'Meta' never matches inside 'metadata'.
  */
 const PRODUCT_LOGO_ALIASES: { name: string; logo: string }[] = [
+  { name: 'Be My Eyes', logo: `${LOGO_DIR}/bemyeyes.png` },
   { name: 'GitHub Copilot', logo: `${LOGO_DIR}/githubcopilot.svg` },
   { name: 'Hugging Face', logo: `${LOGO_DIR}/huggingface.svg` },
   { name: 'DuckDuckGo', logo: `${LOGO_DIR}/duckduckgo.svg` },
