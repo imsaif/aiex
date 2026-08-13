@@ -42,7 +42,7 @@ function readme(): string {
     )
     .join('\n');
 
-  return `# AI UX Skills
+  return `# AIUX Skills for Claude Code
 
 ${patterns.length} Claude Code skills, one per AI UX design pattern, generated from [aiuxdesign.guide](${SITE}/?${UTM}).
 
