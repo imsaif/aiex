@@ -22,8 +22,8 @@ export const examples: Example[] = [
   {
     title: "Granola",
     description: "After each meeting, Granola surfaces contextual quick-actions — List action items, Write follow-up email, List Q&A — derived from that meeting's transcript, offering the right next step exactly where the user needs it.",
-    image: "/images/examples/granola-ask.png",
-    altText: "Granola's Ask Granola panel showing contextual quick-actions based on the meeting transcript",
+    image: "/images/examples/granola-followup.gif",
+    altText: "Granola surfacing a Write follow up email quick-action from the meeting transcript",
     url: "https://www.granola.ai/"
   }
 ]; 

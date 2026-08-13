@@ -30,6 +30,13 @@ interface GuidePageProps {
   }>;
 }
 
+// A second "Claude Code" guide (ai-ux-skills-guide) would otherwise collide
+// with claude-code-learning-path's title, since generateMetadata derives the
+// title stem from guide.tool. Existing guides' titles stay byte-identical.
+const TITLE_STEM_OVERRIDES: Record<string, string> = {
+  'ai-ux-skills-guide': 'AI UX Skills for Claude Code',
+};
+
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
   const { slug } = await params;
   const guide = getGuideBySlug(slug);
@@ -49,8 +56,9 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
   // `title.absolute` skips the layout's "%s | AI Design Patterns" template.
   const lessonCount = guide.lessons?.length ?? 0;
   const titleSuffix = lessonCount > 0 ? ` (${lessonCount} Lessons)` : '';
-  const absoluteTitle = `${guide.tool} for Designers | Free Course${titleSuffix}`;
-  const ogTitle = `${guide.tool} for Designers | Free Course`;
+  const stem = TITLE_STEM_OVERRIDES[slug] ?? `${guide.tool} for Designers`;
+  const absoluteTitle = `${stem} | Free Course${titleSuffix}`;
+  const ogTitle = `${stem} | Free Course`;
 
   return {
     title: { absolute: absoluteTitle },
@@ -291,10 +299,10 @@ export default async function GuidePage({ params }: GuidePageProps) {
                     return (
                       <div
                         key={moduleKey}
-                        className="rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-primary overflow-hidden"
+                        className="rounded-xl border border-border-primary bg-surface-primary overflow-hidden"
                       >
                         {/* Module header */}
-                        <div className="px-5 py-4 border-b border-gray-200 dark:border-gray-700 bg-background-primary">
+                        <div className="px-5 py-4 border-b border-border-primary bg-background-primary">
                           <div className="flex flex-wrap items-baseline justify-between gap-2">
                             <h3 className="text-base font-semibold text-text-primary">
                               {title}
@@ -313,7 +321,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                         </div>
 
                         {/* Lesson rows */}
-                        <ol className="divide-y divide-gray-200 dark:divide-gray-700">
+                        <ol className="divide-y divide-border-primary">
                           {lessons.map((lesson, i) => (
                             <li key={lesson.url}>
                               <Link
@@ -342,7 +350,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
               {/* Start CTA again at the bottom — momentum nudge */}
               {firstLesson && (
-                <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
+                <div className="mt-12 pt-8 border-t border-border-primary text-center">
                   <Link
                     href={firstLesson.url}
                     className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors"
@@ -357,7 +365,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   catches readers who browsed the full course and didn't click
                   Start. Wrapped in its own bordered card so it reads as a
                   distinct alternative path, not as copy attached to the CTA. */}
-              <div className="mt-24 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary">
+              <div className="mt-24 p-6 md:p-8 rounded-2xl border border-border-primary bg-surface-primary">
                 <InlineNewsletterSignup
                   variant="pattern-detail"
                   source="guides"

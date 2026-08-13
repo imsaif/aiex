@@ -30,6 +30,8 @@ export const NEWSLETTER_SOURCES = [
   'design-with-claude',
   'guides',
   'patterns',
+  'patterns-hero',
+  'patterns-grid',
   'about',
   'homepage-hero',
   'homepage-hero-pre-audit',

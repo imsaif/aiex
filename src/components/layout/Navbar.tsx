@@ -95,9 +95,9 @@ const Navbar = () => {
             <Link href="/patterns" className={getLinkClasses('/patterns')}>
               <Squares2X2Icon className="w-5 h-5" />
               <span className="hidden sm:inline relative">
-                Patterns
+                Patterns & Skills
                 <span className="invisible font-semibold block h-0" aria-hidden="true">
-                  Patterns
+                  Patterns & Skills
                 </span>
               </span>
             </Link>

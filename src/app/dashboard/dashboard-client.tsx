@@ -3,7 +3,9 @@
 import { useMemo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import {
+  AcademicCapIcon,
   ArrowDownTrayIcon,
+  CheckIcon,
   XMarkIcon,
   BookmarkIcon,
   CommandLineIcon,
@@ -19,7 +21,6 @@ import {
   composeSkillInstaller,
   skillInstallerFilename,
 } from '@/lib/skills/composePack';
-import { composeSkillMd, skillFilename } from '@/lib/skills/composeSkill';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { SelectCheckbox } from '@/components/ui/SelectCheckbox';
 import { UndoSnackbar } from '@/components/ui/UndoSnackbar';
@@ -31,7 +32,15 @@ function auditTitle(productLabel: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export default function DashboardClient() {
+export interface CourseSummary {
+  slug: string;
+  title: string;
+  lessonCount: number;
+  readTime: number;
+  relatedPatterns: string[];
+}
+
+export default function DashboardClient({ courses = [] }: { courses?: CourseSummary[] }) {
   const { savedSlugs, add: addPattern, remove: removePattern, clear: clearPatterns, isLoading } = useHandoffKit();
   const { savedAudits, save: saveAudit, remove: removeAudit, isLoading: auditsLoading } = useSavedAudits();
   const [packError, setPackError] = useState<string | null>(null);
@@ -68,6 +77,22 @@ export default function DashboardClient() {
   const hasPatterns = savedPatterns.length > 0;
   const hasAudits = savedAudits.length > 0;
   const isEmpty = !hasPatterns && !hasAudits;
+
+  // Courses matched to the saved patterns: the skills guide is always pinned
+  // first (it explains the pack itself), then the two guides with the most
+  // overlap with the saved slugs; falls back to the top courses when nothing
+  // is saved yet.
+  const recommendedCourses = useMemo(() => {
+    const pinned = courses.find((c) => c.slug === 'ai-ux-skills-guide');
+    const saved = new Set(savedSlugs);
+    const scored = courses
+      .filter((c) => c.slug !== 'ai-ux-skills-guide')
+      .map((c) => ({ course: c, overlap: c.relatedPatterns.filter((s) => saved.has(s)).length }))
+      .sort((a, b) => b.overlap - a.overlap);
+    const relevant = scored.filter((s) => s.overlap > 0).map((s) => s.course);
+    const fallback = scored.map((s) => s.course);
+    return [...(pinned ? [pinned] : []), ...(relevant.length ? relevant : fallback).slice(0, 2)];
+  }, [courses, savedSlugs]);
 
   const isAuditSelected = (id: string) => !deselectedAuditIds.has(id);
   const isPatternSelected = (slug: string) => !deselectedPatternSlugs.has(slug);
@@ -206,25 +231,6 @@ export default function DashboardClient() {
     }
   };
 
-  /**
-   * Download one saved pattern's SKILL.md on its own.
-   *
-   * Deliberately ignores the selection checkboxes. Those govern what goes INTO
-   * the pack; this is a direct action on one named row, so disabling it because
-   * the row happens to be unchecked would be inexplicable to someone who just
-   * clicked download on that exact row.
-   *
-   * The filename matches what /skills/aiux-<slug>.md serves, so a user who gets
-   * the same skill either way ends up with an identically named file.
-   */
-  const handleDownloadOne = (pattern: Pattern) => {
-    saveBlob(
-      new Blob([composeSkillMd(pattern)], { type: 'text/markdown;charset=utf-8' }),
-      skillFilename(pattern),
-    );
-    trackAuditEvent('skill_file_downloaded', { slug: pattern.slug, source: 'dashboard' });
-  };
-
   const header = (
     <div className="mb-8">
       <p className="type-eyebrow text-accent-primary mb-2">Your dashboard</p>
@@ -342,15 +348,6 @@ export default function DashboardClient() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => handleDownloadOne(pattern)}
-                      aria-label={`Download the ${pattern.title} skill`}
-                      title="Download this skill"
-                      className="shrink-0 rounded-full p-2 text-text-secondary hover:text-accent-primary hover:bg-surface-secondary transition-colors"
-                    >
-                      <ArrowDownTrayIcon className="h-5 w-5" aria-hidden="true" />
-                    </button>
-                    <button
-                      type="button"
                       onClick={() => handleRemovePattern(pattern.slug)}
                       aria-label={`Remove ${pattern.title} from dashboard`}
                       title="Remove"
@@ -385,9 +382,7 @@ export default function DashboardClient() {
                   a plain markdown file with no format question to ask. */}
               {nP > 0 && (
                 <fieldset className="mb-4">
-                  <legend className="text-sm font-medium text-text-primary mb-2">
-                    How do you want it?
-                  </legend>
+                  <legend className="sr-only">How do you want it?</legend>
                   <div className="flex gap-2" role="radiogroup" aria-label="Download format">
                     {([
                       { id: 'zip', label: 'Folder (.zip)' },
@@ -411,8 +406,8 @@ export default function DashboardClient() {
                   </div>
                   <p className="mt-2 text-sm text-text-secondary">
                     {format === 'zip'
-                      ? 'Unzip it at the root of your repo and the skills are in place. Nothing to run.'
-                      : 'One file to commit. Hand it to Claude Code and it writes the skills for you.'}
+                      ? 'Unzips at your repo root. Nothing to run.'
+                      : 'One file. Claude Code writes the skills for you.'}
                   </p>
                 </fieldset>
               )}
@@ -442,9 +437,71 @@ export default function DashboardClient() {
                     ? skillInstallerFilename()
                     : skillPackFilename()}
               </p>
+              <Link
+                href="/guides/ai-ux-skills-guide"
+                className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-pill border border-border-primary bg-surface-primary px-5 py-2.5 text-base font-medium text-text-primary hover:border-accent-primary hover:text-accent-primary transition-colors"
+              >
+                <AcademicCapIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+                How skills work: 20 minute guide
+              </Link>
+            </div>
+
+            {/* Value framing under the download card: what the pack actually
+                delivers. Keep every claim true to the product. */}
+            <div className="mt-4 rounded-card border border-border-primary bg-surface-primary p-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-text-secondary mb-4">
+                What you get
+              </h3>
+              <ul className="space-y-3 text-sm text-text-secondary">
+                <li className="flex items-start gap-2.5">
+                  <CheckIcon className="h-4 w-4 shrink-0 mt-0.5 text-accent-primary" aria-hidden="true" />
+                  One skill per pattern, written to trigger on its own when the work matches
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckIcon className="h-4 w-4 shrink-0 mt-0.5 text-accent-primary" aria-hidden="true" />
+                  Installs in any repo in under a minute, no configuration
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <CheckIcon className="h-4 w-4 shrink-0 mt-0.5 text-accent-primary" aria-hidden="true" />
+                  Your coding agent applies the pattern even when you are not watching
+                </li>
+              </ul>
             </div>
           </div>
         </div>
+        </div>
+      )}
+
+      {recommendedCourses.length > 0 && (
+        <div className="mt-8">
+          <div className="rounded-card border border-border-primary bg-surface-primary p-6 md:p-8">
+            <div className="flex items-center gap-2.5 mb-1">
+              <AcademicCapIcon className="h-5 w-5 text-accent-primary" aria-hidden="true" />
+              <h2 className="text-xl font-semibold text-text-primary">Courses for your pack</h2>
+            </div>
+            <p className="text-sm text-text-secondary mb-6">
+              Free courses matched to the patterns you save. Learn the thinking behind your skills.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recommendedCourses.map((course) => (
+                <Link
+                  key={course.slug}
+                  href={`/guides/${course.slug}`}
+                  className="group rounded-input border border-border-primary bg-surface-primary p-5 hover:border-accent-primary hover:shadow-card transition-all"
+                >
+                  <span className="inline-flex items-center rounded-pill bg-accent-subtle px-2.5 py-1 text-xs font-medium text-accent-primary">
+                    {course.slug === 'ai-ux-skills-guide' ? 'Start here · Free' : 'Free course'}
+                  </span>
+                  <h3 className="mt-3 font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
+                    {course.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    {course.lessonCount} lessons · {course.readTime} min
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 

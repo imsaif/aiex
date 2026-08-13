@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -19,7 +20,7 @@ export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: {
-    absolute: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
+    absolute: `${patterns.length} AI UX Design Patterns & Skills: A Framework for Designing AI Products`,
   },
   description:
     `${patterns.length} AI UX design patterns documented from ChatGPT, Claude, GitHub Copilot, Midjourney, Figma, Linear, and 50+ shipped AI products. Each pattern has real examples, code demos, and implementation guidance — use them to design AI experiences users actually trust.`,
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: `${siteConfig.url}/patterns`,
-    title: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
+    title: `${patterns.length} AI UX Design Patterns & Skills: A Framework for Designing AI Products`,
     description:
       `${patterns.length} AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products. Real examples, code demos, implementation guidance.`,
     siteName: siteConfig.name,
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${patterns.length} AI UX Design Patterns — A Framework for Designing AI Products`,
+    title: `${patterns.length} AI UX Design Patterns & Skills: A Framework for Designing AI Products`,
     description:
       `${patterns.length} AI UX design patterns from ChatGPT, Claude, GitHub Copilot, Midjourney, and 50+ shipped AI products.`,
     images: [`${siteConfig.url}/images/og/og-home.png`],
@@ -142,39 +143,47 @@ export default function PatternsIndexPage() {
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
                 style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
               >
-                {patterns.length} AI UX Design Patterns
+                {patterns.length} AI UX Design Patterns & Skills
               </h1>
 
-              <p className="text-2xl md:text-3xl text-text-secondary mb-12">
-                How the world&apos;s best AI products design their experiences, documented, analyzed, and continuously updated.
+              <p className="text-2xl md:text-3xl text-text-secondary mb-6">
+                How the world&apos;s best AI products design their experiences.
               </p>
 
-              <div>
+              {/* Hero stays minimal on purpose: identity, quiet social proof,
+                  and a slim email capture (default component copy is the whole
+                  pitch: daily AIUX news disclosure, no extras). */}
+              <div className="mt-12">
                 <p className="text-[9px] font-bold text-text-secondary uppercase tracking-tight mb-4">
                   Patterns used by leading companies
                 </p>
                 <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
               </div>
 
-              {/* Hero email capture — mirrors the /news hero treatment (stacked
-                  form + social proof) so visitors don't have to scroll past the
-                  full grid to subscribe. A second copy lives below the grid. */}
               <div className="mt-10 max-w-md mx-auto">
-                <InlineNewsletterSignup
-                  variant="hero"
-                  source="patterns"
-                  customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
-                  customButtonText="Solve my AI design overload →"
-                  customSuccessMessage="You're in! Watch for our next issue."
-                  stacked
-                />
-                <p className="text-base font-medium text-text-secondary mt-4">
-                  46,000+ reads · 50+ products analyzed daily
+                <InlineNewsletterSignup variant="hero" source="patterns-hero" stacked />
+                <p className="mt-3 text-sm font-medium text-text-secondary">
+                  Read by 1,500+ designers every month.
                 </p>
               </div>
             </div>
           </div>
         </section>
+
+        {/* Skills banner — part of the grid: every pattern below is installable */}
+        <div className="max-w-7xl mx-auto px-6 pt-10">
+          <Link
+            href="/skills"
+            className="group flex items-center justify-center gap-3 rounded-2xl border border-border-primary bg-surface-primary px-6 py-4 shadow-card hover:border-accent-primary hover:shadow-card-hover transition-all"
+          >
+            <p className="text-base text-text-secondary">
+              Every pattern below ships as a free Claude Code skill.{' '}
+              <span className="font-medium text-accent-primary group-hover:text-accent-hover transition-colors">
+                Browse the skills directory →
+              </span>
+            </p>
+          </Link>
+        </div>
 
         {/* Interactive Pattern Grid — search + filters + responsive cards */}
         <PatternGrid
@@ -190,7 +199,10 @@ export default function PatternsIndexPage() {
           <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-3">
             Daily AI UX news
           </h2>
-          <InlineNewsletterSignup variant="hero" source="patterns" />
+          <InlineNewsletterSignup variant="hero" source="patterns-grid" />
+          <p className="mt-4 text-sm text-text-secondary">
+            Read by 1,500+ designers every month.
+          </p>
         </section>
 
         {/* SEO — keyword-rich server-rendered text for Googlebot */}

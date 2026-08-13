@@ -88,7 +88,11 @@ export default function SaveToDashboardButton({
         } ${className}`}
       >
         <Icon className="w-5 h-5" aria-hidden="true" />
-        {isLoading ? 'Save' : saved ? 'Saved' : 'Save'}
+        {isLoading
+          ? (labels?.idle ?? 'Save')
+          : saved
+            ? (labels?.saved ?? 'Saved')
+            : (labels?.idle ?? 'Save')}
       </button>
     );
   }

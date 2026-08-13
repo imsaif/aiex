@@ -48,8 +48,7 @@ export const productLogos: Record<string, string> = {
   IBM: `${SI}/ibm.svg`,
   AWS: `${SI}/aws.svg`,
   Duolingo: `${SI}/duolingo.svg`,
-  'Be': '/images/logos/simple-icons/bemyeyes.svg',
-  GPTZero: `${SI}/openai.svg`,
+  'Be': '/images/logos/simple-icons/bemyeyes.png',
   Hugging: `${SI}/huggingface.svg`,
 
   // Automation & Workflow Tools
@@ -63,6 +62,11 @@ export const productLogos: Record<string, string> = {
   'Woebot': '/images/logos/woebot_health_logo.webp',
   'Crisis': '/images/logos/Crisis_Text_Line_logo.webp',
   'Wysa': '/images/logos/wysa_logo.webp',
+
+  // Meeting & Productivity AI
+  Granola: `${SI}/granola.svg`,
+  GPTZero: `${SI}/gptzero.svg`,
+  PinwheelGPT: `${SI}/pinwheel.png`,
 };
 
 /**

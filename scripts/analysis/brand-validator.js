@@ -117,6 +117,11 @@ const allowedPatterns = [
   // Inline diff/log color indicators that need raw red/green for legibility
   /text-green-600.*['"]Added['"]/,
   /text-red-600.*['"]Removed['"]/,
+
+  // Text on accent-primary fills: the house Button primitive itself uses this
+  // exact literal pair (33 files); flagging it penalizes matching the design
+  // system. Retire this exception if an on-accent text token is ever minted.
+  /text-white\s+dark:text-gray-900/,
 ];
 
 function isAllowedPattern(line) {
