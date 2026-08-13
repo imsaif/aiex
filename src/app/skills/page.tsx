@@ -5,6 +5,7 @@ import { siteConfig } from '@/config/seo';
 import { skillName } from '@/lib/skills/composeSkill';
 import { exampleProducts } from '@/lib/skills/usedBy';
 import { SkillsDirectory, type SkillRow } from '@/components/skills/SkillsDirectory';
+import { InstallCommand } from '@/components/skills/InstallCommand';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
@@ -69,13 +70,9 @@ export default function SkillsPage() {
               {rows.length} AI UX Skills for Claude Code
             </h1>
             <p className="text-lg md:text-xl text-text-secondary">
-              A skill is persistent design guidance for your coding agent. Install one and it triggers on
-              its own whenever the work matches: no prompting, no reminders. Save the skills you want and
-              download them as one pack, or install all of them with one command.
+              Design judgment your coding agent applies on its own. Install once, no prompting.
             </p>
-            <pre className="max-w-2xl mx-auto mt-8 overflow-x-auto rounded-input bg-surface-secondary p-snug text-sm text-text-primary text-left">
-              {GENERIC_COMMAND}
-            </pre>
+            <InstallCommand command={GENERIC_COMMAND} />
             <p className="mt-4 text-sm text-text-secondary">
               New to skills?{' '}
               <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
