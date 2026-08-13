@@ -32,6 +32,11 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'responsible-ai-design',
     'escalation-pathways',
   ],
+  // Inserted second (right after claude-code-learning-path) on purpose: pattern
+  // pages cap "Practice in Courses" at 3 entries in insertion order, so a later
+  // placement here would never surface on human-in-the-loop (already in 3
+  // guides) or progressive-disclosure (already in 5).
+  'ai-ux-skills-guide': ['human-in-the-loop', 'progressive-disclosure', 'error-recovery'],
   'cursor-learning-path': [
     'contextual-assistance',
     'augmented-creation',

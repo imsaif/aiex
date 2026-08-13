@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
   AcademicCapIcon,
+  BoltIcon,
   BookmarkIcon,
   ChatBubbleLeftRightIcon,
   ClockIcon,
@@ -46,13 +47,17 @@ const GUIDE_ICONS: Record<string, GuideIconConfig> = {
     component: ChatBubbleLeftRightIcon,
     alt: 'Conversational UI',
   },
+  'ai-ux-skills-guide': {
+    component: BoltIcon,
+    alt: 'AI UX Skills',
+  },
 };
 
 function GuideIconTile({ slug }: { slug: string }) {
   const meta = GUIDE_ICONS[slug];
   if (!meta) return null;
   return (
-    <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+    <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
       {'component' in meta ? (
         <meta.component
           className="w-6 h-6 text-text-primary"
@@ -184,6 +189,14 @@ const guideMeta: Record<
       'Chat bubbles, streaming & typing indicators',
       'Context management & error recovery',
       'Agentic AI patterns & accessibility',
+    ],
+  },
+  'ai-ux-skills-guide': {
+    tagline: 'Your agent, trained',
+    highlights: [
+      'What a skill is and where it lives',
+      'Install a pack: zip or one-file installer',
+      'Triggering: symptom-first, no prompting',
     ],
   },
 };
@@ -341,7 +354,7 @@ export default function GuidesPage() {
 
         {/* Featured guides */}
         {featuredCards.length > 0 && (
-          <section className="max-w-7xl mx-auto px-6 py-12 md:py-16 border-b border-gray-200 dark:border-gray-700">
+          <section className="max-w-7xl mx-auto px-6 py-12 md:py-16 border-b border-border-primary">
             <div className="flex items-center gap-2 mb-6">
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-accent-subtle text-accent-primary border border-accent-primary/20">
                 Recommended Start
@@ -352,7 +365,7 @@ export default function GuidesPage() {
                 <Link
                   key={card.slug}
                   href={`/guides/${card.slug}`}
-                  className="block p-8 rounded-3xl border border-gray-200 dark:border-gray-700 bg-surface-secondary hover:border-accent-primary/40 hover:shadow-lg transition-all"
+                  className="block p-8 rounded-3xl border border-border-primary bg-surface-secondary hover:border-accent-primary/40 hover:shadow-lg transition-all"
                 >
                   <GuideIconTile slug={card.slug} />
                   <p className="text-sm font-medium text-accent-primary mb-1">
@@ -374,7 +387,7 @@ export default function GuidesPage() {
                       ))}
                     </ul>
                   )}
-                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-border-primary">
                     <span>{card.lessons} lessons</span>
                     <span aria-hidden="true">·</span>
                     <span>{card.readTime} min total</span>
@@ -405,7 +418,7 @@ export default function GuidesPage() {
                 <Link
                   key={card.slug}
                   href={`/guides/${card.slug}`}
-                  className="block p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary hover:border-accent-primary/40 hover:shadow-lg transition-all"
+                  className="block p-8 rounded-2xl border border-border-primary bg-surface-primary hover:border-accent-primary/40 hover:shadow-lg transition-all"
                 >
                   <GuideIconTile slug={card.slug} />
                   <p className="text-sm font-medium text-accent-primary mb-1">
@@ -427,7 +440,7 @@ export default function GuidesPage() {
                       ))}
                     </ul>
                   )}
-                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-border-primary">
                     <span>{card.lessons} lessons</span>
                     <span aria-hidden="true">·</span>
                     <span>{card.readTime} min total</span>
@@ -481,7 +494,7 @@ export default function GuidesPage() {
                 shared with the guide cards so the page reads as one system. */}
             <ul className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
               <li className="flex flex-col items-center text-center">
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
                   <AcademicCapIcon
                     className="w-6 h-6 text-text-primary"
                     aria-hidden="true"
@@ -496,7 +509,7 @@ export default function GuidesPage() {
                 </p>
               </li>
               <li className="flex flex-col items-center text-center">
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
                   <ClockIcon
                     className="w-6 h-6 text-text-primary"
                     aria-hidden="true"
@@ -511,7 +524,7 @@ export default function GuidesPage() {
                 </p>
               </li>
               <li className="flex flex-col items-center text-center">
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-gray-200 dark:border-gray-700">
+                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
                   <BookmarkIcon
                     className="w-6 h-6 text-text-primary"
                     aria-hidden="true"

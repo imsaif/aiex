@@ -8417,6 +8417,308 @@ Audience: Early-stage VCs in the design-tools space.`,
     relatedPatterns: ['Augmented Creation', 'Collaborative AI', 'Contextual Assistance'],
     relatedGuides: ['claude-code-learning-path'],
   },
+  {
+    id: 'ai-ux-skills-course',
+    slug: 'ai-ux-skills-guide',
+    title: 'Using AI UX Skills with Claude Code',
+    description:
+      'Learn what a Claude Code skill is, how it differs from reading a pattern, and how to install and trigger the AI UX skill pack in your own repo.',
+    excerpt:
+      'A short course on turning AI UX patterns into persistent design judgment for Claude Code: what a skill file is, how it differs from a pattern, how to install a skill pack, and how triggering works without a slash command.',
+    tool: 'Claude Code',
+    useCase: 'Skills',
+    skillLevel: 'Beginner',
+    designDomain: 'UX Design',
+    readTime: 10,
+    author: 'Design Team',
+    publishedDate: '2026-08-13',
+    status: 'ready',
+    thumbnail: '/images/logos/simple-icons/anthropic.svg',
+    tags: ['claude-code', 'skills', 'skill-pack', 'agent-skills', 'ai-ux-patterns', 'getting-started'],
+    relatedPatterns: ['human-in-the-loop', 'progressive-disclosure', 'error-recovery'],
+    lessonCount: 4,
+    content: '',
+    lessons: [
+      {
+        id: 'lesson-1',
+        title: 'What a Claude Code Skill Is',
+        duration: 2,
+        order: 1,
+        module: 'foundations',
+        sections: [
+          {
+            type: 'intro',
+            content: 'A Claude Code skill is a small markdown file that gives your coding agent persistent design judgment. Instead of you re-explaining a pattern in every conversation, the skill stays in your repo and Claude reads it whenever the work matches. This site ships one skill per AI UX pattern.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Anatomy of a skill',
+          },
+          {
+            type: 'text',
+            content: 'Every skill lives at `.claude/skills/aiux-<pattern>/SKILL.md`. The file has two parts: a frontmatter block with a `name` and a `description`, and a body with the moves the pattern calls for. The description is the only text Claude reads when deciding whether to load the skill, so it is written as a condition, not a summary: it names the symptoms you would actually type, not the pattern\'s formal name.',
+          },
+          {
+            type: 'code',
+            language: 'markdown',
+            label: '.claude/skills/aiux-human-in-the-loop/SKILL.md (frontmatter)',
+            code: '---\nname: aiux-human-in-the-loop\ndescription: "Use when AI output needs human review, approval, or sign-off before it takes effect or reaches someone: approval queues, \'a person checks before send\', moderation of AI answers, override and reject controls. Human-in-the-Loop keeps automation accountable to human judgment."\n---',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'You never run a skill',
+            content: 'There is no command to type and no menu to open. Claude Code reads every skill\'s description at the start of a session, and loads the full file the moment your request matches one. If nothing matches, the skill just sits there, unused and harmless.',
+            icon: 'info',
+          },
+          {
+            type: 'completion',
+            title: 'You understand the shape of a skill',
+            items: [
+              'A skill is a markdown file at `.claude/skills/aiux-<pattern>/SKILL.md`',
+              'The frontmatter `description` is the trigger; the body holds the moves',
+              'Skills load automatically, there is nothing to run',
+            ],
+            message: 'Next: how a skill differs from just reading the pattern page.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-2',
+        title: 'Patterns Teach You, Skills Teach Your Agent',
+        duration: 2,
+        order: 2,
+        module: 'foundations',
+        sections: [
+          {
+            type: 'intro',
+            content: 'A pattern page and a skill file carry the same design knowledge, but they serve different readers at different moments. Knowing the difference tells you when to read one and when to install the other.',
+            icon: 'info',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Who reads it',
+                content: 'A pattern page: you, while you\'re deciding whether the approach is right. A skill: your agent, while it\'s writing code.',
+              },
+              {
+                label: 'When it applies',
+                content: 'A pattern page: whenever you open it. A skill: only when your request matches its trigger description.',
+              },
+              {
+                label: 'Where it lives',
+                content: 'A pattern page: on aiuxdesign.guide. A skill: in your repo, at `.claude/skills/aiux-<pattern>/SKILL.md`.',
+              },
+              {
+                label: 'How long it lasts',
+                content: 'A pattern page: one read, then it\'s on you to remember. A skill: every session, for as long as the file stays in the repo.',
+              },
+            ],
+          },
+          {
+            type: 'text',
+            content: 'The two shapes aren\'t separate content. A skill\'s body is generated from the same pattern\'s takeaways, just reformatted as instructions an agent can act on instead of prose a person reads.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Read one, install the other',
+            content: 'Read the pattern page to judge whether Claude\'s output actually realizes the pattern. Install the skill so the pattern gets applied even on the sessions where you\'re not watching closely.',
+            icon: 'tip',
+          },
+          {
+            type: 'completion',
+            title: 'You know when to reach for which',
+            items: [
+              'Pattern pages inform your judgment; skills inform your agent\'s behavior',
+              'Skill bodies are generated from the same pattern takeaways, not written separately',
+              'Reading and installing are not substitutes for each other',
+            ],
+            message: 'Next: actually getting a skill pack installed in your repo.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-3',
+        title: 'Install a Skill Pack',
+        duration: 3,
+        order: 3,
+        module: 'setup',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Your dashboard offers two ways to download the skills you\'ve saved: a zip you unpack, or a single markdown file you hand to Claude Code directly. If you only want one skill, there\'s a one-line install for that too.',
+            icon: 'download',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option A: the zip',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Choose Folder (.zip) on your dashboard',
+                content: 'Downloads aiux-skill-pack.zip, containing a README and one `.claude/skills/aiux-<pattern>/SKILL.md` per saved pattern.',
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Unzip it at the root of your repo',
+                content: 'The `.claude/skills/` folder lands exactly where Claude Code expects it.',
+                icon: 'terminal',
+              },
+              {
+                number: 3,
+                title: 'Commit it',
+                content: 'Skills are plain text, so they diff and review like any other file in the repo.',
+                icon: 'check',
+              },
+            ],
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            label: 'Unzip at the repo root',
+            code: 'unzip ~/Downloads/aiux-skill-pack.zip -d .',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option B: the one-file installer',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Download aiux-skills.md',
+                content: 'One markdown file with every saved skill fenced off inside it, plus install instructions at the top.',
+                icon: 'download',
+              },
+              {
+                number: 2,
+                title: 'Drop it in your repo, or paste it straight into chat',
+                content: 'Either works: Claude Code reads the file from disk or from your prompt.',
+                icon: 'code',
+              },
+              {
+                number: 3,
+                title: 'Tell Claude Code to install it',
+                content: '"install the skills in aiux-skills.md" is enough. Claude creates each file at the path named in its heading.',
+                icon: 'terminal',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Just one skill?',
+          },
+          {
+            type: 'text',
+            content: 'You don\'t need the dashboard for a single pattern. Every skill is also served on its own, so this one command installs it directly, no download step at all.',
+          },
+          {
+            type: 'code',
+            language: 'bash',
+            label: 'Install a single skill',
+            code: 'mkdir -p .claude/skills/aiux-<slug> && curl -fsSL https://aiuxdesign.guide/skills/aiux-<slug>.md -o .claude/skills/aiux-<slug>/SKILL.md',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Location matters',
+            content: 'Claude Code only auto-loads skills from `.claude/skills/<name>/SKILL.md`. If you unzip or install somewhere else, nothing triggers. Run `ls .claude/skills/` to confirm the folders landed where they should, and start a fresh Claude Code session afterward so it picks up the new skills.',
+            icon: 'warning',
+          },
+          {
+            type: 'completion',
+            title: 'A skill pack is installed',
+            items: [
+              'Chose a path: zip, one-file installer, or a single-skill curl command',
+              'Confirmed the skills sit under `.claude/skills/<name>/SKILL.md`',
+              'Started a new session so Claude Code picks them up',
+            ],
+            message: 'Next: what actually makes a skill fire, without you asking for it by name.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-4',
+        title: 'How Triggering Works',
+        duration: 3,
+        order: 4,
+        module: 'features',
+        sections: [
+          {
+            type: 'intro',
+            content: 'There\'s no slash command for a skill, and no menu that lists them by pattern name. Claude Code reads every installed skill\'s description line at the start of a session, and loads the matching one the moment your request looks like what that description covers.',
+            icon: 'info',
+          },
+          {
+            type: 'text',
+            content: 'That\'s why the descriptions are written symptom-first, not name-first: they describe the problem you\'d actually type ("approval queues", "a person checks before send"), not the pattern\'s formal title. All 38 patterns on this site have an authored description written this way, so triggering isn\'t left to a generic fallback.',
+          },
+          {
+            type: 'list',
+            items: [
+              '"Add an approve-or-reject step before this goes out" → triggers `aiux-human-in-the-loop`',
+              '"This settings panel shows every option at once, it\'s overwhelming" → triggers `aiux-progressive-disclosure`',
+              '"What should happen if the generation fails halfway through?" → triggers `aiux-error-recovery`',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'No prompting needed',
+            content: 'You don\'t need to remember a skill exists or ask for it by name. Describe the problem the way you normally would, and the matching skill loads on its own.',
+            icon: 'success',
+          },
+          {
+            type: 'text',
+            content: 'If a description doesn\'t quite match your phrasing, you can still be explicit: "use the aiux-human-in-the-loop skill" loads it directly, no different from naming any other file in the repo.',
+          },
+          {
+            type: 'further-reading',
+            title: 'Keep going',
+            links: [
+              {
+                title: 'Browse all skills',
+                url: '/skills',
+                description: 'Every pattern\'s skill, with its trigger description, in one directory.',
+              },
+              {
+                title: 'Your dashboard',
+                url: '/dashboard',
+                description: 'Save patterns as you browse and download them as one pack.',
+              },
+              {
+                title: 'Run the free audit',
+                url: '/audit',
+                description: 'Not sure which patterns your product needs? Start here.',
+              },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'You know how triggering works',
+            items: [
+              'Skill descriptions are symptom-first, written for how you\'d actually phrase a problem',
+              'Claude Code matches your request against installed skills automatically',
+              'You can always name a skill explicitly if it doesn\'t trigger on its own',
+            ],
+            message: 'Head to /skills to see every pattern\'s skill and its trigger description.',
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 /**
