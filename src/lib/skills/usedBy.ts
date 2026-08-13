@@ -35,6 +35,15 @@ const PRODUCT_LOGO_ALIASES: { name: string; logo: string }[] = [
   { name: 'Bing', logo: `${LOGO_DIR}/bing.svg` },
   { name: 'AWS', logo: `${LOGO_DIR}/aws.svg` },
   { name: 'IBM', logo: `${LOGO_DIR}/ibm.svg` },
+  { name: 'Crisis Text Line', logo: `${LOGO_DIR}/crisistextline.png` },
+  { name: 'PinwheelGPT', logo: `${LOGO_DIR}/pinwheel.png` },
+  { name: 'Superhuman', logo: `${LOGO_DIR}/superhuman.webp` },
+  { name: 'Pinwheel', logo: `${LOGO_DIR}/pinwheel.png` },
+  { name: 'GPTZero', logo: `${LOGO_DIR}/gptzero.svg` },
+  { name: 'Granola', logo: `${LOGO_DIR}/granola.svg` },
+  { name: 'Woebot', logo: `${LOGO_DIR}/woebot.png` },
+  { name: 'Devin', logo: `${LOGO_DIR}/devin.svg` },
+  { name: 'Wysa', logo: `${LOGO_DIR}/wysa.jpg` },
 ];
 
 function matchAlias(title: string): { name: string; logo: string } | undefined {
