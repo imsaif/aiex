@@ -469,7 +469,7 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
               </p>
               <Link
                 href="/guides/ai-ux-skills-guide"
-                className="mt-4 flex items-start gap-2.5 rounded-input border border-info bg-accent-subtle p-snug text-sm text-text-primary hover:border-accent-primary transition-colors"
+                className="mt-4 flex items-start gap-2.5 rounded-input border border-border-primary bg-accent-subtle p-snug text-sm text-text-primary hover:border-accent-primary transition-colors"
               >
                 <AcademicCapIcon className="h-5 w-5 shrink-0 text-accent-primary" aria-hidden="true" />
                 <span>
@@ -487,7 +487,7 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
       )}
 
       {recommendedCourses.length > 0 && (
-        <div className="max-w-6xl mx-auto px-6 pb-16">
+        <div className="mt-8">
           <div className="rounded-card border border-border-primary bg-surface-primary p-6 md:p-8">
             <div className="flex items-center gap-2.5 mb-1">
               <AcademicCapIcon className="h-5 w-5 text-accent-primary" aria-hidden="true" />
@@ -503,7 +503,7 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
                   href={`/guides/${course.slug}`}
                   className="group rounded-input border border-border-primary bg-surface-primary p-5 hover:border-accent-primary hover:shadow-card transition-all"
                 >
-                  <span className="inline-flex items-center rounded-pill border border-info bg-accent-subtle px-2.5 py-0.5 text-xs font-medium text-accent-primary">
+                  <span className="inline-flex items-center rounded-pill bg-accent-subtle px-2.5 py-1 text-xs font-medium text-accent-primary">
                     {course.slug === 'ai-ux-skills-guide' ? 'Start here · Free' : 'Free course'}
                   </span>
                   <h3 className="mt-3 font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
