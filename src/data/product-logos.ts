@@ -49,7 +49,6 @@ export const productLogos: Record<string, string> = {
   AWS: `${SI}/aws.svg`,
   Duolingo: `${SI}/duolingo.svg`,
   'Be': '/images/logos/simple-icons/bemyeyes.svg',
-  GPTZero: `${SI}/openai.svg`,
   Hugging: `${SI}/huggingface.svg`,
 
   // Automation & Workflow Tools
