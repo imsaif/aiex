@@ -410,9 +410,7 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
                   a plain markdown file with no format question to ask. */}
               {nP > 0 && (
                 <fieldset className="mb-4">
-                  <legend className="text-sm font-medium text-text-primary mb-2">
-                    How do you want it?
-                  </legend>
+                  <legend className="sr-only">How do you want it?</legend>
                   <div className="flex gap-2" role="radiogroup" aria-label="Download format">
                     {([
                       { id: 'zip', label: 'Folder (.zip)' },
@@ -436,8 +434,8 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
                   </div>
                   <p className="mt-2 text-sm text-text-secondary">
                     {format === 'zip'
-                      ? 'Unzip it at the root of your repo and the skills are in place. Nothing to run. Full walkthrough in the skills guide below.'
-                      : 'One file to commit. Hand it to Claude Code and it writes the skills for you. Full walkthrough in the skills guide below.'}
+                      ? 'Unzips at your repo root. Nothing to run.'
+                      : 'One file. Claude Code writes the skills for you.'}
                   </p>
                 </fieldset>
               )}
@@ -469,15 +467,12 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
               </p>
               <Link
                 href="/guides/ai-ux-skills-guide"
-                className="mt-4 flex items-start gap-2.5 rounded-input border border-border-primary bg-accent-subtle p-snug text-sm text-text-primary hover:border-accent-primary transition-colors"
+                className="mt-4 flex items-center gap-2.5 rounded-input border border-border-primary bg-surface-primary p-snug text-sm text-text-secondary hover:border-accent-primary hover:text-text-primary transition-colors"
               >
                 <AcademicCapIcon className="h-5 w-5 shrink-0 text-accent-primary" aria-hidden="true" />
                 <span>
-                  <span className="font-semibold">New to skills?</span> Learn what they are and how
-                  they trigger in a 10 minute course.
-                  <span className="mt-0.5 block font-medium text-accent-primary">
-                    Read the guide →
-                  </span>
+                  New to skills?{' '}
+                  <span className="font-medium text-accent-primary">Read the 10 minute guide →</span>
                 </span>
               </Link>
             </div>

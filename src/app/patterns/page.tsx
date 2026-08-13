@@ -167,14 +167,19 @@ export default function PatternsIndexPage() {
           </div>
         </section>
 
-        {/* Skills strip — sits with the grid: every pattern below is installable */}
-        <div className="max-w-7xl mx-auto px-6 pt-10 text-center">
-          <p className="text-sm text-text-secondary">
-            Every pattern below ships as a free Claude Code skill.{' '}
-            <Link href="/skills" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
-              Browse the skills directory
-            </Link>
-          </p>
+        {/* Skills banner — part of the grid: every pattern below is installable */}
+        <div className="max-w-7xl mx-auto px-6 pt-10">
+          <Link
+            href="/skills"
+            className="group flex items-center justify-center gap-3 rounded-2xl border border-border-primary bg-surface-primary px-6 py-4 shadow-card hover:border-accent-primary hover:shadow-card-hover transition-all"
+          >
+            <p className="text-base text-text-secondary">
+              Every pattern below ships as a free Claude Code skill.{' '}
+              <span className="font-medium text-accent-primary group-hover:text-accent-hover transition-colors">
+                Browse the skills directory →
+              </span>
+            </p>
+          </Link>
         </div>
 
         {/* Interactive Pattern Grid — search + filters + responsive cards */}
