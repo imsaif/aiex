@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${siteConfig.url}/skills` },
 };
 
-const GENERIC_COMMAND = 'npx skills add imsaif/aiux-skills-claude-code';
+const GENERIC_COMMAND = 'npx skills add imsaif/aiux-skills';
 
 export default function SkillsPage() {
   const categoryNames = categories.map((c) => c.title);

@@ -8779,7 +8779,7 @@ Audience: Early-stage VCs in the design-tools space.`,
             type: 'code',
             language: 'bash',
             label: 'Install every skill',
-            code: 'npx skills add imsaif/aiux-skills-claude-code',
+            code: 'npx skills add imsaif/aiux-skills',
           },
           {
             type: 'heading',
