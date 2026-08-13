@@ -411,8 +411,8 @@ export default function DashboardClient() {
                   </div>
                   <p className="mt-2 text-sm text-text-secondary">
                     {format === 'zip'
-                      ? 'Unzip it at the root of your repo and the skills are in place. Nothing to run.'
-                      : 'One file to commit. Hand it to Claude Code and it writes the skills for you.'}
+                      ? 'Unzip it at the root of your repo and the skills are in place. Nothing to run. Full walkthrough in the skills guide below.'
+                      : 'One file to commit. Hand it to Claude Code and it writes the skills for you. Full walkthrough in the skills guide below.'}
                   </p>
                 </fieldset>
               )}
@@ -441,6 +441,12 @@ export default function DashboardClient() {
                   : format === 'installer'
                     ? skillInstallerFilename()
                     : skillPackFilename()}
+              </p>
+              <p className="mt-3 text-center text-sm text-text-secondary">
+                New to skills?{' '}
+                <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+                  Learn what they are and how they trigger
+                </Link>
               </p>
             </div>
           </div>
