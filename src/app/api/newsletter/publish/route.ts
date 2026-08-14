@@ -4,6 +4,17 @@ import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { timingSafeEqual } from 'crypto';
 
+// Accepts an explicit issue date (ISO string or ms epoch) for the rare case where
+// a draft genuinely needs re-dating. Returns null for anything unparseable so the
+// caller can reject rather than silently fall back to "now" — falling back to now
+// is the exact bug this route had.
+function parsePublishDate(value: unknown): Date | null {
+  if (value === undefined || value === null || value === '') return null;
+  if (typeof value !== 'string' && typeof value !== 'number') return null;
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+}
+
 // POST — publish a draft (admin only). Marks the draft as published in our DB
 // and revalidates the public /news pages. Admin copies the HTML from the admin
 // UI and pastes into a new Beehiiv post to actually email subscribers
@@ -15,10 +26,21 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, title, summary, content } = body;
+    const { id, title, summary, content, publishDate } = body;
 
     if (!id) {
       return NextResponse.json({ error: 'Draft ID is required' }, { status: 400 });
+    }
+
+    // publishDate is the ISSUE date, not the moment the button was pressed. It is
+    // set at generation time and encoded in the slug (ai-ux-daily-aug-12-...), and
+    // /news uses it for BOTH orderBy and the displayed date. Re-stamping it here
+    // moved a backlog draft to today, reordered /news and stacked two issues on
+    // one date (2026-08-03, again 2026-08-13). So we no longer write it on publish;
+    // an explicit override is honoured for the rare deliberate re-date.
+    const overrideDate = parsePublishDate(publishDate);
+    if (publishDate !== undefined && !overrideDate) {
+      return NextResponse.json({ error: 'Invalid publishDate' }, { status: 400 });
     }
 
     const draft = await prisma.newsletterDraft.update({
@@ -28,7 +50,7 @@ export async function POST(request: NextRequest) {
         summary: summary || undefined,
         content: content || undefined,
         status: 'published',
-        publishDate: new Date(),
+        ...(overrideDate ? { publishDate: overrideDate } : {}),
       },
     });
 
@@ -132,11 +154,11 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // Status only — publishDate stays as generated. See the note on the POST path.
     const draft = await prisma.newsletterDraft.update({
       where: { id },
       data: {
         status: 'published',
-        publishDate: new Date(),
       },
     });
 
