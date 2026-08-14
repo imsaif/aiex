@@ -110,6 +110,12 @@ export default function AdminNewsletterClient({
   // Fetch full draft content by ID
   const fetchFullDraft = async (id: string) => {
     setIsLoadingDraft(true);
+    // publishedAt is a transient "you just published THIS draft" flag. It is not
+    // keyed to a draft id, so leaving it set while switching drafts made the next
+    // draft render "Published ✓" and DISABLED its Publish button — you could not
+    // publish anything else without a full page reload. Clear it on every load;
+    // the button then falls back to the authoritative activeDraft.status.
+    setPublishedAt(null);
     try {
       const res = await fetch(`/api/newsletter/drafts?id=${id}`);
       if (!res.ok) return;
@@ -214,6 +220,13 @@ export default function AdminNewsletterClient({
 
       if (response.ok) {
         setPublishedAt(new Date().toISOString());
+        // Reflect the new status in both the open draft and the sidebar list, or
+        // the list keeps showing "pending review" for an issue that is already
+        // live — which reads as "the publish didn't work" and invites a re-click.
+        setActiveDraft((prev) => (prev ? { ...prev, status: 'published' } : prev));
+        setDrafts((prev) =>
+          prev.map((d) => (d.id === activeDraft.id ? { ...d, status: 'published' } : d))
+        );
         setMessage({
           type: 'success',
           text: data.message || 'Published to /news. Now copy the HTML and paste into Beehiiv.',
