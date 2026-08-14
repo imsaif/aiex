@@ -10,8 +10,10 @@ export default function robots(): MetadataRoute.Robots {
   const disallow = [
     '/api/',
     '/admin/',
-    '/*.json$',
-    '/*.xml$',
+    // No blanket '/*.xml$' / '/*.json$' here: those patterns matched
+    // /sitemap.xml itself, so Googlebot refused to read the sitemap
+    // ("Sitemap could not be read" in Search Console). Build artifacts are
+    // already covered by /.next/ and /api/.
     '/.next/',
     '/search',
     '/favorites',
@@ -34,8 +36,12 @@ export default function robots(): MetadataRoute.Robots {
         crawlDelay: 0.5,
       },
     ],
-    // Primary sitemap reference
-    sitemap: `${baseUrl}/sitemap.xml`,
+    // Primary sitemap plus the image sitemap. The image sitemap was reachable
+    // only because it had been submitted by hand in Search Console; declaring
+    // it here survives a property reset and exposes it to other crawlers.
+    // Note it has no .xml extension, which is why it kept being fetched
+    // successfully while /sitemap.xml was blocked by the rule dropped above.
+    sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/sitemap-images`],
     host: baseUrl,
   };
 }

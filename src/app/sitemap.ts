@@ -97,7 +97,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/handbook`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/accessibility-checklist-for-ai-designs`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/agentic-ux-checklist`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
     // /search excluded — blocked in robots.txt
+    // /audit excluded — carries robots: { index: false } as a funnel entry point
+    // /prompts/[slug] excluded — one URL per pattern slug, near-duplicate of the
+    //   pattern page; adding 38 thin URLs works against the open
+    //   "discovered - not indexed" backlog (see .claude/rules/seo.md)
     // /aiuxdesign.gist.design removed — static file, not an indexable page
   ];
 
