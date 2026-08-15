@@ -268,18 +268,6 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
         {/* Filter Bar */}
         <div className="mb-12 space-y-6">
-          {/* Result count. The date range used to live here as a bare text link
-              ("See all issues"), which read as decoration next to the heading; it
-              is a filter, so it now sits with the other filters as a RANGE row. */}
-          <div className="flex items-center gap-4">
-            <h2 className="text-lg font-semibold text-text-primary">
-              Issues
-              <span className="ml-2 text-text-tertiary font-normal">
-                {filteredNewsletters.length}
-              </span>
-            </h2>
-          </div>
-
           {/* Filter rows */}
           <div className="space-y-5">
             {/* Range + type + search on one line. They are all "which issues do I
@@ -287,7 +275,12 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 because it is a long wrapping list. The row renders even when there
                 are no older issues, so search never disappears with the pills. */}
             <div className="flex items-center gap-4">
-              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-16 flex-shrink-0">Show</span>
+              {/* Doubles as this section's heading and as the row's label, so the
+                  count doesn't need a row of its own. Kept an h2 for document
+                  structure even though it is styled like the Product label. */}
+              <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-20 flex-shrink-0">
+                Issues <span className="text-text-primary">{filteredNewsletters.length}</span>
+              </h2>
               <div className="flex flex-1 items-center gap-3 flex-wrap">
                 {olderNewsletters.length > 0 && (
                   <>
@@ -361,7 +354,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
             </div>
             {/* Product row */}
             <div className="flex items-start gap-4">
-              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-16 flex-shrink-0 mt-3">Product</span>
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-20 flex-shrink-0 mt-3">Product</span>
               <div className="flex items-center gap-3 flex-wrap">
                 {allProducts.map((product) => {
                   const isSelected = productFilters.includes(product);
