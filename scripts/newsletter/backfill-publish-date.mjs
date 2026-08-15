@@ -95,7 +95,18 @@ if (!fix.length) {
         data: { publishDate: f.target },
       });
     }
-    console.log(`\n✅ Updated ${fix.length} row(s). Revalidate /news so the change shows immediately.`);
+    console.log(`\n✅ Updated ${fix.length} row(s).`);
+
+    // A direct Prisma write triggers no revalidation, and /news is ISR with
+    // revalidate = 3600 — so the stale prerender (wrong dates) can serve for up to
+    // an hour. The GET quick-approve path is a status no-op on an already-published
+    // draft but still calls revalidatePath('/news'), which is safe to re-hit now
+    // that it no longer re-stamps publishDate. Flush it immediately:
+    console.log(
+      `\nFlush the /news ISR cache (otherwise it self-corrects within the hour):\n` +
+        `  curl -sL -o /dev/null -w '%{http_code}\\n' \\\n` +
+        `    "https://www.aiuxdesign.guide/api/newsletter/publish?id=${fix[0].id}&secret=$ADMIN_APPROVE_SECRET&confirm=true"`
+    );
   } else {
     console.log('\nDry run — re-run with --apply to write.');
   }
