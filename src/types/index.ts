@@ -378,12 +378,20 @@ export interface Newsletter {
   title: string;
   slug: string;
   summary: string;
-  content: string;
+  /**
+   * Full rendered HTML. Optional because the /news LIST does not fetch it — it
+   * is the heaviest column on that query (~18KB/row) and everything the list
+   * needed from it is precomputed into `readMinutes`. Detail pages still load it.
+   */
+  content?: string;
   publishedAt: Date | string;
   published: boolean;
   tags: NewsletterTag[];
   type?: 'daily' | 'weekly';
+  /** Product filter chips, derived at write time by src/lib/newsletter/products.ts. */
   products?: string[];
+  /** Whole minutes; 0 means empty content (a quiet-day entry). */
+  readMinutes?: number;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }

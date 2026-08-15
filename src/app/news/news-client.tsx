@@ -9,20 +9,26 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import dynamic from 'next/dynamic';
 import { Newsletter, NewsletterTag } from '@/types';
 
+// Chip icons. Keys must match PRODUCT_KEYWORDS in src/lib/newsletter/products.ts;
+// a product with no entry here still renders as a text-only chip (the JSX guards
+// on presence), so a missing logo degrades rather than breaking.
+// Not yet self-hosted: Canva, Vercel, Atlassian, Reddit, Replit — those render
+// text-only until their SVGs are added to /public/images/logos/simple-icons/.
+// Do NOT hotlink a CDN for them; every logo on this site is self-hosted.
 const PRODUCT_ICONS: Record<string, string> = {
   'ChatGPT': '/images/logos/simple-icons/openai.svg',
   'Claude': '/images/logos/simple-icons/anthropic.svg',
   'Gemini': '/images/logos/simple-icons/googlegemini.svg',
-  'Cursor': '/images/logos/simple-icons/cursor.svg',
   'Copilot': '/images/logos/simple-icons/githubcopilot.svg',
   'Perplexity': '/images/logos/simple-icons/perplexity.svg',
-  'Midjourney': '/images/logos/simple-icons/midjourney.svg',
   'Figma': '/images/logos/simple-icons/figma.svg',
-  'v0': '/images/logos/simple-icons/v0.svg',
   'OpenAI': '/images/logos/simple-icons/openai.svg',
   'Google': '/images/logos/simple-icons/google.svg',
-  'Meta': '/images/logos/simple-icons/meta.svg',
   'Apple': '/images/logos/simple-icons/apple.svg',
+  'Microsoft': '/images/logos/simple-icons/microsoft.svg',
+  'GitHub': '/images/logos/simple-icons/github.svg',
+  'Adobe': '/images/logos/simple-icons/adobe.svg',
+  'Slack': '/images/logos/simple-icons/slack.svg',
 };
 
 const InlineNewsletterSignup = dynamic(
@@ -37,10 +43,9 @@ interface NewsClientProps {
   availableTags: NewsletterTag[];
 }
 
-function getReadingTime(content: string): number {
-  const wordCount = content ? content.split(/\s+/).length : 0;
-  return Math.max(1, Math.ceil(wordCount / 200));
-}
+// Reading time is precomputed at write time (`readMinutes`) so this list does not
+// have to download every issue's full HTML just to count words. See
+// src/lib/newsletter/products.ts.
 
 function isToday(date: string | Date): boolean {
   const d = new Date(date);
@@ -134,6 +139,17 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
 
   const displayedNewsletters = showAll ? initialNewsletters : recentNewsletters;
 
+  // Which chips can actually return something in the CURRENT view. The chip row
+  // itself is built from every issue (so it stays stable and doesn't reshuffle
+  // under the cursor when you toggle "See all issues"), but the default view is
+  // the last 30 days — so a product covered only in older issues would otherwise
+  // render an enabled chip that yields an empty list. Those get disabled instead.
+  const productsInView = useMemo(() => {
+    const s = new Set<string>();
+    displayedNewsletters.forEach((n) => n.products?.forEach((p) => s.add(p)));
+    return s;
+  }, [displayedNewsletters]);
+
   const filteredNewsletters = useMemo(() => {
     let results = displayedNewsletters;
 
@@ -225,7 +241,9 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-6 py-12 md:py-16">
+      {/* max-w-7xl to match the hero container above. Was 5xl, which left a lot of
+          dead margin on wide screens and forced the product chips onto 2-3 rows. */}
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
         {/* Filter Bar */}
         <div className="mb-12 space-y-6">
           {/* Top row: heading + time toggle + search */}
@@ -288,16 +306,24 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
               <div className="flex items-center gap-3 flex-wrap">
                 {allProducts.map((product) => {
                   const isSelected = productFilters.includes(product);
+                  // Nothing to show for this product in the current window. Keep
+                  // the chip in place (so the row doesn't jump) but make it
+                  // unclickable rather than letting it return an empty list.
+                  const isUnavailable = !productsInView.has(product) && !isSelected;
                   return (
                     <button
                       key={product}
+                      disabled={isUnavailable}
+                      title={isUnavailable ? `No ${product} coverage in this range` : undefined}
                       onClick={() => setProductFilters((prev) =>
                         isSelected ? prev.filter((p) => p !== product) : [...prev, product]
                       )}
-                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
+                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
                         isSelected
-                          ? 'bg-accent-primary text-white dark:text-gray-900'
-                          : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'
+                          ? 'bg-accent-primary text-white dark:text-gray-900 cursor-pointer'
+                          : isUnavailable
+                            ? 'bg-background-tertiary text-text-tertiary opacity-40 cursor-not-allowed'
+                            : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary cursor-pointer'
                       }`}
                     >
                       {PRODUCT_ICONS[product] && (
@@ -340,12 +366,14 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
         {/* Newsletter List */}
         <div className="space-y-0 animate-fade-in">
           {filteredNewsletters.map((newsletter, index) => {
-            // Quiet day entries have empty content - show inline without link
-            const isQuietDay = !newsletter.content || newsletter.content.trim() === '';
+            // Quiet day entries have empty content, which the generator records as
+            // 0 reading minutes — show them inline without a link, since their
+            // detail page would just bounce back here.
+            const readingTime = newsletter.readMinutes ?? 0;
+            const isQuietDay = readingTime === 0;
             const isWeekly = newsletter.type === 'weekly' || newsletter.title.startsWith('This Week in');
             const itemIsNew = hydrated && isNew(newsletter.publishedAt);
             const itemIsToday = hydrated && isToday(newsletter.publishedAt);
-            const readingTime = !isQuietDay ? getReadingTime(newsletter.content) : 0;
 
             return (
               <div
@@ -461,7 +489,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
 
       {/* Deep Dives Section */}
       <section className="border-t border-border-secondary">
-        <div className="max-w-5xl mx-auto px-6 py-16 md:py-20">
+        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
           <div className="mb-10">
             <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider">From the editor</span>
             <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mt-2">Deep Dives</h2>
@@ -567,10 +595,16 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
 
       {/* Sticky Newsletter Signup Bar */}
       {showStickySignup && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-background-primary/95 backdrop-blur-sm border-t border-border-primary shadow-lg animate-slide-in">
-          <div className="max-w-5xl mx-auto px-6 py-6 flex items-center gap-6">
+        <div className="fixed bottom-0 left-0 right-0 z-sticky bg-background-primary/95 backdrop-blur-sm border-t border-border-primary shadow-lg animate-slide-in">
+          <div className="max-w-7xl mx-auto px-6 py-6 flex items-center gap-6">
             {stickyStatus === 'success' ? (
-              <p className="flex-1 text-base text-green-600 dark:text-green-400 font-medium">Subscribed!</p>
+              // status-success fails contrast as TEXT (see .claude/rules/design-system.md),
+              // so it carries the dot only and the label stays text-primary. The word
+              // "Subscribed!" already conveys the state without relying on colour.
+              <p className="flex-1 flex items-center gap-tight text-base text-text-primary font-medium">
+                <span className="w-2 h-2 rounded-full bg-status-success flex-shrink-0" aria-hidden="true" />
+                Subscribed!
+              </p>
             ) : (
               <>
                 <p className="text-base font-semibold text-text-primary hidden sm:block whitespace-nowrap">

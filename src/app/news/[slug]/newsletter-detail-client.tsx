@@ -50,7 +50,9 @@ export default function NewsletterDetailClient({
       import('@/lib/pattern-linkify'),
     ]).then(([purifyMod, linkifyMod]) => {
       const DOMPurify = purifyMod.default;
-      const sanitized = DOMPurify.sanitize(newsletter.content, {
+      // `content` is optional on the shared Newsletter type because the /news
+      // LIST no longer fetches it; the detail route always does.
+      const sanitized = DOMPurify.sanitize(newsletter.content ?? '', {
         ADD_TAGS: ['style'],
         ADD_ATTR: ['target', 'rel'],
       });

@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import Anthropic from '@anthropic-ai/sdk';
 import Parser from 'rss-parser';
 import { prisma } from '@/lib/prisma';
+import { productsForIssue, computeReadMinutes } from '@/lib/newsletter/products';
 import { Resend } from 'resend';
 import { patterns } from '@/data/patterns';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -2381,6 +2382,10 @@ async function runGeneration(
         publishDate: new Date(),
         status: 'pending_review',
         sources: [],
+        // No selection to tag, and empty content means 0 minutes — which is the
+        // signal /news uses to render this inline instead of as a link.
+        products: [],
+        readMinutes: 0,
       },
     });
     console.log('[newsletter] Quiet day entry created (pending_review)');
@@ -2416,6 +2421,8 @@ async function runGeneration(
           publishDate: new Date(),
           status: 'pending_review',
           sources: newsItems.map((item) => item.link),
+          products: [],
+          readMinutes: 0,
         },
       });
       console.log('[newsletter] Single-source-day entry created (pending_review)');
@@ -2682,6 +2689,10 @@ async function runGeneration(
         ? dailyItemsUsed.map((item) => item.sourceUrl)
         : newsItems.map((item) => item.link),
       structuredData: structuredDataWithQA as object,
+      // Tagged here, from the same selection that produced the HTML, so /news can
+      // filter by product without fetching structuredData on the list page.
+      products: productsForIssue(title, summary, structuredDataWithQA),
+      readMinutes: computeReadMinutes(htmlContent),
     },
   });
 

@@ -42,6 +42,21 @@ model NewsletterDraft {
   type           String              @default("daily")
   sources        Json                @default("[]")
   structuredData Json?
+
+  // Derived at write time from title + summary + structuredData.items, via
+  // src/lib/newsletter/products.ts. Stored rather than computed on render
+  // because /news deliberately excludes `structuredData` from its query for load
+  // time, and title+summary alone matched nothing on 43% of recent issues.
+  // Denormalised, so it drifts if PRODUCT_KEYWORDS changes — re-run
+  // scripts/newsletter/backfill-issue-metadata.mjs after editing that map.
+  products       String[]            @default([])
+
+  // Reading time in whole minutes, so the /news list no longer has to fetch
+  // `content` (~18KB/row, ~1MB across the 60 listed issues) purely to count
+  // words. 0 means empty content, which is also how the list detects a
+  // quiet-day entry.
+  readMinutes    Int?
+
   socialPosts    SocialPost[]
   patternMatches NewsPatternMatch[]
 }
