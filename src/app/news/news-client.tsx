@@ -82,6 +82,28 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
   }, [initialNewsletters]);
 
   const [showAll, setShowAll] = useState(!hasRecentNewsletters && initialNewsletters.length > 0);
+
+  // Issue pages deep-link here as /news?product=Figma. Read AFTER hydration from
+  // window.location rather than via useSearchParams: this page is ISR
+  // (`revalidate = 3600` in page.tsx) and touching searchParams — in the server
+  // component or through the hook — opts it out of static rendering, which would
+  // hand back the load-time win from dropping the `content` column. The filter
+  // applies on mount instead, and the widened range keeps the deep link honest
+  // when the product has no coverage in the last 30 days.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get('product');
+    if (!requested) return;
+    const known = initialNewsletters.some((n) => n.products?.includes(requested));
+    if (!known) return;
+    setProductFilters([requested]);
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 30);
+    const inRecent = initialNewsletters.some(
+      (n) => n.products?.includes(requested) && new Date(n.publishedAt) >= cutoff
+    );
+    if (!inRecent) setShowAll(true);
+  }, [initialNewsletters]);
+
   const [showStickySignup, setShowStickySignup] = useState(false);
   const [stickyEmail, setStickyEmail] = useState('');
   const [stickyStatus, setStickyStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -246,44 +268,51 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
         {/* Filter Bar */}
         <div className="mb-12 space-y-6">
-          {/* Top row: heading + time toggle + search */}
-          <div className="flex items-center justify-between gap-4">
+          {/* Result count. The date range used to live here as a bare text link
+              ("See all issues"), which read as decoration next to the heading; it
+              is a filter, so it now sits with the other filters as a RANGE row. */}
+          <div className="flex items-center gap-4">
             <h2 className="text-lg font-semibold text-text-primary">
-              {showAll ? 'All issues' : 'Last 30 days'}
+              Issues
+              <span className="ml-2 text-text-tertiary font-normal">
+                {filteredNewsletters.length}
+              </span>
             </h2>
-            <div className="flex items-center gap-4">
-              {!showAll && olderNewsletters.length > 0 && (
-                <button
-                  onClick={() => setShowAll(true)}
-                  className="text-accent-primary hover:underline text-sm font-medium"
-                >
-                  See all issues
-                </button>
-              )}
-              {showAll && (
-                <button
-                  onClick={() => setShowAll(false)}
-                  className="text-accent-primary hover:underline text-sm font-medium"
-                >
-                  Last 30 days
-                </button>
-              )}
-              <input
-                type="text"
-                value={filterQuery}
-                onChange={(e) => setFilterQuery(e.target.value)}
-                placeholder="Search..."
-                className="bg-transparent border-b border-border-secondary focus:border-accent-primary outline-none text-sm px-1 py-0.5 w-28 text-text-primary placeholder:text-text-tertiary"
-              />
-            </div>
           </div>
 
           {/* Filter rows */}
           <div className="space-y-5">
-            {/* Type row */}
+            {/* Range + type + search on one line. They are all "which issues do I
+                see" controls, so they read as one group; product gets its own row
+                because it is a long wrapping list. The row renders even when there
+                are no older issues, so search never disappears with the pills. */}
             <div className="flex items-center gap-4">
-              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-16 flex-shrink-0">Type</span>
-              <div className="flex items-center gap-3">
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-16 flex-shrink-0">Show</span>
+              <div className="flex flex-1 items-center gap-3 flex-wrap">
+                {olderNewsletters.length > 0 && (
+                  <>
+                    {([
+                      { key: false, label: 'Last 30 days' },
+                      { key: true, label: 'All issues' },
+                    ] as const).map(({ key, label }) => (
+                      <button
+                        key={label}
+                        onClick={() => setShowAll(key)}
+                        aria-pressed={showAll === key}
+                        className={`px-5 py-2.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
+                          showAll === key
+                            ? 'bg-accent-primary text-white dark:text-gray-900'
+                            : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                    {/* Separates the date-range pair from the type pair, so "All
+                        issues" and "All" don't read as one run of options. */}
+                    <span className="w-px h-6 bg-border-secondary mx-1" aria-hidden="true" />
+                  </>
+                )}
                 {(['all', 'daily', 'weekly'] as const).map((type) => (
                   <button
                     key={type}
@@ -297,9 +326,39 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                     {type === 'all' ? 'All' : type === 'daily' ? 'Daily' : 'Weekly'}
                   </button>
                 ))}
+                <div className="relative w-full sm:w-72 sm:ml-auto">
+                  <svg
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary pointer-events-none"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                  </svg>
+                  <input
+                    type="search"
+                    value={filterQuery}
+                    onChange={(e) => setFilterQuery(e.target.value)}
+                    placeholder="Search issues..."
+                    aria-label="Search issues"
+                    className="w-full rounded-pill border border-border-secondary bg-surface-primary pl-11 pr-10 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary outline-none transition-colors focus:border-accent-primary"
+                  />
+                  {filterQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setFilterQuery('')}
+                      aria-label="Clear search"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full text-text-tertiary hover:text-text-primary hover:bg-background-tertiary transition-colors cursor-pointer"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                        strokeLinecap="round" className="w-3.5 h-3.5" aria-hidden="true">
+                        <path d="M18 6 6 18M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-
             {/* Product row */}
             <div className="flex items-start gap-4">
               <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-16 flex-shrink-0 mt-3">Product</span>

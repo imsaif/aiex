@@ -4,9 +4,9 @@ import {
   getNewsletterBySlug,
   getNewsletters,
   getAdjacentNewsletters,
-  tags as defaultTags,
 } from '@/data/newsletters';
 import { prisma } from '@/lib/prisma';
+import { computeReadMinutes } from '@/lib/newsletter/products';
 import NewsletterDetailClient from './newsletter-detail-client';
 import RelatedPatternsForNews from '@/components/PatternIntel/RelatedPatternsForNews';
 import type { Newsletter } from '@/types';
@@ -38,7 +38,13 @@ async function getNewsletterFromDb(slug: string): Promise<Newsletter | undefined
       content: draft.content,
       publishedAt: draft.publishDate.toISOString().split('T')[0],
       published: true,
-      tags: defaultTags.filter((t) => t.slug === 'ai-design' || t.slug === 'ux-patterns'),
+      // Was: the same two hardcoded tags ('AI Design', 'UX Patterns') on every
+      // issue — identical across ~250 issues, rendered as inert spans, absent
+      // from the JSON-LD, and wired to no filter. Replaced by this issue's real
+      // products, which link back to /news with that filter applied.
+      tags: [],
+      products: draft.products ?? [],
+      readMinutes: draft.readMinutes ?? computeReadMinutes(draft.content),
     };
   } catch {
     return undefined;

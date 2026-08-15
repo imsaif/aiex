@@ -36,9 +36,10 @@ export default function NewsletterDetailClient({
     day: 'numeric',
   });
 
-  // Estimate reading time (avg 200 words per minute)
-  const wordCount = newsletter.content ? newsletter.content.split(/\s+/).length : 0;
-  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+  // Precomputed at write time by the same helper the /news list uses, so the two
+  // pages agree. The old inline count split raw HTML on whitespace, so every tag
+  // and attribute counted as a word and inflated this by roughly 3x.
+  const readingTime = newsletter.readMinutes ?? 0;
 
   // Lazy-load DOMPurify and sanitize content. Outbound links open in a new
   // tab; pattern auto-linking happens AFTER that pass so internal /patterns/
@@ -82,16 +83,19 @@ export default function NewsletterDetailClient({
             Back to Archive
           </Link>
 
-          {/* Tags */}
-          {newsletter.tags.length > 0 && (
+          {/* Products covered in this issue. Each links back to the archive with
+              that filter applied, so the chips are navigation rather than the
+              inert, identical-on-every-issue decoration they replaced. */}
+          {(newsletter.products?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {newsletter.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="px-3 py-1 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info"
+              {newsletter.products!.map((product) => (
+                <Link
+                  key={product}
+                  href={`/news?product=${encodeURIComponent(product)}`}
+                  className="px-3 py-1 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info hover:border-accent-primary transition-colors"
                 >
-                  {tag.name}
-                </span>
+                  {product}
+                </Link>
               ))}
             </div>
           )}
