@@ -266,21 +266,21 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
       {/* max-w-7xl to match the hero container above. Was 5xl, which left a lot of
           dead margin on wide screens and forced the product chips onto 2-3 rows. */}
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-        {/* Filter Bar */}
-        <div className="mb-12 space-y-6">
-          {/* Filter rows */}
-          <div className="space-y-5">
-            {/* Range + type + search on one line. They are all "which issues do I
-                see" controls, so they read as one group; product gets its own row
-                because it is a long wrapping list. The row renders even when there
-                are no older issues, so search never disappears with the pills. */}
-            <div className="flex items-center gap-4">
-              {/* Doubles as this section's heading and as the row's label, so the
-                  count doesn't need a row of its own. Kept an h2 for document
-                  structure even though it is styled like the Product label. */}
-              <h2 className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-20 flex-shrink-0">
-                Issues <span className="text-text-primary">{filteredNewsletters.length}</span>
-              </h2>
+        {/* Filter Bar. Contained in a bordered panel so the controls read as one
+            object distinct from the list beneath them — on an all-white page the
+            rows previously floated with nothing grouping them. Rows are separated
+            by a divider rather than spacing alone, so each facet is its own band. */}
+        <div className="mb-12 rounded-card border border-border-secondary bg-surface-primary divide-y divide-border-secondary">
+          {/* Range + type + search on one line. They are all "which issues do I
+              see" controls, so they read as one group; product gets its own row
+              because it is a long wrapping list. The row renders even when there
+              are no older issues, so search never disappears with the pills. */}
+          <div className="flex items-center gap-4 px-5 py-4">
+              {/* The count lives with "Clear filters" in the panel footer, so this
+                  is just the row label. Heading kept for document structure but
+                  visually hidden — "Show" is a control label, not a section title. */}
+              <h2 className="sr-only">Browse issues</h2>
+              <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-20 flex-shrink-0">Show</span>
               <div className="flex flex-1 items-center gap-3 flex-wrap">
                 {olderNewsletters.length > 0 && (
                   <>
@@ -352,8 +352,8 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                 </div>
               </div>
             </div>
-            {/* Product row */}
-            <div className="flex items-start gap-4">
+          {/* Product row */}
+          <div className="flex items-start gap-4 px-5 py-4">
               <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider w-20 flex-shrink-0 mt-3">Product</span>
               <div className="flex items-center gap-3 flex-wrap">
                 {allProducts.map((product) => {
@@ -392,27 +392,28 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                   );
                 })}
               </div>
-            </div>
           </div>
 
-          {/* Active filter summary */}
-          {hasActiveFilters && (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-text-secondary">
-                {filteredNewsletters.length} {filteredNewsletters.length === 1 ? 'issue' : 'issues'}
-              </span>
+          {/* Result count + reset, as the panel's footer band. The count is always
+              shown (not only when filters are active) so the panel always reports
+              what the list below contains. */}
+          <div className="flex items-center gap-3 px-5 py-3">
+            <span className="text-sm text-text-secondary">
+              {filteredNewsletters.length} {filteredNewsletters.length === 1 ? 'issue' : 'issues'}
+            </span>
+            {hasActiveFilters && (
               <button
                 onClick={() => {
                   setTypeFilter('all');
                   setProductFilters([]);
                   setFilterQuery('');
                 }}
-                className="text-sm text-accent-primary hover:underline font-medium"
+                className="text-sm text-accent-primary hover:underline font-medium cursor-pointer"
               >
                 Clear filters
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Newsletter List */}
