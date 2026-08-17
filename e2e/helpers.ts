@@ -66,6 +66,22 @@ export async function runOneAudit(
   const files = Array.from({ length: imageCount }, (_, i) => makePngFile(`fixture-${i}.png`));
   await fileInput.setInputFiles(files);
 
+  // Product type is auto-detected from the first screenshot (auto-detect-first
+  // UX, shipped in 5507595). The 8 manual tiles are no longer on screen by
+  // default — they live behind `showPicker`, revealed by "Change" once a type
+  // has been detected, or by the "pick manually" fallback if detection failed.
+  // Clicking a tile directly is what broke this helper from 2026-07-13.
+  //
+  // Open the panel explicitly rather than relying on the detected value, so the
+  // spec controls which type is used and stays honest if the classifier changes.
+  // Both reveal controls only render once classification settles, so this also
+  // serves as the wait for the "Detecting…" spinner to clear.
+  const revealPicker = page
+    .getByRole('button', { name: /^change$|pick manually/i })
+    .first();
+  await expect(revealPicker).toBeVisible();
+  await revealPicker.click();
+
   await page.getByRole('button', { name: new RegExp(productLabel, 'i') }).first().click();
 
   // Wait for the analyze response so callers can assert against settled state.
