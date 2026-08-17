@@ -1460,9 +1460,34 @@ async function getDailyNewsletterItems(days = 7): Promise<NewsletterItem[]> {
   const dailyNewsletters = await prisma.newsletterDraft.findMany({
     where: {
       type: 'daily',
-      // Only compile from published dailies. pending_review drafts may contain
-      // low-quality or rejected content that shouldn't feed into the weekly.
-      status: 'published',
+      // Compile from dailies that a human has NOT rejected — published or still
+      // awaiting review. Was `status: 'published'` until 2026-08-17; that filter
+      // silently dropped a day's news whenever the admin published Sunday's daily
+      // AFTER the Monday 03:10 UTC weekly ran, which is a standing weekly race
+      // because publishing is manual (Publish in /admin/newsletter, then paste
+      // into Beehiiv) and the deadline is automated.
+      //
+      // It cost a real issue: on 2026-08-17 the weekly compiled from 2026-08-11..15
+      // only (`sources.length` 19 = 3+3+4+4+5, the daily-compile path — the RSS
+      // fallback would be ~150). Sunday 08-16's daily was published at 06:42 UTC,
+      // 3.5h after the weekly generated, so its five stories (Mico retirement,
+      // browser-fingerprint demo, Figma velocity framework, design-systems-vs-
+      // component-libraries, Claude Code 101) reached NO weekly. They can't be
+      // recovered later either: next Monday's 7-day cutoff starts 08-17 03:10.
+      //
+      // The old comment claimed pending_review "may contain low-quality or
+      // rejected content". That conflates two distinct states, and the data says
+      // otherwise: `rejected` is its own status (30 dailies, 1 weekly all-time),
+      // and ZERO dailies sat in pending_review across the last 90 days — every one
+      // ends terminally `published` (187) or `rejected` (30). So for a daily,
+      // pending_review is the transient gap between 03:10 generation and review,
+      // NOT a quality signal. Rejected dailies remain excluded, as before.
+      //
+      // Residual risk is bounded and human-gated: a daily the admin would later
+      // reject can enter the ~19-item pool that Claude picks 5 from, and the
+      // weekly itself is written `pending_review` and reviewed before any send.
+      // Do NOT widen this to include 'rejected' — that IS the quality signal.
+      status: { in: ['published', 'pending_review'] },
       createdAt: { gte: cutoffDate },
     },
     orderBy: { createdAt: 'desc' },
