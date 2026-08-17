@@ -52,20 +52,29 @@ function tryParseCsv(folder, filename) {
 
 // ---------- comparison detection ----------
 
+// GSC labels the range with whatever unit the picker used: "Last 28 days",
+// but also "Last 3 months", "Last 6 months", "Last 12 months". Matching only
+// `days` made every 3-month export — the range this project actually reviews
+// with — exit as "Could not detect column layout", which reads like a broken
+// export rather than a narrow parser.
+const RANGE = String.raw`\d+\s+(?:days?|weeks?|months?)`;
+const col = (header, prefix, metric) =>
+  header.findIndex((h) => new RegExp(`^${prefix}\\s+${RANGE}\\s+${metric}$`, 'i').test(h));
+
 function detectComparison(header) {
   // Comparison exports have columns like "Last 28 days Clicks", "Previous 28 days Clicks"
-  const lastClicksIdx = header.findIndex((h) => /^Last \d+ days? Clicks$/i.test(h));
-  const prevClicksIdx = header.findIndex((h) => /^Previous \d+ days? Clicks$/i.test(h));
+  const lastClicksIdx = col(header, 'Last', 'Clicks');
+  const prevClicksIdx = col(header, 'Previous', 'Clicks');
   if (lastClicksIdx === -1 || prevClicksIdx === -1) return null;
   return {
     lastClicks: lastClicksIdx,
     prevClicks: prevClicksIdx,
-    lastImp: header.findIndex((h) => /^Last \d+ days? Impressions$/i.test(h)),
-    prevImp: header.findIndex((h) => /^Previous \d+ days? Impressions$/i.test(h)),
-    lastCtr: header.findIndex((h) => /^Last \d+ days? CTR$/i.test(h)),
-    prevCtr: header.findIndex((h) => /^Previous \d+ days? CTR$/i.test(h)),
-    lastPos: header.findIndex((h) => /^Last \d+ days? Position$/i.test(h)),
-    prevPos: header.findIndex((h) => /^Previous \d+ days? Position$/i.test(h)),
+    lastImp: col(header, 'Last', 'Impressions'),
+    prevImp: col(header, 'Previous', 'Impressions'),
+    lastCtr: col(header, 'Last', 'CTR'),
+    prevCtr: col(header, 'Previous', 'CTR'),
+    lastPos: col(header, 'Last', 'Position'),
+    prevPos: col(header, 'Previous', 'Position'),
   };
 }
 
