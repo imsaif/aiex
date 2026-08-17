@@ -36,6 +36,13 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-08-17 19:16 (MacBook)
+- **Pattern:** GSC quarterly read-out (Aug-17 export) + seo-review analyzer fix
+- **Status:** ✅ Analysis delivered (read-only); analyzer fix committed + pushed on `worktree-seo-analyze-months`, **unmerged** pending user call
+- **Files Changed:** 1 (`.claude/skills/seo-review/analyze.js`, +17/-8) — stats show 0 because the tree was already committed when the script ran
+- **Tests Added/Modified:** 0 (verified via a synthetic 28-day fixture + the real 3-month export)
+- **Notes:** Read-out on `aiuxdesign.guide-Performance-on-Search-2026-08-17` (window May 19–Aug 16 vs prior 3 months; zip verified byte-identical to the extracted folder via `diff -r`). **Headline: clicks 466 → 803 (+72%) on impressions 73,401 → 69,127 (−6%), CTR 0.63% → 1.16%.** Fewer impressions with far more clicks = shedding deep-position junk (fading queries all pos 25–59: `privacy first ai` 937→0 at pos 25, `collaborative ai` 200→32 at pos 44). **`/guides` drove 93% of net growth** (63 → 378 clicks, impressions +642%) — a section the Jun-22 baseline never even discussed; `tweaks-explore-variations-without-chat` alone went 0 → 71. **June's conversational-ui authority call was right**: 52 → 151 clicks, head terms `conversational ui` 44.5 → 21.3 and `conversational ui design` 37.7 → 12.7. But it masks the section: **patterns excluding conversational-ui went 232 → 176 clicks (−24%)**. **Real regression = the `/audit` consolidation bet** (noindexed Aug 1/Aug 10 on the reasoning that `/` already ranks for audit intent): `/audit` 1,293 → 0 imp as designed, but `/` fell pos 5.74 → 15.93 with clicks 86 → 40 **and impressions 1,804 → 1,499** — if `/` had absorbed the intent impressions would have *risen*; query `ai ux audit` pos 6.97 → 17.04. Separately and with a different cause, brand `aiux` lost clicks 46 → 26 at a **flat** position (3.99 → 4.12) on near-flat impressions = brand-SERP CTR collapse, not a ranking problem. Countries: US is only +43 of the +337 net and absorbed nearly all the impression shed (−9,796 vs the site's −4,274 net) while every other market gained; US avg position 13.1 is the **worst** among top markets (Germany 9.8, Netherlands 8.7, Singapore 6.3). India +21 left **unverified** against self-testing traffic per the ipHash rule. **Correction worth keeping:** first blamed the pattern-impression drop on the Aug-14 robots.txt/sitemap fix — **wrong**, a blocked sitemap halts discovery of *new* URLs and cannot strip impressions from already-indexed ones; disproved by `/guides` growing +642% in impressions entirely *inside* the blind window (lesson pages 0 → 3,616), which also means the `seo.md` claim that everything shipped since April was "invisible" is overstated. **None of the robots fix is in this data** (landed Aug 14, export runs to Aug 16, GSC lags 2–3d) — recheck ~mid-September. **Analyzer fix:** `detectComparison()` matched only `/^Last \d+ days? …/`, so every "Last 3 months" export — the range actually used here — died with "Could not detect Pages.csv column layout", a message that reads like a bad export rather than a narrow parser; widened the range token to `days|weeks|months` and folded eight near-identical `findIndex` regexes into one `col()` helper. **Highest-leverage next action:** cursor-learning-path lessons ranking page 1 (pos 8–9.5) at 0.12–0.38% CTR across 500–850 imp each — the seo.md "page-1 with <1% CTR is the real leak" pattern, i.e. meta rewrites, not content.
+
 ### Session 2026-08-15 14:48 (MacBook)
 - **Pattern:** /news publishDate backfill + story-level product filter
 - **Status:** ✅ publishDate fix live on prod; filter work committed on `worktree-newsletter-publishdate-fix`, awaiting merge
@@ -110,10 +117,3 @@ _This section tracks the last 10 work sessions across all machines. It's automat
 
 
 ### Session 2026-07-21 16:46 (MacBook)
-- **Pattern:** Newsletter title prompt — steer weekly titles toward SEO-searchable topics
-- **Status:** ✅ Committed + pushed (deploys to prod; affects the next weekly newsletter generation)
-- **Files Changed:** 1 (`src/app/api/cron/generate-newsletter/route.ts`)
-- **Tests Added/Modified:** 0
-- **Notes:** Pre-existing WIP committed on request as its own focused commit, separate from the guides work. Rewrites the title-generation instruction in both prompt variants (weekly + fallback): keep the "This Week in AIUX:" prefix, then 4–8 concrete searchable words (real pattern names / UX concepts / product categories a designer would type into search, most-searchable term front-loaded); explicitly bans abstract/poetic/alliterative titles ("Cumulative Drift", "Trust and Control") that read well but nobody searches. Same SEO-title intent as the guides pass.
-
-### Session 2026-07-21 15:26 (MacBook)
