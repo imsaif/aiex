@@ -73,8 +73,19 @@ paths:
 
 ```bash
 # 1. Start dev with the abort lifted (inline, not persisted). Kill any existing :3000 first.
-lsof -ti:3000 | xargs kill -9 2>/dev/null
+#    NOTE the -sTCP:LISTEN. Without it `lsof -ti:3000` also returns CLIENT processes
+#    holding a socket to the port (Chrome, if you have the dev site open in a tab).
+#    `xargs kill -9` then chokes on the browser PID, the real next-server SURVIVES,
+#    the new `npm run dev` finds 3000 occupied, and you silently keep talking to the
+#    OLD server. Cost three round trips on 2026-08-17 — every curl 401'd against a
+#    stale process that never had the new env. Verify the restart with
+#    `ps -o lstart -p $(lsof -ti:3000 -sTCP:LISTEN)`; "something answers on :3000" is
+#    NOT evidence your new server is the one answering.
+lsof -ti:3000 -sTCP:LISTEN | xargs kill -9 2>/dev/null
 NEWSLETTER_CLAUDE_TIMEOUT_MS=180000 npm run dev   # wait for "Ready"
+# Do NOT run this through a wrapper that waits for the command to exit (e.g. Claude
+# Code's `!` prefix) — a dev server never exits, so it just hangs with no output.
+# Use a separate terminal, or background it and tail the log.
 
 # 2. Trigger the weekly (uses the LOCAL .env.local CRON_SECRET, not the prod value).
 SECRET=$(grep -h '^CRON_SECRET=' .env.local | head -1 | cut -d= -f2- | tr -d '"')
