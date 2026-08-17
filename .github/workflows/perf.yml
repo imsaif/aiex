@@ -37,12 +37,26 @@ jobs:
           configPath: './lighthouserc.json'
           uploadArtifacts: true
           temporaryPublicStorage: true
+      # Embed the actual failing assertions in the issue body. The issue used to
+      # be the template verbatim — a checklist and a link to this run, with no
+      # measurement — so once the Actions log expired (~90 days) and the LHCI
+      # report links died (~7 days), the issue became unfalsifiable. #26 and #28
+      # (Apr 2026) had to be closed in Aug 2026 as "cause unrecoverable" for
+      # exactly that reason. Never let this step fail the notification: on any
+      # problem it falls back to the bare template.
+      - name: Build issue body with measurements
+        if: failure() && github.event_name == 'schedule'
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          node scripts/ci/perf-issue-body.mjs ./perf-issue-body.md \
+            || cp ./.github/perf-issue-template.md ./perf-issue-body.md
       - name: Open issue on regression
         if: failure() && github.event_name == 'schedule'
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "[Perf] LHCI regression detected — run ${{ github.run_id }}"
-          content-filepath: ./.github/perf-issue-template.md
+          content-filepath: ./perf-issue-body.md
           labels: |
             performance
             automated
