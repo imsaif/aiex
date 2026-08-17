@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import type { ProductType } from '@/types/audit';
+import { isE2EMode } from '@/lib/audit/e2e-mock';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
@@ -24,6 +25,22 @@ function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/we
 }
 
 export async function POST(request: NextRequest) {
+  // E2E_MODE short-circuit — mirrors the analyze route. Playwright specs hit
+  // this branch so auto-detect is deterministic and costs no Anthropic spend.
+  //
+  // This is load-bearing, not just a spend optimisation. CI runs with
+  // `ANTHROPIC_API_KEY: sk-e2e-placeholder`, so the real call 401s; the caller
+  // in ScreenshotUpload swallows that (`.catch(() => {})`), productType stays
+  // null, and because the manual tiles sit behind `showPicker` the funnel has
+  // no way forward at all. That is what left E2E red from 2026-07-13.
+  //
+  // `x-e2e-product-type` lets a spec pin a specific type; default is
+  // chat-interface, matching runOneAudit's default productLabel.
+  if (isE2EMode()) {
+    const pinned = VALID_TYPES.find((t) => t === request.headers.get('x-e2e-product-type'));
+    return NextResponse.json({ productType: pinned ?? 'chat-interface' });
+  }
+
   try {
     const { image } = (await request.json()) as { image?: string };
     if (!image || typeof image !== 'string') {

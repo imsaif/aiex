@@ -11,8 +11,14 @@ test.describe('audit empty state', () => {
 
     // Empty-state copy lives in EmptyAuditState — assert on the leading line
     // shipped in the May 20 audit overhaul.
+    //
+    // The pattern count is matched as \d+, NOT pinned. It renders from
+    // PATTERN_COUNT (`src/data/pattern-count.ts`), which grew 36 → 38 and left
+    // this assertion failing on copy that was working correctly. What this
+    // test exists to prove is that the empty state rendered at all; the library
+    // size is asserted in `src/data/__tests__/pattern-count.test.ts`.
     await expect(
-      page.getByText(/we scanned for 36 ai ux patterns|doesn.t look like an ai/i).first()
+      page.getByText(/we scanned for \d+ ai ux patterns|doesn.t look like an ai/i).first()
     ).toBeVisible({ timeout: 10_000 });
 
     // The reassurance line that the run didn't burn a credit.
