@@ -12,9 +12,8 @@ import { Newsletter, NewsletterTag } from '@/types';
 // Chip icons. Keys must match PRODUCT_KEYWORDS in src/lib/newsletter/products.ts;
 // a product with no entry here still renders as a text-only chip (the JSX guards
 // on presence), so a missing logo degrades rather than breaking.
-// Not yet self-hosted: Canva, Vercel, Atlassian, Reddit, Replit — those render
-// text-only until their SVGs are added to /public/images/logos/simple-icons/.
-// Do NOT hotlink a CDN for them; every logo on this site is self-hosted.
+// Every logo is self-hosted under /public/images/logos/simple-icons/ — do NOT
+// hotlink a CDN when adding one; fetch the SVG and commit it alongside the others.
 const PRODUCT_ICONS: Record<string, string> = {
   'ChatGPT': '/images/logos/simple-icons/openai.svg',
   'Claude': '/images/logos/simple-icons/anthropic.svg',
@@ -29,6 +28,11 @@ const PRODUCT_ICONS: Record<string, string> = {
   'GitHub': '/images/logos/simple-icons/github.svg',
   'Adobe': '/images/logos/simple-icons/adobe.svg',
   'Slack': '/images/logos/simple-icons/slack.svg',
+  'Canva': '/images/logos/simple-icons/canva.svg',
+  'Vercel': '/images/logos/simple-icons/vercel.svg',
+  'Atlassian': '/images/logos/simple-icons/atlassian.svg',
+  'Reddit': '/images/logos/simple-icons/reddit.svg',
+  'Replit': '/images/logos/simple-icons/replit.svg',
 };
 
 const InlineNewsletterSignup = dynamic(
