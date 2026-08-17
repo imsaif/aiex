@@ -1,8 +1,10 @@
 The nightly Lighthouse CI run failed against the production budget defined in `budget.json`.
 
-**Run**: see the "Performance" workflow in the [Actions tab](../../actions/workflows/perf.yml) for the failing URL(s) and the specific assertion that breached.
+**The failing URLs, budgets and measured values are recorded above**, at run time, by `scripts/ci/perf-issue-body.mjs`. They stay readable for the life of this issue. Everything below is the standing investigation checklist.
 
-**LHCI report**: linked in the workflow run summary (uploaded to LHCI temporary public storage — link expires after ~7 days, so click through soon).
+**Run**: see the "Performance" workflow in the [Actions tab](../../actions/workflows/perf.yml). Note the log expires after ~90 days — if this issue is older than that, the embedded numbers above are the only record.
+
+**LHCI report**: linked above when available (uploaded to LHCI temporary public storage — the link expires after ~7 days, so click through soon).
 
 ## Investigate
 
