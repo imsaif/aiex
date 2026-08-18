@@ -96,6 +96,13 @@ const RSS_SOURCES: RssSource[] = [
   // (verified Apr 20 2026: /blog/rss.xml, /blog/feed/, /blog/atom.xml all 404).
   // Revisit if they ship one or via an aggregator.
   { name: 'Figma', url: 'https://www.figma.com/blog/feed/atom.xml', color: '#f24e1e', tier: 'design-tool' },
+  // Added 2026-08-18. The Aug-18 "no AI product news" complaint traced to this:
+  // for the tools designers actually use, the CHANGELOG is the designer-relevant
+  // feed and the BLOG is the corporate one — and we were subscribed only to blogs.
+  // Verified live the same day: 444 entries, near-daily, and squarely on-topic
+  // (Figma agent skills, Figma MCP/Weave, responsive text wrap). This is the feed
+  // the Aug-18 pool most obviously lacked.
+  { name: 'Figma Release Notes', url: 'https://www.figma.com/release-notes/feed/atom.xml', color: '#f24e1e', tier: 'design-tool' },
   // First-party design-tool blogs with real RSS (added Jul 15 2026 to thicken this tier — was Figma-only)
   { name: 'UXPin', url: 'https://www.uxpin.com/studio/feed/', color: '#00c9a7', tier: 'design-tool' }, // AI-native design tool, near-daily
   { name: 'Dovetail', url: 'https://dovetail.com/blog/rss.xml', color: '#6b4eff', tier: 'design-tool' }, // AI UX-research platform
@@ -116,6 +123,14 @@ const RSS_SOURCES: RssSource[] = [
 
   // AI labs (Google News searches for AI products)
   { name: 'Cursor', url: 'https://news.google.com/rss/search?q=Cursor+AI+editor+OR+Cursor+code+editor&hl=en-US&gl=US&ceid=US:en', color: '#7c3aed', tier: 'ai-lab' },
+  // First-party changelogs, added 2026-08-18 alongside Figma Release Notes. Both
+  // products were previously reachable ONLY via the Google News searches above,
+  // which is why Cursor's Origin launch arrived on Aug-17 as a VentureBeat piece
+  // framed around a GitHub outage rather than as the release itself. The Google
+  // News entries stay — they catch acquisitions and third-party coverage a
+  // changelog never mentions — and MAX_ITEMS_PER_COMPANY caps the pair at 2.
+  { name: 'Cursor Changelog', url: 'https://cursor.com/changelog/rss.xml', color: '#7c3aed', tier: 'ai-lab' },
+  { name: 'Notion Releases', url: 'https://www.notion.so/releases/rss.xml', color: '#000000', tier: 'ai-lab' }, // interface-level changes (model picker, Custom Agents, high-contrast mode), not coverage of them
   { name: 'Notion', url: 'https://news.google.com/rss/search?q=Notion+AI+OR+Notion+app+update&hl=en-US&gl=US&ceid=US:en', color: '#000000', tier: 'ai-lab' },
   { name: 'Linear', url: 'https://news.google.com/rss/search?q=Linear+app+OR+Linear+project+management&hl=en-US&gl=US&ceid=US:en', color: '#5e6ad2', tier: 'ai-lab' },
   { name: 'Perplexity', url: 'https://news.google.com/rss/search?q=Perplexity+AI&hl=en-US&gl=US&ceid=US:en', color: '#20808d', tier: 'ai-lab' },
@@ -164,6 +179,12 @@ const RSS_SOURCES: RssSource[] = [
   { name: 'Vercel', url: 'https://vercel.com/atom', color: '#000000', tier: 'dev-platform' },
   { name: 'GitHub', url: 'https://github.blog/feed/', color: '#333333', tier: 'dev-platform' },
   { name: 'Supabase', url: 'https://supabase.com/rss.xml', color: '#3ecf8e', tier: 'dev-platform' }, // /blog/rss.xml 404 (Jul 15 2026)
+  // Added 2026-08-18. AI app builder designers actually touch; near-daily, and the
+  // writing is design-shaped ("The model picker is a dead end"). Deliberately
+  // `dev-platform`, NOT `design-tool`: dev-platform product-news status is gated by
+  // the infra test, so a funding round ("we raised $400M Series C") can't march
+  // into the issue as a product launch the way a design-tool item would.
+  { name: 'Lovable', url: 'https://lovable.dev/blog/rss.xml', color: '#f97316', tier: 'dev-platform' },
 
   // Tech news (keyword-only scoring — no source baseline)
   { name: 'The Verge', url: 'https://www.theverge.com/rss/ai-artificial-intelligence/index.xml', color: '#e5127d', tier: 'tech-news' }, // old path 404 (Jul 15 2026)
@@ -179,7 +200,7 @@ const RSS_SOURCES: RssSource[] = [
 // (the previous lite slice was Vercel/GitHub/Supabase-heavy).
 const RSS_SOURCES_LITE: RssSource[] = RSS_SOURCES.filter((s) =>
   ['Nielsen Norman Group', 'Smashing Magazine', 'UX Collective', 'A List Apart',
-   'TLDR Design', 'Figma', 'OpenAI', 'Google AI'].includes(s.name)
+   'TLDR Design', 'Figma', 'Figma Release Notes', 'OpenAI', 'Google AI'].includes(s.name)
 );
 
 // Scrape Anthropic news (no RSS feed available). Anthropic posts first-party
