@@ -549,16 +549,8 @@ export default function AdminNewsletterClient({
                           status-coloured text fails contrast as body copy, and the
                           "Flagged" label carries the meaning so it never rests on
                           colour alone. */}
-                      {/* 2026-08-18: `no_product_news` was renamed
-                          `product_news_floor` when the floor went from a flat 1 to
-                          "at least half, min 2". Both prefixes stay suppressed — the
-                          rule is still FEED-aware (a source-tier proxy), not
-                          story-aware, so the condition named above for re-evaluating
-                          the banner is still not met. Revisit only if the counter
-                          starts reading the story itself. */}
                       {qa.selectionRuleViolation &&
-                        !qa.selectionRuleViolation.startsWith('no_product_news') &&
-                        !qa.selectionRuleViolation.startsWith('product_news_floor') && (
+                        !qa.selectionRuleViolation.startsWith('no_product_news') && (
                         <div className="mb-3 p-2.5 rounded-md bg-status-warning/10 border border-status-warning/40 text-text-primary text-xs md:text-sm">
                           <span className="font-semibold">⚠ Flagged &mdash; selection rule broken:</span>{' '}
                           <span className="font-mono">{qa.selectionRuleViolation}</span>

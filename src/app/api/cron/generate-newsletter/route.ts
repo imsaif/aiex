@@ -1634,9 +1634,8 @@ YOUR TASK:
    - Prefer items from design-research publications (Nielsen Norman, Smashing Magazine, A List Apart, TLDR Design) and design tools (Figma, Framer) over dev platforms (Vercel, GitHub, Supabase, Replit) when both are present at similar relevance scores.
 
    PRODUCT-NEWS FLOOR (strict — overrides relevance scoring):
-   - AT LEAST HALF of your selected items MUST be concrete product news from an AI lab, design tool, or dev platform (e.g., OpenAI, Anthropic/Claude, Google AI, Microsoft AI, Perplexity, Cursor, Notion, Linear, Windsurf, Figma, Framer, Vercel, GitHub, Replit). Never fewer than 2. So: 4 items → at least 2 product news, 5 items → at least 3, 6 items → at least 3. A "concrete product news" item announces a launch, feature, version, or dated change — not an opinion piece or framework essay about that space.
-   - Count them before you answer. Frameworks, "how we think about X" posts, design-system craft essays and drift/debt guides are NOT product news, however well-argued — they are the other half of the issue, not this half.
-   - If the pool genuinely contains fewer than 2 such items, return fewer total items rather than padding with essays. A 2-item issue with 2 product launches beats a 4-item issue with 1.
+   - At least 1 of your selected items MUST be concrete product news from an AI lab or design tool (e.g., OpenAI, Anthropic/Claude, Google AI, Microsoft AI, Perplexity, Cursor, Notion, Linear, Windsurf, Figma, Framer). A "concrete product news" item announces a launch, feature, version, or dated change — not an opinion piece about that company.
+   - If the pool genuinely contains zero such items, return fewer total items rather than padding with opinion/articles. A 3-item issue with 1 product launch beats a 4-item all-opinion issue.
 
    DIVERSITY RULES (strict — these override relevance scoring):
    - Pick items from at least 3 DIFFERENT companies/products. A newsletter where every item is from one company is not useful.
@@ -2174,24 +2173,6 @@ interface NewsletterQATelemetry {
 // product field instead of the source field. Mirrors the prompt's value of 2.
 const MAX_ITEMS_PER_COMPANY = 2;
 
-// Product-news floor, expressed as a fraction of the issue rather than a flat
-// count. The daily prompt asks for 4-6 items, so the old flat `>= 1` meant a
-// 6-story issue could legally carry 5 essays. Raised 2026-08-18 after the Aug-18
-// draft shipped 4 stories with exactly 1 product item (Adobe Workfront) while
-// the pool held Cursor's Origin launch, Replit's governance tools and the
-// Stripe/OpenRouter deal — the floor passed, so nothing flagged it.
-//
-// "At least half, minimum 2" is also how the opinion cap is enforced now. The
-// obvious alternative — widening `isOpinionUrl` so essays from Sparkbox-style
-// agency blogs and curated Substacks count as opinion — is NOT safe: that
-// predicate is also the pool pre-filter (see the `opinionFiltered` call), so
-// widening it would strip those sources before scoring and structurally kill
-// them, the same failure the curator tier hit with latent.space. Bounding
-// product news from below bounds essays from above without touching the pool.
-function requiredProductNews(itemCount: number): number {
-  return Math.max(2, Math.ceil(itemCount / 2));
-}
-
 // Hosts we DELIBERATELY subscribe to (derived from RSS_SOURCES so it never drifts
 // out of sync). Used by isOpinionUrl to exempt our curated practitioner Substacks
 // (Jakob Nielsen, Julie Zhuo, Emily Campbell, Design Systems Collective, etc.) from
@@ -2273,7 +2254,7 @@ You selected more than ${MAX_ITEMS_PER_COMPANY} stories about the same company o
 
 CRITICAL RETRY — your previous selection violated the rules: ${violation}.
 
-Your selection did not carry enough concrete product news. At least HALF of your items (never fewer than 2) must be product news. Add items from this list of concrete product-news sources that were in the pool, dropping your weakest framework/essay picks to make room. Pick the most designer-relevant ones:
+You MUST include AT LEAST ONE item from this list of concrete product-news sources that were in the pool. Pick the most designer-relevant one:
 
 ${lines}
 
@@ -2355,21 +2336,17 @@ function buildQABlock(
   // Hard selection rules for daily issues. Violations route to auto-quiet so
   // we don't ship opinion-heavy filler when the pool can't support real news.
   // Two violation types:
-  //   1) productNewsCount < requiredProductNews(n) → too little concrete news.
+  //   1) productNewsCount < 1 → no concrete launch in the issue at all.
   //   2) opinionCount > 0 → any opinion item disqualifies the issue.
-  // Pool-aware escape hatch: if the pool couldn't supply the required count,
-  // rule (1) doesn't fire — there's nothing better Claude could have picked.
+  // Pool-aware escape hatch: if the pool genuinely contained zero product-news
+  // items, rule (1) doesn't fire — there's nothing better Claude could have
+  // picked, and shipping 4 design-pub items is acceptable.
   //
   // MUST use the same predicate as the counter above. When the numerator and
   // this hatch disagree, a day whose pool carries product news ONLY from the
   // tier one side recognises slips through un-guarded.
-  const requiredProduct = requiredProductNews(selectedItems.length);
   const poolProductNews = pool.filter(isProductNewsItem);
-  // Hatch must use the SAME threshold as the guard below. If the guard demands 2
-  // and the hatch only asks "> 0", a day whose pool holds exactly 1 product item
-  // flags a violation it can never satisfy and routes to auto-quiet — a silent
-  // daily outage rather than an honest short issue.
-  const poolHadProductNews = poolProductNews.length >= requiredProduct;
+  const poolHadProductNews = poolProductNews.length > 0;
   // Company-cap violation: any single product label appears more than twice.
   let companyCapViolation: string | null = null;
   for (const [key, count] of Object.entries(productCounts)) {
@@ -2380,8 +2357,8 @@ function buildQABlock(
   }
 
   let selectionRuleViolation: string | null = null;
-  if (productNewsCount < requiredProduct && poolHadProductNews) {
-    selectionRuleViolation = `product_news_floor (need ${requiredProduct} of ${selectedItems.length}, pool had ${poolProductNews.length}, Claude picked ${productNewsCount})`;
+  if (productNewsCount < 1 && poolHadProductNews) {
+    selectionRuleViolation = `no_product_news (pool had ${poolProductNews.length} product-news items but Claude picked 0)`;
   } else if (opinionCount > 0) {
     selectionRuleViolation = `opinion_present (${opinionCount} opinion items, max 0)`;
   } else if (companyCapViolation) {
