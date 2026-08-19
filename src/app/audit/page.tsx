@@ -19,8 +19,8 @@ export const revalidate = 86400;
 // that earns the traffic. This URL exists to serve intent that is already
 // on-site, not to win search.
 export const metadata: Metadata = {
-  title: `Audit your interface against ${PATTERN_COUNT} AI UX patterns`,
-  description: `Upload a screenshot and score your AI interface against ${PATTERN_COUNT} patterns. Free, no signup.`,
+  title: `Audit your design and get Claude skills`,
+  description: `Upload a screenshot, see which of ${PATTERN_COUNT} AI UX patterns your design is missing, and download them as Claude skills. Free, no signup.`,
   // noindex alone, deliberately without a canonical pointing at `/`. Those two
   // are contradictory signals: a canonical says "index the other URL instead",
   // noindex says "index nothing here". noindex is the one we actually want.

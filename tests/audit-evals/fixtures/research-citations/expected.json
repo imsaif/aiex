@@ -1,0 +1,16 @@
+{
+  "description": "AI search/research answer with inline citations (Perplexity, ChatGPT search mode, or Claude with web search)",
+  "productType": "search-discovery",
+  "productDescription": "An AI answer engine that responds to factual questions with cited sources",
+  "mustFindPatterns": [
+    "Confidence Visualization"
+  ],
+  "mustNotFindPatterns": [
+    "Autonomy Spectrum",
+    "Action Audit Trail",
+    "Agent Status & Monitoring"
+  ],
+  "maxApplicablePatterns": 8,
+  "expectEmptyTopGaps": false,
+  "notes": "THE POSITIVE-CASE SAFETY NET FOR NARROWING CONFIDENCE VISUALIZATION. This fixture exists for one reason: Confidence Visualization currently fires on every chat interface, including plain conversational threads where it does not belong, because the prompt defines it as applying wherever 'the AI returns a substantive answer'. The fix is to narrow it to claims about external state of the world. This is the surface where that narrowed rule must STILL fire: an answer engine stating verifiable facts sourced from the web is exactly where a reader needs to know how certain the system is. If a scope change makes CV stop appearing here, the change went too far and this assertion fails. Explainable AI is deliberately NOT in mustFind: a citation surface already shows its sources, so XAI is usually well-implemented rather than a gap, and asserting it would bake in a false expectation. The anti-asserts are the usual agentic set: an answer engine takes no autonomous actions, so nothing in that family should surface."
+}

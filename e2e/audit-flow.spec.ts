@@ -31,7 +31,9 @@ test.describe('audit funnel — happy path', () => {
     // Then attempt a second audit. With the free limit reached (count = 1),
     // "New audit" routes through handleClear, which gates on isPaywalled and
     // surfaces the unlock modal — the paywall's natural trigger point now.
-    await page.getByRole('button', { name: /new audit/i }).click();
+    // "New audit" -> "Run another audit" with the skills repositioning. Matched
+    // loosely so the next copy tweak does not fail the funnel spec.
+    await page.getByRole('button', { name: /run another audit|new audit/i }).click();
     await expect(
       page.getByRole('heading', { name: /3 more audits/i }).first()
     ).toBeVisible({ timeout: 10_000 });

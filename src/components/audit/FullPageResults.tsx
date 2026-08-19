@@ -1,30 +1,40 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  CheckCircleIcon,
   XMarkIcon,
   ArrowPathIcon,
-  CommandLineIcon,
   LightBulbIcon,
+  ArrowDownTrayIcon,
+  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
-import { composeHandoffPrompt, productTypeLabel } from '@/lib/audit/handoff';
-import SaveAuditButton from './SaveAuditButton';
+import Link from 'next/link';
+import { resolvePatternSlug } from '@/lib/audit/pattern-link';
+import { relatedGuidesFor } from '@/lib/audit/relatedGuides';
+import { productTypeLabel } from '@/lib/audit/handoff';
+
+/**
+ * Whether the results page carries the "Ask about your audit" conversation.
+ *
+ * Off: the page's job is to hand over skills, and the chat competed with the
+ * save action for the same attention. Flip to true to restore it; the endpoint,
+ * the state, and the markup are all still here.
+ */
+const SHOW_RESULTS_CHAT = false;
 import type { SavedAudit } from '@/hooks/useSavedAudits';
 import type { AnalysisResults, TopGap, ProductContext } from '@/types/audit';
 import { GapCard } from './GapCard';
-import { EmailReportModal } from './EmailReportModal';
 import { DemoProductMockup, DEMO_PINS } from './DemoProductMockup';
 import { LaptopFrame } from './LaptopFrame';
 import { PhoneFrame } from './PhoneFrame';
 import { DemoChatMockup } from './DemoChatMockup';
 import { trackAuditEvent } from '@/lib/audit/analytics';
-import { ANALYSIS_MESSAGES, CHAT_SUGGESTIONS } from './shared';
+import { CHAT_SUGGESTIONS } from './shared';
 import { PaywallInlineCapture } from './PaywallInlineCapture';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
@@ -61,33 +71,7 @@ interface ChatMessage {
   content: string;
 }
 
-const SCAN_PATTERNS = [
-  'Conversational UI', 'Error Recovery', 'Confidence Visualization',
-  'Explainable AI', 'Progressive Disclosure', 'Human-in-the-Loop',
-  'Feedback Loops', 'Graceful Handoff', 'Safe Exploration',
-  'Privacy-First Design', 'Adaptive Interfaces', 'Contextual Assistance',
-  'Augmented Creation', 'Responsible AI Design', 'Collaborative AI',
-  'Ambient Intelligence', 'Predictive Anticipation', 'Multimodal Interaction',
-  'Guided Learning', 'Selective Memory', 'Context Switching',
-  'Universal Access Patterns', 'Trust Calibration', 'Intent Preview',
-  'Autonomy Spectrum', 'Action Audit Trail', 'Escalation Pathways',
-  'Agent Status & Monitoring', 'Crisis Detection', 'Anti-Manipulation',
-];
 
-const PRODUCT_LOGOS = [
-  { src: '/images/logos/simple-icons/openai.svg', alt: 'OpenAI' },
-  { src: '/images/logos/simple-icons/anthropic.svg', alt: 'Anthropic' },
-  { src: '/images/logos/simple-icons/googlegemini.svg', alt: 'Gemini' },
-  { src: '/images/logos/simple-icons/githubcopilot.svg', alt: 'GitHub Copilot' },
-  { src: '/images/logos/simple-icons/perplexity.svg', alt: 'Perplexity' },
-  { src: '/images/logos/simple-icons/notion.svg', alt: 'Notion' },
-  { src: '/images/logos/simple-icons/figma.svg', alt: 'Figma' },
-  { src: '/images/logos/simple-icons/cursor.svg', alt: 'Cursor' },
-  { src: '/images/logos/simple-icons/midjourney.svg', alt: 'Midjourney' },
-  { src: '/images/logos/simple-icons/grammarly.svg', alt: 'Grammarly' },
-  { src: '/images/logos/simple-icons/duolingo.svg', alt: 'Duolingo' },
-  { src: '/images/logos/simple-icons/huggingface.svg', alt: 'Hugging Face' },
-];
 
 // Deterministic pin positions overlaid on the user's uploaded screenshot.
 // We don't have AI-detected coordinates, so we distribute up to 5 pins evenly
@@ -513,13 +497,43 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const heroDeviceType = activeScreenshot?.deviceType ?? screenshotDeviceType;
   const showDemoCTA = isDemoMode && !!onStartRealAudit;
   // Analysis loading state
-  const [messageIndex, setMessageIndex] = useState(0);
-  const [scanIndex, setScanIndex] = useState(0);
-  const [analyzeElapsedMs, setAnalyzeElapsedMs] = useState(0);
 
-  // Handoff copy state
-  const [handoffCopied, setHandoffCopied] = useState(false);
-  const [showHandoffSource, setShowHandoffSource] = useState(false);
+
+
+  // Skill-pack download state.
+  const [packBuilding, setPackBuilding] = useState(false);
+  const [packError, setPackError] = useState<string | null>(null);
+  const [packDone, setPackDone] = useState(false);
+
+  // The gaps that map to a real pattern, and so have a skill to save. A gap the
+  // model named but the catalogue does not carry is shown but not savable —
+  // better than offering a save that would silently do nothing.
+  const savableSlugs = useMemo(() => {
+    const gaps = (results?.topGaps || []).filter(
+      (g) => g.status === 'missing' || g.status === 'needs-improvement'
+    );
+    const slugs: string[] = [];
+    for (const gap of gaps) {
+      const slug = resolvePatternSlug(gap.pattern, gap.resource);
+      if (slug && !slugs.includes(slug)) slugs.push(slug);
+    }
+    return slugs;
+  }, [results]);
+
+  /**
+   * The pack is every skill this audit matched.
+   *
+   * There was briefly a per-card control to narrow it, which had to go: the
+   * pack already contained all of them, so a button reading "Save this skill"
+   * could only ever *remove* one. Curating three items is also a decision
+   * nobody asked for; anyone wanting fewer can delete a file after unzipping.
+   */
+  const packCount = savableSlugs.length;
+
+  const relatedGuides = useMemo(
+    () => relatedGuidesFor(results?.productContext?.productType),
+    [results],
+  );
 
   // Chat state — inline conversation below the findings
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -528,7 +542,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
   // Email modal state
-  const [showEmailModal, setShowEmailModal] = useState(false);
 
   // Optional "see it on your screenshot" disclosure
   const [showScreenshot, setShowScreenshot] = useState(false);
@@ -537,34 +550,10 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const [openPin, setOpenPin] = useState<number | null>(null);
   const [hoveredPin, setHoveredPin] = useState<number | null>(null);
 
-  // Rotate analysis messages
-  useEffect(() => {
-    if (!isAnalyzing) return;
-    const interval = setInterval(() => {
-      setMessageIndex((i) => (i + 1) % ANALYSIS_MESSAGES.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [isAnalyzing]);
-
-  // Advance pattern scan checklist
-  useEffect(() => {
-    if (!isAnalyzing) { setScanIndex(0); return; }
-    const interval = setInterval(() => {
-      setScanIndex((i) => Math.min(i + 1, SCAN_PATTERNS.length));
-    }, 400);
-    return () => clearInterval(interval);
-  }, [isAnalyzing]);
-
-  // Track elapsed analysis time so the progress bar can pace itself against the
-  // REAL median (~40s, p90 ~58s) instead of the pattern checklist, which filled
-  // to 100% in ~12s and then sat there — the classic "stuck at 100%, must be
-  // frozen" perceived-hang that drives abandonment on a genuinely slow call.
-  useEffect(() => {
-    if (!isAnalyzing) { setAnalyzeElapsedMs(0); return; }
-    const startedAt = Date.now();
-    const interval = setInterval(() => setAnalyzeElapsedMs(Date.now() - startedAt), 250);
-    return () => clearInterval(interval);
-  }, [isAnalyzing]);
+  // The rotating status messages, the pattern-scan checklist and the elapsed
+  // timer that paced the progress bar all belonged to the old analysing screen.
+  // The skeleton replaced them: the audit is one request with no intermediate
+  // events, so there was no real progress for any of them to report.
 
   // Bring the latest message into view. The conversation now flows in the page
   // (no inner scroll container) with a sticky input, so scrolling the window to
@@ -632,40 +621,67 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     }
   }, [messages, results, isLoading]);
 
-  // Shared handoff-copy handler — used by both the inline IDE card and the
-  // mobile sticky bottom bar. Defined here (before any conditional return) so
-  // the hook order stays stable; it derives its inputs from `results` and
-  // no-ops when results aren't ready yet. (Moving this below the `if (!results)
-  // return null` guard caused React error #310 — a hooks-count mismatch.)
-  const handleCopyHandoff = useCallback(async () => {
-    if (!results) return;
-    const gaps = (results.topGaps || []).filter(
-      (g) => g.status === 'missing' || g.status === 'needs-improvement'
-    );
-    if (gaps.length === 0) return;
-    const handoffPrompt = composeHandoffPrompt({
-      surfaceDescription: (results as ExtendedResults | null)?.surfaceDescription,
+
+  // Save every skill this audit matched, in one action. Individual cards can
+  // still be toggled; this is the shortcut for "all of them", which is the
+  // common case when someone has just seen their own gaps.
+  //
+  // Saving the skills also saves the audit itself. The pack builder emits a
+  // fixes file alongside the skills whenever a saved audit is present, so this
+  // is how the one-shot fixes for this product reach the download now that the
+  // results page no longer offers its own copy-to-clipboard prompt. The two
+  // stores stay separate (skills are slugs, audits are text snapshots) but
+  // there is no longer a reason to make someone save them in two steps.
+  // The audit as a storable snapshot. Used both for saving to the dashboard and
+  // for the fixes file inside a directly-downloaded pack, so the two paths ship
+  // identical content.
+  const auditSnapshot = useMemo<SavedAudit | null>(() => {
+    if (!results) return null;
+    return {
+      id: results.id,
+      savedAt: Date.now(),
       productType: results.productContext?.productType,
-      gaps,
-    });
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(handoffPrompt);
-      } else {
-        const ta = document.createElement('textarea');
-        ta.value = handoffPrompt;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      }
-      trackAuditEvent('audit_handoff_copied', { gapCount: gaps.length });
-      setHandoffCopied(true);
-      setTimeout(() => setHandoffCopied(false), 2000);
-    } catch {
-      /* swallow — clipboard can fail in private browsing; user can still copy from disclosure */
-    }
+      productLabel: productTypeLabel(results.productContext?.productType),
+      surfaceDescription: (results as ExtendedResults | null)?.surfaceDescription || '',
+      score: typeof results.score === 'number' ? results.score : null,
+      maxScore: typeof results.maxScore === 'number' ? results.maxScore : null,
+      applicablePatternsCount: results.applicablePatterns?.length ?? 0,
+      gaps: (results.topGaps || []).filter(
+        (g) => g.status === 'missing' || g.status === 'needs-improvement'
+      ),
+      quickWins: results.quickWins || [],
+    };
   }, [results]);
+
+  // Download the pack for this audit directly. Nothing has to be saved first —
+  // this is the "I just want it now" path, and the dashboard remains the place
+  // to accumulate skills across audits.
+  const handleDownloadPack = useCallback(async () => {
+    if (!auditSnapshot || auditSnapshot.gaps.length === 0) return;
+    setPackBuilding(true);
+    setPackError(null);
+    try {
+      const { downloadAuditSkillPack } = await import('@/lib/skills/auditPack');
+      const skillCount = await downloadAuditSkillPack(auditSnapshot.gaps, auditSnapshot);
+      // Same event the dashboard fires, tagged with origin, so the "a pack left
+      // the site" total stays whole across both surfaces.
+      trackAuditEvent('skill_pack_downloaded', {
+        source: 'audit-results',
+        format: 'zip',
+        gapCount: auditSnapshot.gaps.length,
+        skillCount,
+      });
+      setPackDone(true);
+      setTimeout(() => setPackDone(false), 2500);
+    } catch (err) {
+      // Nothing was written, so say so rather than leaving a dead button.
+      console.warn('Failed to build the skill pack:', err);
+      setPackError('We could not build the pack just now. Try again in a moment.');
+    } finally {
+      setPackBuilding(false);
+    }
+  }, [auditSnapshot]);
+
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -674,134 +690,82 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
     }
   };
 
-  // Analyzing state — screenshot overlay with pattern scanner
+  // Analyzing state — a skeleton of the results page itself.
+  //
+  // The previous version ticked pattern names off a checklist while a progress
+  // bar filled. Both were fiction: the audit is a single request that returns
+  // everything at once, so there is no per-pattern progress to report. Showing
+  // invented progress in a tool whose whole claim is honesty about your
+  // interface was the wrong trade.
+  //
+  // This mirrors the real results layout instead, so the wait previews the
+  // answer and the arrival is a fill-in rather than a page swap. One honest
+  // status line, no bar, no countdown we cannot keep.
   if (isAnalyzing && !results) {
-    // Show a fixed list of 8 patterns, update their state in place — no scrolling/jumping
-    const displayPatterns = SCAN_PATTERNS.slice(0, 8);
-
+    const shimmer = 'animate-pulse bg-background-secondary rounded';
     return (
-      <div className="min-h-[70vh] relative overflow-hidden rounded-2xl mx-4 sm:mx-6 mt-6">
-        {/* Screenshot background */}
-        {screenshotUrl && (
-          <img
-            src={screenshotUrl}
-            alt="Your interface being analyzed"
-            className="absolute inset-0 w-full h-full object-cover object-top"
-          />
-        )}
-
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-
-        {/* Scanning line animation */}
-        <div
-          className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-accent-primary to-transparent opacity-60"
-          style={{
-            animation: 'scanLine 2.5s ease-in-out infinite',
-            top: '0%',
-          }}
-        />
-        <style>{`
-          @keyframes scanLine {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { top: 100%; opacity: 0; }
-          }
-          @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-        `}</style>
-
-        {/* Center overlay content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] px-4 py-12">
-
-          {/* Pattern scanner card */}
-          <div className="w-full max-w-sm rounded-2xl bg-white/10 backdrop-blur-xl border border-white/10 p-5 mb-8">
-            <p className="text-[11px] font-medium uppercase tracking-widest text-white/50 mb-4">Checking patterns</p>
-            <div className="space-y-2.5">
-              {displayPatterns.map((pattern, i) => {
-                // Each slot cycles through the full list: the pattern name shown
-                // rotates based on scanIndex, while the state (checked/active/pending)
-                // stays positionally stable
-                const isChecked = i < (scanIndex % (displayPatterns.length + 1));
-                const isActive = i === (scanIndex % (displayPatterns.length + 1));
-
-                // Swap in new pattern names as scan progresses through batches
-                const batch = Math.floor(scanIndex / displayPatterns.length);
-                const patternIdx = (batch * displayPatterns.length + i) % SCAN_PATTERNS.length;
-                const patternName = SCAN_PATTERNS[patternIdx];
-
-                return (
-                  <div
-                    key={i}
-                    className={`flex items-center gap-3 transition-all duration-300 ${
-                      isActive ? 'opacity-100' : isChecked ? 'opacity-60' : 'opacity-30'
-                    }`}
-                  >
-                    {isChecked ? (
-                      <CheckCircleIcon className="w-4 h-4 text-status-success flex-shrink-0" />
-                    ) : isActive ? (
-                      <div className="w-4 h-4 flex-shrink-0 flex items-center justify-center">
-                        <div className="w-2.5 h-2.5 rounded-full bg-accent-primary animate-pulse" />
-                      </div>
-                    ) : (
-                      <div className="w-4 h-4 flex-shrink-0 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-white/20" />
-                      </div>
-                    )}
-                    <span className={`text-sm transition-all duration-200 ${
-                      isActive ? 'text-white font-medium' : isChecked ? 'text-white/60' : 'text-white/30'
-                    }`}>
-                      {patternName}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-            {/* Progress bar */}
-            <div className="mt-4 h-1 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-accent-primary rounded-full transition-all duration-300 ease-out"
-                // Asymptotic ease toward ~95% keyed to elapsed time (median run ~40s),
-                // so the bar keeps visibly moving for the whole wait and never parks
-                // at 100% before results land. Reaches ~60% at 20s, ~82% at 40s.
-                style={{ width: `${Math.round(95 * (1 - Math.exp(-analyzeElapsedMs / 20000)))}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Logo ticker */}
-          <div className="w-full max-w-md mb-8 overflow-hidden">
-            <p className="text-[10px] font-medium uppercase tracking-widest text-white/30 text-center mb-3">
-              Comparing against top AI products
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        {/* Header — real text, in the same geometry as the results header so
+            nothing jumps when the findings land. */}
+        <div className="lg:flex lg:gap-8 lg:justify-center mb-5 sm:mb-6">
+          <div className="w-full lg:w-[768px] min-w-0">
+            <h1 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight leading-tight">
+              Reading your interface
+            </h1>
+            <p
+              className="text-xs sm:text-sm text-text-secondary leading-snug"
+              role="status"
+              aria-live="polite"
+            >
+              Checking it against {PATTERN_COUNT} patterns. This usually takes about 40 seconds.
             </p>
-            <div className="overflow-hidden">
-              <div
-                className="flex gap-6 items-center"
-                style={{ animation: 'marquee 15s linear infinite', width: 'max-content' }}
-              >
-                {/* Double the logos for seamless loop */}
-                {[...PRODUCT_LOGOS, ...PRODUCT_LOGOS].map((logo, i) => (
-                  <img
-                    key={`${logo.alt}-${i}`}
-                    src={logo.src}
-                    alt={logo.alt}
-                    className="w-5 h-5 opacity-40 invert flex-shrink-0"
-                    width={20}
-                    height={20}
-                  />
-                ))}
-              </div>
-            </div>
           </div>
+          <div className="hidden lg:block w-[340px] flex-shrink-0" aria-hidden />
+        </div>
 
-          {/* Status message */}
-          <p className="text-base font-medium text-white mb-1.5">
-            {ANALYSIS_MESSAGES[messageIndex]}
-          </p>
-          <p className="text-sm text-white/40">This usually takes 30-45 seconds — we check every pattern properly</p>
+        <div className="lg:flex lg:gap-8 lg:justify-center" aria-hidden>
+          {/* LEFT — placeholder skill cards in the same shape as GapCard. */}
+          <main className="w-full lg:w-[768px] min-w-0">
+            <div className={`h-4 w-32 mb-4 ${shimmer}`} />
+            <div className="space-y-3">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-xl border border-border-primary bg-background-primary p-5"
+                  // Stagger so the cards breathe out of phase; one synchronised
+                  // pulse across the column reads as a single flashing block.
+                  style={{ animationDelay: `${i * 160}ms` }}
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`h-6 w-6 rounded-full ${shimmer}`} />
+                    <div className={`h-4 w-20 ${shimmer}`} />
+                    <div className={`h-5 w-48 ${shimmer}`} />
+                  </div>
+                  <div className={`h-3 w-full mb-2 ${shimmer}`} />
+                  <div className={`h-3 w-4/5 mb-4 ${shimmer}`} />
+                  <div className="rounded-lg border border-border-primary bg-accent-subtle p-4">
+                    <div className={`h-3 w-28 mb-2 ${shimmer}`} />
+                    <div className={`h-3 w-3/4 ${shimmer}`} />
+                  </div>
+                  <div className={`h-10 w-40 mt-4 rounded-full ${shimmer}`} />
+                </div>
+              ))}
+            </div>
+          </main>
+
+          {/* RIGHT — the rail, so the pack card does not appear from nowhere. */}
+        <aside className="mt-8 lg:mt-9 lg:w-[340px] lg:flex-shrink-0">
+            <div className="space-y-4">
+              {[0, 1].map((i) => (
+                <div key={i} className="rounded-2xl border border-border-primary bg-background-primary p-5">
+                  <div className={`h-3 w-24 mb-3 ${shimmer}`} />
+                  <div className={`h-3 w-full mb-2 ${shimmer}`} />
+                  <div className={`h-3 w-2/3 mb-4 ${shimmer}`} />
+                  <div className={`h-11 w-full rounded-full ${shimmer}`} />
+                </div>
+              ))}
+            </div>
+          </aside>
         </div>
       </div>
     );
@@ -811,7 +775,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   // Extract data
   const topGaps = results.topGaps || [];
-  const quickWins = results.quickWins || [];
   const issues = topGaps.filter((g) => g.status === 'missing' || g.status === 'needs-improvement');
 
   // ----- Demo view: full-bleed dashboard mockup with clickable pins + side panel -----
@@ -835,10 +798,14 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 sm:mb-6"
                 style={{ color: 'var(--text-hero)' }}
               >
-                Free AI UX Audit Tool
+                Turn Your Design Into Claude Skills
               </h1>
+              {/* The headline says what you get; this says what to hand over.
+                  The uploader takes images only, so "your design" without a
+                  stated mechanic invites people to arrive with a Figma link. */}
               <p className="text-sm sm:text-base md:text-lg text-text-secondary mb-8 sm:mb-10">
-                Score AI interfaces against {PATTERN_COUNT} proven patterns and get specific fixes you can ship today.
+                Free AI UX audit. Upload a screenshot and see which of {PATTERN_COUNT} proven patterns your
+                interface is missing.
               </p>
 
               {/* CTA — moved into the hero text zone so the email form sits
@@ -966,21 +933,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
   const surfaceDescription = (results as ExtendedResults | null)?.surfaceDescription;
   const noFindings = topPinnedIssues.length === 0;
 
-  // Text-only snapshot for the "Save audit" action — exactly the inputs the
-  // dashboard needs to recap the audit and re-compose the IDE handoff prompt.
-  // The screenshot is deliberately omitted (localStorage cap, see useSavedAudits).
-  const savedAudit: SavedAudit = {
-    id: results.id,
-    savedAt: Date.now(),
-    productType: results.productContext?.productType,
-    productLabel: productTypeLabel(results.productContext?.productType),
-    surfaceDescription: surfaceDescription || '',
-    score: typeof results.score === 'number' ? results.score : null,
-    maxScore: typeof results.maxScore === 'number' ? results.maxScore : null,
-    applicablePatternsCount: results.applicablePatterns?.length ?? 0,
-    gaps: issues,
-    quickWins,
-  };
 
   // Empty-state branch: when a real (non-demo) run surfaces zero actionable
   // findings, replace the normal results layout with an honest "this isn't an
@@ -1006,13 +958,18 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         {/* Results header — wrapped in the same two-column geometry (768px slot
             + rail spacer) so the title/description line up with the gap cards.
             "New audit" now lives as the last action in the right rail. */}
-        <div className="lg:flex lg:gap-8 lg:justify-center mb-5 sm:mb-6">
+        {/* Sized up from text-lg/text-xs. This is the one place the page says
+            what it is and what you now have; at the old size it read as a
+            breadcrumb and got skipped. */}
+        <div className="lg:flex lg:gap-8 lg:justify-center mb-6 sm:mb-8">
           <div className="w-full lg:w-[768px] min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold text-text-primary tracking-tight leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-1.5">
               Your audit results
             </h1>
-            <p className="text-xs sm:text-sm text-text-secondary leading-snug">
-              Review the gaps below and learn what you are missing in the design.
+            <p className="text-base sm:text-lg text-text-secondary leading-relaxed">
+              {isDemoMode
+                ? 'Review the gaps below and learn what you are missing in the design.'
+                : 'The patterns your design is missing, ready to download as Claude skills.'}
             </p>
           </div>
           <div className="hidden lg:block lg:w-[340px] lg:flex-shrink-0" aria-hidden />
@@ -1020,15 +977,18 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
         <div className="lg:flex lg:gap-8 lg:items-start lg:justify-center">
 
-        {/* LEFT — the findings, then a conversation about them */}
+        {/* LEFT — the skills this interface is missing */}
         <main className="w-full lg:w-[768px] min-w-0">
 
-          {/* Findings — every gap as a card */}
+          {/* Each gap is a skill the user can save. Framed as skills rather
+              than findings because the audit's output is now the pack, not
+              the report. */}
+          {/* No count label above the cards. The pack card already states how
+              many skills there are, the cards are numbered, and the page
+              subhead says what they are, so a third statement of the same fact
+              was just another line to read. */}
           {topPinnedIssues.length > 0 && (
             <section>
-              <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-4">
-                {topPinnedIssues.length} gap{topPinnedIssues.length === 1 ? '' : 's'} found
-              </p>
               <div className="space-y-3">
                 {topPinnedIssues.map((gap, i) => (
                   <GapCard key={i} gap={gap} index={i + 1} />
@@ -1037,8 +997,55 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             </section>
           )}
 
+          {/* Guides matched to the surface that was audited.
+              Lives under the findings rather than in the rail: at 340px it read
+              as one more sidebar item, and the point is to send people into the
+              courses. Full column width, after they have seen what is missing,
+              is where that lands.
+
+              This replaced the done-for-you services pitch, which was not being
+              clicked. A chat interface gets the conversational UI guide;
+              everyone gets the skills guide, because every audit now ends with a
+              pack that has to be installed. Where no guide genuinely covers the
+              surface only the skills one shows: padding this with a
+              loosely-related guide would teach people to skip the block. */}
+          {!isDemoMode && relatedGuides.length > 0 && (
+            <section className="mt-8">
+              <p className="text-sm font-semibold uppercase tracking-wider text-text-tertiary mb-4">
+                Learn
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {relatedGuides.map((guide) => (
+                  <Link
+                    key={guide.slug}
+                    href={`/guides/${guide.slug}`}
+                    onClick={() =>
+                      trackAuditEvent('audit_guide_clicked', {
+                        slug: guide.slug,
+                        productType: results.productContext?.productType ?? null,
+                      })
+                    }
+                    className="group block rounded-xl border border-border-primary bg-background-primary p-5 hover:border-accent-primary/40 hover:bg-background-secondary transition-colors"
+                  >
+                    <span className="block text-base font-semibold text-text-primary group-hover:text-accent-primary transition-colors mb-1">
+                      {guide.title}
+                    </span>
+                    <span className="block text-sm text-text-secondary leading-relaxed">{guide.reason}</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* Conversation — messages flow in the column; the input floats at
-              the bottom of the viewport (sticky on desktop). */}
+              the bottom of the viewport (sticky on desktop).
+
+              Off since the results page became a skills handover: the page's
+              one job is now "save the skills you want", and a chat box beside
+              that competes for the same attention. Kept behind the flag rather
+              than deleted because /api/audit/chat and the chat state below are
+              still wired and working, so turning it back on is one line. */}
+          {SHOW_RESULTS_CHAT && (
           <section className="mt-10">
             <div className="flex items-center gap-2 text-text-secondary mb-4">
               <ChatBubbleLeftRightIcon className="w-5 h-5 text-accent-primary" />
@@ -1114,61 +1121,123 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               </div>
             </div>
           </section>
+          )}
 
         </main>
 
         {/* RIGHT — artifacts: fix handoff, screenshot, save, email, audit facts */}
-        <aside className="mt-8 lg:mt-9 lg:w-[340px] lg:flex-shrink-0">
+        {/* lg:mt-0 so the pack card's top edge lines up with the first skill
+            card. lg:mt-9 dropped the whole rail below the column beside it,
+            which read as a mistake rather than as spacing. The mobile mt-8
+            stays: stacked, the rail needs air above it. */}
+        <aside className="mt-8 lg:mt-0 lg:w-[340px] lg:flex-shrink-0">
           <div className="lg:sticky lg:top-6 space-y-4">
 
-            {/* Apply the fixes — copy the handoff prompt to Claude Code / Cursor */}
-            {issues.length > 0 && (() => {
-              const handoffPrompt = composeHandoffPrompt({
-                surfaceDescription,
-                productType: results.productContext?.productType,
-                gaps: issues,
-              });
-              return (
-                <div className="rounded-2xl border border-border-primary bg-background-primary p-5">
-                  <p className="text-sm font-semibold uppercase tracking-wider text-accent-primary mb-1">Apply the fixes</p>
-                  <p className="text-sm text-text-secondary leading-relaxed mb-3">
-                    One prompt with all {issues.length} gap{issues.length === 1 ? '' : 's'} &mdash; paste into Claude Code or Cursor.
+            {/* Your pack — the single takeaway, and the only place a count
+                lives. Saving a card adds to it; the button downloads whatever is
+                in it. Downloading needs no prior save: with nothing picked, the
+                pack is everything this audit matched, which is what most people
+                want and saves them clicking Save three times to get there.
+
+                Hidden in demo mode: the sample audit describes a product the
+                visitor does not own. */}
+            {!isDemoMode && savableSlugs.length > 0 && (
+              <div className="rounded-2xl border border-border-primary bg-background-primary p-5">
+                <div className="flex items-baseline justify-between gap-2 mb-1">
+                  <p className="text-sm font-semibold uppercase tracking-wider text-accent-primary">Your pack</p>
+                  <p className="text-sm font-semibold text-text-primary tabular-nums">
+                    {packCount} skill{packCount === 1 ? '' : 's'}
                   </p>
-                  <button
-                    onClick={handleCopyHandoff}
-                    className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer"
-                  >
-                    {handoffCopied ? (
-                      <>
-                        <CheckCircleIcon className="w-5 h-5" />
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <CommandLineIcon className="w-5 h-5" />
-                        Copy fix for Claude Code
-                      </>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowHandoffSource((v) => !v);
-                      trackAuditEvent('audit_inspect_prompt_toggled', { opened: !showHandoffSource });
-                    }}
-                    aria-expanded={showHandoffSource}
-                    className="mt-2 w-full inline-flex items-center justify-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary cursor-pointer"
-                  >
-                    <ChevronDownIcon className={`w-4 h-4 transition-transform ${showHandoffSource ? 'rotate-180' : ''}`} />
-                    {showHandoffSource ? 'Hide prompt' : 'Inspect prompt'}
-                  </button>
-                  {showHandoffSource && (
-                    <div className="mt-3 rounded-lg border border-border-primary bg-background-secondary p-3 max-h-72 overflow-y-auto">
-                      <pre className="text-xs font-mono whitespace-pre-wrap text-text-secondary leading-relaxed">{handoffPrompt}</pre>
-                    </div>
-                  )}
                 </div>
-              );
-            })()}
+                <p className="text-sm text-text-secondary leading-relaxed mb-3">
+                  Every pattern this audit matched, plus the fixes for your screen.
+                  Unzips into <code className="text-xs font-mono text-text-primary">.claude/skills/</code>.
+                </p>
+                <button
+                  onClick={handleDownloadPack}
+                  disabled={packBuilding}
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-sm hover:bg-accent-hover transition-colors active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                >
+                  {packDone ? (
+                    <>
+                      <CheckCircleIcon className="w-5 h-5" />
+                      Downloaded
+                    </>
+                  ) : (
+                    <>
+                      <ArrowDownTrayIcon className="w-5 h-5" />
+                      {packBuilding ? 'Building your pack…' : 'Download skill pack'}
+                    </>
+                  )}
+                </button>
+                {packError && (
+                  <p role="alert" className="mt-2 text-xs text-text-secondary">{packError}</p>
+                )}
+              </div>
+            )}
+
+
+            {/* Run another audit — directly under the pack, because it is the
+                only other thing anyone does from this page, and burying it under
+                the reference blocks made people scroll to find it.
+
+                Two neighbours are gone rather than restyled. "Email this report"
+                went because the report is no longer the thing you leave with;
+                the pack is, and it is already one click away. The done-for-you
+                services card went because it was not being clicked. Note that
+                removing it also removed the `service_cta_clicked` event, so
+                there is no measurement behind that call any more: putting it
+                back later means starting the evidence over. */}
+            <button
+              type="button"
+              onClick={() => {
+                trackAuditEvent('audit_new_audit_clicked');
+                onNewAudit();
+              }}
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
+            >
+              <ArrowPathIcon className="w-4 h-4" />
+              Run another audit
+            </button>
+
+            {/* What we audited. Open by default: it is the context for every finding above, not an optional extra */}
+            {(surfaceDescription || results.applicablePatterns?.length) && (
+              <details open className="rounded-2xl border border-border-primary bg-background-primary px-5 py-4">
+                <summary className="text-sm font-semibold uppercase tracking-wider text-text-tertiary cursor-pointer select-none">What we audited</summary>
+                {(() => {
+                  const productLabel: Record<string, string> = {
+                    'chat-interface': 'Chat interface',
+                    'ai-agent': 'AI agent',
+                    'recommendation-system': 'Recommendations',
+                    'content-generation': 'Content generation',
+                    other: 'AI product',
+                  };
+                  const productType = results.productContext?.productType;
+                  const facts: Array<{ label: string; value: string }> = [];
+                  if (productType) facts.push({ label: 'Surface', value: productLabel[productType] || productType });
+                  facts.push({ label: 'Device', value: heroDeviceType === 'mobile' ? 'Mobile' : 'Desktop' });
+                  if (allScreenshots.length > 0) facts.push({ label: 'Screenshots', value: String(allScreenshots.length) });
+                  if (results.applicablePatterns?.length) facts.push({ label: 'Applicable patterns', value: `${results.applicablePatterns.length} of 36` });
+                  if (issues.length > 0) facts.push({ label: 'Gaps found', value: String(issues.length) });
+                  return (
+                    <div className="mt-3">
+                      <dl className="rounded-lg border border-border-primary bg-background-secondary divide-y divide-border-primary mb-3">
+                        {facts.map((f) => (
+                          <div key={f.label} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
+                            <dt className="text-sm text-text-secondary">{f.label}</dt>
+                            <dd className="text-base font-semibold text-text-primary text-right truncate">{f.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                      {surfaceDescription && (
+                        <p className="text-sm text-text-secondary leading-relaxed">{surfaceDescription}</p>
+                      )}
+                    </div>
+                  );
+                })()}
+              </details>
+            )}
+
 
             {/* Screenshot — collapsible artifact with non-interactive markers */}
             {heroScreenshotUrl && (
@@ -1266,78 +1335,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               </div>
             )}
 
-            {/* Save / Email / New audit (the last CTA) */}
-            <div className="flex flex-col gap-2">
-              <SaveAuditButton
-                audit={savedAudit}
-                className="w-full px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary cursor-pointer"
-              />
-              <button
-                onClick={() => setShowEmailModal(true)}
-                className="w-full inline-flex items-center justify-center px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-              >
-                Email Report
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  trackAuditEvent('audit_new_audit_clicked');
-                  onNewAudit();
-                }}
-                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full border border-border-primary bg-background-primary text-text-primary text-sm font-medium hover:bg-background-secondary transition-colors cursor-pointer"
-              >
-                <ArrowPathIcon className="w-4 h-4" />
-                New audit
-              </button>
-            </div>
 
-            {/* Done-for-you upsell — non-blocking secondary offer */}
-            <a
-              href="/services?from=post-audit-cta"
-              onClick={() => trackAuditEvent('service_cta_clicked', { source: 'results_rail' })}
-              className="block rounded-2xl border border-border-primary bg-background-primary px-5 py-4 hover:bg-background-secondary transition-colors"
-            >
-              <span className="block text-sm font-semibold text-text-primary mb-0.5">Want us to audit your whole product?</span>
-              <span className="block text-sm text-text-secondary">A senior, done-for-you AI-UX audit with a detailed report, prioritized recommendations, and a walkthrough with your team. <span className="text-accent-primary">Learn more →</span></span>
-            </a>
-
-            {/* What we audited — optional details */}
-            {(surfaceDescription || results.applicablePatterns?.length) && (
-              <details className="rounded-2xl border border-border-primary bg-background-primary px-5 py-4">
-                <summary className="text-sm font-semibold uppercase tracking-wider text-text-tertiary cursor-pointer select-none">What we audited</summary>
-                {(() => {
-                  const productLabel: Record<string, string> = {
-                    'chat-interface': 'Chat interface',
-                    'ai-agent': 'AI agent',
-                    'recommendation-system': 'Recommendations',
-                    'content-generation': 'Content generation',
-                    other: 'AI product',
-                  };
-                  const productType = results.productContext?.productType;
-                  const facts: Array<{ label: string; value: string }> = [];
-                  if (productType) facts.push({ label: 'Surface', value: productLabel[productType] || productType });
-                  facts.push({ label: 'Device', value: heroDeviceType === 'mobile' ? 'Mobile' : 'Desktop' });
-                  if (allScreenshots.length > 0) facts.push({ label: 'Screenshots', value: String(allScreenshots.length) });
-                  if (results.applicablePatterns?.length) facts.push({ label: 'Applicable patterns', value: `${results.applicablePatterns.length} of 36` });
-                  if (issues.length > 0) facts.push({ label: 'Gaps found', value: String(issues.length) });
-                  return (
-                    <div className="mt-3">
-                      <dl className="rounded-lg border border-border-primary bg-background-secondary divide-y divide-border-primary mb-3">
-                        {facts.map((f) => (
-                          <div key={f.label} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
-                            <dt className="text-sm text-text-secondary">{f.label}</dt>
-                            <dd className="text-base font-semibold text-text-primary text-right truncate">{f.value}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                      {surfaceDescription && (
-                        <p className="text-sm text-text-secondary leading-relaxed">{surfaceDescription}</p>
-                      )}
-                    </div>
-                  );
-                })()}
-              </details>
-            )}
 
           </div>
         </aside>
@@ -1349,7 +1347,12 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
       {/* Desktop floating chat input — fixed to the viewport bottom, aligned to
           the left findings column via a mirror of the two-column layout (a
           340px spacer reserves the rail). pointer-events pass through the empty
-          gutters so only the input itself is interactive. */}
+          gutters so only the input itself is interactive.
+
+          Behind the same flag as the conversation it belongs to. It sits
+          outside that section in the tree, so gating only the section would
+          leave a floating input on the page with no conversation above it. */}
+      {SHOW_RESULTS_CHAT && (
       <div className="hidden lg:block fixed inset-x-0 bottom-6 z-sticky pointer-events-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex gap-8 justify-center">
           <div className="w-full lg:w-[768px] min-w-0 pointer-events-auto">
@@ -1375,46 +1378,42 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           <div className="w-[340px] flex-shrink-0" aria-hidden />
         </div>
       </div>
+      )}
 
-      {/* Mobile sticky handoff CTA — keeps the load-bearing action thumb-reachable
-          while the user scrolls the results. Hidden when a gap side-sheet is
-          open so it doesn't compete with that surface. */}
-      {issues.length > 0 && openPin === null && (
+      {/* Mobile sticky CTA — the same single action as the rail, thumb-reachable.
+          Hidden when a gap side-sheet is open so it doesn't compete with it. */}
+      {!isDemoMode && savableSlugs.length > 0 && openPin === null && (
         <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
           <button
             type="button"
-            onClick={handleCopyHandoff}
-            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-base shadow-lg active:scale-95 transition-transform cursor-pointer min-h-[48px]"
+            onClick={handleDownloadPack}
+            disabled={packBuilding}
+            className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-accent-primary text-white dark:text-gray-900 font-semibold text-base shadow-lg active:scale-95 transition-transform disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer min-h-[48px]"
           >
-            {handoffCopied ? (
+            {packDone ? (
               <>
                 <CheckCircleIcon className="w-5 h-5" />
-                Copied — paste into Claude Code
+                Downloaded
               </>
             ) : (
               <>
-                <CommandLineIcon className="w-5 h-5" />
-                Copy handoff prompt
+                <ArrowDownTrayIcon className="w-5 h-5" />
+                {packBuilding ? 'Building your pack…' : 'Download skill pack'}
               </>
             )}
           </button>
         </div>
       )}
 
-      {showEmailModal && (
-        <EmailReportModal
-          isOpen={showEmailModal}
-          onClose={() => setShowEmailModal(false)}
-          results={results}
-          productContext={results.productContext}
-        />
-      )}
+
     </div>
   );
 }
 
 /**
- * Single-CTA hero — one primary "Audit your design — free" button. The
+ * Single-CTA hero — one primary "Get your skills" button. Labelled by outcome
+ * rather than process; "Claude" is dropped because the headline directly above
+ * already carries it and three mentions in one viewport reads as a chant. The
  * email-form-in-hero variant converted at 1.9% over the May 8-13 window
  * (8 submits / 417 real sessions) while audit starts ran at 1.2%; pairing
  * them in one component split attention so neither won. Email capture now
@@ -1442,7 +1441,7 @@ function DemoStartForm({
         onClick={onStart}
         className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base font-semibold hover:bg-accent-hover transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap"
       >
-        Audit your design
+        Get your skills
         <span aria-hidden>→</span>
       </button>
 

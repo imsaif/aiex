@@ -104,6 +104,8 @@ playwright/.cache/
 
 # Audit-tool eval runs (regenerated per run; not checked in)
 tests/audit-evals/last-run.json
+tests/audit-evals/last-run-loop.json
+tests/audit-evals/last-run-ab.json
 
 # Documentation drafts
 docs/status.md

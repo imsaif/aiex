@@ -8,7 +8,7 @@ import { clampScore } from '@/lib/audit/score';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock';
 import { checkAnalysisRateLimit, formatTimeUntilReset } from '@/lib/rate-limit';
-import { runVerificationLoop } from '@/lib/audit/verifyLoop';
+import { runVerificationLoop, LOOP_DEADLINE_MS } from '@/lib/audit/verifyLoop';
 import type { ContextData, AnalysisResults, DeviceType, ProductType } from '@/types/audit';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 
@@ -24,9 +24,8 @@ const anthropic = new Anthropic({
 // LOOP_DEADLINE_MS below), not a higher maxDuration.
 export const maxDuration = 60;
 
-// Wall-clock headroom the loop must respect so the function never hard-times-out.
-// Leaves ~5s under maxDuration for JSON serialization + the after() sample write.
-const LOOP_DEADLINE_MS = 55000;
+// LOOP_DEADLINE_MS is defined alongside the loop itself so the offline A/B eval
+// budgets the loop exactly the way this route does.
 
 // Detect image media type from base64 data
 function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/webp' | 'image/gif' {

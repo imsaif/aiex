@@ -78,4 +78,78 @@ describe('runVerificationLoop', () => {
     expect((secondArg as { maxRetries?: number }).maxRetries).toBe(0);
     expect((secondArg as { signal?: AbortSignal }).signal).toBeDefined();
   });
+
+  // `reviseAudit` returns a fresh object ({...draft, topGaps}) even when it
+  // changes nothing, so a reference-identity check reported every completed
+  // revise as a change. That number is what the AUDIT_VERIFY_LOOP
+  // enable/disable decision rests on, so it has to reflect real edits only.
+  it('reports revised=false when the revise pass returns identical findings', async () => {
+    const unchanged = JSON.stringify({
+      applicablePatterns: ['A', 'B'],
+      topGaps: DRAFT.topGaps,
+      quickWins: [],
+      generalObservations: [],
+      chatContext: '',
+    });
+    const out = await runVerificationLoop({
+      client: scriptedClient([DROP_2, unchanged]), imageBlocks: [], draft: DRAFT,
+      deadlineMs: 1_000_000, now: () => 0,
+    });
+    expect(out.outcome).toBe('revise-attempted');
+    expect(out.revised).toBe(false);
+    expect(out.result.topGaps).toHaveLength(2);
+  });
+
+  describe('outcome', () => {
+    it('distinguishes a clean draft from a failed critic', async () => {
+      const clean = await runVerificationLoop({
+        client: scriptedClient([ALL_KEEP]), imageBlocks: [], draft: DRAFT,
+        deadlineMs: 1_000_000, now: () => 0,
+      });
+      expect(clean.outcome).toBe('no-revision-needed');
+      expect(clean.verdict).not.toBeNull();
+
+      const failed = await runVerificationLoop({
+        client: scriptedClient(['not json']), imageBlocks: [], draft: DRAFT,
+        deadlineMs: 1_000_000, now: () => 0,
+      });
+      expect(failed.outcome).toBe('critic-failed');
+      expect(failed.verdict).toBeNull();
+    });
+
+    it('reports budget-precritic when there was never enough time', async () => {
+      const out = await runVerificationLoop({
+        client: scriptedClient([ALL_KEEP]), imageBlocks: [], draft: DRAFT,
+        deadlineMs: 5000, now: () => 5000 - (REVISE_MIN_MS - 1),
+      });
+      expect(out.outcome).toBe('budget-precritic');
+    });
+
+    it('reports budget-prerevise when the critic used up the budget', async () => {
+      // Enough headroom for the critic, none left by the time it returns.
+      let t = 0;
+      const out = await runVerificationLoop({
+        client: scriptedClient([DROP_2]), imageBlocks: [], draft: DRAFT,
+        deadlineMs: REVISE_MIN_MS + 1000,
+        now: () => {
+          const v = t;
+          t = REVISE_MIN_MS + 1000; // critic call consumed the remaining budget
+          return v;
+        },
+      });
+      expect(out.outcome).toBe('budget-prerevise');
+      expect(out.revised).toBe(false);
+      expect(out.verdict).not.toBeNull();
+      expect(out.result.topGaps).toHaveLength(2);
+    });
+
+    it('reports revise-attempted when the revise pass ran', async () => {
+      const out = await runVerificationLoop({
+        client: scriptedClient([DROP_2, REVISED_ONE]), imageBlocks: [], draft: DRAFT,
+        deadlineMs: 1_000_000, now: () => 0,
+      });
+      expect(out.outcome).toBe('revise-attempted');
+      expect(out.revised).toBe(true);
+    });
+  });
 });

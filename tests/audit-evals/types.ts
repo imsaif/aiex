@@ -79,3 +79,90 @@ export interface EvalRunReport {
   passedHardAsserts: number;
   totalFixtures: number;
 }
+
+/* -------------------------------------------------------------------------
+ * Paired A/B eval (run-ab.ts)
+ *
+ * Measures what the verification loop CONTRIBUTES, which the single-arm runner
+ * cannot. The single-arm runner makes its own analyze call per arm, so a
+ * baseline run and an EVAL_WITH_LOOP=1 run start from two different drafts —
+ * any score difference conflates the loop's effect with run-to-run vision
+ * variance. The paired runner analyzes ONCE and sends that one draft down both
+ * arms, so the only difference between them is the loop itself.
+ * ---------------------------------------------------------------------- */
+
+export type HardAsserts = FixtureResult['hardAsserts'];
+
+/** One scored arm of the pair (baseline draft, or the post-loop result). */
+export interface ArmResult {
+  auditResponse: unknown;
+  hardAsserts: HardAsserts;
+  hardAssertsPassed: boolean;
+  judge: JudgeScores | null;
+  judgeError: string | null;
+}
+
+/**
+ * What the loop actually did. This is the decision-critical output — at small
+ * corpus sizes an axis delta of ±0.5 is noise, but "the critic dropped 3
+ * findings whose evidence it could not locate" is signal even at n=2.
+ */
+export interface LoopTelemetry {
+  /** Where the loop stopped. Distinguishes budget bail from critic failure
+   *  from a genuinely clean draft — all three look like "no revision". */
+  outcome: string;
+  /** False means the critic call failed or was skipped, NOT that it approved
+   *  the draft. Without this the two are indistinguishable in the report. */
+  hadVerdict: boolean;
+  /** True only when findings actually changed. */
+  revised: boolean;
+  verdictCounts: { keep: number; sharpen: number; drop: number };
+  /** Findings the critic could not locate in the screenshot. The false-absence
+   *  rate is the specific failure the loop exists to catch. */
+  evidenceNotVisible: number;
+  overallNote: string;
+  loopMs: number;
+  gapCountBefore: number;
+  gapCountAfter: number;
+}
+
+export interface AbFixtureResult {
+  slug: string;
+  description: string;
+  productType: string;
+  baseline: ArmResult | null;
+  withLoop: ArmResult | null;
+  loop: LoopTelemetry | null;
+  /** Set when the shared analyze call failed and neither arm could be scored. */
+  error: string | null;
+}
+
+export interface AbRunReport {
+  startedAt: string;
+  durationMs: number;
+  models: {
+    analyze: string;
+    critic: string;
+    revise: string;
+    judge: string;
+  };
+  fixtures: AbFixtureResult[];
+  baselineAxisMeans: Record<JudgeAxis, number> | null;
+  withLoopAxisMeans: Record<JudgeAxis, number> | null;
+  /** withLoop minus baseline, per axis. Positive = the loop improved that axis. */
+  axisDeltas: Record<JudgeAxis, number> | null;
+  baselineHardPassed: number;
+  withLoopHardPassed: number;
+  totalFixtures: number;
+  loopSummary: {
+    /** Fixtures where the loop reached the revise call. */
+    reviseAttempted: number;
+    /** Fixtures where findings actually changed. */
+    revisedCount: number;
+    outcomes: Record<string, number>;
+    totalKeep: number;
+    totalSharpen: number;
+    totalDrop: number;
+    totalEvidenceNotVisible: number;
+  };
+}

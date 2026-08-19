@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ProductType } from '@/types/audit';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
-import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon, ChartBarIcon, ExclamationTriangleIcon, ListBulletIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { ArrowUpTrayIcon, PhotoIcon, XMarkIcon, PlusIcon, ChevronLeftIcon, ChevronRightIcon, ArrowDownTrayIcon, ExclamationTriangleIcon, ListBulletIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { productOptions } from './productOptions';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { processImageFile } from '@/lib/audit/image';
@@ -363,9 +363,9 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         {/* RIGHT: floating cards — Progress stepper advances as the user acts. */}
         <aside className="w-full lg:w-[360px] flex-shrink-0 flex flex-col gap-3 text-left">
           <div className="mb-0.5">
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">Audit your interface</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">Audit your design</h2>
             <p className="text-text-secondary text-sm mt-1">
-              Score your design against 38 AI UX patterns.
+              Take a screenshot of your design and get Claude skills that help you design better.
             </p>
           </div>
 
@@ -447,7 +447,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
 
                 <StepRow state={step3State} last>
                   <div className="text-sm font-semibold text-text-primary">Analyze</div>
-                  <div className="text-xs text-text-secondary mt-0.5">Score, top gaps &amp; fixes you can ship</div>
+                  <div className="text-xs text-text-secondary mt-0.5">Your matching skills, ready to download</div>
                 </StepRow>
               </ol>
             </div>
@@ -458,25 +458,29 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
             <p className="px-3 pt-2 pb-1.5 text-xs font-medium uppercase tracking-wide text-text-tertiary">
               What you&apos;ll get
             </p>
+            {/* Ordered by what the audit now hands over: the skills first, the
+                pack that carries them, then the one-off fixes. The old list led
+                with a score, which is a number you read and forget rather than
+                something you leave with. */}
             <ul className="divide-y divide-border-primary">
-              <li className="flex items-start gap-2.5 px-3 py-2">
-                <ChartBarIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
-                <div className="text-xs leading-snug">
-                  <span className="font-semibold text-text-primary">Score</span>
-                  <span className="text-text-secondary"> out of applicable patterns</span>
-                </div>
-              </li>
               <li className="flex items-start gap-2.5 px-3 py-2">
                 <ExclamationTriangleIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
                 <div className="text-xs leading-snug">
-                  <span className="font-semibold text-text-primary">Top gaps</span>
-                  <span className="text-text-secondary"> and patterns to add</span>
+                  <span className="font-semibold text-text-primary">The skills</span>
+                  <span className="text-text-secondary"> your design is missing</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-2.5 px-3 py-2">
+                <ArrowDownTrayIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
+                <div className="text-xs leading-snug">
+                  <span className="font-semibold text-text-primary">A pack</span>
+                  <span className="text-text-secondary"> that installs into Claude Code</span>
                 </div>
               </li>
               <li className="flex items-start gap-2.5 px-3 py-2">
                 <ListBulletIcon className="w-4 h-4 mt-0.5 flex-shrink-0 text-text-secondary" />
                 <div className="text-xs leading-snug">
-                  <span className="font-semibold text-text-primary">Actions</span>
+                  <span className="font-semibold text-text-primary">Fixes</span>
                   <span className="text-text-secondary"> you can ship today</span>
                 </div>
               </li>

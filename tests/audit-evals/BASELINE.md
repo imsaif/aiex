@@ -34,6 +34,100 @@ Reference scores and known issues to compare against on every prompt/model chang
 
 ---
 
+## Verification loop (`AUDIT_VERIFY_LOOP`) — first A/B measurement, 2026-08-19
+
+Run with `npm run eval:audit:ab` (paired: one analyze call, both arms scored
+from that same draft). Two fixtures, run separately.
+
+**Result: the loop did not fire on either fixture.** Both returned
+`outcome: budget-precritic` — analyze consumed the wall-clock budget before the
+critic could start. No verdicts, no revisions, zero delta on every axis.
+
+| Fixture | analyze latency | budget left of 55s | outcome |
+|---|---|---|---|
+| chat-claude | 49.6s | ~5.4s (needs ≥12s) | `budget-precritic` |
+| agent-claude-code | 975.8s ⚠️ | none | `budget-precritic` |
+
+⚠️ The 975s analyze is not a normal call — almost certainly SDK retries against
+a degraded or rate-limited endpoint. Treat that row's *scores* as unusable; only
+its outcome is informative, and it agrees with the other.
+
+**What this reframes.** The open question was "does the critic improve audit
+quality?" The measurement says we cannot answer that yet, because the prior
+question is unanswered: **can the loop run at all inside the 55s budget?** On
+these runs, no. Enabling `AUDIT_VERIFY_LOOP` today would most likely be a no-op
+in production — it would bail at the same gate — while adding a failure surface.
+
+### Production latency confirms it — checked 2026-08-19
+
+Queried `AuditSample.latencyMs`, n=100 successful context-first audits,
+2026-05-13 → 08-16, across 68 distinct `ipHash` (largest single source 13%).
+
+> **Do not compute rates over the raw table.** 642 of the 781 rows are
+> `role = 'monitor'` — an hourly health check that posts no image and is
+> recorded as `bad_request`. It ran 2026-06-16 → 07-13 and has since stopped.
+> Including it makes the endpoint look 82% broken. Filter `role != 'monitor'`
+> first: the real user funnel is 139 attempts at **74% success**, 19%
+> `empty_gaps`, 4% `no_ai_surface`, 2% `parse_error`, 1% `api_error`.
+
+The loop needs ≥12s (`REVISE_MIN_MS`) left of the 55s budget, so **analyze must
+finish inside 43s** for the critic to start at all.
+
+| Population | n | p50 | p75 | p90 | finish under 43s |
+|---|---|---|---|---|---|
+| context-first success | 100 | 43.1s | 51.5s | 58.1s | **50%** |
+| single image | 84 | 41.7s | 47.8s | 55.8s | 56% |
+| multi image | 16 | 55.6s | 65.8s | 68.0s | **19%** |
+| last 30 days | 17 | 42.1s | 51.1s | 55.2s | 53% |
+
+The median lands exactly on the cutoff. Enabling `AUDIT_VERIFY_LOOP` today is a
+coin flip per request, and it is least likely to fire on the slow multi-image
+requests that would benefit most. The local eval result was not an artefact.
+
+**Options, in order of promise**
+1. Run the critic on a fast model (Haiku) and re-check whether the budget math
+   works. `AUDIT_CRITIC_MODEL` already exists for this.
+2. Restructure so verification overlaps analyze instead of following it.
+3. Drop the loop.
+
+Growing the corpus and re-running the A/B are moot until the loop can fire.
+
+**Do not flip the flag.**
+
+### Real users only (role = null)
+
+Of the 100 context-first successes, 19 are `admin`/`test` — our own runs, and
+they are notably faster. Real users are worse than the pooled figure:
+
+| Population | n | p50 | p75 | p90 | under 43s |
+|---|---|---|---|---|---|
+| anonymous (real users) | 81 | 43.9s | 52.1s | 58.6s | **44%** |
+| anonymous, single image | 65 | 43.0s | 49.3s | 57.1s | 51% |
+| admin + test (ours) | 19 | 32.5s | 43.1s | 51.9s | 74% |
+
+Testing on our own machines gives a systematically optimistic picture. For real
+users the loop could fire on fewer than half of audits.
+
+### One more finding from the same query
+
+- **p90 is 58s and max is 83s against `maxDuration = 60`.** Requests complete
+  well past the documented Vercel cap. Either the cap is not what the code
+  comments assume, or these rows come from a path it does not apply to. Worth
+  understanding before trusting any time-budget reasoning in this route.
+
+### ⚠️ Possible regression, unconfirmed — `agent-claude-code`
+
+This fixture scored 5/5/5/5/5 with hard-asserts PASS in the May baseline. In the
+Aug 19 run it scored F=3 S=3 P=1 A=3 NF=1 with hard-asserts **FAIL**. The
+May baseline used `claude-sonnet-4-20250514`; the harness now runs
+`claude-sonnet-4-6`, so this may be model drift rather than a prompt problem.
+
+Unconfirmed: it comes from the anomalous 975s run, whose output quality is
+suspect. **Re-run this fixture on a healthy connection before treating it as a
+real regression.**
+
+---
+
 ## Known open issues (NOT FIXED — gated on more fixtures)
 
 ### Bug 4 — CV / Explainable AI scope on conversational vs research surfaces
