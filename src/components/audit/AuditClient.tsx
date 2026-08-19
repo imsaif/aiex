@@ -85,7 +85,7 @@ export default function AuditClient({
   const hasAutoOpenedPaywallRef = useRef(false);
   const paywallMode: 'unlock' | 'final' = atFinalCap ? 'final' : 'unlock';
 
-  // User clicked "Audit your design" on the homepage. Navigates to /audit
+  // User clicked "Get your skills" on the homepage. Navigates to /audit
   // rather than switching step in place, so the tool has one canonical URL that
   // every entry point (homepage CTA, both pattern-page CTAs) shares and that can
   // be measured by pathname. Costs a page navigation the in-place switch didn't.

@@ -71,6 +71,16 @@ export const AUDIT_EVENT_NAMES = [
   'saved_items_bar_clicked',
   // Dashboard: zipped pack of one skill per saved pattern, plus the audit fixes file.
   'skill_pack_downloaded',
+  // Audit results: "save all" on the matching skills, rather than card-by-card.
+  // Per-skill saves already fire dashboard_pattern_saved from the kit hook.
+  'audit_skills_saved_all',
+  // Audit results: left for the dashboard, which is where a pack is downloaded.
+  // The step that tells us whether the save-then-download handoff actually holds.
+  'audit_dashboard_cta_clicked',
+  // Audit results: clicked through to a guide matched to the audited surface.
+  // Replaced the services upsell that used to hold this slot, so this is the
+  // measurement of whether guide recommendations do better than that did.
+  'audit_guide_clicked',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
