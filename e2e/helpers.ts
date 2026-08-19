@@ -57,7 +57,13 @@ export async function runOneAudit(
   const productLabel = opts.productLabel ?? 'Chat interface';
   const imageCount = opts.imageCount ?? 1;
 
-  await page.getByRole('button', { name: /audit your design/i }).first().click();
+  // The hero CTA was renamed "Audit your design" -> "Get your skills" when the
+  // audit became a skills handover. Matching both keeps this helper working if
+  // the copy moves again, and stops a rename from reading as a broken funnel.
+  await page
+    .getByRole('button', { name: /get your skills|audit your design/i })
+    .first()
+    .click();
 
   // Hidden file input — query directly since it has no accessible name.
   const fileInput = page.locator('input[type="file"]').first();
