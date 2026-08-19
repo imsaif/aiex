@@ -62,7 +62,62 @@ npm run eval:audit -- chat               # only fixtures whose slug contains "ch
 npm run eval:audit -- chat agent         # union: "chat" OR "agent"
 ```
 
-Requires `ANTHROPIC_API_KEY` in `.env.local` (loaded via dotenv).
+Requires `ANTHROPIC_API_KEY`. Loaded from `.env.local` first, then `.env`
+(see `env.ts`); an exported shell variable overrides both.
+
+> Until Aug 2026 the runners used `import 'dotenv/config'`, which reads **only**
+> `.env`. The key lives in `.env.local`, so the eval worked solely on machines
+> that already had the variable exported and printed "ANTHROPIC_API_KEY not set"
+> everywhere else, contradicting this README. `env.ts` now loads both.
+
+## Two runners: gate vs. experiment
+
+| | `npm run eval:audit` | `npm run eval:audit:ab` |
+|---|---|---|
+| Question | "did we regress?" | "does the verification loop help?" |
+| Arms | one | two, from the **same** draft |
+| Exit code | non-zero on regression — **CI gate** | always 0 — reports, never gates |
+| Report | `last-run.json` | `last-run-ab.json` |
+| Vision calls / fixture | 2 | 3, or 5 when the loop revises |
+
+### The paired A/B runner
+
+```bash
+npm run eval:audit:ab                    # full corpus
+npm run eval:audit:ab -- chat            # single fixture
+```
+
+Built to decide whether to enable `AUDIT_VERIFY_LOOP`. Per fixture it calls
+analyze **once**, judges that draft (arm A), runs `runVerificationLoop` on that
+exact same draft, and judges the result (arm B). Because both arms descend from
+one draft, the delta is attributable to the loop.
+
+`EVAL_WITH_LOOP=1 npm run eval:audit` also runs the loop, but each arm makes its
+own analyze call — so comparing two such runs mixes the loop's effect with
+run-to-run vision variance. It is kept for spot checks; **use the A/B runner for
+the enable/disable decision.**
+
+**Read the loop-behaviour block, not just the axis deltas.** At single-digit
+corpus sizes an axis delta of ±0.5 is judge noise. `outcome`, `drop` counts and
+`evidence not visible` are real signal even at n=2. In particular `outcome`
+separates three cases that all look like "no revision":
+
+| outcome | meaning |
+|---|---|
+| `budget-precritic` | ran out of wall-clock before the critic — **the loop never fired** |
+| `critic-failed` | critic call errored or returned unparseable JSON |
+| `no-revision-needed` | critic read every finding and approved it |
+| `budget-prerevise` | critic flagged problems but there was no time to fix them |
+| `revise-attempted` | the revise pass ran (check `revised` for whether it changed anything) |
+
+Model overrides, for measuring a model bump against a fixed corpus:
+
+```bash
+EVAL_ANALYZE_MODEL=claude-opus-5 npm run eval:audit:ab
+AUDIT_CRITIC_MODEL=claude-haiku-4-5 npm run eval:audit:ab
+```
+
+**Cost**: ~3–5 vision calls per fixture, so roughly 1.5–2.5× a normal eval run.
 
 **Cost**: each fixture is ~2 Claude Sonnet 4 vision calls (analyze + judge). At ~$0.01–0.03/call, a 15-fixture run is roughly $0.30–$0.90. Run locally before pushing; in CI, gate on PRs that touch prompts only.
 

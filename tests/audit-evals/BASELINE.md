@@ -34,6 +34,60 @@ Reference scores and known issues to compare against on every prompt/model chang
 
 ---
 
+## Verification loop (`AUDIT_VERIFY_LOOP`) — first A/B measurement, 2026-08-19
+
+Run with `npm run eval:audit:ab` (paired: one analyze call, both arms scored
+from that same draft). Two fixtures, run separately.
+
+**Result: the loop did not fire on either fixture.** Both returned
+`outcome: budget-precritic` — analyze consumed the wall-clock budget before the
+critic could start. No verdicts, no revisions, zero delta on every axis.
+
+| Fixture | analyze latency | budget left of 55s | outcome |
+|---|---|---|---|
+| chat-claude | 49.6s | ~5.4s (needs ≥12s) | `budget-precritic` |
+| agent-claude-code | 975.8s ⚠️ | none | `budget-precritic` |
+
+⚠️ The 975s analyze is not a normal call — almost certainly SDK retries against
+a degraded or rate-limited endpoint. Treat that row's *scores* as unusable; only
+its outcome is informative, and it agrees with the other.
+
+**What this reframes.** The open question was "does the critic improve audit
+quality?" The measurement says we cannot answer that yet, because the prior
+question is unanswered: **can the loop run at all inside the 55s budget?** On
+these runs, no. Enabling `AUDIT_VERIFY_LOOP` today would most likely be a no-op
+in production — it would bail at the same gate — while adding a failure surface.
+
+**Caveat before acting.** These are local latencies, not Vercel's. A ~50s
+analyze may reflect local network or API load rather than production behaviour.
+Confirm against real production timing before concluding the loop is unusable.
+
+**Next steps, in order**
+1. Measure real production analyze latency (the analyze route already logs
+   `latencyMs`). If p50 is well under ~35s, the loop has room and this local
+   result was an artefact.
+2. If production analyze really does run ~50s, the loop cannot work as designed.
+   The options are a faster critic model (Haiku), running the critic
+   concurrently rather than after analyze, or dropping the loop.
+3. Only once the loop demonstrably fires: re-run the A/B for a quality delta,
+   on a corpus larger than 2.
+
+**Do not flip the flag on this evidence.** n=2, the loop never executed, and one
+of the two runs was anomalous.
+
+### ⚠️ Possible regression, unconfirmed — `agent-claude-code`
+
+This fixture scored 5/5/5/5/5 with hard-asserts PASS in the May baseline. In the
+Aug 19 run it scored F=3 S=3 P=1 A=3 NF=1 with hard-asserts **FAIL**. The
+May baseline used `claude-sonnet-4-20250514`; the harness now runs
+`claude-sonnet-4-6`, so this may be model drift rather than a prompt problem.
+
+Unconfirmed: it comes from the anomalous 975s run, whose output quality is
+suspect. **Re-run this fixture on a healthy connection before treating it as a
+real regression.**
+
+---
+
 ## Known open issues (NOT FIXED — gated on more fixtures)
 
 ### Bug 4 — CV / Explainable AI scope on conversational vs research surfaces
