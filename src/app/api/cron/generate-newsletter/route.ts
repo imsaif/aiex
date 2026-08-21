@@ -1907,7 +1907,7 @@ function renderCallout(opts: {
 }
 
 // Points at `/audit`, NOT `/`. The reader has already expressed intent by
-// clicking a button that says "Audit your design" — `/audit` renders
+// clicking a button that says "Get your Claude skills" — `/audit` renders
 // AuditClient with initialStep="screenshot" and drops them straight into
 // upload, while `/` opens on the marketing demo step. Every other
 // intent-expressing entry point (homepage CTA, both pattern-page
@@ -1946,9 +1946,9 @@ function renderFooterCTA(_type: NewsletterType, campaign: string): string {
   return `
 <div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
   <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
-  <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against ${PATTERN_COUNT} patterns</h2>
-  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
-  <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Audit your design →</span></a></p>
+  <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Turn your design into Claude skills</h2>
+  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot. See which of the ${PATTERN_COUNT} patterns you are missing and take them away as Claude Code skills. Free, no signup for the first audit.</p>
+  <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Get your Claude skills →</span></a></p>
 </div>
 <!-- POLL SLOT: beehiiv will not let you insert a block INTO pasted HTML, so the
      poll block lands here, after everything. Question: "Was this issue worth your
