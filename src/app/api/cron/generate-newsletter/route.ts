@@ -1529,17 +1529,43 @@ async function getDailyNewsletterItems(days = 7): Promise<NewsletterItem[]> {
   return allItems;
 }
 
+// Shared writing rules for every string the model produces: story
+// descriptions, Designer's Takeaways, and the callout boxes. Kept as ONE
+// constant because the daily and weekly prompts carried near-identical copies
+// that had already started to drift.
+//
+// The banned-word list is lifted from the anti-slop-designer command in the
+// designwithclaude plugin (commands/anti-slop-designer.md, "Copy" appendix).
+// Those are perishable examples, not eternal rules: when models stop producing
+// them, replace them rather than letting the list grow forever.
+//
+// The contrast-construction ban ("not X, but Y" / "isn't just X, it's Y") is
+// the one that mattered most for the callouts. It is the shape a model reaches
+// for when it has an observation but no argument, so it reads as insight while
+// asserting nothing.
+const WRITING_STYLE_BLOCK = `WRITING STYLE (applies to every string you write, including the callout boxes):
+- Write naturally and conversationally. Short sentences.
+- NEVER use em dashes (\u2014). Use commas, periods, or "and" instead.
+- NEVER use the contrast construction: "not X, but Y", "isn't just X, it's Y",
+  "less X, more Y", "X is the new Y". State the point directly instead.
+- BANNED WORDS: load-bearing, seamless, unlock, elevate, leverage, delve,
+  dive into, game-changer, revolutionize, empower, robust, landscape, realm,
+  testament, crucial, pivotal, underscore, "in today's fast-paced world",
+  "we've got you covered".
+- Do not open with a throat-clearing clause ("As AI continues to...",
+  "In an era where..."). Start on the actual point.
+- Do not claim a quality, show the evidence for it. "Figma shipped it in the
+  Aug 19 release" beats "a significant step forward".
+- Be specific and concrete. Name the product, the number, the version.
+`;
+
 // Build prompt for weekly compilation from daily items
 function buildWeeklyCompilationPrompt(dailyItems: NewsletterItem[]): string {
   const patternList = patterns.map((p) => `- ${p.slug}: ${p.title}`).join('\n');
 
   return `You are writing the "This Week in AIUX" weekly newsletter EXCLUSIVELY for product and UX designers, not engineers. A story belongs in this roundup only if a designer can act on it in their work — change a flow, ship a pattern, run a study, rethink a screen.
 
-WRITING STYLE:
-- Write naturally and conversationally
-- NEVER use em dashes (—). Use commas, periods, or "and" instead
-- Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
-- Be specific and concrete, not vague or hyperbolic
+${WRITING_STYLE_BLOCK}
 
 I have collected items from this week's daily newsletters. Your job is to curate the BEST 5 items and create a tight weekly roundup.
 
@@ -1606,11 +1632,7 @@ IMPORTANT: Do NOT select any news item that covers the same topic or story as th
 
   return `You are writing the "AI UX Daily" newsletter EXCLUSIVELY for product and UX designers, not engineers. A story belongs in this newsletter only if a designer can act on it in the next month — change a flow, ship a pattern, run a study, rethink a screen. If you cannot articulate that action in one sentence, the story does not belong.
 
-WRITING STYLE:
-- Write naturally and conversationally
-- NEVER use em dashes (—). Use commas, periods, or "and" instead
-- Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
-- Be specific and concrete, not vague or hyperbolic
+${WRITING_STYLE_BLOCK}
 
 Given these recent AI product news items, create a newsletter update:
 ${deduplicationBlock}
@@ -1666,8 +1688,8 @@ RESPOND IN THIS EXACT JSON FORMAT:
     }
   ],
   "takeaway": {
-    "title": "Key insight title",
-    "body": "2-3 sentences explaining the insight"
+    "title": "Max 8 words. The insight itself, not a label for it.",
+    "body": "TWO sentences, max 40 words total. Sentence one: the pattern across today's stories. Sentence two: what a designer does about it. No preamble, no recap of the stories above, no contrast constructions."
   }
 }`;
 }
@@ -1682,11 +1704,7 @@ ${recentHeadlines.map(h => `- ${h}`).join('\n')}\n`
 
   return `You are writing the "This Week in AIUX" weekly newsletter EXCLUSIVELY for product and UX designers, not engineers. A story belongs in this roundup only if a designer can act on it in their work — change a flow, ship a pattern, run a study, rethink a screen. If you cannot articulate that action in one sentence, the story does not belong.
 
-WRITING STYLE:
-- Write naturally and conversationally
-- NEVER use em dashes (—). Use commas, periods, or "and" instead
-- Avoid overused AI phrases like "dive into", "delve", "game-changer", "revolutionize"
-- Be specific and concrete, not vague or hyperbolic
+${WRITING_STYLE_BLOCK}
 
 Given these AI product news items from the past week, create a comprehensive weekly roundup:
 ${deduplicationBlock}
@@ -1907,7 +1925,7 @@ function renderCallout(opts: {
 }
 
 // Points at `/audit`, NOT `/`. The reader has already expressed intent by
-// clicking a button that says "Audit your design" — `/audit` renders
+// clicking a button that says "Get your Claude skills" — `/audit` renders
 // AuditClient with initialStep="screenshot" and drops them straight into
 // upload, while `/` opens on the marketing demo step. Every other
 // intent-expressing entry point (homepage CTA, both pattern-page
@@ -1946,9 +1964,9 @@ function renderFooterCTA(_type: NewsletterType, campaign: string): string {
   return `
 <div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
   <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
-  <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Audit your AI design against ${PATTERN_COUNT} patterns</h2>
-  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot, get specific gaps and a Claude Code prompt to fix them. Free, no signup for the first audit.</p>
-  <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Audit your design →</span></a></p>
+  <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Turn your design into Claude skills</h2>
+  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot. See which of the ${PATTERN_COUNT} patterns you are missing and take them away as Claude Code skills. Free, no signup for the first audit.</p>
+  <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Get your Claude skills →</span></a></p>
 </div>
 <!-- POLL SLOT: beehiiv will not let you insert a block INTO pasted HTML, so the
      poll block lands here, after everything. Question: "Was this issue worth your
