@@ -40,6 +40,12 @@ interface GuidePageProps {
 // title stem from guide.tool. Existing guides' titles stay byte-identical.
 const TITLE_STEM_OVERRIDES: Record<string, string> = {
   'ai-ux-skills-guide': 'AI UX Skills for Claude Code',
+  // "build a conversational interface" draws 236 impressions at ~position 10
+  // (Search Console, 3mo to 25 Aug 2026) — a how-to query this course answers
+  // and /patterns/conversational-ui does not. The derived stem was
+  // "Conversational UI for Designers", which never says "build". Matching the
+  // query exactly keeps the full title at 59 chars, inside the display window.
+  'conversational-ui-guide': 'Build a Conversational Interface',
 };
 
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
