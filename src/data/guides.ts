@@ -5687,7 +5687,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'A conversational UI is any interface where users shape outcomes through natural-language turns — typing, speaking, or gesturing back and forth with a system. Not every chat widget qualifies, and most product moments are better served by a button or command than by chat at all.',
+            content: 'A conversational UI is any interface where users shape outcomes through natural-language turns: typing, speaking, or gesturing back and forth with a system. Not every chat widget qualifies, and most product moments are better served by a button or command than by chat at all.',
             icon: 'info',
           },
           {
@@ -5697,7 +5697,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Before getting into how to build chat interfaces, here\'s a reframe worth keeping underneath every decision in this guide: conversation is overhead, not value. Every word a user types or reads is friction between their intent and the outcome they actually want. Chat is one tool — sometimes the right one — but never the goal.\n\nMost modern AI products are quietly moving away from chat-as-default. Vercel applies code suggestions with one click instead of a dialogue. GitHub Copilot offers slash commands like /fix and /explain. Google\'s Personal Intelligence works ambiently across Gmail and Photos without a chat surface at all. The lesson: the best AI experiences often eliminate the conversation entirely.',
+            content: 'Before getting into how to build chat interfaces, here\'s a reframe worth keeping underneath every decision in this guide: conversation is overhead, not value. Every word a user types or reads is friction between their intent and the outcome they actually want. Chat is one tool, sometimes the right one, but never the goal.\n\nMost modern AI products are quietly moving away from chat-as-default. Vercel applies code suggestions with one click instead of a dialogue. GitHub Copilot offers slash commands like /fix and /explain. Google\'s Personal Intelligence works ambiently across Gmail and Photos without a chat surface at all. The lesson: the best AI experiences often eliminate the conversation entirely.',
           },
           {
             type: 'heading',
@@ -5724,14 +5724,14 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'When intent is clear, conversation gets in the way. When intent is ambiguous, conversation is essential. This spectrum maps the four interaction models you should reach for, from least to most conversational. Reach for chat last, not first — most product moments live on the left side of this spectrum.',
+            content: 'When intent is clear, conversation gets in the way. When intent is ambiguous, conversation is essential. This spectrum maps the four interaction models you should reach for, from least to most conversational. Reach for chat last, not first. Most product moments live on the left side of this spectrum.',
           },
           {
             type: 'table',
             rows: [
               {
                 label: 'One-click actions',
-                content: 'Clear intent, single action. Vercel\'s "Apply" button on AI code suggestions is the canonical example — the user\'s intent is "fix this", there\'s nothing to discuss.',
+                content: 'Clear intent, single action. Vercel\'s "Apply" button on AI code suggestions is the canonical example: the user\'s intent is "fix this", there\'s nothing to discuss.',
               },
               {
                 label: 'Structured commands',
@@ -5743,7 +5743,7 @@ export const guides: Guide[] = [
               },
               {
                 label: 'Open chat',
-                content: 'Ambiguous or exploratory intent — brainstorming, writing, debugging, learning. This is where conversational UI genuinely earns its place.',
+                content: 'Ambiguous or exploratory intent: brainstorming, writing, debugging, learning. This is where conversational UI genuinely earns its place.',
               },
             ],
           },
@@ -5794,7 +5794,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'warning',
             title: 'Three patterns that quietly ruin conversational UX',
-            content: 'The accordion effect — users iterate prompts repeatedly to coax the right output, each cycle adding cognitive cost without proportional value.\n\nThe articulation barrier — the gap between what users want and the language they need to ask for it. Suggested prompts and structured commands exist to bridge this gap.\n\nThe context-switching tax — moving from app to chat and back drops productivity by up to 40% and takes around 23 minutes to refocus. Embedded AI beats destination AI almost every time.',
+            content: 'The accordion effect: users iterate prompts repeatedly to coax the right output, each cycle adding cognitive cost without proportional value.\n\nThe articulation barrier: the gap between what users want and the language they need to ask for it. Suggested prompts and structured commands exist to bridge this gap.\n\nThe context-switching tax: moving from app to chat and back drops productivity by up to 40% and takes around 23 minutes to refocus. Embedded AI beats destination AI almost every time.',
           },
           {
             type: 'callout',
@@ -5809,7 +5809,7 @@ export const guides: Guide[] = [
                 url: 'https://medium.com/design-bootcamp/ai-is-finally-learning-to-shut-up-62af1d2c01c8',
                 source: 'Medium',
                 description:
-                  'Why the best AI products often eliminate chat — the full argument behind the Intent-Clarity Spectrum and the cost-of-conversation framing.',
+                  'Why the best AI products often eliminate chat: the full argument behind the Intent-Clarity Spectrum and the cost-of-conversation framing.',
               },
             ],
           },
@@ -5834,7 +5834,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'A chat interface has six essential components. The first five are the chat shell most teams already build; the sixth — the disclosure surface — is where most products quietly fail.',
+            content: 'A chat interface has six essential components. The first five are the chat shell most teams already build; the sixth, the disclosure surface, is where most products quietly fail.',
           },
           {
             type: 'table',
@@ -5861,7 +5861,7 @@ export const guides: Guide[] = [
               },
               {
                 label: 'Disclosure surface',
-                content: 'The always-visible signals that tell the user what the AI is, what it can see right now, and what it\'s authorized to do. Identity badge in the header, context indicators in the input bar, and an audit trail under each AI action. Without this surface, users feel surveilled rather than helped — and the product gets pulled.',
+                content: 'The always-visible signals that tell the user what the AI is, what it can see right now, and what it\'s authorized to do. Identity badge in the header, context indicators in the input bar, and an audit trail under each AI action. Without this surface, users feel surveilled rather than helped, and the product gets pulled.',
               },
             ],
           },
@@ -5896,7 +5896,7 @@ export const guides: Guide[] = [
                 url: 'https://medium.com/p/91df21ad2742',
                 source: 'Medium',
                 description:
-                  'Why disclosure is a first-class component of chat anatomy — and what happens to products that skip it (Microsoft Copilot, Meta internal agent, Deutsche Telekom + ElevenLabs).',
+                  'Why disclosure is a first-class component of chat anatomy, and what happens to products that skip it (Microsoft Copilot, Meta internal agent, Deutsche Telekom + ElevenLabs).',
               },
             ],
           },
@@ -5911,7 +5911,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'A message bubble in React is a styled div inside a scrollable list, rendered from a { role, content, timestamp } data shape. This lesson builds one from scratch with auto-scroll, avatars, and status states — the foundation under every chat UI.',
+            content: 'A message bubble in React is a styled div inside a scrollable list, rendered from a { role, content, timestamp } data shape. This lesson builds one from scratch with auto-scroll, avatars, and status states: the foundation under every chat UI.',
             icon: 'code',
           },
           {
@@ -6073,7 +6073,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'A blank input field is the biggest usability problem in conversational UI — users know what they want but not the words that produce it. Suggested prompts close that gap by offering the vocabulary inline. Done well, they become a navigation mechanism, not training wheels.',
+            content: 'A blank input field is the biggest usability problem in conversational UI: users know what they want but not the words that produce it. Suggested prompts close that gap by offering the vocabulary inline. Done well, they become a navigation mechanism, not training wheels.',
             icon: 'lightbulb',
           },
           {
@@ -6083,7 +6083,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'There\'s a gap users run into with every free-form AI interface — they know what they want, but not the exact words that will produce it. The "articulation barrier" is the cognitive distance between intent and prompt language, and it\'s the single biggest reason new users churn on chat-first products.\n\nSuggested prompts exist to close that gap. They show the vocabulary, the shape, and the granularity of a well-formed request — not by teaching it, but by offering it inline. The best prompt sets feel less like tutorials and more like visible commands: scannable options that turn an open text field into a guided surface without removing the user\'s freedom to type anything else.\n\nStructured commands like /fix and /explain are the precise end of this spectrum. They give power users a low-ambiguity shortcut once they\'ve figured out the articulation.',
+            content: 'There\'s a gap users run into with every free-form AI interface: they know what they want, but not the exact words that will produce it. The "articulation barrier" is the cognitive distance between intent and prompt language, and it\'s the single biggest reason new users churn on chat-first products.\n\nSuggested prompts exist to close that gap. They show the vocabulary, the shape, and the granularity of a well-formed request, not by teaching it, but by offering it inline. The best prompt sets feel less like tutorials and more like visible commands: scannable options that turn an open text field into a guided surface without removing the user\'s freedom to type anything else.\n\nStructured commands like /fix and /explain are the precise end of this spectrum. They give power users a low-ambiguity shortcut once they\'ve figured out the articulation.',
           },
           {
             type: 'heading',
@@ -6153,7 +6153,7 @@ export const guides: Guide[] = [
                 url: 'https://medium.com/design-bootcamp/ai-is-finally-learning-to-shut-up-62af1d2c01c8',
                 source: 'Medium',
                 description:
-                  'The articulation barrier in depth — and why structured commands like /fix often outperform open prompts for repeat users.',
+                  'The articulation barrier in depth, and why structured commands like /fix often outperform open prompts for repeat users.',
               },
             ],
           },
@@ -6168,7 +6168,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Context management is how a chat remembers what was said five messages ago. Every AI model has a context window — GPT-4 holds ~128K tokens, Claude ~200K — but the design work is deciding what to keep verbatim, summarize, or drop without users noticing.',
+            content: 'Context management is how a chat remembers what was said five messages ago. Every AI model has a context window (GPT-4 holds ~128K tokens, Claude ~200K), but the design work is deciding what to keep verbatim, summarize, or drop without users noticing.',
             icon: 'brain',
           },
           {
@@ -6230,11 +6230,11 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
-            content: 'Selective memory — make what you retain visible',
+            content: 'Selective memory: make what you retain visible',
           },
           {
             type: 'text',
-            content: 'Context is a system-design concern. Memory is a UX concern. Users must always be able to answer three questions about the AI in front of them: what can it see right now, what is it retaining for later, and how do I see or change that?\n\nWhen products get this wrong, the failure mode isn\'t usually "the AI remembered something it shouldn\'t" — it\'s "the AI retained state and never surfaced it." Users feel watched rather than helped, and the product gets pulled from the default surface. A well-designed conversational UI makes memory legible, not silent.',
+            content: 'Context is a system-design concern. Memory is a UX concern. Users must always be able to answer three questions about the AI in front of them: what can it see right now, what is it retaining for later, and how do I see or change that?\n\nWhen products get this wrong, the failure mode isn\'t usually "the AI remembered something it shouldn\'t". It\'s "the AI retained state and never surfaced it." Users feel watched rather than helped, and the product gets pulled from the default surface. A well-designed conversational UI makes memory legible, not silent.',
           },
           {
             type: 'table',
@@ -6245,7 +6245,7 @@ export const guides: Guide[] = [
               },
               {
                 label: 'Microsoft Copilot (screen AI)',
-                content: 'Sees the current screen and voice input. Retains context across sessions. Only reveals context during active conversation — when the chat closes, the retention becomes invisible. This is the gap that led to the March 2026 feature rollback.',
+                content: 'Sees the current screen and voice input. Retains context across sessions. Only reveals context during active conversation. When the chat closes, the retention becomes invisible. This is the gap that led to the March 2026 feature rollback.',
               },
               {
                 label: 'Meta internal agent',
@@ -6257,7 +6257,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'warning',
             title: 'Anti-pattern: Silent Context Retention',
-            content: 'If the AI remembers something between turns or between sessions, say so — in the UI, not in the terms of service. Every retention you don\'t surface becomes a trust debt, and users cannot tell the difference between "remembers helpfully" and "watches quietly" without a visible signal.',
+            content: 'If the AI remembers something between turns or between sessions, say so, in the UI, not in the terms of service. Every retention you don\'t surface becomes a trust debt, and users cannot tell the difference between "remembers helpfully" and "watches quietly" without a visible signal.',
           },
           {
             type: 'text',
@@ -6286,7 +6286,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'AI will fail. Responses come back wrong, APIs time out, and users ask for things the model can\'t do. This lesson walks through the four failure modes — misunderstanding, refusal, timeout, hallucination — and how to design each one so the conversation stays productive.',
+            content: 'AI will fail. Responses come back wrong, APIs time out, and users ask for things the model can\'t do. This lesson walks through the four failure modes (misunderstanding, refusal, timeout, hallucination) and how to design each one so the conversation stays productive.',
             icon: 'shield',
           },
           {
@@ -6365,7 +6365,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'The four failure modes above assume the AI knows it failed. A harder class of error is when the AI gives a confident-sounding answer that happens to be wrong. These are the worst errors for conversational UI because users have no visible signal to distrust them — and the same interface used for correct answers is used for the confident-wrong ones.\n\nThree specific sub-patterns are worth naming:',
+            content: 'The four failure modes above assume the AI knows it failed. A harder class of error is when the AI gives a confident-sounding answer that happens to be wrong. These are the worst errors for conversational UI because users have no visible signal to distrust them, and the same interface used for correct answers is used for the confident-wrong ones.\n\nThree specific sub-patterns are worth naming:',
           },
           {
             type: 'table',
@@ -6388,7 +6388,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'tip',
             title: 'Pattern: Honest Uncertainty',
-            content: 'Claude\'s approach to these failures is the design target: state access limits explicitly ("I can\'t read that page — paste the content and I\'ll help"), cite sources when available, and prefer a shorter honest answer over a longer fabricated one. In conversational UX: surface uncertainty as a first-class message element, not a disclaimer. A visible "I\'m inferring this from..." line is worth more than 400 confidently wrong words.',
+            content: 'Claude\'s approach to these failures is the design target: state access limits explicitly ("I can\'t read that page. Paste the content and I\'ll help"), cite sources when available, and prefer a shorter honest answer over a longer fabricated one. In conversational UX: surface uncertainty as a first-class message element, not a disclaimer. A visible "I\'m inferring this from..." line is worth more than 400 confidently wrong words.',
           },
           {
             type: 'text',
@@ -6719,7 +6719,7 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Where on the permission spectrum does this sit — human decides, shared decision, or AI decides? Map it in the actual interface, not the spec doc.',
+              'Where on the permission spectrum does this sit: human decides, shared decision, or AI decides? Map it in the actual interface, not the spec doc.',
               'Is the boundary designed or patched? If the "Cancel" button was added after a review raised concerns, it\'s patched.',
               'Who else does this affect? If the AI acts on behalf of one user but touches another user\'s data, consent design extends beyond the invoking user.',
               'What happens at 15x? If the AI gets faster or runs more often, does the human review step still work, or does it become rubber-stamping?',
@@ -6733,7 +6733,7 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Does the user know the AI is present? Not in the terms of service — at the moment of use, every time.',
+              'Does the user know the AI is present? Not in the terms of service, at the moment of use, every time.',
               'Does the user know what context the AI accesses? What data is being read, why, and for how long?',
               'Does the user know what the AI is authorized to do? What actions can it take, on whose behalf, within what boundaries?',
             ],
@@ -6773,7 +6773,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'An agentic chat doesn\'t just answer — it sends emails, runs code, or modifies files on the user\'s behalf. That changes the interface fundamentally: irreversibility, trust calibration, and consent all become design problems. This lesson covers the patterns that make agentic AI safe to use.',
+            content: 'An agentic chat doesn\'t just answer: it sends emails, runs code, or modifies files on the user\'s behalf. That changes the interface fundamentally: irreversibility, trust calibration, and consent all become design problems. This lesson covers the patterns that make agentic AI safe to use.',
             icon: 'robot',
           },
           {
@@ -6805,7 +6805,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'The first design decision is not what the agent does — it\'s where it lives. A destination AI is a place users go to get help. An ambient AI is present where the work is already happening, and surfaces only when it\'s useful. Most agentic products work better ambient than destination, because the context-switching tax of "go to AI → get help → come back" eats into the productivity gain the agent was supposed to provide.',
+            content: 'The first design decision is not what the agent does. It\'s where it lives. A destination AI is a place users go to get help. An ambient AI is present where the work is already happening, and surfaces only when it\'s useful. Most agentic products work better ambient than destination, because the context-switching tax of "go to AI → get help → come back" eats into the productivity gain the agent was supposed to provide.',
           },
           {
             type: 'table',
@@ -6816,7 +6816,7 @@ export const guides: Guide[] = [
               },
               {
                 label: 'Ambient AI',
-                content: 'The agent lives inside the tools the user is already in — Google Personal Intelligence across Gmail/Photos, Figma\'s Make embeds inline with designs, Vercel\'s apply-fix button inside the editor. Lower interaction cost, but demands stronger disclosure because users haven\'t "summoned" the AI.',
+                content: 'The agent lives inside the tools the user is already in: Google Personal Intelligence across Gmail/Photos, Figma\'s Make embeds inline with designs, Vercel\'s apply-fix button inside the editor. Lower interaction cost, but demands stronger disclosure because users haven\'t "summoned" the AI.',
               },
             ],
           },
@@ -6838,7 +6838,7 @@ export const guides: Guide[] = [
               },
               {
                 label: 'Shared decision',
-                content: 'The AI drafts, the user reviews before execution. Uber Eats cart assistant, Vercel feature flags, Figma Claude-produced code that designers keep or reject. This is the middle of the spectrum — and in practice, the middle is nearly empty. Most products skip straight from "AI suggests" to "AI acts."',
+                content: 'The AI drafts, the user reviews before execution. Uber Eats cart assistant, Vercel feature flags, Figma Claude-produced code that designers keep or reject. This is the middle of the spectrum, and in practice, the middle is nearly empty. Most products skip straight from "AI suggests" to "AI acts."',
               },
               {
                 label: 'AI decides',
@@ -6879,18 +6879,18 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'The most important design decision on any agentic feature is what the AI shouldn\'t do. If you find yourself adding confirmation dialogs after a review meeting flagged the risk, you\'re patching boundaries rather than designing them — and users can feel the difference.',
+            content: 'The most important design decision on any agentic feature is what the AI shouldn\'t do. If you find yourself adding confirmation dialogs after a review meeting flagged the risk, you\'re patching boundaries rather than designing them, and users can feel the difference.',
           },
           {
             type: 'table',
             rows: [
               {
                 label: 'Designed boundary',
-                content: 'Built in from the start. The boundary is the feature. "The repository boundary is the permission — the agent can\'t reach outside it, but inside that boundary it acts without asking." Feels integral, not additive.',
+                content: 'Built in from the start. The boundary is the feature. "The repository boundary is the permission: the agent can\'t reach outside it, but inside that boundary it acts without asking." Feels integral, not additive.',
               },
               {
                 label: 'Patched boundary',
-                content: 'Added after the capability shipped (or after a review surfaced a concern). Confirmation modals, warning banners, off-by-default toggles. Feels like a speed bump, not a feature — and users learn to click through them.',
+                content: 'Added after the capability shipped (or after a review surfaced a concern). Confirmation modals, warning banners, off-by-default toggles. Feels like a speed bump, not a feature, and users learn to click through them.',
               },
             ],
           },
@@ -6901,7 +6901,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'When the agent is ambient and partially autonomous, a single "consent event" at the start is not enough. Disclosure has to happen at four moments — before, during, controls, and after — and the design job is to make sure each moment has a real UI surface, not a buried settings toggle.',
+            content: 'When the agent is ambient and partially autonomous, a single "consent event" at the start is not enough. Disclosure has to happen at four moments (before, during, controls, and after), and the design job is to make sure each moment has a real UI surface, not a buried settings toggle.',
           },
           {
             type: 'table',
@@ -6916,7 +6916,7 @@ export const guides: Guide[] = [
               },
               {
                 label: 'Controls',
-                content: 'User visibility into — and adjustment of — what the agent can see and do. Consent toggles per data source, per mode, or per session. Cursor context retention visible from the sidebar, not buried under Settings > Advanced.',
+                content: 'User visibility into, and adjustment of, what the agent can see and do. Consent toggles per data source, per mode, or per session. Cursor context retention visible from the sidebar, not buried under Settings > Advanced.',
               },
               {
                 label: 'After',
@@ -6981,7 +6981,7 @@ export const guides: Guide[] = [
           {
             type: 'code-preview',
             language: 'text',
-            label: 'Intent Preview — action confirmation',
+            label: 'Intent Preview: action confirmation',
             previewId: 'intent-preview-card',
             code: 'User: "Schedule a meeting with Sarah for next Tuesday"\n\nAI: [Intent Preview Card]\n    Create Meeting\n    - With: Sarah Johnson\n    - Date: Tuesday, April 1 at 10:00 AM\n    - Duration: 30 minutes\n    - Location: Google Meet\n    \n    [Confirm]  [Edit]  [Cancel]',
           },
@@ -6992,7 +6992,7 @@ export const guides: Guide[] = [
           {
             type: 'code-preview',
             language: 'text',
-            label: 'Plan Summary — multi-step execution',
+            label: 'Plan Summary: multi-step execution',
             previewId: 'plan-summary-card',
             code: 'AI: [Plan Summary]\n    I\'ll refactor the auth module in 3 steps:\n    \n    Step 1: Extract token validation into utils/auth.ts\n    Step 2: Update 12 import statements\n    Step 3: Add unit tests for the new module\n    \n    Estimated time: ~2 minutes\n    \n    [Start]  [Modify Plan]  [Cancel]',
           },
@@ -7053,7 +7053,7 @@ export const guides: Guide[] = [
                 url: 'https://medium.com/design-bootcamp/ai-is-finally-learning-to-shut-up-62af1d2c01c8',
                 source: 'Medium',
                 description:
-                  'Why ambient AI beats destination AI for most agentic tasks — the context-switching tax and the economics of interaction cost.',
+                  'Why ambient AI beats destination AI for most agentic tasks: the context-switching tax and the economics of interaction cost.',
               },
             ],
           },
