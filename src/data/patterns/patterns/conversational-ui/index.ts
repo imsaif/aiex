@@ -18,15 +18,15 @@ export const conversationalui: Pattern = {
     "conversational AI",
   ],
   thumbnail: "/images/examples/slack-ai.gif",
-  introduction: "Conversational UI is a design pattern where users interact with AI through natural language (text or voice) instead of traditional menus, forms, and buttons. Rather than learning a product's interface, users simply describe what they need and the AI interprets their intent.\n\nConversational interfaces come in many forms: text-based chatbots like ChatGPT and Claude, voice assistants like Siri and Alexa, embedded AI assistants like Slack AI and Microsoft Copilot, and hybrid interfaces that combine chat with traditional UI elements. What unites them is the principle that natural language is the primary input.\n\nThis pattern is especially powerful for customer support (answering questions without navigating help docs), complex workflows (generating code, writing emails, analyzing data through conversation), and accessibility (voice control for users who can't use traditional inputs). The best conversational UIs don't just respond to commands. They maintain context across turns, ask clarifying questions, and adapt their tone and detail level to the user.",
+  introduction: "Conversational UI is a design pattern where users interact with AI through natural language (text or voice) instead of traditional menus, forms, and buttons. Rather than learning a product's interface, users simply describe what they need and the AI interprets their intent.\n\nConversational interfaces come in many forms: text-based chatbots like ChatGPT and Claude, voice assistants like Siri and Alexa, embedded AI assistants like Slack AI and Microsoft Copilot, and hybrid interfaces that combine chat with traditional UI elements.",
   datePublished: "2024-01-15",
-  dateModified: "2026-05-26",
+  dateModified: "2026-08-25",
   hideFAQ: true,
   content: {
     skillDescription:
       "Use when designing chat or voice interaction: chatbots, assistants, message threads, composer design, 'talk to the app in plain language', turn-taking and context in conversation. Conversational UI makes dialogue feel natural instead of robotic.",
     problem: "Traditional graphical interfaces require users to learn specific navigation patterns, menu hierarchies, and form layouts. As AI products grow more capable, the gap between what the system can do and what users can discover widens. Users prefer asking for what they need in plain language, but poorly designed conversational interfaces frustrate them with robotic responses, lost context, and dead-end conversations.",
-    solution: "Design conversational interfaces that understand natural language, maintain context across multiple turns, and respond in a natural, human-like way. Support both text and voice input where appropriate. Provide conversation starters and suggested prompts to help users get started, use typing indicators and status cues for natural pacing, and design clear fallback paths for when the AI doesn't understand. The best conversational UIs blend chat with structured UI elements like buttons, cards, and carousels, so users can switch between typing and clicking based on what's fastest.",
+    solution: "Design conversational interfaces that understand natural language, maintain context across multiple turns, and respond in a natural, human-like way. Support both text and voice input where appropriate.",
     examples: [
       {
         title: "ChatGPT",
