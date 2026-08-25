@@ -208,18 +208,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         )}
 
-        {/* "When to use — and when it backfires" replaces the AI Design Prompt
-            when a pattern has opinionated judgment to ship; otherwise we fall
-            back to the legacy figmaPrompt rendering. */}
-        {pattern.content.judgmentCall ? (
-          <JudgmentCallBlock data={pattern.content.judgmentCall} patternTitle={pattern.title} />
-        ) : pattern.content.figmaPrompt && (
-          <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">AI Design Prompt</h2>
-            <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
-          </section>
-        )}
-
         {/* Practice in Courses: cross-link to courses for SEO */}
         {relatedGuides.length > 0 && (
           <section>
@@ -249,6 +237,19 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             </div>
           </section>
         )}
+
+        {/* "When to use — and when it backfires" replaces the AI Design Prompt
+            when a pattern has opinionated judgment to ship; otherwise we fall
+            back to the legacy figmaPrompt rendering. */}
+        {pattern.content.judgmentCall ? (
+          <JudgmentCallBlock data={pattern.content.judgmentCall} patternTitle={pattern.title} />
+        ) : pattern.content.figmaPrompt && (
+          <section>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">AI Design Prompt</h2>
+            <FigmaPromptCard figmaPrompt={pattern.content.figmaPrompt} />
+          </section>
+        )}
+
 
         {/* "Take it into your own product" replaces the flat
             Guidelines/Considerations columns when a pattern has ranked
