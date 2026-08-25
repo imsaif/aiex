@@ -19,6 +19,12 @@ import {
 } from '@/lib/guides/lesson-urls';
 import { extractHeadings } from '@/lib/guides/headings';
 import { MODULE_TITLES } from '@/lib/guides/modules';
+import patterns from '@/data/patterns';
+import { getPatternsForGuide } from '@/lib/cross-links';
+
+/** Pattern cards rendered per lesson. Matches MAX_RELATED_GUIDES on the pattern
+ *  page so the two directions of the cross-link stay symmetrical. */
+const MAX_RELATED_PATTERNS = 3;
 
 // ISR so the first request is cached and Googlebot hits warm HTML
 export const revalidate = 86400;
@@ -196,6 +202,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
 
   const headings = extractHeadings(sections);
 
+  // Upward cross-link: lesson → pattern. The reverse direction (pattern →
+  // guide) already renders via getGuidesForPattern on the pattern detail page,
+  // but nothing consumed getPatternsForGuide, so link equity only ever flowed
+  // downward. GUIDE_TO_PATTERNS lists the primary pattern first per guide.
+  const relatedPatterns = getPatternsForGuide(courseSlug)
+    .map((patternSlug) => patterns.find((p) => p.slug === patternSlug))
+    .filter((p): p is (typeof patterns)[number] => p != null)
+    .slice(0, MAX_RELATED_PATTERNS);
+
   return (
     <>
       {structuredData.map((schema, i) => (
@@ -275,14 +290,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   {lesson.title}
                 </h1>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-border-primary text-xs text-text-secondary">
                     {lesson.duration} min read
                   </span>
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-border-primary text-xs text-text-secondary">
                     {guide.tool} for Designers
                   </span>
                   {guide.lastUpdatedDate && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-gray-200 dark:border-gray-700 text-xs text-text-secondary">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-primary border border-border-primary text-xs text-text-secondary">
                       Updated{' '}
                       {new Date(guide.lastUpdatedDate).toLocaleDateString(
                         'en-US',
@@ -316,7 +331,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   course. One ask per course (5 total across the site), auto-
                   hidden after first subscribe via localStorage. */}
               {!next && (
-                <div className="mb-12 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary">
+                <div className="mb-12 p-6 md:p-8 rounded-2xl border border-border-primary bg-surface-primary">
                   <InlineNewsletterSignup
                     variant="pattern-detail"
                     source="guides"
@@ -328,15 +343,45 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </div>
               )}
 
+              {/* Related patterns — the upward half of the guide/pattern
+                  cross-link. Anchor text is the pattern title so the target
+                  page receives the term it is trying to rank for. */}
+              {relatedPatterns.length > 0 && (
+                <section className="mb-12" aria-labelledby="related-patterns-heading">
+                  <h2
+                    id="related-patterns-heading"
+                    className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-4"
+                  >
+                    The patterns behind this lesson
+                  </h2>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {relatedPatterns.map((pattern) => (
+                      <Link
+                        key={pattern.slug}
+                        href={`/patterns/${pattern.slug}`}
+                        className="block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors group"
+                      >
+                        <span className="block font-medium text-text-primary group-hover:text-accent-primary transition-colors">
+                          {pattern.title}
+                        </span>
+                        <span className="block mt-1 text-sm text-text-secondary line-clamp-2">
+                          {pattern.description}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               {/* Previous / next lesson */}
               <nav
-                className="flex flex-col sm:flex-row justify-between items-stretch gap-4 border-t border-gray-200 dark:border-gray-700 pt-8"
+                className="flex flex-col sm:flex-row justify-between items-stretch gap-4 border-t border-border-primary pt-8"
                 aria-label="Lesson navigation"
               >
                 {previous ? (
                   <Link
                     href={previous.url}
-                    className="flex-1 block p-5 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-accent-primary/40 hover:bg-surface-primary transition-colors group"
+                    className="flex-1 block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors group"
                   >
                     <span className="block text-xs text-text-secondary mb-1">
                       ← Previous Lesson
@@ -351,7 +396,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 {next ? (
                   <Link
                     href={next.url}
-                    className="flex-1 block p-5 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-accent-primary/40 hover:bg-surface-primary transition-colors text-right group"
+                    className="flex-1 block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors text-right group"
                   >
                     <span className="block text-xs text-text-secondary mb-1">
                       Next Lesson →

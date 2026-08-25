@@ -424,7 +424,7 @@ const renderSection = (
       return (
         <div
           key={index}
-          className={`flex gap-4 mb-10 p-5 md:p-6 ${CARD_SHELL} border-l-4 border-l-border-secondary`}
+          className={`flex gap-4 mb-10 p-5 md:p-6 ${CARD_SHELL}`}
         >
           {section.icon && section.icon !== 'none' && (
             <div className="text-text-secondary flex-shrink-0">{getIcon(section.icon)}</div>

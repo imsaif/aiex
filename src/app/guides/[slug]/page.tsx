@@ -14,6 +14,11 @@ import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletter
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import type { LessonHeading } from '@/lib/guides/headings';
 import { MODULE_TITLES, MODULE_DESCRIPTIONS } from '@/lib/guides/modules';
+import patterns from '@/data/patterns';
+import { getPatternsForGuide } from '@/lib/cross-links';
+
+/** Matches MAX_RELATED_PATTERNS on the lesson page. */
+const MAX_RELATED_PATTERNS = 3;
 
 // ISR + static params so course overviews are pre-built and cached — previously
 // every request cold-started a serverless function (flagged in the SEO audit).
@@ -35,6 +40,12 @@ interface GuidePageProps {
 // title stem from guide.tool. Existing guides' titles stay byte-identical.
 const TITLE_STEM_OVERRIDES: Record<string, string> = {
   'ai-ux-skills-guide': 'AI UX Skills for Claude Code',
+  // "build a conversational interface" draws 236 impressions at ~position 10
+  // (Search Console, 3mo to 25 Aug 2026) — a how-to query this course answers
+  // and /patterns/conversational-ui does not. The derived stem was
+  // "Conversational UI for Designers", which never says "build". Matching the
+  // query exactly keeps the full title at 59 chars, inside the display window.
+  'conversational-ui-guide': 'Build a Conversational Interface',
 };
 
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
@@ -111,6 +122,13 @@ export default async function GuidePage({ params }: GuidePageProps) {
   // First lesson → used for the "Start Learning" CTA
   const lessonLinks = getLessonsForCourse(slug);
   const firstLesson = lessonLinks[0];
+
+  // Upward cross-link: course hub → pattern. See the matching block on the
+  // lesson page; GUIDE_TO_PATTERNS lists the primary pattern first.
+  const relatedPatterns = getPatternsForGuide(slug)
+    .map((patternSlug) => patterns.find((p) => p.slug === patternSlug))
+    .filter((p): p is (typeof patterns)[number] => p != null)
+    .slice(0, MAX_RELATED_PATTERNS);
 
   // Group lessons by module for the "All lessons" section in the middle column
   const moduleOrder: string[] = [];
@@ -359,6 +377,36 @@ export default async function GuidePage({ params }: GuidePageProps) {
                     <ArrowRightIcon className="w-4 h-4" />
                   </Link>
                 </div>
+              )}
+
+              {/* Related patterns — upward half of the guide/pattern cross-link.
+                  Sits above the newsletter card so the course hub passes a
+                  titled link to the pattern pages it teaches. */}
+              {relatedPatterns.length > 0 && (
+                <section className="mt-16" aria-labelledby="related-patterns-heading">
+                  <h2
+                    id="related-patterns-heading"
+                    className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-4"
+                  >
+                    The patterns behind this course
+                  </h2>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {relatedPatterns.map((pattern) => (
+                      <Link
+                        key={pattern.slug}
+                        href={`/patterns/${pattern.slug}`}
+                        className="block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors group"
+                      >
+                        <span className="block font-medium text-text-primary group-hover:text-accent-primary transition-colors">
+                          {pattern.title}
+                        </span>
+                        <span className="block mt-1 text-sm text-text-secondary line-clamp-2">
+                          {pattern.description}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </section>
               )}
 
               {/* Newsletter signup — positioned after the Start CTA so it
