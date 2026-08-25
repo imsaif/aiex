@@ -220,6 +220,36 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         )}
 
+        {/* Practice in Courses: cross-link to courses for SEO */}
+        {relatedGuides.length > 0 && (
+          <section>
+            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">
+              Practice in Courses
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {relatedGuides.map((guide) => (
+                <Link
+                  key={guide.slug}
+                  href={`/guides/${guide.slug}`}
+                  className="group block"
+                >
+                  <div className="bg-surface-primary rounded-2xl p-6 border border-border-primary shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
+                    <span className="inline-block self-start px-2.5 py-1 rounded-full text-xs font-medium bg-surface-secondary text-text-secondary mb-3">
+                      {guide.tool}
+                    </span>
+                    <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
+                      {guide.title}
+                    </h3>
+                    <p className="text-sm text-text-secondary mt-auto">
+                      {guide.lessonCount} lessons, free course
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* "Take it into your own product" replaces the flat
             Guidelines/Considerations columns when a pattern has ranked
             takeaways. When an installPrompt is also present, the section
@@ -377,35 +407,6 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           </section>
         )}
 
-        {/* Practice in Courses — cross-link to courses for SEO */}
-        {relatedGuides.length > 0 && (
-          <section>
-            <h2 className="text-2xl font-bold text-text-primary pb-3 mb-6 border-b border-border-secondary">
-              Practice in Courses
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {relatedGuides.map((guide) => (
-                <Link
-                  key={guide.slug}
-                  href={`/guides/${guide.slug}`}
-                  className="group block"
-                >
-                  <div className="bg-surface-primary rounded-2xl p-6 border border-border-primary shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
-                    <span className="inline-block self-start px-2.5 py-1 rounded-full text-xs font-medium bg-surface-secondary text-text-secondary mb-3">
-                      {guide.tool}
-                    </span>
-                    <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-primary transition-colors">
-                      {guide.title}
-                    </h3>
-                    <p className="text-sm text-text-secondary mt-auto">
-                      {guide.lessonCount} lessons — free course
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Newsletter Signup */}
         <section>
