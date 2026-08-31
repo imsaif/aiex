@@ -34,9 +34,14 @@ const SAMPLE_SCREENSHOTS: Array<{
   },
 ];
 
+// How the product type got set. Passed up so the event log can tell a
+// deliberate pick apart from auto-classification (which only runs after a real
+// upload) and from loading a sample screenshot.
+export type ProductTypeSource = 'manual' | 'auto' | 'sample';
+
 interface ScreenshotUploadProps {
   productType: ProductType | null;
-  onProductTypeChange: (productType: ProductType) => void;
+  onProductTypeChange: (productType: ProductType, source: ProductTypeSource) => void;
   onAnalyze: (images: UploadedImage[]) => void;
 }
 
@@ -128,7 +133,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
           .then((r) => (r.ok ? r.json() : null))
           .then((data: { productType?: ProductType } | null) => {
             if (data?.productType && !productTypeRef.current) {
-              onProductTypeChange(data.productType);
+              onProductTypeChange(data.productType, 'auto');
             }
           })
           .catch(() => { /* silent — user can still pick manually */ })
@@ -149,7 +154,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         dt.items.add(file);
         // Skip auto-classification — sample's productType is known.
         hasAutoClassifiedRef.current = true;
-        if (!productTypeRef.current) onProductTypeChange(sample.productType);
+        if (!productTypeRef.current) onProductTypeChange(sample.productType, 'sample');
         processFiles(dt.files, { isSample: true });
       } catch {
         /* silent — user can still upload manually */
@@ -387,7 +392,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                       key={option.id}
                       onClick={() => {
                         trackAuditEvent('audit_product_type_selected', { productType: option.id });
-                        onProductTypeChange(option.id);
+                        onProductTypeChange(option.id, 'manual');
                         setShowPicker(false);
                       }}
                       className={`flex flex-col gap-1 px-3 py-2.5 rounded-lg border text-left transition-all cursor-pointer ${

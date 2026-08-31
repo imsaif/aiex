@@ -368,9 +368,13 @@ export default function AuditClient({
 
             <ScreenshotUpload
               productType={productType}
-              onProductTypeChange={(type) => {
+              onProductTypeChange={(type, source) => {
                 setProductType(type);
-                trackAuditEvent('audit_step_completed', { step: 'product-type', productType: type });
+                // Not a funnel "step" — it is the product type being resolved,
+                // by a manual pick, auto-classification, or a sample load. The
+                // auto case is the log's best proxy for a real upload, since
+                // classification only runs once an image is in hand.
+                trackAuditEvent('audit_product_type_detected', { productType: type, source });
               }}
               onAnalyze={handleScreenshotUpload}
             />

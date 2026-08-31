@@ -191,7 +191,11 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
     // five numbers, but it's the first thing to look at when reach→started sags.
     reachDetail: {
       startRealClicked: evCount('audit_demo_start_real_clicked'), // client · lower-bound
-      productTypeSelected: evCount('audit_product_type_selected'),
+      productTypeSelected: evCount('audit_product_type_selected'), // picker button only
+      // Product type resolved by any route. The `auto` source only fires after
+      // an image is in hand, so this is the closest proxy the log has for
+      // "someone actually uploaded a screenshot".
+      productTypeDetected: evCount('audit_product_type_detected'),
       emptyStateShown: evCount('audit_empty_state_shown'),
     },
     guards: {
