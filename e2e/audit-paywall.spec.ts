@@ -1,7 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { seedAuditState } from './helpers';
+import { PAYWALL_ENABLED } from '../src/lib/audit/constants';
 
 test.describe('audit paywall — final cap', () => {
+  // Switched off 2026-08-31 (PAYWALL_ENABLED = false). Skipped rather than
+  // deleted: the contract below is still what the gate should do, so flipping
+  // the flag back restores this coverage in the same commit.
+  test.skip(!PAYWALL_ENABLED, 'audit paywall is switched off — see PAYWALL_ENABLED');
+
   test('returning user at unlocked cap sees final-cap modal on next attempt', async ({ page }) => {
     // Simulate a returning user who already unlocked and used all 4 audits.
     await seedAuditState(page, { count: 4, unlocked: true });
