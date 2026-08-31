@@ -855,7 +855,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                       activePin={openPin ?? hoveredPin}
                       onPinClick={(idx) => {
                         setOpenPin(idx);
-                        trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
+                        trackAuditEvent('audit_demo_pin_clicked', { pinIndex: idx });
                       }}
                       onPinHover={setHoveredPin}
                     />
@@ -868,7 +868,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                       activePin={openPin ?? hoveredPin}
                       onPinClick={(idx) => {
                         setOpenPin(idx);
-                        trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
+                        trackAuditEvent('audit_demo_pin_clicked', { pinIndex: idx });
                       }}
                       onPinHover={setHoveredPin}
                     />
@@ -893,7 +893,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                     activePin={openPin ?? hoveredPin}
                     onPinClick={(idx) => {
                       setOpenPin(idx);
-                      trackAuditEvent('audit_step_completed', { step: 'demo_pin_clicked', pinIndex: idx });
+                      trackAuditEvent('audit_demo_pin_clicked', { pinIndex: idx });
                     }}
                     onPinHover={setHoveredPin}
                   />
