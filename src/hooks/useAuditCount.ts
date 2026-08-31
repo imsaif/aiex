@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { FREE_AUDIT_LIMIT, UNLOCKED_AUDIT_LIMIT } from '@/lib/audit/constants';
+import { FREE_AUDIT_LIMIT, UNLOCKED_AUDIT_LIMIT, PAYWALL_ENABLED } from '@/lib/audit/constants';
 
 export { FREE_AUDIT_LIMIT, UNLOCKED_AUDIT_LIMIT };
 
@@ -59,8 +59,11 @@ export function useAuditCount() {
   }, []);
 
   const effectiveLimit = isUnlocked ? UNLOCKED_AUDIT_LIMIT : FREE_AUDIT_LIMIT;
-  const needsUnlock = !isUnlocked && auditCount >= FREE_AUDIT_LIMIT;
-  const atFinalCap = isUnlocked && auditCount >= UNLOCKED_AUDIT_LIMIT;
+  // One switch, checked here so every consumer of this hook goes dark together.
+  // The count still increments while the gate is off — turning it back on
+  // should not need a migration, and the stored count stays truthful.
+  const needsUnlock = PAYWALL_ENABLED && !isUnlocked && auditCount >= FREE_AUDIT_LIMIT;
+  const atFinalCap = PAYWALL_ENABLED && isUnlocked && auditCount >= UNLOCKED_AUDIT_LIMIT;
 
   return {
     auditCount,

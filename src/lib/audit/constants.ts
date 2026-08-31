@@ -1,3 +1,21 @@
+// Master switch for the client-side audit gate. OFF since 2026-08-31.
+//
+// Turned off on evidence, not preference. The gate fired after a SINGLE audit
+// and did not overlay the page — it REPLACED the homepage's primary "Get your
+// skills" CTA with an email-capture form, so a returning visitor who had run
+// one audit arrived to find the main action missing. In the 30 days to
+// 2026-08-31 that hit 18 people (roughly a third of everyone who engaged that
+// month) and `audit_unlock_submitted` has NEVER been recorded — not a low
+// conversion rate, zero rows all-time, against 40 impressions and 4 dismissals.
+// It also contradicted the standing rule to hold off gating until 50+ sessions.
+//
+// While this is false, `needsUnlock` and `atFinalCap` are forced false in
+// useAuditCount, so nothing downstream has to know the gate exists. The costs
+// stay bounded by the server-side net (RATE_LIMITS.ANALYSES_PER_DAY = 10 per IP
+// per day), which was always the real ceiling. Flip back to true when there is
+// enough volume for gating to be worth measuring.
+export const PAYWALL_ENABLED = false;
+
 export const FREE_AUDIT_LIMIT: number = 1;
 export const UNLOCKED_AUDIT_LIMIT: number = 4;
 
