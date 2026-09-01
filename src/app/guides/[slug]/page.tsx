@@ -227,7 +227,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
           <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px] lg:gap-10">
             {/* LEFT SIDEBAR — course nav */}
             <aside className="hidden lg:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-r border-border-primary pr-6">
+              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-r border-border-primary pr-6">
                 <GuideSidebar guide={guide} currentIsOverview />
               </div>
             </aside>
@@ -442,7 +442,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
             {/* RIGHT SIDEBAR — on this page (xl+ only) */}
             <aside className="hidden xl:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-l border-border-primary pl-6">
+              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-l border-border-primary pl-6">
                 <OnThisPage headings={headings} />
               </div>
             </aside>

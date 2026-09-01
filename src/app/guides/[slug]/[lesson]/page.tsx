@@ -236,7 +236,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {/* LEFT SIDEBAR — course nav (sticky on desktop) */}
             <aside className="hidden lg:block">
               <div
-                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-r border-border-primary pr-6"
+                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-r border-border-primary pr-6"
               >
                 <GuideSidebar guide={guide} currentLessonSlug={lessonSlug} />
               </div>
@@ -439,7 +439,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {/* RIGHT SIDEBAR — on this page (xl+ only) */}
             <aside className="hidden xl:block">
               <div
-                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-l border-border-primary pl-6"
+                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-l border-border-primary pl-6"
               >
                 <OnThisPage headings={headings} />
               </div>
