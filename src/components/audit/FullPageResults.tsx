@@ -817,7 +817,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 ) : (
                   <DemoStartForm
                     onStart={() => {
-                      trackAuditEvent('audit_demo_start_real_clicked');
+                      trackAuditEvent('audit_get_skills_clicked');
                       onStartRealAudit!();
                     }}
                     auditsRemaining={auditsRemaining}
@@ -855,7 +855,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                       activePin={openPin ?? hoveredPin}
                       onPinClick={(idx) => {
                         setOpenPin(idx);
-                        trackAuditEvent('audit_demo_pin_clicked', { pinIndex: idx });
                       }}
                       onPinHover={setHoveredPin}
                     />
@@ -868,7 +867,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                       activePin={openPin ?? hoveredPin}
                       onPinClick={(idx) => {
                         setOpenPin(idx);
-                        trackAuditEvent('audit_demo_pin_clicked', { pinIndex: idx });
                       }}
                       onPinHover={setHoveredPin}
                     />
@@ -893,7 +891,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                     activePin={openPin ?? hoveredPin}
                     onPinClick={(idx) => {
                       setOpenPin(idx);
-                      trackAuditEvent('audit_demo_pin_clicked', { pinIndex: idx });
                     }}
                     onPinHover={setHoveredPin}
                   />

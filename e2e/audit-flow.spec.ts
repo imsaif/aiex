@@ -1,8 +1,54 @@
 import { test, expect } from '@playwright/test';
 import { runOneAudit, seedAuditState } from './helpers';
+import { PAYWALL_ENABLED, FREE_AUDIT_LIMIT } from '../src/lib/audit/constants';
 
 test.describe('audit funnel — happy path', () => {
+  test('one audit runs end to end and the count persists', async ({ page }) => {
+    await seedAuditState(page, { count: 0, unlocked: false });
+    await page.goto('/');
+
+    await runOneAudit(page);
+
+    await expect(
+      page.getByRole('heading', { name: /your audit results/i })
+    ).toBeVisible({ timeout: 10_000 });
+
+    const count = await page.evaluate(() =>
+      window.localStorage.getItem('aiux_audit_count')
+    );
+    expect(count).toBe('1');
+  });
+
+  // The gate is off (PAYWALL_ENABLED = false, 2026-08-31). This asserts the
+  // NEW contract rather than merely skipping the old one: a returning visitor
+  // sitting on the old free limit must still be able to run another audit, and
+  // must still see the CTA. Before the switch, this exact state replaced the
+  // hero CTA with an email form. If the gate ever comes back by accident, this
+  // is the test that catches it.
+  test('with the gate off, a user past the old free limit is not blocked', async ({ page }) => {
+    test.skip(PAYWALL_ENABLED, 'gate is on — the journey below covers it instead');
+
+    await seedAuditState(page, { count: FREE_AUDIT_LIMIT, unlocked: false });
+    await page.goto('/');
+
+    // The CTA is still there, not swapped for the unlock form.
+    await expect(
+      page.getByRole('button', { name: /get your skills/i }).first()
+    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByRole('heading', { name: /3 more audits/i })).toHaveCount(0);
+
+    // And the audit actually runs.
+    await runOneAudit(page);
+    await expect(
+      page.getByRole('heading', { name: /your audit results/i })
+    ).toBeVisible({ timeout: 10_000 });
+  });
+
+  // The full gated journey. Kept, not deleted, so flipping PAYWALL_ENABLED back
+  // on restores its coverage in the same commit that restores the feature.
   test('1 free audit → unlock modal → 3 more → final-cap modal', async ({ page }) => {
+    test.skip(!PAYWALL_ENABLED, 'audit paywall is switched off — see PAYWALL_ENABLED');
+
     await seedAuditState(page, { count: 0, unlocked: false });
 
     // Newsletter subscribe is unrelated to the unlock contract; stub it so
@@ -15,11 +61,6 @@ test.describe('audit funnel — happy path', () => {
 
     // --- Audit #1 (free) ---------------------------------------------------
     await runOneAudit(page);
-
-    // Results view shows — pick a stable signal: a gap pattern name we
-    // hardcode in the E2E mock.
-    // No per-iteration content assertion — `runOneAudit` already awaited
-    // the analyze response; count persistence is verified at the end.
 
     // The redesigned results view deliberately does NOT auto-open the unlock
     // modal — it lets the user explore their results first (see the comment in
@@ -56,18 +97,18 @@ test.describe('audit funnel — happy path', () => {
       await page.goto('/');
       await runOneAudit(page);
       // No per-iteration content assertion — `runOneAudit` already awaited
-    // the analyze response; count persistence is verified at the end.
+      // the analyze response; count persistence is verified at the end.
     }
 
     // --- Audit #5 — final cap lockout ------------------------------------
-    // After 4 unlocked audits, the hero shows the inline lockout instead of
-    // the CTA — no Analyze button should be reachable.
     // Sanity check — count must have actually incremented across all 4 runs.
     const finalCount = await page.evaluate(() =>
       window.localStorage.getItem('aiux_audit_count')
     );
     expect(finalCount).toBe('4');
 
+    // After 4 unlocked audits, the hero shows the inline lockout instead of
+    // the CTA — no Analyze button should be reachable.
     await page.goto('/');
     await expect(
       page.getByText(/reached the free limit|that.s all|final/i).first()

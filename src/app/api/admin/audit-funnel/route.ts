@@ -190,7 +190,12 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
     // biggest leak in the funnel. Kept OUT of the spine so the headline stays
     // five numbers, but it's the first thing to look at when reach→started sags.
     reachDetail: {
-      startRealClicked: evCount('audit_demo_start_real_clicked'), // client · lower-bound
+      // The homepage's one CTA. Summed across both names: the event was renamed
+      // `audit_demo_start_real_clicked` -> `audit_get_skills_clicked` on
+      // 2026-08-31, and reading only the new name would silently zero the 74
+      // rows of history behind it. Drop the old term once it falls out of range.
+      startRealClicked:
+        evCount('audit_get_skills_clicked') + evCount('audit_demo_start_real_clicked'), // client · lower-bound
       productTypeSelected: evCount('audit_product_type_selected'), // picker button only
       // Product type resolved by any route. The `auto` source only fires after
       // an image is in hand, so this is the closest proxy the log has for

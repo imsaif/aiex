@@ -15,20 +15,12 @@ export const AUDIT_EVENT_NAMES = [
   // sample loads; without it the manual case double-counts against
   // audit_product_type_selected above, which only the picker button fires.
   'audit_product_type_detected',
-  // Hotspot clicks on the DEMO GRAPHIC on the homepage. Engagement with a
-  // marketing image, a sibling of audit_demo_viewed — NOT a step in the audit
-  // funnel and never to be counted as one. Imran confirmed the demo is a
-  // homepage graphic, not an entry into the flow.
-  //
-  // Replaces `audit_step_completed`, retired 2026-08-31. That one name carried
-  // both these pin clicks and product-type changes, distinguished only by a
-  // `step` property nobody read, which produced a false "audits doubled after
-  // the Claude-skills reposition" reading. Historical rows are still separable
-  // via properties->>'step'. Dropping the name from this allowlist means any
-  // stale client bundle still emitting it is silently swallowed during the
-  // deploy window — intended: those beacons are pin clicks under a misleading
-  // name.
-  'audit_demo_pin_clicked',
+  // NOTE: `audit_step_completed` (retired 2026-08-31) and `audit_demo_pin_clicked`
+  // (added and removed the same day) are both gone. The first conflated demo-pin
+  // clicks with product-type changes behind an unread `step` property and caused a
+  // false "audits doubled" reading. Splitting it out revealed the honest number —
+  // 18 people clicked a demo pin in 30 days — which is not worth carrying, so the
+  // pin tracking went too. Historical rows for both names remain queryable.
   'audit_gap_found',
   'audit_resource_clicked',
   'audit_chat_message_sent',
@@ -37,7 +29,16 @@ export const AUDIT_EVENT_NAMES = [
   'audit_remaining_banner_shown',
   'audit_save_nudge_shown',
   'audit_demo_viewed',
-  'audit_demo_start_real_clicked',
+  // The homepage's one primary CTA — the "Get your skills" button. Renamed from
+  // `audit_demo_start_real_clicked` on 2026-08-31, a name inherited from a
+  // button that said "start a real audit" and has not existed for months.
+  // Pre-rename history (74 rows all-time) lives under the OLD name; the admin
+  // funnel sums both, so the series is continuous across the rename.
+  //
+  // With `audit_demo_pin_clicked` removed, the homepage now emits exactly two
+  // events: `audit_demo_viewed` (the denominator) and this (the numerator).
+  // Everything else there ran at 1-6 events a month and measured nothing.
+  'audit_get_skills_clicked',
   // Arrival on the upload screen, from any entry point. Since `/audit` shipped,
   // this — not audit_demo_viewed — is "reached the tool": a pattern reader can
   // now land on upload without ever seeing the homepage, so counting homepage
