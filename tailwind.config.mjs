@@ -48,6 +48,10 @@ export default {
           warning: '#f59e0b',  // amber-500
           info: '#3b82f6',     // blue-500
         },
+        // Third-party brand colors, used only on their own marks
+        brand: {
+          claude: '#d97757',
+        },
         // Social platform brand colors
         social: {
           twitter: '#000000',

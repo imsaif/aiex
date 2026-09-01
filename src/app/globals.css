@@ -780,3 +780,33 @@ html[data-theme="dark"] .newsletter-content a[style*="background-color: #162036"
 .scrollbar-subtle:hover::-webkit-scrollbar-thumb {
   background-color: var(--text-secondary);
 }
+
+/* Claude mark — the sunbeams draw back toward the centre and open out again
+   while the whole mark drifts round, echoing the way the Claude logo breathes.
+   The turn and the breath sit on separate elements because they both drive
+   `transform` and would otherwise cancel each other out. */
+.animate-claude-spin {
+  transform-origin: center;
+  animation: claudeSpin 4s linear infinite;
+}
+
+.animate-claude-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: claudePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes claudeSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes claudePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.55); opacity: 0.75; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-claude-spin,
+  .animate-claude-pulse { animation: none; }
+}

@@ -6,6 +6,7 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
+import { ClaudeMark } from '@/components/icons/ClaudeMark';
 import PatternGrid from '../pattern-grid';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
@@ -170,18 +171,20 @@ export default function PatternsIndexPage() {
           </div>
         </section>
 
-        {/* Skills banner — part of the grid: every pattern below is installable */}
-        <div className="max-w-7xl mx-auto px-6 pt-10">
+        {/* Skills note — sits above the grid, sized to its own sentence rather
+            than stretched across the page like a card. */}
+        <div className="max-w-7xl mx-auto px-6 pt-10 flex justify-center">
           <Link
             href="/skills"
-            className="group flex items-center justify-center gap-3 rounded-2xl border border-border-primary bg-surface-primary px-6 py-4 shadow-card hover:border-accent-primary hover:shadow-card-hover transition-all"
+            className="group inline-flex items-center gap-2.5 rounded-full border border-border-primary bg-surface-primary py-2 pl-3 pr-4 text-sm text-text-secondary hover:border-accent-primary transition-colors"
           >
-            <p className="text-base text-text-secondary">
+            <ClaudeMark animated className="h-4 w-4 shrink-0 text-brand-claude" />
+            <span>
               Every pattern below ships as a free Claude Code skill.{' '}
               <span className="font-medium text-accent-primary group-hover:text-accent-hover transition-colors">
                 Browse the skills directory →
               </span>
-            </p>
+            </span>
           </Link>
         </div>
 

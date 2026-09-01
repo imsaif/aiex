@@ -39,6 +39,7 @@ import { PaywallInlineCapture } from './PaywallInlineCapture';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
 import { PATTERN_COUNT } from '@/data/pattern-count';
+import { ClaudeMark } from '@/components/icons/ClaudeMark';
 
 interface ExtendedResults extends AnalysisResults {
   topGaps?: TopGap[];
@@ -1438,6 +1439,7 @@ function DemoStartForm({
         onClick={onStart}
         className="inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-accent-primary text-white dark:text-gray-900 text-base font-semibold hover:bg-accent-hover transition-colors active:scale-[0.98] cursor-pointer whitespace-nowrap"
       >
+        <ClaudeMark animated className="h-[18px] w-[18px] shrink-0" />
         Get your skills
         <span aria-hidden>→</span>
       </button>
