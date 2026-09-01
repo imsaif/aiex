@@ -98,6 +98,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      // Paid 1:1 session (commercial landing page). /call/booked is deliberately
+      // absent — it sits behind payment and is marked noindex.
+      url: `${baseUrl}/call`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/handbook`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

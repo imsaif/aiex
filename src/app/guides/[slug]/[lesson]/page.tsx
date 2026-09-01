@@ -9,6 +9,8 @@ import GuideSidebar from '@/components/guides/GuideSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import GuidePDFCTA from '@/components/guides/GuidePDFCTA';
+import CallOfferBlock from '@/components/call/CallOfferBlock';
+import { guideCarriesCallOffer } from '@/lib/call-offer';
 import { siteConfig } from '@/config/seo';
 import { LessonSection } from '@/types/lesson';
 import {
@@ -341,6 +343,19 @@ export default async function LessonPage({ params }: LessonPageProps) {
                     customSuccessMessage="Subscribed! Watch for the next issue."
                   />
                 </div>
+              )}
+
+              {/* Paid 1:1 call offer, quiet one-line variant. On every lesson of
+                  the two Claude learning paths rather than only the last one:
+                  someone hits a blocker mid-course, which is exactly the moment
+                  the offer answers. Kept to a single line so a free course does
+                  not read as an advert. */}
+              {guideCarriesCallOffer(guide.slug) && (
+                <CallOfferBlock
+                  variant="compact"
+                  source={`lesson:${guide.slug}`}
+                  className="mb-12"
+                />
               )}
 
               {/* Related patterns — the upward half of the guide/pattern

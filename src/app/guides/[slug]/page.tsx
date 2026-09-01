@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { guides, getGuideBySlug } from '@/data/guides';
+import CallOfferBlock from '@/components/call/CallOfferBlock';
+import { guideCarriesCallOffer } from '@/lib/call-offer';
 import { generateGuideStructuredData } from '@/utils/structuredData';
 import { siteConfig } from '@/config/seo';
 import Navbar from '@/components/layout/Navbar';
@@ -296,6 +298,19 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   })}
                 </ul>
               </section>
+
+              {/* Paid 1:1 call offer. Placed here — after the reader has seen what
+                  the course covers, before the lesson list — because the previous
+                  paid surface (/services) sat only in the footer and the post-audit
+                  screen and took zero enquiries in three months. Mid-page is the
+                  change being tested. Learning paths only; see call-offer.ts. */}
+              {guideCarriesCallOffer(guide.slug) && (
+                <CallOfferBlock
+                  variant="full"
+                  source={`guide:${guide.slug}`}
+                  className="mb-12"
+                />
+              )}
 
               {/* All lessons — bordered module cards with hoverable lesson rows */}
               <section className="mb-12">

@@ -101,6 +101,17 @@ export const AUDIT_EVENT_NAMES = [
   // Replaced the services upsell that used to hold this slot, so this is the
   // measurement of whether guide recommendations do better than that did.
   'audit_guide_clicked',
+  // Paid 1:1 call offer on the two Claude learning paths (src/lib/call-offer.ts).
+  // The whole point of the feature is placement, so `call_offer_shown` fires on
+  // scroll-into-view rather than on render — it counts people who actually saw
+  // the block, not people who loaded a page containing it.
+  'call_offer_shown',
+  'call_offer_clicked',
+  'call_page_viewed',
+  'call_checkout_clicked',
+  // Fired on /call/booked, which is reached only via the Dodo redirect. The gap
+  // between call_checkout_clicked and this is the paid-but-never-booked leak.
+  'call_booking_page_viewed',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
