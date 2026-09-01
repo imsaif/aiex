@@ -31,7 +31,7 @@ const WHAT_HAPPENS = [
   },
   {
     title: 'You keep whatever we make',
-    body: 'Prompts, config, code, or a plan — written down in the call, not sent afterwards.',
+    body: 'Prompts, config, code, or a plan, written down during the call rather than sent afterwards.',
   },
 ];
 

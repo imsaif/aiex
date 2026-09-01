@@ -81,8 +81,8 @@ export function CallOfferBlock({ variant = 'full', source, className = '' }: Cal
 
       <p className="text-text-secondary mb-6 max-w-2xl">
         The course is free and always will be. If you would rather work through your
-        own project with me — your codebase, your design system, your actual
-        blockers — book a session and we will do it live.
+        own project with me, book a session. Your codebase, your design system, your
+        actual blockers, worked through live.
       </p>
 
       <Link

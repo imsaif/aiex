@@ -26,7 +26,7 @@ export function BookingEmbed() {
           Your payment went through.
         </p>
         <p className="text-text-secondary">
-          The booking calendar is not connected yet — email me and I will send you
+          The booking calendar is not connected yet. Email me and I will send you
           times directly.
         </p>
       </div>
