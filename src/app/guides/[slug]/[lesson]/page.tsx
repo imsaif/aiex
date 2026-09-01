@@ -9,6 +9,8 @@ import GuideSidebar from '@/components/guides/GuideSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import GuidePDFCTA from '@/components/guides/GuidePDFCTA';
+import CallOfferBlock from '@/components/call/CallOfferBlock';
+import { guideCarriesCallOffer } from '@/lib/call-offer';
 import { siteConfig } from '@/config/seo';
 import { LessonSection } from '@/types/lesson';
 import {
@@ -234,7 +236,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {/* LEFT SIDEBAR — course nav (sticky on desktop) */}
             <aside className="hidden lg:block">
               <div
-                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-r border-border-primary pr-6"
+                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-r border-border-primary pr-6"
               >
                 <GuideSidebar guide={guide} currentLessonSlug={lessonSlug} />
               </div>
@@ -343,6 +345,19 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </div>
               )}
 
+              {/* Paid 1:1 call offer, quiet one-line variant. On every lesson of
+                  the two Claude learning paths rather than only the last one:
+                  someone hits a blocker mid-course, which is exactly the moment
+                  the offer answers. Kept to a single line so a free course does
+                  not read as an advert. */}
+              {guideCarriesCallOffer(guide.slug) && (
+                <CallOfferBlock
+                  variant="compact"
+                  source={`lesson:${guide.slug}`}
+                  className="mb-12"
+                />
+              )}
+
               {/* Related patterns — the upward half of the guide/pattern
                   cross-link. Anchor text is the pattern title so the target
                   page receives the term it is trying to rank for. */}
@@ -424,7 +439,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {/* RIGHT SIDEBAR — on this page (xl+ only) */}
             <aside className="hidden xl:block">
               <div
-                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto border-l border-border-primary pl-6"
+                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-l border-border-primary pl-6"
               >
                 <OnThisPage headings={headings} />
               </div>
