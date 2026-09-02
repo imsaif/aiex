@@ -116,14 +116,14 @@ function GapSidePanel({ gap, pinNumber, onClose }: { gap: TopGap; pinNumber: num
       <button
         onClick={onClose}
         aria-label="Close panel"
-        className="fixed lg:absolute inset-0 bg-black/50 lg:bg-black/30 z-40 lg:z-20 cursor-pointer animate-fade-in"
+        className="fixed lg:absolute inset-0 bg-black/50 lg:bg-black/30 z-modal lg:z-sticky cursor-pointer animate-fade-in"
       />
       {/* Sheet: fixed bottom sheet on mobile, right-anchored side panel on desktop. */}
       <aside
         role="dialog"
         aria-modal="true"
         aria-label={`Pattern detected: ${gap.pattern}`}
-        className="fixed lg:absolute inset-x-0 bottom-0 lg:inset-x-auto lg:top-0 lg:right-0 lg:bottom-0 w-full lg:w-[420px] max-h-[85vh] lg:max-h-none z-50 lg:z-30 bg-background-primary border-t lg:border-t-0 lg:border-l border-border-primary shadow-xl overflow-y-auto overscroll-contain rounded-t-2xl lg:rounded-none animate-slide-up lg:animate-slide-in"
+        className="fixed lg:absolute inset-x-0 bottom-0 lg:inset-x-auto lg:top-0 lg:right-0 lg:bottom-0 w-full lg:w-[420px] max-h-[85vh] lg:max-h-none z-toast lg:z-overlay bg-background-primary border-t lg:border-t-0 lg:border-l border-border-primary shadow-xl overflow-y-auto overscroll-contain rounded-t-2xl lg:rounded-none animate-slide-up lg:animate-slide-in"
       >
         {/* Drag handle (mobile only) — visual affordance for the bottom-sheet pattern. */}
         <div className="lg:hidden flex justify-center pt-2.5 pb-1" aria-hidden>
@@ -416,7 +416,7 @@ function EmptyAuditState({
                 </button>
               </div>
               {suggestError && (
-                <div className="mt-4 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 text-base text-red-700 dark:text-red-300">
+                <div className="mt-4 px-4 py-3 rounded-xl bg-surface-error border border-border-error-subtle text-base text-text-error">
                   {suggestError}
                 </div>
               )}
@@ -1267,18 +1267,18 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                           <button
                             {...withFocusSuppress(() => setActiveScreenshotIndex((i) => (i - 1 + allScreenshots.length) % allScreenshots.length))}
                             aria-label="Previous screenshot"
-                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-dropdown"
                           >
                             <ChevronLeftIcon className="w-4 h-4" />
                           </button>
                           <button
                             {...withFocusSuppress(() => setActiveScreenshotIndex((i) => (i + 1) % allScreenshots.length))}
                             aria-label="Next screenshot"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-dropdown"
                           >
                             <ChevronRightIcon className="w-4 h-4" />
                           </button>
-                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black/60 text-white text-xs rounded-full z-10">
+                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-black/60 text-white text-xs rounded-full z-dropdown">
                             {activeScreenshotIndex + 1} / {allScreenshots.length}
                           </div>
                         </>
@@ -1289,7 +1289,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                           <span
                             key={pin.index}
                             aria-hidden
-                            className={`absolute z-10 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold border-2 transition-all bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 ${
+                            className={`absolute z-dropdown -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold border-2 transition-all bg-accent-primary text-white dark:text-gray-900 border-white dark:border-gray-900 ${
                               isActive
                                 ? 'scale-125 shadow-lg ring-2 ring-black/15 dark:ring-white/25'
                                 : 'shadow-md ring-1 ring-black/10 dark:ring-white/20'
@@ -1381,7 +1381,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
       {/* Mobile sticky CTA — the same single action as the rail, thumb-reachable.
           Hidden when a gap side-sheet is open so it doesn't compete with it. */}
       {!isDemoMode && savableSlugs.length > 0 && openPin === null && (
-        <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
+        <div className="lg:hidden fixed inset-x-0 bottom-0 z-overlay px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
           <button
             type="button"
             onClick={handleDownloadPack}

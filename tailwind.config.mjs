@@ -18,12 +18,14 @@ export default {
           primary: 'var(--surface-primary)',
           secondary: 'var(--surface-secondary)',
           elevated: 'var(--surface-elevated)',
+          error: 'var(--surface-error)',
         },
         text: {
           primary: 'var(--text-primary)',
           secondary: 'var(--text-secondary)',
           tertiary: 'var(--text-tertiary)',
           disabled: 'var(--text-disabled)',
+          error: 'var(--text-error)',
         },
         // Minimal accent colors for interactive elements
         accent: {
@@ -38,6 +40,7 @@ export default {
           focus: 'var(--border-focus)',
           success: 'var(--border-success)',
           error: 'var(--border-error)',
+          'error-subtle': 'var(--border-error-subtle)',
           warning: 'var(--border-warning)',
           info: 'var(--border-info)',
         },

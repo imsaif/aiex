@@ -42,6 +42,9 @@ body {
   /* Semantic state borders */
   --border-success: #10b981;
   --border-error: #ef4444;
+  --surface-error: #fef2f2;
+  --text-error: #b91c1c;
+  --border-error-subtle: #fecaca;
   --border-warning: #f59e0b;
   --border-info: #3b82f6;
 
@@ -197,6 +200,9 @@ body {
     /* Semantic state borders (adjusted for dark mode) */
     --border-success: #059669;
     --border-error: #dc2626;
+    --surface-error: #1f0e0e;
+    --text-error: #fca5a5;
+    --border-error-subtle: #7f1d1d;
     --border-warning: #d97706;
     --border-info: #1d4ed8;
 
@@ -257,6 +263,9 @@ html[data-theme="dark"] {
 
   --border-success: #059669;
   --border-error: #dc2626;
+  --surface-error: #1f0e0e;
+  --text-error: #fca5a5;
+  --border-error-subtle: #7f1d1d;
   --border-warning: #d97706;
   --border-info: #1d4ed8;
 
@@ -313,6 +322,9 @@ html[data-theme="light"] {
 
   --border-success: #10b981;
   --border-error: #ef4444;
+  --surface-error: #fef2f2;
+  --text-error: #b91c1c;
+  --border-error-subtle: #fecaca;
   --border-warning: #f59e0b;
   --border-info: #3b82f6;
 
