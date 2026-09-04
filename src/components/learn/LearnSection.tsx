@@ -26,25 +26,28 @@ export default function LearnSection({
     >
       {/* Same capped measure as the hero. The rows below stay full width. */}
       <div className="mb-8 max-w-[950px]">
-        <div className="mb-2 flex items-baseline gap-3">
+        {/* The ordinal sits outside the text column so the heading and the
+            intro share a left edge. Previously the ordinal pushed only the
+            heading across, and the intro hung to the left of its own title. */}
+        <div className="flex items-baseline gap-3">
           <span
             aria-hidden="true"
-            className="type-eyebrow font-mono text-accent-primary"
+            className="type-eyebrow shrink-0 font-mono text-accent-primary"
           >
             {section.ordinal}
           </span>
-          <h2 className="type-h2 text-text-primary">
-            {section.question}
-          </h2>
+          <div>
+            <h2 className="type-h2 mb-2 text-text-primary">
+              {section.question}
+            </h2>
+            <p className="type-body text-text-secondary">{section.intro}</p>
+          </div>
         </div>
-        <p className="type-body text-text-secondary">
-          {section.intro}
-        </p>
       </div>
 
       <ol className="space-y-3">
-        {section.items.map((item) => (
-          <LearnItemCard key={item.href} item={item} />
+        {section.items.map((item, i) => (
+          <LearnItemCard key={item.href} item={item} ordinal={i + 1} />
         ))}
       </ol>
 

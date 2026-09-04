@@ -239,15 +239,10 @@ export default async function LessonPage({ params }: LessonPageProps) {
               currentLessonSlug={lessonSlug}
             />
           }
-          aside={
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6" data-course-chrome="scroll">
-              <OnThisPage headings={headings} />
-            </div>
-          }
         >
           <div className="pt-10 pb-16">
             {/* CENTER — lesson article */}
-            <article className="max-w-3xl">
+            <div className="pt-2">
               {/* Breadcrumb */}
               <nav
                 className="mb-6 text-sm text-text-secondary"
@@ -317,6 +312,11 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   )}
                 </div>
               </header>
+
+              {/* Body and TOC. The TOC starts under the header, so the lesson
+                  title and its meta get the full width. */}
+              <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_240px] xl:gap-12">
+                <article className="max-w-[820px]">
 
               {/* Lesson body — fully expanded, server-rendered for crawlers */}
               <div className="mb-12">
@@ -392,53 +392,84 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </section>
               )}
 
-              {/* Previous / next lesson */}
+                </article>
+
+                <aside className="hidden xl:block">
+                  <div
+                    className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6"
+                    data-course-chrome="scroll"
+                  >
+                    <OnThisPage headings={headings} />
+                  </div>
+                </aside>
+              </div>
+
+              {/* Lesson footer, full width under both columns. Two panels
+                  rather than two bordered cards: Previous is where you came
+                  from, Up next is the one you are meant to take — so it carries
+                  the tint and the filled arrow. */}
               <nav
-                className="flex flex-col sm:flex-row justify-between items-stretch gap-4 border-t border-border-primary pt-8"
+                className="mt-16 grid grid-cols-1 border-t border-border-primary sm:grid-cols-2"
                 aria-label="Lesson navigation"
               >
                 {previous ? (
                   <Link
                     href={previous.url}
-                    className="flex-1 block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors group"
+                    className="group flex items-center gap-4 border-b border-border-primary py-8 pr-8 sm:border-b-0 sm:border-r"
                   >
-                    <span className="block text-xs text-text-secondary mb-1">
-                      ← Previous Lesson
+                    <span
+                      aria-hidden="true"
+                      className="type-lead text-text-secondary transition-colors group-hover:text-accent-primary"
+                    >
+                      ←
                     </span>
-                    <span className="block font-medium text-text-primary group-hover:text-accent-primary transition-colors">
-                      {previous.title}
+                    <span className="min-w-0">
+                      <span className="type-caption block text-text-secondary">
+                        Previous
+                      </span>
+                      <span className="type-lead block font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+                        {previous.title}
+                      </span>
                     </span>
                   </Link>
                 ) : (
-                  <div className="flex-1" />
+                  <div className="hidden sm:block" />
                 )}
+
                 {next ? (
                   <Link
                     href={next.url}
-                    className="flex-1 block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors text-right group"
+                    className="group flex items-center justify-between gap-4 bg-background-rail py-8 pl-8 pr-6"
                   >
-                    <span className="block text-xs text-text-secondary mb-1">
-                      Next Lesson →
+                    <span className="min-w-0">
+                      <span className="type-caption block text-text-secondary">
+                        Up next
+                      </span>
+                      <span className="type-lead block font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+                        {next.title}
+                      </span>
                     </span>
-                    <span className="block font-medium text-text-primary group-hover:text-accent-primary transition-colors">
-                      {next.title}
+                    <span
+                      aria-hidden="true"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent"
+                    >
+                      →
                     </span>
                   </Link>
                 ) : (
-                  <div className="flex-1" />
+                  <div className="hidden sm:block" />
                 )}
               </nav>
 
-              {/* Back to course overview */}
-              <div className="mt-8 text-center">
+              <div className="border-t border-border-primary py-8 text-center">
                 <Link
                   href={`/guides/${guide.slug}`}
-                  className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary"
+                  className="type-caption inline-flex items-center gap-2 text-text-secondary hover:text-text-primary"
                 >
                   ← Back to {guide.title} overview
                 </Link>
               </div>
-            </article>
+            </div>
 
           </div>
         </LearnShell>

@@ -171,15 +171,10 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
         <LearnShell
           sidebar={<LearnSidebar currentGuideSlug={guide.slug} currentIsOverview />}
-          aside={
-            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6" data-course-chrome="scroll">
-              <OnThisPage headings={headings} />
-            </div>
-          }
         >
           <div className="pt-10 pb-16">
             {/* CENTER — course overview article */}
-            <article className="max-w-3xl">
+            <div className="pt-2">
               {/* Breadcrumb */}
               <nav
                 className="mb-6 text-sm text-text-secondary"
@@ -249,6 +244,12 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   {moduleOrder.length === 1 ? 'module' : 'modules'}
                 </p>
               </header>
+
+              {/* Body and TOC. The TOC starts here, under the header, so the
+                  title and the course meta get the full width — three columns
+                  all the way up squeezed the reading column to 768px. */}
+              <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_240px] xl:gap-12">
+                <article className="max-w-[820px]">
 
               {/* About this course */}
               <section className="mb-12">
@@ -436,7 +437,18 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   customSuccessMessage="Subscribed! Watch for the next issue."
                 />
               </div>
-            </article>
+                </article>
+
+                <aside className="hidden xl:block">
+                  <div
+                    className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6"
+                    data-course-chrome="scroll"
+                  >
+                    <OnThisPage headings={headings} />
+                  </div>
+                </aside>
+              </div>
+            </div>
 
           </div>
         </LearnShell>
