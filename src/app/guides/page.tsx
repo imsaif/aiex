@@ -16,6 +16,8 @@ import { guides } from '@/data/guides';
 import { learnMap } from '@/data/learn-map';
 import { resolveLearnSection } from '@/lib/learn-map';
 import LearnSection from '@/components/learn/LearnSection';
+import LearnSidebar from '@/components/learn/LearnSidebar';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
 
 // Per-guide visual anchor — brand logo where available, generic chat icon for
@@ -284,7 +286,7 @@ function buildStructuredData() {
   ];
 }
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
   const structuredData = buildStructuredData();
 
   return (
@@ -300,44 +302,74 @@ export default function GuidesPage() {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
-        {/* Hero — server-rendered. Typography + spacing scaled to match the
-            homepage hero hierarchy (H1, subtitle, padding, margins). */}
+        {/* Hero — question-led, following the aihero.dev/learn model. The
+            page opens by asking the visitor what they want to do rather than
+            announcing what the site has; the numbered list doubles as the
+            table of contents and jumps into the matching section. Questions
+            come from learnMap so the hero cannot drift from the map below. */}
         <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center max-w-4xl mx-auto">
-              <p className="text-sm font-semibold uppercase tracking-wide text-accent-primary mb-4">
-                Free Learning Paths
-              </p>
-              <h1
-                className="text-5xl md:text-6xl lg:text-7xl font-bold mb-9"
-                style={{ color: 'var(--text-hero)' }}
-              >
-                AI Tool Guides for Designers
-              </h1>
-              <p className="text-2xl md:text-3xl text-text-secondary mb-12">
-                Free step-by-step courses on Claude Code, Cursor, GitHub
-                Copilot, GitHub, and conversational UI.
-              </p>
-              <p className="text-base text-text-secondary">
-                {guides.length} guides · {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)} lessons ·
-                All free, start instantly
-              </p>
-
-              {/* Hero email capture — mirrors the /news and /patterns hero
-                  treatment (stacked form + social proof) for a consistent,
-                  above-the-fold conversion surface. */}
-              <div className="mt-10 max-w-md mx-auto">
-                <InlineNewsletterSignup
-                  variant="hero"
-                  source="guides"
-                  customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
-                  customButtonText="Solve my AI design overload →"
-                  customSuccessMessage="You're in! Watch for our next issue."
-                  stacked
-                />
-                <p className="text-base font-medium text-text-secondary mt-4">
-                  46,000+ reads · 50+ products analyzed daily
+            <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16">
+              <div>
+                <p className="type-eyebrow font-semibold text-accent-primary mb-4">
+                  The Map
                 </p>
+                <h1
+                  className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+                  style={{ color: 'var(--text-hero)' }}
+                >
+                  What do you want to do with AI UX?
+                </h1>
+                <p className="text-xl md:text-2xl text-text-secondary mb-4">
+                  Pick the question that sounds like you. Each one opens onto
+                  the courses, patterns and checklists that answer it, in the
+                  order they make sense.
+                </p>
+                <p className="type-body text-text-secondary mb-10">
+                  {guides.length} courses ·{' '}
+                  {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
+                  lessons · {PATTERN_COUNT} patterns · all free, no account
+                </p>
+
+                <ol className="border-t border-border-primary">
+                  {learnMap.map((section) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className="group flex items-baseline gap-4 border-b border-border-primary py-4 transition-colors hover:text-accent-primary"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="type-eyebrow font-mono text-accent-primary"
+                        >
+                          {section.ordinal}
+                        </span>
+                        <span className="type-h3 text-text-primary group-hover:text-accent-primary">
+                          {section.question}
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              {/* Email capture kept from the previous hero — same above-the-fold
+                  conversion surface as /news and /patterns, moved beside the
+                  questions rather than under a centred headline. */}
+              <div className="mt-12 lg:mt-0">
+                <div className="rounded-card border border-border-primary bg-surface-primary p-6 lg:sticky lg:top-24">
+                  <InlineNewsletterSignup
+                    variant="hero"
+                    source="guides"
+                    customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
+                    customButtonText="Solve my AI design overload →"
+                    customSuccessMessage="You're in! Watch for our next issue."
+                    stacked
+                  />
+                  <p className="type-body font-medium text-text-secondary mt-4">
+                    46,000+ reads · 50+ products analyzed daily
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -347,13 +379,16 @@ export default function GuidesPage() {
             answers it, in the order it makes sense. Resolved server-side; the
             resolver throws on a dead slug so this can never render a card
             pointing at a 404. */}
-        <div className="max-w-7xl mx-auto px-6">
-          {learnMap.map((section) => (
-            <LearnSection
-              key={section.id}
-              section={resolveLearnSection(section)}
-            />
-          ))}
+        <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
+          <LearnSidebar />
+          <div>
+            {learnMap.map((section) => (
+              <LearnSection
+                key={section.id}
+                section={resolveLearnSection(section)}
+              />
+            ))}
+          </div>
         </div>
 
         {/* All courses — the catalogue view. The map above is the
