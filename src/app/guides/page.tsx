@@ -302,15 +302,20 @@ export default async function GuidesPage() {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
+        {/* One two-column shell for the whole page. The rail starts at the
+            top, beside the hero, rather than below a full-width hero band —
+            that is what makes the learn area read as one place. */}
+        <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
+          <LearnSidebar />
+          <div className="min-w-0">
+
         {/* Hero — question-led, following the aihero.dev/learn model. The
             page opens by asking the visitor what they want to do rather than
             announcing what the site has; the numbered list doubles as the
             table of contents and jumps into the matching section. Questions
             come from learnMap so the hero cannot drift from the map below. */}
-        <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16">
-              <div>
+        <section className="border-b border-border-primary pb-12 pt-10 md:pb-16">
+          <div className="max-w-3xl">
                 <p className="type-eyebrow font-semibold text-accent-primary mb-4">
                   The Map
                 </p>
@@ -359,28 +364,7 @@ export default async function GuidesPage() {
                       </a>
                     </li>
                   ))}
-                </ol>
-              </div>
-
-              {/* Email capture kept from the previous hero — same above-the-fold
-                  conversion surface as /news and /patterns, moved beside the
-                  questions rather than under a centred headline. */}
-              <div className="mt-12 lg:mt-0">
-                <div className="rounded-card border border-border-primary bg-surface-primary p-6 lg:sticky lg:top-24">
-                  <InlineNewsletterSignup
-                    variant="hero"
-                    source="guides"
-                    customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
-                    customButtonText="Solve my AI design overload →"
-                    customSuccessMessage="You're in! Watch for our next issue."
-                    stacked
-                  />
-                  <p className="type-body font-medium text-text-secondary mt-4">
-                    46,000+ reads · 50+ products analyzed daily
-                  </p>
-                </div>
-              </div>
-            </div>
+            </ol>
           </div>
         </section>
 
@@ -388,17 +372,42 @@ export default async function GuidesPage() {
             answers it, in the order it makes sense. Resolved server-side; the
             resolver throws on a dead slug so this can never render a card
             pointing at a 404. */}
-        <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
-          <LearnSidebar />
-          <div>
-            {learnMap.map((section) => (
-              <LearnSection
-                key={section.id}
-                section={resolveLearnSection(section)}
-              />
-            ))}
-          </div>
+        <div>
+          {learnMap.map((section) => (
+            <LearnSection
+              key={section.id}
+              section={resolveLearnSection(section)}
+            />
+          ))}
         </div>
+
+        {/* Newsletter — placed after the map rather than in the hero. The
+            hero's job is now navigation: read the question, pick a path. An
+            email form there competes with that. By this point the visitor has
+            either found their path or has not, and both are reasonable moments
+            to offer a weekly digest. */}
+        <section className="border-t border-border-primary py-12 md:py-16">
+          <div className="rounded-card border border-border-primary bg-surface-primary p-6 md:grid md:grid-cols-2 md:items-center md:gap-10 md:p-8">
+            <div>
+              <p className="type-h3 text-text-primary">
+                Not sure where to start?
+              </p>
+              <p className="type-body text-text-secondary mt-1">
+                46,000+ reads · 50+ products analyzed daily
+              </p>
+            </div>
+            <div className="mt-4 w-full md:mt-0">
+              <InlineNewsletterSignup
+                variant="hero"
+                source="guides"
+                customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
+                customButtonText="Solve my AI design overload →"
+                customSuccessMessage="You're in! Watch for our next issue."
+                stacked
+              />
+            </div>
+          </div>
+        </section>
 
         {/* All courses — the catalogue view. The map above is the
             recommendation; this is the complete list, and it is what
@@ -407,7 +416,7 @@ export default async function GuidesPage() {
             sections' "more" links. */}
         <section
           id="all-courses"
-          className="max-w-7xl mx-auto px-6 py-12 md:py-16 scroll-mt-24"
+          className="py-12 md:py-16 scroll-mt-24"
         >
           <div className="mb-8 max-w-3xl">
             <h2 className="type-h2 text-text-primary mb-2">All courses</h2>
@@ -460,7 +469,7 @@ export default async function GuidesPage() {
             Outer max-w-7xl matches the cards container above; inner max-w-3xl
             stays narrow for readability and is left-aligned so it lines up
             with the cards' left edge instead of floating mid-viewport. */}
-        <section className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-6 md:pb-8">
+        <section className="pt-12 md:pt-16 pb-6 md:pb-8">
           <div className="max-w-3xl mx-auto">
             <h2
               id="why-guides"
@@ -546,7 +555,7 @@ export default async function GuidesPage() {
             container pattern as the intro: max-w-7xl outer, max-w-3xl inner
             left-aligned. Question h3s and answer p sizes bumped for
             readability and stronger hierarchy. */}
-        <section className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+        <section className="py-12 md:py-16">
           <div className="max-w-3xl mx-auto">
             <h2
               id="faq"
@@ -594,6 +603,9 @@ export default async function GuidesPage() {
             </div>
           </div>
         </section>
+
+        </div>
+        </div>
 
         <Footer />
         <ScrollToTop />
