@@ -22,10 +22,10 @@ export default function LearnSection({
   return (
     <section
       id={section.id}
-      className="scroll-mt-24 border-b border-border-primary py-12 last:border-b-0 md:py-16"
+      className="scroll-mt-24 border-b border-border-primary py-16 last:border-b-0 md:py-20"
     >
       {/* Same capped measure as the hero. The rows below stay full width. */}
-      <div className="mb-8 max-w-[950px]">
+      <div className="mb-12 max-w-[950px]">
         {/* The ordinal sits outside the text column so the heading and the
             intro share a left edge. Previously the ordinal pushed only the
             heading across, and the intro hung to the left of its own title. */}
@@ -48,7 +48,7 @@ export default function LearnSection({
         </div>
       </div>
 
-      <ol className="space-y-3">
+      <ol className="space-y-4">
         {section.items.map((item, i) => (
           <LearnItemCard key={item.href} item={item} ordinal={i + 1} />
         ))}

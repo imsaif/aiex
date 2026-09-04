@@ -44,7 +44,7 @@ export default function LearnShell({
   return (
     <div className="learn-console-ground bg-background-console">
       <div
-        className={`mx-auto max-w-[1600px] lg:grid lg:border-x lg:border-border-primary ${columns}`}
+        className={`mx-auto max-w-[1600px] lg:grid lg:border-r lg:border-border-primary ${columns}`}
       >
         <div className="bg-background-rail lg:border-r lg:border-border-primary">
           {sidebar}

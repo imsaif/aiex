@@ -46,13 +46,17 @@ export default function LearnItemCard({
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="type-eyebrow text-text-secondary">{meta.join(' · ')}</p>
+          {/* A bordered pill, not loose text — it reads as a label and gives
+              the title something to sit under, the way the reference does it. */}
+          <span className="type-eyebrow inline-flex items-center rounded border border-border-primary px-2.5 py-1 text-text-secondary">
+            {meta.join(' · ')}
+          </span>
 
           {/* Capped measure, not the full row. */}
-          <h3 className="type-lead mt-1.5 max-w-[640px] font-semibold text-text-primary group-hover:text-accent-primary">
+          <h3 className="type-lead mt-3 max-w-[820px] font-bold text-text-primary group-hover:text-accent-primary">
             {item.title}
           </h3>
-          <p className="type-caption mt-1.5 line-clamp-2 max-w-[640px] text-text-secondary">
+          <p className="type-caption mt-2 line-clamp-2 max-w-[820px] text-text-secondary">
             {item.description}
           </p>
         </div>

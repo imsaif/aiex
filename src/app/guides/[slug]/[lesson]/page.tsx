@@ -274,7 +274,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   H1, and iconified meta pill row */}
               <header className="mb-10">
                 <div
-                  className="border-t-2 border-accent-primary/30 w-12 mb-6"
+                  className="hidden"
                   aria-hidden="true"
                 />
                 <div className="flex flex-wrap items-center gap-2 mb-3">

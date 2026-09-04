@@ -1,10 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import {
-  AcademicCapIcon,
-  ClockIcon,
-  BookmarkIcon,
-} from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -173,16 +168,21 @@ export default async function GuidesPage() {
                 <p className="type-eyebrow font-semibold text-accent-primary mb-4">
                   The Map
                 </p>
+                {/* "AI UX" is bound with a non-breaking space so the line can
+                    never break between them, and balance keeps the wrap even
+                    rather than leaving one short word on the last line. */}
+                {/* type-h1, not type-display: at 56px the question wrapped to
+                    two lines inside the 950px measure, and a two-line question
+                    reads as a paragraph rather than a prompt. */}
                 <h1
-                  className="type-display mb-6"
-                  style={{ color: 'var(--text-hero)' }}
+                  className="type-h1 mb-6"
+                  style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
                 >
-                  What do you want to do with AI UX?
+                  What do you want to learn about AI&nbsp;UX?
                 </h1>
                 <p className="type-lead text-text-secondary mb-4">
                   Pick the question that sounds like you. Each one opens onto
-                  the courses, patterns and checklists that answer it, in the
-                  order they make sense.
+                  the courses, patterns and checklists that answer it.
                 </p>
                 <p className="type-caption text-text-secondary mb-10">
                   {guides.length} courses ·{' '}
@@ -295,55 +295,6 @@ export default async function GuidesPage() {
               </p>
             </div>
 
-            {/* 3-up benefit row. Left-aligned like everything else on the
-                page; centred cells were the other half of the mismatch. */}
-            <ul className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
-              <li>
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-                  <AcademicCapIcon
-                    className="w-6 h-6 text-text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
-                <h3 className="type-body font-semibold text-text-primary mb-2">
-                  Built for designers
-                </h3>
-                <p className="type-caption text-text-secondary">
-                  No coding background required. Each guide assumes a
-                  designer starting point and lets the AI handle the syntax.
-                </p>
-              </li>
-              <li>
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-                  <ClockIcon
-                    className="w-6 h-6 text-text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
-                <h3 className="type-body font-semibold text-text-primary mb-2">
-                  Hours, not weeks
-                </h3>
-                <p className="type-caption text-text-secondary">
-                  Each course is a focused path you can work through in an
-                  afternoon, no semester-long commitment to get fluent.
-                </p>
-              </li>
-              <li>
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-                  <BookmarkIcon
-                    className="w-6 h-6 text-text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
-                <h3 className="type-body font-semibold text-text-primary mb-2">
-                  Bookmark any lesson
-                </h3>
-                <p className="type-caption text-text-secondary">
-                  Every lesson has its own URL: save, share, or return to
-                  the exact step you need without scrolling through a course.
-                </p>
-              </li>
-            </ul>
           </div>
         </section>
 
