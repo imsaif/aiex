@@ -320,17 +320,17 @@ export default async function GuidesPage() {
                   The Map
                 </p>
                 <h1
-                  className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+                  className="type-display mb-6"
                   style={{ color: 'var(--text-hero)' }}
                 >
                   What do you want to do with AI UX?
                 </h1>
-                <p className="text-xl md:text-2xl text-text-secondary mb-4">
+                <p className="type-lead max-w-2xl text-text-secondary mb-4">
                   Pick the question that sounds like you. Each one opens onto
                   the courses, patterns and checklists that answer it, in the
                   order they make sense.
                 </p>
-                <p className="type-body text-text-secondary mb-10">
+                <p className="type-caption text-text-secondary mb-10">
                   {guides.length} courses ·{' '}
                   {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
                   lessons · {PATTERN_COUNT} patterns · all free, no account

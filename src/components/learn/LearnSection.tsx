@@ -41,19 +41,21 @@ export default function LearnSection({
         </p>
       </div>
 
-      <ol className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <ol className="space-y-3">
         {section.items.map((item) => (
           <LearnItemCard key={item.href} item={item} />
         ))}
       </ol>
 
-      <Link
-        href={section.more.href}
-        className="type-body mt-6 inline-flex items-center gap-2 font-medium text-accent-primary hover:underline"
-      >
-        {section.more.label}
-        <span aria-hidden="true">→</span>
-      </Link>
+      <div className="mt-6 flex justify-end">
+        <Link
+          href={section.more.href}
+          className="type-caption inline-flex items-center gap-2 rounded-card border border-border-primary px-4 py-2 font-semibold text-text-primary transition-colors hover:border-accent-primary/40 hover:text-accent-primary"
+        >
+          {section.more.label}
+          <span aria-hidden="true">→</span>
+        </Link>
+      </div>
     </section>
   );
 }
