@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  SparklesIcon,
   NewspaperIcon,
   MagnifyingGlassIcon,
   FolderIcon,
@@ -13,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
 import { useSavedCount } from '@/hooks/useSavedCount';
+import { AiuxMarkOutline } from '@/components/icons/AiuxMarkOutline';
 
 // Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
 const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
@@ -118,7 +118,7 @@ const Navbar = ({
                 — /patterns was standing in for it. First position, ahead of the
                 learning material. */}
             <Link href="/audit" className={getLinkClasses('/audit')}>
-              <SparklesIcon className="w-5 h-5" />
+              <AiuxMarkOutline className="w-5 h-5" />
               <span className="hidden sm:inline relative">
                 Tool
                 <span className="invisible font-semibold block h-0" aria-hidden="true">
