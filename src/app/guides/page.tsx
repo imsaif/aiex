@@ -139,7 +139,6 @@ interface GuideCard {
   highlights: string[];
   lessons: number;
   readTime: number;
-  featured: boolean;
 }
 
 const guideMeta: Record<
@@ -204,13 +203,6 @@ const guideMeta: Record<
   },
 };
 
-const featuredSlugs = new Set([
-  'claude-code-learning-path',
-  'claude-design-learning-path',
-  'github-learning-path',
-  'conversational-ui-guide',
-]);
-
 const cards: GuideCard[] = guides.map((g) => ({
   slug: g.slug,
   title: g.title,
@@ -219,11 +211,7 @@ const cards: GuideCard[] = guides.map((g) => ({
   highlights: guideMeta[g.slug]?.highlights || [],
   lessons: g.lessons?.length || 0,
   readTime: g.readTime || 0,
-  featured: featuredSlugs.has(g.slug),
 }));
-
-const featuredCards = cards.filter((c) => c.featured);
-const otherCards = cards.filter((c) => !c.featured);
 
 function buildStructuredData() {
   return [
@@ -368,108 +356,60 @@ export default function GuidesPage() {
           ))}
         </div>
 
-        {/* Featured guides */}
-        {featuredCards.length > 0 && (
-          <section className="max-w-7xl mx-auto px-6 py-12 md:py-16 border-b border-border-primary">
-            <div className="flex items-center gap-2 mb-6">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-accent-subtle text-accent-primary border border-accent-primary/20">
-                Recommended Start
-              </span>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {featuredCards.map((card) => (
-                <Link
-                  key={card.slug}
-                  href={`/guides/${card.slug}`}
-                  className="block p-8 rounded-3xl border border-border-primary bg-surface-secondary hover:border-accent-primary/40 hover:shadow-lg transition-all"
-                >
-                  <GuideIconTile slug={card.slug} />
-                  <p className="text-sm font-medium text-accent-primary mb-1">
-                    {card.tagline}
-                  </p>
-                  <h2 className="text-2xl font-bold text-text-primary mb-4">
-                    {card.title}
-                  </h2>
-                  {card.highlights.length > 0 && (
-                    <ul className="space-y-2 mb-5">
-                      {card.highlights.map((h, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-2 text-sm text-text-secondary"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-border-primary">
-                    <span>{card.lessons} lessons</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{card.readTime} min total</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="font-medium text-accent-primary">
-                      Start Learning →
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* More guides */}
-        {otherCards.length > 0 && (
-          <section className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-text-primary mb-2">
-                More Guides
-              </h2>
-              <p className="text-text-secondary">
-                Other AI tools to expand your workflow
-              </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {otherCards.map((card) => (
-                <Link
-                  key={card.slug}
-                  href={`/guides/${card.slug}`}
-                  className="block p-8 rounded-2xl border border-border-primary bg-surface-primary hover:border-accent-primary/40 hover:shadow-lg transition-all"
-                >
-                  <GuideIconTile slug={card.slug} />
-                  <p className="text-sm font-medium text-accent-primary mb-1">
-                    {card.tagline}
-                  </p>
-                  <h3 className="text-xl font-bold text-text-primary mb-4">
-                    {card.title}
-                  </h3>
-                  {card.highlights.length > 0 && (
-                    <ul className="space-y-2 mb-5">
-                      {card.highlights.map((h, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-2 text-sm text-text-secondary"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-border-primary">
-                    <span>{card.lessons} lessons</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{card.readTime} min total</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="font-medium text-accent-primary">
-                      Start Learning →
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
+        {/* All courses — the catalogue view. The map above is the
+            recommendation; this is the complete list, and it is what
+            guarantees every course keeps an internal link from this page
+            however the curation is edited. Also the target for the map
+            sections' "more" links. */}
+        <section
+          id="all-courses"
+          className="max-w-7xl mx-auto px-6 py-12 md:py-16 scroll-mt-24"
+        >
+          <div className="mb-8 max-w-3xl">
+            <h2 className="type-h2 text-text-primary mb-2">All courses</h2>
+            <p className="type-body text-text-secondary">
+              Every learning path on the site, {guides.length} in total. Free,
+              no account needed.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {cards.map((card) => (
+              <Link
+                key={card.slug}
+                href={`/guides/${card.slug}`}
+                className="block p-8 rounded-card border border-border-primary bg-surface-primary hover:border-accent-primary/40 hover:shadow-lg transition-all"
+              >
+                <GuideIconTile slug={card.slug} />
+                <p className="type-caption font-medium text-accent-primary mb-1">
+                  {card.tagline}
+                </p>
+                <h3 className="type-h3 text-text-primary mb-4">{card.title}</h3>
+                {card.highlights.length > 0 && (
+                  <ul className="space-y-2 mb-5">
+                    {card.highlights.map((h, i) => (
+                      <li
+                        key={i}
+                        className="flex items-center gap-2 type-body text-text-secondary"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-pill bg-accent-primary flex-shrink-0" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div className="flex items-center gap-4 type-body text-text-secondary pt-4 border-t border-border-primary">
+                  <span>{card.lessons} lessons</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{card.readTime} min total</span>
+                  <span aria-hidden="true">·</span>
+                  <span className="font-medium text-accent-primary">
+                    Start Learning →
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* Intro prose — SEO content block, placed below the cards as
             supporting content so the hero-to-cards flow matches /patterns.
