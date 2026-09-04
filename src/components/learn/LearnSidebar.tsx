@@ -3,6 +3,8 @@ import { guides } from '@/data/guides';
 import categories from '@/data/categories';
 import { prisma } from '@/lib/prisma';
 import { getNewsletters } from '@/data/newsletters';
+import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
+import { getModuleTitle } from '@/lib/guides/modules';
 
 /**
  * The rail on the left of /guides. Turns the courses index into the front door
@@ -19,7 +21,7 @@ import { getNewsletters } from '@/data/newsletters';
  */
 
 const EXPLORE = [
-  { label: 'Map', href: '/guides', current: true },
+  { label: 'Map', href: '/guides' },
   { label: 'Patterns', href: '/patterns' },
   { label: 'Skills', href: '/skills' },
   {
@@ -119,8 +121,81 @@ function RailLink({
   );
 }
 
-export default async function LearnSidebar() {
+
+/**
+ * The current course's lessons, nested under it in the Courses group.
+ *
+ * This is what makes the rail a console rather than a page-local nav: the same
+ * groups stay put on every page of the learning area, and the course you are
+ * inside opens in place. Module grouping and the "Overview" row match what the
+ * course pages showed before, so nothing is lost in the merge.
+ */
+function CourseLessons({
+  guideSlug,
+  currentLessonSlug,
+  currentIsOverview,
+}: {
+  guideSlug: string;
+  currentLessonSlug?: string;
+  currentIsOverview?: boolean;
+}) {
+  const lessons = getLessonsForCourse(guideSlug);
+
+  const moduleOrder: string[] = [];
+  const byModule = new Map<string, typeof lessons>();
+  for (const lesson of lessons) {
+    const key = lesson.module || 'lessons';
+    if (!byModule.has(key)) {
+      moduleOrder.push(key);
+      byModule.set(key, []);
+    }
+    byModule.get(key)!.push(lesson);
+  }
+
+  return (
+    <div className="mt-1 ml-3 border-l border-border-primary pl-2">
+      <RailLink href={`/guides/${guideSlug}`} current={currentIsOverview}>
+        Overview
+      </RailLink>
+
+      {moduleOrder.map((moduleKey) => (
+        <div key={moduleKey} className="mt-3">
+          <p className="type-eyebrow mb-1 px-3 font-semibold text-text-secondary">
+            {getModuleTitle(moduleKey)}
+          </p>
+          <ul className="space-y-0.5">
+            {byModule.get(moduleKey)!.map((lesson) => {
+              const slug = lesson.url.split('/').pop() || '';
+              return (
+                <li key={lesson.url}>
+                  <RailLink
+                    href={lesson.url}
+                    current={slug === currentLessonSlug}
+                  >
+                    {lesson.title}
+                  </RailLink>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default async function LearnSidebar({
+  currentGuideSlug,
+  currentLessonSlug,
+  currentIsOverview,
+}: {
+  /** Set on a course or lesson page so that course opens in the rail. */
+  currentGuideSlug?: string;
+  currentLessonSlug?: string;
+  currentIsOverview?: boolean;
+} = {}) {
   const issues = await getLatestIssues();
+  const onTheMap = !currentGuideSlug;
 
   return (
     // Hidden below lg: the map itself is the mobile navigation, and a collapsed
@@ -141,7 +216,7 @@ export default async function LearnSidebar() {
             <li key={item.href}>
               <RailLink
                 href={item.href}
-                current={item.current}
+                current={item.href === '/guides' && onTheMap}
                 external={item.external}
               >
                 {item.label}
@@ -154,13 +229,26 @@ export default async function LearnSidebar() {
       <div className="mb-7">
         <GroupLabel>Courses</GroupLabel>
         <ul className="space-y-0.5">
-          {guides.map((guide) => (
-            <li key={guide.slug}>
-              <RailLink href={`/guides/${guide.slug}`}>
-                {railLabel(guide.title)}
-              </RailLink>
-            </li>
-          ))}
+          {guides.map((guide) => {
+            const isCurrent = guide.slug === currentGuideSlug;
+            return (
+              <li key={guide.slug}>
+                <RailLink
+                  href={`/guides/${guide.slug}`}
+                  current={isCurrent && !currentIsOverview && !currentLessonSlug}
+                >
+                  {railLabel(guide.title)}
+                </RailLink>
+                {isCurrent && (
+                  <CourseLessons
+                    guideSlug={guide.slug}
+                    currentLessonSlug={currentLessonSlug}
+                    currentIsOverview={currentIsOverview}
+                  />
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
 

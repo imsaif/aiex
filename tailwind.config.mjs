@@ -26,6 +26,10 @@ export default {
           tertiary: 'var(--text-tertiary)',
           disabled: 'var(--text-disabled)',
           error: 'var(--text-error)',
+          // Text sitting on an accent-primary fill. accent-primary inverts
+          // between themes, so this has to invert with it — call sites were
+          // hand-rolling `text-white dark:text-gray-900` instead.
+          'on-accent': 'var(--text-on-accent)',
         },
         // Minimal accent colors for interactive elements
         accent: {

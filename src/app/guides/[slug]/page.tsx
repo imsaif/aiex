@@ -10,7 +10,7 @@ import { siteConfig } from '@/config/seo';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
-import GuideSidebar from '@/components/guides/GuideSidebar';
+import LearnSidebar from '@/components/learn/LearnSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
@@ -168,68 +168,16 @@ export default async function GuidePage({ params }: GuidePageProps) {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
-        {/* Full-width hero — mirrors the /news hero treatment so every guide
-            opens with the same centered, branded moment instead of a bordered
-            card squeezed inside the article column. */}
-        <section className="pt-20 md:pt-24 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info uppercase tracking-wider">
-                  {guide.tool} Course
-                </span>
-              </div>
-              <h1
-                className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 text-text-primary leading-[1.1]"
-                style={{ textWrap: 'balance' }}
-              >
-                {guide.title}
-              </h1>
-              <p className="text-lg md:text-xl text-text-secondary mb-8 max-w-3xl mx-auto leading-relaxed">
-                {guide.excerpt || guide.description}
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
-                <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface-primary border border-border-primary text-xs text-text-secondary font-medium">
-                  {guide.skillLevel}
-                </span>
-                {guide.lastUpdatedDate && (
-                  <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-surface-primary border border-border-primary text-xs text-text-secondary font-medium">
-                    Updated{' '}
-                    {new Date(guide.lastUpdatedDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </span>
-                )}
-              </div>
-              {firstLesson && (
-                <div className="flex justify-center">
-                  <Link
-                    href={firstLesson.url}
-                    className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors whitespace-nowrap"
-                  >
-                    Start Learning
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Link>
-                </div>
-              )}
-              <p className="text-base font-medium text-text-secondary mt-6">
-                {totalLessons} lessons · {totalMinutes} minutes · {moduleOrder.length} {moduleOrder.length === 1 ? 'module' : 'modules'}
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* Three-column docs layout — same grid as /guides/[course]/[lesson]
             so users see a consistent shell the moment they enter the course. */}
-        <div className="max-w-[1400px] mx-auto px-6 pt-12 md:pt-16 pb-16">
+        <div className="max-w-[1400px] mx-auto px-6 pt-10 pb-16">
           <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px] lg:gap-10">
-            {/* LEFT SIDEBAR — course nav */}
-            <aside className="hidden lg:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-r border-border-primary pr-6">
-                <GuideSidebar guide={guide} currentIsOverview />
-              </div>
+            {/* LEFT SIDEBAR — the shared learn rail. Same groups on every
+                page of the learning area; this course opens in place, so the
+                lesson nav is still here and the rest of the area stays
+                reachable instead of the page feeling like a dead end. */}
+            <aside>
+              <LearnSidebar currentGuideSlug={guide.slug} currentIsOverview />
             </aside>
 
             {/* CENTER — course overview article */}
@@ -251,6 +199,58 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   </li>
                 </ol>
               </nav>
+
+              {/* Course header — inside the content column, not a
+                  full-width band above it. A band spans the whole page, which
+                  pushes the rail below it and makes each course read as its
+                  own site rather than a page of the learning area. */}
+              <header className="mb-12 border-b border-border-primary pb-10">
+                <div className="mb-4">
+                  <span className="type-eyebrow font-semibold text-accent-primary">
+                    {guide.tool} Course
+                  </span>
+                </div>
+                <h1
+                  className="type-h1 mb-4 text-text-primary"
+                  style={{ textWrap: 'balance' }}
+                >
+                  {guide.title}
+                </h1>
+                <p className="type-lead mb-6 text-text-secondary">
+                  {guide.excerpt || guide.description}
+                </p>
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                  <span className="type-caption inline-flex items-center rounded-pill border border-border-primary bg-surface-primary px-3 py-1 text-text-secondary">
+                    {guide.skillLevel}
+                  </span>
+                {guide.lastUpdatedDate && (
+                    <span className="type-caption inline-flex items-center rounded-pill border border-border-primary bg-surface-primary px-3 py-1 text-text-secondary">
+                    Updated{' '}
+                    {new Date(guide.lastUpdatedDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                )}
+              </div>
+                {firstLesson && (
+                  <div className="flex">
+                  <Link
+                    href={firstLesson.url}
+                      className="type-body inline-flex items-center gap-3 whitespace-nowrap rounded-pill bg-accent-primary px-6 py-3 font-medium text-text-on-accent transition-colors hover:bg-accent-hover"
+                  >
+                    Start Learning
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Link>
+                </div>
+              )}
+                <p className="type-caption mt-6 text-text-secondary">
+                  {totalLessons} lessons · {totalMinutes} minutes ·{' '}
+                  {moduleOrder.length}{' '}
+                  {moduleOrder.length === 1 ? 'module' : 'modules'}
+                </p>
+              </header>
 
               {/* About this course */}
               <section className="mb-12">

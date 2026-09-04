@@ -5,7 +5,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import LessonRenderer from '@/components/ui/LessonRenderer';
-import GuideSidebar from '@/components/guides/GuideSidebar';
+import LearnSidebar from '@/components/learn/LearnSidebar';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import GuidePDFCTA from '@/components/guides/GuidePDFCTA';
@@ -233,13 +233,14 @@ export default async function LessonPage({ params }: LessonPageProps) {
             Grid math: left 240px, content 1fr (max ~720px), right 220px. */}
         <div className="max-w-[1400px] mx-auto px-6 pt-20 md:pt-24 pb-16">
           <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px] lg:gap-10">
-            {/* LEFT SIDEBAR — course nav (sticky on desktop) */}
-            <aside className="hidden lg:block">
-              <div
-                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-r border-border-primary pr-6"
-              >
-                <GuideSidebar guide={guide} currentLessonSlug={lessonSlug} />
-              </div>
+            {/* LEFT SIDEBAR — the shared learn rail, with this course open
+                and the current lesson marked. See the course overview page for
+                why this replaced the page-local nav. */}
+            <aside>
+              <LearnSidebar
+                currentGuideSlug={guide.slug}
+                currentLessonSlug={lessonSlug}
+              />
             </aside>
 
             {/* CENTER — lesson article */}
