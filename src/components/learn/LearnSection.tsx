@@ -28,15 +28,15 @@ export default function LearnSection({
         <div className="mb-2 flex items-baseline gap-3">
           <span
             aria-hidden="true"
-            className="font-mono text-sm font-semibold text-accent-primary"
+            className="type-eyebrow font-mono text-accent-primary"
           >
             {section.ordinal}
           </span>
-          <h2 className="text-2xl font-bold text-text-primary md:text-3xl">
+          <h2 className="type-h2 text-text-primary">
             {section.question}
           </h2>
         </div>
-        <p className="text-base leading-relaxed text-text-secondary">
+        <p className="type-body text-text-secondary">
           {section.intro}
         </p>
       </div>
@@ -49,7 +49,7 @@ export default function LearnSection({
 
       <Link
         href={section.more.href}
-        className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent-primary hover:underline"
+        className="type-body mt-6 inline-flex items-center gap-2 font-medium text-accent-primary hover:underline"
       >
         {section.more.label}
         <span aria-hidden="true">→</span>

@@ -21,24 +21,26 @@ export default function LearnItemCard({ item }: { item: ResolvedLearnItem }) {
     <li>
       <Link
         href={item.href}
-        className="group flex flex-col gap-1.5 rounded-2xl border border-border-primary bg-surface-primary p-5 transition-all hover:border-accent-primary/40 hover:shadow-lg sm:p-6"
+        className="group flex h-full flex-col gap-1.5 rounded-card border border-border-primary bg-surface-primary p-5 transition-all hover:border-accent-primary/40 hover:shadow-lg sm:p-6"
       >
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="rounded-full border border-accent-primary/20 bg-accent-subtle px-2.5 py-0.5 text-xs font-semibold text-accent-primary">
+          <span className="type-caption rounded-pill border border-accent-primary/20 bg-accent-subtle px-3 py-0.5 font-semibold text-accent-primary">
             {item.badge}
           </span>
           {meta.length > 0 && (
-            <span className="text-xs text-text-secondary">
+            <span className="type-caption text-text-secondary">
               {meta.join(' · ')}
             </span>
           )}
         </div>
 
-        <h3 className="text-lg font-bold text-text-primary group-hover:text-accent-primary sm:text-xl">
+        <h3 className="type-h3 text-text-primary group-hover:text-accent-primary">
           {item.title}
         </h3>
 
-        <p className="text-sm leading-relaxed text-text-secondary">
+        {/* Clamped: source descriptions vary from one line to a full paragraph,
+            and an unclamped card sets the height of everything beside it. */}
+        <p className="type-body line-clamp-3 text-text-secondary">
           {item.description}
         </p>
       </Link>
