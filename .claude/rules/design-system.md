@@ -47,6 +47,24 @@ Other design-consistency commands:
 - `npm run design-fix` / `npm run design-fix-all` - Fix design issues
 - **See** [Design System Enforcement](../../docs/DESIGN_SYSTEM_ENFORCEMENT.md) for automatic pre-commit validation
 
+## Gotcha: `brand:check` scans whole staged files, not changed lines
+
+Touching one line of a pre-token component stages the whole file and blocks the
+commit on **every** pre-existing violation in it. This has now cost two
+sessions: 2026-08-31 shipped a commit with `--no-verify` after 20 violations in
+`ScreenshotUpload.tsx` / `FullPageResults.tsx`, and 2026-09-04 a two-line change
+to lesson headings forced migrating 19 raw greys in `LessonRenderer.tsx`.
+
+**Before planning a small edit to a legacy file, check what it will drag in:**
+
+```bash
+npx eslint --no-eslintrc >/dev/null 2>&1; npm run brand:check 2>&1 | grep -c '✗'
+```
+
+Then choose deliberately: migrate the file (and say so, it is real scope), or
+achieve the change without touching it. `--no-verify` leaves the debt and the
+next person hits it again.
+
 The validator and its allowlist live in `scripts/analysis/brand-validator.js`. Documented exceptions (grain texture, news strip Today pill, macOS browser-chrome traffic-light hexes) are kept narrow; do not broaden the allowlist when fixing a violation — fix the violation instead.
 
 ## Migration backlog (don't "fix" these casually)
