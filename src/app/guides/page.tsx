@@ -10,6 +10,7 @@ import { resolveLearnSection } from '@/lib/learn-map';
 import LearnSection from '@/components/learn/LearnSection';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
+import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
 
@@ -190,6 +191,7 @@ export default async function GuidesPage() {
                   lessons · {PATTERN_COUNT} patterns · all free, no account
                 </p>
 
+
                 {/* Boxed chips in two columns, matching the reference. Each
                     jumps to its section; the arrow says "this goes down the
                     page" rather than off to another page. */}
@@ -219,6 +221,11 @@ export default async function GuidesPage() {
                     </li>
                   ))}
             </ol>
+
+                {/* Under the questions, not above them. The chips are the
+                    reason someone is on this page; an email field above them
+                    asks for something before offering anything. */}
+                <ConsoleSignup source="guides-hero" />
           </div>
         </section>
 
@@ -234,34 +241,6 @@ export default async function GuidesPage() {
             />
           ))}
         </div>
-
-        {/* Newsletter — placed after the map rather than in the hero. The
-            hero's job is now navigation: read the question, pick a path. An
-            email form there competes with that. By this point the visitor has
-            either found their path or has not, and both are reasonable moments
-            to offer a weekly digest. */}
-        <section className="border-t border-border-primary py-12 md:py-16">
-          <div className="rounded-card border border-border-primary bg-surface-primary p-6 md:grid md:grid-cols-2 md:items-center md:gap-10 md:p-8">
-            <div>
-              <p className="type-h3 text-text-primary">
-                Not sure where to start?
-              </p>
-              <p className="type-body text-text-secondary mt-1">
-                46,000+ reads · 50+ products analyzed daily
-              </p>
-            </div>
-            <div className="mt-4 w-full md:mt-0">
-              <InlineNewsletterSignup
-                variant="hero"
-                source="guides"
-                customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
-                customButtonText="Solve my AI design overload →"
-                customSuccessMessage="You're in! Watch for our next issue."
-                stacked
-              />
-            </div>
-          </div>
-        </section>
 
         {/* Supporting prose. Left-aligned on the same 950px measure and the
             same top rule as the map sections above — centred at a different
