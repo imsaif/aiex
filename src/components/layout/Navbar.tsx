@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import {
   NewspaperIcon,
   MagnifyingGlassIcon,
-  FolderIcon,
   AcademicCapIcon,
   BookmarkIcon,
 } from '@heroicons/react/24/outline';
@@ -147,15 +146,6 @@ const Navbar = ({
               </span>
             </Link>
 
-<Link href="/resources" className={getLinkClasses('/resources')}>
-              <FolderIcon className="w-5 h-5" />
-              <span className="hidden sm:inline relative">
-                Resources
-                <span className="invisible font-semibold block h-0" aria-hidden="true">
-                  Resources
-                </span>
-              </span>
-            </Link>
 
             <Link href="/dashboard" className={getLinkClasses('/dashboard')}>
               <span className="relative inline-flex">

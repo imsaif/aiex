@@ -73,6 +73,13 @@ export const learnMap: LearnSection[] = [
       { kind: 'pattern', slug: 'progressive-disclosure' },
       { kind: 'pattern', slug: 'human-in-the-loop' },
       { kind: 'pattern', slug: 'error-recovery' },
+      {
+        kind: 'resource',
+        href: '/handbook',
+        title: 'The AI UX Handbook',
+        badge: 'Kit',
+        blurb: 'The patterns written up as chapters, if you would rather read straight through.',
+      },
     ],
     more: { label: 'All 38 patterns', href: '/patterns' },
   },
@@ -165,9 +172,18 @@ export const learnMap: LearnSection[] = [
         badge: 'Checklist',
         blurb: 'Where AI interfaces commonly fail assistive technology, and what to do instead.',
       },
+      {
+        kind: 'resource',
+        href: '/toolkit',
+        title: 'AI Interaction Toolkit',
+        badge: 'Kit',
+        blurb: 'Interaction patterns, component specs and implementation checklists as a PDF.',
+      },
       { kind: 'pattern', slug: 'vulnerable-user-protection' },
       { kind: 'pattern', slug: 'universal-access-patterns' },
     ],
-    more: { label: 'The full toolkit', href: '/toolkit' },
+    // Points at /resources now that it is off the nav — the page still exists
+    // and still ranks, so the map is how you get to it.
+    more: { label: 'Every tool and download', href: '/resources' },
   },
 ];
