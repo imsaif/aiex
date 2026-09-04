@@ -13,6 +13,9 @@ import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { guides } from '@/data/guides';
+import { learnMap } from '@/data/learn-map';
+import { resolveLearnSection } from '@/lib/learn-map';
+import LearnSection from '@/components/learn/LearnSection';
 import { siteConfig } from '@/config/seo';
 
 // Per-guide visual anchor — brand logo where available, generic chat icon for
@@ -351,6 +354,19 @@ export default function GuidesPage() {
             </div>
           </div>
         </section>
+
+        {/* The Learn Map — five questions, each opening onto the content that
+            answers it, in the order it makes sense. Resolved server-side; the
+            resolver throws on a dead slug so this can never render a card
+            pointing at a 404. */}
+        <div className="max-w-7xl mx-auto px-6">
+          {learnMap.map((section) => (
+            <LearnSection
+              key={section.id}
+              section={resolveLearnSection(section)}
+            />
+          ))}
+        </div>
 
         {/* Featured guides */}
         {featuredCards.length > 0 && (
