@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Squares2X2Icon,
+  SparklesIcon,
   NewspaperIcon,
   MagnifyingGlassIcon,
   FolderIcon,
@@ -113,21 +113,19 @@ const Navbar = ({
 
           {/* Navigation Links */}
           <div className="flex items-center gap-1 sm:gap-3">
-            {/* Hidden inside the console, where the rail already lists Patterns
-                and Skills — repeating them in the bar is the same link twice on
-                one screen. Kept everywhere else: off the console the bar is the
-                only route to the pattern library. */}
-            {!inConsole && (
-              <Link href="/patterns" className={getLinkClasses('/patterns')}>
-                <Squares2X2Icon className="w-5 h-5" />
-                <span className="hidden sm:inline relative">
-                  Patterns & Skills
-                  <span className="invisible font-semibold block h-0" aria-hidden="true">
-                    Patterns & Skills
-                  </span>
+
+            {/* The audit is the product, and it had no entry in the bar at all
+                — /patterns was standing in for it. First position, ahead of the
+                learning material. */}
+            <Link href="/audit" className={getLinkClasses('/audit')}>
+              <SparklesIcon className="w-5 h-5" />
+              <span className="hidden sm:inline relative">
+                Tool
+                <span className="invisible font-semibold block h-0" aria-hidden="true">
+                  Tool
                 </span>
-              </Link>
-            )}
+              </span>
+            </Link>
 
             <Link href="/guides" className={getLinkClasses('/guides')}>
               <AcademicCapIcon className="w-5 h-5" />
