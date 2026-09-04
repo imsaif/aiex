@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
+import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
@@ -161,6 +162,8 @@ export default function PatternsIndexPage() {
             {patterns.length} patterns · {categories.length} categories · free,
             no account
           </p>
+
+          <ConsoleSignup source="patterns-hero" />
         </header>
 
         {/* Skills note — sits above the grid, sized to its own sentence rather
@@ -188,22 +191,17 @@ export default function PatternsIndexPage() {
           allIndustries={allIndustries}
         />
 
-        {/* Social proof + newsletter. Both were in the hero; they read
-            better here, after someone has seen the patterns, and this is where
-            the page's only remaining email capture lives — the hero carried a
-            second, duplicate one. */}
+        {/* Social proof. The email capture that used to sit under it moved to
+            the page header — one in-page form is enough, and these logos are
+            the only place the proof appears. */}
         <section className="border-t border-border-primary py-16 md:py-20">
           <p className="type-eyebrow mb-4 text-center text-text-secondary">
             Patterns used by leading companies
           </p>
           <LazyLogoCarousel companies={companyLogos} size="sm" gap="lg" />
 
-          <div className="mx-auto mt-14 max-w-2xl text-center">
-          <h2 className="type-h2 text-text-primary mb-3">
-            Daily AI UX news
-          </h2>
-          <InlineNewsletterSignup variant="hero" source="patterns-grid" />
-          <p className="type-caption mt-4 text-text-secondary">
+          <div className="mx-auto mt-10 max-w-2xl text-center">
+          <p className="type-caption text-text-secondary">
             Read by 1,500+ designers every month.
           </p>
           </div>

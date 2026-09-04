@@ -9,6 +9,7 @@ import { InstallCommand } from '@/components/skills/InstallCommand';
 import Navbar from '@/components/layout/Navbar';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
+import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
@@ -91,6 +92,8 @@ export default function SkillsPage() {
               </Link>{' '}
               (6 lessons, about 20 minutes).
             </p>
+
+            <ConsoleSignup source="skills-hero" />
           </div>
 
           <div className="mt-8 lg:mt-0">
