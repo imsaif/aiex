@@ -26,12 +26,11 @@ body {
   /* Ground the learn console sits on. Its own token because the neutral
      ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
      close to separate a nav rail from the page behind it. */
-  /* Ground and rail are one tone on purpose. A ground darker than the rail
-     reads as a stripe down the left edge rather than as a margin; the
-     separation that matters is rail-to-content, and the border plus the white
-     content column does that. */
-  --background-console: #eff1f6;
-  --background-rail: #eff1f6;
+  /* The rail is the darkest surface, not the ground. A ground darker than the
+     rail read as a stripe down the left edge; inverted, the rail reads as a
+     panel and the outer margin recedes. Content stays white. */
+  --background-console: #f7f8fb;
+  --background-rail: #e8ebf2;
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;
@@ -327,8 +326,8 @@ html[data-theme="light"] {
   /* Ground the learn console sits on. Its own token because the neutral
      ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
      close to separate a nav rail from the page behind it. */
-  --background-console: #eff1f6;
-  --background-rail: #eff1f6;
+  --background-console: #f7f8fb;
+  --background-rail: #e8ebf2;
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;
