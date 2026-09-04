@@ -1,12 +1,9 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   AcademicCapIcon,
-  BoltIcon,
-  BookmarkIcon,
-  ChatBubbleLeftRightIcon,
   ClockIcon,
+  BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -20,67 +17,6 @@ import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
-
-// Per-guide visual anchor — brand logo where available, generic chat icon for
-// the conversational UI guide. Drops into the card header so the grid reads
-// as an icon-led list rather than five identical text blocks.
-type GuideIconConfig =
-  | { src: string; alt: string }
-  | { component: typeof ChatBubbleLeftRightIcon; alt: string };
-
-const GUIDE_ICONS: Record<string, GuideIconConfig> = {
-  'claude-code-learning-path': {
-    src: '/images/logos/simple-icons/anthropic.svg',
-    alt: 'Claude',
-  },
-  'claude-design-learning-path': {
-    src: '/images/logos/simple-icons/claude-design.svg',
-    alt: 'Claude Design',
-  },
-  'cursor-learning-path': {
-    src: '/images/logos/simple-icons/cursor.svg',
-    alt: 'Cursor',
-  },
-  'github-copilot-learning-path': {
-    src: '/images/logos/simple-icons/githubcopilot.svg',
-    alt: 'GitHub Copilot',
-  },
-  'github-learning-path': {
-    src: '/images/logos/simple-icons/github.svg',
-    alt: 'GitHub',
-  },
-  'conversational-ui-guide': {
-    component: ChatBubbleLeftRightIcon,
-    alt: 'Conversational UI',
-  },
-  'ai-ux-skills-guide': {
-    component: BoltIcon,
-    alt: 'AI UX Skills',
-  },
-};
-
-function GuideIconTile({ slug }: { slug: string }) {
-  const meta = GUIDE_ICONS[slug];
-  if (!meta) return null;
-  return (
-    <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-      {'component' in meta ? (
-        <meta.component
-          className="w-6 h-6 text-text-primary"
-          aria-hidden="true"
-        />
-      ) : (
-        <Image
-          src={meta.src}
-          alt=""
-          width={28}
-          height={28}
-          className="dark:invert"
-        />
-      )}
-    </div>
-  );
-}
 
 export const revalidate = 86400;
 
@@ -131,90 +67,6 @@ export const metadata: Metadata = {
     creator: siteConfig.creator.twitter,
   },
 };
-
-// Pre-computed card data so the server component can render without touching
-// the heavier client-side guide utilities (framer-motion, icons, etc.).
-interface GuideCard {
-  slug: string;
-  title: string;
-  tool: string;
-  tagline: string;
-  highlights: string[];
-  lessons: number;
-  readTime: number;
-}
-
-const guideMeta: Record<
-  string,
-  { tagline: string; highlights: string[] }
-> = {
-  'claude-code-learning-path': {
-    tagline: 'Start Here',
-    highlights: [
-      'Figma MCP design-to-code',
-      'AI-powered prototyping',
-      'Version control basics',
-    ],
-  },
-  'claude-design-learning-path': {
-    tagline: 'Prompt to prototype',
-    highlights: [
-      'Prompts → clickable HTML prototypes',
-      'Design system extracted from your codebase',
-      'Handoff to Claude Code for implementation',
-    ],
-  },
-  'cursor-learning-path': {
-    tagline: 'AI-native code editor',
-    highlights: [
-      'Tab autocomplete & AI suggestions',
-      'Chat & Composer for code generation',
-      'Design-to-code workflows',
-    ],
-  },
-  'github-copilot-learning-path': {
-    tagline: 'AI pair programmer',
-    highlights: [
-      'Inline code suggestions',
-      'AI pair programming',
-      'Works in VS Code, JetBrains & more',
-    ],
-  },
-  'github-learning-path': {
-    tagline: 'Version control fundamentals',
-    highlights: [
-      'Git basics for designers',
-      'Pull requests & code review',
-      'Team collaboration workflows',
-    ],
-  },
-  'conversational-ui-guide': {
-    tagline: 'Design & implementation',
-    highlights: [
-      'Chat bubbles, streaming & typing indicators',
-      'Context management & error recovery',
-      'Agentic AI patterns & accessibility',
-    ],
-  },
-  'ai-ux-skills-guide': {
-    tagline: 'Your agent, trained',
-    highlights: [
-      'Claude Code from zero: install and first session',
-      'Install a pack: zip or one-file installer',
-      'Triggering: symptom-first, no prompting',
-    ],
-  },
-};
-
-const cards: GuideCard[] = guides.map((g) => ({
-  slug: g.slug,
-  title: g.title,
-  tool: g.tool,
-  tagline: guideMeta[g.slug]?.tagline || '',
-  highlights: guideMeta[g.slug]?.highlights || [],
-  lessons: g.lessons?.length || 0,
-  readTime: g.readTime || 0,
-}));
 
 function buildStructuredData() {
   return [
@@ -408,61 +260,6 @@ export default async function GuidesPage() {
                 stacked
               />
             </div>
-          </div>
-        </section>
-
-        {/* All courses — the catalogue view. The map above is the
-            recommendation; this is the complete list, and it is what
-            guarantees every course keeps an internal link from this page
-            however the curation is edited. Also the target for the map
-            sections' "more" links. */}
-        <section
-          id="all-courses"
-          className="py-12 md:py-16 scroll-mt-24"
-        >
-          <div className="mb-8 max-w-3xl">
-            <h2 className="type-h2 text-text-primary mb-2">All courses</h2>
-            <p className="type-body text-text-secondary">
-              Every learning path on the site, {guides.length} in total. Free,
-              no account needed.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {cards.map((card) => (
-              <Link
-                key={card.slug}
-                href={`/guides/${card.slug}`}
-                className="block p-8 rounded-card border border-border-primary bg-surface-primary hover:border-accent-primary/40 hover:shadow-lg transition-all"
-              >
-                <GuideIconTile slug={card.slug} />
-                <p className="type-caption font-medium text-accent-primary mb-1">
-                  {card.tagline}
-                </p>
-                <h3 className="type-h3 text-text-primary mb-4">{card.title}</h3>
-                {card.highlights.length > 0 && (
-                  <ul className="space-y-2 mb-5">
-                    {card.highlights.map((h, i) => (
-                      <li
-                        key={i}
-                        className="flex items-center gap-2 type-body text-text-secondary"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-pill bg-accent-primary flex-shrink-0" />
-                        {h}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <div className="flex items-center gap-4 type-body text-text-secondary pt-4 border-t border-border-primary">
-                  <span>{card.lessons} lessons</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{card.readTime} min total</span>
-                  <span aria-hidden="true">·</span>
-                  <span className="font-medium text-accent-primary">
-                    Start Learning →
-                  </span>
-                </div>
-              </Link>
-            ))}
           </div>
         </section>
 
