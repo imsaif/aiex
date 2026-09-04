@@ -17,7 +17,10 @@ import { useSavedCount } from '@/hooks/useSavedCount';
 // Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
 const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 
-const Navbar = () => {
+const Navbar = ({
+  /** True on learn-console pages, where the bar matches the console slab. */
+  inConsole = false,
+}: { inConsole?: boolean } = {}) => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { count: savedCount } = useSavedCount();
@@ -67,8 +70,25 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full py-5 bg-surface-primary border-b border-border-primary">
-      <div className="max-w-7xl mx-auto px-6">
+    // Two widths. Off the console the bar is full-width as it always was —
+    // those pages have full-bleed heroes, and a slabbed bar above one reads as
+    // a card floating over nothing. In the console the bar becomes the same
+    // 1600px slab as the shell, so the header lines up with the rail and the
+    // content column instead of stopping 320px short of them.
+    <nav
+      className={
+        inConsole
+          ? 'w-full bg-background-tertiary'
+          : 'w-full py-5 bg-surface-primary border-b border-border-primary'
+      }
+    >
+      <div
+        className={
+          inConsole
+            ? 'mx-auto max-w-[1600px] border-b border-border-primary bg-surface-primary px-6 py-5 lg:border-x'
+            : 'max-w-7xl mx-auto px-6'
+        }
+      >
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-text-primary">
             <span className="flex items-center justify-center w-9 h-9 bg-accent-subtle rounded-full">

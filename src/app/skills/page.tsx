@@ -57,7 +57,7 @@ export default function SkillsPage() {
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
-      <Navbar />
+      <Navbar inConsole />
 
       {/* Learn console shell — same rail as /guides and the course pages, so
           Explore's own links do not drop you out of the area they belong to.

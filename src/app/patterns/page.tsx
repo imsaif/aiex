@@ -134,7 +134,7 @@ export default function PatternsIndexPage() {
       />
 
       <main className="min-h-screen bg-background-primary text-text-primary">
-        <Navbar />
+        <Navbar inConsole />
 
       {/* Learn console shell — same rail as /guides and the course pages, so
           Explore's own links do not drop you out of the area they belong to.

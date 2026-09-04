@@ -301,7 +301,7 @@ export default async function GuidesPage() {
       ))}
 
       <main className="min-h-screen bg-background-primary text-text-primary">
-        <Navbar />
+        <Navbar inConsole />
 
         {/* One two-column shell for the whole page. The rail starts at the
             top, beside the hero, rather than below a full-width hero band —

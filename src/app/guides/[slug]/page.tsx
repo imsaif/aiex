@@ -167,7 +167,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
       ))}
 
       <main className="min-h-screen bg-background-primary text-text-primary">
-        <Navbar />
+        <Navbar inConsole />
 
         <LearnShell
           sidebar={<LearnSidebar currentGuideSlug={guide.slug} currentIsOverview />}

@@ -225,7 +225,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
       ))}
 
       <main className="min-h-screen bg-background-primary text-text-primary">
-        <Navbar />
+        <Navbar inConsole />
 
         {/* Three-column docs layout.
             - Mobile: single column (sidebars hidden, breadcrumb gives context)
