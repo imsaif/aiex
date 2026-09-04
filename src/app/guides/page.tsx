@@ -263,20 +263,18 @@ export default async function GuidesPage() {
           </div>
         </section>
 
-        {/* Intro prose — SEO content block, placed below the cards as
-            supporting content so the hero-to-cards flow matches /patterns.
-            Outer max-w-7xl matches the cards container above; inner max-w-3xl
-            stays narrow for readability and is left-aligned so it lines up
-            with the cards' left edge instead of floating mid-viewport. */}
-        <section className="pt-12 md:pt-16 pb-6 md:pb-8">
-          <div className="max-w-3xl mx-auto">
+        {/* Supporting prose. Left-aligned on the same 950px measure and the
+            same top rule as the map sections above — centred at a different
+            width it read as a different page stapled on the end. */}
+        <section className="border-t border-border-primary py-12 md:py-16">
+          <div className="max-w-[950px]">
             <h2
               id="why-guides"
-              className="scroll-mt-24 text-2xl md:text-3xl font-bold text-text-primary mb-6"
+              className="type-h2 scroll-mt-24 text-text-primary mb-6"
             >
               Why guides
             </h2>
-            <div className="prose prose-lg dark:prose-invert max-w-none text-text-secondary leading-relaxed space-y-4">
+            <div className="type-body space-y-4 text-text-secondary">
               <p>
                 The line between designer and developer is dissolving. Not
                 because designers are learning to code in the traditional
@@ -297,51 +295,50 @@ export default async function GuidesPage() {
               </p>
             </div>
 
-            {/* 3-up benefit row — visual reinforcement of the three claims
-                in the prose above. Centered cells, icon-tile design language
-                shared with the guide cards so the page reads as one system. */}
-            <ul className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <li className="flex flex-col items-center text-center">
+            {/* 3-up benefit row. Left-aligned like everything else on the
+                page; centred cells were the other half of the mismatch. */}
+            <ul className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
+              <li>
                 <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
                   <AcademicCapIcon
                     className="w-6 h-6 text-text-primary"
                     aria-hidden="true"
                   />
                 </div>
-                <h3 className="text-base font-semibold text-text-primary mb-2">
+                <h3 className="type-body font-semibold text-text-primary mb-2">
                   Built for designers
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed">
+                <p className="type-caption text-text-secondary">
                   No coding background required. Each guide assumes a
                   designer starting point and lets the AI handle the syntax.
                 </p>
               </li>
-              <li className="flex flex-col items-center text-center">
+              <li>
                 <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
                   <ClockIcon
                     className="w-6 h-6 text-text-primary"
                     aria-hidden="true"
                   />
                 </div>
-                <h3 className="text-base font-semibold text-text-primary mb-2">
+                <h3 className="type-body font-semibold text-text-primary mb-2">
                   Hours, not weeks
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed">
+                <p className="type-caption text-text-secondary">
                   Each course is a focused path you can work through in an
                   afternoon, no semester-long commitment to get fluent.
                 </p>
               </li>
-              <li className="flex flex-col items-center text-center">
+              <li>
                 <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
                   <BookmarkIcon
                     className="w-6 h-6 text-text-primary"
                     aria-hidden="true"
                   />
                 </div>
-                <h3 className="text-base font-semibold text-text-primary mb-2">
+                <h3 className="type-body font-semibold text-text-primary mb-2">
                   Bookmark any lesson
                 </h3>
-                <p className="text-sm text-text-secondary leading-relaxed">
+                <p className="type-caption text-text-secondary">
                   Every lesson has its own URL: save, share, or return to
                   the exact step you need without scrolling through a course.
                 </p>
@@ -350,24 +347,22 @@ export default async function GuidesPage() {
           </div>
         </section>
 
-        {/* FAQ — visible counterpart to the FAQPage JSON-LD above. Same
-            container pattern as the intro: max-w-7xl outer, max-w-3xl inner
-            left-aligned. Question h3s and answer p sizes bumped for
-            readability and stronger hierarchy. */}
-        <section className="py-12 md:py-16">
-          <div className="max-w-3xl mx-auto">
+        {/* FAQ — the visible counterpart the FAQPage markup requires. Same
+            measure and rule as every other section. */}
+        <section className="border-t border-border-primary py-12 md:py-16">
+          <div className="max-w-[950px]">
             <h2
               id="faq"
-              className="scroll-mt-24 text-2xl md:text-3xl font-bold text-text-primary mb-8"
+              className="type-h2 scroll-mt-24 text-text-primary mb-8"
             >
               Frequently Asked Questions
             </h2>
             <div className="space-y-8">
               <div>
-                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                <h3 className="type-lead font-semibold text-text-primary mb-3">
                   Which AI tool should designers learn first?
                 </h3>
-                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                <p className="type-body text-text-secondary">
                   Start with Claude Code. It has the most forgiving learning
                   curve, works with Figma via MCP for design-to-code
                   workflows, and lets you describe what you want in plain
@@ -377,10 +372,10 @@ export default async function GuidesPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                <h3 className="type-lead font-semibold text-text-primary mb-3">
                   Do I need to know how to code to use these guides?
                 </h3>
-                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                <p className="type-body text-text-secondary">
                   No. Every guide is written for designers with zero coding
                   background. We cover everything from terminal basics to
                   version control to shipping real prototypes. You describe
@@ -389,10 +384,10 @@ export default async function GuidesPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                <h3 className="type-lead font-semibold text-text-primary mb-3">
                   Are these guides really free?
                 </h3>
-                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                <p className="type-body text-text-secondary">
                   Yes, all guides are free. No email required to read them.
                   The tools themselves (Claude Code, Cursor, GitHub Copilot)
                   have free tiers, so we recommend starting with those and

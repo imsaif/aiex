@@ -29,7 +29,10 @@ export default function LearnSection({
         {/* The ordinal sits outside the text column so the heading and the
             intro share a left edge. Previously the ordinal pushed only the
             heading across, and the intro hung to the left of its own title. */}
-        <div className="flex items-baseline gap-3">
+        {/* The ordinal hangs into the column's left padding at lg and up, so
+            every h2 on the page starts at the same edge — numbered map
+            sections and the unnumbered prose sections alike. */}
+        <div className="flex items-baseline gap-3 lg:-ml-7">
           <span
             aria-hidden="true"
             className="type-eyebrow shrink-0 font-mono text-accent-primary"
