@@ -57,12 +57,16 @@ export interface LearnSection {
   more: { label: string; href: string };
 }
 
+/**
+ * Section intros are approved copy, not placeholders — reviewed 2026-09-04.
+ * They were drafted here and signed off rather than rewritten, so treat the
+ * wording as intentional.
+ */
 export const learnMap: LearnSection[] = [
   {
     id: 'first-ai-feature',
     ordinal: '01',
     question: "I'm designing my first AI feature. Where do I start?",
-    // TODO(copy): replace with Imran's words before this ships.
     intro:
       'The usual UX playbook assumes the system does what you told it to. Start ' +
       'with what changes when it does not, and the handful of patterns you will ' +
@@ -87,7 +91,6 @@ export const learnMap: LearnSection[] = [
     id: 'trust',
     ordinal: '02',
     question: 'How do I make people trust what the AI tells them?',
-    // TODO(copy): replace with Imran's words before this ships.
     intro:
       'Most AI features fail on confidence, not capability. These cover showing ' +
       'uncertainty, explaining a decision, and leaving people a way back when it ' +
@@ -108,7 +111,6 @@ export const learnMap: LearnSection[] = [
     id: 'conversation',
     ordinal: '03',
     question: 'How do I design the conversation itself?',
-    // TODO(copy): replace with Imran's words before this ships.
     intro:
       'Turn-taking, memory, and knowing when to hand back to a person. The course ' +
       'covers the shape of a conversation end to end; the patterns are the ' +
@@ -129,7 +131,6 @@ export const learnMap: LearnSection[] = [
     id: 'build-it',
     ordinal: '04',
     question: 'How do I get AI tools to build what I designed?',
-    // TODO(copy): replace with Imran's words before this ships.
     intro:
       'Five hands-on paths for the tools that turn a design into working code. ' +
       'Pick the one you already have open — they do not need to be taken in order.',
@@ -146,7 +147,6 @@ export const learnMap: LearnSection[] = [
     id: 'check-your-work',
     ordinal: '05',
     question: 'How do I check my work before it ships?',
-    // TODO(copy): replace with Imran's words before this ships.
     intro:
       'Run the design past something other than your own judgement. Two ' +
       'checklists, an audit kit, and the patterns that catch what checklists miss.',
