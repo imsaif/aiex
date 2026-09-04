@@ -109,11 +109,14 @@ export default async function LearnSidebar() {
   return (
     // Hidden below lg: the map itself is the mobile navigation, and a collapsed
     // accordion above five sections of content would only push them down.
-    // The rail is also taller than the viewport, so it scrolls inside itself —
-    // without that the Topics group sits below the fold with no way to reach it.
+    //
+    // The rail scrolls with the page rather than inside its own box. It is
+    // taller than the viewport, and a sticky column with overflow-y-auto puts a
+    // second scrollbar on screen — the reference rail has none, and every group
+    // is still reachable by simply scrolling the page.
     <nav
       aria-label="Learn"
-      className="hidden lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-8rem)] lg:self-start lg:overflow-y-auto lg:pr-2"
+      className="hidden lg:block lg:border-r lg:border-border-primary lg:pr-6"
     >
       <div className="mb-8">
         <GroupLabel>Explore</GroupLabel>

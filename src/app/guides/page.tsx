@@ -331,21 +331,30 @@ export default async function GuidesPage() {
                   lessons · {PATTERN_COUNT} patterns · all free, no account
                 </p>
 
-                <ol className="border-t border-border-primary">
+                {/* Boxed chips in two columns, matching the reference. Each
+                    jumps to its section; the arrow says "this goes down the
+                    page" rather than off to another page. */}
+                <ol className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   {learnMap.map((section) => (
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
-                        className="group flex items-baseline gap-4 border-b border-border-primary py-4 transition-colors hover:text-accent-primary"
+                        className="group flex h-full items-center gap-3 rounded-card border border-border-primary bg-surface-primary px-4 py-4 transition-colors hover:border-accent-primary/40"
                       >
                         <span
                           aria-hidden="true"
-                          className="type-eyebrow font-mono text-accent-primary"
+                          className="type-eyebrow font-mono text-text-secondary"
                         >
                           {section.ordinal}
                         </span>
-                        <span className="type-h3 text-text-primary group-hover:text-accent-primary">
+                        <span className="type-body flex-1 font-semibold text-text-primary group-hover:text-accent-primary">
                           {section.question}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className="type-body text-text-secondary group-hover:text-accent-primary"
+                        >
+                          ↓
                         </span>
                       </a>
                     </li>
