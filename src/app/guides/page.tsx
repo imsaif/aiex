@@ -185,15 +185,12 @@ export default async function GuidesPage() {
                   Pick the question that sounds like you. Each one opens onto
                   the courses, patterns and checklists that answer it.
                 </p>
-                <p className="type-caption text-text-secondary">
+                <p className="type-caption text-text-secondary mb-10">
                   {guides.length} courses ·{' '}
                   {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
                   lessons · {PATTERN_COUNT} patterns · all free, no account
                 </p>
 
-                <ConsoleSignup source="guides-hero" />
-
-                <div className="mb-10" />
 
                 {/* Boxed chips in two columns, matching the reference. Each
                     jumps to its section; the arrow says "this goes down the
@@ -224,6 +221,11 @@ export default async function GuidesPage() {
                     </li>
                   ))}
             </ol>
+
+                {/* Under the questions, not above them. The chips are the
+                    reason someone is on this page; an email field above them
+                    asks for something before offering anything. */}
+                <ConsoleSignup source="guides-hero" />
           </div>
         </section>
 
