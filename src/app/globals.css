@@ -812,6 +812,25 @@ html[data-theme="dark"] .newsletter-content a[style*="background-color: #162036"
   display: none;
 }
 
+/* RULE: no scrollbar anywhere in the courses area chrome.
+   The learn rail and the "On this page" column both scroll independently so
+   they can stay pinned, but neither should ever show a bar. Targeted by
+   element as well as by utility class so a missing class cannot quietly bring
+   one back. Content inside a lesson — the chat demos — is deliberately not
+   covered: there a scrollbar is the affordance telling you the transcript
+   scrolls. */
+nav[aria-label='Learn'],
+nav[aria-label='On this page'],
+[data-course-chrome='scroll'] {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+nav[aria-label='Learn']::-webkit-scrollbar,
+nav[aria-label='On this page']::-webkit-scrollbar,
+[data-course-chrome='scroll']::-webkit-scrollbar {
+  display: none;
+}
+
 .scrollbar-subtle {
   scrollbar-width: thin;
   scrollbar-color: var(--border-primary) transparent;

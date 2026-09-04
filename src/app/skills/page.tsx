@@ -7,6 +7,7 @@ import { exampleProducts } from '@/lib/skills/usedBy';
 import { SkillsDirectory, type SkillRow } from '@/components/skills/SkillsDirectory';
 import { InstallCommand } from '@/components/skills/InstallCommand';
 import Navbar from '@/components/layout/Navbar';
+import LearnSidebar from '@/components/learn/LearnSidebar';
 import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
@@ -57,9 +58,17 @@ export default function SkillsPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemList) }} />
       <Navbar />
 
+      {/* Learn console shell — same rail as /guides and the course pages, so
+          Explore's own links do not drop you out of the area they belong to.
+          Opened directly under the navbar so the rail runs the full length of
+          the page rather than starting below a full-width hero. */}
+      <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
+        <LearnSidebar active="skills" />
+        <div className="min-w-0">
+
       {/* Hero Section - centered, matching resources/patterns/news style */}
-      <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="pt-10 pb-12 md:pb-16 border-b border-border-primary">
+        <div>
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-6">
               <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
@@ -109,6 +118,9 @@ export default function SkillsPage() {
           </p>
         </div>
       </section>
+
+        </div>
+      </div>
 
       <SavedItemsBar />
       <Footer />

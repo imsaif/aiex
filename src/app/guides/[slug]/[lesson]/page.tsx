@@ -440,7 +440,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
             {/* RIGHT SIDEBAR — on this page (xl+ only) */}
             <aside className="hidden xl:block">
               <div
-                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-subtle border-l border-border-primary pl-6"
+                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6" data-course-chrome="scroll"
               >
                 <OnThisPage headings={headings} />
               </div>

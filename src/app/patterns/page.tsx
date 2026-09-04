@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
+import LearnSidebar from '@/components/learn/LearnSidebar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
@@ -134,11 +135,19 @@ export default function PatternsIndexPage() {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
+      {/* Learn console shell — same rail as /guides and the course pages, so
+          Explore's own links do not drop you out of the area they belong to.
+          Opened directly under the navbar so the rail runs the full length of
+          the page rather than starting below a full-width hero. */}
+      <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
+        <LearnSidebar active="patterns" />
+        <div className="min-w-0">
+
         {/* Hero — restored to the pre-swap homepage treatment: large H1,
             subhead, and the company-logo carousel as social proof. Server-
             rendered for fast LCP. */}
-        <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="pt-10 pb-12 md:pb-16 border-b border-border-primary">
+          <div>
             <div className="text-center max-w-4xl mx-auto">
               <h1
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
@@ -214,6 +223,9 @@ export default function PatternsIndexPage() {
             The AI UX design pattern library for product designers and teams building AI-powered experiences. Each pattern is documented from 3+ real implementations across products like ChatGPT, Claude, GitHub Copilot, Midjourney, Google, and Notion, with examples, code demos, and research-backed guidance you can apply today.
           </p>
         </div>
+
+        </div>
+      </div>
 
         {/* Raised above SavedItemsBar, which is fixed to the bottom on this route. */}
         <ScrollToTop bottom={88} />

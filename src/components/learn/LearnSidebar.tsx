@@ -186,17 +186,28 @@ function CourseLessons({
 }
 
 export default async function LearnSidebar({
+  active,
   currentGuideSlug,
   currentLessonSlug,
   currentIsOverview,
 }: {
+  /** Which Explore row to mark as the current page. */
+  active?: 'map' | 'patterns' | 'skills';
   /** Set on a course or lesson page so that course opens in the rail. */
   currentGuideSlug?: string;
   currentLessonSlug?: string;
   currentIsOverview?: boolean;
 } = {}) {
   const issues = await getLatestIssues();
-  const onTheMap = !currentGuideSlug;
+  // A course page is inside the map's area but is not the map itself.
+  const activeHref =
+    active === 'patterns'
+      ? '/patterns'
+      : active === 'skills'
+        ? '/skills'
+        : currentGuideSlug
+          ? null
+          : '/guides';
 
   return (
     // Hidden below lg: the map itself is the mobile navigation, and a collapsed
@@ -220,7 +231,7 @@ export default async function LearnSidebar({
             <li key={item.href}>
               <RailLink
                 href={item.href}
-                current={item.href === '/guides' && onTheMap}
+                current={item.href === activeHref}
                 external={item.external}
               >
                 {item.label}
