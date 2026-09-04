@@ -12,7 +12,7 @@ import type { ReactNode } from 'react';
  * sheet:
  *
  *   background-tertiary   the ground the console sits on
- *   background-secondary  the rail column
+ *   background-rail       the rail column, a real step off white
  *   background-primary    the content column, the only white surface
  *
  * The console is a bounded slab centred on that ground, with an explicit edge
@@ -42,11 +42,11 @@ export default function LearnShell({
     : 'lg:grid-cols-[260px_minmax(0,1fr)]';
 
   return (
-    <div className="bg-background-tertiary">
+    <div className="learn-console-ground bg-background-console">
       <div
         className={`mx-auto max-w-[1600px] lg:grid lg:border-x lg:border-border-primary ${columns}`}
       >
-        <div className="bg-background-secondary lg:border-r lg:border-border-primary">
+        <div className="bg-background-rail lg:border-r lg:border-border-primary">
           {sidebar}
         </div>
 

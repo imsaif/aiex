@@ -70,15 +70,16 @@ const Navbar = ({
   };
 
   return (
-    // Two widths. Off the console the bar is full-width as it always was —
-    // those pages have full-bleed heroes, and a slabbed bar above one reads as
-    // a card floating over nothing. In the console the bar becomes the same
-    // 1600px slab as the shell, so the header lines up with the rail and the
-    // content column instead of stopping 320px short of them.
+    // The content width is 1600px either way, so the logo and the nav items do
+    // not move when you cross between the console and the rest of the site —
+    // that shift was visible as a jump. Only the surround changes: off the
+    // console the bar is a plain full-width band, because those pages have
+    // full-bleed heroes and a slabbed bar above one reads as a card floating
+    // over nothing. In the console it becomes the same slab as the shell.
     <nav
       className={
         inConsole
-          ? 'w-full bg-background-tertiary'
+          ? 'w-full bg-background-console'
           : 'w-full py-5 bg-surface-primary border-b border-border-primary'
       }
     >
@@ -86,7 +87,7 @@ const Navbar = ({
         className={
           inConsole
             ? 'mx-auto max-w-[1600px] border-b border-border-primary bg-surface-primary px-6 py-5 lg:border-x'
-            : 'max-w-7xl mx-auto px-6'
+            : 'mx-auto max-w-[1600px] px-6'
         }
       >
         <div className="flex items-center justify-between">

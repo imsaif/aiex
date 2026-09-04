@@ -23,6 +23,11 @@ body {
   --background-secondary: #fafafa;
   --background-tertiary: #f5f5f5;
   --background-grain: #F0F1F5;
+  /* Ground the learn console sits on. Its own token because the neutral
+     ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
+     close to separate a nav rail from the page behind it. */
+  --background-console: #e4e7ee;   /* ground */
+  --background-rail: #eff1f6;      /* nav rail — a real step off white */
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;
@@ -188,6 +193,8 @@ body {
     --background-secondary: #171717;
     --background-tertiary: #1f1f1f;
     --background-grain: #162036;
+    --background-console: #050505;
+    --background-rail: #141414;
 
     --surface-primary: #0f0f0f;
     --surface-secondary: #171717;
@@ -253,6 +260,7 @@ html[data-theme="dark"] {
   --background-secondary: #171717;
   --background-tertiary: #1f1f1f;
   --background-grain: #162036;
+  --background-console: #050505;
 
   --surface-primary: #0f0f0f;
   --surface-secondary: #171717;
@@ -312,6 +320,11 @@ html[data-theme="light"] {
   --background-secondary: #fafafa;
   --background-tertiary: #f5f5f5;
   --background-grain: #F0F1F5;
+  /* Ground the learn console sits on. Its own token because the neutral
+     ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
+     close to separate a nav rail from the page behind it. */
+  --background-console: #e4e7ee;
+  --background-rail: #eff1f6;
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;
@@ -790,6 +803,15 @@ html[data-theme="dark"] .newsletter-content a[style*="background-color: #162036"
 /* Disclosure rows in the learn rail. Native <details> gives expand/collapse
    with no JavaScript and, crucially, no navigation — clicking a course opens it
    in place instead of loading its page and throwing you back to the top. */
+/* The reserved scrollbar gutter is part of the <html> box, so the console's
+   ground — painted by a div inside <body> — cannot reach it, leaving a pale
+   strip down one edge. Tint the canvas itself when a console shell is on the
+   page. :has() rather than a class toggled in JS, so there is no flash before
+   hydration. */
+html:has(.learn-console-ground) {
+  background-color: var(--background-console);
+}
+
 .rail-disclosure > summary {
   list-style: none;
   cursor: pointer;
