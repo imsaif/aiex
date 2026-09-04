@@ -24,7 +24,8 @@ export default function LearnSection({
       id={section.id}
       className="scroll-mt-24 border-b border-border-primary py-12 last:border-b-0 md:py-16"
     >
-      <div className="mb-8 max-w-3xl">
+      {/* Same capped measure as the hero. The rows below stay full width. */}
+      <div className="mb-8 max-w-[950px]">
         <div className="mb-2 flex items-baseline gap-3">
           <span
             aria-hidden="true"

@@ -314,7 +314,10 @@ export default async function GuidesPage() {
             table of contents and jumps into the matching section. Questions
             come from learnMap so the hero cannot drift from the map below. */}
         <section className="border-b border-border-primary pb-12 pt-10 md:pb-16">
-          <div>
+          {/* Capped measure. The column runs ~1200px; prose set that wide is
+              tiring to read and is what made this page feel busy. Rows and
+              grids below keep the full width. */}
+          <div className="max-w-[950px]">
                 <p className="type-eyebrow font-semibold text-accent-primary mb-4">
                   The Map
                 </p>
@@ -324,7 +327,7 @@ export default async function GuidesPage() {
                 >
                   What do you want to do with AI UX?
                 </h1>
-                <p className="type-lead max-w-2xl text-text-secondary mb-4">
+                <p className="type-lead text-text-secondary mb-4">
                   Pick the question that sounds like you. Each one opens onto
                   the courses, patterns and checklists that answer it, in the
                   order they make sense.
