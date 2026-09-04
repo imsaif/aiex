@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import LessonRenderer from '@/components/ui/LessonRenderer';
 import LearnSidebar from '@/components/learn/LearnSidebar';
+import LearnShell from '@/components/learn/LearnShell';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import GuidePDFCTA from '@/components/guides/GuidePDFCTA';
@@ -231,18 +232,20 @@ export default async function LessonPage({ params }: LessonPageProps) {
             - lg (≥1024px): left sidebar + content (no right sidebar yet)
             - xl (≥1280px): left sidebar + content + on-this-page TOC
             Grid math: left 240px, content 1fr (max ~720px), right 220px. */}
-        <div className="max-w-[1400px] mx-auto px-6 pt-20 md:pt-24 pb-16">
-          <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px] lg:gap-10">
-            {/* LEFT SIDEBAR — the shared learn rail, with this course open
-                and the current lesson marked. See the course overview page for
-                why this replaced the page-local nav. */}
-            <aside>
-              <LearnSidebar
-                currentGuideSlug={guide.slug}
-                currentLessonSlug={lessonSlug}
-              />
-            </aside>
-
+        <LearnShell
+          sidebar={
+            <LearnSidebar
+              currentGuideSlug={guide.slug}
+              currentLessonSlug={lessonSlug}
+            />
+          }
+          aside={
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6" data-course-chrome="scroll">
+              <OnThisPage headings={headings} />
+            </div>
+          }
+        >
+          <div className="pt-10 pb-16">
             {/* CENTER — lesson article */}
             <article className="max-w-3xl">
               {/* Breadcrumb */}
@@ -437,16 +440,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </div>
             </article>
 
-            {/* RIGHT SIDEBAR — on this page (xl+ only) */}
-            <aside className="hidden xl:block">
-              <div
-                className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6" data-course-chrome="scroll"
-              >
-                <OnThisPage headings={headings} />
-              </div>
-            </aside>
           </div>
-        </div>
+        </LearnShell>
 
         <Footer />
         <ScrollToTop />

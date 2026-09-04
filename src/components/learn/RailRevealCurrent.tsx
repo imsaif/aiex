@@ -1,6 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useLayoutEffect, useEffect } from 'react';
+
+// useLayoutEffect runs before paint, so the rail is already in the right place
+// on first frame. With useEffect the rail painted at scrollTop 0 and then
+// jumped, which is exactly the flicker this is meant to prevent. Falls back to
+// useEffect on the server, where useLayoutEffect warns and does nothing.
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 /**
  * Scrolls the rail so the current item is visible.
@@ -20,7 +27,7 @@ import { useEffect } from 'react';
  * behaviour people expect when opening a lesson.
  */
 export default function RailRevealCurrent() {
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const rail = document.querySelector<HTMLElement>('nav[aria-label="Learn"]');
     const current = rail?.querySelector<HTMLElement>('[aria-current="page"]');
     if (!rail || !current) return;

@@ -17,6 +17,7 @@ import { learnMap } from '@/data/learn-map';
 import { resolveLearnSection } from '@/lib/learn-map';
 import LearnSection from '@/components/learn/LearnSection';
 import LearnSidebar from '@/components/learn/LearnSidebar';
+import LearnShell from '@/components/learn/LearnShell';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
 
@@ -305,9 +306,7 @@ export default async function GuidesPage() {
         {/* One two-column shell for the whole page. The rail starts at the
             top, beside the hero, rather than below a full-width hero band —
             that is what makes the learn area read as one place. */}
-        <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
-          <LearnSidebar />
-          <div className="min-w-0">
+        <LearnShell sidebar={<LearnSidebar />}>
 
         {/* Hero — question-led, following the aihero.dev/learn model. The
             page opens by asking the visitor what they want to do rather than
@@ -604,8 +603,7 @@ export default async function GuidesPage() {
           </div>
         </section>
 
-        </div>
-        </div>
+        </LearnShell>
 
         <Footer />
         <ScrollToTop />

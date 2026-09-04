@@ -11,6 +11,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import LearnSidebar from '@/components/learn/LearnSidebar';
+import LearnShell from '@/components/learn/LearnShell';
 import OnThisPage from '@/components/guides/OnThisPage';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
@@ -168,18 +169,15 @@ export default async function GuidePage({ params }: GuidePageProps) {
       <main className="min-h-screen bg-background-primary text-text-primary">
         <Navbar />
 
-        {/* Three-column docs layout — same grid as /guides/[course]/[lesson]
-            so users see a consistent shell the moment they enter the course. */}
-        <div className="max-w-[1400px] mx-auto px-6 pt-10 pb-16">
-          <div className="lg:grid lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[240px_minmax(0,1fr)_220px] lg:gap-10">
-            {/* LEFT SIDEBAR — the shared learn rail. Same groups on every
-                page of the learning area; this course opens in place, so the
-                lesson nav is still here and the rest of the area stays
-                reachable instead of the page feeling like a dead end. */}
-            <aside>
-              <LearnSidebar currentGuideSlug={guide.slug} currentIsOverview />
-            </aside>
-
+        <LearnShell
+          sidebar={<LearnSidebar currentGuideSlug={guide.slug} currentIsOverview />}
+          aside={
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6" data-course-chrome="scroll">
+              <OnThisPage headings={headings} />
+            </div>
+          }
+        >
+          <div className="pt-10 pb-16">
             {/* CENTER — course overview article */}
             <article className="max-w-3xl">
               {/* Breadcrumb */}
@@ -440,14 +438,8 @@ export default async function GuidePage({ params }: GuidePageProps) {
               </div>
             </article>
 
-            {/* RIGHT SIDEBAR — on this page (xl+ only) */}
-            <aside className="hidden xl:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto scrollbar-none border-l border-border-primary pl-6" data-course-chrome="scroll">
-                <OnThisPage headings={headings} />
-              </div>
-            </aside>
           </div>
-        </div>
+        </LearnShell>
 
         <Footer />
         <ScrollToTop />

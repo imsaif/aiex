@@ -64,51 +64,46 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
   return (
     <>
       {/* Main Content with Sidebar */}
-      <div id="patterns" className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-24">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Desktop Sidebar */}
-          <aside className="hidden lg:block lg:w-64 flex-shrink-0">
-            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-card sticky top-24">
-              <h3
-                className="font-semibold text-xl mb-4 text-gray-900 dark:text-white"
+      <div id="patterns" className="pt-12 md:pt-16 pb-24">
+        {/* Categories as a horizontal filter row rather than a left column.
+            Inside the console that column sat beside the rail, so the page had
+            two nav columns before the first card; as a row it costs one line
+            and the grid gets the full width. */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setSelectedCategory('All Categories')}
+              aria-pressed={selectedCategory === 'All Categories'}
+              className={`type-caption rounded-pill border px-4 py-2 transition-colors ${
+                selectedCategory === 'All Categories'
+                  ? 'border-transparent bg-text-primary font-semibold text-background-primary'
+                  : 'border-border-primary text-text-secondary hover:border-accent-primary/40 hover:text-text-primary'
+              }`}
+            >
+              All Patterns
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.title)}
+                aria-pressed={selectedCategory === cat.title}
+                className={`type-caption rounded-pill border px-4 py-2 transition-colors ${
+                  selectedCategory === cat.title
+                    ? 'border-transparent bg-text-primary font-semibold text-background-primary'
+                    : 'border-border-primary text-text-secondary hover:border-accent-primary/40 hover:text-text-primary'
+                }`}
               >
-                Categories
-              </h3>
-              <ul className="space-y-2">
-                <li>
-                  <button
-                    onClick={() => setSelectedCategory('All Categories')}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
-                      selectedCategory === 'All Categories'
-                        ? 'bg-white font-semibold shadow-sm text-black'
-                        : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
-                    }`}
-                  >
-                    All Patterns
-                  </button>
-                </li>
-                {categories.map(cat => (
-                  <li key={cat.id}>
-                    <button
-                      onClick={() => setSelectedCategory(cat.title)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
-                        selectedCategory === cat.title
-                          ? 'bg-white font-semibold shadow-sm text-black'
-                          : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
-                      }`}
-                    >
-                      {cat.title}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
+                {cat.title}
+              </button>
+            ))}
+          </div>
+        </div>
 
+        <div className="flex flex-col">
           {/* Patterns Grid */}
-          <div className="flex-1">
+          <div>
             {/* Search Bar */}
-            <div className="mb-6 bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card">
+            <div className="mb-6 bg-surface-primary rounded-card p-5 border border-border-primary shadow-card">
               <UnifiedSearchBar
                 placeholder="Search any AI Pattern you need"
                 value={searchQuery}
@@ -126,7 +121,7 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
             </div>
 
             {/* Filter Bars */}
-            <div className="bg-surface-primary dark:bg-gray-800/50 rounded-2xl p-5 border border-gray-200 dark:border-gray-700 shadow-card mb-8">
+            <div className="bg-surface-primary rounded-card p-5 border border-border-primary shadow-card mb-8">
               <div className="flex flex-wrap items-start gap-3">
                 <ProductFilterBar
                   products={allProducts}
@@ -203,11 +198,11 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                       </p>
 
                       {/* Divider */}
-                      <div className="border-t border-gray-200 dark:border-gray-700 mb-6"></div>
+                      <div className="border-t border-border-primary mb-6"></div>
 
                       {/* Category */}
                       <div className="flex items-center gap-2 mb-6">
-                        <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-text-secondary">
+                        <span className="px-3 py-1.5 rounded-pill type-caption bg-surface-secondary text-text-secondary">
                           {pattern.category}
                         </span>
                       </div>

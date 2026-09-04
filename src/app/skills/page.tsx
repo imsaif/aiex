@@ -8,6 +8,7 @@ import { SkillsDirectory, type SkillRow } from '@/components/skills/SkillsDirect
 import { InstallCommand } from '@/components/skills/InstallCommand';
 import Navbar from '@/components/layout/Navbar';
 import LearnSidebar from '@/components/learn/LearnSidebar';
+import LearnShell from '@/components/learn/LearnShell';
 import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
@@ -62,44 +63,54 @@ export default function SkillsPage() {
           Explore's own links do not drop you out of the area they belong to.
           Opened directly under the navbar so the rail runs the full length of
           the page rather than starting below a full-width hero. */}
-      <div className="max-w-7xl mx-auto px-6 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-12">
-        <LearnSidebar active="skills" />
-        <div className="min-w-0">
+      <LearnShell sidebar={<LearnSidebar active="skills" />}>
 
-      {/* Hero Section - centered, matching resources/patterns/news style */}
-      <section className="pt-10 pb-12 md:pb-16 border-b border-border-primary">
-        <div>
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <span className="px-3 py-1.5 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info">
-                Free Claude Code Skills
-              </span>
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ color: 'var(--text-hero)' }}>
+      {/* Split page header, following the reference: identity on the left,
+          the thing you actually came to copy on the right. No centred hero —
+          inside a console column that reads as a page within a page. */}
+      <header className="border-b border-border-primary pt-10 pb-10">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12">
+          <div>
+            <p className="type-eyebrow mb-3 font-semibold text-accent-primary">
+              Free Claude Code Skills
+            </p>
+            <h1 className="type-h1 mb-3" style={{ color: 'var(--text-hero)' }}>
               {rows.length} AI UX Skills for Claude Code
             </h1>
-            <p className="text-lg md:text-xl text-text-secondary">
-              Design judgment your coding agent applies on its own. Install once, no prompting.
+            <p className="type-lead max-w-xl text-text-secondary">
+              Design judgment your coding agent applies on its own. Install
+              once, no prompting.
             </p>
-            <InstallCommand command={GENERIC_COMMAND} />
-            <p className="mt-4 text-sm text-text-secondary">
+            <p className="type-caption mt-4 text-text-secondary">
               New to skills?{' '}
-              <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+              <Link
+                href="/guides/ai-ux-skills-guide"
+                className="font-medium text-accent-primary transition-colors hover:text-accent-hover"
+              >
                 Read how skills work
               </Link>{' '}
               (6 lessons, about 20 minutes).
             </p>
           </div>
-        </div>
-      </section>
 
-      <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
+          <div className="mt-8 lg:mt-0">
+            <div className="rounded-card border border-border-primary bg-surface-primary p-5">
+              <p className="type-caption mb-3 font-semibold text-text-primary">
+                Install the skills
+              </p>
+              <InstallCommand command={GENERIC_COMMAND} />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="py-12 md:py-16">
         <SkillsDirectory rows={rows} categories={categoryNames} />
       </div>
 
       {/* Bottom CTA */}
-      <section className="border-t border-border-primary bg-surface-primary">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20 text-center">
+      <section className="border-t border-border-primary">
+        <div className="py-16 md:py-20 text-center">
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">Want several at once?</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl mx-auto">
             Save patterns as you browse and download them as one pack from your{' '}
@@ -119,8 +130,7 @@ export default function SkillsPage() {
         </div>
       </section>
 
-        </div>
-      </div>
+      </LearnShell>
 
       <SavedItemsBar />
       <Footer />
