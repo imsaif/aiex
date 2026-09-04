@@ -61,7 +61,7 @@ const Navbar = ({
   // Get link classes based on active state - minimal style with no layout shift
   const getLinkClasses = (href: string) => {
     const active = isActive(href);
-    return `flex items-center gap-2 px-2 sm:px-4 py-2 transition-colors duration-200 ease-out text-base border-b-2 ${
+    return `type-caption flex items-center gap-2 px-2 sm:px-3 py-1.5 transition-colors duration-200 ease-out border-b-2 ${
       active
         ? 'text-text-primary border-text-primary font-semibold'
         : 'text-text-secondary hover:text-text-primary border-transparent'
@@ -78,20 +78,20 @@ const Navbar = ({
     <nav
       className={
         inConsole
-          ? 'w-full bg-background-console'
-          : 'w-full py-5 bg-surface-primary border-b border-border-primary'
+          ? 'sticky top-0 z-sticky w-full bg-background-console'
+          : 'sticky top-0 z-sticky w-full py-3 bg-surface-primary border-b border-border-primary'
       }
     >
       <div
         className={
           inConsole
-            ? 'mx-auto max-w-[1600px] border-b border-border-primary bg-surface-primary px-6 py-5 lg:border-x'
+            ? 'mx-auto max-w-[1600px] border-b border-border-primary bg-surface-primary px-6 py-3 lg:border-x'
             : 'mx-auto max-w-[1600px] px-6'
         }
       >
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-text-primary">
-            <span className="flex items-center justify-center w-9 h-9 bg-accent-subtle rounded-full">
+            <span className="flex items-center justify-center w-8 h-8 bg-accent-subtle rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -107,7 +107,7 @@ const Navbar = ({
                 />
               </svg>
             </span>
-            <span className="text-xl font-medium tracking-tight">aiux</span>
+            <span className="type-lead font-medium tracking-tight">aiux</span>
           </Link>
 
           {/* Navigation Links */}

@@ -222,7 +222,7 @@ export default async function LearnSidebar({
       aria-label="Learn"
       // Border and column background come from LearnShell; the rail only owns
       // its own padding and scroll behaviour.
-      className="hidden lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:px-4 lg:pt-10 lg:pb-10 scrollbar-none"
+      className="hidden lg:block lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:px-4 lg:pt-10 lg:pb-10 scrollbar-none"
     >
       <RailRevealCurrent />
 
