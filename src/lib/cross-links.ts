@@ -2,12 +2,12 @@
  * Bidirectional cross-links between guides and patterns.
  *
  * Used to create internal link equity between indexed pattern pages and
- * new lesson pages, accelerating Google's crawl of the ~66 lesson URLs
+ * new lesson pages, accelerating Google's crawl of the ~84 lesson URLs
  * shipped in the Apr 2026 SEO refactor.
  */
 
 /** Guide slug → related pattern slugs (semantically curated). Every pattern
- *  in the 36-pattern catalogue must appear in at least one entry below so the
+ *  in the 38-pattern catalogue must appear in at least one entry below so the
  *  pattern detail page renders a "Practice in Courses" cross-link card. */
 const GUIDE_TO_PATTERNS: Record<string, string[]> = {
   'claude-code-learning-path': [

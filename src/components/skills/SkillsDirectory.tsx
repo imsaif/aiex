@@ -41,48 +41,42 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
   }, [rows, searchQuery, selectedCategory]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8">
-      {/* Sidebar (stacks above the grid on mobile, fixed rail on desktop) */}
-      <aside className="lg:w-64 flex-shrink-0">
-        <div className="bg-surface-primary dark:bg-surface-elevated rounded-2xl p-6 border border-border-primary shadow-card lg:sticky lg:top-24">
-          <h3 className="font-semibold text-xl mb-4 text-text-primary">Categories</h3>
-          <ul className="space-y-2">
-            <li>
-              <button
-                type="button"
-                onClick={() => setSelectedCategory('All Skills')}
-                aria-pressed={selectedCategory === 'All Skills'}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
-                  selectedCategory === 'All Skills'
-                    ? 'bg-white font-semibold shadow-sm text-black'
-                    : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
-                }`}
-              >
-                All Skills
-              </button>
-            </li>
-            {categories.map((category) => (
-              <li key={category}>
-                <button
-                  type="button"
-                  onClick={() => setSelectedCategory(category)}
-                  aria-pressed={selectedCategory === category}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-all ${
-                    selectedCategory === category
-                      ? 'bg-white font-semibold shadow-sm text-black'
-                      : 'hover:bg-white text-gray-700 dark:text-white hover:text-black'
-                  }`}
-                >
-                  {category}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </aside>
+    <div>
+      {/* Categories as a horizontal filter row rather than a left column, the
+          same as /patterns. Inside the console that column sat beside the rail,
+          so the page had two nav columns before the first card. */}
+      <div className="mb-8 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setSelectedCategory('All Skills')}
+          aria-pressed={selectedCategory === 'All Skills'}
+          className={`type-caption rounded-pill border px-4 py-2 transition-colors ${
+            selectedCategory === 'All Skills'
+              ? 'border-transparent bg-text-primary font-semibold text-background-primary'
+              : 'border-border-primary text-text-secondary hover:border-accent-primary/40 hover:text-text-primary'
+          }`}
+        >
+          All Skills
+        </button>
+        {categories.map((category) => (
+          <button
+            key={category}
+            type="button"
+            onClick={() => setSelectedCategory(category)}
+            aria-pressed={selectedCategory === category}
+            className={`type-caption rounded-pill border px-4 py-2 transition-colors ${
+              selectedCategory === category
+                ? 'border-transparent bg-text-primary font-semibold text-background-primary'
+                : 'border-border-primary text-text-secondary hover:border-accent-primary/40 hover:text-text-primary'
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
 
       {/* Skills Grid */}
-      <div className="flex-1">
+      <div>
         {/* Search Bar */}
         <div className="mb-6 bg-surface-primary dark:bg-surface-elevated rounded-2xl p-5 border border-border-primary shadow-card">
           <UnifiedSearchBar

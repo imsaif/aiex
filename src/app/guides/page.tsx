@@ -1,80 +1,17 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
-import {
-  AcademicCapIcon,
-  BoltIcon,
-  BookmarkIcon,
-  ChatBubbleLeftRightIcon,
-  ClockIcon,
-} from '@heroicons/react/24/outline';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { guides } from '@/data/guides';
+import { learnMap } from '@/data/learn-map';
+import { resolveLearnSection } from '@/lib/learn-map';
+import LearnSection from '@/components/learn/LearnSection';
+import LearnSidebar from '@/components/learn/LearnSidebar';
+import LearnShell from '@/components/learn/LearnShell';
+import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
-
-// Per-guide visual anchor — brand logo where available, generic chat icon for
-// the conversational UI guide. Drops into the card header so the grid reads
-// as an icon-led list rather than five identical text blocks.
-type GuideIconConfig =
-  | { src: string; alt: string }
-  | { component: typeof ChatBubbleLeftRightIcon; alt: string };
-
-const GUIDE_ICONS: Record<string, GuideIconConfig> = {
-  'claude-code-learning-path': {
-    src: '/images/logos/simple-icons/anthropic.svg',
-    alt: 'Claude',
-  },
-  'claude-design-learning-path': {
-    src: '/images/logos/simple-icons/claude-design.svg',
-    alt: 'Claude Design',
-  },
-  'cursor-learning-path': {
-    src: '/images/logos/simple-icons/cursor.svg',
-    alt: 'Cursor',
-  },
-  'github-copilot-learning-path': {
-    src: '/images/logos/simple-icons/githubcopilot.svg',
-    alt: 'GitHub Copilot',
-  },
-  'github-learning-path': {
-    src: '/images/logos/simple-icons/github.svg',
-    alt: 'GitHub',
-  },
-  'conversational-ui-guide': {
-    component: ChatBubbleLeftRightIcon,
-    alt: 'Conversational UI',
-  },
-  'ai-ux-skills-guide': {
-    component: BoltIcon,
-    alt: 'AI UX Skills',
-  },
-};
-
-function GuideIconTile({ slug }: { slug: string }) {
-  const meta = GUIDE_ICONS[slug];
-  if (!meta) return null;
-  return (
-    <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-      {'component' in meta ? (
-        <meta.component
-          className="w-6 h-6 text-text-primary"
-          aria-hidden="true"
-        />
-      ) : (
-        <Image
-          src={meta.src}
-          alt=""
-          width={28}
-          height={28}
-          className="dark:invert"
-        />
-      )}
-    </div>
-  );
-}
 
 export const revalidate = 86400;
 
@@ -125,102 +62,6 @@ export const metadata: Metadata = {
     creator: siteConfig.creator.twitter,
   },
 };
-
-// Pre-computed card data so the server component can render without touching
-// the heavier client-side guide utilities (framer-motion, icons, etc.).
-interface GuideCard {
-  slug: string;
-  title: string;
-  tool: string;
-  tagline: string;
-  highlights: string[];
-  lessons: number;
-  readTime: number;
-  featured: boolean;
-}
-
-const guideMeta: Record<
-  string,
-  { tagline: string; highlights: string[] }
-> = {
-  'claude-code-learning-path': {
-    tagline: 'Start Here',
-    highlights: [
-      'Figma MCP design-to-code',
-      'AI-powered prototyping',
-      'Version control basics',
-    ],
-  },
-  'claude-design-learning-path': {
-    tagline: 'Prompt to prototype',
-    highlights: [
-      'Prompts → clickable HTML prototypes',
-      'Design system extracted from your codebase',
-      'Handoff to Claude Code for implementation',
-    ],
-  },
-  'cursor-learning-path': {
-    tagline: 'AI-native code editor',
-    highlights: [
-      'Tab autocomplete & AI suggestions',
-      'Chat & Composer for code generation',
-      'Design-to-code workflows',
-    ],
-  },
-  'github-copilot-learning-path': {
-    tagline: 'AI pair programmer',
-    highlights: [
-      'Inline code suggestions',
-      'AI pair programming',
-      'Works in VS Code, JetBrains & more',
-    ],
-  },
-  'github-learning-path': {
-    tagline: 'Version control fundamentals',
-    highlights: [
-      'Git basics for designers',
-      'Pull requests & code review',
-      'Team collaboration workflows',
-    ],
-  },
-  'conversational-ui-guide': {
-    tagline: 'Design & implementation',
-    highlights: [
-      'Chat bubbles, streaming & typing indicators',
-      'Context management & error recovery',
-      'Agentic AI patterns & accessibility',
-    ],
-  },
-  'ai-ux-skills-guide': {
-    tagline: 'Your agent, trained',
-    highlights: [
-      'Claude Code from zero: install and first session',
-      'Install a pack: zip or one-file installer',
-      'Triggering: symptom-first, no prompting',
-    ],
-  },
-};
-
-const featuredSlugs = new Set([
-  'claude-code-learning-path',
-  'claude-design-learning-path',
-  'github-learning-path',
-  'conversational-ui-guide',
-]);
-
-const cards: GuideCard[] = guides.map((g) => ({
-  slug: g.slug,
-  title: g.title,
-  tool: g.tool,
-  tagline: guideMeta[g.slug]?.tagline || '',
-  highlights: guideMeta[g.slug]?.highlights || [],
-  lessons: g.lessons?.length || 0,
-  readTime: g.readTime || 0,
-  featured: featuredSlugs.has(g.slug),
-}));
-
-const featuredCards = cards.filter((c) => c.featured);
-const otherCards = cards.filter((c) => !c.featured);
 
 function buildStructuredData() {
   return [
@@ -293,7 +134,7 @@ function buildStructuredData() {
   ];
 }
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
   const structuredData = buildStructuredData();
 
   return (
@@ -307,168 +148,133 @@ export default function GuidesPage() {
       ))}
 
       <main className="min-h-screen bg-background-primary text-text-primary">
-        <Navbar />
+        <Navbar inConsole />
 
-        {/* Hero — server-rendered. Typography + spacing scaled to match the
-            homepage hero hierarchy (H1, subtitle, padding, margins). */}
-        <section className="pt-16 md:pt-20 pb-16 md:pb-20 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center max-w-4xl mx-auto">
-              <p className="text-sm font-semibold uppercase tracking-wide text-accent-primary mb-4">
-                Free Learning Paths
-              </p>
-              <h1
-                className="text-5xl md:text-6xl lg:text-7xl font-bold mb-9"
-                style={{ color: 'var(--text-hero)' }}
-              >
-                AI Tool Guides for Designers
-              </h1>
-              <p className="text-2xl md:text-3xl text-text-secondary mb-12">
-                Free step-by-step courses on Claude Code, Cursor, GitHub
-                Copilot, GitHub, and conversational UI.
-              </p>
-              <p className="text-base text-text-secondary">
-                {guides.length} guides · {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)} lessons ·
-                All free, start instantly
-              </p>
+        {/* One two-column shell for the whole page. The rail starts at the
+            top, beside the hero, rather than below a full-width hero band —
+            that is what makes the learn area read as one place. */}
+        <LearnShell sidebar={<LearnSidebar />}>
 
-              {/* Hero email capture — mirrors the /news and /patterns hero
-                  treatment (stacked form + social proof) for a consistent,
-                  above-the-fold conversion surface. */}
-              <div className="mt-10 max-w-md mx-auto">
-                <InlineNewsletterSignup
-                  variant="hero"
-                  source="guides"
-                  customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
-                  customButtonText="Solve my AI design overload →"
-                  customSuccessMessage="You're in! Watch for our next issue."
-                  stacked
-                />
-                <p className="text-base font-medium text-text-secondary mt-4">
-                  46,000+ reads · 50+ products analyzed daily
+        {/* Hero — question-led, following the aihero.dev/learn model. The
+            page opens by asking the visitor what they want to do rather than
+            announcing what the site has; the numbered list doubles as the
+            table of contents and jumps into the matching section. Questions
+            come from learnMap so the hero cannot drift from the map below. */}
+        <section className="border-b border-border-primary pb-12 pt-10 md:pb-16">
+          {/* Capped measure. The column runs ~1200px; prose set that wide is
+              tiring to read and is what made this page feel busy. Rows and
+              grids below keep the full width. */}
+          <div className="max-w-[950px]">
+                <p className="type-eyebrow font-semibold text-accent-primary mb-4">
+                  The Map
                 </p>
-              </div>
+                {/* "AI UX" is bound with a non-breaking space so the line can
+                    never break between them, and balance keeps the wrap even
+                    rather than leaving one short word on the last line. */}
+                {/* type-h1, not type-display: at 56px the question wrapped to
+                    two lines inside the 950px measure, and a two-line question
+                    reads as a paragraph rather than a prompt. */}
+                <h1
+                  className="type-h1 mb-6"
+                  style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
+                >
+                  What do you want to learn about AI&nbsp;UX?
+                </h1>
+                <p className="type-lead text-text-secondary mb-4">
+                  Pick the question that sounds like you. Each one opens onto
+                  the courses, patterns and checklists that answer it.
+                </p>
+                <p className="type-caption text-text-secondary mb-10">
+                  {guides.length} courses ·{' '}
+                  {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
+                  lessons · {PATTERN_COUNT} patterns · all free, no account
+                </p>
+
+                {/* Boxed chips in two columns, matching the reference. Each
+                    jumps to its section; the arrow says "this goes down the
+                    page" rather than off to another page. */}
+                <ol className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  {learnMap.map((section) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className="group flex h-full items-center gap-3 rounded-card border border-border-primary bg-surface-primary px-4 py-4 transition-colors hover:border-accent-primary/40"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="type-eyebrow font-mono text-text-secondary"
+                        >
+                          {section.ordinal}
+                        </span>
+                        <span className="type-body flex-1 font-semibold text-text-primary group-hover:text-accent-primary">
+                          {section.question}
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className="type-body text-text-secondary group-hover:text-accent-primary"
+                        >
+                          ↓
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* The Learn Map — five questions, each opening onto the content that
+            answers it, in the order it makes sense. Resolved server-side; the
+            resolver throws on a dead slug so this can never render a card
+            pointing at a 404. */}
+        <div>
+          {learnMap.map((section) => (
+            <LearnSection
+              key={section.id}
+              section={resolveLearnSection(section)}
+            />
+          ))}
+        </div>
+
+        {/* Newsletter — placed after the map rather than in the hero. The
+            hero's job is now navigation: read the question, pick a path. An
+            email form there competes with that. By this point the visitor has
+            either found their path or has not, and both are reasonable moments
+            to offer a weekly digest. */}
+        <section className="border-t border-border-primary py-12 md:py-16">
+          <div className="rounded-card border border-border-primary bg-surface-primary p-6 md:grid md:grid-cols-2 md:items-center md:gap-10 md:p-8">
+            <div>
+              <p className="type-h3 text-text-primary">
+                Not sure where to start?
+              </p>
+              <p className="type-body text-text-secondary mt-1">
+                46,000+ reads · 50+ products analyzed daily
+              </p>
+            </div>
+            <div className="mt-4 w-full md:mt-0">
+              <InlineNewsletterSignup
+                variant="hero"
+                source="guides"
+                customSubheading="Get daily AI product updates, pattern breakdowns & design insights"
+                customButtonText="Solve my AI design overload →"
+                customSuccessMessage="You're in! Watch for our next issue."
+                stacked
+              />
             </div>
           </div>
         </section>
 
-        {/* Featured guides */}
-        {featuredCards.length > 0 && (
-          <section className="max-w-7xl mx-auto px-6 py-12 md:py-16 border-b border-border-primary">
-            <div className="flex items-center gap-2 mb-6">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-accent-subtle text-accent-primary border border-accent-primary/20">
-                Recommended Start
-              </span>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {featuredCards.map((card) => (
-                <Link
-                  key={card.slug}
-                  href={`/guides/${card.slug}`}
-                  className="block p-8 rounded-3xl border border-border-primary bg-surface-secondary hover:border-accent-primary/40 hover:shadow-lg transition-all"
-                >
-                  <GuideIconTile slug={card.slug} />
-                  <p className="text-sm font-medium text-accent-primary mb-1">
-                    {card.tagline}
-                  </p>
-                  <h2 className="text-2xl font-bold text-text-primary mb-4">
-                    {card.title}
-                  </h2>
-                  {card.highlights.length > 0 && (
-                    <ul className="space-y-2 mb-5">
-                      {card.highlights.map((h, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-2 text-sm text-text-secondary"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-border-primary">
-                    <span>{card.lessons} lessons</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{card.readTime} min total</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="font-medium text-accent-primary">
-                      Start Learning →
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* More guides */}
-        {otherCards.length > 0 && (
-          <section className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-text-primary mb-2">
-                More Guides
-              </h2>
-              <p className="text-text-secondary">
-                Other AI tools to expand your workflow
-              </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {otherCards.map((card) => (
-                <Link
-                  key={card.slug}
-                  href={`/guides/${card.slug}`}
-                  className="block p-8 rounded-2xl border border-border-primary bg-surface-primary hover:border-accent-primary/40 hover:shadow-lg transition-all"
-                >
-                  <GuideIconTile slug={card.slug} />
-                  <p className="text-sm font-medium text-accent-primary mb-1">
-                    {card.tagline}
-                  </p>
-                  <h3 className="text-xl font-bold text-text-primary mb-4">
-                    {card.title}
-                  </h3>
-                  {card.highlights.length > 0 && (
-                    <ul className="space-y-2 mb-5">
-                      {card.highlights.map((h, i) => (
-                        <li
-                          key={i}
-                          className="flex items-center gap-2 text-sm text-text-secondary"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0" />
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="flex items-center gap-4 text-sm text-text-secondary pt-4 border-t border-border-primary">
-                    <span>{card.lessons} lessons</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{card.readTime} min total</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="font-medium text-accent-primary">
-                      Start Learning →
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Intro prose — SEO content block, placed below the cards as
-            supporting content so the hero-to-cards flow matches /patterns.
-            Outer max-w-7xl matches the cards container above; inner max-w-3xl
-            stays narrow for readability and is left-aligned so it lines up
-            with the cards' left edge instead of floating mid-viewport. */}
-        <section className="max-w-7xl mx-auto px-6 pt-12 md:pt-16 pb-6 md:pb-8">
-          <div className="max-w-3xl mx-auto">
+        {/* Supporting prose. Left-aligned on the same 950px measure and the
+            same top rule as the map sections above — centred at a different
+            width it read as a different page stapled on the end. */}
+        <section className="border-t border-border-primary py-12 md:py-16">
+          <div className="max-w-[950px]">
             <h2
               id="why-guides"
-              className="scroll-mt-24 text-2xl md:text-3xl font-bold text-text-primary mb-6"
+              className="type-h2 scroll-mt-24 text-text-primary mb-6"
             >
               Why guides
             </h2>
-            <div className="prose prose-lg dark:prose-invert max-w-none text-text-secondary leading-relaxed space-y-4">
+            <div className="type-body space-y-4 text-text-secondary">
               <p>
                 The line between designer and developer is dissolving. Not
                 because designers are learning to code in the traditional
@@ -489,77 +295,25 @@ export default function GuidesPage() {
               </p>
             </div>
 
-            {/* 3-up benefit row — visual reinforcement of the three claims
-                in the prose above. Centered cells, icon-tile design language
-                shared with the guide cards so the page reads as one system. */}
-            <ul className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <li className="flex flex-col items-center text-center">
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-                  <AcademicCapIcon
-                    className="w-6 h-6 text-text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
-                <h3 className="text-base font-semibold text-text-primary mb-2">
-                  Built for designers
-                </h3>
-                <p className="text-sm text-text-secondary leading-relaxed">
-                  No coding background required. Each guide assumes a
-                  designer starting point and lets the AI handle the syntax.
-                </p>
-              </li>
-              <li className="flex flex-col items-center text-center">
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-                  <ClockIcon
-                    className="w-6 h-6 text-text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
-                <h3 className="text-base font-semibold text-text-primary mb-2">
-                  Hours, not weeks
-                </h3>
-                <p className="text-sm text-text-secondary leading-relaxed">
-                  Each course is a focused path you can work through in an
-                  afternoon, no semester-long commitment to get fluent.
-                </p>
-              </li>
-              <li className="flex flex-col items-center text-center">
-                <div className="mb-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-background-primary border border-border-primary">
-                  <BookmarkIcon
-                    className="w-6 h-6 text-text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
-                <h3 className="text-base font-semibold text-text-primary mb-2">
-                  Bookmark any lesson
-                </h3>
-                <p className="text-sm text-text-secondary leading-relaxed">
-                  Every lesson has its own URL: save, share, or return to
-                  the exact step you need without scrolling through a course.
-                </p>
-              </li>
-            </ul>
           </div>
         </section>
 
-        {/* FAQ — visible counterpart to the FAQPage JSON-LD above. Same
-            container pattern as the intro: max-w-7xl outer, max-w-3xl inner
-            left-aligned. Question h3s and answer p sizes bumped for
-            readability and stronger hierarchy. */}
-        <section className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-          <div className="max-w-3xl mx-auto">
+        {/* FAQ — the visible counterpart the FAQPage markup requires. Same
+            measure and rule as every other section. */}
+        <section className="border-t border-border-primary py-12 md:py-16">
+          <div className="max-w-[950px]">
             <h2
               id="faq"
-              className="scroll-mt-24 text-2xl md:text-3xl font-bold text-text-primary mb-8"
+              className="type-h2 scroll-mt-24 text-text-primary mb-8"
             >
               Frequently Asked Questions
             </h2>
             <div className="space-y-8">
               <div>
-                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                <h3 className="type-lead font-semibold text-text-primary mb-3">
                   Which AI tool should designers learn first?
                 </h3>
-                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                <p className="type-body text-text-secondary">
                   Start with Claude Code. It has the most forgiving learning
                   curve, works with Figma via MCP for design-to-code
                   workflows, and lets you describe what you want in plain
@@ -569,10 +323,10 @@ export default function GuidesPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                <h3 className="type-lead font-semibold text-text-primary mb-3">
                   Do I need to know how to code to use these guides?
                 </h3>
-                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                <p className="type-body text-text-secondary">
                   No. Every guide is written for designers with zero coding
                   background. We cover everything from terminal basics to
                   version control to shipping real prototypes. You describe
@@ -581,10 +335,10 @@ export default function GuidesPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-text-primary mb-3">
+                <h3 className="type-lead font-semibold text-text-primary mb-3">
                   Are these guides really free?
                 </h3>
-                <p className="text-base md:text-lg text-text-secondary leading-relaxed">
+                <p className="type-body text-text-secondary">
                   Yes, all guides are free. No email required to read them.
                   The tools themselves (Claude Code, Cursor, GitHub Copilot)
                   have free tiers, so we recommend starting with those and
@@ -594,6 +348,8 @@ export default function GuidesPage() {
             </div>
           </div>
         </section>
+
+        </LearnShell>
 
         <Footer />
         <ScrollToTop />

@@ -4,20 +4,22 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  Squares2X2Icon,
   NewspaperIcon,
   MagnifyingGlassIcon,
-  FolderIcon,
   AcademicCapIcon,
   BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import dynamic from 'next/dynamic';
 import { useSavedCount } from '@/hooks/useSavedCount';
+import { AiuxMarkOutline } from '@/components/icons/AiuxMarkOutline';
 
 // Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
 const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 
-const Navbar = () => {
+const Navbar = ({
+  /** True on learn-console pages, where the bar matches the console slab. */
+  inConsole = false,
+}: { inConsole?: boolean } = {}) => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { count: savedCount } = useSavedCount();
@@ -59,7 +61,7 @@ const Navbar = () => {
   // Get link classes based on active state - minimal style with no layout shift
   const getLinkClasses = (href: string) => {
     const active = isActive(href);
-    return `flex items-center gap-2 px-2 sm:px-4 py-2 transition-colors duration-200 ease-out text-base border-b-2 ${
+    return `type-caption flex items-center gap-2 px-2 sm:px-3 py-1.5 transition-colors duration-200 ease-out border-b-2 ${
       active
         ? 'text-text-primary border-text-primary font-semibold'
         : 'text-text-secondary hover:text-text-primary border-transparent'
@@ -67,11 +69,29 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full py-5 bg-surface-primary border-b border-border-primary">
-      <div className="max-w-7xl mx-auto px-6">
+    // The content width is 1600px either way, so the logo and the nav items do
+    // not move when you cross between the console and the rest of the site —
+    // that shift was visible as a jump. Only the surround changes: off the
+    // console the bar is a plain full-width band, because those pages have
+    // full-bleed heroes and a slabbed bar above one reads as a card floating
+    // over nothing. In the console it becomes the same slab as the shell.
+    <nav
+      className={
+        inConsole
+          ? 'sticky top-0 z-sticky w-full bg-background-console'
+          : 'sticky top-0 z-sticky w-full py-3 bg-surface-primary border-b border-border-primary'
+      }
+    >
+      <div
+        className={
+          inConsole
+            ? 'mx-auto max-w-[1600px] border-b border-border-primary bg-surface-primary px-6 py-3 lg:border-x'
+            : 'mx-auto max-w-[1600px] px-6'
+        }
+      >
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-text-primary">
-            <span className="flex items-center justify-center w-9 h-9 bg-accent-subtle rounded-full">
+            <span className="flex items-center justify-center w-8 h-8 bg-accent-subtle rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -87,17 +107,21 @@ const Navbar = () => {
                 />
               </svg>
             </span>
-            <span className="text-xl font-medium tracking-tight">aiux</span>
+            <span className="type-lead font-medium tracking-tight">aiux</span>
           </Link>
 
           {/* Navigation Links */}
           <div className="flex items-center gap-1 sm:gap-3">
-            <Link href="/patterns" className={getLinkClasses('/patterns')}>
-              <Squares2X2Icon className="w-5 h-5" />
+
+            {/* The audit is the product, and it had no entry in the bar at all
+                — /patterns was standing in for it. First position, ahead of the
+                learning material. */}
+            <Link href="/audit" className={getLinkClasses('/audit')}>
+              <AiuxMarkOutline className="w-5 h-5" />
               <span className="hidden sm:inline relative">
-                Patterns & Skills
+                Tool
                 <span className="invisible font-semibold block h-0" aria-hidden="true">
-                  Patterns & Skills
+                  Tool
                 </span>
               </span>
             </Link>
@@ -122,15 +146,6 @@ const Navbar = () => {
               </span>
             </Link>
 
-<Link href="/resources" className={getLinkClasses('/resources')}>
-              <FolderIcon className="w-5 h-5" />
-              <span className="hidden sm:inline relative">
-                Resources
-                <span className="invisible font-semibold block h-0" aria-hidden="true">
-                  Resources
-                </span>
-              </span>
-            </Link>
 
             <Link href="/dashboard" className={getLinkClasses('/dashboard')}>
               <span className="relative inline-flex">

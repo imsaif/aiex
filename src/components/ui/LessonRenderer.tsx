@@ -192,7 +192,7 @@ function CopyButton({ code }: { code: string }) {
       type="button"
       onClick={handleCopy}
       aria-label={copied ? 'Copied to clipboard' : 'Copy code to clipboard'}
-      className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all border bg-gray-800/90 dark:bg-gray-700/90 text-white border-gray-700 dark:border-gray-600 hover:bg-gray-800 dark:hover:bg-gray-700"
+      className="absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all border bg-surface-secondary text-text-primary border-border-primary hover:bg-surface-secondary dark:hover:bg-surface-secondary"
     >
       {copied ? (
         <>
@@ -210,19 +210,19 @@ function CodePreviewBlock({ section }: { section: { code: string; language?: str
   const [showCode, setShowCode] = useState(false);
 
   return (
-    <div className="mb-6 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="mb-6 rounded-lg border border-border-primary overflow-hidden">
       {/* Toggle header */}
-      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700">
-        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+      <div className="flex items-center justify-between px-4 py-2.5 bg-surface-secondary border-b border-border-primary">
+        <span className="text-sm font-medium text-text-secondary">
           {section.label || 'Example'}
         </span>
-        <div className="inline-flex rounded-md border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 p-0.5">
+        <div className="inline-flex rounded-md border border-border-primary bg-surface-secondary p-0.5">
           <button
             onClick={() => setShowCode(false)}
             className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-all cursor-pointer ${
               !showCode
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'bg-accent-primary text-text-on-accent shadow-sm'
+                : 'text-text-secondary hover:text-text-primary dark:hover:text-text-primary'
             }`}
           >
             <EyeIcon className="w-3.5 h-3.5" />
@@ -232,8 +232,8 @@ function CodePreviewBlock({ section }: { section: { code: string; language?: str
             onClick={() => setShowCode(true)}
             className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs font-medium transition-all cursor-pointer ${
               showCode
-                ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'bg-accent-primary text-text-on-accent shadow-sm'
+                : 'text-text-secondary hover:text-text-primary dark:hover:text-text-primary'
             }`}
           >
             <CodeBracketIcon className="w-3.5 h-3.5" />
@@ -245,18 +245,18 @@ function CodePreviewBlock({ section }: { section: { code: string; language?: str
       {/* Content */}
       {showCode ? (
         <div className="relative">
-          <pre className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-4 m-0 overflow-auto font-mono text-sm max-h-[500px]">
+          <pre className="bg-surface-primary text-text-primary p-4 m-0 overflow-auto font-mono text-sm max-h-[500px]">
             <code>{section.code}</code>
           </pre>
           <button
             onClick={() => navigator.clipboard.writeText(section.code)}
-            className="absolute top-3 right-3 bg-gray-800/80 dark:bg-gray-700/80 border border-gray-700 dark:border-gray-600 text-white px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all hover:bg-gray-800 dark:hover:bg-gray-700"
+            className="absolute top-3 right-3 bg-surface-secondary border border-border-primary text-text-primary px-3 py-1.5 rounded text-xs font-medium cursor-pointer transition-all hover:bg-surface-secondary dark:hover:bg-surface-secondary"
           >
             Copy
           </button>
         </div>
       ) : (
-        <div className="p-4 bg-gray-50/50 dark:bg-gray-900/30">
+        <div className="p-4 bg-surface-secondary">
           <DynamicPreview previewId={section.previewId} />
         </div>
       )}
@@ -442,7 +442,7 @@ const renderSection = (
           <h2
             key={index}
             id={id}
-            className="scroll-mt-24 text-[1.75rem] font-bold text-text-primary mt-14 mb-5 pb-3 border-b border-border-primary"
+            className="type-h2 scroll-mt-24 text-text-primary mt-14 mb-5 border-t border-border-primary pt-10"
           >
             {section.content}
           </h2>
@@ -453,7 +453,7 @@ const renderSection = (
           <h3
             key={index}
             id={id}
-            className="scroll-mt-24 text-[1.375rem] font-bold text-text-primary mt-10 mb-4"
+            className="type-h3 scroll-mt-24 text-text-primary mt-10 mb-4 border-t border-border-primary pt-8"
           >
             {section.content}
           </h3>
@@ -464,7 +464,7 @@ const renderSection = (
           <h4
             key={index}
             id={id}
-            className="scroll-mt-24 text-[1.125rem] font-semibold text-text-secondary mt-8 mb-4"
+            className="scroll-mt-24 type-lead font-semibold text-text-secondary mt-8 mb-4"
           >
             {section.content}
           </h4>
@@ -533,10 +533,10 @@ const renderSection = (
               className={`p-5 ${CARD_SHELL}`}
             >
               <div className="flex gap-3 mb-4">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 font-semibold text-sm flex-shrink-0">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-text-on-accent font-semibold text-sm flex-shrink-0">
                   {step.number}
                 </div>
-                <h4 className="m-0 font-bold text-gray-900 dark:text-gray-100 text-[1.125rem]">
+                <h4 className="m-0 font-bold text-text-primary type-lead">
                   {step.title}
                 </h4>
               </div>
@@ -636,13 +636,13 @@ const renderSection = (
     case 'code':
       return (
         <div key={index} className="mb-6">
-          <div className="bg-gray-900 dark:bg-gray-950 text-white px-4 py-3 rounded-t-lg">
+          <div className="bg-text-primary text-background-primary px-4 py-3 rounded-t-lg">
             <span className="text-sm font-mono">
               {section.label || section.language || 'code'}
             </span>
           </div>
           <div className="relative">
-            <pre className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 p-4 m-0 rounded-b-lg border border-gray-200 dark:border-gray-700 border-t-0 overflow-auto font-mono text-sm">
+            <pre className="bg-surface-primary text-text-primary p-4 m-0 rounded-b-lg border border-border-primary border-t-0 overflow-auto font-mono text-sm">
               <code>{section.code}</code>
             </pre>
             <CopyButton code={section.code} />
@@ -683,18 +683,18 @@ const renderSection = (
                 />
               )}
               {section.label && (
-                <figcaption className="p-3 text-gray-500 dark:text-gray-400 text-sm">
+                <figcaption className="p-3 text-text-secondary text-sm">
                   {section.label}
                 </figcaption>
               )}
             </figure>
           ) : (
-            <div className="rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 p-12 text-center">
-              <div className="text-gray-400 dark:text-gray-500 mb-2">{getIcon('github')}</div>
-              <p className="m-0 mb-2 text-gray-600 dark:text-gray-400 font-semibold">
+            <div className="rounded-lg border-2 border-dashed border-border-primary bg-surface-secondary p-12 text-center">
+              <div className="text-text-secondary mb-2">{getIcon('github')}</div>
+              <p className="m-0 mb-2 text-text-secondary font-semibold">
                 {section.label || 'Image coming soon'}
               </p>
-              <p className="m-0 text-gray-400 dark:text-gray-500 text-sm">Add image here</p>
+              <p className="m-0 text-text-secondary text-sm">Add image here</p>
             </div>
           )}
         </div>
@@ -708,15 +708,15 @@ const renderSection = (
           className="mt-14 p-6 bg-background-secondary border border-border-secondary rounded-card"
         >
           <div className="flex gap-3 mb-4">
-            <CheckCircleIcon className="w-6 h-6 text-green-500 flex-shrink-0" />
-            <h3 className="m-0 text-xl font-bold text-gray-900 dark:text-gray-100">
+            <CheckCircleIcon className="w-6 h-6 text-status-success flex-shrink-0" />
+            <h3 className="m-0 text-xl font-bold text-text-primary">
               {section.title}
             </h3>
           </div>
           <ul className="m-0 mb-4 p-0 list-none text-text-secondary">
             {section.items.map((item, i) => (
               <li key={i} className="mb-2 flex gap-2">
-                <CheckIcon className="w-5 h-5 text-green-500 flex-shrink-0" />
+                <CheckIcon className="w-5 h-5 text-status-success flex-shrink-0" />
                 {item}
               </li>
             ))}

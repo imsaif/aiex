@@ -3,12 +3,14 @@ import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border-primary bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+    // A plain white band, not a card on a tinted ground. The card read as
+    // floating once the console pages tinted the canvas behind it.
+    <footer className="border-t border-border-primary bg-background-primary">
       {/* Multi-Column Footer Section — card-on-grain treatment lifted from
           the audit-page resources card so the homepage doesn't render two
           adjacent footers. */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 lg:py-20">
-        <div className="bg-background-primary rounded-2xl border border-border-primary p-8 md:p-10">
+      <div className="mx-auto max-w-[1600px] px-6 py-12 md:py-16 lg:py-20">
+        <div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12">
             {/* Left Section: Branding */}
             <div className="lg:col-span-4">
@@ -283,7 +285,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-primary">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="mx-auto max-w-[1600px] px-6 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Email + theme toggle */}
             <div className="flex items-center gap-3">

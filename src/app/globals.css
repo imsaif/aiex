@@ -23,6 +23,14 @@ body {
   --background-secondary: #fafafa;
   --background-tertiary: #f5f5f5;
   --background-grain: #F0F1F5;
+  /* Ground the learn console sits on. Its own token because the neutral
+     ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
+     close to separate a nav rail from the page behind it. */
+  /* The rail is the darkest surface, not the ground. A ground darker than the
+     rail read as a stripe down the left edge; inverted, the rail reads as a
+     panel and the outer margin recedes. Content stays white. */
+  --background-console: #f7f8fb;
+  --background-rail: #e8ebf2;
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;
@@ -65,6 +73,7 @@ body {
   --ring-focus-warning: #f59e0b;
 
   --accent-primary: #162036;
+  --text-on-accent: #ffffff;   /* text sitting on accent-primary */
   --accent-hover: #1e2a42;
   --accent-subtle: #f5f5f5;
 
@@ -115,6 +124,11 @@ body {
   --type-h3-weight: 600;
   --type-h3-leading: 1.3;
   --type-h3-tracking: -0.015em;
+
+  --type-lead-size: 1.25rem;         /* 20px — lead paragraphs, list-item titles */
+  --type-lead-weight: 400;
+  --type-lead-leading: 1.5;
+  --type-lead-tracking: -0.01em;
 
   --type-body-size: 1rem;            /* 16px — paragraph copy */
   --type-body-weight: 400;
@@ -182,6 +196,8 @@ body {
     --background-secondary: #171717;
     --background-tertiary: #1f1f1f;
     --background-grain: #162036;
+    --background-console: #050505;
+    --background-rail: #141414;
 
     --surface-primary: #0f0f0f;
     --surface-secondary: #171717;
@@ -223,6 +239,7 @@ body {
     --ring-focus-warning: #d97706;
 
     --accent-primary: #ffffff;
+    --text-on-accent: #162036;
     --accent-hover: #e5e5e5;
     --accent-subtle: #171717;
 
@@ -246,6 +263,7 @@ html[data-theme="dark"] {
   --background-secondary: #171717;
   --background-tertiary: #1f1f1f;
   --background-grain: #162036;
+  --background-console: #050505;
 
   --surface-primary: #0f0f0f;
   --surface-secondary: #171717;
@@ -283,6 +301,7 @@ html[data-theme="dark"] {
   --ring-focus-warning: #d97706;
 
   --accent-primary: #ffffff;
+  --text-on-accent: #162036;
   --accent-hover: #e5e5e5;
   --accent-subtle: #171717;
 
@@ -304,6 +323,11 @@ html[data-theme="light"] {
   --background-secondary: #fafafa;
   --background-tertiary: #f5f5f5;
   --background-grain: #F0F1F5;
+  /* Ground the learn console sits on. Its own token because the neutral
+     ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
+     close to separate a nav rail from the page behind it. */
+  --background-console: #f7f8fb;
+  --background-rail: #e8ebf2;
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;
@@ -342,6 +366,7 @@ html[data-theme="light"] {
   --ring-focus-warning: #f59e0b;
 
   --accent-primary: #162036;
+  --text-on-accent: #ffffff;   /* text sitting on accent-primary */
   --accent-hover: #1e2a42;
   --accent-subtle: #f5f5f5;
 
@@ -423,6 +448,12 @@ p {
   font-weight: var(--type-h3-weight);
   line-height: var(--type-h3-leading);
   letter-spacing: var(--type-h3-tracking);
+}
+.type-lead {
+  font-size: var(--type-lead-size);
+  font-weight: var(--type-lead-weight);
+  line-height: var(--type-lead-leading);
+  letter-spacing: var(--type-lead-tracking);
 }
 .type-body {
   font-size: var(--type-body-size);
@@ -768,6 +799,63 @@ html[data-theme="dark"] .newsletter-content a[style*="background-color: #162036"
    attention on machines set to always show scrollbars.
    Colour comes from --border-primary so it follows light/dark on its own.
    Firefox uses scrollbar-width/color; WebKit needs the ::-webkit- rules. */
+/* Scrollable without a visible scrollbar. For a nav rail that must stay pinned
+   while the content scrolls: sticky + its own overflow keeps it from snapping
+   back to the top on every navigation, and hiding the bar keeps the page
+   looking clean. Keyboard and wheel scrolling still work. */
+/* Disclosure rows in the learn rail. Native <details> gives expand/collapse
+   with no JavaScript and, crucially, no navigation — clicking a course opens it
+   in place instead of loading its page and throwing you back to the top. */
+/* The reserved scrollbar gutter is part of the <html> box, so the console's
+   ground — painted by a div inside <body> — cannot reach it, leaving a pale
+   strip down one edge. Tint the canvas itself when a console shell is on the
+   page. :has() rather than a class toggled in JS, so there is no flash before
+   hydration. */
+html:has(.learn-console-ground) {
+  background-color: var(--background-console);
+}
+
+.rail-disclosure > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.rail-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.rail-disclosure > summary .rail-chevron {
+  transition: transform 150ms ease;
+}
+.rail-disclosure[open] > summary .rail-chevron {
+  transform: rotate(90deg);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* RULE: no scrollbar anywhere in the courses area chrome.
+   The learn rail and the "On this page" column both scroll independently so
+   they can stay pinned, but neither should ever show a bar. Targeted by
+   element as well as by utility class so a missing class cannot quietly bring
+   one back. Content inside a lesson — the chat demos — is deliberately not
+   covered: there a scrollbar is the affordance telling you the transcript
+   scrolls. */
+nav[aria-label='Learn'],
+nav[aria-label='On this page'],
+[data-course-chrome='scroll'] {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+nav[aria-label='Learn']::-webkit-scrollbar,
+nav[aria-label='On this page']::-webkit-scrollbar,
+[data-course-chrome='scroll']::-webkit-scrollbar {
+  display: none;
+}
+
 .scrollbar-subtle {
   scrollbar-width: thin;
   scrollbar-color: var(--border-primary) transparent;
