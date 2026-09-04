@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { getNewsletters } from '@/data/newsletters';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import { getModuleTitle } from '@/lib/guides/modules';
+import RailRevealCurrent from './RailRevealCurrent';
 
 /**
  * The rail on the left of /guides. Turns the courses index into the front door
@@ -201,14 +202,17 @@ export default async function LearnSidebar({
     // Hidden below lg: the map itself is the mobile navigation, and a collapsed
     // accordion above five sections of content would only push them down.
     //
-    // The rail scrolls with the page rather than inside its own box. It is
-    // taller than the viewport, and a sticky column with overflow-y-auto puts a
-    // second scrollbar on screen — the reference rail has none, and every group
-    // is still reachable by simply scrolling the page.
+    // Pinned, with its own scroll and no visible scrollbar. A rail that scrolls
+    // with the page snaps back to the top on every navigation, because Next
+    // scrolls to top when the route changes — which is what made clicking
+    // through the rail feel jumpy. Sticky keeps it anchored; scrollbar-none
+    // keeps the page clean while every group stays reachable.
     <nav
       aria-label="Learn"
-      className="hidden lg:block lg:border-r lg:border-border-primary lg:pr-6 lg:pt-10"
+      className="hidden lg:block lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:border-r lg:border-border-primary lg:pr-6 lg:pt-10 scrollbar-none"
     >
+      <RailRevealCurrent />
+
       <div className="mb-7">
         <GroupLabel>Explore</GroupLabel>
         <ul className="space-y-0.5">
@@ -233,19 +237,43 @@ export default async function LearnSidebar({
             const isCurrent = guide.slug === currentGuideSlug;
             return (
               <li key={guide.slug}>
-                <RailLink
-                  href={`/guides/${guide.slug}`}
-                  current={isCurrent && !currentIsOverview && !currentLessonSlug}
+                {/* A native <details>, so opening a course is a disclosure and
+                    not a navigation. Clicking the row used to load that
+                    course's page, which reset the scroll and made the rail
+                    jump; now it expands in place with no JavaScript and no
+                    route change. "Overview" inside is the link to the course
+                    page itself. */}
+                <details
+                  className="rail-disclosure"
+                  open={isCurrent}
+                  name="learn-rail-course"
                 >
-                  {railLabel(guide.title)}
-                </RailLink>
-                {isCurrent && (
+                  <summary
+                    className={`flex items-center gap-2 rounded-card px-3 py-1.5 type-caption transition-colors ${
+                      isCurrent
+                        ? 'font-semibold text-text-primary'
+                        : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary'
+                    }`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="rail-chevron shrink-0 text-text-secondary"
+                    >
+                      ›
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      {railLabel(guide.title)}
+                    </span>
+                  </summary>
+
                   <CourseLessons
                     guideSlug={guide.slug}
-                    currentLessonSlug={currentLessonSlug}
-                    currentIsOverview={currentIsOverview}
+                    currentLessonSlug={
+                      isCurrent ? currentLessonSlug : undefined
+                    }
+                    currentIsOverview={isCurrent && currentIsOverview}
                   />
-                )}
+                </details>
               </li>
             );
           })}

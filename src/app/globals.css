@@ -783,6 +783,35 @@ html[data-theme="dark"] .newsletter-content a[style*="background-color: #162036"
    attention on machines set to always show scrollbars.
    Colour comes from --border-primary so it follows light/dark on its own.
    Firefox uses scrollbar-width/color; WebKit needs the ::-webkit- rules. */
+/* Scrollable without a visible scrollbar. For a nav rail that must stay pinned
+   while the content scrolls: sticky + its own overflow keeps it from snapping
+   back to the top on every navigation, and hiding the bar keeps the page
+   looking clean. Keyboard and wheel scrolling still work. */
+/* Disclosure rows in the learn rail. Native <details> gives expand/collapse
+   with no JavaScript and, crucially, no navigation — clicking a course opens it
+   in place instead of loading its page and throwing you back to the top. */
+.rail-disclosure > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.rail-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+.rail-disclosure > summary .rail-chevron {
+  transition: transform 150ms ease;
+}
+.rail-disclosure[open] > summary .rail-chevron {
+  transform: rotate(90deg);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 .scrollbar-subtle {
   scrollbar-width: thin;
   scrollbar-color: var(--border-primary) transparent;
