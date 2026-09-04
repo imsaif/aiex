@@ -54,9 +54,25 @@ async function getLatestIssues(): Promise<Array<{ slug: string; title: string }>
     .map((n) => ({ slug: n.slug, title: n.title }));
 }
 
+/**
+ * Short label for the rail. Six of the seven course titles end in some form of
+ * "Course for Designers", so at 240px they all wrap to two lines and the rail
+ * loses its rhythm. The group heading already says "Courses", so the suffix is
+ * carrying no information here.
+ *
+ * Presentation only — the full title is unchanged everywhere else, and a title
+ * that does not match simply passes through.
+ */
+function railLabel(title: string): string {
+  return title
+    .replace(/\s+Course for Designers$/i, '')
+    .replace(/\s+Learning Path$/i, '')
+    .replace(/\s+Course$/i, '');
+}
+
 function GroupLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="type-eyebrow mb-3 font-semibold text-text-secondary">
+    <p className="type-eyebrow mb-2 px-3 font-semibold text-text-secondary">
       {children}
     </p>
   );
@@ -74,7 +90,7 @@ function RailLink({
   external?: boolean;
 }) {
   const base =
-    'block rounded-card px-3 py-2 type-body transition-colors';
+    'block rounded-card px-3 py-1.5 type-caption transition-colors';
   const state = current
     ? 'bg-text-primary text-background-primary font-semibold'
     : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary';
@@ -116,9 +132,9 @@ export default async function LearnSidebar() {
     // is still reachable by simply scrolling the page.
     <nav
       aria-label="Learn"
-      className="hidden lg:block lg:border-r lg:border-border-primary lg:pr-6"
+      className="hidden lg:block lg:border-r lg:border-border-primary lg:pr-6 lg:pt-10"
     >
-      <div className="mb-8">
+      <div className="mb-7">
         <GroupLabel>Explore</GroupLabel>
         <ul className="space-y-0.5">
           {EXPLORE.map((item) => (
@@ -135,18 +151,20 @@ export default async function LearnSidebar() {
         </ul>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-7">
         <GroupLabel>Courses</GroupLabel>
         <ul className="space-y-0.5">
           {guides.map((guide) => (
             <li key={guide.slug}>
-              <RailLink href={`/guides/${guide.slug}`}>{guide.title}</RailLink>
+              <RailLink href={`/guides/${guide.slug}`}>
+                {railLabel(guide.title)}
+              </RailLink>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-7">
         <GroupLabel>What&rsquo;s new</GroupLabel>
         <ul className="space-y-0.5">
           {issues.map((issue) => (

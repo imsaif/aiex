@@ -315,7 +315,7 @@ export default async function GuidesPage() {
             table of contents and jumps into the matching section. Questions
             come from learnMap so the hero cannot drift from the map below. */}
         <section className="border-b border-border-primary pb-12 pt-10 md:pb-16">
-          <div className="max-w-3xl">
+          <div>
                 <p className="type-eyebrow font-semibold text-accent-primary mb-4">
                   The Map
                 </p>
