@@ -192,19 +192,36 @@ export default function PatternsIndexPage() {
                 free, no account
               </p>
 
+              {/* A block, not a loose line. As bare text under the eyebrow it
+                  read as a fourth muted sentence in the stack — easy to skim
+                  past, and oddly placed, since it is an offer rather than more
+                  description of the page. Boxed, with the mark set in its own
+                  frame, it reads as a thing you can act on and sits at a
+                  different altitude from the copy above it. */}
               <Link
                 href="/skills"
-                className="group mt-loose inline-flex items-center gap-2 type-caption text-text-secondary transition-colors hover:text-text-primary"
+                className="group mt-8 flex max-w-2xl items-start gap-4 rounded-card border border-border-primary p-loose transition-colors hover:border-accent-primary/40"
               >
-                <ClaudeMark
-                  animated
-                  className="h-4 w-4 shrink-0 text-brand-claude"
-                />
-                <span>
-                  Every pattern ships as a free Claude Code skill.{' '}
-                  <span className="font-medium text-accent-primary transition-colors group-hover:text-accent-hover">
-                    Browse the directory →
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary">
+                  <ClaudeMark
+                    animated
+                    className="h-4 w-4 shrink-0 text-brand-claude"
+                  />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="type-body block font-semibold text-text-primary">
+                    Every pattern ships as a free Claude Code skill
                   </span>
+                  <span className="type-caption block text-text-secondary">
+                    Install one and your agent applies that pattern on its own,
+                    without being asked.
+                  </span>
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="type-body shrink-0 text-text-secondary transition-colors group-hover:text-accent-primary"
+                >
+                  →
                 </span>
               </Link>
             </div>
