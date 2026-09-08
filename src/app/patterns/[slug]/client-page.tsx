@@ -75,7 +75,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
   // opacity:0→1 animation defers the credited LCP paint (inflated LCP under
   // throttling). Keep fade-ins scoped to below-fold sections only.
   return (
-    <main className="max-w-7xl mx-auto pt-20 md:pt-24 pb-8 px-6">
+    <main className="pt-10 pb-8">
       {/* Previous / Next Navigation */}
       <nav className="flex items-center justify-between text-sm mb-6">
         {previousPattern ? (
