@@ -92,11 +92,16 @@ function RailLink({
   current?: boolean;
   external?: boolean;
 }) {
+  // "You are here" is a location, not a button. It used to be a solid ink fill,
+  // the same treatment as the Subscribe CTA and the selected category pill, so
+  // three unrelated meanings read at the same volume. The current row now says
+  // its piece with weight, a quiet surface and an accent edge, and solid ink is
+  // left to mean "the one action on this page".
   const base =
-    'block rounded-card px-3 py-1.5 type-caption transition-colors';
+    'block rounded-card border-l-2 px-3 py-1.5 type-caption transition-colors';
   const state = current
-    ? 'bg-text-primary text-background-primary font-semibold'
-    : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary';
+    ? 'border-accent-primary bg-surface-secondary font-semibold text-text-primary'
+    : 'border-transparent text-text-secondary hover:bg-surface-secondary hover:text-text-primary';
 
   if (external) {
     return (

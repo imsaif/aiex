@@ -15,6 +15,7 @@ import type { NewsletterSource } from '@/types/newsletter';
 export default function ConsoleSignup({
   source,
   subheading = 'Daily AI UX news and pattern breakdowns, straight to your inbox.',
+  className = 'mt-6 max-w-md',
 }: {
   /**
    * Where the signup came from. Typed against NEWSLETTER_SOURCES rather than
@@ -23,9 +24,16 @@ export default function ConsoleSignup({
    */
   source: NewsletterSource;
   subheading?: string;
+  /**
+   * Wrapper classes. The default spaces the capture off the text above it in a
+   * plain stacked header; a caller that already gives it a surface of its own
+   * (the patterns header boxes it) passes an empty string so the padding is
+   * not applied twice.
+   */
+  className?: string;
 }) {
   return (
-    <div className="mt-6 max-w-md">
+    <div className={className}>
       <InlineNewsletterSignup
         variant="news"
         source={source}

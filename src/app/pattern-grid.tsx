@@ -13,6 +13,7 @@ import SaveToDashboardButton from '../components/handoff/SaveToDashboardButton';
 import type { PatternSummary, Category } from '../types';
 import type { Product } from '../data/utils/product-utils';
 import type { Industry } from '../data/utils/industry-utils';
+import { categoryDotColor, categorySelectedStyle } from '../lib/categoryColors';
 
 // Lazy-load components that use framer-motion or aren't needed at first paint
 const CategoryFilterSheet = dynamic(() => import('../components/ui/CategoryFilterSheet'), { ssr: false });
@@ -64,19 +65,23 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
   return (
     <>
       {/* Main Content with Sidebar */}
-      <div id="patterns" className="pt-12 md:pt-16 pb-24">
+      <div id="patterns" className="pt-8 pb-24">
         {/* Categories as a horizontal filter row rather than a left column.
             Inside the console that column sat beside the rail, so the page had
             two nav columns before the first card; as a row it costs one line
             and the grid gets the full width. */}
         <div className="mb-8">
           <div className="flex flex-wrap gap-2">
+            {/* A selected pill wears its own category colour rather than a
+                solid ink fill. The fill is reserved for the page's one primary
+                action (Subscribe); using it here too made "what is filtered"
+                and "what to click" read at the same volume. */}
             <button
               onClick={() => setSelectedCategory('All Categories')}
               aria-pressed={selectedCategory === 'All Categories'}
-              className={`type-caption rounded-pill border px-4 py-2 transition-colors ${
+              className={`type-caption inline-flex items-center gap-2 rounded-pill border px-4 py-2 transition-colors ${
                 selectedCategory === 'All Categories'
-                  ? 'border-transparent bg-text-primary font-semibold text-background-primary'
+                  ? 'border-border-secondary bg-surface-secondary font-semibold text-text-primary'
                   : 'border-border-primary text-text-secondary hover:border-accent-primary/40 hover:text-text-primary'
               }`}
             >
@@ -87,12 +92,22 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.title)}
                 aria-pressed={selectedCategory === cat.title}
-                className={`type-caption rounded-pill border px-4 py-2 transition-colors ${
+                className={`type-caption inline-flex items-center gap-2 rounded-pill border px-4 py-2 transition-colors ${
                   selectedCategory === cat.title
-                    ? 'border-transparent bg-text-primary font-semibold text-background-primary'
+                    ? 'font-semibold text-text-primary'
                     : 'border-border-primary text-text-secondary hover:border-accent-primary/40 hover:text-text-primary'
                 }`}
+                style={
+                  selectedCategory === cat.title
+                    ? categorySelectedStyle(cat.color)
+                    : undefined
+                }
               >
+                <span
+                  aria-hidden="true"
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: categoryDotColor(cat.color) }}
+                />
                 {cat.title}
               </button>
             ))}

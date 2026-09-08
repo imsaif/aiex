@@ -143,45 +143,61 @@ export default function PatternsIndexPage() {
           the page rather than starting below a full-width hero. */}
       <LearnShell sidebar={<LearnSidebar active="patterns" />}>
 
-        {/* Page header, not a hero. Left-aligned title, one line of
-            description, then a meta row — the same shape the course and lesson
-            pages use, so every page in the console opens the same way. The
-            logo carousel and the email capture moved below the grid; they are
-            supporting material, not the first thing to read. */}
-        <header className="pt-10 pb-8 border-b border-border-primary">
-          <h1
-            className="type-h1 mb-3"
-            style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
-          >
-            {patterns.length} AI UX Design Patterns &amp; Skills
-          </h1>
-          <p className="type-lead mb-5 max-w-2xl text-text-secondary">
-            How the world&apos;s best AI products design their experiences.
-          </p>
-          <p className="type-caption text-text-secondary">
-            {patterns.length} patterns · {categories.length} categories · free,
-            no account
-          </p>
+        {/* Page header, not a hero. Two columns at lg: what this page is on the
+            left, the email offer as a contained card on the right.
 
-          <ConsoleSignup source="patterns-hero" />
+            It used to be a single left-hand stack — title, lead, counts, a
+            floating input and button, a rule, then an orphaned pill — so five
+            unrelated things dribbled down the same edge with no grouping and
+            the right two-thirds of the console sat empty. Splitting it gives
+            the offer a boundary of its own, and pulls the skills line up into
+            the meta row where it belongs: it describes the library, so it
+            reads with the counts rather than as a stray banner above the
+            grid. */}
+        <header className="border-b border-border-primary pt-10 pb-8">
+          <div className="grid gap-loose lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-12">
+            <div>
+              <h1
+                className="type-h1 mb-3"
+                style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
+              >
+                {patterns.length} AI UX Design Patterns &amp; Skills
+              </h1>
+              <p className="type-lead mb-5 max-w-2xl text-text-secondary">
+                How the world&apos;s best AI products design their experiences.
+              </p>
+
+              <p className="type-caption text-text-secondary">
+                {patterns.length} patterns · {categories.length} categories ·
+                free, no account
+              </p>
+
+              <Link
+                href="/skills"
+                className="group mt-3 inline-flex items-center gap-2 type-caption text-text-secondary transition-colors hover:text-text-primary"
+              >
+                <ClaudeMark
+                  animated
+                  className="h-4 w-4 shrink-0 text-brand-claude"
+                />
+                <span>
+                  Every pattern ships as a free Claude Code skill.{' '}
+                  <span className="font-medium text-accent-primary transition-colors group-hover:text-accent-hover">
+                    Browse the directory →
+                  </span>
+                </span>
+              </Link>
+            </div>
+
+            {/* The offer, boxed. On its own it read as an input someone forgot
+                to finish; inside a surface it reads as a deliberate module,
+                and the Subscribe button becomes the one solid-ink control in
+                view — which is the whole emphasis rule for this console. */}
+            <div className="rounded-card border border-border-primary bg-surface-secondary p-loose">
+              <ConsoleSignup source="patterns-hero" className="" />
+            </div>
+          </div>
         </header>
-
-        {/* Skills note — sits above the grid, sized to its own sentence rather
-            than stretched across the page like a card. */}
-        <div className="pt-8">
-          <Link
-            href="/skills"
-            className="group inline-flex items-center gap-2.5 rounded-full border border-border-primary bg-surface-primary py-2 pl-3 pr-4 text-sm text-text-secondary hover:border-accent-primary transition-colors"
-          >
-            <ClaudeMark animated className="h-4 w-4 shrink-0 text-brand-claude" />
-            <span>
-              Every pattern below ships as a free Claude Code skill.{' '}
-              <span className="font-medium text-accent-primary group-hover:text-accent-hover transition-colors">
-                Browse the skills directory →
-              </span>
-            </span>
-          </Link>
-        </div>
 
         {/* Interactive Pattern Grid — search + filters + responsive cards */}
         <PatternGrid
