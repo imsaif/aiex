@@ -28,6 +28,11 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
   // colored raster brand assets fall in line with the simple-icons set.
   const logoFilter = useThemeFilter('grayscale(100%)');
 
+  // Nothing narrowed yet: the visitor is browsing the whole directory, which
+  // is the state the grouped-by-category view is for.
+  const isBrowsingAll =
+    searchQuery.trim() === '' && selectedCategory === 'All Skills';
+
   const filteredRows = useMemo(() => {
     const query = searchQuery.toLowerCase();
     return rows.filter((row) => {
@@ -52,7 +57,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
           aria-pressed={selectedCategory === 'All Skills'}
           className={`type-caption rounded-pill border px-4 py-2 transition-colors ${
             selectedCategory === 'All Skills'
-              ? 'border-transparent bg-text-primary font-semibold text-background-primary'
+              ? 'border-border-secondary bg-surface-secondary font-semibold text-text-primary'
               : 'border-border-primary text-text-secondary hover:border-accent-primary/40 hover:text-text-primary'
           }`}
         >
@@ -87,7 +92,75 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Browsing everything: the directory groups itself by category, the
+            same shape /patterns uses. 38 identical cards in a flat run gave
+            the page no structure of its own and left the filter pills carrying
+            all of it. Searching or filtering brings the cards back, where the
+            set is small enough that each result earns the space. */}
+        {isBrowsingAll && (
+          <div className="border-b border-border-primary">
+            {categories.map((category) => {
+              const categoryRows = rows.filter((r) => r.category === category);
+              if (categoryRows.length === 0) return null;
+
+              return (
+                <section
+                  key={category}
+                  className="grid gap-loose border-t border-border-primary py-10 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12"
+                >
+                  <div className="lg:sticky lg:top-24 lg:self-start">
+                    <h2 className="type-h3 mb-2 text-text-primary">{category}</h2>
+                    <p className="type-eyebrow uppercase text-text-secondary">
+                      {categoryRows.length}{' '}
+                      {categoryRows.length === 1 ? 'skill' : 'skills'}
+                    </p>
+                  </div>
+
+                  <ul className="min-w-0">
+                    {categoryRows.map((row, index) => (
+                      <li
+                        key={row.slug}
+                        className={index > 0 ? 'border-t border-border-primary' : ''}
+                      >
+                        <div className="group relative flex items-start gap-4 py-4">
+                          <Link
+                            href={`/patterns/${row.slug}`}
+                            className="min-w-0 flex-1"
+                          >
+                            {/* The skill's own name leads: it is what you type
+                                and what appears in your project, so it is the
+                                identifier, not the prose title. */}
+                            <p className="type-caption mb-1 font-mono text-text-secondary">
+                              {row.skillName}
+                            </p>
+                            <h3 className="type-body mb-1 font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+                              {row.title}
+                            </h3>
+                            <p className="type-caption text-text-secondary">
+                              {row.trigger}
+                            </p>
+                          </Link>
+
+                          <SaveToDashboardButton
+                            slug={row.slug}
+                            variant="icon"
+                            className="shrink-0"
+                          />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Not merely hidden when grouped — not rendered. Two copies of every
+            skill in the DOM is a screen-reader duplicate and a doubled
+            document. */}
+        {!isBrowsingAll && (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredRows.map((row) => (
             <div
               key={row.slug}
@@ -156,6 +229,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
             </div>
           ))}
         </div>
+        )}
 
         {filteredRows.length === 0 && (
           <div className="text-center py-12">

@@ -184,12 +184,11 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
               </div>
             )}
 
-            {/* Patterns Grid */}
-            <div
-              className={`grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 ${
-                isBrowsingAll ? 'hidden' : ''
-              }`}
-            >
+            {/* Patterns Grid. Not rendered at all while grouped, rather than
+                hidden: two copies of every pattern in the DOM is a
+                screen-reader duplicate and a doubled document. */}
+            {!isBrowsingAll && (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredPatterns.map((pattern) => (
                 <div
                   key={pattern.id}
@@ -296,6 +295,7 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                 </div>
               ))}
             </div>
+            )}
 
             {filteredPatterns.length === 0 && (
               <div className="text-center py-12">

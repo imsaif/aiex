@@ -13,6 +13,11 @@ import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
+import {
+  ArrowDownTrayIcon,
+  BookmarkIcon,
+  NewspaperIcon,
+} from '@heroicons/react/24/outline';
 
 export const revalidate = 3600;
 
@@ -42,6 +47,19 @@ export default function SkillsPage() {
       products: exampleProducts(pattern),
     }));
 
+  // A real skill's frontmatter for the "what a skill looks like" block, built
+  // from the same data the installer writes rather than hand-copied, so the
+  // example cannot drift from the file people actually get. Progressive
+  // Disclosure is the sample because its trigger line is the most legible to
+  // someone who has never seen a skill; any row would do if it disappears.
+  const sample = rows.find((r) => r.slug === 'progressive-disclosure') ?? rows[0];
+  const sampleSkill = [
+    '---',
+    `name: ${sample.skillName}`,
+    `description: ${sample.trigger}`,
+    '---',
+  ].join('\n');
+
   const itemList = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -66,23 +84,37 @@ export default function SkillsPage() {
           the page rather than starting below a full-width hero. */}
       <LearnShell sidebar={<LearnSidebar active="skills" />}>
 
-      {/* Split page header, following the reference: identity on the left,
-          the thing you actually came to copy on the right. No centred hero —
-          inside a console column that reads as a page within a page. */}
-      <header className="border-b border-border-primary pt-10 pb-10">
-        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12">
-          <div>
-            <p className="type-eyebrow mb-3 font-semibold text-accent-primary">
+      {/* Split page header: what this is on the left, the thing you came to
+          copy on the right. The right column is a stack of hairline-separated
+          blocks rather than one boxed card — a card reads as a widget parked
+          in the corner, while blocks with their own icon, heading and footnote
+          read as content that happens to sit beside the title.
+
+          Same typographic ladder as /patterns: display for the title on one
+          line, h3 at normal weight for the lead, leading opened on both since
+          those tokens are tuned for single lines. */}
+      <header className="border-b border-border-primary pt-16 pb-12">
+        {/* Proportional split rather than a fixed 380px sidebar. A fixed width
+            squeezed the install column at every viewport the console is
+            actually read at: the command wrapped, the copy ran three words to
+            a line, and the whole thing read as a squashed sidebar. Roughly
+            60/40 gives the commands room to sit on one line. */}
+        <div className="lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-0">
+          <div className="lg:pr-12">
+            <p className="type-eyebrow mb-4 font-semibold uppercase text-accent-primary">
               Free Claude Code Skills
             </p>
-            <h1 className="type-h1 mb-3" style={{ color: 'var(--text-hero)' }}>
+            <h1
+              className="type-display mb-6 leading-tight"
+              style={{ color: 'var(--text-hero)' }}
+            >
               {rows.length} AI UX Skills for Claude Code
             </h1>
-            <p className="type-lead max-w-xl text-text-secondary">
+            <p className="type-h3 mb-9 max-w-2xl font-normal leading-relaxed text-text-secondary">
               Design judgment your coding agent applies on its own. Install
               once, no prompting.
             </p>
-            <p className="type-caption mt-4 text-text-secondary">
+            <p className="type-caption text-text-secondary">
               New to skills?{' '}
               <Link
                 href="/guides/ai-ux-skills-guide"
@@ -93,19 +125,96 @@ export default function SkillsPage() {
               (6 lessons, about 20 minutes).
             </p>
 
-            <ConsoleSignup source="skills-hero" />
+            {/* The left column ran out of content well before the install
+                column did, leaving a large hole under the lead. Rather than
+                pad it, show the thing itself: a real skill's frontmatter,
+                taken from the pattern data rather than typed out here, so it
+                cannot drift from what actually installs. It answers the
+                question the page provokes — "what is a skill, exactly?" —
+                without sending anyone to the course first. */}
+            <div className="mt-10 rounded-card border border-border-primary">
+              <p className="type-caption border-b border-border-primary px-5 py-3 font-semibold text-text-primary">
+                What a skill looks like
+              </p>
+              <pre className="whitespace-pre-wrap break-words px-5 py-4 type-caption font-mono leading-relaxed text-text-secondary">
+                <code>{sampleSkill}</code>
+              </pre>
+              <p className="type-caption border-t border-border-primary px-5 py-3 text-text-secondary">
+                Your agent reads the trigger line and applies the pattern when
+                it fits. You never mention it.
+              </p>
+            </div>
           </div>
 
-          <div className="mt-8 lg:mt-0">
-            <div className="rounded-card border border-border-primary bg-surface-primary p-5">
-              <p className="type-caption mb-3 font-semibold text-text-primary">
-                Install the skills
+          <div className="mt-10 lg:mt-0 lg:border-l lg:border-border-primary lg:pl-12">
+            <section>
+              <h2 className="type-body mb-2 flex items-center gap-2.5 font-semibold text-text-primary">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary">
+                  <ArrowDownTrayIcon
+                    aria-hidden="true"
+                    className="h-4 w-4 text-text-secondary"
+                  />
+                </span>
+                Install every skill
+              </h2>
+              <p className="type-caption mb-4 text-text-secondary">
+                One file per pattern, written into your project and editable
+                afterwards.
               </p>
               <InstallCommand command={GENERIC_COMMAND} />
-            </div>
+              <p className="type-caption mt-3 text-text-secondary">
+                {rows.length} skills · free · MIT
+              </p>
+            </section>
+
+            <section className="mt-8 border-t border-border-primary pt-8">
+              <h2 className="type-body mb-2 flex items-center gap-2.5 font-semibold text-text-primary">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary">
+                  <BookmarkIcon aria-hidden="true" className="h-4 w-4 text-text-secondary" />
+                </span>
+                Only the ones you need
+              </h2>
+              <p className="type-caption mb-3 text-text-secondary">
+                Save skills as you browse, then download them together as one
+                pack.
+              </p>
+              <Link
+                href="/dashboard"
+                className="type-caption font-medium text-accent-primary transition-colors hover:text-accent-hover"
+              >
+                Open your dashboard →
+              </Link>
+            </section>
+
+            <section className="mt-8 border-t border-border-primary pt-8">
+              <h2 className="type-body mb-2 font-semibold text-text-primary">
+                Works with any agent
+              </h2>
+              <p className="type-caption text-text-secondary">
+                Claude Code · Cursor · GitHub Copilot · Codex
+              </p>
+            </section>
           </div>
         </div>
       </header>
+
+      {/* The email offer, on its own line under the header rather than inside
+          it, for the same reason as /patterns: in the header it competes with
+          the title for the opening beat. */}
+      <section className="flex flex-col gap-snug border-b border-border-primary py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
+        <p className="flex items-center gap-2.5 type-caption text-text-secondary">
+          <NewspaperIcon
+            aria-hidden="true"
+            className="h-4 w-4 shrink-0 text-text-secondary"
+          />
+          Daily AI UX news and pattern breakdowns, straight to your inbox.
+        </p>
+        <ConsoleSignup
+          source="skills-hero"
+          className="w-full lg:max-w-md"
+          subheading=""
+        />
+      </section>
 
       <div className="py-12 md:py-16">
         <SkillsDirectory rows={rows} categories={categoryNames} />
