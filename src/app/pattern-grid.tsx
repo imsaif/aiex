@@ -13,7 +13,8 @@ import SaveToDashboardButton from '../components/handoff/SaveToDashboardButton';
 import type { PatternSummary, Category } from '../types';
 import type { Product } from '../data/utils/product-utils';
 import type { Industry } from '../data/utils/industry-utils';
-import { categoryDotColor, categorySelectedStyle } from '../lib/categoryColors';
+import { categorySelectedStyle } from '../lib/categoryColors';
+import PatternCategorySection from '../components/patterns/PatternCategorySection';
 
 // Lazy-load components that use framer-motion or aren't needed at first paint
 const CategoryFilterSheet = dynamic(() => import('../components/ui/CategoryFilterSheet'), { ssr: false });
@@ -35,6 +36,15 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
 
   // Get theme-aware filter for product logos
   const logoFilter = useThemeFilter('grayscale(100%)');
+
+  // Nothing narrowed yet: the visitor is browsing the whole library, which is
+  // the state the grouped-by-category view is for.
+  const isBrowsingAll =
+    searchQuery.trim() === '' &&
+    selectedCategory === 'All Categories' &&
+    selectedProducts.length === 0 &&
+    selectedIndustries.length === 0 &&
+    !showAgenticOnly;
 
   const filteredPatterns = useMemo(() => {
     return patterns.filter(pattern => {
@@ -103,11 +113,6 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                     : undefined
                 }
               >
-                <span
-                  aria-hidden="true"
-                  className="h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: categoryDotColor(cat.color) }}
-                />
                 {cat.title}
               </button>
             ))}
@@ -162,8 +167,29 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
               </div>
             </div>
 
+            {/* Browsing everything: the library groups itself by category
+                rather than presenting 38 identical cards in one flat run. See
+                PatternCategorySection for why rows beat cards here. The moment
+                anything is searched or filtered the card grid returns, because
+                then the set is small and each result earns the space. */}
+            {isBrowsingAll && (
+              <div className="border-b border-border-primary">
+                {categories.map((cat) => (
+                  <PatternCategorySection
+                    key={cat.id}
+                    category={cat}
+                    patterns={patterns.filter((p) => p.category === cat.title)}
+                  />
+                ))}
+              </div>
+            )}
+
             {/* Patterns Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+              className={`grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 ${
+                isBrowsingAll ? 'hidden' : ''
+              }`}
+            >
               {filteredPatterns.map((pattern) => (
                 <div
                   key={pattern.id}
