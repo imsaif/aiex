@@ -182,15 +182,16 @@ export default function SkillsPage() {
                 the command, then a footnote row splitting the secondary detail
                 left and the way out right.
 
-                Deliberately quieter than the left column, and quiet in the
-                way labels are quiet: the headings are small caps in secondary
-                ink rather than dark body-weight text, so they name their block
-                without competing with the H1 beside them. Leading is loose
-                throughout — at this size, air is what makes a column readable
-                rather than cramped, and it costs nothing here since the column
-                is shorter than the one it sits next to. */}
+                Deliberately quiet, and quiet in the way labels are quiet:
+                small caps in secondary ink, marks left unframed, footnotes a
+                step smaller again. Only the command itself keeps a surface,
+                because it is the one thing in this column anybody came to act
+                on. Leading is loose throughout — at this size air is what
+                makes a column readable rather than cramped, and it costs
+                nothing here since the column is shorter than the one beside
+                it. */}
             <section>
-              <h2 className="type-caption mb-3 flex items-center gap-2.5 font-semibold uppercase tracking-wide text-text-secondary">
+              <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
                 <CyclingAgentMark />
                 Install every skill
               </h2>
@@ -200,12 +201,12 @@ export default function SkillsPage() {
               </p>
               <InstallCommand command={GENERIC_COMMAND} />
               <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <p className="type-caption font-mono text-text-secondary">
+                <p className="type-eyebrow font-mono text-text-secondary">
                   {rows.length} skills · free · MIT
                 </p>
                 <Link
                   href="/guides/ai-ux-skills-guide"
-                  className="type-caption text-text-secondary transition-colors hover:text-text-primary"
+                  className="type-eyebrow text-text-secondary transition-colors hover:text-text-primary"
                 >
                   How skills work ↗
                 </Link>
@@ -213,10 +214,8 @@ export default function SkillsPage() {
             </section>
 
             <section className="mt-9 border-t border-border-primary pt-9">
-              <h2 className="type-caption mb-3 flex items-center gap-2.5 font-semibold uppercase tracking-wide text-text-secondary">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
-                  <ClaudeMark className="h-4 w-4 text-brand-claude" />
-                </span>
+              <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
+<ClaudeMark className="h-4 w-4 shrink-0 text-brand-claude" />
                 Claude Code
               </h2>
               <p className="type-caption mb-5 leading-loose text-text-secondary">
@@ -225,12 +224,12 @@ export default function SkillsPage() {
                 nothing to remember at the prompt.
               </p>
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="type-caption font-mono text-text-secondary">
+                <p className="type-eyebrow font-mono text-text-secondary">
                   Only need a few?
                 </p>
                 <Link
                   href="/dashboard"
-                  className="type-caption text-text-secondary transition-colors hover:text-text-primary"
+                  className="type-eyebrow text-text-secondary transition-colors hover:text-text-primary"
                 >
                   Build a pack ↗
                 </Link>
@@ -238,7 +237,7 @@ export default function SkillsPage() {
             </section>
 
             <section className="mt-9 border-t border-border-primary pt-9">
-              <h2 className="type-caption mb-3 font-semibold uppercase tracking-wide text-text-secondary">
+              <h2 className="type-eyebrow mb-3 uppercase text-text-secondary">
                 Works with any agent
               </h2>
               <AgentLogoRow />

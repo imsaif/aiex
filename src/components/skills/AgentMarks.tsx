@@ -12,6 +12,11 @@ import { useThemeFilter } from '@/hooks/useTheme';
  * four words, but recognises four logos without reading at all. The names stay
  * in the markup for screen readers and for anyone whose images do not load.
  *
+ * The names are set at caption rather than the eyebrow size the labels above
+ * them use: a label can be 12px because you read it once, but these are
+ * content — the answer to "which agents?" — and 12px is below what this
+ * project treats as readable for anything that carries meaning.
+ *
  * simple-icons ship as flat black glyphs, so they are filtered the same way
  * the pattern grid and ProductsSection filter product logos: greyscale in
  * light mode, inverted on top of that in dark, which keeps a black mark
@@ -54,7 +59,7 @@ export function CyclingAgentMark() {
   }, []);
 
   return (
-    <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
+    <span className="relative flex h-4 w-4 shrink-0 items-center justify-center">
       {AGENTS.map((agent, i) => (
         <Image
           key={agent.name}
@@ -84,14 +89,14 @@ export function AgentLogoRow() {
       {AGENTS.map((agent) => (
         <li
           key={agent.name}
-          className="type-caption flex items-center gap-2 text-text-secondary"
+          className="type-caption flex items-center gap-1.5 text-text-secondary"
         >
           <Image
             src={agent.logo}
             alt=""
-            width={16}
-            height={16}
-            className="h-4 w-4"
+            width={14}
+            height={14}
+            className="h-3.5 w-3.5"
             style={{ filter: logoFilter }}
           />
           {agent.name}

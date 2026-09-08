@@ -32,7 +32,7 @@ export function InstallCommand({ command }: { command: string }) {
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-card border border-border-primary bg-surface-secondary py-3 pl-4 pr-3">
+    <div className="flex items-center gap-3 rounded-card bg-surface-secondary py-2.5 pl-4 pr-2.5">
       {/* The command scrolls rather than wraps: a wrapped shell command reads
           as two commands, and half-selecting one is worse than scrolling. */}
       <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-sm text-text-primary">
@@ -45,7 +45,7 @@ export function InstallCommand({ command }: { command: string }) {
         type="button"
         onClick={copy}
         aria-label="Copy install command"
-        className="inline-flex shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary p-2 text-text-secondary transition-colors hover:border-accent-primary/40 hover:text-text-primary"
+        className="inline-flex shrink-0 items-center justify-center rounded-card p-2 text-text-secondary transition-colors hover:bg-background-primary hover:text-text-primary"
       >
         {copied ? (
           <CheckIcon className="h-4 w-4 text-accent-primary" aria-hidden="true" />
