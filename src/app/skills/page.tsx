@@ -49,14 +49,15 @@ export default function SkillsPage() {
       products: exampleProducts(pattern),
     }));
 
-  // The three courses that make sense before installing anything: what a
-  // skill is, then the two agents most visitors arrive with. Titles and lesson
-  // counts are read from the guides data rather than typed here, so a renamed
-  // or re-cut course cannot leave a stale claim on this page.
+  // Two courses, not a menu: what a skill is, then the agent this page is
+  // named after. A third row turned a nudge into a directory and competed
+  // with the skills list further down, which is where browsing belongs.
+  // Titles and lesson counts are read from the guides data rather than typed
+  // here, so a renamed or re-cut course cannot leave a stale claim on this
+  // page.
   const STARTING_COURSE_SLUGS = [
     'ai-ux-skills-guide',
     'claude-code-learning-path',
-    'cursor-learning-path',
   ];
   const startingCourses = STARTING_COURSE_SLUGS.map((slug) =>
     guides.find((g) => g.slug === slug)
