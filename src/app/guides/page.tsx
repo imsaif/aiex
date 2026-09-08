@@ -11,6 +11,7 @@ import LearnSection from '@/components/learn/LearnSection';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
 import ConsoleSignup from '@/components/learn/ConsoleSignup';
+import { NewspaperIcon } from '@heroicons/react/24/outline';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
 
@@ -161,31 +162,33 @@ export default async function GuidesPage() {
             announcing what the site has; the numbered list doubles as the
             table of contents and jumps into the matching section. Questions
             come from learnMap so the hero cannot drift from the map below. */}
-        <section className="border-b border-border-primary pb-12 pt-10 md:pb-16">
-          {/* Capped measure. The column runs ~1200px; prose set that wide is
-              tiring to read and is what made this page feel busy. Rows and
-              grids below keep the full width. */}
+        <section className="border-b border-border-primary pt-16 pb-12">
+          {/* The eyebrow and title sit outside the prose measure. They used to
+              be inside it and set at h1 rather than display, because at 56px
+              the question wrapped to two lines within 950px and a two-line
+              question reads as a paragraph rather than a prompt. Lifting them
+              out of the cap lets the question run as one line at the same
+              display size /patterns and /skills use, so the three console
+              pages open at the same weight instead of this one arriving
+              smaller than its neighbours. */}
+          <p className="type-eyebrow font-semibold uppercase text-accent-primary mb-4">
+            The Map
+          </p>
+          {/* "AI UX" is bound with a non-breaking space so the line can never
+              break between them. */}
+          <h1
+            className="type-display mb-6 leading-tight"
+            style={{ color: 'var(--text-hero)' }}
+          >
+            What do you want to learn about AI&nbsp;UX?
+          </h1>
+
           <div className="max-w-[950px]">
-                <p className="type-eyebrow font-semibold text-accent-primary mb-4">
-                  The Map
-                </p>
-                {/* "AI UX" is bound with a non-breaking space so the line can
-                    never break between them, and balance keeps the wrap even
-                    rather than leaving one short word on the last line. */}
-                {/* type-h1, not type-display: at 56px the question wrapped to
-                    two lines inside the 950px measure, and a two-line question
-                    reads as a paragraph rather than a prompt. */}
-                <h1
-                  className="type-h1 mb-6"
-                  style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
-                >
-                  What do you want to learn about AI&nbsp;UX?
-                </h1>
-                <p className="type-lead text-text-secondary mb-4">
+                <p className="type-h3 mb-9 font-normal leading-relaxed text-text-secondary">
                   Pick the question that sounds like you. Each one opens onto
                   the courses, patterns and checklists that answer it.
                 </p>
-                <p className="type-caption text-text-secondary mb-10">
+                <p className="type-eyebrow uppercase text-text-secondary mb-10">
                   {guides.length} courses ·{' '}
                   {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
                   lessons · {PATTERN_COUNT} patterns · all free, no account
@@ -222,11 +225,29 @@ export default async function GuidesPage() {
                   ))}
             </ol>
 
-                {/* Under the questions, not above them. The chips are the
-                    reason someone is on this page; an email field above them
-                    asks for something before offering anything. */}
-                <ConsoleSignup source="guides-hero" />
           </div>
+        </section>
+
+        {/* The email offer, on its own line under the header rather than tucked
+            below the question chips inside it. Sitting in the header it hung
+            off the bottom of the 950px measure as a fourth thing in a stack
+            that was already asking a question — a label, a field and a button
+            competing with the chips that are the reason anyone is here. As its
+            own band it is unmistakably secondary, gets the full width, and
+            matches /patterns and /skills. */}
+        <section className="flex flex-col gap-snug border-b border-border-primary py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
+          <p className="flex items-center gap-2.5 type-caption text-text-secondary">
+            <NewspaperIcon
+              aria-hidden="true"
+              className="h-4 w-4 shrink-0 text-text-secondary"
+            />
+            Daily AI UX news and pattern breakdowns, straight to your inbox.
+          </p>
+          <ConsoleSignup
+            source="guides-hero"
+            className="w-full lg:max-w-md"
+            subheading=""
+          />
         </section>
 
         {/* The Learn Map — five questions, each opening onto the content that

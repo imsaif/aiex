@@ -88,6 +88,29 @@ body {
   --severity-6: #10b981; /* low */
   --severity-7: #162036; /* baseline / always-include (also used as dark chip text) */
 
+  /* Category key — one hue per pattern category, used as a small dot beside a
+   * category's name so the eight categories are told apart by something other
+   * than reading the label. Data-visualization colors like the severity scale
+   * above: theme-independent, and consumed via
+   * `style={{ backgroundColor: 'var(--category-N) }}`.
+   *
+   * They are a key, never the only carrier of meaning — every dot sits next to
+   * its written category name, and they are never used for text or as the sole
+   * indicator of a selected state. The names match `color` in
+   * `src/data/categories.ts`.
+   *
+   * Mid-500 weights: dark enough to be visible on the white content column,
+   * light enough to hold up on the dark surface in dark mode. */
+  --category-blue: #3b82f6;
+  --category-green: #10b981;
+  --category-purple: #8b5cf6;
+  --category-orange: #f97316;
+  --category-pink: #ec4899;
+  --category-red: #ef4444;
+  --category-yellow: #f59e0b;
+  --category-indigo: #6366f1;
+  --category-teal: #14b8a6;
+
   /* Legacy variables for backward compatibility */
   --background: var(--background-primary);
   --foreground: var(--text-primary);
@@ -139,6 +162,11 @@ body {
   --type-caption-weight: 500;
   --type-caption-leading: 1.5;
   --type-caption-tracking: 0;
+
+  --type-footnote-size: 0.8125rem;   /* 13px — footnote rows under a block */
+  --type-footnote-weight: 400;
+  --type-footnote-leading: 1.5;
+  --type-footnote-tracking: 0;
 
   --type-eyebrow-size: 0.75rem;      /* 12px — uppercase chips above headings */
   --type-eyebrow-weight: 600;
@@ -467,6 +495,19 @@ p {
   line-height: var(--type-caption-leading);
   letter-spacing: var(--type-caption-tracking);
 }
+/* Footnote — the small print under a block: a licence, a count, a link out.
+ * Sits between caption and eyebrow deliberately. Caption is a step too loud
+ * for a line nobody needs to read, and eyebrow forces uppercase and semibold,
+ * which made "38 SKILLS · FREE · MIT" shout louder than the copy above it.
+ * Sentence case at normal weight, so it recedes without relying on a lighter
+ * grey — text-text-tertiary fails WCAG AA in dark mode on this palette. */
+.type-footnote {
+  font-size: var(--type-footnote-size);
+  font-weight: var(--type-footnote-weight);
+  line-height: var(--type-footnote-leading);
+  letter-spacing: var(--type-footnote-tracking);
+}
+
 .type-eyebrow {
   font-size: var(--type-eyebrow-size);
   font-weight: var(--type-eyebrow-weight);

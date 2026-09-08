@@ -53,10 +53,22 @@ describe('SkillsDirectory', () => {
     expect(toggle).toHaveBeenCalledWith(rows[0].slug);
   });
 
-  it('renders one card per skill with name, trigger, and Used-by', () => {
+  // The default view is grouped by category — a row per skill under a category
+  // heading, not a card. Cards are for the filtered and searched views, where
+  // the set is small enough to be worth the space, so Used-by logos only
+  // appear once something is narrowed.
+  it('lists every skill grouped under its category heading by default', () => {
     renderDirectory();
     expect(screen.getByText('aiux-human-in-the-loop')).toBeInTheDocument();
     expect(screen.getByText('Use when a UI shows too much at once.')).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'User Experience' })
+    ).toBeInTheDocument();
+  });
+
+  it('renders cards with Used-by once a category is chosen', () => {
+    renderDirectory();
+    fireEvent.click(screen.getByRole('button', { name: 'User Experience' }));
     expect(screen.getByText('Obscure Tool')).toBeInTheDocument();
   });
 

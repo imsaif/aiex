@@ -9,7 +9,7 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
-import { ClaudeMark } from '@/components/icons/ClaudeMark';
+import { NewspaperIcon } from '@heroicons/react/24/outline';
 import PatternGrid from '../pattern-grid';
 import patterns from '@/data/patterns';
 import categories from '@/data/categories';
@@ -143,45 +143,84 @@ export default function PatternsIndexPage() {
           the page rather than starting below a full-width hero. */}
       <LearnShell sidebar={<LearnSidebar active="patterns" />}>
 
-        {/* Page header, not a hero. Left-aligned title, one line of
-            description, then a meta row — the same shape the course and lesson
-            pages use, so every page in the console opens the same way. The
-            logo carousel and the email capture moved below the grid; they are
-            supporting material, not the first thing to read. */}
-        <header className="pt-10 pb-8 border-b border-border-primary">
-          <h1
-            className="type-h1 mb-3"
-            style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
-          >
-            {patterns.length} AI UX Design Patterns &amp; Skills
-          </h1>
-          <p className="type-lead mb-5 max-w-2xl text-text-secondary">
-            How the world&apos;s best AI products design their experiences.
-          </p>
-          <p className="type-caption text-text-secondary">
-            {patterns.length} patterns · {categories.length} categories · free,
-            no account
-          </p>
+        {/* Page header, not a hero. It says one thing: what this page is.
 
-          <ConsoleSignup source="patterns-hero" />
+            The email capture used to live in here — first as a tinted card in
+            the top right, then as a bare second column — and both split the
+            opening beat between the title and an offer. It now has its own
+            band underneath. The skills line stays, because it describes the
+            library itself and belongs with the counts rather than as a stray
+            banner above the grid. */}
+        <header className="border-b border-border-primary pt-16 pb-12">
+          <div>
+            <div>
+              {/* Each level steps down the token scale rather than sitting a
+                  hair apart: display for the title, h3 at normal weight for
+                  the lead, then the counts as a tracked eyebrow. Leading is
+                  opened on both large sizes — the display token's 1.05 and the
+                  h1's 1.15 are tuned for a single line and close multi-line
+                  text into a slab — and the gaps widen as importance drops, so
+                  the block reads as a hierarchy rather than a stack. */}
+              {/* No max-width and no balancing: the title is meant to run as a
+                  single line across the content column at desktop widths.
+                  Both a measure and `text-wrap: balance` would break it into
+                  two. It still wraps naturally on narrow screens. */}
+              <h1
+                className="type-display mb-6 leading-tight"
+                style={{ color: 'var(--text-hero)' }}
+              >
+                {patterns.length} AI UX Design Patterns &amp; Skills
+              </h1>
+              <p className="type-h3 mb-9 max-w-2xl font-normal leading-relaxed text-text-secondary">
+                How the world&apos;s best AI products design their experiences.
+              </p>
+
+              {/* Counts and the skills offer on one tracked line. The offer
+                  was a bordered block a moment ago and read as a banner
+                  bolted under the title; as the last clause of the metadata
+                  it states the fact once, in the place someone already looks
+                  to find out what the library is, and links on. */}
+              <p className="type-eyebrow uppercase text-text-secondary">
+                {patterns.length} patterns · {categories.length} categories ·
+                free ·{' '}
+                <Link
+                  href="/skills"
+                  className="font-semibold text-accent-primary transition-colors hover:text-accent-hover"
+                >
+                  each one ships as a Claude Code skill →
+                </Link>
+              </p>
+            </div>
+
+          </div>
         </header>
 
-        {/* Skills note — sits above the grid, sized to its own sentence rather
-            than stretched across the page like a card. */}
-        <div className="pt-8">
-          <Link
-            href="/skills"
-            className="group inline-flex items-center gap-2.5 rounded-full border border-border-primary bg-surface-primary py-2 pl-3 pr-4 text-sm text-text-secondary hover:border-accent-primary transition-colors"
-          >
-            <ClaudeMark animated className="h-4 w-4 shrink-0 text-brand-claude" />
-            <span>
-              Every pattern below ships as a free Claude Code skill.{' '}
-              <span className="font-medium text-accent-primary group-hover:text-accent-hover transition-colors">
-                Browse the skills directory →
-              </span>
-            </span>
-          </Link>
-        </div>
+        {/* The email offer, on its own line under the header rather than inside
+            it. In the header it was a second thing competing with the title
+            for the opening beat, whichever way it was dressed - a tinted card
+            read as a widget dropped in the corner, and a bare second column
+            still split the eye at the exact moment the page should be saying
+            one thing. As its own band it is unmistakably secondary, and it
+            gets the full width instead of a 380px sliver. */}
+        <section className="flex flex-col gap-snug border-b border-border-primary py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
+          {/* One line, not a heading over a subheading. A two-line label for a
+              single input restated the same offer twice and gave a secondary
+              band the type hierarchy of a section. The newspaper mark — the
+              same one the nav uses for News — carries what the heading was
+              doing, in the space of a character. */}
+          <p className="flex items-center gap-2.5 type-caption text-text-secondary">
+            <NewspaperIcon
+              aria-hidden="true"
+              className="h-4 w-4 shrink-0 text-text-secondary"
+            />
+            Daily AI UX news and pattern breakdowns, straight to your inbox.
+          </p>
+          <ConsoleSignup
+            source="patterns-hero"
+            className="w-full lg:max-w-md"
+            subheading=""
+          />
+        </section>
 
         {/* Interactive Pattern Grid — search + filters + responsive cards */}
         <PatternGrid

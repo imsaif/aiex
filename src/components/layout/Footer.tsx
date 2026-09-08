@@ -38,15 +38,19 @@ export default function Footer() {
                 Have an idea? Share feedback
               </a>
 
-              {/* Newsletter signup — compact, site-wide */}
-              <div id="newsletter" className="mt-6 scroll-mt-24">
+              {/* Newsletter signup — compact, site-wide.
+                  Not stacked: a full-width field with a full-width button
+                  under it made the smallest thing in the footer the largest,
+                  a black bar wider than any column of links beside it. Field
+                  and button now sit on one row inside a measure of their own,
+                  which is also how the console pages set this same offer. */}
+              <div id="newsletter" className="mt-6 max-w-sm scroll-mt-24">
                 <p className="text-sm font-medium text-text-primary mb-2">
                   Get daily AI UX news
                 </p>
                 <InlineNewsletterSignup
                   variant="footer"
                   source="footer"
-                  stacked
                   customButtonText="Subscribe"
                   customSuccessMessage="You're in! Check your inbox."
                 />

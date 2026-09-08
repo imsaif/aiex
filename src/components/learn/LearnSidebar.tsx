@@ -92,10 +92,19 @@ function RailLink({
   current?: boolean;
   external?: boolean;
 }) {
-  const base =
-    'block rounded-card px-3 py-1.5 type-caption transition-colors';
+  // "You are here" is a location, not a button. It used to be a solid ink fill,
+  // the same treatment as the Subscribe CTA and the selected category pill, so
+  // three unrelated meanings read at the same volume. The current row now says
+  // its piece with weight and a raised chip, and solid ink is left to mean
+  // "the one action on this page".
+  //
+  // No accent edge: a left border on a rounded chip renders as a crescent
+  // hanging off the corner rather than as a rail marker, which reads as a
+  // mistake. The chip is a step lighter than the rail it sits on, which is
+  // enough on its own.
+  const base = 'block rounded-card px-3 py-1.5 type-caption transition-colors';
   const state = current
-    ? 'bg-text-primary text-background-primary font-semibold'
+    ? 'bg-background-primary font-semibold text-text-primary shadow-card'
     : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary';
 
   if (external) {
