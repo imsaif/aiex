@@ -162,31 +162,33 @@ export default async function GuidesPage() {
             announcing what the site has; the numbered list doubles as the
             table of contents and jumps into the matching section. Questions
             come from learnMap so the hero cannot drift from the map below. */}
-        <section className="border-b border-border-primary pb-12 pt-10 md:pb-16">
-          {/* Capped measure. The column runs ~1200px; prose set that wide is
-              tiring to read and is what made this page feel busy. Rows and
-              grids below keep the full width. */}
+        <section className="border-b border-border-primary pt-16 pb-12">
+          {/* The eyebrow and title sit outside the prose measure. They used to
+              be inside it and set at h1 rather than display, because at 56px
+              the question wrapped to two lines within 950px and a two-line
+              question reads as a paragraph rather than a prompt. Lifting them
+              out of the cap lets the question run as one line at the same
+              display size /patterns and /skills use, so the three console
+              pages open at the same weight instead of this one arriving
+              smaller than its neighbours. */}
+          <p className="type-eyebrow font-semibold uppercase text-accent-primary mb-4">
+            The Map
+          </p>
+          {/* "AI UX" is bound with a non-breaking space so the line can never
+              break between them. */}
+          <h1
+            className="type-display mb-6 leading-tight"
+            style={{ color: 'var(--text-hero)' }}
+          >
+            What do you want to learn about AI&nbsp;UX?
+          </h1>
+
           <div className="max-w-[950px]">
-                <p className="type-eyebrow font-semibold text-accent-primary mb-4">
-                  The Map
-                </p>
-                {/* "AI UX" is bound with a non-breaking space so the line can
-                    never break between them, and balance keeps the wrap even
-                    rather than leaving one short word on the last line. */}
-                {/* type-h1, not type-display: at 56px the question wrapped to
-                    two lines inside the 950px measure, and a two-line question
-                    reads as a paragraph rather than a prompt. */}
-                <h1
-                  className="type-h1 mb-6"
-                  style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
-                >
-                  What do you want to learn about AI&nbsp;UX?
-                </h1>
-                <p className="type-lead text-text-secondary mb-4">
+                <p className="type-h3 mb-9 font-normal leading-relaxed text-text-secondary">
                   Pick the question that sounds like you. Each one opens onto
                   the courses, patterns and checklists that answer it.
                 </p>
-                <p className="type-caption text-text-secondary mb-10">
+                <p className="type-eyebrow uppercase text-text-secondary mb-10">
                   {guides.length} courses ·{' '}
                   {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
                   lessons · {PATTERN_COUNT} patterns · all free, no account

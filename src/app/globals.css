@@ -163,6 +163,11 @@ body {
   --type-caption-leading: 1.5;
   --type-caption-tracking: 0;
 
+  --type-footnote-size: 0.8125rem;   /* 13px — footnote rows under a block */
+  --type-footnote-weight: 400;
+  --type-footnote-leading: 1.5;
+  --type-footnote-tracking: 0;
+
   --type-eyebrow-size: 0.75rem;      /* 12px — uppercase chips above headings */
   --type-eyebrow-weight: 600;
   --type-eyebrow-leading: 1.4;
@@ -490,6 +495,19 @@ p {
   line-height: var(--type-caption-leading);
   letter-spacing: var(--type-caption-tracking);
 }
+/* Footnote — the small print under a block: a licence, a count, a link out.
+ * Sits between caption and eyebrow deliberately. Caption is a step too loud
+ * for a line nobody needs to read, and eyebrow forces uppercase and semibold,
+ * which made "38 SKILLS · FREE · MIT" shout louder than the copy above it.
+ * Sentence case at normal weight, so it recedes without relying on a lighter
+ * grey — text-text-tertiary fails WCAG AA in dark mode on this palette. */
+.type-footnote {
+  font-size: var(--type-footnote-size);
+  font-weight: var(--type-footnote-weight);
+  line-height: var(--type-footnote-leading);
+  letter-spacing: var(--type-footnote-tracking);
+}
+
 .type-eyebrow {
   font-size: var(--type-eyebrow-size);
   font-weight: var(--type-eyebrow-weight);
