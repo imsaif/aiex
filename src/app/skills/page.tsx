@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { patterns } from '@/data/patterns';
 import categories from '@/data/categories';
+import { guides } from '@/data/guides';
 import { siteConfig } from '@/config/seo';
 import { skillName } from '@/lib/skills/composeSkill';
 import { exampleProducts } from '@/lib/skills/usedBy';
@@ -48,18 +49,25 @@ export default function SkillsPage() {
       products: exampleProducts(pattern),
     }));
 
-  // A real skill's frontmatter for the "what a skill looks like" block, built
-  // from the same data the installer writes rather than hand-copied, so the
-  // example cannot drift from the file people actually get. Progressive
-  // Disclosure is the sample because its trigger line is the most legible to
-  // someone who has never seen a skill; any row would do if it disappears.
-  const sample = rows.find((r) => r.slug === 'progressive-disclosure') ?? rows[0];
-  const sampleSkill = [
-    '---',
-    `name: ${sample.skillName}`,
-    `description: ${sample.trigger}`,
-    '---',
-  ].join('\n');
+  // The three courses that make sense before installing anything: what a
+  // skill is, then the two agents most visitors arrive with. Titles and lesson
+  // counts are read from the guides data rather than typed here, so a renamed
+  // or re-cut course cannot leave a stale claim on this page.
+  const STARTING_COURSE_SLUGS = [
+    'ai-ux-skills-guide',
+    'claude-code-learning-path',
+    'cursor-learning-path',
+  ];
+  const startingCourses = STARTING_COURSE_SLUGS.map((slug) =>
+    guides.find((g) => g.slug === slug)
+  )
+    .filter((g): g is NonNullable<typeof g> => g != null)
+    .map((g) => ({
+      slug: g.slug,
+      title: g.title,
+      tool: g.tool,
+      lessonCount: g.lessons?.length ?? g.lessonCount ?? 0,
+    }));
 
   const itemList = {
     '@context': 'https://schema.org',
@@ -115,51 +123,76 @@ export default function SkillsPage() {
               Design judgment your coding agent applies on its own. Install
               once, no prompting.
             </p>
-            <p className="type-caption text-text-secondary">
-              New to skills?{' '}
-              <Link
-                href="/guides/ai-ux-skills-guide"
-                className="font-medium text-accent-primary transition-colors hover:text-accent-hover"
-              >
-                Read how skills work
-              </Link>{' '}
-              (6 lessons, about 20 minutes).
-            </p>
 
             {/* The left column ran out of content well before the install
-                column did, leaving a large hole under the lead. Rather than
-                pad it, show the thing itself: a real skill's frontmatter,
-                taken from the pattern data rather than typed out here, so it
-                cannot drift from what actually installs. It answers the
-                question the page provokes — "what is a skill, exactly?" —
-                without sending anyone to the course first. */}
+                column did, leaving a large hole under the lead. It held a
+                sample skill file for a while, which answered "what is a skill"
+                but answered it to someone who had not yet asked — a wall of
+                frontmatter is the second question, not the first.
+
+                A course list is the better neighbour to an install command:
+                whoever is not ready to run the command is ready to read, and
+                these are the courses that end with them running it anyway.
+                Titles and lesson counts come from the guides data, so a course
+                renamed or re-cut here cannot go stale. */}
             <div className="mt-10 rounded-card border border-border-primary">
               <p className="type-caption border-b border-border-primary px-5 py-3 font-semibold text-text-primary">
-                What a skill looks like
+                New here? Start with a course
               </p>
-              <pre className="whitespace-pre-wrap break-words px-5 py-4 type-caption font-mono leading-relaxed text-text-secondary">
-                <code>{sampleSkill}</code>
-              </pre>
-              <p className="type-caption border-t border-border-primary px-5 py-3 text-text-secondary">
-                Your agent reads the trigger line and applies the pattern when
-                it fits. You never mention it.
-              </p>
+              <ul>
+                {startingCourses.map((course, index) => (
+                  <li
+                    key={course.slug}
+                    className={index > 0 ? 'border-t border-border-primary' : ''}
+                  >
+                    <Link
+                      href={`/guides/${course.slug}`}
+                      className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-secondary"
+                    >
+                      <span className="min-w-0 flex-1">
+                        <span className="type-body block font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+                          {course.title}
+                        </span>
+                        <span className="type-caption block text-text-secondary">
+                          {course.lessonCount} lessons · {course.tool}
+                        </span>
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="type-body shrink-0 text-text-secondary transition-colors group-hover:text-accent-primary"
+                      >
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/guides"
+                className="type-caption block border-t border-border-primary px-5 py-3 text-text-secondary transition-colors hover:text-text-primary"
+              >
+                All courses ↗
+              </Link>
             </div>
           </div>
 
           <div className="mt-10 lg:mt-0 lg:border-l lg:border-border-primary lg:pl-12">
-            {/* Each block: a solid mark, a heading with real weight, one line
-                of body copy, the command, then a footnote row splitting the
-                secondary detail left and the way out right. The mark is filled
-                rather than outlined so it reads as a marker at the head of a
-                section instead of another empty box among the bordered ones
-                below it. */}
+            {/* Each block: a small framed mark, a heading, one line of copy,
+                the command, then a footnote row splitting the secondary detail
+                left and the way out right.
+
+                Deliberately quieter than the left column. Set at lead size
+                with body copy under it, this column shouted as loudly as the
+                title it sits beside — three headings competing with the H1 for
+                a reader who has not decided to install anything yet. It is
+                reference material for when they do, so it reads at the size
+                reference material reads at. */}
             <section>
-              <h2 className="type-lead mb-3 flex items-center gap-3 font-semibold text-text-primary">
+              <h2 className="type-body mb-2 flex items-center gap-2.5 font-semibold text-text-primary">
                 <CyclingAgentMark />
                 Install every skill
               </h2>
-              <p className="type-body mb-5 leading-relaxed text-text-secondary">
+              <p className="type-caption mb-4 leading-relaxed text-text-secondary">
                 One file per pattern, written into your project and editable
                 afterwards.
               </p>
@@ -177,14 +210,14 @@ export default function SkillsPage() {
               </div>
             </section>
 
-            <section className="mt-8 border-t border-border-primary pt-8">
-              <h2 className="type-lead mb-3 flex items-center gap-3 font-semibold text-text-primary">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
-                  <ClaudeMark className="h-[18px] w-[18px] text-brand-claude" />
+            <section className="mt-7 border-t border-border-primary pt-7">
+              <h2 className="type-body mb-2 flex items-center gap-2.5 font-semibold text-text-primary">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
+                  <ClaudeMark className="h-4 w-4 text-brand-claude" />
                 </span>
                 Claude Code
               </h2>
-              <p className="type-body mb-4 leading-relaxed text-text-secondary">
+              <p className="type-caption mb-4 leading-relaxed text-text-secondary">
                 Skills land in <code className="font-mono">.claude/skills/</code>{' '}
                 and Claude Code picks them up on its own. No config, and
                 nothing to remember at the prompt.
@@ -202,8 +235,8 @@ export default function SkillsPage() {
               </div>
             </section>
 
-            <section className="mt-8 border-t border-border-primary pt-8">
-              <h2 className="type-lead mb-3 font-semibold text-text-primary">
+            <section className="mt-7 border-t border-border-primary pt-7">
+              <h2 className="type-body mb-2 font-semibold text-text-primary">
                 Works with any agent
               </h2>
               <AgentLogoRow />

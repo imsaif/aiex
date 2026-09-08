@@ -54,7 +54,7 @@ export function CyclingAgentMark() {
   }, []);
 
   return (
-    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
+    <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
       {AGENTS.map((agent, i) => (
         <Image
           key={agent.name}
@@ -62,7 +62,7 @@ export function CyclingAgentMark() {
           alt=""
           width={18}
           height={18}
-          className={`absolute h-[18px] w-[18px] transition-opacity duration-500 ${
+          className={`absolute h-4 w-4 transition-opacity duration-500 ${
             i === index ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ filter: logoFilter }}
