@@ -147,34 +147,48 @@ export default function SkillsPage() {
           </div>
 
           <div className="mt-10 lg:mt-0 lg:border-l lg:border-border-primary lg:pl-12">
+            {/* Each block: a solid mark, a heading with real weight, one line
+                of body copy, the command, then a footnote row splitting the
+                secondary detail left and the way out right. The mark is filled
+                rather than outlined so it reads as a marker at the head of a
+                section instead of another empty box among the bordered ones
+                below it. */}
             <section>
-              <h2 className="type-body mb-2 flex items-center gap-2.5 font-semibold text-text-primary">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary">
+              <h2 className="type-lead mb-3 flex items-center gap-3 font-semibold text-text-primary">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-accent-primary">
                   <ArrowDownTrayIcon
                     aria-hidden="true"
-                    className="h-4 w-4 text-text-secondary"
+                    className="h-5 w-5 text-text-on-accent"
                   />
                 </span>
                 Install every skill
               </h2>
-              <p className="type-caption mb-4 text-text-secondary">
+              <p className="type-body mb-5 leading-relaxed text-text-secondary">
                 One file per pattern, written into your project and editable
                 afterwards.
               </p>
               <InstallCommand command={GENERIC_COMMAND} />
-              <p className="type-caption mt-3 text-text-secondary">
-                {rows.length} skills · free · MIT
-              </p>
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                <p className="type-caption font-mono text-text-secondary">
+                  {rows.length} skills · free · MIT
+                </p>
+                <Link
+                  href="/guides/ai-ux-skills-guide"
+                  className="type-caption text-text-secondary transition-colors hover:text-text-primary"
+                >
+                  How skills work ↗
+                </Link>
+              </div>
             </section>
 
             <section className="mt-8 border-t border-border-primary pt-8">
-              <h2 className="type-body mb-2 flex items-center gap-2.5 font-semibold text-text-primary">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary">
-                  <BookmarkIcon aria-hidden="true" className="h-4 w-4 text-text-secondary" />
+              <h2 className="type-lead mb-3 flex items-center gap-3 font-semibold text-text-primary">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-accent-primary">
+                  <BookmarkIcon aria-hidden="true" className="h-5 w-5 text-text-on-accent" />
                 </span>
                 Only the ones you need
               </h2>
-              <p className="type-caption mb-3 text-text-secondary">
+              <p className="type-body mb-4 leading-relaxed text-text-secondary">
                 Save skills as you browse, then download them together as one
                 pack.
               </p>
@@ -187,10 +201,10 @@ export default function SkillsPage() {
             </section>
 
             <section className="mt-8 border-t border-border-primary pt-8">
-              <h2 className="type-body mb-2 font-semibold text-text-primary">
+              <h2 className="type-lead mb-3 font-semibold text-text-primary">
                 Works with any agent
               </h2>
-              <p className="type-caption text-text-secondary">
+              <p className="type-caption font-mono text-text-secondary">
                 Claude Code · Cursor · GitHub Copilot · Codex
               </p>
             </section>

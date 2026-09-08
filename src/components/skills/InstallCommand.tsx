@@ -4,9 +4,18 @@ import { useState } from 'react';
 import { CheckIcon, ClipboardIcon } from '@heroicons/react/24/outline';
 
 /**
- * The one-command install, presented as a compact terminal chip with a copy
- * button. Content-width and centered so a short command doesn't float inside
- * an oversized block.
+ * The one-command install, as a full-width terminal block with a copy button.
+ *
+ * It used to be a content-width pill floating in the middle of its column,
+ * which read as a chip rather than as a thing to run: the command and the copy
+ * control had no shared boundary, and the block's width changed with the
+ * length of the command. Now it fills its column on a tinted surface, the way
+ * a code block does everywhere else, so the eye lands on it as the payload of
+ * the section rather than as decoration.
+ *
+ * Spacing is the caller's business — the block carries none of its own, so it
+ * can sit tight under a paragraph or loose in a stack without fighting a
+ * baked-in margin.
  */
 export function InstallCommand({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);
@@ -23,8 +32,10 @@ export function InstallCommand({ command }: { command: string }) {
   }
 
   return (
-    <div className="mt-8 inline-flex items-center gap-3 rounded-pill border border-border-primary bg-surface-primary py-2.5 pl-6 pr-2.5 shadow-card">
-      <code className="font-mono text-sm text-text-primary">
+    <div className="flex items-center gap-3 rounded-card border border-border-primary bg-surface-secondary py-3 pl-4 pr-3">
+      {/* The command scrolls rather than wraps: a wrapped shell command reads
+          as two commands, and half-selecting one is worse than scrolling. */}
+      <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-sm text-text-primary">
         <span className="mr-2 select-none text-text-secondary" aria-hidden="true">
           $
         </span>
@@ -34,7 +45,7 @@ export function InstallCommand({ command }: { command: string }) {
         type="button"
         onClick={copy}
         aria-label="Copy install command"
-        className="inline-flex items-center justify-center rounded-full p-2 text-text-secondary hover:bg-surface-secondary hover:text-text-primary transition-colors"
+        className="inline-flex shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary p-2 text-text-secondary transition-colors hover:border-accent-primary/40 hover:text-text-primary"
       >
         {copied ? (
           <CheckIcon className="h-4 w-4 text-accent-primary" aria-hidden="true" />
