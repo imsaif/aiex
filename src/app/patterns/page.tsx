@@ -9,7 +9,6 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
-import { ClaudeMark } from '@/components/icons/ClaudeMark';
 import { NewspaperIcon } from '@heroicons/react/24/outline';
 import PatternGrid from '../pattern-grid';
 import patterns from '@/data/patterns';
@@ -155,17 +154,6 @@ export default function PatternsIndexPage() {
         <header className="border-b border-border-primary pt-16 pb-12">
           <div>
             <div>
-              {/* Four things in this column, and they used to arrive as three
-                  muted lines of near-identical size under one heading, so the
-                  eye had nothing to rank. Now each level differs on two axes
-                  at once — size and treatment — and the gaps grow with the
-                  drop in importance: title, then a lead at half its size,
-                  then the counts set as a tracked eyebrow so they read as
-                  metadata rather than as more prose, then the skills link.
-
-                  The heading also gets its leading opened from the token's
-                  1.15: that value is tuned for a single line, and over two it
-                  closes the lines up into a slab. */}
               {/* Each level steps down the token scale rather than sitting a
                   hair apart: display for the title, h3 at normal weight for
                   the lead, then the counts as a tracked eyebrow. Leading is
@@ -187,43 +175,21 @@ export default function PatternsIndexPage() {
                 How the world&apos;s best AI products design their experiences.
               </p>
 
+              {/* Counts and the skills offer on one tracked line. The offer
+                  was a bordered block a moment ago and read as a banner
+                  bolted under the title; as the last clause of the metadata
+                  it states the fact once, in the place someone already looks
+                  to find out what the library is, and links on. */}
               <p className="type-eyebrow uppercase text-text-secondary">
                 {patterns.length} patterns · {categories.length} categories ·
-                free, no account
-              </p>
-
-              {/* A block, not a loose line. As bare text under the eyebrow it
-                  read as a fourth muted sentence in the stack — easy to skim
-                  past, and oddly placed, since it is an offer rather than more
-                  description of the page. Boxed, with the mark set in its own
-                  frame, it reads as a thing you can act on and sits at a
-                  different altitude from the copy above it. */}
-              <Link
-                href="/skills"
-                className="group mt-8 flex max-w-2xl items-start gap-4 rounded-card border border-border-primary p-loose transition-colors hover:border-accent-primary/40"
-              >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-card border border-border-primary">
-                  <ClaudeMark
-                    animated
-                    className="h-4 w-4 shrink-0 text-brand-claude"
-                  />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="type-body block font-semibold text-text-primary">
-                    Every pattern ships as a free Claude Code skill
-                  </span>
-                  <span className="type-caption block text-text-secondary">
-                    Install one and your agent applies that pattern on its own,
-                    without being asked.
-                  </span>
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="type-body shrink-0 text-text-secondary transition-colors group-hover:text-accent-primary"
+                free ·{' '}
+                <Link
+                  href="/skills"
+                  className="font-semibold text-accent-primary transition-colors hover:text-accent-hover"
                 >
-                  →
-                </span>
-              </Link>
+                  each one ships as a Claude Code skill →
+                </Link>
+              </p>
             </div>
 
           </div>

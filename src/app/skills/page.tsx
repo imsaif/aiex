@@ -180,7 +180,7 @@ export default function SkillsPage() {
             <section className="mt-8 border-t border-border-primary pt-8">
               <h2 className="type-lead mb-3 flex items-center gap-3 font-semibold text-text-primary">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
-                  <ClaudeMark animated className="h-[18px] w-[18px] text-brand-claude" />
+                  <ClaudeMark className="h-[18px] w-[18px] text-brand-claude" />
                 </span>
                 Claude Code
               </h2>
