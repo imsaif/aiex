@@ -13,11 +13,12 @@ import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
+import { NewspaperIcon } from '@heroicons/react/24/outline';
+import { ClaudeMark } from '@/components/icons/ClaudeMark';
 import {
-  ArrowDownTrayIcon,
-  BookmarkIcon,
-  NewspaperIcon,
-} from '@heroicons/react/24/outline';
+  CyclingAgentMark,
+  AgentLogoRow,
+} from '@/components/skills/AgentMarks';
 
 export const revalidate = 3600;
 
@@ -155,12 +156,7 @@ export default function SkillsPage() {
                 below it. */}
             <section>
               <h2 className="type-lead mb-3 flex items-center gap-3 font-semibold text-text-primary">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-accent-primary">
-                  <ArrowDownTrayIcon
-                    aria-hidden="true"
-                    className="h-5 w-5 text-text-on-accent"
-                  />
-                </span>
+                <CyclingAgentMark />
                 Install every skill
               </h2>
               <p className="type-body mb-5 leading-relaxed text-text-secondary">
@@ -183,30 +179,34 @@ export default function SkillsPage() {
 
             <section className="mt-8 border-t border-border-primary pt-8">
               <h2 className="type-lead mb-3 flex items-center gap-3 font-semibold text-text-primary">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-accent-primary">
-                  <BookmarkIcon aria-hidden="true" className="h-5 w-5 text-text-on-accent" />
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card border border-border-primary bg-background-primary">
+                  <ClaudeMark animated className="h-[18px] w-[18px] text-brand-claude" />
                 </span>
-                Only the ones you need
+                Claude Code
               </h2>
               <p className="type-body mb-4 leading-relaxed text-text-secondary">
-                Save skills as you browse, then download them together as one
-                pack.
+                Skills land in <code className="font-mono">.claude/skills/</code>{' '}
+                and Claude Code picks them up on its own. No config, and
+                nothing to remember at the prompt.
               </p>
-              <Link
-                href="/dashboard"
-                className="type-caption font-medium text-accent-primary transition-colors hover:text-accent-hover"
-              >
-                Open your dashboard →
-              </Link>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="type-caption font-mono text-text-secondary">
+                  Only need a few?
+                </p>
+                <Link
+                  href="/dashboard"
+                  className="type-caption text-text-secondary transition-colors hover:text-text-primary"
+                >
+                  Build a pack ↗
+                </Link>
+              </div>
             </section>
 
             <section className="mt-8 border-t border-border-primary pt-8">
               <h2 className="type-lead mb-3 font-semibold text-text-primary">
                 Works with any agent
               </h2>
-              <p className="type-caption font-mono text-text-secondary">
-                Claude Code · Cursor · GitHub Copilot · Codex
-              </p>
+              <AgentLogoRow />
             </section>
           </div>
         </div>
