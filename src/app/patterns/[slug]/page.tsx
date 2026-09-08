@@ -6,6 +6,8 @@ import { generatePatternMetadata } from '@/utils/metadata';
 import { generatePatternStructuredData } from '@/utils/structuredData';
 import { getProductsForPattern } from '@/data/utils/product-utils';
 import Navbar from '@/components/layout/Navbar';
+import LearnSidebar from '@/components/learn/LearnSidebar';
+import LearnShell from '@/components/learn/LearnShell';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
@@ -115,14 +117,21 @@ export default async function PatternPage({ params }: { params: Promise<{ slug: 
       ))}
 
       <main className="min-h-screen bg-background-primary text-text-primary">
-        <Navbar />
-        <ClientPage
-          pattern={pattern}
-          previousPattern={previousPattern}
-          nextPattern={nextPattern}
-          categoryPatterns={categoryPatterns}
-          relatedGuides={relatedGuideData}
-        />
+        <Navbar inConsole />
+
+        {/* Learn console shell — a pattern opens inside the console, with the
+            same rail as /patterns, so following a card from the grid never
+            drops you out of the area you were browsing. */}
+        <LearnShell sidebar={<LearnSidebar active="patterns" />}>
+          <ClientPage
+            pattern={pattern}
+            previousPattern={previousPattern}
+            nextPattern={nextPattern}
+            categoryPatterns={categoryPatterns}
+            relatedGuides={relatedGuideData}
+          />
+        </LearnShell>
+
         <Footer />
         {/* Raised above SavedItemsBar, which is fixed to the bottom on this route. */}
         <ScrollToTop bottom={88} />
