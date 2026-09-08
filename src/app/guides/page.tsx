@@ -11,6 +11,7 @@ import LearnSection from '@/components/learn/LearnSection';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
 import ConsoleSignup from '@/components/learn/ConsoleSignup';
+import { NewspaperIcon } from '@heroicons/react/24/outline';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
 
@@ -222,11 +223,29 @@ export default async function GuidesPage() {
                   ))}
             </ol>
 
-                {/* Under the questions, not above them. The chips are the
-                    reason someone is on this page; an email field above them
-                    asks for something before offering anything. */}
-                <ConsoleSignup source="guides-hero" />
           </div>
+        </section>
+
+        {/* The email offer, on its own line under the header rather than tucked
+            below the question chips inside it. Sitting in the header it hung
+            off the bottom of the 950px measure as a fourth thing in a stack
+            that was already asking a question — a label, a field and a button
+            competing with the chips that are the reason anyone is here. As its
+            own band it is unmistakably secondary, gets the full width, and
+            matches /patterns and /skills. */}
+        <section className="flex flex-col gap-snug border-b border-border-primary py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
+          <p className="flex items-center gap-2.5 type-caption text-text-secondary">
+            <NewspaperIcon
+              aria-hidden="true"
+              className="h-4 w-4 shrink-0 text-text-secondary"
+            />
+            Daily AI UX news and pattern breakdowns, straight to your inbox.
+          </p>
+          <ConsoleSignup
+            source="guides-hero"
+            className="w-full lg:max-w-md"
+            subheading=""
+          />
         </section>
 
         {/* The Learn Map — five questions, each opening onto the content that
