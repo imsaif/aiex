@@ -160,24 +160,35 @@ export default function PatternsIndexPage() {
               shorter column happens to end, which read as a clipped line. */}
           <div className="grid gap-loose lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-0">
             <div className="lg:pr-12">
+              {/* Four things in this column, and they used to arrive as three
+                  muted lines of near-identical size under one heading, so the
+                  eye had nothing to rank. Now each level differs on two axes
+                  at once — size and treatment — and the gaps grow with the
+                  drop in importance: title, then a lead at half its size,
+                  then the counts set as a tracked eyebrow so they read as
+                  metadata rather than as more prose, then the skills link.
+
+                  The heading also gets its leading opened from the token's
+                  1.15: that value is tuned for a single line, and over two it
+                  closes the lines up into a slab. */}
               <h1
-                className="type-h1 mb-4 max-w-lg"
+                className="type-h1 mb-5 max-w-lg leading-tight"
                 style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
               >
                 {patterns.length} AI UX Design Patterns &amp; Skills
               </h1>
-              <p className="type-lead mb-5 max-w-xl text-text-secondary">
+              <p className="type-lead mb-7 max-w-xl text-text-secondary">
                 How the world&apos;s best AI products design their experiences.
               </p>
 
-              <p className="type-caption text-text-secondary">
+              <p className="type-eyebrow uppercase text-text-secondary">
                 {patterns.length} patterns · {categories.length} categories ·
                 free, no account
               </p>
 
               <Link
                 href="/skills"
-                className="group mt-3 inline-flex items-center gap-2 type-caption text-text-secondary transition-colors hover:text-text-primary"
+                className="group mt-loose inline-flex items-center gap-2 type-caption text-text-secondary transition-colors hover:text-text-primary"
               >
                 <ClaudeMark
                   animated
