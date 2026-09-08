@@ -155,15 +155,18 @@ export default function PatternsIndexPage() {
             reads with the counts rather than as a stray banner above the
             grid. */}
         <header className="border-b border-border-primary pt-10 pb-8">
-          <div className="grid gap-loose lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-12">
-            <div>
+          {/* No `items-start`: the columns stretch so the dividing rule runs
+              the full height of the header instead of stopping wherever the
+              shorter column happens to end, which read as a clipped line. */}
+          <div className="grid gap-loose lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-0">
+            <div className="lg:pr-12">
               <h1
-                className="type-h1 mb-3"
+                className="type-h1 mb-4 max-w-lg"
                 style={{ color: 'var(--text-hero)', textWrap: 'balance' }}
               >
                 {patterns.length} AI UX Design Patterns &amp; Skills
               </h1>
-              <p className="type-lead mb-5 max-w-2xl text-text-secondary">
+              <p className="type-lead mb-5 max-w-xl text-text-secondary">
                 How the world&apos;s best AI products design their experiences.
               </p>
 
@@ -189,11 +192,16 @@ export default function PatternsIndexPage() {
               </Link>
             </div>
 
-            {/* The offer, boxed. On its own it read as an input someone forgot
-                to finish; inside a surface it reads as a deliberate module,
-                and the Subscribe button becomes the one solid-ink control in
-                view — which is the whole emphasis rule for this console. */}
-            <div className="rounded-card border border-border-primary bg-surface-secondary p-loose">
+            {/* A second column, not a card parked in the corner. A tinted box
+                here read as a widget someone dropped on the page: it competed
+                with the H1 for weight and left a hole between the two. A rule
+                and the shared top edge do the same grouping work with none of
+                the noise, and the column gets a heading of its own so it reads
+                as content rather than as an orphaned input. */}
+            <div className="lg:border-l lg:border-border-primary lg:pl-12">
+              <h2 className="type-body mb-2 font-semibold text-text-primary">
+                Get the daily drop
+              </h2>
               <ConsoleSignup source="patterns-hero" className="" />
             </div>
           </div>
