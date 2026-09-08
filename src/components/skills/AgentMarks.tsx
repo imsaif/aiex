@@ -20,7 +20,7 @@ import { useThemeFilter } from '@/hooks/useTheme';
 
 /** Order matters: the first is the mark shown before the cycle starts. */
 export const AGENTS = [
-  { name: 'Claude Code', logo: '/images/logos/simple-icons/anthropic.svg' },
+  { name: 'Claude Code', logo: '/images/logos/claude.svg' },
   { name: 'Cursor', logo: '/images/logos/simple-icons/cursor.svg' },
   { name: 'GitHub Copilot', logo: '/images/logos/simple-icons/githubcopilot.svg' },
   { name: 'Codex', logo: '/images/logos/simple-icons/openai.svg' },
