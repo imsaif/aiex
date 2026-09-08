@@ -201,12 +201,12 @@ export default function SkillsPage() {
               </p>
               <InstallCommand command={GENERIC_COMMAND} />
               <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <p className="type-eyebrow font-mono text-text-secondary">
+                <p className="type-caption font-mono font-normal text-text-secondary">
                   {rows.length} skills · free · MIT
                 </p>
                 <Link
                   href="/guides/ai-ux-skills-guide"
-                  className="type-eyebrow text-text-secondary transition-colors hover:text-text-primary"
+                  className="type-caption font-normal text-text-secondary transition-colors hover:text-text-primary"
                 >
                   How skills work ↗
                 </Link>
@@ -224,12 +224,12 @@ export default function SkillsPage() {
                 nothing to remember at the prompt.
               </p>
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="type-eyebrow font-mono text-text-secondary">
+                <p className="type-caption font-mono font-normal text-text-secondary">
                   Only need a few?
                 </p>
                 <Link
                   href="/dashboard"
-                  className="type-eyebrow text-text-secondary transition-colors hover:text-text-primary"
+                  className="type-caption font-normal text-text-secondary transition-colors hover:text-text-primary"
                 >
                   Build a pack ↗
                 </Link>
