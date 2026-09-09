@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAnalysisUsage } from '@/lib/rate-limit';
+import { getAnalysisUsage } from '@/lib/audit/analysis-rate-limit';
 
 export async function GET(request: NextRequest) {
   // Get client IP
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
              request.headers.get('x-real-ip') ||
              'unknown';
 
-  const usage = getAnalysisUsage(ip);
+  const usage = await getAnalysisUsage(ip);
 
   return NextResponse.json({
     used: usage.used,
