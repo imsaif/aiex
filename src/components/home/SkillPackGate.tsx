@@ -268,7 +268,7 @@ export function SkillPackGate({
               type="button"
               onClick={onDismiss}
               aria-label="Close"
-              className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors"
+              className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
             >
               <XMarkIcon className="w-5 h-5" aria-hidden="true" />
             </button>
@@ -284,7 +284,7 @@ export function SkillPackGate({
           <button
             type="button"
             onClick={() => onDone?.()}
-            className="mt-6 inline-flex items-center justify-center px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 transition-all"
+            className="mt-6 inline-flex items-center justify-center px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 transition-all"
           >
             Start my audit
           </button>
@@ -332,7 +332,7 @@ export function SkillPackGate({
             type="button"
             onClick={onDismiss}
             aria-label="Close"
-            className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors"
+            className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
           >
             <XMarkIcon className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -433,7 +433,7 @@ export function SkillPackGate({
           <button
             type="submit"
             disabled={isLoading}
-            className="shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
+            className="shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 disabled:opacity-60 transition-all"
           >
             <ArrowDownTrayIcon className="w-4 h-4" aria-hidden="true" />
             {isLoading ? 'Sending…' : `Send all ${PATTERN_COUNT} skills`}
@@ -460,7 +460,7 @@ export function SkillPackGate({
               trackAuditEvent('skills_gate_skipped', { source });
               onDone?.();
             }}
-            className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
+            className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
           >
             No thanks, start my audit
           </button>
@@ -491,7 +491,7 @@ export function SkillPackGate({
             setExpanded(true);
             trackAuditEvent('skills_gate_expanded');
           }}
-          className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-pill border-2 border-accent-primary bg-surface-primary text-accent-primary text-base font-semibold hover:bg-accent-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 transition-all"
+          className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-pill border-2 border-accent-primary bg-surface-primary text-accent-primary text-base font-semibold hover:bg-accent-primary hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 transition-all"
         >
           <ArrowDownTrayIcon className="w-5 h-5" aria-hidden="true" />
           Get all {PATTERN_COUNT} skills
@@ -524,7 +524,7 @@ export function SkillPackGate({
           <button
             type="submit"
             disabled={isLoading}
-            className="shrink-0 px-5 py-2.5 rounded-pill bg-accent-primary text-white text-sm font-medium hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
+            className="shrink-0 px-5 py-2.5 rounded-pill bg-accent-primary text-white text-sm font-medium hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 disabled:opacity-60 transition-all"
           >
             {isLoading ? 'Building\u2026' : 'Send them'}
           </button>
@@ -592,7 +592,7 @@ export function SkillPackGate({
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent-primary text-white font-medium hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent-primary text-white font-medium hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 disabled:opacity-60 transition-all"
             >
               <ArrowDownTrayIcon className="w-4 h-4" aria-hidden="true" />
               {isLoading ? 'Building your pack…' : `Send me the ${PATTERN_COUNT} skills`}
