@@ -37,6 +37,7 @@ export const NEWSLETTER_SOURCES = [
   'about',
   'homepage-hero',
   'homepage-hero-pre-audit',
+  'homepage-skills-pack',
 ] as const;
 
 export type NewsletterSource = (typeof NEWSLETTER_SOURCES)[number];
