@@ -217,9 +217,9 @@ export function SkillPackGate({
     return (
       <div className="py-1">
         <p className="text-sm text-text-secondary">
-          You already know what will be missing: the confirm step, the sources, the undo. Add
-          these once and Claude designs them in from the start, so your next review is about the
-          idea rather than the basics.
+          Your ammo for designing better AI. Each skill carries the reasoning behind a pattern —
+          what it fixes, what to avoid — so every decision Claude makes for you is one you can
+          defend in the room.
         </p>
 
         <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
