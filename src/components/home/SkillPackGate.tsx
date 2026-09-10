@@ -29,11 +29,26 @@ const BENEFITS = [
   'Daily AI UX newsletter (unsubscribe anytime)',
 ];
 
-export function SkillPackGate() {
+interface SkillPackGateProps {
+  /**
+   * 'compact' sits directly under the hero CTA: one quiet line that expands
+   * into an email row when clicked. The two placements tried before this both
+   * failed for the same reason in opposite directions — the full-width
+   * 'section' variant sat below the social-proof block where nobody scrolls,
+   * and a bordered card between the logo row and the device mockups read as a
+   * second hero competing with the first and cut the logos off from the
+   * product shot. A collapsed line is visible without competing, and the
+   * reveal-on-intent is the site's own Progressive Disclosure pattern.
+   */
+  variant?: 'section' | 'compact';
+}
+
+export function SkillPackGate({ variant = 'section' }: SkillPackGateProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const shown = useRef(false);
 
   useEffect(() => {
@@ -104,6 +119,71 @@ export function SkillPackGate() {
     }
   };
 
+  // --- compact: one line under the hero CTA, expands on intent -------------
+  if (variant === 'compact') {
+    if (success) {
+      return (
+        <p role="status" className="flex items-center justify-center gap-2 text-sm text-text-secondary">
+          <CheckIcon className="w-4 h-4 text-accent-primary" aria-hidden="true" />
+          Your pack is downloading. Check your Downloads folder.
+        </p>
+      );
+    }
+
+    if (!expanded) {
+      return (
+        <button
+          type="button"
+          onClick={() => {
+            setExpanded(true);
+            trackAuditEvent('skills_gate_expanded');
+          }}
+          className="text-sm text-text-secondary underline underline-offset-4 decoration-border-primary hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
+        >
+          Or take all {PATTERN_COUNT} patterns as skills
+        </button>
+      );
+    }
+
+    return (
+      <div className="w-full max-w-md mx-auto text-center">
+        <p className="text-sm text-text-secondary mb-3">
+          Where should we send the {PATTERN_COUNT} skill files?
+        </p>
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+          <label htmlFor="skill-pack-email" className="sr-only">
+            Email address
+          </label>
+          <input
+            id="skill-pack-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            autoComplete="email"
+            autoFocus
+            disabled={isLoading}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? 'skill-pack-error' : undefined}
+            className="flex-1 min-w-0 px-4 py-2.5 rounded-pill border border-border-primary bg-surface-primary text-sm text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary disabled:opacity-60"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="shrink-0 px-5 py-2.5 rounded-pill bg-accent-primary text-white text-sm font-medium hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
+          >
+            {isLoading ? 'Building\u2026' : 'Send them'}
+          </button>
+        </form>
+        {error && (
+          <p id="skill-pack-error" role="alert" className="mt-2 text-sm text-status-error">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <section
       aria-labelledby="skill-pack-heading"
@@ -117,8 +197,8 @@ export function SkillPackGate() {
           Take all {PATTERN_COUNT} patterns as Claude skills
         </h2>
         <p className="mt-3 text-sm sm:text-base text-text-secondary leading-relaxed">
-          No audit needed. Get the whole library as skill files, so Claude applies these
-          patterns while it builds instead of after you catch them in review.
+          Get the whole library as skill files, so Claude applies these patterns while it
+          builds instead of after you catch them in review.
         </p>
 
         <ul className="mt-6 space-y-2 text-left inline-block">

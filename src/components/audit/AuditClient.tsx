@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
 import { SocialProof } from '@/components/audit/SocialProof';
-import { SkillPackGate } from '@/components/home/SkillPackGate';
 import Footer from '@/components/layout/Footer';
 import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
@@ -404,9 +403,6 @@ export default function AuditClient({
 
       {/* SEO content + community block — only on the demo landing */}
       {step === 'demo' && showSocialProof && <SocialProof />}
-
-      {/* Homepage only. Parallel to the audit, never in front of it. */}
-      {step === 'demo' && showSocialProof && <SkillPackGate />}
 
       {/* Footer — only on the demo landing, not the audit/results view */}
       {step === 'demo' && <Footer />}
