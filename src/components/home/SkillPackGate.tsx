@@ -9,7 +9,6 @@ import {
   ArrowUturnLeftIcon,
   CommandLineIcon,
   SwatchIcon,
-  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -210,41 +209,42 @@ export function SkillPackGate({
       {
         value: 'claude' as const,
         icon: SwatchIcon,
-        label: 'Claude Design or Claude app',
-        hint: 'One upload at Customize → Skills.',
+        label: 'Claude Design',
+        hint: 'One upload at Customize → Skills. Works in the Claude app too.',
       },
     ];
 
     return (
-      <div>
+      <div className="py-1">
         <p className="text-sm text-text-secondary">
           AI features usually launch missing these. The skills apply all {PATTERN_COUNT} patterns
           to everything Claude designs for you.
         </p>
 
-        <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-5">
+        <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
           {BENEFIT_CARDS.map(({ icon: Icon, title, body }) => (
-            <div key={title}>
-              <Icon className="w-5 h-5 text-accent-primary mb-2.5" aria-hidden="true" />
+            <div
+              key={title}
+              className="rounded-card border border-border-primary bg-surface-primary p-6"
+            >
+              <Icon className="w-5 h-5 text-accent-primary mb-3" aria-hidden="true" />
               <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
-              <p className="mt-1 text-sm text-text-secondary leading-relaxed">{body}</p>
+              <p className="mt-1.5 text-sm text-text-secondary leading-relaxed">{body}</p>
             </div>
           ))}
         </div>
 
-        <fieldset className="mt-8">
+        <fieldset className="mt-9">
           <legend className="text-sm text-text-secondary mb-2.5">Where will you use them?</legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {/* Icons of the destination, not brand marks. Claude Code and Claude
-                Design share one Claude logo, so putting it on both cards would
-                make the two options look identical at exactly the moment the
-                reader is trying to tell them apart. */}
+
+          {/* One control, not two more cards. The benefit cards above are the
+              content of this modal and earn their boxes; repeating that shape
+              for the chooser gave the dialog five bordered rectangles in a
+              column. A segmented control reads as a single choice, and the hint
+              moves below it so only the relevant one is ever on screen. */}
+          <div className="inline-flex p-1 rounded-pill border border-border-primary bg-surface-secondary">
             {TARGETS.map((option) => (
-              <label key={option.value} className="relative block cursor-pointer">
-                {/* The real control, kept for keyboard and screen readers and
-                    hidden visually. `peer` drives the card's own border, tint
-                    and ring. NOTE: peer-* is a sibling combinator, so it cannot
-                    reach the icon or tick nested inside — those read `target`. */}
+              <label key={option.value} className="relative cursor-pointer">
                 <input
                   type="radio"
                   name="skill-pack-target"
@@ -253,32 +253,27 @@ export function SkillPackGate({
                   onChange={() => setTarget(option.value)}
                   className="sr-only peer"
                 />
-                <span className="flex items-start gap-2.5 p-3 h-full rounded-card border border-border-primary bg-surface-primary transition-colors hover:border-accent-primary peer-checked:border-accent-primary peer-checked:bg-surface-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
+                {/* peer-* is a sibling combinator, so it styles this span but
+                    cannot reach the icon nested inside it — that reads state. */}
+                <span className="flex items-center gap-2 px-4 py-2 rounded-pill text-sm font-medium text-text-secondary transition-colors peer-checked:bg-accent-primary peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
                   <option.icon
-                    className={`w-5 h-5 mt-0.5 shrink-0 ${
-                      target === option.value ? 'text-accent-primary' : 'text-text-secondary'
+                    className={`w-4 h-4 shrink-0 ${
+                      target === option.value ? 'text-white' : 'text-text-secondary'
                     }`}
                     aria-hidden="true"
                   />
-                  <span className="min-w-0">
-                    <span className="block text-sm font-medium text-text-primary">
-                      {option.label}
-                    </span>
-                    <span className="block text-sm text-text-secondary">{option.hint}</span>
-                  </span>
-                  <CheckCircleIcon
-                    className={`w-5 h-5 ml-auto shrink-0 text-accent-primary transition-opacity ${
-                      target === option.value ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    aria-hidden="true"
-                  />
+                  {option.label}
                 </span>
               </label>
             ))}
           </div>
+
+          <p className="mt-2.5 text-sm text-text-secondary">
+            {TARGETS.find((t) => t.value === target)?.hint}
+          </p>
         </fieldset>
 
-        <form onSubmit={handleSubmit} className="mt-4 flex flex-col sm:flex-row gap-2">
+        <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -311,11 +306,11 @@ export function SkillPackGate({
           </p>
         )}
 
-        <p id="skill-pack-terms" className="mt-3 text-sm text-text-secondary">
+        <p id="skill-pack-terms" className="mt-3.5 text-sm text-text-secondary">
           Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
         </p>
 
-        <div className="mt-7 text-center">
+        <div className="mt-9 text-center">
           <button
             type="button"
             onClick={() => {
