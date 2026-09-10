@@ -446,6 +446,10 @@ export function SkillPackGate({
           </p>
         )}
 
+        <p id="skill-pack-terms" className="mt-3 text-sm text-text-secondary">
+          Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
+        </p>
+
         {/* The no-email path, stated rather than implied. Someone who does not
             want to hand over an address should be able to see that they do not
             have to, without having to guess that the dialog is dismissible. */}
@@ -460,9 +464,6 @@ export function SkillPackGate({
           >
             No thanks, start my audit
           </button>
-          <p id="skill-pack-terms" className="mt-4 text-sm text-text-secondary">
-            Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
-          </p>
         </div>
       </div>
     );
