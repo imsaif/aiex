@@ -425,7 +425,6 @@ export function SkillPackGate({
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
             autoComplete="email"
-            autoFocus
             disabled={isLoading}
             aria-invalid={error ? true : undefined}
             aria-describedby={error ? 'skill-pack-error' : 'skill-pack-terms'}
