@@ -38,6 +38,69 @@ const BENEFITS = [
   'Daily AI UX newsletter (unsubscribe anytime)',
 ];
 
+/**
+ * "Also works with ..." with the tool cycling underneath it.
+ *
+ * Sits on the same row as the "Where will you use them?" legend, which had a
+ * wide empty right-hand side. It answers the question that row invites without
+ * adding another line of copy: the two named options are Claude surfaces, and a
+ * reader whose day is spent in Cursor needs to know they are not excluded.
+ *
+ * Accessibility: the rotating half is decoration, so it is aria-hidden and the
+ * full list is stated once in visually hidden text. The names never disappear
+ * for a screen reader, and nothing here is announced three times over. Motion
+ * stops entirely under prefers-reduced-motion, where it settles on the first
+ * tool rather than flickering through them.
+ */
+const ALSO_WORKS_WITH = [
+  { name: 'Cursor', logo: '/images/logos/simple-icons/cursor.svg' },
+  { name: 'GitHub Copilot', logo: '/images/logos/simple-icons/githubcopilot.svg' },
+  { name: 'Codex', logo: '/images/logos/simple-icons/openai.svg' },
+];
+
+function AlsoWorksWith() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const reduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % ALSO_WORKS_WITH.length);
+    }, 2200);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const current = ALSO_WORKS_WITH[index];
+
+  return (
+    <span className="flex items-center gap-2 text-sm text-text-secondary">
+      <span className="hidden sm:inline">Also works with</span>
+      <span aria-hidden="true" className="flex items-center gap-1.5 min-w-[7.5rem]">
+        {/* Local SVGs, matching CompanyLogoCarousel's approach. The marks are
+            solid black, so they invert in dark mode to stay visible. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          key={current.name}
+          src={current.logo}
+          alt=""
+          width={14}
+          height={14}
+          className="w-3.5 h-3.5 opacity-70 dark:invert animate-fade-in"
+        />
+        <span key={`${current.name}-label`} className="animate-fade-in">
+          {current.name}
+        </span>
+      </span>
+      <span className="sr-only">
+        Also works with {ALSO_WORKS_WITH.map((t) => t.name).join(', ')}.
+      </span>
+    </span>
+  );
+}
+
 interface SkillPackGateProps {
   /**
    * 'compact' sits directly under the hero CTA: one quiet line that expands
@@ -184,18 +247,18 @@ export function SkillPackGate({
     const BENEFIT_CARDS = [
       {
         icon: LightBulbIcon,
-        title: 'Shows its working',
-        body: 'Sources sit under each reply, so people can check it.',
+        title: 'It explains itself',
+        body: 'Claude adds a line under the answer showing what it used, so people can tell whether to trust it.',
       },
       {
         icon: HandRaisedIcon,
-        title: 'A confirm step',
-        body: 'It asks before it sends, books or deletes anything.',
+        title: 'It asks first',
+        body: 'Before the AI sends an email or deletes something, your screen has a confirm step.',
       },
       {
         icon: ArrowUturnLeftIcon,
-        title: 'An undo path',
-        body: 'Any reply can be undone.',
+        title: 'Mistakes are undoable',
+        body: 'Every AI action gets an undo, so a wrong answer is never permanent.',
       },
     ];
 
@@ -236,7 +299,12 @@ export function SkillPackGate({
         </div>
 
         <fieldset className="mt-9">
-          <legend className="text-sm text-text-secondary mb-2.5">Where will you use them?</legend>
+          <legend className="w-full mb-2.5">
+            <span className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+              <span className="text-sm text-text-secondary">Where will you use them?</span>
+              <AlsoWorksWith />
+            </span>
+          </legend>
 
           {/* One control, not two more cards. The benefit cards above are the
               content of this modal and earn their boxes; repeating that shape
