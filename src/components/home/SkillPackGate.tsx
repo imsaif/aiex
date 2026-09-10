@@ -73,6 +73,10 @@ export function SkillPackGate({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  // Which package shape to build. See composeSingleSkill.ts for why one library
+  // needs two: Claude Code reads a project tree, Claude's own uploader takes one
+  // skill folder.
+  const [target, setTarget] = useState<'code' | 'claude'>('code');
   const shown = useRef(false);
 
   useEffect(() => {
@@ -112,28 +116,39 @@ export function SkillPackGate({
         throw new Error(data.error || 'Something went wrong');
       }
 
-      trackAuditEvent('skills_gate_submitted', { source });
+      trackAuditEvent('skills_gate_submitted', { source, target });
 
       // Build the pack from the whole library. No audit is involved, so there
       // are no audits to attach.
-      const [{ default: patterns }, { composeSkillPack, skillPackFilename }, { saveBlob }] =
-        await Promise.all([
-          import('@/data/patterns'),
-          import('@/lib/skills/composePack'),
-          import('@/lib/skills/auditPack'),
-        ]);
+      const [
+        { default: patterns },
+        { composeSkillPack, skillPackFilename },
+        { composeSingleSkillZipEntries, singleSkillFilename },
+        { saveBlob },
+      ] = await Promise.all([
+        import('@/data/patterns'),
+        import('@/lib/skills/composePack'),
+        import('@/lib/skills/composeSingleSkill'),
+        import('@/lib/skills/auditPack'),
+      ]);
 
-      const files = composeSkillPack(patterns, []);
+      // Same guidance either way — only the arrangement differs.
+      const files =
+        target === 'claude'
+          ? composeSingleSkillZipEntries(patterns)
+          : composeSkillPack(patterns, []);
+      const filename = target === 'claude' ? singleSkillFilename() : skillPackFilename();
+
       const { zipSync, strToU8 } = await import('fflate');
       const zippable = Object.fromEntries(
         Object.entries(files).map(([path, contents]) => [path, strToU8(contents)])
       );
       saveBlob(
         new Blob([zipSync(zippable, { level: 6 }) as BlobPart], { type: 'application/zip' }),
-        skillPackFilename()
+        filename
       );
 
-      trackAuditEvent('skills_gate_pack_downloaded', { skillCount: patterns.length, source });
+      trackAuditEvent('skills_gate_pack_downloaded', { skillCount: patterns.length, source, target });
       setSuccess(true);
       // Hand control back so the caller can continue the journey. Deliberately
       // after the download starts, not before, so nobody navigates away from a
@@ -211,7 +226,47 @@ export function SkillPackGate({
           Three of {PATTERN_COUNT} patterns. Claude reads them before it writes.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
+        <fieldset className="mt-5">
+          <legend className="text-sm text-text-secondary mb-2">Where will you use them?</legend>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {([
+              {
+                value: 'code' as const,
+                label: 'Claude Code',
+                hint: 'Unzip into your project. Cursor and Copilot read them too.',
+              },
+              {
+                value: 'claude' as const,
+                label: 'Claude Design or Claude app',
+                hint: 'One upload at Customize \u2192 Skills.',
+              },
+            ]).map((option) => (
+              <label
+                key={option.value}
+                className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-colors ${
+                  target === option.value
+                    ? 'border-accent-primary bg-surface-primary'
+                    : 'border-border-primary bg-surface-primary hover:border-accent-primary'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="skill-pack-target"
+                  value={option.value}
+                  checked={target === option.value}
+                  onChange={() => setTarget(option.value)}
+                  className="mt-0.5 accent-accent-primary"
+                />
+                <span>
+                  <span className="block text-sm font-medium text-text-primary">{option.label}</span>
+                  <span className="block text-sm text-text-secondary">{option.hint}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <form onSubmit={handleSubmit} className="mt-3 flex flex-col sm:flex-row gap-2">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
