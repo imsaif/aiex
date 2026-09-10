@@ -804,9 +804,9 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               {/* The headline says what you get; this says what to hand over.
                   The uploader takes images only, so "your design" without a
                   stated mechanic invites people to arrive with a Figma link. */}
-              <p className="text-sm sm:text-base md:text-lg text-text-secondary mb-8 sm:mb-10">
-                Free AI UX audit. Upload a screenshot and see which of {PATTERN_COUNT} proven patterns your
-                interface is missing.
+              <p className="text-sm sm:text-base md:text-lg text-text-secondary mb-8 sm:mb-10 text-balance max-w-2xl mx-auto">
+                Free AI UX audit. Upload a screenshot and see what your design is missing
+                before your users do.
               </p>
 
               {/* CTA — moved into the hero text zone so the email form sits

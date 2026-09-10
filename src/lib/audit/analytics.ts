@@ -63,6 +63,15 @@ export const AUDIT_EVENT_NAMES = [
   'audit_unlock_submitted',
   'audit_unlock_dismissed',
   'audit_final_cap_shown',
+  // Homepage skill-pack gate: email for the whole library, no audit required.
+  // The post-audit unlock only reaches ~6 people per 6 weeks, which is why this
+  // test lives on the homepage instead.
+  'skills_gate_shown',
+  'skills_gate_expanded',
+  'skills_gate_skipped',
+  'skills_gate_dismissed',
+  'skills_gate_submitted',
+  'skills_gate_pack_downloaded',
   // Newly instrumented CTAs (previously untracked)
   'audit_inspect_prompt_toggled',
   'audit_screenshot_locations_opened',
