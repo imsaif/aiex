@@ -241,17 +241,17 @@ export function SkillPackGate({
       {
         icon: LightBulbIcon,
         title: 'It explains itself',
-        body: 'Claude adds a line under the answer showing what it used, so people can tell whether to trust it.',
+        body: 'People can see what the answer was based on.',
       },
       {
         icon: HandRaisedIcon,
         title: 'It asks first',
-        body: 'Before the AI sends an email or deletes something, your screen has a confirm step.',
+        body: 'A confirm step before it sends or deletes.',
       },
       {
         icon: ArrowUturnLeftIcon,
         title: 'Mistakes are undoable',
-        body: 'Every AI action gets an undo, so a wrong answer is never permanent.',
+        body: 'Every AI action can be taken back.',
       },
     ];
 
