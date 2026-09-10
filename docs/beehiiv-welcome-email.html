@@ -5,6 +5,11 @@
   Replaces the newsletter-only welcome, which said "36 AI UX patterns" (stale, it
   is 38) and never mentioned the skills the whole site now leads with.
 
+  Kept SHORT on purpose: a welcome email is read once, in about five seconds, by
+  someone who has not decided to care yet. One line of what it is, three links,
+  a signature. The first draft explained each link in three lines and read as a
+  page rather than a note.
+
   THREE THINGS TO KNOW BEFORE EDITING:
 
   1. Beehiiv rewrites anchor colours in its EMAIL render pass, so the compose
@@ -13,7 +18,7 @@
      the beehiiv anchor row in .claude/rules/newsletter-and-infra.md. Verify in the
      EMAIL PREVIEW, never the compose editor.
 
-  2. The pattern count is hardcoded at 38 in three places. It comes from
+  2. The pattern count is hardcoded at 38 in two places. It comes from
      PATTERN_COUNT (src/data/pattern-count.ts) everywhere else on the site, but a
      pasted snippet cannot read it. Search this file for "38" when the count moves.
 
@@ -24,19 +29,16 @@
 <div style="background:#f9f9f9;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;">
     <tr>
-      <td style="padding:32px 32px 0;">
-        <p style="margin:0 0 20px;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#162036;">
+      <td style="padding:32px 32px 24px;">
+        <p style="margin:0 0 18px;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#162036;">
           AIUX Design Guide
         </p>
-        <h1 style="margin:0 0 14px;font-size:26px;line-height:1.2;font-weight:700;color:#162036;">
+        <h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;font-weight:700;color:#162036;">
           Welcome. Here is what you get.
         </h1>
-        <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#20294C;">
-          One short email a day on what actually shipped in AI product design, from teams like
-          OpenAI, Google, Anthropic and Apple, each one tied to a design pattern you can use.
-        </p>
-        <p style="margin:0 0 28px;font-size:15px;line-height:1.6;color:#20294C;">
-          No roundups of roundups. What shipped, and why it matters if you design AI products.
+        <p style="margin:0;font-size:15px;line-height:1.6;color:#20294C;">
+          One short email a day on what shipped in AI product design, tied to a pattern you can
+          actually use.
         </p>
       </td>
     </tr>
@@ -48,49 +50,32 @@
     </tr>
 
     <tr>
-      <td style="padding:26px 32px 8px;">
-        <p style="margin:0 0 18px;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#162036;">
+      <td style="padding:24px 32px 8px;">
+        <p style="margin:0 0 16px;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#162036;">
           Start here
         </p>
 
-        <!-- 1 -->
-        <p style="margin:0 0 6px;font-size:16px;line-height:1.4;font-weight:700;color:#162036;">
-          <a href="https://www.aiuxdesign.guide/skills" style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;"><span style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;">Install the 38 patterns as Claude skills &rarr;</span></a>
-        </p>
-        <p style="margin:0 0 22px;font-size:15px;line-height:1.6;color:#20294C;">
-          Free, one file per pattern. Claude reads them before it designs, so the confirm step,
-          the sources under an answer and the undo arrive in the first version instead of your
-          review notes. Works in Claude Code, Claude Design and the Claude app.
+        <p style="margin:0 0 14px;font-size:15px;line-height:1.5;color:#20294C;">
+          <a href="https://www.aiuxdesign.guide/skills" style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;font-weight:700;"><span style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;">Install the 38 patterns as Claude skills &rarr;</span></a><br />
+          Free. Claude applies them while it designs, in Claude Code, Claude Design and the app.
         </p>
 
-        <!-- 2 -->
-        <p style="margin:0 0 6px;font-size:16px;line-height:1.4;font-weight:700;color:#162036;">
-          <a href="https://www.aiuxdesign.guide/audit" style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;"><span style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;">Audit a screen you are working on &rarr;</span></a>
-        </p>
-        <p style="margin:0 0 22px;font-size:15px;line-height:1.6;color:#20294C;">
-          Upload a screenshot and see what your design is missing before your users do. Free, and
-          you get the fixes back as skills.
+        <p style="margin:0 0 14px;font-size:15px;line-height:1.5;color:#20294C;">
+          <a href="https://www.aiuxdesign.guide/audit" style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;font-weight:700;"><span style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;">Audit a screen &rarr;</span></a><br />
+          See what your design is missing before your users do.
         </p>
 
-        <!-- 3 -->
-        <p style="margin:0 0 6px;font-size:16px;line-height:1.4;font-weight:700;color:#162036;">
-          <a href="https://www.aiuxdesign.guide/patterns" style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;"><span style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;">Browse all 38 patterns &rarr;</span></a>
-        </p>
-        <p style="margin:0 0 4px;font-size:15px;line-height:1.6;color:#20294C;">
-          Each one documented from shipped products, with real examples, live demos and the
-          reasoning behind every move.
+        <p style="margin:0;font-size:15px;line-height:1.5;color:#20294C;">
+          <a href="https://www.aiuxdesign.guide/patterns" style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;font-weight:700;"><span style="color:#162036 !important;text-decoration:none !important;font-style:normal !important;">Browse all 38 patterns &rarr;</span></a><br />
+          Documented from shipped products, with live demos.
         </p>
       </td>
     </tr>
 
     <tr>
-      <td style="padding:22px 32px 32px;">
-        <div style="height:1px;background:#e5e7eb;line-height:1px;font-size:0;margin-bottom:22px;">&nbsp;</div>
-        <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:#20294C;">
-          Reply to any issue with a question, or something you are wrestling with. I read every one.
-        </p>
+      <td style="padding:24px 32px 32px;">
         <p style="margin:0;font-size:15px;line-height:1.6;color:#20294C;">
-          See you tomorrow,<br />
+          Reply any time, I read every one.<br />
           <strong style="color:#162036;">Imran</strong>
           &middot;
           <a href="https://www.aiuxdesign.guide" style="color:#20294C !important;text-decoration:underline !important;font-style:normal !important;"><span style="color:#20294C !important;text-decoration:underline !important;font-style:normal !important;">aiuxdesign.guide</span></a>
