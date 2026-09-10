@@ -173,25 +173,26 @@ export function SkillPackGate({
         // insider term, and a designer reading it fast does not picture anything.
         // "It says why" is the same trust problem in language that lands.
         icon: LightBulbIcon,
-        title: 'It says why',
-        body: 'Under each reply, the sources it actually read. People judge the answer instead of guessing at it.',
+        title: 'Shows its working',
+        body: 'Sources sit under the reply, so trusting it is a judgement rather than a leap of faith.',
       },
       {
         icon: HandRaisedIcon,
-        title: 'A check before it acts',
-        body: 'When the assistant is about to send, book or delete something, it asks first.',
+        title: 'A confirm step',
+        body: 'Send, book, delete — it asks before it acts, rather than you flagging it in review.',
       },
       {
         icon: ArrowUturnLeftIcon,
-        title: 'A way back',
-        body: 'Any reply can be undone or corrected, so a wrong answer costs a click, not a support ticket.',
+        title: 'An undo path',
+        body: 'A wrong answer costs a click. No dead end, no support ticket, no apology screen.',
       },
     ];
 
     return (
       <div>
         <p className="text-sm text-text-secondary">
-          What lands in your interface when Claude builds with these {PATTERN_COUNT} skills loaded.
+          AI features ship missing the same handful of states. These land in the first build
+          instead of your redlines.
         </p>
 
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -208,8 +209,8 @@ export function SkillPackGate({
         </div>
 
         <p className="mt-4 text-sm text-text-primary leading-relaxed">
-          Three of {PATTERN_COUNT}. Claude reads them before it writes, so these arrive in the first
-          version instead of your review notes.
+          Three of {PATTERN_COUNT} patterns. Claude reads them before it writes, so the states you
+          would have specced are already there when the build lands.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
