@@ -217,8 +217,9 @@ export function SkillPackGate({
     return (
       <div className="py-1">
         <p className="text-sm text-text-secondary">
-          AI features usually launch missing these. The skills apply all {PATTERN_COUNT} patterns
-          to everything Claude designs for you.
+          You already know what will be missing: the confirm step, the sources, the undo. Add
+          these once and Claude designs them in from the start, so your next review is about the
+          idea rather than the basics.
         </p>
 
         <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
