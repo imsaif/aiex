@@ -217,8 +217,8 @@ export function SkillPackGate({
     return (
       <div className="py-1">
         <p className="text-sm text-text-secondary">
-          Your ammo for designing better AI. Each skill carries the reasoning behind a pattern —
-          what it fixes, what to avoid — so every decision Claude makes for you is one you can
+          Your ammo for designing better AI. Each skill carries the reasoning behind a pattern,
+          what it fixes and what to avoid, so every decision Claude makes for you is one you can
           defend in the room.
         </p>
 
