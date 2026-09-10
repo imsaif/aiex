@@ -40,10 +40,16 @@ interface SkillPackGateProps {
    * product shot. A collapsed line is visible without competing, and the
    * reveal-on-intent is the site's own Progressive Disclosure pattern.
    */
-  variant?: 'section' | 'compact';
+  variant?: 'section' | 'compact' | 'interstitial';
+  /**
+   * 'interstitial' only. Called after the email is captured, and also when the
+   * person skips. The caller decides where they go next — today, on to the
+   * audit they just asked for.
+   */
+  onDone?: () => void;
 }
 
-export function SkillPackGate({ variant = 'section' }: SkillPackGateProps) {
+export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -111,6 +117,10 @@ export function SkillPackGate({ variant = 'section' }: SkillPackGateProps) {
 
       trackAuditEvent('skills_gate_pack_downloaded', { skillCount: patterns.length });
       setSuccess(true);
+      // Hand control back so the caller can continue the journey. Deliberately
+      // after the download starts, not before, so nobody navigates away from a
+      // pack that has not begun writing.
+      onDone?.();
     } catch (err) {
       // Say what happened rather than leaving a dead button.
       setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -118,6 +128,68 @@ export function SkillPackGate({ variant = 'section' }: SkillPackGateProps) {
       setIsLoading(false);
     }
   };
+
+  // --- interstitial: shown on the way into the audit ----------------------
+  //
+  // Asked at the highest-intent moment on the page — the click on the hero CTA
+  // — rather than after the audit, where the equivalent ask has reached six
+  // people since August. Deliberately SKIPPABLE: a hard gate would protect
+  // nothing and the audit only completes about four times a week, so blocking
+  // it to harvest an email would cost the one qualification step the site has.
+  // Skipping is tracked, so the skip rate is itself the finding.
+  if (variant === 'interstitial') {
+    return (
+      <div className="text-center">
+        <p className="text-sm text-text-secondary mb-4">
+          Your audit is ready to start. Want the {PATTERN_COUNT} skill files too? We will send
+          them now, so Claude can apply these patterns while it builds.
+        </p>
+
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+          <label htmlFor="skill-pack-email" className="sr-only">
+            Email address
+          </label>
+          <input
+            id="skill-pack-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            autoComplete="email"
+            autoFocus
+            disabled={isLoading}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? 'skill-pack-error' : undefined}
+            className="flex-1 min-w-0 px-4 py-3 rounded-pill border border-border-primary bg-surface-primary text-sm text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary disabled:opacity-60"
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="shrink-0 px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
+          >
+            {isLoading ? 'Sending\u2026' : 'Send and continue'}
+          </button>
+        </form>
+
+        {error && (
+          <p id="skill-pack-error" role="alert" className="mt-2 text-sm text-status-error">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="button"
+          onClick={() => {
+            trackAuditEvent('skills_gate_skipped');
+            onDone?.();
+          }}
+          className="mt-4 text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
+        >
+          Skip, just start my audit
+        </button>
+      </div>
+    );
+  }
 
   // --- compact: one line under the hero CTA, expands on intent -------------
   if (variant === 'compact') {
@@ -138,9 +210,10 @@ export function SkillPackGate({ variant = 'section' }: SkillPackGateProps) {
             setExpanded(true);
             trackAuditEvent('skills_gate_expanded');
           }}
-          className="text-sm text-text-secondary underline underline-offset-4 decoration-border-primary hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
+          className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-pill border-2 border-accent-primary bg-surface-primary text-accent-primary text-base font-semibold hover:bg-accent-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 transition-all"
         >
-          Or take all {PATTERN_COUNT} patterns as skills
+          <ArrowDownTrayIcon className="w-5 h-5" aria-hidden="true" />
+          Get all {PATTERN_COUNT} skills
         </button>
       );
     }

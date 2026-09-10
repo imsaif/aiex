@@ -39,7 +39,6 @@ import { PaywallInlineCapture } from './PaywallInlineCapture';
 import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
 import { PATTERN_COUNT } from '@/data/pattern-count';
-import { SkillPackGate } from '@/components/home/SkillPackGate';
 import { ClaudeMark } from '@/components/icons/ClaudeMark';
 
 interface ExtendedResults extends AnalysisResults {
@@ -826,16 +825,6 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                     isUnlocked={isUnlocked}
                   />
                 )}
-              </div>
-
-              {/* Secondary, quieter ask: the skills without running an audit.
-                  Collapsed to one line so it does not compete with the primary
-                  CTA above it, and so the logo row still runs straight into the
-                  product mockup. Two earlier placements failed — a full-width
-                  band below the social proof (nobody scrolls there) and a card
-                  between the logos and the mockup (read as a second hero). */}
-              <div className="mt-4">
-                <SkillPackGate variant="compact" />
               </div>
             </div>
 

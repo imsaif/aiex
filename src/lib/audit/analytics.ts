@@ -68,6 +68,7 @@ export const AUDIT_EVENT_NAMES = [
   // test lives on the homepage instead.
   'skills_gate_shown',
   'skills_gate_expanded',
+  'skills_gate_skipped',
   'skills_gate_submitted',
   'skills_gate_pack_downloaded',
   // Newly instrumented CTAs (previously untracked)

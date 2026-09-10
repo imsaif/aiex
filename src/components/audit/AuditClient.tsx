@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import type { UploadedImage } from '@/components/audit/CenterUpload';
 import { ScreenshotUpload } from '@/components/audit/ScreenshotUpload';
 import { SocialProof } from '@/components/audit/SocialProof';
+import { SkillPackGate } from '@/components/home/SkillPackGate';
+import { Dialog } from '@/components/ui/Dialog';
 import Footer from '@/components/layout/Footer';
 import { DEMO_ANALYSIS_RESULTS, DEMO_SCREENSHOT_FALLBACK } from '@/data/demo-audit';
 import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner';
@@ -92,13 +94,24 @@ export default function AuditClient({
   //
   // The paywall check stays here: if they're capped, show the modal on the page
   // they're already on instead of navigating them somewhere to be blocked.
+  // The hero CTA is the highest-intent click on the site, so the skill-pack ask
+  // rides on it rather than sitting somewhere quieter. It is skippable: see the
+  // note on the 'interstitial' variant for why a hard gate would be the wrong
+  // trade against ~4 completed audits a week.
+  const [showSkillsGate, setShowSkillsGate] = useState(false);
+
   const handleStartRealAudit = useCallback(() => {
     if (isPaywalled) {
       setShowPaywall(true);
       return;
     }
+    setShowSkillsGate(true);
+  }, [isPaywalled]);
+
+  const leaveForAudit = useCallback(() => {
+    setShowSkillsGate(false);
     router.push('/audit');
-  }, [isPaywalled, router]);
+  }, [router]);
 
   // Run analysis against the API
   const runAnalysis = useCallback(async (images: UploadedImage[]) => {
@@ -290,6 +303,16 @@ export default function AuditClient({
           onClose={() => setRateLimitError(null)}
         />
       )}
+
+      {/* Skill-pack ask on the way into the audit. Skippable by design. */}
+      <Dialog
+        open={showSkillsGate}
+        onClose={leaveForAudit}
+        title="Take the skills with you"
+        size="md"
+      >
+        <SkillPackGate variant="interstitial" onDone={leaveForAudit} />
+      </Dialog>
 
       {/* Paywall Modal */}
       {showPaywall && (
