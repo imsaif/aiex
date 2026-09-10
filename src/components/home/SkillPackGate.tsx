@@ -174,25 +174,24 @@ export function SkillPackGate({
         // "It says why" is the same trust problem in language that lands.
         icon: LightBulbIcon,
         title: 'Shows its working',
-        body: 'Sources sit under the reply, so trusting it is a judgement rather than a leap of faith.',
+        body: 'Sources sit under each reply, so people can check it.',
       },
       {
         icon: HandRaisedIcon,
         title: 'A confirm step',
-        body: 'Send, book, delete — it asks before it acts, rather than you flagging it in review.',
+        body: 'It asks before it sends, books or deletes anything.',
       },
       {
         icon: ArrowUturnLeftIcon,
         title: 'An undo path',
-        body: 'A wrong answer costs a click. No dead end, no support ticket, no apology screen.',
+        body: 'Any reply can be undone.',
       },
     ];
 
     return (
       <div>
         <p className="text-sm text-text-secondary">
-          AI features ship missing the same handful of states. These land in the first build
-          instead of your redlines.
+          AI features usually ship without these. The skills put them in the first build.
         </p>
 
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -209,8 +208,7 @@ export function SkillPackGate({
         </div>
 
         <p className="mt-4 text-sm text-text-primary leading-relaxed">
-          Three of {PATTERN_COUNT} patterns. Claude reads them before it writes, so the states you
-          would have specced are already there when the build lands.
+          Three of {PATTERN_COUNT} patterns. Claude reads them before it writes.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">

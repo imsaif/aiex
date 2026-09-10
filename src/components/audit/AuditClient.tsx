@@ -308,7 +308,7 @@ export default function AuditClient({
       <Dialog
         open={showSkillsGate}
         onClose={leaveForAudit}
-        title="The states nobody specced"
+        title="38 AI UX skills for Claude Code"
         size="lg"
       >
         <SkillPackGate variant="interstitial" onDone={leaveForAudit} />
