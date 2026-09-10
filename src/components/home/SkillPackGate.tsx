@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
+import type { NewsletterSource } from '@/types/newsletter';
 
 /**
  * Homepage-only email gate for the full pattern skill pack.
@@ -53,9 +54,20 @@ interface SkillPackGateProps {
    * audit they just asked for.
    */
   onDone?: () => void;
+  /**
+   * Which surface this instance sits on. Kept per-placement so Beehiiv and the
+   * local Subscriber row both record where the address came from, and the
+   * homepage can be compared against the pattern pages. MUST exist in
+   * NEWSLETTER_SOURCES — an unlisted value is a silent 400 on a valid email.
+   */
+  source?: NewsletterSource;
 }
 
-export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProps) {
+export function SkillPackGate({
+  variant = 'section',
+  onDone,
+  source = 'homepage-skills-pack',
+}: SkillPackGateProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,8 +80,8 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
     // guard anyway so the denominator of the conversion rate stays honest.
     if (shown.current) return;
     shown.current = true;
-    trackAuditEvent('skills_gate_shown');
-  }, []);
+    trackAuditEvent('skills_gate_shown', { source });
+  }, [source]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +102,7 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
         // This literal MUST exist in NEWSLETTER_SOURCES. An unlisted value is a
         // silent 400 on a valid email — that is exactly how `audit-unlock`
         // captured nothing for two months.
-        body: JSON.stringify({ email, source: 'homepage-skills-pack' }),
+        body: JSON.stringify({ email, source }),
       });
 
       const data = await response.json();
@@ -100,7 +112,7 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
         throw new Error(data.error || 'Something went wrong');
       }
 
-      trackAuditEvent('skills_gate_submitted');
+      trackAuditEvent('skills_gate_submitted', { source });
 
       // Build the pack from the whole library. No audit is involved, so there
       // are no audits to attach.
@@ -121,7 +133,7 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
         skillPackFilename()
       );
 
-      trackAuditEvent('skills_gate_pack_downloaded', { skillCount: patterns.length });
+      trackAuditEvent('skills_gate_pack_downloaded', { skillCount: patterns.length, source });
       setSuccess(true);
       // Hand control back so the caller can continue the journey. Deliberately
       // after the download starts, not before, so nobody navigates away from a
@@ -162,17 +174,17 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
         // "It says why" is the same trust problem in language that lands.
         icon: LightBulbIcon,
         title: 'It says why',
-        body: 'Every suggestion shows what it was based on, so people can judge it instead of guessing.',
+        body: 'Under each reply, the sources it actually read. People judge the answer instead of guessing at it.',
       },
       {
         icon: HandRaisedIcon,
         title: 'A check before it acts',
-        body: 'Nothing consequential happens without a person approving it first.',
+        body: 'When the assistant is about to send, book or delete something, it asks first.',
       },
       {
         icon: ArrowUturnLeftIcon,
         title: 'A way back',
-        body: 'Every AI action can be undone, so a wrong answer stays cheap.',
+        body: 'Any reply can be undone or corrected, so a wrong answer costs a click, not a support ticket.',
       },
     ];
 
@@ -242,7 +254,7 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
           <button
             type="button"
             onClick={() => {
-              trackAuditEvent('skills_gate_skipped');
+              trackAuditEvent('skills_gate_skipped', { source });
               onDone?.();
             }}
             className="text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"

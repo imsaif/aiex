@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { InlineAuditCTA } from '@/components/audit/InlineAuditCTA';
+import { SkillPackGate } from '@/components/home/SkillPackGate';
 import SaveToDashboardButton from '@/components/handoff/SaveToDashboardButton';
 import { composeSkillMd } from '@/lib/skills/composeSkill';
 
@@ -380,6 +381,15 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             <InlineAuditCTA variant="pattern-detail" />
           </section>
         )}
+
+        {/* Skill pack ask. Pattern pages are where the search traffic actually
+            lands — /patterns/conversational-ui alone carries 16,863 impressions
+            a quarter, about a fifth of the whole site — and until now not one of
+            them asked for anything. Tagged `pattern-skills-pack` so this can be
+            compared against the homepage placement rather than blurred into it. */}
+        <section>
+          <SkillPackGate source="pattern-skills-pack" />
+        </section>
 
         {/* More from Category */}
         {categoryPatterns.length > 0 && (
