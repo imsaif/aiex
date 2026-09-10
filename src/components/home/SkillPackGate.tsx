@@ -255,10 +255,10 @@ export function SkillPackGate({
                 />
                 {/* peer-* is a sibling combinator, so it styles this span but
                     cannot reach the icon nested inside it — that reads state. */}
-                <span className="flex items-center gap-2 px-4 py-2 rounded-pill text-sm font-medium text-text-secondary transition-colors peer-checked:bg-accent-primary peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
+                <span className="flex items-center gap-2 px-4 py-2 rounded-pill text-sm font-medium text-text-secondary transition-colors peer-checked:bg-surface-primary peer-checked:text-text-primary peer-checked:shadow-card peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
                   <option.icon
                     className={`w-4 h-4 shrink-0 ${
-                      target === option.value ? 'text-white' : 'text-text-secondary'
+                      target === option.value ? 'text-accent-primary' : 'text-text-secondary'
                     }`}
                     aria-hidden="true"
                   />
