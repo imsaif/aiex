@@ -274,8 +274,8 @@ export function SkillPackGate({
       <div className="py-1">
         <p className="text-sm text-text-secondary">
           Your ammo for designing better AI products. Each skill carries the thinking behind a
-          pattern, what it fixes and what to avoid, so you can always say why a screen works
-          that way.
+          pattern, what it fixes and what to avoid, so you can always know and say why a screen
+          works that way.
         </p>
 
         <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
