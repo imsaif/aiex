@@ -58,7 +58,7 @@ const ALSO_WORKS_WITH = [
   { name: 'Codex', logo: '/images/logos/simple-icons/openai.svg' },
 ];
 
-function AlsoWorksWith() {
+function CyclingTool() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -76,26 +76,23 @@ function AlsoWorksWith() {
   const current = ALSO_WORKS_WITH[index];
 
   return (
-    <span className="flex items-center gap-2 text-sm text-text-secondary">
-      <span className="hidden sm:inline">Also works with</span>
-      <span aria-hidden="true" className="flex items-center gap-1.5 min-w-[7.5rem]">
-        {/* Local SVGs, matching CompanyLogoCarousel's approach. The marks are
-            solid black, so they invert in dark mode to stay visible. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          key={current.name}
-          src={current.logo}
-          alt=""
-          width={14}
-          height={14}
-          className="w-3.5 h-3.5 opacity-70 dark:invert animate-fade-in"
-        />
-        <span key={`${current.name}-label`} className="animate-fade-in">
-          {current.name}
-        </span>
-      </span>
-      <span className="sr-only">
-        Also works with {ALSO_WORKS_WITH.map((t) => t.name).join(', ')}.
+    <span
+      aria-hidden="true"
+      className="flex items-center gap-1.5 text-sm text-text-secondary whitespace-nowrap"
+    >
+      {/* Local SVGs, matching CompanyLogoCarousel's approach. The marks are
+          solid black, so they invert in dark mode to stay visible. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        key={current.name}
+        src={current.logo}
+        alt=""
+        width={14}
+        height={14}
+        className="w-3.5 h-3.5 opacity-70 dark:invert animate-fade-in"
+      />
+      <span key={`${current.name}-label`} className="animate-fade-in">
+        {current.name}
       </span>
     </span>
   );
@@ -300,9 +297,15 @@ export function SkillPackGate({
 
         <fieldset className="mt-9">
           <legend className="w-full mb-2.5">
-            <span className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+            <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
               <span className="text-sm text-text-secondary">Where will you use them?</span>
-              <AlsoWorksWith />
+              <span className="text-sm text-text-secondary">
+                Also works with
+                <span className="sr-only">
+                  {' '}
+                  {ALSO_WORKS_WITH.map((t) => t.name).join(', ')}.
+                </span>
+              </span>
             </span>
           </legend>
 
@@ -311,6 +314,7 @@ export function SkillPackGate({
               for the chooser gave the dialog five bordered rectangles in a
               column. A segmented control reads as a single choice, and the hint
               moves below it so only the relevant one is ever on screen. */}
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           <div className="inline-flex p-1 rounded-pill border border-border-primary bg-surface-secondary">
             {TARGETS.map((option) => (
               <label key={option.value} className="relative cursor-pointer">
@@ -335,6 +339,9 @@ export function SkillPackGate({
                 </span>
               </label>
             ))}
+          </div>
+
+            <CyclingTool />
           </div>
 
           <p className="mt-2.5 text-sm text-text-secondary">
