@@ -233,7 +233,7 @@ export function SkillPackGate({
               {
                 value: 'code' as const,
                 label: 'Claude Code',
-                hint: 'Unzip into your project. Cursor and Copilot read them too.',
+                hint: 'Unzip into your project.',
               },
               {
                 value: 'claude' as const,
