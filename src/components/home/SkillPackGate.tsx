@@ -69,7 +69,7 @@ function CyclingTool() {
 
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % ALSO_WORKS_WITH.length);
-    }, 2200);
+    }, 3600);
     return () => window.clearInterval(id);
   }, []);
 
@@ -87,13 +87,10 @@ function CyclingTool() {
         key={current.name}
         src={current.logo}
         alt=""
-        width={14}
-        height={14}
-        className="w-3.5 h-3.5 opacity-70 dark:invert animate-fade-in"
+        width={24}
+        height={24}
+        className="w-6 h-6 opacity-70 dark:invert animate-fade-in"
       />
-      <span key={`${current.name}-label`} className="animate-fade-in">
-        {current.name}
-      </span>
     </span>
   );
 }
