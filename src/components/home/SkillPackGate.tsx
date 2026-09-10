@@ -73,24 +73,23 @@ function CyclingTool() {
     return () => window.clearInterval(id);
   }, []);
 
-  const current = ALSO_WORKS_WITH[index];
-
   return (
-    <span
-      aria-hidden="true"
-      className="flex items-center gap-1.5 text-sm text-text-secondary whitespace-nowrap"
-    >
+    <span aria-hidden="true" className="relative block w-6 h-6 shrink-0">
       {/* Local SVGs, matching CompanyLogoCarousel's approach. The marks are
           solid black, so they invert in dark mode to stay visible. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        key={current.name}
-        src={current.logo}
-        alt=""
-        width={24}
-        height={24}
-        className="w-6 h-6 opacity-70 dark:invert animate-fade-in"
-      />
+      {ALSO_WORKS_WITH.map((tool, i) => (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          key={tool.name}
+          src={tool.logo}
+          alt=""
+          width={24}
+          height={24}
+          className={`absolute inset-0 w-6 h-6 dark:invert transition-opacity duration-700 ease-in-out ${
+            i === index ? 'opacity-70' : 'opacity-0'
+          }`}
+        />
+      ))}
     </span>
   );
 }
