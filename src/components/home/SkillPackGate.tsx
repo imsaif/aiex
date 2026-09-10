@@ -9,6 +9,7 @@ import {
   ArrowUturnLeftIcon,
   CommandLineIcon,
   SwatchIcon,
+  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -250,31 +251,43 @@ export function SkillPackGate({
                 hint: 'One upload at Customize \u2192 Skills.',
               },
             ]).map((option) => (
-              <label
-                key={option.value}
-                className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-colors ${
-                  target === option.value
-                    ? 'border-accent-primary bg-surface-primary'
-                    : 'border-border-primary bg-surface-primary hover:border-accent-primary'
-                }`}
-              >
+              <label key={option.value} className="relative block cursor-pointer">
+                {/* The real control, kept for keyboard and screen readers and
+                    hidden visually. A native radio dot inside a card reads as
+                    two controls stacked on each other; the card IS the control,
+                    so the selected state is carried by its border, tint and
+                    tick instead. `peer` drives all of that from the input's own
+                    checked and focus-visible state, so nothing depends on React
+                    re-rendering to look right. */}
                 <input
                   type="radio"
                   name="skill-pack-target"
                   value={option.value}
                   checked={target === option.value}
                   onChange={() => setTarget(option.value)}
-                  className="mt-0.5 accent-accent-primary"
+                  className="sr-only peer"
                 />
-                <option.icon
-                  className={`w-5 h-5 mt-0.5 shrink-0 ${
-                    target === option.value ? 'text-accent-primary' : 'text-text-secondary'
-                  }`}
-                  aria-hidden="true"
-                />
-                <span>
-                  <span className="block text-sm font-medium text-text-primary">{option.label}</span>
-                  <span className="block text-sm text-text-secondary">{option.hint}</span>
+                <span
+                  className="flex items-start gap-2.5 p-3 h-full rounded-card border-2 border-border-primary bg-surface-primary transition-colors hover:border-accent-primary peer-checked:border-accent-primary peer-checked:bg-surface-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2"
+                >
+                  <option.icon
+                    className={`w-5 h-5 mt-0.5 shrink-0 ${
+                      target === option.value ? 'text-accent-primary' : 'text-text-secondary'
+                    }`}
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-medium text-text-primary">
+                      {option.label}
+                    </span>
+                    <span className="block text-sm text-text-secondary">{option.hint}</span>
+                  </span>
+                  <CheckCircleIcon
+                    className={`w-5 h-5 ml-auto shrink-0 text-accent-primary transition-opacity ${
+                      target === option.value ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    aria-hidden="true"
+                  />
                 </span>
               </label>
             ))}
