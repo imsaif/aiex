@@ -2,8 +2,15 @@
  * Regenerates the public imsaif/aiux-skills repo from the pattern registry.
  *
  * The skills repo is a build artifact: never hand-edit it. This script owns
- * every file in it (38 skill folders + README + LICENSE). Run after any
- * pattern or skill-composer change, then commit and push the target repo.
+ * every file in it (38 skill folders + README + LICENSE + the Claude Code
+ * plugin manifests). Run after any pattern or skill-composer change, then
+ * commit and push the target repo.
+ *
+ * The same 38 folders serve two installers without being duplicated:
+ *   - `npx skills add imsaif/aiux-skills` reads `<name>/SKILL.md` at the root.
+ *   - Claude Code reads them as a plugin, because `plugin.json` declares
+ *     `"skills": ["."]`, which points the scan at the repo root instead of the
+ *     default `skills/` subdirectory. Nothing is moved or copied to support it.
  *
  * Usage:
  *   npm run skills:sync -- /path/to/aiux-skills-checkout
@@ -12,6 +19,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { patterns } from '@/data/patterns';
 import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
+import { pluginManifest, marketplaceManifest } from '@/lib/skills/pluginManifest';
 
 const SITE = 'https://aiuxdesign.guide';
 const UTM = 'utm_source=github&utm_medium=skills-repo&utm_campaign=aiux-skills';
@@ -124,4 +132,14 @@ for (const pattern of patterns) {
 fs.writeFileSync(path.join(target, 'README.md'), readme());
 fs.writeFileSync(path.join(target, 'LICENSE'), LICENSE);
 
-console.log(`Wrote ${written} skills + README + LICENSE to ${target}`);
+const pluginDir = path.join(target, '.claude-plugin');
+fs.mkdirSync(pluginDir, { recursive: true });
+fs.writeFileSync(path.join(pluginDir, 'plugin.json'), pluginManifest(patterns, SITE));
+fs.writeFileSync(
+  path.join(pluginDir, 'marketplace.json'),
+  marketplaceManifest(patterns, SITE),
+);
+
+console.log(
+  `Wrote ${written} skills + README + LICENSE + plugin manifests to ${target}`,
+);

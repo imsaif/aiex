@@ -8,6 +8,8 @@ One term, one meaning, everywhere: code identifiers, UI copy, docs, and AI sessi
 | Skill | The generated Claude Code `SKILL.md` for one pattern, named `aiux-<slug>`, served at `/skills/aiux-<slug>.md` | The pattern itself, the pack |
 | Trigger line | The skill's frontmatter `description`; symptom-first; authored per pattern as `content.skillDescription` | Marketing copy |
 | Pack | A user-curated set of saved skills downloaded together (installer markdown or zip) from the dashboard | The full library; the /skills directory |
+| Plugin | The Claude Code plugin named `aiux`, published from the generated `imsaif/aiux-skills` repo, carrying all 38 skills at once | A skill; the pack; the marketplace |
+| Marketplace | The catalog a plugin is listed in — ours (`aiux-skills`, declared by `marketplace.json`) or Anthropic's `claude-community` | The plugin itself; the /skills directory |
 | Installer | The single markdown file (`aiux-skills.md`) that instructs Claude to create each skill file | A shell script |
 | Audit fixes | The one-shot task file (`aiux-audit-fixes.md`) generated from a user's audits; worked through once, then deleted | A skill |
 | Save | Adding a pattern's skill to the visitor's pack (browser state) | Installing |
