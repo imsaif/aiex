@@ -446,14 +446,10 @@ export function SkillPackGate({
           </p>
         )}
 
-        <p id="skill-pack-terms" className="mt-3.5 text-sm text-text-secondary">
-          Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
-        </p>
-
         {/* The no-email path, stated rather than implied. Someone who does not
             want to hand over an address should be able to see that they do not
             have to, without having to guess that the dialog is dismissible. */}
-        <div className="mt-8 pt-5 border-t border-border-primary text-center">
+        <div className="mt-7 pt-5 border-t border-border-primary text-center">
           <button
             type="button"
             onClick={() => {
@@ -464,8 +460,8 @@ export function SkillPackGate({
           >
             No thanks, start my audit
           </button>
-          <p className="mt-1.5 text-sm text-text-secondary">
-            The audit is free either way. No email needed.
+          <p id="skill-pack-terms" className="mt-4 text-sm text-text-secondary">
+            Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
           </p>
         </div>
       </div>
