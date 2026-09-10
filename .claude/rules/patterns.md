@@ -139,6 +139,7 @@ When working on a pattern, ensure ALL of these are completed:
 - [ ] Validate pattern with `npm run test:patterns`
 - [ ] Review pattern in browser (http://localhost:3000)
 - [ ] Ensure all assets are optimized
+- [ ] **Resync the published skills** (see below) — pattern content is shipped in three places, not one
 
 ### Pattern Development Process
 1. **Select Pattern**: Choose one pattern from the 12 requiring updates
@@ -149,6 +150,41 @@ When working on a pattern, ensure ALL of these are completed:
 6. **Move to Next**: Select the next pattern to update
 
 **⚠️ Important Rule**: Stay focused on ONE pattern. Don't jump to another pattern until current one is 100% complete with all checklist items done.
+
+## Publishing: a pattern edit lives in three places
+
+Editing pattern content does **not** finish when the site deploys. The same text ships as
+Claude Code skills through a generated repo that nothing updates automatically.
+
+| Surface | Updated by | Automatic? |
+|---|---|---|
+| `/patterns/<slug>` on the site | the deploy | yes |
+| `/skills/aiux-<slug>.md` + the downloadable pack | the deploy (composed at build) | yes |
+| `imsaif/aiux-skills` — the public skills repo **and** the `aiux` Claude Code plugin | `npm run skills:sync` | **no** |
+
+### After any pattern or skill-composer change
+
+```bash
+npm run skills:sync -- /path/to/aiux-skills-checkout
+# then commit and push that repo
+```
+
+That repo is a build artifact: the script owns every file in it, including
+`.claude-plugin/plugin.json`. Never hand-edit it.
+
+**⚠️ This has already failed once.** Between 13 August and 10 September 2026 the repo went
+unsynced while five patterns were rewritten on the site, so `npx skills add` and the
+plugin both shipped guidance the site had already replaced: `guided-learning`,
+`plan-summary`, `safe-exploration`, `session-degradation-prevention`,
+`vulnerable-user-protection`.
+
+It is invisible when it happens. The site looks right, the tests pass, and the stale copy
+is in a different repo nobody opens. The only tell is running the sync and seeing a diff.
+So run it as part of finishing a pattern, not as a separate remembered chore.
+
+`src/lib/skills/__tests__/pluginManifest.test.ts` guards the manifests' shape — that the
+skill scan points at the repo root, that names match, that every skill has a trigger line.
+It cannot see whether the published repo is current. Nothing can, from here.
 
 ## Pattern Structure (38/38 Complete ✅)
 Pattern implementation follows this structured format:
