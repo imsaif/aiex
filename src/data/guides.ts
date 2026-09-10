@@ -650,7 +650,7 @@ export const guides: Guide[] = [
       {
         id: 'lesson-22',
         title: 'Figma to Code Best Practices',
-        duration: 2,
+        duration: 4,
         order: 7,
         module: 'figma',
         sections: [
@@ -747,6 +747,86 @@ export const guides: Guide[] = [
             icon: 'info',
           },
           {
+            type: 'heading',
+            level: 'h3',
+            content: 'What Vague Layer Names Actually Cost You',
+          },
+          {
+            type: 'text',
+            content: 'This is the single biggest difference between output you can use and output you have to redo. Claude Code reads your layer names as a description of what each thing is.',
+          },
+          {
+            type: 'list',
+            items: [
+              '"Frame 437" around your header becomes a generic container with no meaning. Nothing tells Claude it is a header, so it will not be reusable and it will not be labelled properly for screen readers.',
+              '"hero-section" becomes a named, reusable block, and Claude usually labels it correctly for screen readers without being asked.',
+              '"Rectangle 12" behind a card becomes a bare coloured box sitting on its own. "card-background" becomes part of the card itself.',
+              '"Group 8" holding your nav links becomes a shapeless wrapper. "primary-nav" becomes a proper navigation list.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Three Things That Break Auto Layout Translation',
+          },
+          {
+            type: 'text',
+            content: 'Auto Layout usually converts cleanly. These are the three cases where it does not, and where you should expect to correct the result.',
+          },
+          {
+            type: 'list',
+            items: [
+              'Elements positioned by hand inside an Auto Layout frame. Claude has to guess whether that position is deliberate or left over from earlier. Say which it is in your prompt.',
+              'Fixed-width text boxes. These become text that will not reflow on a phone. Set text to hug or fill before you generate.',
+              'Layers that overlap on purpose, like a badge sitting half outside a card. Auto Layout has no way to express this, so mention it explicitly or it will be flattened.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Four Things to Check in the First Result',
+          },
+          {
+            type: 'text',
+            content: 'You do not need to read the code. Open the result in your browser and check these four things, in this order.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Narrow the window',
+                content: 'Drag the browser window down to phone width. Most first attempts break here before they break anywhere else.',
+                icon: 'monitor',
+              },
+              {
+                number: 2,
+                title: 'Compare the spacing',
+                content: 'Put your design and the result side by side. Spacing drift is the most common gap and the easiest to describe back to Claude.',
+                icon: 'check',
+              },
+              {
+                number: 3,
+                title: 'Hover and click everything',
+                content: 'Hover and pressed states are rarely in the Figma file, so they are rarely in the first result. Ask for them by name.',
+                icon: 'cog',
+              },
+              {
+                number: 4,
+                title: 'Try your longest real sentence',
+                content: 'Swap the placeholder copy for the longest text this screen will really carry. Layouts that only work with short filler are the classic failure.',
+                icon: 'edit',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Describe the gap, not the fix',
+            content: 'When something looks off, tell Claude what you see rather than how to correct it. "The gap between the cards is tighter than the design" gets a better result than "set the gap to 24 pixels", because Claude can read the design and check its own work.',
+            icon: 'info',
+          },
+          {
             type: 'completion',
             title: 'Cleaner prompts, cleaner output',
             items: [
@@ -754,6 +834,8 @@ export const guides: Guide[] = [
               'Wrote specific prompts that describe exact framework, colors, and interactions',
               'Set up the Figma → code → review → refine loop as a working rhythm',
               'Learned how Code Connect maps Figma components to your real component library',
+              'Learned which Figma habits produce clean code and which produce work you have to redo',
+              'Got a four-step check for the first result, before reading a single line of code',
             ],
             message: 'You know the moves now. Last lesson in this module: closing the loop by bringing code back to Figma.',
           },
