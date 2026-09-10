@@ -135,11 +135,13 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
   // — rather than after the audit, where the equivalent ask has reached six
   // people since August.
   //
-  // Written as a pitch, not a form. The first version was a headline and an
-  // input, which asks for an email without ever saying what the skills do for
-  // the person handing it over. The argument below is the one a designer
-  // actually recognises: you already find these gaps, you just find them too
-  // late to be cheap to fix.
+  // Shows rather than explains. Two earlier versions failed in the same
+  // direction: a bare email field said nothing about the value, and the prose
+  // rewrite that followed said everything but made a designer read four
+  // paragraphs to get it. The same AI suggestion is rendered twice below —
+  // once as Claude builds it by default, once as Claude builds it with the
+  // skills loaded. The difference is the argument, and it is legible in about
+  // two seconds without reading a word of body copy.
   //
   // Deliberately SKIPPABLE: a hard gate would protect nothing and the audit
   // only completes about four times a week, so blocking it to harvest an email
@@ -148,40 +150,71 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
   if (variant === 'interstitial') {
     return (
       <div>
-        <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
-          Every AI feature you review is missing the same handful of things. Nothing shows
-          how sure the model is. There is no way back from a wrong answer. It acts before
-          anyone checks. You catch it in review, write it up, and wait for the rebuild.
+        <p className="text-sm text-text-secondary">
+          The same AI suggestion, built without the skills and with them.
         </p>
 
-        <p className="mt-4 text-sm sm:text-base text-text-primary font-medium leading-relaxed">
-          These {PATTERN_COUNT} skills move that judgment upstream. Claude reads them before it
-          writes, so the patterns are in the first version instead of your feedback.
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Without ------------------------------------------------------ */}
+          <div>
+            <div className="rounded-card border border-border-primary bg-surface-primary p-4 h-full">
+              <p className="text-sm text-text-secondary mb-2">AI Assistant</p>
+              <p className="text-sm text-text-primary leading-relaxed">
+                Revenue is up 12% this month, driven by mobile checkout.
+              </p>
+              <div className="mt-4">
+                <span className="inline-block px-3 py-1.5 rounded-pill bg-accent-primary text-white text-sm font-medium">
+                  Apply
+                </span>
+              </div>
+            </div>
+            <p className="mt-2 flex items-center gap-2 text-sm text-text-secondary">
+              <span
+                className="w-2 h-2 rounded-full bg-status-error shrink-0"
+                aria-hidden="true"
+              />
+              Without the skills
+            </p>
+          </div>
+
+          {/* With --------------------------------------------------------- */}
+          <div>
+            <div className="rounded-card border-2 border-accent-primary bg-surface-primary p-4 h-full">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-text-secondary">AI Assistant</p>
+                <p className="text-sm text-text-primary font-medium">82% sure</p>
+              </div>
+              <div
+                className="h-1.5 w-full rounded-pill bg-surface-secondary overflow-hidden mb-3"
+                aria-hidden="true"
+              >
+                <div className="h-full w-[82%] rounded-pill bg-accent-primary" />
+              </div>
+              <p className="text-sm text-text-primary leading-relaxed">
+                Revenue is up 12% this month, driven by mobile checkout.
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="inline-block px-3 py-1.5 rounded-pill bg-accent-primary text-white text-sm font-medium">
+                  Review, then apply
+                </span>
+                <span className="text-sm text-text-secondary underline underline-offset-4">
+                  Undo
+                </span>
+              </div>
+            </div>
+            <p className="mt-2 flex items-center gap-2 text-sm text-text-primary font-medium">
+              <CheckIcon className="w-4 h-4 shrink-0 text-accent-primary" aria-hidden="true" />
+              With the skills
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-4 text-sm text-text-primary leading-relaxed">
+          Confidence made visible, a human check before it acts, a way back. In the first
+          version, not in your review notes.
         </p>
 
-        <ul className="mt-5 space-y-2.5">
-          {[
-            'Applied while it builds, not caught in review',
-            'One file per pattern, editable — change the guidance to match your product',
-            'Works with Claude Code, Cursor, GitHub Copilot and Codex',
-          ].map((point) => (
-            <li key={point} className="flex items-start gap-2.5 text-sm text-text-secondary">
-              <CheckIcon className="w-4 h-4 mt-0.5 shrink-0 text-accent-primary" aria-hidden="true" />
-              <span>{point}</span>
-            </li>
-          ))}
-        </ul>
-
-        <p className="mt-5 pt-4 border-t border-border-primary text-sm text-text-secondary">
-          <span className="text-text-primary font-medium">Confidence Visualization</span>
-          {' \u00b7 '}
-          <span className="text-text-primary font-medium">Human-in-the-Loop</span>
-          {' \u00b7 '}
-          <span className="text-text-primary font-medium">Graceful Handoff</span>
-          {` \u00b7 and ${PATTERN_COUNT - 3} more`}
-        </p>
-
-        <form onSubmit={handleSubmit} className="mt-6 flex flex-col sm:flex-row gap-2">
+        <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -203,7 +236,7 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
             disabled={isLoading}
             className="shrink-0 px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
           >
-            {isLoading ? 'Sending\u2026' : 'Send the skills, then audit'}
+            {isLoading ? 'Sending…' : `Send all ${PATTERN_COUNT} skills`}
           </button>
         </form>
 
@@ -214,10 +247,11 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
         )}
 
         <p id="skill-pack-terms" className="mt-3 text-sm text-text-secondary">
-          Free and MIT licensed. Comes with the daily AI UX newsletter, unsubscribe anytime.
+          Free, MIT licensed, works with Cursor and Copilot too. Includes the daily
+          newsletter, unsubscribe anytime.
         </p>
 
-        <div className="mt-5 pt-4 border-t border-border-primary text-center">
+        <div className="mt-4 pt-4 border-t border-border-primary text-center">
           <button
             type="button"
             onClick={() => {

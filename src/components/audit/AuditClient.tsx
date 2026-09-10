@@ -308,7 +308,7 @@ export default function AuditClient({
       <Dialog
         open={showSkillsGate}
         onClose={leaveForAudit}
-        title="Stop catching the same gaps in review"
+        title="What the skills change"
         size="lg"
       >
         <SkillPackGate variant="interstitial" onDone={leaveForAudit} />
