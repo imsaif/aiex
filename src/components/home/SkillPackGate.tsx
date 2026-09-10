@@ -171,14 +171,11 @@ export function SkillPackGate({
   // — rather than after the audit, where the equivalent ask has reached six
   // people since August.
   //
-  // Three versions preceded this one and each failed differently: a bare email
-  // field made no argument at all; a prose rewrite made the argument but asked a
-  // designer to read four paragraphs for it; a side-by-side mock of one AI card
-  // was visual but narrow, showing a single example rather than what the pack
-  // is for — and its captions collided with the copy beneath them.
-  //
-  // Cards carry it better. Three named changes to the interface itself, each one
-  // a real pattern from the library, scannable without reading a sentence.
+  // Kept deliberately sparse. An earlier pass had six bordered boxes stacked in
+  // one dialog: three benefit cards, two option cards, an input. Every one of
+  // them was drawing a line around something that did not need one, and the
+  // whole thing read as busy. The benefits are borderless now; the only boxes
+  // left are the two that are actually controls.
   //
   // Deliberately SKIPPABLE: a hard gate would protect nothing and the audit
   // only completes about four times a week, so blocking it to harvest an email
@@ -187,9 +184,6 @@ export function SkillPackGate({
   if (variant === 'interstitial') {
     const BENEFIT_CARDS = [
       {
-        // Was "Confidence made visible". Dropped: confidence visualisation is an
-        // insider term, and a designer reading it fast does not picture anything.
-        // "It says why" is the same trust problem in language that lands.
         icon: LightBulbIcon,
         title: 'Shows its working',
         body: 'Sources sit under each reply, so people can check it.',
@@ -206,59 +200,51 @@ export function SkillPackGate({
       },
     ];
 
+    const TARGETS = [
+      {
+        value: 'code' as const,
+        icon: CommandLineIcon,
+        label: 'Claude Code',
+        hint: 'Unzip into your project.',
+      },
+      {
+        value: 'claude' as const,
+        icon: SwatchIcon,
+        label: 'Claude Design or Claude app',
+        hint: 'One upload at Customize → Skills.',
+      },
+    ];
+
     return (
       <div>
         <p className="text-sm text-text-secondary">
-          AI features usually ship without these. The skills put them in the first build.
+          AI features usually launch missing these. The skills apply all {PATTERN_COUNT} patterns
+          to everything Claude designs for you.
         </p>
 
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-x-6 gap-y-5">
           {BENEFIT_CARDS.map(({ icon: Icon, title, body }) => (
-            <div
-              key={title}
-              className="rounded-card border border-border-primary bg-surface-primary p-4"
-            >
-              <Icon className="w-6 h-6 text-accent-primary mb-3" aria-hidden="true" />
+            <div key={title}>
+              <Icon className="w-5 h-5 text-accent-primary mb-2.5" aria-hidden="true" />
               <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
-              <p className="mt-1.5 text-sm text-text-secondary leading-relaxed">{body}</p>
+              <p className="mt-1 text-sm text-text-secondary leading-relaxed">{body}</p>
             </div>
           ))}
         </div>
 
-        <p className="mt-4 text-sm text-text-primary leading-relaxed">
-          Three of {PATTERN_COUNT} patterns. Claude reads them before it writes.
-        </p>
-
-        <fieldset className="mt-5">
-          <legend className="text-sm text-text-secondary mb-2">Where will you use them?</legend>
+        <fieldset className="mt-8">
+          <legend className="text-sm text-text-secondary mb-2.5">Where will you use them?</legend>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {/* Icons of the destination, not brand marks. Claude Code and Claude
                 Design share one Claude logo, so putting it on both cards would
                 make the two options look identical at exactly the moment the
-                reader is trying to tell them apart. A terminal and an artboard
-                separate instantly. */}
-            {([
-              {
-                value: 'code' as const,
-                icon: CommandLineIcon,
-                label: 'Claude Code',
-                hint: 'Unzip into your project.',
-              },
-              {
-                value: 'claude' as const,
-                icon: SwatchIcon,
-                label: 'Claude Design or Claude app',
-                hint: 'One upload at Customize \u2192 Skills.',
-              },
-            ]).map((option) => (
+                reader is trying to tell them apart. */}
+            {TARGETS.map((option) => (
               <label key={option.value} className="relative block cursor-pointer">
                 {/* The real control, kept for keyboard and screen readers and
-                    hidden visually. A native radio dot inside a card reads as
-                    two controls stacked on each other; the card IS the control,
-                    so the selected state is carried by its border, tint and
-                    tick instead. `peer` drives all of that from the input's own
-                    checked and focus-visible state, so nothing depends on React
-                    re-rendering to look right. */}
+                    hidden visually. `peer` drives the card's own border, tint
+                    and ring. NOTE: peer-* is a sibling combinator, so it cannot
+                    reach the icon or tick nested inside — those read `target`. */}
                 <input
                   type="radio"
                   name="skill-pack-target"
@@ -267,9 +253,7 @@ export function SkillPackGate({
                   onChange={() => setTarget(option.value)}
                   className="sr-only peer"
                 />
-                <span
-                  className="flex items-start gap-2.5 p-3 h-full rounded-card border-2 border-border-primary bg-surface-primary transition-colors hover:border-accent-primary peer-checked:border-accent-primary peer-checked:bg-surface-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2"
-                >
+                <span className="flex items-start gap-2.5 p-3 h-full rounded-card border border-border-primary bg-surface-primary transition-colors hover:border-accent-primary peer-checked:border-accent-primary peer-checked:bg-surface-secondary peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
                   <option.icon
                     className={`w-5 h-5 mt-0.5 shrink-0 ${
                       target === option.value ? 'text-accent-primary' : 'text-text-secondary'
@@ -294,7 +278,7 @@ export function SkillPackGate({
           </div>
         </fieldset>
 
-        <form onSubmit={handleSubmit} className="mt-3 flex flex-col sm:flex-row gap-2">
+        <form onSubmit={handleSubmit} className="mt-4 flex flex-col sm:flex-row gap-2">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -328,11 +312,10 @@ export function SkillPackGate({
         )}
 
         <p id="skill-pack-terms" className="mt-3 text-sm text-text-secondary">
-          Free, MIT licensed, works with Cursor and Copilot too. Includes the daily
-          newsletter, unsubscribe anytime.
+          Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
         </p>
 
-        <div className="mt-4 pt-4 border-t border-border-primary text-center">
+        <div className="mt-7 text-center">
           <button
             type="button"
             onClick={() => {
