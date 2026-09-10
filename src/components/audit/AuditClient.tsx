@@ -308,7 +308,7 @@ export default function AuditClient({
       <Dialog
         open={showSkillsGate}
         onClose={leaveForAudit}
-        title="What the skills change"
+        title="What these skills put in your interface"
         size="lg"
       >
         <SkillPackGate variant="interstitial" onDone={leaveForAudit} />

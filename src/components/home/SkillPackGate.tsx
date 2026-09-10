@@ -1,7 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { CheckIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import {
+  CheckIcon,
+  ArrowDownTrayIcon,
+  LightBulbIcon,
+  HandRaisedIcon,
+  ArrowUturnLeftIcon,
+} from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 
@@ -135,83 +141,63 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
   // — rather than after the audit, where the equivalent ask has reached six
   // people since August.
   //
-  // Shows rather than explains. Two earlier versions failed in the same
-  // direction: a bare email field said nothing about the value, and the prose
-  // rewrite that followed said everything but made a designer read four
-  // paragraphs to get it. The same AI suggestion is rendered twice below —
-  // once as Claude builds it by default, once as Claude builds it with the
-  // skills loaded. The difference is the argument, and it is legible in about
-  // two seconds without reading a word of body copy.
+  // Three versions preceded this one and each failed differently: a bare email
+  // field made no argument at all; a prose rewrite made the argument but asked a
+  // designer to read four paragraphs for it; a side-by-side mock of one AI card
+  // was visual but narrow, showing a single example rather than what the pack
+  // is for — and its captions collided with the copy beneath them.
+  //
+  // Cards carry it better. Three named changes to the interface itself, each one
+  // a real pattern from the library, scannable without reading a sentence.
   //
   // Deliberately SKIPPABLE: a hard gate would protect nothing and the audit
   // only completes about four times a week, so blocking it to harvest an email
   // would cost the one qualification step the site has. Skipping is tracked, so
   // the skip rate is itself the finding.
   if (variant === 'interstitial') {
+    const BENEFIT_CARDS = [
+      {
+        // Was "Confidence made visible". Dropped: confidence visualisation is an
+        // insider term, and a designer reading it fast does not picture anything.
+        // "It says why" is the same trust problem in language that lands.
+        icon: LightBulbIcon,
+        title: 'It says why',
+        body: 'Every suggestion shows what it was based on, so people can judge it instead of guessing.',
+      },
+      {
+        icon: HandRaisedIcon,
+        title: 'A check before it acts',
+        body: 'Nothing consequential happens without a person approving it first.',
+      },
+      {
+        icon: ArrowUturnLeftIcon,
+        title: 'A way back',
+        body: 'Every AI action can be undone, so a wrong answer stays cheap.',
+      },
+    ];
+
     return (
       <div>
         <p className="text-sm text-text-secondary">
-          The same AI suggestion, built without the skills and with them.
+          What lands in your interface when Claude builds with these {PATTERN_COUNT} skills loaded.
         </p>
 
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Without ------------------------------------------------------ */}
-          <div>
-            <div className="rounded-card border border-border-primary bg-surface-primary p-4 h-full">
-              <p className="text-sm text-text-secondary mb-2">AI Assistant</p>
-              <p className="text-sm text-text-primary leading-relaxed">
-                Revenue is up 12% this month, driven by mobile checkout.
-              </p>
-              <div className="mt-4">
-                <span className="inline-block px-3 py-1.5 rounded-pill bg-accent-primary text-white text-sm font-medium">
-                  Apply
-                </span>
-              </div>
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {BENEFIT_CARDS.map(({ icon: Icon, title, body }) => (
+            <div
+              key={title}
+              className="rounded-card border border-border-primary bg-surface-primary p-4"
+            >
+              <Icon className="w-6 h-6 text-accent-primary mb-3" aria-hidden="true" />
+              <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
+              <p className="mt-1.5 text-sm text-text-secondary leading-relaxed">{body}</p>
             </div>
-            <p className="mt-2 flex items-center gap-2 text-sm text-text-secondary">
-              <span
-                className="w-2 h-2 rounded-full bg-status-error shrink-0"
-                aria-hidden="true"
-              />
-              Without the skills
-            </p>
-          </div>
-
-          {/* With --------------------------------------------------------- */}
-          <div>
-            <div className="rounded-card border-2 border-accent-primary bg-surface-primary p-4 h-full">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-text-secondary">AI Assistant</p>
-                <p className="text-sm text-text-primary font-medium">82% sure</p>
-              </div>
-              <div
-                className="h-1.5 w-full rounded-pill bg-surface-secondary overflow-hidden mb-3"
-                aria-hidden="true"
-              >
-                <div className="h-full w-[82%] rounded-pill bg-accent-primary" />
-              </div>
-              <p className="text-sm text-text-primary leading-relaxed">
-                Revenue is up 12% this month, driven by mobile checkout.
-              </p>
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="inline-block px-3 py-1.5 rounded-pill bg-accent-primary text-white text-sm font-medium">
-                  Review, then apply
-                </span>
-                <span className="text-sm text-text-secondary underline underline-offset-4">
-                  Undo
-                </span>
-              </div>
-            </div>
-            <p className="mt-2 flex items-center gap-2 text-sm text-text-primary font-medium">
-              <CheckIcon className="w-4 h-4 shrink-0 text-accent-primary" aria-hidden="true" />
-              With the skills
-            </p>
-          </div>
+          ))}
         </div>
 
         <p className="mt-4 text-sm text-text-primary leading-relaxed">
-          Confidence made visible, a human check before it acts, a way back. In the first
-          version, not in your review notes.
+          Three of {PATTERN_COUNT}. Claude reads them before it writes, so these arrive in the first
+          version instead of your review notes.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
@@ -234,8 +220,9 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
           <button
             type="submit"
             disabled={isLoading}
-            className="shrink-0 px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
+            className="shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
           >
+            <ArrowDownTrayIcon className="w-4 h-4" aria-hidden="true" />
             {isLoading ? 'Sending…' : `Send all ${PATTERN_COUNT} skills`}
           </button>
         </form>
