@@ -108,10 +108,25 @@ export default function AuditClient({
     setShowSkillsGate(true);
   }, [isPaywalled]);
 
+  // Two ways out of the skills dialog, and they are NOT the same thing.
+  //
+  // `leaveForAudit` is the deliberate one: the person gave an email, or clicked
+  // "Skip, just start my audit". They asked to go on, so we go on.
+  //
+  // `dismissSkillsGate` is backdrop-click, Escape and the close button. Those
+  // mean "I did not want this dialog", not "take me somewhere else" — and they
+  // were wired to the same handler, so clicking outside the modal silently
+  // navigated people to /audit. Dismissing now just closes it and leaves them on
+  // the page they were reading, which is what dismissing means everywhere else.
   const leaveForAudit = useCallback(() => {
     setShowSkillsGate(false);
     router.push('/audit');
   }, [router]);
+
+  const dismissSkillsGate = useCallback(() => {
+    trackAuditEvent('skills_gate_dismissed');
+    setShowSkillsGate(false);
+  }, []);
 
   // Run analysis against the API
   const runAnalysis = useCallback(async (images: UploadedImage[]) => {
@@ -307,11 +322,11 @@ export default function AuditClient({
       {/* Skill-pack ask on the way into the audit. Skippable by design. */}
       <Dialog
         open={showSkillsGate}
-        onClose={leaveForAudit}
-        title="Supercharge your design with Claude skills"
+        onClose={dismissSkillsGate}
+        ariaLabel="Supercharge your design with Claude skills"
         size="lg"
       >
-        <SkillPackGate variant="interstitial" onDone={leaveForAudit} />
+        <SkillPackGate variant="interstitial" onDone={leaveForAudit} onDismiss={dismissSkillsGate} />
       </Dialog>
 
       {/* Paywall Modal */}

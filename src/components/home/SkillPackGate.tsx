@@ -10,6 +10,7 @@ import {
   CommandLineIcon,
   SwatchIcon,
   CheckCircleIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -120,11 +121,19 @@ interface SkillPackGateProps {
    * NEWSLETTER_SOURCES — an unlisted value is a silent 400 on a valid email.
    */
   source?: NewsletterSource;
+  /**
+   * 'interstitial' only. Closing the dialog without going anywhere. Separate from
+   * `onDone` on purpose: dismissing means "I did not want this", not "take me to
+   * the audit", and wiring both to one handler is what made a backdrop click
+   * silently navigate people away.
+   */
+  onDismiss?: () => void;
 }
 
 export function SkillPackGate({
   variant = 'section',
   onDone,
+  onDismiss,
   source = 'homepage-skills-pack',
 }: SkillPackGateProps) {
   const [email, setEmail] = useState('');
@@ -254,6 +263,16 @@ export function SkillPackGate({
     if (success) {
       return (
         <div className="text-center py-2">
+          {onDismiss && (
+            <button
+              type="button"
+              onClick={onDismiss}
+              aria-label="Close"
+              className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors"
+            >
+              <XMarkIcon className="w-5 h-5" aria-hidden="true" />
+            </button>
+          )}
           <CheckCircleIcon className="w-10 h-10 mx-auto text-accent-primary" aria-hidden="true" />
           <p className="mt-3 text-base font-semibold text-text-primary">
             On their way, and downloading now.
@@ -308,6 +327,20 @@ export function SkillPackGate({
 
     return (
       <div className="py-1">
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Close"
+            className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary transition-colors"
+          >
+            <XMarkIcon className="w-5 h-5" aria-hidden="true" />
+          </button>
+        )}
+        <h2 className="pr-8 mb-3 text-xl sm:text-2xl font-semibold tracking-tight leading-[1.2] text-text-primary">
+          Supercharge your design with Claude skills
+        </h2>
+
         <p className="text-sm text-text-secondary">
           Your ammo for designing better AI products. Each skill carries the thinking behind a
           pattern, what it fixes and what to avoid, so you stop shipping AI slop and always know
@@ -418,17 +451,23 @@ export function SkillPackGate({
           Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
         </p>
 
-        <div className="mt-9 text-center">
+        {/* The no-email path, stated rather than implied. Someone who does not
+            want to hand over an address should be able to see that they do not
+            have to, without having to guess that the dialog is dismissible. */}
+        <div className="mt-8 pt-5 border-t border-border-primary text-center">
           <button
             type="button"
             onClick={() => {
               trackAuditEvent('skills_gate_skipped', { source });
               onDone?.();
             }}
-            className="text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
+            className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
           >
-            Skip, just start my audit
+            No thanks, start my audit
           </button>
+          <p className="mt-1.5 text-sm text-text-secondary">
+            The audit is free either way. No email needed.
+          </p>
         </div>
       </div>
     );

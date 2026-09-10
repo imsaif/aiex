@@ -69,6 +69,7 @@ export const AUDIT_EVENT_NAMES = [
   'skills_gate_shown',
   'skills_gate_expanded',
   'skills_gate_skipped',
+  'skills_gate_dismissed',
   'skills_gate_submitted',
   'skills_gate_pack_downloaded',
   // Newly instrumented CTAs (previously untracked)
