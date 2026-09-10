@@ -308,8 +308,8 @@ export default function AuditClient({
       <Dialog
         open={showSkillsGate}
         onClose={leaveForAudit}
-        title="Take the skills with you"
-        size="md"
+        title="Stop catching the same gaps in review"
+        size="lg"
       >
         <SkillPackGate variant="interstitial" onDone={leaveForAudit} />
       </Dialog>

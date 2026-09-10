@@ -133,19 +133,55 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
   //
   // Asked at the highest-intent moment on the page — the click on the hero CTA
   // — rather than after the audit, where the equivalent ask has reached six
-  // people since August. Deliberately SKIPPABLE: a hard gate would protect
-  // nothing and the audit only completes about four times a week, so blocking
-  // it to harvest an email would cost the one qualification step the site has.
-  // Skipping is tracked, so the skip rate is itself the finding.
+  // people since August.
+  //
+  // Written as a pitch, not a form. The first version was a headline and an
+  // input, which asks for an email without ever saying what the skills do for
+  // the person handing it over. The argument below is the one a designer
+  // actually recognises: you already find these gaps, you just find them too
+  // late to be cheap to fix.
+  //
+  // Deliberately SKIPPABLE: a hard gate would protect nothing and the audit
+  // only completes about four times a week, so blocking it to harvest an email
+  // would cost the one qualification step the site has. Skipping is tracked, so
+  // the skip rate is itself the finding.
   if (variant === 'interstitial') {
     return (
-      <div className="text-center">
-        <p className="text-sm text-text-secondary mb-4">
-          Your audit is ready to start. Want the {PATTERN_COUNT} skill files too? We will send
-          them now, so Claude can apply these patterns while it builds.
+      <div>
+        <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
+          Every AI feature you review is missing the same handful of things. Nothing shows
+          how sure the model is. There is no way back from a wrong answer. It acts before
+          anyone checks. You catch it in review, write it up, and wait for the rebuild.
         </p>
 
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+        <p className="mt-4 text-sm sm:text-base text-text-primary font-medium leading-relaxed">
+          These {PATTERN_COUNT} skills move that judgment upstream. Claude reads them before it
+          writes, so the patterns are in the first version instead of your feedback.
+        </p>
+
+        <ul className="mt-5 space-y-2.5">
+          {[
+            'Applied while it builds, not caught in review',
+            'One file per pattern, editable — change the guidance to match your product',
+            'Works with Claude Code, Cursor, GitHub Copilot and Codex',
+          ].map((point) => (
+            <li key={point} className="flex items-start gap-2.5 text-sm text-text-secondary">
+              <CheckIcon className="w-4 h-4 mt-0.5 shrink-0 text-accent-primary" aria-hidden="true" />
+              <span>{point}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-5 pt-4 border-t border-border-primary text-sm text-text-secondary">
+          <span className="text-text-primary font-medium">Confidence Visualization</span>
+          {' \u00b7 '}
+          <span className="text-text-primary font-medium">Human-in-the-Loop</span>
+          {' \u00b7 '}
+          <span className="text-text-primary font-medium">Graceful Handoff</span>
+          {` \u00b7 and ${PATTERN_COUNT - 3} more`}
+        </p>
+
+        <form onSubmit={handleSubmit} className="mt-6 flex flex-col sm:flex-row gap-2">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -159,7 +195,7 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
             autoFocus
             disabled={isLoading}
             aria-invalid={error ? true : undefined}
-            aria-describedby={error ? 'skill-pack-error' : undefined}
+            aria-describedby={error ? 'skill-pack-error' : 'skill-pack-terms'}
             className="flex-1 min-w-0 px-4 py-3 rounded-pill border border-border-primary bg-surface-primary text-sm text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary disabled:opacity-60"
           />
           <button
@@ -167,7 +203,7 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
             disabled={isLoading}
             className="shrink-0 px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 disabled:opacity-60 transition-all"
           >
-            {isLoading ? 'Sending\u2026' : 'Send and continue'}
+            {isLoading ? 'Sending\u2026' : 'Send the skills, then audit'}
           </button>
         </form>
 
@@ -177,16 +213,22 @@ export function SkillPackGate({ variant = 'section', onDone }: SkillPackGateProp
           </p>
         )}
 
-        <button
-          type="button"
-          onClick={() => {
-            trackAuditEvent('skills_gate_skipped');
-            onDone?.();
-          }}
-          className="mt-4 text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
-        >
-          Skip, just start my audit
-        </button>
+        <p id="skill-pack-terms" className="mt-3 text-sm text-text-secondary">
+          Free and MIT licensed. Comes with the daily AI UX newsletter, unsubscribe anytime.
+        </p>
+
+        <div className="mt-5 pt-4 border-t border-border-primary text-center">
+          <button
+            type="button"
+            onClick={() => {
+              trackAuditEvent('skills_gate_skipped');
+              onDone?.();
+            }}
+            className="text-sm text-text-secondary underline underline-offset-4 hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary rounded-input px-1 py-0.5"
+          >
+            Skip, just start my audit
+          </button>
+        </div>
       </div>
     );
   }
