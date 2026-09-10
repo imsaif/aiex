@@ -9,6 +9,7 @@ import {
   ArrowUturnLeftIcon,
   CommandLineIcon,
   SwatchIcon,
+  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -207,11 +208,21 @@ export function SkillPackGate({
       );
 
       trackAuditEvent('skills_gate_pack_downloaded', { skillCount: patterns.length, source, target });
+
+      // Email a copy too, best-effort. The download above races the navigation
+      // that follows, and some browsers cancel a blob download when the page
+      // navigates; an emailed copy means giving an address always ends in having
+      // the files. A failure here must never surface as a failed signup, so it is
+      // deliberately not awaited into the error path.
+      fetch('/api/skills/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, target }),
+      }).catch(() => {
+        /* already downloaded; nothing to tell the visitor */
+      });
+
       setSuccess(true);
-      // Hand control back so the caller can continue the journey. Deliberately
-      // after the download starts, not before, so nobody navigates away from a
-      // pack that has not begun writing.
-      onDone?.();
     } catch (err) {
       // Say what happened rather than leaving a dead button.
       setError(err instanceof Error ? err.message : 'Something went wrong');
@@ -237,6 +248,31 @@ export function SkillPackGate({
   // would cost the one qualification step the site has. Skipping is tracked, so
   // the skip rate is itself the finding.
   if (variant === 'interstitial') {
+    // Confirm before continuing rather than navigating on the same tick the
+    // download starts. The previous version set this state and immediately called
+    // onDone, so nobody ever saw it and the download raced the route change.
+    if (success) {
+      return (
+        <div className="text-center py-2">
+          <CheckCircleIcon className="w-10 h-10 mx-auto text-accent-primary" aria-hidden="true" />
+          <p className="mt-3 text-base font-semibold text-text-primary">
+            On their way, and downloading now.
+          </p>
+          <p className="mt-1.5 text-sm text-text-secondary">
+            Check your Downloads folder for the zip. A copy is in your inbox too, with the setup
+            steps.
+          </p>
+          <button
+            type="button"
+            onClick={() => onDone?.()}
+            className="mt-6 inline-flex items-center justify-center px-6 py-3 rounded-pill bg-accent-primary text-white text-sm font-semibold hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 transition-all"
+          >
+            Start my audit
+          </button>
+        </div>
+      );
+    }
+
     const BENEFIT_CARDS = [
       {
         icon: LightBulbIcon,
