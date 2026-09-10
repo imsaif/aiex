@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
       target === 'claude' ? 'Claude Design and the Claude app' : 'Claude Code';
 
     await resend.emails.send({
-      from: 'AI UX Daily <imran@aiuxdesign.guide>',
+      from: 'AIUX Design Guide <imran@aiuxdesign.guide>',
       replyTo: 'imranrizom@gmail.com',
       to: email,
       subject: `Your ${PATTERN_COUNT} AI UX skills`,
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
           <tr>
             <td style="padding:32px 32px 0;">
               <p style="margin:0 0 20px;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                aiux
+                AIUX Design Guide
               </p>
               <h1 style="margin:0 0 12px;font-size:26px;line-height:1.2;font-weight:700;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
                 Your ${PATTERN_COUNT} AI UX skills
@@ -135,14 +135,11 @@ export async function POST(request: NextRequest) {
             </td>
           </tr>
           <tr>
-            <td style="padding:16px 32px 32px;">
-              <a href="https://www.aiuxdesign.guide/patterns"
-                 style="display:inline-block;background:${NAVY};color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:13px 26px;border-radius:999px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                Read the patterns
-              </a>
-              <p style="margin:16px 0 0;font-size:14px;line-height:1.6;color:${BODY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                Every pattern is written up with real examples from shipped products and the
-                reasoning behind each move.
+            <td style="padding:20px 32px 32px;">
+              <p style="margin:0;font-size:14px;line-height:1.6;color:${BODY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                Every pattern is also written up at
+                <a href="https://www.aiuxdesign.guide/patterns" style="color:${NAVY};font-weight:600;text-decoration:underline;">aiuxdesign.guide/patterns</a>,
+                with real examples from shipped products and the reasoning behind each move.
               </p>
             </td>
           </tr>
