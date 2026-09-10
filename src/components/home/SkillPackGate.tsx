@@ -7,6 +7,8 @@ import {
   LightBulbIcon,
   HandRaisedIcon,
   ArrowUturnLeftIcon,
+  CommandLineIcon,
+  SwatchIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -229,14 +231,21 @@ export function SkillPackGate({
         <fieldset className="mt-5">
           <legend className="text-sm text-text-secondary mb-2">Where will you use them?</legend>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {/* Icons of the destination, not brand marks. Claude Code and Claude
+                Design share one Claude logo, so putting it on both cards would
+                make the two options look identical at exactly the moment the
+                reader is trying to tell them apart. A terminal and an artboard
+                separate instantly. */}
             {([
               {
                 value: 'code' as const,
+                icon: CommandLineIcon,
                 label: 'Claude Code',
                 hint: 'Unzip into your project.',
               },
               {
                 value: 'claude' as const,
+                icon: SwatchIcon,
                 label: 'Claude Design or Claude app',
                 hint: 'One upload at Customize \u2192 Skills.',
               },
@@ -256,6 +265,12 @@ export function SkillPackGate({
                   checked={target === option.value}
                   onChange={() => setTarget(option.value)}
                   className="mt-0.5 accent-accent-primary"
+                />
+                <option.icon
+                  className={`w-5 h-5 mt-0.5 shrink-0 ${
+                    target === option.value ? 'text-accent-primary' : 'text-text-secondary'
+                  }`}
+                  aria-hidden="true"
                 />
                 <span>
                   <span className="block text-sm font-medium text-text-primary">{option.label}</span>
