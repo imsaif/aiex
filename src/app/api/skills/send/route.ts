@@ -56,12 +56,42 @@ export async function POST(request: NextRequest) {
       { level: 6 }
     );
 
-    const install =
+    // Brand values, hardcoded because email clients cannot read CSS variables and
+    // most strip <style> blocks entirely. These mirror globals.css: navy for
+    // headings and the button, near-white for the page, gray-200 for rules.
+    const NAVY = '#162036';
+    const BODY = '#20294C';
+    const PAGE = '#f9f9f9';
+    const CARD = '#ffffff';
+    const RULE = '#e5e7eb';
+
+    const steps =
       target === 'claude'
-        ? `<li>Open Claude, go to <strong>Customize &rarr; Skills</strong>, click <strong>+ Create skill</strong> and upload the zip.</li>
-           <li>That is it. Claude Design and the Claude app both pick it up.</li>`
-        : `<li>Unzip it into your project. The files land in <code>.claude/skills/</code>.</li>
-           <li>Claude Code reads them on its own. Nothing to remember at the prompt.</li>`;
+        ? [
+            'Open Claude and go to Customize &rarr; Skills.',
+            'Click <strong>+ Create skill</strong> and upload the attached zip.',
+            'Done. Claude Design and the Claude app both pick it up.',
+          ]
+        : [
+            'Unzip the attachment into your project.',
+            'The files land in <code style="background:' + PAGE + ';padding:2px 5px;border-radius:4px;">.claude/skills/</code>.',
+            'Claude Code reads them on its own. Nothing to remember at the prompt.',
+          ];
+
+    const stepsHtml = steps
+      .map(
+        (step, i) => `
+          <tr>
+            <td style="padding:0 0 14px;vertical-align:top;width:28px;">
+              <div style="width:22px;height:22px;border-radius:11px;background:${NAVY};color:#ffffff;font-size:12px;font-weight:700;line-height:22px;text-align:center;">${i + 1}</div>
+            </td>
+            <td style="padding:0 0 14px 10px;font-size:15px;line-height:1.5;color:${BODY};">${step}</td>
+          </tr>`
+      )
+      .join('');
+
+    const packLabel =
+      target === 'claude' ? 'Claude Design and the Claude app' : 'Claude Code';
 
     await resend.emails.send({
       from: 'AI UX Daily <imran@aiuxdesign.guide>',
@@ -69,24 +99,61 @@ export async function POST(request: NextRequest) {
       to: email,
       subject: `Your ${PATTERN_COUNT} AI UX skills`,
       html: `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1a1a1a;">
-          <h1 style="font-size: 22px; margin: 0 0 12px;">Your ${PATTERN_COUNT} AI UX skills</h1>
-          <p style="font-size: 15px; line-height: 1.6; margin: 0 0 16px;">
-            Attached. Each skill carries the thinking behind one pattern, what it fixes and what to
-            avoid, so you stop shipping AI slop and always know why a screen works that way.
-          </p>
-          <ol style="font-size: 15px; line-height: 1.7; margin: 0 0 20px; padding-left: 20px;">
-            ${install}
-          </ol>
-          <p style="font-size: 15px; line-height: 1.6; margin: 0 0 16px;">
-            Every pattern is written up at
-            <a href="https://www.aiuxdesign.guide/patterns" style="color: #1a1a1a;">aiuxdesign.guide/patterns</a>,
-            with real examples and the reasoning behind each move.
-          </p>
-          <p style="font-size: 13px; line-height: 1.6; color: #666; margin: 24px 0 0;">
-            You are also on the daily AI UX newsletter. Every issue has an unsubscribe link.
-          </p>
-        </div>
+<body style="margin:0;padding:0;background:${PAGE};">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PAGE};padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CARD};border:1px solid ${RULE};border-radius:16px;">
+          <tr>
+            <td style="padding:32px 32px 0;">
+              <p style="margin:0 0 20px;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                aiux
+              </p>
+              <h1 style="margin:0 0 12px;font-size:26px;line-height:1.2;font-weight:700;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                Your ${PATTERN_COUNT} AI UX skills
+              </h1>
+              <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:${BODY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                They are attached, packaged for <strong style="color:${NAVY};">${packLabel}</strong>.
+                Each skill carries the thinking behind one pattern, what it fixes and what to avoid,
+                so you stop shipping AI slop and always know why a screen works that way.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 32px;">
+              <div style="height:1px;background:${RULE};"></div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 32px 8px;">
+              <p style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                Setting them up
+              </p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                ${stepsHtml}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 32px 32px;">
+              <a href="https://www.aiuxdesign.guide/patterns"
+                 style="display:inline-block;background:${NAVY};color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:13px 26px;border-radius:999px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                Read the patterns
+              </a>
+              <p style="margin:16px 0 0;font-size:14px;line-height:1.6;color:${BODY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                Every pattern is written up with real examples from shipped products and the
+                reasoning behind each move.
+              </p>
+            </td>
+          </tr>
+        </table>
+        <p style="max-width:560px;margin:20px auto 0;font-size:12px;line-height:1.6;color:#6b7280;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+          You are also on the daily AI UX newsletter. Every issue has an unsubscribe link.
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
       `,
       attachments: [
         {
