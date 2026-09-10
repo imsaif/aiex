@@ -5900,7 +5900,7 @@ export const guides: Guide[] = [
       {
         id: 'lesson-2',
         title: 'Anatomy of a Chat Interface',
-        duration: 5,
+        duration: 7,
         order: 2,
         module: 'foundations',
         sections: [
@@ -5969,6 +5969,46 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'warning',
             content: 'Don\'t overload the empty state with features, tutorials, or marketing. Users came to chat - get them typing within 3 seconds of landing on the page.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Designing the First Message',
+          },
+          {
+            type: 'text',
+            content: 'The empty state is the container. The first message is the thing inside it people actually read, and it is where most chat products waste their only chance to explain themselves. "Hi! I\'m an AI assistant. How can I help you today?" is the default, and it tells the user nothing they did not already know.\n\nA first message has three jobs, and it should do all three inside two sentences.',
+          },
+          {
+            type: 'table',
+            rows: [
+              {
+                label: 'Say what this one is for',
+                content: 'Not "I am an AI assistant" but what this particular assistant does that a general one does not. "I can answer questions about your account, billing and orders" beats "How can I help?" because it draws the boundary the user is about to test anyway.',
+              },
+              {
+                label: 'Say what it can already see',
+                content: 'If the assistant can see the current page, an uploaded file, or the user\'s order history, say so in the first message. People who do not know what it can see either under-ask or feel watched. This is the disclosure surface doing its job at message one.',
+              },
+              {
+                label: 'Show one thing worth trying',
+                content: 'One concrete example beats a capability list. "Try: why was I charged twice in March" gets typed. "I can help with billing questions" gets ignored.',
+              },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What to Say About Limits, and When',
+          },
+          {
+            type: 'text',
+            content: 'Do not open with limitations. A first message that leads with what the assistant cannot do reads as a disclaimer, and gets skipped along with everything around it.\n\nName each limit at the moment it becomes relevant instead: when someone asks for something out of scope, when the assistant is about to act rather than answer, or when it is working from information that may be out of date. A limit stated at the point of use gets read. The same limit stated in the greeting does not.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            content: 'The first message is not a welcome. Treat it as the assistant introducing its job, not greeting a guest. Warmth without information is the most common failure here, and it is why so many chat products feel identical in the first five seconds.',
           },
           {
             type: 'further-reading',
