@@ -56,6 +56,10 @@ export async function POST(request: NextRequest) {
 
     revalidatePath('/news');
     revalidatePath(`/news/${draft.slug}`);
+    // Search-engine discovery surfaces. Both are cached routes that would
+    // otherwise keep serving a copy predating this post.
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/news/rss.xml');
 
     return NextResponse.json({
       success: true,
@@ -164,6 +168,10 @@ export async function GET(request: NextRequest) {
 
     revalidatePath('/news');
     revalidatePath(`/news/${draft.slug}`);
+    // Search-engine discovery surfaces. Both are cached routes that would
+    // otherwise keep serving a copy predating this post.
+    revalidatePath('/sitemap.xml');
+    revalidatePath('/news/rss.xml');
 
     return NextResponse.redirect(`${siteUrl}/news/${draft.slug}?published=true`);
   } catch (error) {

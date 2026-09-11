@@ -16,6 +16,13 @@ export const metadata: Metadata = {
     type: 'website',
     images: [{ url: '/api/og/page?slug=news', width: 1200, height: 630 }],
   },
+  // Feed autodiscovery. Without this the RSS route exists but nothing points at
+  // it, so readers and crawlers can only find it if told the URL by hand.
+  alternates: {
+    types: {
+      'application/rss+xml': [{ url: '/news/rss.xml', title: 'AI UX News' }],
+    },
+  },
 };
 
 // ISR with a long TTL + on-demand revalidatePath('/news') in publish/route.ts.
