@@ -22,6 +22,13 @@ async function getPublishedNewsSlugs(): Promise<Array<{ slug: string; publishDat
   }
 }
 
+// Regenerate hourly. Without this the sitemap is prerendered once at build and
+// served from cache indefinitely, so a daily /news post could sit ~16h before
+// appearing in the sitemap (observed 2026-09-11). One DB query per hour is well
+// inside the Neon budget that forced /news off its 60s TTL.
+// Publishing also fires revalidatePath('/sitemap.xml') for immediate pickup.
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
 
