@@ -10,10 +10,18 @@ import { prisma } from '@/lib/prisma';
 async function getPublishedNewsSlugs(): Promise<Array<{ slug: string; publishDate: Date }>> {
   try {
     const drafts = await prisma.newsletterDraft.findMany({
-      where: { status: 'published' },
+      // Quiet-day entries are published but have no body. Their detail page
+      // calls notFound(), so advertising them here hands Search Console a 404
+      // on a URL we submitted. `readMinutes > 0` is the same signal /news uses
+      // to render them inline without a link (see news-client.tsx).
+      where: { status: 'published', readMinutes: { gt: 0 } },
       select: { slug: true, publishDate: true },
       orderBy: { publishDate: 'desc' },
-      take: 200,
+      // Was 200, which was silently truncating: the site passed 200 published
+      // posts, so the oldest ones dropped out of the sitemap entirely. The
+      // sitemap spec allows 50,000 URLs and this query selects two small
+      // columns, so the cap only needs to be well clear of the daily cadence.
+      take: 5000,
     });
     return drafts;
   } catch {

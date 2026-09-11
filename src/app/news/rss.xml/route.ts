@@ -29,7 +29,9 @@ function escapeXml(value: string): string {
 async function getDbItems(): Promise<FeedItem[]> {
   try {
     const drafts = await prisma.newsletterDraft.findMany({
-      where: { status: 'published' },
+      // Same quiet-day exclusion as the sitemap: those entries have no body and
+      // their detail page 404s, so a reader clicking through would hit nothing.
+      where: { status: 'published', readMinutes: { gt: 0 } },
       // `content` is deliberately not selected — it is the heaviest column and
       // the feed only needs the summary. See the note in /news/page.tsx.
       select: { title: true, slug: true, summary: true, publishDate: true },
