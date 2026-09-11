@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { getPatternsWithPrompts } from '@/data/utils/prompt-utils';
 import categories from '@/data/categories';
+import { siteConfig } from '@/config/seo';
 import PromptsClient from './prompts-client';
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [{ url: '/api/og/page?slug=prompts', width: 1200, height: 630 }],
   },
+  alternates: { canonical: `${siteConfig.url}/prompts` },
 };
 
 // Serializable prompt data for the client

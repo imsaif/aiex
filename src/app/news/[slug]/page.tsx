@@ -88,6 +88,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: newsletter.summary,
       images: [ogImageUrl],
     },
+    // Self-referencing canonical. News articles are the pages we most want
+    // indexed, and they were shipping without one — leaving Google to pick a
+    // URL itself whenever a post is reachable via a tracking or query-string
+    // variant.
+    alternates: { canonical: `${siteUrl}/news/${newsletter.slug}` },
   };
 }
 

@@ -3,6 +3,7 @@ import { getNewsletters, getAllTags } from '@/data/newsletters';
 import { prisma } from '@/lib/prisma';
 import { productsForIssue, computeReadMinutes } from '@/lib/newsletter/products';
 import NewsClient from './news-client';
+import { siteConfig } from '@/config/seo';
 import type { Newsletter } from '@/types';
 
 export const metadata: Metadata = {
@@ -16,9 +17,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [{ url: '/api/og/page?slug=news', width: 1200, height: 630 }],
   },
-  // Feed autodiscovery. Without this the RSS route exists but nothing points at
-  // it, so readers and crawlers can only find it if told the URL by hand.
   alternates: {
+    canonical: `${siteConfig.url}/news`,
+    // Feed autodiscovery. Without this the RSS route exists but nothing points
+    // at it, so readers and crawlers can only find it if told the URL by hand.
     types: {
       'application/rss+xml': [{ url: '/news/rss.xml', title: 'AI UX News' }],
     },

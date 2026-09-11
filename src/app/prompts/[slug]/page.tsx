@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPromptBySlug, getPatternsWithPrompts } from '@/data/utils/prompt-utils';
+import { siteConfig } from '@/config/seo';
 import ClientPage from './client-page';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -22,13 +23,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${pattern.title} - Figma Make Prompt | AI Design Patterns`,
+    // No trailing "| AI Design Patterns" here — the root layout's title
+    // template appends it, and hardcoding it produced a doubled suffix in the
+    // live <title>.
+    title: `${pattern.title} - Figma Make Prompt`,
     description: `Copy-paste Figma Make prompt for ${pattern.title} pattern with customization tips. ${pattern.description}`,
     openGraph: {
       title: `${pattern.title} - Figma Make Prompt`,
       description: pattern.description,
       type: 'article',
     },
+    // Every /prompts/<slug> shares its slug with /patterns/<slug>. Without a
+    // canonical, Google saw two similar pages and no signal of which is
+    // primary, and dropped one: 7 prompt pages sat in "Crawled - currently not
+    // indexed" in the 2026-09-11 Search Console export. Self-referencing
+    // canonical, since these pages are their own primary URL.
+    alternates: { canonical: `${siteConfig.url}/prompts/${slug}` },
   };
 }
 
