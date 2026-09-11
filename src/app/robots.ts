@@ -41,7 +41,10 @@ export default function robots(): MetadataRoute.Robots {
     // it here survives a property reset and exposes it to other crawlers.
     // Note it has no .xml extension, which is why it kept being fetched
     // successfully while /sitemap.xml was blocked by the rule dropped above.
-    sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/sitemap-images`],
+    // The news feed is listed alongside the sitemaps deliberately: Google accepts
+    // an RSS/Atom feed as a discovery source, and because it carries only the
+    // newest posts it gets picked up sooner than a full sitemap recrawl.
+    sitemap: [`${baseUrl}/sitemap.xml`, `${baseUrl}/sitemap-images`, `${baseUrl}/news/rss.xml`],
     host: baseUrl,
   };
 }
