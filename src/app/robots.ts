@@ -22,16 +22,26 @@ export default function robots(): MetadataRoute.Robots {
     '/download/',
   ];
 
+  // Every page's og:image is generated under /api/, which the '/api/' rule
+  // above blocks — so Google could not fetch a preview image for any post
+  // (139 such URLs sat in "Blocked by robots.txt" in the 2026-09-11 Search
+  // Console export). That rules the news section out of image-rich results and
+  // Discover, where a crawlable image is effectively required. These four
+  // routes are the only image generators; the rest of /api/ stays blocked.
+  // Google resolves conflicts by longest match, so '/api/og/' (8 chars) wins
+  // over '/api/' (5) without needing the disallow list to change.
+  const allow = ['/', '/api/og/', '/api/newsletter/og'];
+
   return {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow,
         disallow,
       },
       {
         userAgent: 'Googlebot',
-        allow: '/',
+        allow,
         disallow,
         crawlDelay: 0.5,
       },
