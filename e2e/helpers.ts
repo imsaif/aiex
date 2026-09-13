@@ -65,6 +65,27 @@ export async function runOneAudit(
     .first()
     .click();
 
+  // The hero CTA no longer goes straight to the upload. Since #100 (2026-09-10)
+  // it opens the skill-pack dialog, and only its no-email exit routes on to
+  // /audit where the upload field lives — so every audit spec started failing on
+  // the `toBeAttached` below with "element(s) not found". Take that exit.
+  //
+  // Deliberately tolerated rather than required: the dialog is skippable by
+  // design and may be made conditional or dropped, and this helper should report
+  // a broken funnel, not a changed one. Same reason the CTA name above matches
+  // two labels. Escape and backdrop-click are NOT equivalent here — those only
+  // dismiss the dialog and leave you on the homepage.
+  const skipSkillsGate = page.getByRole('button', {
+    name: /no thanks, start my audit|skip, just start my audit/i,
+  });
+  const gateAppeared = await skipSkillsGate
+    .waitFor({ state: 'visible', timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+  if (gateAppeared) {
+    await skipSkillsGate.click();
+  }
+
   // Hidden file input — query directly since it has no accessible name.
   const fileInput = page.locator('input[type="file"]').first();
   await expect(fileInput).toBeAttached();
