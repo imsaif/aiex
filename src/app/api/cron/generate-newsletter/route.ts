@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 import { productsForIssue, computeReadMinutes } from '@/lib/newsletter/products';
 import { Resend } from 'resend';
 import { patterns } from '@/data/patterns';
+import { isValidPatternSlug, sanitizePatternSlugs } from '@/lib/newsletter/pattern-slug';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { AUDIT_PATH } from '@/lib/audit/constants';
 
@@ -1174,7 +1175,8 @@ interface NewsletterItem {
   description: string;
   designerTakeaway: string;
   sourceUrl: string;
-  patternSlug: string;
+  // Optional because sanitizePatternSlugs drops anything the model invented.
+  patternSlug?: string;
   // Resolved from the pool at generation time (not from Claude). `sourceName` is
   // the true publisher (for the source badge); `sourceTier` drives lead-ordering
   // and the voice-badge decision. Optional because the weekly-compilation path
@@ -1459,7 +1461,8 @@ interface WeeklyNewsletterData {
     insight: string;
   };
   patternToKnow: {
-    patternSlug: string;
+    // Optional for the same reason as NewsletterItem.patternSlug.
+    patternSlug?: string;
     title: string;
     explanation: string;
     whenToUse: string;
@@ -1866,6 +1869,13 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
   // date — show provenance instead of a misleading date (see digestProvenanceLabel).
   const dateLabel = digestProvenanceLabel(item) ?? item.date;
 
+  // No chip when the model failed to match a real pattern (sanitizePatternSlugs
+  // drops invented slugs). Better a card that ends at the takeaway than a chip
+  // linking to a pattern page that 404s.
+  const patternChip = isValidPatternSlug(item.patternSlug)
+    ? `<p style="margin: 0;"><a href="${SITE_URL}/patterns/${item.patternSlug}" target="_blank" rel="noopener" style="display: inline-block; background-color: transparent; color: ${EMAIL_INK}; padding: 8px 14px; border: 1px solid ${EMAIL_HAIRLINE}; border-radius: 999px; font-size: 12px; font-weight: 500; text-decoration: none; letter-spacing: 0.2px;"><span style="color: ${EMAIL_MUTED}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; font-size: 10px; margin-right: 6px;">Pattern</span>${getPatternTitle(item.patternSlug)} →</a></p>`
+    : '';
+
   return `
 <div style="margin: 0; padding: 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;"><tr>
@@ -1884,7 +1894,7 @@ function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
       </td>
     </tr>
   </table>
-  <p style="margin: 0;"><a href="${SITE_URL}/patterns/${item.patternSlug}" target="_blank" rel="noopener" style="display: inline-block; background-color: transparent; color: ${EMAIL_INK}; padding: 8px 14px; border: 1px solid ${EMAIL_HAIRLINE}; border-radius: 999px; font-size: 12px; font-weight: 500; text-decoration: none; letter-spacing: 0.2px;"><span style="color: ${EMAIL_MUTED}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; font-size: 10px; margin-right: 6px;">Pattern</span>${getPatternTitle(item.patternSlug)} →</a></p>
+  ${patternChip}
 </div>${separator}`.trim();
 }
 
@@ -2028,15 +2038,23 @@ function generateWeeklyHTML(data: WeeklyNewsletterData): string {
   // Stays dark: it's the one block carrying a CTA, so it should be the anchor.
   // CTA label was `Deep dive on ${title}` which restated the heading directly
   // above it word for word.
+  // Slug may have been dropped by sanitizePatternSlugs. Keep the callout (the
+  // explanation still earns its place) but fall back to the model's own title and
+  // drop the CTA rather than link to a pattern page that does not exist.
+  const deepDiveSlug = data.patternToKnow.patternSlug;
   const patternToKnow = renderCallout({
     kicker: 'Pattern deep-dive',
-    title: getPatternTitle(data.patternToKnow.patternSlug),
+    title: isValidPatternSlug(deepDiveSlug)
+      ? getPatternTitle(deepDiveSlug)
+      : data.patternToKnow.title,
     body: data.patternToKnow.explanation,
     subBody: data.patternToKnow.whenToUse,
-    cta: {
-      label: 'See the pattern',
-      href: `${SITE_URL}/patterns/${data.patternToKnow.patternSlug}`,
-    },
+    cta: isValidPatternSlug(deepDiveSlug)
+      ? {
+          label: 'See the pattern',
+          href: `${SITE_URL}/patterns/${deepDiveSlug}`,
+        }
+      : undefined,
   });
 
   // Note: data.summary is intentionally NOT rendered in the email body. It
@@ -2563,6 +2581,8 @@ async function runGeneration(
 
   if (type === 'weekly') {
     const weeklyData = parsedData as WeeklyNewsletterData;
+    // Before anything renders: drop pattern slugs the model invented.
+    sanitizePatternSlugs(weeklyData);
     // Render-level guarantee, same class as enforceLeadPosition above. The
     // prompt says "Exactly 5, not more", but EVERY prompt-only selection rule
     // in this route's history has eventually been ignored by the model (the
@@ -2581,6 +2601,7 @@ async function runGeneration(
     structuredData = weeklyData;
   } else {
     const dailyData = parsedData as NewsletterData;
+    sanitizePatternSlugs(dailyData);
     // Attach authoritative publisher + tier from the pool (fixes source badges +
     // makes lead-ordering reliable), then guarantee concrete news leads a voice.
     enrichItemsWithSource(dailyData.items, newsItems);
@@ -2662,6 +2683,7 @@ async function runGeneration(
           retryText.match(/```json\s*([\s\S]*?)\s*```/) ||
           retryText.match(/```\s*([\s\S]*?)\s*```/) || [null, retryText];
         const retryParsed = JSON.parse(retryMatch[1] || retryText) as NewsletterData;
+        sanitizePatternSlugs(retryParsed);
         const retryQA = buildQABlock(retryParsed.items, newsItems, clippedSources);
         if (!retryQA.selectionRuleViolation) {
           retryOutcome = 'succeeded';
