@@ -105,3 +105,63 @@ export function AgentLogoRow() {
     </ul>
   );
 }
+
+/**
+ * Logo for a course's tool, for the rail's Courses group.
+ *
+ * A tool logo is not decoration here, which is the difference from the rows in
+ * every other group: six of the seven courses are ABOUT a tool, and the logo
+ * says which one before the title is read. That is the same job the marks do in
+ * Explore.
+ *
+ * Lives beside `AGENTS` because this is the second place that needs to know
+ * where a tool's logo file is, and two lists of that would drift.
+ */
+const COURSE_TOOL_LOGOS: Record<string, string> = {
+  'Claude Code': '/images/logos/claude.svg',
+  'Claude Design': '/images/logos/simple-icons/claude-design.svg',
+  Cursor: '/images/logos/cursor.svg',
+  'GitHub Copilot': '/images/logos/simple-icons/githubcopilot.svg',
+  GitHub: '/images/logos/simple-icons/github.svg',
+};
+
+/**
+ * One course has no tool — "Conversational UI" is a subject, not a product —
+ * and a single blank slot in a column of logos reads as a missing image rather
+ * than as a deliberate absence. It gets a drawn mark instead, which keeps the
+ * column even and still says what the course is about.
+ */
+function SubjectMark() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+    </svg>
+  );
+}
+
+export function CourseToolMark({ tool }: { tool?: string }) {
+  const logoFilter = useThemeFilter('grayscale(100%)');
+  const logo = tool ? COURSE_TOOL_LOGOS[tool] : undefined;
+
+  if (!logo) return <SubjectMark />;
+
+  return (
+    <Image
+      src={logo}
+      alt=""
+      width={14}
+      height={14}
+      className="h-3.5 w-3.5 shrink-0"
+      style={{ filter: logoFilter }}
+    />
+  );
+}

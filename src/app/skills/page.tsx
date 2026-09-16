@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import { patterns } from '@/data/patterns';
 import categories from '@/data/categories';
-import { guides } from '@/data/guides';
 import { siteConfig } from '@/config/seo';
 import { skillName } from '@/lib/skills/composeSkill';
 import { exampleProducts } from '@/lib/skills/usedBy';
 import { SkillsDirectory, type SkillRow } from '@/components/skills/SkillsDirectory';
-import { InstallCommand } from '@/components/skills/InstallCommand';
+import { InstallPicker, type InstallOption } from '@/components/skills/InstallPicker';
 import Navbar from '@/components/layout/Navbar';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
@@ -15,11 +14,6 @@ import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
 import { NewspaperIcon } from '@heroicons/react/24/outline';
-import { ClaudeMark } from '@/components/icons/ClaudeMark';
-import {
-  CyclingAgentMark,
-  AgentLogoRow,
-} from '@/components/skills/AgentMarks';
 
 export const revalidate = 3600;
 
@@ -31,6 +25,77 @@ export const metadata: Metadata = {
 };
 
 const GENERIC_COMMAND = 'npx skills add imsaif/aiux-skills';
+
+/**
+ * The plugin install, which is three commands and only works as three.
+ *
+ * Verified against the CLI on 2026-09-16 rather than taken from the docs:
+ *
+ *   1. Required. Installing without adding the marketplace fails outright —
+ *      "Plugin aiux not found in marketplace aiux-skills".
+ *   2. Required, obviously.
+ *   3. Required HERE, which is the part worth writing down. A session started
+ *      after the install sees all 38 skills with no reload, so the line looks
+ *      redundant when you test it from a terminal. But these are slash commands,
+ *      so the reader is inside a session whose context was built before the
+ *      plugin existed, and that session is exactly the one that needs it.
+ *
+ * Dropping it would produce the failure this project has already paid for once:
+ * installed, inert, and no error anywhere to say so. The CLI's install output no
+ * longer mentions the reload, which makes the silence more likely, not less.
+ *
+ * The marketplace name is our own (`imsaif/aiux-skills`) rather than Anthropic's
+ * catalogue, because the plugin is not listed there: it passed review in the
+ * console on 2026-09-10 and, as of 2026-09-16, searching the official
+ * marketplace for "aiux" returns nothing. Until that changes, adding the
+ * marketplace by name is the only way anyone installs it.
+ */
+const PLUGIN_COMMANDS = [
+  '/plugin marketplace add imsaif/aiux-skills',
+  '/plugin install aiux@aiux-skills',
+  '/reload-plugins',
+];
+
+/**
+ * Order is the recommendation: the first option is the default anyone who does
+ * not have a preference will take.
+ *
+ * The plugin leads because it installs once and applies everywhere, which is
+ * the right default for an audience that does not think in repos. Copying the
+ * files stays because it is the only route where the files are real, editable
+ * and committable, and because the plugin format is Claude Code's own — so it
+ * is also what every other agent uses.
+ *
+ * The second label is "Any agent", not "Any other agent", and that one word is
+ * load-bearing. "Other" excludes Claude Code, which is false — this is also the
+ * route a Claude Code user takes when they want the files committed so their
+ * team gets them. The old label needed a sentence of apology after it ("works
+ * in Claude Code too"); the accurate label needs none.
+ *
+ * It also does not name Cursor, Copilot and Codex. The label covers them and
+ * the mark beside it cycles their logos, so spelling them out was the same fact
+ * a third time.
+ */
+const INSTALL_OPTIONS: InstallOption[] = [
+  {
+    id: 'plugin',
+    label: 'Claude Code',
+    mark: 'claude',
+    description:
+      'One install, every project. Nothing is copied into your repo.',
+    command: PLUGIN_COMMANDS,
+    prompt: null,
+    note: 'All three lines. Without the reload the skills are installed but inert, and nothing says so.',
+  },
+  {
+    id: 'files',
+    label: 'Any agent',
+    mark: 'agents',
+    description:
+      'Writes one file per pattern into your project, yours to edit and commit.',
+    command: GENERIC_COMMAND,
+  },
+];
 
 export default function SkillsPage() {
   const categoryNames = categories.map((c) => c.title);
@@ -47,27 +112,6 @@ export default function SkillsPage() {
       category: pattern.category,
       trigger: pattern.content.skillDescription ?? pattern.description,
       products: exampleProducts(pattern),
-    }));
-
-  // Two courses, not a menu: what a skill is, then the agent this page is
-  // named after. A third row turned a nudge into a directory and competed
-  // with the skills list further down, which is where browsing belongs.
-  // Titles and lesson counts are read from the guides data rather than typed
-  // here, so a renamed or re-cut course cannot leave a stale claim on this
-  // page.
-  const STARTING_COURSE_SLUGS = [
-    'ai-ux-skills-guide',
-    'claude-code-learning-path',
-  ];
-  const startingCourses = STARTING_COURSE_SLUGS.map((slug) =>
-    guides.find((g) => g.slug === slug)
-  )
-    .filter((g): g is NonNullable<typeof g> => g != null)
-    .map((g) => ({
-      slug: g.slug,
-      title: g.title,
-      tool: g.tool,
-      lessonCount: g.lessons?.length ?? g.lessonCount ?? 0,
     }));
 
   const itemList = {
@@ -94,154 +138,70 @@ export default function SkillsPage() {
           the page rather than starting below a full-width hero. */}
       <LearnShell sidebar={<LearnSidebar active="skills" />}>
 
-      {/* Split page header: what this is on the left, the thing you came to
-          copy on the right. The right column is a stack of hairline-separated
-          blocks rather than one boxed card — a card reads as a widget parked
-          in the corner, while blocks with their own icon, heading and footnote
-          read as content that happens to sit beside the title.
+      {/* Page header: what this is, then the two ways to get it.
+
+          The installs are blocks with their own mark, heading and footnote
+          rather than one boxed card — a card reads as a widget parked on the
+          page, while blocks read as content.
 
           Same typographic ladder as /patterns: display for the title on one
           line, h3 at normal weight for the lead, leading opened on both since
           those tokens are tuned for single lines. */}
       <header className="border-b border-border-primary pt-16 pb-12">
-        {/* Proportional split rather than a fixed 380px sidebar. A fixed width
-            squeezed the install column at every viewport the console is
-            actually read at: the command wrapped, the copy ran three words to
-            a line, and the whole thing read as a squashed sidebar. Roughly
-            60/40 gives the commands room to sit on one line. */}
-        <div className="lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-0">
-          <div className="lg:pr-12">
+        <div>
+          {/* No max-width on the lead any more. It was capped for a two-column
+              header, where the title had to share the row with the install
+              column; on the full width those caps only forced a wrap that was
+              not needed — "38 AI UX Skills for Claude Code" broke after
+              "Claude", splitting the product name across two lines. */}
+          <div>
             <p className="type-eyebrow mb-4 font-semibold uppercase text-accent-primary">
               Free Claude Code Skills
             </p>
             <h1
-              className="type-display mb-6 leading-tight"
+              className="type-display mb-6 text-balance leading-tight"
               style={{ color: 'var(--text-hero)' }}
             >
               {rows.length} AI UX Skills for Claude Code
             </h1>
-            <p className="type-h3 mb-9 max-w-2xl font-normal leading-relaxed text-text-secondary">
+            <p className="type-h3 mb-7 max-w-4xl font-normal leading-relaxed text-text-secondary">
               Design judgment your coding agent applies on its own. Install
               once, no prompting.
             </p>
 
-            {/* The left column ran out of content well before the install
-                column did, leaving a large hole under the lead. It held a
-                sample skill file for a while, which answered "what is a skill"
-                but answered it to someone who had not yet asked — a wall of
-                frontmatter is the second question, not the first.
-
-                A course list is the better neighbour to an install command:
-                whoever is not ready to run the command is ready to read, and
-                these are the courses that end with them running it anyway.
-                Titles and lesson counts come from the guides data, so a course
-                renamed or re-cut here cannot go stale. */}
-            <div className="mt-10 rounded-card border border-border-primary">
-              <p className="type-caption border-b border-border-primary px-5 py-3 font-semibold text-text-primary">
-                New here? Start with a course
-              </p>
-              <ul>
-                {startingCourses.map((course, index) => (
-                  <li
-                    key={course.slug}
-                    className={index > 0 ? 'border-t border-border-primary' : ''}
-                  >
-                    <Link
-                      href={`/guides/${course.slug}`}
-                      className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-secondary"
-                    >
-                      <span className="min-w-0 flex-1">
-                        <span className="type-body block font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
-                          {course.title}
-                        </span>
-                        <span className="type-caption block text-text-secondary">
-                          {course.lessonCount} lessons · {course.tool}
-                        </span>
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="type-body shrink-0 text-text-secondary transition-colors group-hover:text-accent-primary"
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/guides"
-                className="type-caption block border-t border-border-primary px-5 py-3 text-text-secondary transition-colors hover:text-text-primary"
-              >
-                All courses ↗
-              </Link>
-            </div>
           </div>
 
-          <div className="mt-10 lg:mt-0 lg:border-l lg:border-border-primary lg:pl-12">
-            {/* Each block: a small framed mark, a heading, one line of copy,
-                the command, then a footnote row splitting the secondary detail
-                left and the way out right.
+          {/* One command, with a switch above it.
 
-                Deliberately quiet, and quiet in the way labels are quiet:
-                small caps in secondary ink, marks left unframed, footnotes a
-                step smaller again. Only the command itself keeps a surface,
-                because it is the one thing in this column anybody came to act
-                on. Leading is loose throughout — at this size air is what
-                makes a column readable rather than cramped, and it costs
-                nothing here since the column is shorter than the one beside
-                it. */}
-            <section>
-              <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
-                <CyclingAgentMark />
-                Install every skill
-              </h2>
-              <p className="type-caption mb-5 leading-loose text-text-secondary">
-                One file per pattern, written into your project and editable
-                afterwards.
-              </p>
-              <InstallCommand command={GENERIC_COMMAND} />
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <p className="type-footnote font-mono text-text-secondary">
-                  {rows.length} skills · free · MIT
-                </p>
-                <Link
-                  href="/guides/ai-ux-skills-guide"
-                  className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
-                >
-                  How skills work ↗
-                </Link>
-              </div>
-            </section>
+              Showing both at once was honest and still wrong: two commands of
+              equal weight make a visitor compare before they can act, and the
+              comparison is not one they have the information to make. A switch
+              turns it into a choice with a default, which is what it always
+              was, and gives the page back the space two sections were using.
 
-            <section className="mt-9 border-t border-border-primary pt-9">
-              <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
-<ClaudeMark className="h-4 w-4 shrink-0 text-brand-claude" />
-                Claude Code
-              </h2>
-              <p className="type-caption mb-5 leading-loose text-text-secondary">
-                Skills land in <code className="font-mono">.claude/skills/</code>{' '}
-                and Claude Code picks them up on its own. No config, and
-                nothing to remember at the prompt.
-              </p>
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="type-footnote font-mono text-text-secondary">
-                  Only need a few?
-                </p>
-                <Link
-                  href="/dashboard"
-                  className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
-                >
-                  Build a pack ↗
-                </Link>
-              </div>
-            </section>
-
-            <section className="mt-9 border-t border-border-primary pt-9">
-              <h2 className="type-eyebrow mb-3 uppercase text-text-secondary">
-                Works with any agent
-              </h2>
-              <AgentLogoRow />
-            </section>
+              The agent logo row went with the earlier layout. It answered "does
+              this work with what I use", and the second option now answers that
+              by name, in the place where the question arises. */}
+          <div className="mt-12 max-w-3xl">
+            <InstallPicker options={INSTALL_OPTIONS} />
+            {/* The "38 skills · free · MIT" line is gone. The count is already
+                the first two characters of the title, and free/MIT is a term
+                nobody was weighing up at this point — it was three facts
+                occupying the row where the two ways onward live. */}
+            <div className="mt-10 flex flex-wrap items-center gap-6">
+              <Link
+                href="/dashboard"
+                className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
+              >
+                Only need a few? Build a pack ↗
+              </Link>
+              <Link
+                href="/guides/ai-ux-skills-guide"
+                className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
+              >
+                How skills work ↗
+              </Link>
+            </div>
           </div>
         </div>
       </header>

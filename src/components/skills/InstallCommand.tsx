@@ -17,12 +17,33 @@ import { CheckIcon, ClipboardIcon } from '@heroicons/react/24/outline';
  * can sit tight under a paragraph or loose in a stack without fighting a
  * baked-in margin.
  */
-export function InstallCommand({ command }: { command: string }) {
+/**
+ * Pass an array for a sequence that only works run in full.
+ *
+ * The plugin install is three commands, and the third (`/reload-plugins`) is the
+ * one people drop — without it the skills are installed and inert, with no error
+ * to say so. One copy button covering the whole sequence is the difference
+ * between that being easy to get right and easy to get wrong.
+ */
+export function InstallCommand({
+  command,
+  /**
+   * The prompt character. `$` is a shell, so it is wrong in front of a Claude
+   * Code slash command — those are typed at Claude's own prompt, and a `$` would
+   * tell the reader to run them in a terminal, where they do nothing. Pass
+   * `null` for those.
+   */
+  prompt = '$',
+}: {
+  command: string | string[];
+  prompt?: string | null;
+}) {
   const [copied, setCopied] = useState(false);
+  const lines = Array.isArray(command) ? command : [command];
 
   async function copy() {
     try {
-      await navigator.clipboard.writeText(command);
+      await navigator.clipboard.writeText(lines.join('\n'));
       setCopied(true);
       window.clarity?.('event', 'install-command-copy');
       setTimeout(() => setCopied(false), 2000);
@@ -32,14 +53,27 @@ export function InstallCommand({ command }: { command: string }) {
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-card bg-surface-secondary py-2.5 pl-4 pr-2.5">
-      {/* The command scrolls rather than wraps: a wrapped shell command reads
+    // Width comes from the commands, not the column. Filling the column left the
+    // longest line (42 characters) sitting in a 768px box, so the text hugged one
+    // edge and the copy button the other, with dead space between them reading as
+    // a mis-set block rather than a command you run.
+    //
+    // max-w-full so it still shrinks on a narrow screen rather than pushing the
+    // page sideways; each line keeps its own overflow-x for the rare long one.
+    <div className="flex w-fit max-w-full items-start gap-3 rounded-card bg-surface-secondary py-3.5 pl-4 pr-2.5">
+      {/* Each command scrolls rather than wraps: a wrapped shell command reads
           as two commands, and half-selecting one is worse than scrolling. */}
-      <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-sm text-text-primary">
-        <span className="mr-2 select-none text-text-secondary" aria-hidden="true">
-          $
-        </span>
-        {command}
+      <code className="min-w-0 flex-1 font-mono text-sm text-text-primary">
+        {lines.map((line) => (
+          <span key={line} className="block overflow-x-auto whitespace-nowrap leading-loose">
+            {prompt && (
+              <span className="mr-2 select-none text-text-secondary" aria-hidden="true">
+                {prompt}
+              </span>
+            )}
+            {line}
+          </span>
+        ))}
       </code>
       <button
         type="button"

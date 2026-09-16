@@ -1,4 +1,13 @@
 import Link from 'next/link';
+import {
+  AcademicCapIcon,
+  NewspaperIcon,
+  PuzzlePieceIcon,
+  TagIcon,
+  CodeBracketIcon,
+  MapIcon,
+  Squares2X2Icon,
+} from '@heroicons/react/24/outline';
 import { guides } from '@/data/guides';
 import categories from '@/data/categories';
 import { prisma } from '@/lib/prisma';
@@ -6,6 +15,7 @@ import { getNewsletters } from '@/data/newsletters';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import { getModuleTitle } from '@/lib/guides/modules';
 import RailRevealCurrent from './RailRevealCurrent';
+import { CourseToolMark } from '@/components/skills/AgentMarks';
 
 /**
  * The rail on the left of /guides. Turns the courses index into the front door
@@ -21,14 +31,28 @@ import RailRevealCurrent from './RailRevealCurrent';
  * than client-side expansion state and better for search.
  */
 
+/**
+ * Explore is the one group whose ROWS carry marks.
+ *
+ * These four are destinations of different kinds — a map, a library, a thing
+ * you install, a repo — and a mark tells them apart faster than reading four
+ * similar-length words. Every other group is a list of one kind of thing, so
+ * its mark belongs on the heading instead; see `GroupLabel`.
+ */
 const EXPLORE = [
-  { label: 'Map', href: '/guides' },
-  { label: 'Patterns', href: '/patterns' },
-  { label: 'Skills', href: '/skills' },
+  { label: 'Map', href: '/guides', Icon: MapIcon },
+  { label: 'Patterns', href: '/patterns', Icon: Squares2X2Icon },
+  { label: 'Skills', href: '/skills', Icon: PuzzlePieceIcon },
   {
     label: 'Open source',
-    href: 'https://github.com/imsaif/aiex',
+    // The skills repo, not the site's. "Open source" next to Patterns and
+    // Skills reads as an offer — the thing you can take and use — and that is
+    // `aiux-skills`: 38 MIT skill files, and the marketplace the Claude Code
+    // plugin installs from. The site's own repo is open too, but it is a
+    // different promise, and the one nobody in this rail came for.
+    href: 'https://github.com/imsaif/aiux-skills',
     external: true,
+    Icon: CodeBracketIcon,
   },
 ];
 
@@ -73,9 +97,25 @@ function railLabel(title: string): string {
     .replace(/\s+Course$/i, '');
 }
 
-function GroupLabel({ children }: { children: React.ReactNode }) {
+/**
+ * A mark on the heading says what kind of thing the list below is.
+ *
+ * Rows get their own mark only where it carries information the title does not:
+ * Explore, where the four destinations are different kinds of thing, and
+ * Courses, where the logo names the product each course is about. What's new
+ * and Topics get nothing on their rows, because every row there is the same
+ * kind of thing and a repeated mark would be decoration.
+ */
+function GroupLabel({
+  children,
+  Icon,
+}: {
+  children: React.ReactNode;
+  Icon?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+}) {
   return (
-    <p className="type-eyebrow mb-2 px-3 font-semibold text-text-secondary">
+    <p className="type-eyebrow mb-3 flex items-center gap-2 px-3 font-semibold text-text-secondary">
+      {Icon && <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />}
       {children}
     </p>
   );
@@ -86,11 +126,13 @@ function RailLink({
   children,
   current,
   external,
+  Icon,
 }: {
   href: string;
   children: React.ReactNode;
   current?: boolean;
   external?: boolean;
+  Icon?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }) {
   // "You are here" is a location, not a button. It used to be a solid ink fill,
   // the same treatment as the Subscribe CTA and the selected category pill, so
@@ -102,7 +144,10 @@ function RailLink({
   // hanging off the corner rather than as a rail marker, which reads as a
   // mistake. The chip is a step lighter than the rail it sits on, which is
   // enough on its own.
-  const base = 'block rounded-card px-3 py-1.5 type-caption transition-colors';
+  // Flex rather than block so the icon and label share a baseline row and a
+  // wrapping label indents under itself instead of under the mark.
+  const base =
+    'flex items-center gap-2.5 rounded-card px-3 py-2 type-caption leading-relaxed transition-colors';
   const state = current
     ? 'bg-background-primary font-semibold text-text-primary shadow-card'
     : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary';
@@ -115,7 +160,11 @@ function RailLink({
         rel="noopener noreferrer"
         className={`${base} ${state}`}
       >
-        {children} <span aria-hidden="true">↗</span>
+        {Icon && <Icon className="h-4 w-4 shrink-0" aria-hidden />}
+        <span className="min-w-0 flex-1">{children}</span>
+        <span aria-hidden="true" className="shrink-0">
+          ↗
+        </span>
       </a>
     );
   }
@@ -126,7 +175,8 @@ function RailLink({
       className={`${base} ${state}`}
       aria-current={current ? 'page' : undefined}
     >
-      {children}
+      {Icon && <Icon className="h-4 w-4 shrink-0" aria-hidden />}
+      <span className="min-w-0 flex-1">{children}</span>
     </Link>
   );
 }
@@ -173,7 +223,7 @@ function CourseLessons({
           <p className="type-eyebrow mb-1 px-3 font-semibold text-text-secondary">
             {getModuleTitle(moduleKey)}
           </p>
-          <ul className="space-y-0.5">
+          <ul className="space-y-1">
             {byModule.get(moduleKey)!.map((lesson) => {
               const slug = lesson.url.split('/').pop() || '';
               return (
@@ -235,15 +285,16 @@ export default async function LearnSidebar({
     >
       <RailRevealCurrent />
 
-      <div className="mb-7">
+      <div className="mb-9">
         <GroupLabel>Explore</GroupLabel>
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {EXPLORE.map((item) => (
             <li key={item.href}>
               <RailLink
                 href={item.href}
                 current={item.href === activeHref}
                 external={item.external}
+                Icon={item.Icon}
               >
                 {item.label}
               </RailLink>
@@ -252,9 +303,9 @@ export default async function LearnSidebar({
         </ul>
       </div>
 
-      <div className="mb-7">
-        <GroupLabel>Courses</GroupLabel>
-        <ul className="space-y-0.5">
+      <div className="mb-9">
+        <GroupLabel Icon={AcademicCapIcon}>Courses</GroupLabel>
+        <ul className="space-y-1">
           {guides.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
             return (
@@ -271,7 +322,7 @@ export default async function LearnSidebar({
                   name="learn-rail-course"
                 >
                   <summary
-                    className={`flex items-center gap-2 rounded-card px-3 py-1.5 type-caption transition-colors ${
+                    className={`flex items-center gap-2 rounded-card px-3 py-2 type-caption leading-relaxed transition-colors ${
                       isCurrent
                         ? 'font-semibold text-text-primary'
                         : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary'
@@ -283,6 +334,12 @@ export default async function LearnSidebar({
                     >
                       ›
                     </span>
+                    {/* The tool's logo, which earns its place where a generic
+                        icon would not: six of the seven courses are about a
+                        product, and the logo says which one before the title is
+                        read. The seventh has no product and takes a drawn mark,
+                        so the column stays even. */}
+                    <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
                       {railLabel(guide.title)}
                     </span>
@@ -302,9 +359,9 @@ export default async function LearnSidebar({
         </ul>
       </div>
 
-      <div className="mb-7">
-        <GroupLabel>What&rsquo;s new</GroupLabel>
-        <ul className="space-y-0.5">
+      <div className="mb-9">
+        <GroupLabel Icon={NewspaperIcon}>What&rsquo;s new</GroupLabel>
+        <ul className="space-y-1">
           {issues.map((issue) => (
             <li key={issue.slug}>
               <RailLink href={`/news/${issue.slug}`}>{issue.title}</RailLink>
@@ -319,8 +376,8 @@ export default async function LearnSidebar({
       </div>
 
       <div>
-        <GroupLabel>Topics</GroupLabel>
-        <ul className="space-y-0.5">
+        <GroupLabel Icon={TagIcon}>Topics</GroupLabel>
+        <ul className="space-y-1">
           {categories.map((category) => (
             <li key={category.slug}>
               <RailLink href={`/patterns/category/${category.slug}`}>
