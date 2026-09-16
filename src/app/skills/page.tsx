@@ -5,7 +5,7 @@ import { siteConfig } from '@/config/seo';
 import { skillName } from '@/lib/skills/composeSkill';
 import { exampleProducts } from '@/lib/skills/usedBy';
 import { SkillsDirectory, type SkillRow } from '@/components/skills/SkillsDirectory';
-import { InstallCommand } from '@/components/skills/InstallCommand';
+import { InstallPicker, type InstallOption } from '@/components/skills/InstallPicker';
 import Navbar from '@/components/layout/Navbar';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
@@ -14,10 +14,6 @@ import Footer from '@/components/layout/Footer';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
 import Link from 'next/link';
 import { NewspaperIcon } from '@heroicons/react/24/outline';
-import { ClaudeMark } from '@/components/icons/ClaudeMark';
-import {
-  CyclingAgentMark,
-} from '@/components/skills/AgentMarks';
 
 export const revalidate = 3600;
 
@@ -48,6 +44,39 @@ const PLUGIN_COMMANDS = [
   '/plugin marketplace add imsaif/aiux-skills',
   '/plugin install aiux@aiux-skills',
   '/reload-plugins',
+];
+
+/**
+ * Order is the recommendation: the first option is the default anyone who does
+ * not have a preference will take.
+ *
+ * The plugin leads because it installs once and applies everywhere, which is
+ * the right default for an audience that does not think in repos. Copying the
+ * files stays because it is the only route where the files are real, editable
+ * and committable, and because the plugin format is Claude Code's own — so it
+ * is also what every other agent uses.
+ *
+ * The second description ends by saying it works in Claude Code too. Without
+ * that line its label reads as "not for Claude Code", which is false, and would
+ * push anyone who wants the files in their repo toward the wrong choice.
+ */
+const INSTALL_OPTIONS: InstallOption[] = [
+  {
+    id: 'plugin',
+    label: 'Claude Code',
+    description:
+      'Install once as a plugin. Every project has them, and nothing is copied into your repo.',
+    command: PLUGIN_COMMANDS,
+    prompt: null,
+    note: 'All three lines. Without the reload the skills are installed but inert, and nothing says so.',
+  },
+  {
+    id: 'files',
+    label: 'Any other agent',
+    description:
+      'Cursor, Copilot, Codex and the rest. One file per pattern, written into the project you are in, then yours to edit and commit. Works in Claude Code too, if you would rather have the files.',
+    command: GENERIC_COMMAND,
+  },
 ];
 
 export default function SkillsPage() {
@@ -124,53 +153,30 @@ export default function SkillsPage() {
 
           </div>
 
-          {/* The two installs sit under the lead rather than beside it.
+          {/* One command, with a switch above it.
 
-              As a right-hand column they were squeezed into roughly a third of
-              the page, which is what pushed the copy to three or four words a
-              line and made a short section look like a dense one. Side by side
-              at full width they are the same words in half the lines.
+              Showing both at once was honest and still wrong: two commands of
+              equal weight make a visitor compare before they can act, and the
+              comparison is not one they have the information to make. A switch
+              turns it into a choice with a default, which is what it always
+              was, and gives the page back the space two sections were using.
 
-              The agent logo row went with the old layout. It was answering
-              "does this work with what I use", and the second block now answers
-              that by name — Cursor, Copilot, Codex — in the place where the
-              question actually arises. */}
-          <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-12">
-            {/* Each block: a mark, a heading, one line of copy, the command,
-                then a footnote row splitting the secondary detail left and the
-                way out right.
-
-                Deliberately quiet, and quiet in the way labels are quiet:
-                small caps in secondary ink, marks left unframed, footnotes a
-                step smaller again. Only the command itself keeps a surface,
-                because it is the one thing here anybody came to act on.
-
-                Two ways in, and the order is the recommendation.
-
-                They used to sit as separate sections with headings that did not
-                read as alternatives — "Install every skill" and "Claude Code" —
-                so a visitor had to work out for themselves that these were two
-                routes to the same 38 files, and then which one they wanted.
-                The headings now name the act rather than the scope, and the
-                "Or" does the work of saying these are alternatives. */}
-            <section>
-              <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
-                <ClaudeMark className="h-4 w-4 shrink-0 text-brand-claude" />
-                Claude Code
-              </h2>
-              <p className="type-caption mb-5 leading-loose text-text-secondary">
-                Install once. Every project has them, and nothing is copied into
-                your repo.
+              The agent logo row went with the earlier layout. It answered "does
+              this work with what I use", and the second option now answers that
+              by name, in the place where the question arises. */}
+          <div className="mt-12 max-w-3xl">
+            <InstallPicker options={INSTALL_OPTIONS} />
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border-primary pt-4">
+              <p className="type-footnote font-mono text-text-secondary">
+                {rows.length} skills · free · MIT
               </p>
-              <InstallCommand command={PLUGIN_COMMANDS} prompt={null} />
-              <p className="type-footnote mt-3 leading-loose text-text-secondary">
-                All three lines. Without the reload the skills are installed but
-                inert, and nothing says so.
-              </p>
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <p className="type-footnote font-mono text-text-secondary">
-                  {rows.length} skills · free · MIT
-                </p>
+              <div className="flex flex-wrap items-center gap-5">
+                <Link
+                  href="/dashboard"
+                  className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
+                >
+                  Only need a few? Build a pack ↗
+                </Link>
                 <Link
                   href="/guides/ai-ux-skills-guide"
                   className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
@@ -178,46 +184,7 @@ export default function SkillsPage() {
                   How skills work ↗
                 </Link>
               </div>
-            </section>
-
-            {/* Side by side now, so the rule between them is vertical and only
-                at the width where they actually sit in two columns. */}
-            <section className="border-t border-border-primary pt-9 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
-              <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
-                <CyclingAgentMark />
-                Any other agent
-              </h2>
-              {/* Kept, and kept second, for two reasons that are easy to lose:
-                  it is the only route where the files are real and editable, so
-                  a team can commit them and change them; and the plugin is
-                  Claude Code's own format, so this is what the other agents in
-                  the row below actually use. Demoting it is a recommendation,
-                  not a deprecation. */}
-              {/* The heading says "any other agent" because the plugin format
-                  is Claude Code's own. The last line is not a footnote: without
-                  it the heading reads as "not for Claude Code", and this is in
-                  fact the better route there too for anyone who wants the files
-                  in the repo rather than loaded from outside it. */}
-              <p className="type-caption mb-5 leading-loose text-text-secondary">
-                Cursor, Copilot, Codex and the rest. One file per pattern,
-                written into the project you are in, then yours to edit and
-                commit. Works in Claude Code too, if you would rather have the
-                files.
-              </p>
-              <InstallCommand command={GENERIC_COMMAND} />
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <p className="type-footnote font-mono text-text-secondary">
-                  Only need a few?
-                </p>
-                <Link
-                  href="/dashboard"
-                  className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
-                >
-                  Build a pack ↗
-                </Link>
-              </div>
-            </section>
-
+            </div>
           </div>
         </div>
       </header>
