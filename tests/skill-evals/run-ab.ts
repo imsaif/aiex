@@ -16,6 +16,13 @@
  *
  * This reports. It never gates a build: a five-point rubric over ten tasks is not a
  * regression test, and treating it as one would invite tuning the corpus until it passes.
+ *
+ * Read BASELINE.md before running, and update it after a run worth keeping. The
+ * per-run JSON this writes to `runs/` is gitignored on purpose — it is one
+ * afternoon on one machine, and a folder of transcripts answers no question
+ * anyone asks. BASELINE.md is the record that survives, including the nulls: a
+ * run that showed no effect is a finding, and losing it means someone re-runs it
+ * in six months to learn the same thing.
  */
 import './env';
 import fs from 'fs';
