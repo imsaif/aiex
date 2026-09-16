@@ -114,7 +114,7 @@ function GroupLabel({
   Icon?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }) {
   return (
-    <p className="type-eyebrow mb-2 flex items-center gap-2 px-3 font-semibold text-text-secondary">
+    <p className="type-eyebrow mb-3 flex items-center gap-2 px-3 font-semibold text-text-secondary">
       {Icon && <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />}
       {children}
     </p>
@@ -147,7 +147,7 @@ function RailLink({
   // Flex rather than block so the icon and label share a baseline row and a
   // wrapping label indents under itself instead of under the mark.
   const base =
-    'flex items-center gap-2.5 rounded-card px-3 py-1.5 type-caption transition-colors';
+    'flex items-center gap-2.5 rounded-card px-3 py-2 type-caption leading-relaxed transition-colors';
   const state = current
     ? 'bg-background-primary font-semibold text-text-primary shadow-card'
     : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary';
@@ -223,7 +223,7 @@ function CourseLessons({
           <p className="type-eyebrow mb-1 px-3 font-semibold text-text-secondary">
             {getModuleTitle(moduleKey)}
           </p>
-          <ul className="space-y-0.5">
+          <ul className="space-y-1">
             {byModule.get(moduleKey)!.map((lesson) => {
               const slug = lesson.url.split('/').pop() || '';
               return (
@@ -285,9 +285,9 @@ export default async function LearnSidebar({
     >
       <RailRevealCurrent />
 
-      <div className="mb-7">
+      <div className="mb-9">
         <GroupLabel>Explore</GroupLabel>
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {EXPLORE.map((item) => (
             <li key={item.href}>
               <RailLink
@@ -303,9 +303,9 @@ export default async function LearnSidebar({
         </ul>
       </div>
 
-      <div className="mb-7">
+      <div className="mb-9">
         <GroupLabel Icon={AcademicCapIcon}>Courses</GroupLabel>
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {guides.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
             return (
@@ -322,7 +322,7 @@ export default async function LearnSidebar({
                   name="learn-rail-course"
                 >
                   <summary
-                    className={`flex items-center gap-2 rounded-card px-3 py-1.5 type-caption transition-colors ${
+                    className={`flex items-center gap-2 rounded-card px-3 py-2 type-caption leading-relaxed transition-colors ${
                       isCurrent
                         ? 'font-semibold text-text-primary'
                         : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary'
@@ -359,9 +359,9 @@ export default async function LearnSidebar({
         </ul>
       </div>
 
-      <div className="mb-7">
+      <div className="mb-9">
         <GroupLabel Icon={NewspaperIcon}>What&rsquo;s new</GroupLabel>
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {issues.map((issue) => (
             <li key={issue.slug}>
               <RailLink href={`/news/${issue.slug}`}>{issue.title}</RailLink>
@@ -377,7 +377,7 @@ export default async function LearnSidebar({
 
       <div>
         <GroupLabel Icon={TagIcon}>Topics</GroupLabel>
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {categories.map((category) => (
             <li key={category.slug}>
               <RailLink href={`/patterns/category/${category.slug}`}>
