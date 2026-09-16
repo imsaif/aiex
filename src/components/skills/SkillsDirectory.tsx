@@ -116,35 +116,83 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                     </p>
                   </div>
 
+                  {/* One line per skill while browsing.
+
+                      Each row used to be three: the name, the title, then the
+                      whole trigger sentence. Across 38 skills that is several
+                      screens, and the length is what made the library feel
+                      shapeless — you could never see a category whole, so the
+                      grouping did no work.
+
+                      The trigger is not lost. It is the reason to open a skill,
+                      not a thing to read 38 times, so it appears on search and
+                      filter, where the set is small enough for it to earn the
+                      space. */}
                   <ul className="min-w-0">
                     {categoryRows.map((row, index) => (
                       <li
                         key={row.slug}
                         className={index > 0 ? 'border-t border-border-primary' : ''}
                       >
-                        <div className="group relative flex items-start gap-4 py-4">
+                        <div className="group relative flex items-center gap-4 py-2.5">
                           <Link
                             href={`/patterns/${row.slug}`}
-                            className="min-w-0 flex-1"
+                            className="flex min-w-0 flex-1 flex-col gap-x-4 gap-y-0.5 sm:flex-row sm:items-baseline"
                           >
                             {/* The skill's own name leads: it is what you type
                                 and what appears in your project, so it is the
-                                identifier, not the prose title. */}
-                            <p className="type-caption mb-1 font-mono text-text-secondary">
+                                identifier, not the prose title. Fixed width at
+                                the sizes that have room, so the titles line up
+                                into a second column and the eye can run down
+                                either one. */}
+                            <span className="type-caption shrink-0 font-mono text-text-secondary sm:w-64">
                               {row.skillName}
-                            </p>
-                            <h3 className="type-body mb-1 font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+                            </span>
+                            <span className="type-body min-w-0 truncate font-medium text-text-primary transition-colors group-hover:text-accent-primary">
                               {row.title}
-                            </h3>
-                            <p className="type-caption text-text-secondary">
-                              {row.trigger}
-                            </p>
+                            </span>
                           </Link>
 
+                          {/* The products this pattern was observed in.
+
+                              This column used to be 38 identical bookmark
+                              icons — the same control repeated down the page,
+                              carrying no information and reading as chrome. The
+                              logos are content: they say the pattern was taken
+                              from shipped products rather than invented, and
+                              they differ row to row, which is what makes a long
+                              list worth scanning. */}
+                          {row.products.length > 0 && (
+                            <ul className="hidden shrink-0 items-center gap-2 sm:flex">
+                              {row.products.slice(0, 3).map((product) => (
+                                <li key={product.name} title={product.name}>
+                                  {product.logo ? (
+                                    <Image
+                                      src={product.logo}
+                                      alt={product.name}
+                                      width={14}
+                                      height={14}
+                                      className="h-3.5 w-3.5"
+                                      style={{ filter: logoFilter }}
+                                    />
+                                  ) : (
+                                    <span className="type-footnote text-text-secondary">
+                                      {product.name}
+                                    </span>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {/* Save stays, but stops shouting. It reveals on
+                              hover and on keyboard focus — and stays put where
+                              there is no hover at all, because a control only
+                              a mouse can find is not a control on a phone. */}
                           <SaveToDashboardButton
                             slug={row.slug}
                             variant="icon"
-                            className="shrink-0"
+                            className="shrink-0 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
                           />
                         </div>
                       </li>
