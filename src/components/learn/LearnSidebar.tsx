@@ -15,6 +15,7 @@ import { getNewsletters } from '@/data/newsletters';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import { getModuleTitle } from '@/lib/guides/modules';
 import RailRevealCurrent from './RailRevealCurrent';
+import { CourseToolMark } from '@/components/skills/AgentMarks';
 
 /**
  * The rail on the left of /guides. Turns the courses index into the front door
@@ -97,12 +98,13 @@ function railLabel(title: string): string {
 }
 
 /**
- * Marks sit on the group headings, never on the rows beneath them.
+ * A mark on the heading says what kind of thing the list below is.
  *
- * A heading is the one place in a group where an icon carries information: it
- * says what kind of thing the list below is. Repeating a mark down every row
- * would be decoration, and in Courses it would sit beside the disclosure
- * triangles and read as a second control.
+ * Rows get their own mark only where it carries information the title does not:
+ * Explore, where the four destinations are different kinds of thing, and
+ * Courses, where the logo names the product each course is about. What's new
+ * and Topics get nothing on their rows, because every row there is the same
+ * kind of thing and a repeated mark would be decoration.
  */
 function GroupLabel({
   children,
@@ -332,6 +334,12 @@ export default async function LearnSidebar({
                     >
                       ›
                     </span>
+                    {/* The tool's logo, which earns its place where a generic
+                        icon would not: six of the seven courses are about a
+                        product, and the logo says which one before the title is
+                        read. The seventh has no product and takes a drawn mark,
+                        so the column stays even. */}
+                    <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
                       {railLabel(guide.title)}
                     </span>
