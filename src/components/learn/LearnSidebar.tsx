@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import {
-  DocumentTextIcon,
+  AcademicCapIcon,
+  NewspaperIcon,
+  PuzzlePieceIcon,
+  TagIcon,
   CodeBracketIcon,
   MapIcon,
   Squares2X2Icon,
@@ -28,18 +31,17 @@ import RailRevealCurrent from './RailRevealCurrent';
  */
 
 /**
- * Icons on Explore only, not on Courses or Topics.
+ * Explore is the one group whose ROWS carry marks.
  *
- * These four are destinations of different kinds — a map, a library, a
- * downloadable thing, a repo — and a mark tells them apart faster than reading
- * four similar-length words. The groups below are lists of one kind of thing
- * each, where per-row icons would be decoration and would fight the disclosure
- * triangles the courses already use.
+ * These four are destinations of different kinds — a map, a library, a thing
+ * you install, a repo — and a mark tells them apart faster than reading four
+ * similar-length words. Every other group is a list of one kind of thing, so
+ * its mark belongs on the heading instead; see `GroupLabel`.
  */
 const EXPLORE = [
   { label: 'Map', href: '/guides', Icon: MapIcon },
   { label: 'Patterns', href: '/patterns', Icon: Squares2X2Icon },
-  { label: 'Skills', href: '/skills', Icon: DocumentTextIcon },
+  { label: 'Skills', href: '/skills', Icon: PuzzlePieceIcon },
   {
     label: 'Open source',
     // The skills repo, not the site's. "Open source" next to Patterns and
@@ -94,9 +96,24 @@ function railLabel(title: string): string {
     .replace(/\s+Course$/i, '');
 }
 
-function GroupLabel({ children }: { children: React.ReactNode }) {
+/**
+ * Marks sit on the group headings, never on the rows beneath them.
+ *
+ * A heading is the one place in a group where an icon carries information: it
+ * says what kind of thing the list below is. Repeating a mark down every row
+ * would be decoration, and in Courses it would sit beside the disclosure
+ * triangles and read as a second control.
+ */
+function GroupLabel({
+  children,
+  Icon,
+}: {
+  children: React.ReactNode;
+  Icon?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+}) {
   return (
-    <p className="type-eyebrow mb-2 px-3 font-semibold text-text-secondary">
+    <p className="type-eyebrow mb-2 flex items-center gap-2 px-3 font-semibold text-text-secondary">
+      {Icon && <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden />}
       {children}
     </p>
   );
@@ -285,7 +302,7 @@ export default async function LearnSidebar({
       </div>
 
       <div className="mb-7">
-        <GroupLabel>Courses</GroupLabel>
+        <GroupLabel Icon={AcademicCapIcon}>Courses</GroupLabel>
         <ul className="space-y-0.5">
           {guides.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
@@ -335,7 +352,7 @@ export default async function LearnSidebar({
       </div>
 
       <div className="mb-7">
-        <GroupLabel>What&rsquo;s new</GroupLabel>
+        <GroupLabel Icon={NewspaperIcon}>What&rsquo;s new</GroupLabel>
         <ul className="space-y-0.5">
           {issues.map((issue) => (
             <li key={issue.slug}>
@@ -351,7 +368,7 @@ export default async function LearnSidebar({
       </div>
 
       <div>
-        <GroupLabel>Topics</GroupLabel>
+        <GroupLabel Icon={TagIcon}>Topics</GroupLabel>
         <ul className="space-y-0.5">
           {categories.map((category) => (
             <li key={category.slug}>

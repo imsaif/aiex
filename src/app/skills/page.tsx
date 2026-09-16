@@ -102,17 +102,22 @@ export default function SkillsPage() {
           those tokens are tuned for single lines. */}
       <header className="border-b border-border-primary pt-16 pb-12">
         <div>
-          <div className="max-w-3xl">
+          {/* No max-width on the lead any more. It was capped for a two-column
+              header, where the title had to share the row with the install
+              column; on the full width those caps only forced a wrap that was
+              not needed — "38 AI UX Skills for Claude Code" broke after
+              "Claude", splitting the product name across two lines. */}
+          <div>
             <p className="type-eyebrow mb-4 font-semibold uppercase text-accent-primary">
               Free Claude Code Skills
             </p>
             <h1
-              className="type-display mb-6 leading-tight"
+              className="type-display mb-6 text-balance leading-tight"
               style={{ color: 'var(--text-hero)' }}
             >
               {rows.length} AI UX Skills for Claude Code
             </h1>
-            <p className="type-h3 mb-7 max-w-2xl font-normal leading-relaxed text-text-secondary">
+            <p className="type-h3 mb-7 max-w-4xl font-normal leading-relaxed text-text-secondary">
               Design judgment your coding agent applies on its own. Install
               once, no prompting.
             </p>
