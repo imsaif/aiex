@@ -29,10 +29,20 @@ const GENERIC_COMMAND = 'npx skills add imsaif/aiux-skills';
 /**
  * The plugin install, which is three commands and only works as three.
  *
- * `/plugin install` does not activate anything on its own — Claude Code's own
- * wording is "Run /reload-plugins to activate successfully installed plugins".
- * Hand someone the first two lines and they get a plugin that is present and
- * does nothing, with no error to explain it.
+ * Verified against the CLI on 2026-09-16 rather than taken from the docs:
+ *
+ *   1. Required. Installing without adding the marketplace fails outright —
+ *      "Plugin aiux not found in marketplace aiux-skills".
+ *   2. Required, obviously.
+ *   3. Required HERE, which is the part worth writing down. A session started
+ *      after the install sees all 38 skills with no reload, so the line looks
+ *      redundant when you test it from a terminal. But these are slash commands,
+ *      so the reader is inside a session whose context was built before the
+ *      plugin existed, and that session is exactly the one that needs it.
+ *
+ * Dropping it would produce the failure this project has already paid for once:
+ * installed, inert, and no error anywhere to say so. The CLI's install output no
+ * longer mentions the reload, which makes the silence more likely, not less.
  *
  * The marketplace name is our own (`imsaif/aiux-skills`) rather than Anthropic's
  * catalogue, because the plugin is not listed there: it passed review in the
