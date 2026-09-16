@@ -146,13 +146,49 @@ export function SkillPackGate({
   // skill folder.
   const [target, setTarget] = useState<'code' | 'claude'>('code');
   const shown = useRef(false);
+  // Attached to whichever variant's root element renders, so the impression
+  // event can wait for that element to be on screen.
+  const rootRef = useRef<HTMLElement | null>(null);
 
+  // Fire "shown" when the gate actually enters the viewport, not on mount.
+  //
+  // It used to fire from a mount effect, which counted every page load that
+  // RENDERED the gate. On pattern pages it sits near the bottom, below the audit
+  // CTA, so most of those loads were people who never scrolled to it. That made
+  // the denominator meaningless: 424 "impressions" across 151 visitors with zero
+  // submissions read as a catastrophic conversion rate, when the truth was that
+  // nobody could be shown to have seen it at all.
+  //
+  // Same approach as CallOfferBlock, deliberately: placement is the open question
+  // for both, and they need to be comparable.
   useEffect(() => {
-    // Once per mount. The homepage does not remount this on step changes, but
-    // guard anyway so the denominator of the conversion rate stays honest.
-    if (shown.current) return;
-    shown.current = true;
-    trackAuditEvent('skills_gate_shown', { source });
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      // No observer (old browser, jsdom): fall back to counting the render, so a
+      // missing API under-reports nothing rather than silently recording zero.
+      if (shown.current) return;
+      shown.current = true;
+      trackAuditEvent('skills_gate_shown', { source });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          if (shown.current) return;
+          shown.current = true;
+          trackAuditEvent('skills_gate_shown', { source });
+          observer.disconnect();
+        }
+      },
+      // Half the block visible, matching CallOfferBlock. A lower threshold would
+      // count a gate that only clipped the bottom of the viewport as "seen".
+      { threshold: 0.5 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, [source]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -326,7 +362,7 @@ export function SkillPackGate({
     ];
 
     return (
-      <div className="py-1">
+      <div ref={rootRef as React.RefObject<HTMLDivElement>} className="py-1">
         {onDismiss && (
           <button
             type="button"
@@ -483,6 +519,7 @@ export function SkillPackGate({
     if (!expanded) {
       return (
         <button
+          ref={rootRef as React.RefObject<HTMLButtonElement>}
           type="button"
           onClick={() => {
             setExpanded(true);
@@ -537,6 +574,7 @@ export function SkillPackGate({
 
   return (
     <section
+      ref={rootRef as React.RefObject<HTMLElement>}
       aria-labelledby="skill-pack-heading"
       className="w-full border-t border-border-primary bg-surface-secondary"
     >
