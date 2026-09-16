@@ -1,0 +1,64 @@
+{
+  "model": "claude-sonnet-4-6",
+  "repeats": 1,
+  "runs": [
+    {
+      "task": "invoice-prefill",
+      "arm": "with",
+      "repeat": 0,
+      "output": "The problem isn't the prediction. A 50% hit rate on \"most recent customer + amount\" is probably close to the ceiling for this pattern — small agencies have irregular billing and clients come and go. Your PM's instinct to \"make it smarter\" will get you to maybe 60% and cost months. That's not the fix.\n\n**What's actually wrong: the wrong prediction is load-bearing friction.**\n\nWhen the prefill is wrong, the user has to:\n1. Recognize it's wrong (costs attention)\n2. Click into the field\n3. Select all or triple-click\n4. Delete\n5. Then type what they meant\n\nThat's 4-5 steps of overhead before they've done anything useful. The prediction isn't expensive when it's right — it's *very* expensive when it's wrong. You've optimized for the hit case and created a penalty for the miss case.\n\n---\n\n**What to change: ghost text, not hard prefill.**\n\nInstead of populating the field with a value the user has to delete, show the suggestion as placeholder-style ghost text — visually present but not committed. If the user starts typing, the ghost disappears. If the suggestion is right, they hit Tab or Enter to accept it.\n\nThis flips the economics: accepting a good suggestion costs 1 keystroke. Ignoring a bad suggestion costs 0 keystrokes — you just type. The miss case goes from 5 steps to 0.\n\nThis is the pattern autocomplete uses everywhere. The reason forms don't do it more is that it requires a bit more implementation than `value=`.\n\n---\n\n**Secondary change: split the two fields.**\n\nCustomer name and amount have very different prediction confidence. You probably know \"this client invoices monthly\" better than \"this client will be billed exactly $4,200 again.\" Consider prefilling customer (where repeat patterns are strong) and leaving amount empty or showing it only as a soft hint below the field (\"Last invoice: $4,200\"). Don't hard-prefill amount at all — it has the highest correction cost because numbers are hard to scan at a glance.\n\n---\n\n**What this costs.**\n\nGhost text on the customer field: a few days of frontend work if your stack supports controlled inputs. The visual treatment needs care — the ghost text must be clearly distinct from real input (lighter color, different weight) or users won't trust the form.\n\nSplitting the prefill behavior: a product decision more than an engineering one. Zero dev cost if you just stop prefilling the amount field today.\n\nThe \"smarter prediction\" path — more training data, better heuristics, possibly ML — costs months and gets you marginal gains on the miss rate while not touching the miss *cost* at all. You'd be solving the wrong variable.\n\n**What I'd ship first:** stop hard-prefilling the amount field this sprint. Ghost text on customer name in the following sprint. Measure correction rates before and after. I'd bet correction rate drops 70%+ without touching the model at all.",
+      "skillsLoaded": [],
+      "ms": 22273,
+      "ok": true
+    },
+    {
+      "task": "invoice-prefill",
+      "arm": "without",
+      "repeat": 0,
+      "output": "## What's actually broken\n\nThe problem isn't prediction accuracy — it's the interaction model. Pre-filling *commits* the UI to a guess. When you're wrong (50% of the time), the user has to fight the form before they can do their actual job. Going from 50% to 70% accuracy still means 30% of users are clearing fields, and you've shipped a sprint of ML work to reduce annoyance by a third.\n\nThe real issue: **you're making users undo your guess instead of helping them confirm their intent.**\n\n---\n\n## What to change\n\n**Replace pre-fill with inline suggestion hints.**\n\nLeave the fields empty. Directly below (or as grey ghost text inside) each field, show the last-used value:\n\n```\nCustomer\n[ _________________________ ]\n  Last used: Acme Corp\n\nAmount\n[ _________________________ ]\n  Last used: $3,200\n```\n\nUser types \"Ac\" → autocomplete finishes \"Acme Corp\" (they're confirming, not correcting). User sees $3,200 and types a different number → hint disappears, no friction. User wants the same amount → one click or Tab accepts it.\n\n**The key shift:** a wrong prediction now costs the user *nothing* — they just type. A right prediction still saves them the keystrokes. The hint is helpful when correct and invisible when wrong.\n\n---\n\n## Concrete details\n\n- The customer field should be an autocomplete/typeahead, not a pre-filled text input. The hint appears *after* a customer is selected, showing what you last billed them, not what you billed anyone.\n- Amount hint should be customer-scoped: \"Last billed to Acme Corp: $3,200\" — not global last invoice. This is probably why you're at 50% now: you're likely pulling the wrong prior value.\n- If the agency has a common rate card, show a secondary hint: \"Rate card: $150/hr\" alongside the historical amount.\n\n---\n\n## What this costs\n\nThis is a front-end interaction change plus one small data query (last invoice per customer). No ML, no new infrastructure. Realistically a 2–3 day implementation. The autocomplete component likely already exists if you have any typeahead elsewhere in the product.\n\nThe \"make predictions smarter\" framing from your PM is solving for accuracy when the actual lever is **cost of being wrong**. Ship the hint pattern and the 50% problem mostly disappears regardless of accuracy.",
+      "skillsLoaded": [],
+      "ms": 34160,
+      "ok": true
+    }
+  ],
+  "pairs": [
+    {
+      "task": "invoice-prefill",
+      "repeat": 0,
+      "withShownAs": "one",
+      "verdict": {
+        "responseOne": {
+          "diagnosis": 4,
+          "specificity": 4,
+          "tradeoff": 4,
+          "actionability": 4,
+          "groundedness": 4
+        },
+        "responseTwo": {
+          "diagnosis": 4,
+          "specificity": 5,
+          "tradeoff": 3,
+          "actionability": 5,
+          "groundedness": 4
+        },
+        "preferred": "two",
+        "reasoning": "Response Two edges ahead on specificity and actionability: it names the customer-scoped amount hint as a likely cause of the 50% miss rate, gives a concrete wireframe-level sketch, and adds the rate-card secondary hint—all things a designer can act on without follow-up questions. Response One has the stronger tradeoff section (explicitly calling out the ML cost and the 'smarter prediction' dead end), but Response Two's practical details tip the balance."
+      },
+      "withScores": {
+        "diagnosis": 4,
+        "specificity": 4,
+        "tradeoff": 4,
+        "actionability": 4,
+        "groundedness": 4
+      },
+      "withoutScores": {
+        "diagnosis": 4,
+        "specificity": 5,
+        "tradeoff": 3,
+        "actionability": 5,
+        "groundedness": 4
+      },
+      "winner": "without"
+    }
+  ]
+}
