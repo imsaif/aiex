@@ -113,18 +113,29 @@ export function InstallPicker({ options }: { options: InstallOption[] }) {
         </div>
       </div>
 
+      {/* One cluster, not four stacked lines.
+
+          Description, command and caveat were evenly spaced and similarly
+          weighted, so the eye had no reason to land on the command — the thing
+          the reader came for. They now sit tight together as a single unit, and
+          the space goes around the group instead of between its parts. The
+          caveat is a step smaller again, because it is a condition on the
+          command rather than a fact of equal standing. */}
       <div
         role="tabpanel"
         id={`install-panel-${active.id}`}
         aria-labelledby={`install-tab-${active.id}`}
-        className="mt-5"
+        className="mt-6"
       >
-        <p className="type-caption mb-4 leading-loose text-text-secondary">
+        <p className="type-caption mb-2.5 text-text-secondary">
           {active.description}
         </p>
         <InstallCommand command={active.command} prompt={active.prompt} />
         {active.note && (
-          <p className="type-footnote mt-3 leading-loose text-text-secondary">
+          // Size, not colour. text-text-tertiary would read as the quieter step
+          // this wants, but it fails AA in dark mode, and a caveat nobody can
+          // read is the one thing this line cannot afford to be.
+          <p className="type-footnote mt-2 max-w-xl text-text-secondary">
             {active.note}
           </p>
         )}

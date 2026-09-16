@@ -82,7 +82,7 @@ const INSTALL_OPTIONS: InstallOption[] = [
     label: 'Claude Code',
     mark: 'claude',
     description:
-      'Install once as a plugin. Every project has them, and nothing is copied into your repo.',
+      'One install, every project. Nothing is copied into your repo.',
     command: PLUGIN_COMMANDS,
     prompt: null,
     note: 'All three lines. Without the reload the skills are installed but inert, and nothing says so.',
@@ -184,24 +184,23 @@ export default function SkillsPage() {
               by name, in the place where the question arises. */}
           <div className="mt-12 max-w-3xl">
             <InstallPicker options={INSTALL_OPTIONS} />
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border-primary pt-4">
-              <p className="type-footnote font-mono text-text-secondary">
-                {rows.length} skills · free · MIT
-              </p>
-              <div className="flex flex-wrap items-center gap-5">
-                <Link
-                  href="/dashboard"
-                  className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
-                >
-                  Only need a few? Build a pack ↗
-                </Link>
-                <Link
-                  href="/guides/ai-ux-skills-guide"
-                  className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
-                >
-                  How skills work ↗
-                </Link>
-              </div>
+            {/* The "38 skills · free · MIT" line is gone. The count is already
+                the first two characters of the title, and free/MIT is a term
+                nobody was weighing up at this point — it was three facts
+                occupying the row where the two ways onward live. */}
+            <div className="mt-10 flex flex-wrap items-center gap-6">
+              <Link
+                href="/dashboard"
+                className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
+              >
+                Only need a few? Build a pack ↗
+              </Link>
+              <Link
+                href="/guides/ai-ux-skills-guide"
+                className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
+              >
+                How skills work ↗
+              </Link>
             </div>
           </div>
         </div>

@@ -53,7 +53,14 @@ export function InstallCommand({
   }
 
   return (
-    <div className="flex items-start gap-3 rounded-card bg-surface-secondary py-2.5 pl-4 pr-2.5">
+    // Width comes from the commands, not the column. Filling the column left the
+    // longest line (42 characters) sitting in a 768px box, so the text hugged one
+    // edge and the copy button the other, with dead space between them reading as
+    // a mis-set block rather than a command you run.
+    //
+    // max-w-full so it still shrinks on a narrow screen rather than pushing the
+    // page sideways; each line keeps its own overflow-x for the rare long one.
+    <div className="flex w-fit max-w-full items-start gap-3 rounded-card bg-surface-secondary py-2.5 pl-4 pr-2.5">
       {/* Each command scrolls rather than wraps: a wrapped shell command reads
           as two commands, and half-selecting one is worse than scrolling. */}
       <code className="min-w-0 flex-1 font-mono text-sm text-text-primary">
