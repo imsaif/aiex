@@ -127,7 +127,7 @@ export function InstallPicker({ options }: { options: InstallOption[] }) {
         aria-labelledby={`install-tab-${active.id}`}
         className="mt-6"
       >
-        <p className="type-caption mb-2.5 text-text-secondary">
+        <p className="type-caption mb-3 leading-loose text-text-secondary">
           {active.description}
         </p>
         <InstallCommand command={active.command} prompt={active.prompt} />
@@ -135,7 +135,7 @@ export function InstallPicker({ options }: { options: InstallOption[] }) {
           // Size, not colour. text-text-tertiary would read as the quieter step
           // this wants, but it fails AA in dark mode, and a caveat nobody can
           // read is the one thing this line cannot afford to be.
-          <p className="type-footnote mt-2 max-w-xl text-text-secondary">
+          <p className="type-footnote mt-2.5 max-w-xl leading-loose text-text-secondary">
             {active.note}
           </p>
         )}
