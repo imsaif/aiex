@@ -140,10 +140,22 @@ export default function SkillsPage() {
             >
               {rows.length} AI UX Skills for Claude Code
             </h1>
-            <p className="type-h3 mb-9 max-w-2xl font-normal leading-relaxed text-text-secondary">
+            <p className="type-h3 mb-7 max-w-2xl font-normal leading-relaxed text-text-secondary">
               Design judgment your coding agent applies on its own. Install
               once, no prompting.
             </p>
+
+            {/* Moved up from the bottom of the install column, where it was the
+                last thing on the page and answered a question the reader has at
+                the top: the title says Claude Code, so "does this work with what
+                I use" is the first doubt, not the last. It sits under the lead
+                as a quiet qualifier rather than a section of its own. */}
+            <div>
+              <h2 className="type-eyebrow mb-3 uppercase text-text-secondary">
+                Works with any agent
+              </h2>
+              <AgentLogoRow />
+            </div>
 
             {/* The left column ran out of content well before the install
                 column did, leaving a large hole under the lead. It held a
@@ -210,16 +222,28 @@ export default function SkillsPage() {
                 makes a column readable rather than cramped, and it costs
                 nothing here since the column is shorter than the one beside
                 it. */}
+            {/* Two ways in, and the order is the recommendation.
+
+                They used to sit as separate sections with headings that did not
+                read as alternatives — "Install every skill" and "Claude Code" —
+                so a visitor had to work out for themselves that these were two
+                routes to the same 38 files, and then which one they wanted.
+                The headings now name the act rather than the scope, and the
+                "Or" does the work of saying these are alternatives. */}
             <section>
               <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
-                <CyclingAgentMark />
-                Install every skill
+                <ClaudeMark className="h-4 w-4 shrink-0 text-brand-claude" />
+                Claude Code
               </h2>
               <p className="type-caption mb-5 leading-loose text-text-secondary">
-                One file per pattern, written into your project and editable
-                afterwards.
+                Install once. Every project has them, and nothing is copied into
+                your repo.
               </p>
-              <InstallCommand command={GENERIC_COMMAND} />
+              <InstallCommand command={PLUGIN_COMMANDS} prompt={null} />
+              <p className="type-footnote mt-3 leading-loose text-text-secondary">
+                All three lines. Without the reload the skills are installed but
+                inert, and nothing says so.
+              </p>
               <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                 <p className="type-footnote font-mono text-text-secondary">
                   {rows.length} skills · free · MIT
@@ -235,27 +259,28 @@ export default function SkillsPage() {
 
             <section className="mt-9 border-t border-border-primary pt-9">
               <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
-<ClaudeMark className="h-4 w-4 shrink-0 text-brand-claude" />
-                Claude Code
+                <CyclingAgentMark />
+                Any other agent
               </h2>
+              {/* Kept, and kept second, for two reasons that are easy to lose:
+                  it is the only route where the files are real and editable, so
+                  a team can commit them and change them; and the plugin is
+                  Claude Code's own format, so this is what the other agents in
+                  the row below actually use. Demoting it is a recommendation,
+                  not a deprecation. */}
+              {/* The heading says "any other agent" because the plugin format
+                  is Claude Code's own. The last line is not a footnote: without
+                  it the heading reads as "not for Claude Code", and this is in
+                  fact the better route there too for anyone who wants the files
+                  in the repo rather than loaded from outside it. */}
               <p className="type-caption mb-5 leading-loose text-text-secondary">
-                Skills land in <code className="font-mono">.claude/skills/</code>{' '}
-                and Claude Code picks them up on its own. No config, and
-                nothing to remember at the prompt.
+                Cursor, Copilot, Codex and the rest. One file per pattern,
+                written into the project you are in, then yours to edit and
+                commit. Works in Claude Code too, if you would rather have the
+                files.
               </p>
-              {/* The plugin, which until now existed and was advertised
-                  nowhere. It installs the same skills without writing them into
-                  the project, so it suits people who want them in every repo
-                  rather than committed to one. */}
-              <p className="type-caption mb-3 leading-loose text-text-secondary">
-                Or install them everywhere at once, as a plugin:
-              </p>
-              <InstallCommand command={PLUGIN_COMMANDS} prompt={null} />
-              <p className="type-footnote mb-5 mt-3 leading-loose text-text-secondary">
-                All three lines. Without the reload the skills are installed but
-                inert, and nothing says so.
-              </p>
-              <div className="flex flex-wrap items-center justify-between gap-2">
+              <InstallCommand command={GENERIC_COMMAND} />
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
                 <p className="type-footnote font-mono text-text-secondary">
                   Only need a few?
                 </p>
@@ -268,12 +293,6 @@ export default function SkillsPage() {
               </div>
             </section>
 
-            <section className="mt-9 border-t border-border-primary pt-9">
-              <h2 className="type-eyebrow mb-3 uppercase text-text-secondary">
-                Works with any agent
-              </h2>
-              <AgentLogoRow />
-            </section>
           </div>
         </div>
       </header>
