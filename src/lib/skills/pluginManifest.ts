@@ -19,6 +19,26 @@ import { skillName } from './composeSkill';
 
 export const PLUGIN_NAME = 'aiux';
 export const MARKETPLACE_NAME = 'aiux-skills';
+
+/**
+ * Bump this whenever the generated skills change. Nothing enforces it, and the
+ * cost of forgetting is invisible.
+ *
+ * Claude Code caches each install at
+ * `~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/` and skips any
+ * plugin whose resolved version matches what is already on disk. So a plugin
+ * left at the same number ships its old skills to everyone who already
+ * installed it, with no error anywhere, while the repo looks perfectly correct.
+ *
+ * This already happened on design-with-claude, which sat at 1.0.4 through three
+ * merges. Here it sat at 1.0.0 while the four proactive trigger lines changed
+ * (aiex#110), so every install from the plugin's first six days would have kept
+ * the superseded wording.
+ *
+ * The number lives here once because it is written into two manifests, and two
+ * literals are two chances to update only one.
+ */
+export const PLUGIN_VERSION = '1.1.0';
 const REPO = 'https://github.com/imsaif/aiux-skills';
 
 /**
@@ -36,7 +56,7 @@ export function pluginManifest(patterns: Pattern[], site: string): string {
       {
         name: PLUGIN_NAME,
         description: `${patterns.length} AI UX design patterns as skills, one per pattern. Each carries the symptoms it applies to and the interface moves that make it real, distilled from shipped AI products: showing reasoning, asking before acting, recovering from wrong answers, handing off to a person.`,
-        version: '1.0.0',
+        version: PLUGIN_VERSION,
         author: { name: 'Imran Mohammed', url: site },
         homepage: site,
         repository: REPO,
@@ -65,7 +85,7 @@ export function marketplaceManifest(patterns: Pattern[], site: string): string {
             name: PLUGIN_NAME,
             source: './',
             description: `${patterns.length} AI UX design patterns as skills: chat and conversational interfaces, agent autonomy and status, confidence and explainability, error recovery, human handoff, and more. Triggers on its own when your work matches a pattern.`,
-            version: '1.0.0',
+            version: PLUGIN_VERSION,
             category: 'design',
             keywords: ['ai', 'ux', 'design', 'patterns', 'accessibility'],
           },
