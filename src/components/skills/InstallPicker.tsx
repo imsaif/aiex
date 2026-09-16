@@ -2,6 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { InstallCommand } from './InstallCommand';
+import { CyclingAgentMark } from './AgentMarks';
+import { ClaudeMark } from '@/components/icons/ClaudeMark';
 
 /**
  * One command at a time, with a switch above it.
@@ -17,10 +19,26 @@ import { InstallCommand } from './InstallCommand';
  * at is a warning nobody reads.
  */
 
+/**
+ * Named rather than passed as an element, so the options can stay plain data in
+ * the server component that defines them. `agents` cycles through the agent
+ * logos, which is the point: the label says "any other agent" and the mark
+ * shows you which ones without spending a row on a logo strip.
+ */
+type MarkName = 'claude' | 'agents';
+
+function OptionMark({ name }: { name: MarkName }) {
+  if (name === 'claude') {
+    return <ClaudeMark className="h-4 w-4 shrink-0 text-brand-claude" />;
+  }
+  return <CyclingAgentMark />;
+}
+
 export interface InstallOption {
   id: string;
   /** Switch label. Short enough to sit in a pill. */
   label: string;
+  mark?: MarkName;
   /** One line under the switch, saying what this route actually does. */
   description: string;
   command: string | string[];
@@ -81,12 +99,13 @@ export function InstallPicker({ options }: { options: InstallOption[] }) {
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setActiveId(option.id)}
                 onKeyDown={(e) => onKeyDown(e, index)}
-                className={`rounded-pill px-4 py-1.5 type-caption transition-colors ${
+                className={`flex items-center gap-2 rounded-pill px-4 py-1.5 type-caption transition-colors ${
                   selected
                     ? 'bg-background-primary font-semibold text-text-primary shadow-card'
                     : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
+                {option.mark && <OptionMark name={option.mark} />}
                 {option.label}
               </button>
             );

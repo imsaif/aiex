@@ -59,11 +59,16 @@ const PLUGIN_COMMANDS = [
  * The second description ends by saying it works in Claude Code too. Without
  * that line its label reads as "not for Claude Code", which is false, and would
  * push anyone who wants the files in their repo toward the wrong choice.
+ *
+ * It no longer names Cursor, Copilot and Codex: the label says "any other
+ * agent" and the mark beside it cycles their logos, so spelling them out was
+ * the same fact a third time.
  */
 const INSTALL_OPTIONS: InstallOption[] = [
   {
     id: 'plugin',
     label: 'Claude Code',
+    mark: 'claude',
     description:
       'Install once as a plugin. Every project has them, and nothing is copied into your repo.',
     command: PLUGIN_COMMANDS,
@@ -73,8 +78,9 @@ const INSTALL_OPTIONS: InstallOption[] = [
   {
     id: 'files',
     label: 'Any other agent',
+    mark: 'agents',
     description:
-      'Cursor, Copilot, Codex and the rest. One file per pattern, written into the project you are in, then yours to edit and commit. Works in Claude Code too, if you would rather have the files.',
+      'Writes one file per pattern into your project, yours to edit and commit. Works in Claude Code too.',
     command: GENERIC_COMMAND,
   },
 ];
