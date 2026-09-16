@@ -23,6 +23,7 @@
     "e2e:install": "playwright install --with-deps chromium",
     "eval:audit": "TS_NODE_PROJECT=tsconfig.eval.json ts-node -r tsconfig-paths/register tests/audit-evals/run.ts",
     "eval:audit:ab": "TS_NODE_PROJECT=tsconfig.eval.json ts-node -r tsconfig-paths/register tests/audit-evals/run-ab.ts",
+    "eval:skills": "TS_NODE_PROJECT=tsconfig.eval.json ts-node -r tsconfig-paths/register tests/skill-evals/run-ab.ts",
     "skills:sync": "TS_NODE_PROJECT=tsconfig.eval.json ts-node -r tsconfig-paths/register scripts/skills/sync-skills-repo.ts",
     "eval:corpus-check": "TS_NODE_PROJECT=tsconfig.eval.json ts-node -r tsconfig-paths/register tests/audit-evals/validate-corpus.ts",
     "optimize-images": "node scripts/assets/optimize-images.js",
