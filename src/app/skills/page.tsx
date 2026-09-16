@@ -56,13 +56,15 @@ const PLUGIN_COMMANDS = [
  * and committable, and because the plugin format is Claude Code's own — so it
  * is also what every other agent uses.
  *
- * The second description ends by saying it works in Claude Code too. Without
- * that line its label reads as "not for Claude Code", which is false, and would
- * push anyone who wants the files in their repo toward the wrong choice.
+ * The second label is "Any agent", not "Any other agent", and that one word is
+ * load-bearing. "Other" excludes Claude Code, which is false — this is also the
+ * route a Claude Code user takes when they want the files committed so their
+ * team gets them. The old label needed a sentence of apology after it ("works
+ * in Claude Code too"); the accurate label needs none.
  *
- * It no longer names Cursor, Copilot and Codex: the label says "any other
- * agent" and the mark beside it cycles their logos, so spelling them out was
- * the same fact a third time.
+ * It also does not name Cursor, Copilot and Codex. The label covers them and
+ * the mark beside it cycles their logos, so spelling them out was the same fact
+ * a third time.
  */
 const INSTALL_OPTIONS: InstallOption[] = [
   {
@@ -77,10 +79,10 @@ const INSTALL_OPTIONS: InstallOption[] = [
   },
   {
     id: 'files',
-    label: 'Any other agent',
+    label: 'Any agent',
     mark: 'agents',
     description:
-      'Writes one file per pattern into your project, yours to edit and commit. Works in Claude Code too.',
+      'Writes one file per pattern into your project, yours to edit and commit.',
     command: GENERIC_COMMAND,
   },
 ];
