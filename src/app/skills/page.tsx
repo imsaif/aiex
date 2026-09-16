@@ -32,6 +32,26 @@ export const metadata: Metadata = {
 
 const GENERIC_COMMAND = 'npx skills add imsaif/aiux-skills';
 
+/**
+ * The plugin install, which is three commands and only works as three.
+ *
+ * `/plugin install` does not activate anything on its own — Claude Code's own
+ * wording is "Run /reload-plugins to activate successfully installed plugins".
+ * Hand someone the first two lines and they get a plugin that is present and
+ * does nothing, with no error to explain it.
+ *
+ * The marketplace name is our own (`imsaif/aiux-skills`) rather than Anthropic's
+ * catalogue, because the plugin is not listed there: it passed review in the
+ * console on 2026-09-10 and, as of 2026-09-16, searching the official
+ * marketplace for "aiux" returns nothing. Until that changes, adding the
+ * marketplace by name is the only way anyone installs it.
+ */
+const PLUGIN_COMMANDS = [
+  '/plugin marketplace add imsaif/aiux-skills',
+  '/plugin install aiux@aiux-skills',
+  '/reload-plugins',
+];
+
 export default function SkillsPage() {
   const categoryNames = categories.map((c) => c.title);
   const rows: SkillRow[] = [...patterns]
@@ -222,6 +242,18 @@ export default function SkillsPage() {
                 Skills land in <code className="font-mono">.claude/skills/</code>{' '}
                 and Claude Code picks them up on its own. No config, and
                 nothing to remember at the prompt.
+              </p>
+              {/* The plugin, which until now existed and was advertised
+                  nowhere. It installs the same skills without writing them into
+                  the project, so it suits people who want them in every repo
+                  rather than committed to one. */}
+              <p className="type-caption mb-3 leading-loose text-text-secondary">
+                Or install them everywhere at once, as a plugin:
+              </p>
+              <InstallCommand command={PLUGIN_COMMANDS} prompt={null} />
+              <p className="type-footnote mb-5 mt-3 leading-loose text-text-secondary">
+                All three lines. Without the reload the skills are installed but
+                inert, and nothing says so.
               </p>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="type-footnote font-mono text-text-secondary">
