@@ -20,7 +20,7 @@ export const predictiveanticipation: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when the product should act before the user asks, or when it already anticipates too much: suggesting next actions, pre-loading likely content, 'it should know what I need next', smart defaults from behavior. Equally: 'it keeps autofilling things nobody asked for', actions taken that should only have been staged, suggestions that feel presumptuous. Predictive Anticipation decides what to prepare and what to leave to the user.",
+      "Use when the product should act before the user asks, or when it already anticipates too much: suggesting next actions, pre-loading likely content, 'it should know what I need next', smart defaults from behavior. Equally, when the prediction itself is the complaint: 'it keeps autofilling things nobody asked for', fields pre-filled with the wrong guess, an action committed that should only have been staged. This is the pattern for pre-filling and pre-staging the user's next step, not for background sensing (Ambient Intelligence) or inline tips (Contextual Assistance).",
     problem: "Users waste time waiting for content or searching for next actions. Systems react instead of anticipating needs.",
     solution: "Design AI that learns from behavior patterns to predict next actions. Pre-load content, suggest next steps, and gather resources before users request them.",
     examples,
