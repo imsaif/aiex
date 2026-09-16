@@ -67,6 +67,9 @@ export const AUDIT_EVENT_NAMES = [
   // The post-audit unlock only reaches ~6 people per 6 weeks, which is why this
   // test lives on the homepage instead.
   'skills_gate_shown',
+  // Fired when a newsletter link opens the dialog on landing, so arrivals that
+  // carried intent can be separated from people who met the gate by scrolling.
+  'skills_gate_autoopened',
   'skills_gate_expanded',
   'skills_gate_skipped',
   'skills_gate_dismissed',
