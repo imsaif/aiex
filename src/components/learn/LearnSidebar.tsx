@@ -1,4 +1,10 @@
 import Link from 'next/link';
+import {
+  DocumentTextIcon,
+  CodeBracketIcon,
+  MapIcon,
+  Squares2X2Icon,
+} from '@heroicons/react/24/outline';
 import { guides } from '@/data/guides';
 import categories from '@/data/categories';
 import { prisma } from '@/lib/prisma';
@@ -21,14 +27,29 @@ import RailRevealCurrent from './RailRevealCurrent';
  * than client-side expansion state and better for search.
  */
 
+/**
+ * Icons on Explore only, not on Courses or Topics.
+ *
+ * These four are destinations of different kinds — a map, a library, a
+ * downloadable thing, a repo — and a mark tells them apart faster than reading
+ * four similar-length words. The groups below are lists of one kind of thing
+ * each, where per-row icons would be decoration and would fight the disclosure
+ * triangles the courses already use.
+ */
 const EXPLORE = [
-  { label: 'Map', href: '/guides' },
-  { label: 'Patterns', href: '/patterns' },
-  { label: 'Skills', href: '/skills' },
+  { label: 'Map', href: '/guides', Icon: MapIcon },
+  { label: 'Patterns', href: '/patterns', Icon: Squares2X2Icon },
+  { label: 'Skills', href: '/skills', Icon: DocumentTextIcon },
   {
     label: 'Open source',
-    href: 'https://github.com/imsaif/aiex',
+    // The skills repo, not the site's. "Open source" next to Patterns and
+    // Skills reads as an offer — the thing you can take and use — and that is
+    // `aiux-skills`: 38 MIT skill files, and the marketplace the Claude Code
+    // plugin installs from. The site's own repo is open too, but it is a
+    // different promise, and the one nobody in this rail came for.
+    href: 'https://github.com/imsaif/aiux-skills',
     external: true,
+    Icon: CodeBracketIcon,
   },
 ];
 
@@ -86,11 +107,13 @@ function RailLink({
   children,
   current,
   external,
+  Icon,
 }: {
   href: string;
   children: React.ReactNode;
   current?: boolean;
   external?: boolean;
+  Icon?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }) {
   // "You are here" is a location, not a button. It used to be a solid ink fill,
   // the same treatment as the Subscribe CTA and the selected category pill, so
@@ -102,7 +125,10 @@ function RailLink({
   // hanging off the corner rather than as a rail marker, which reads as a
   // mistake. The chip is a step lighter than the rail it sits on, which is
   // enough on its own.
-  const base = 'block rounded-card px-3 py-1.5 type-caption transition-colors';
+  // Flex rather than block so the icon and label share a baseline row and a
+  // wrapping label indents under itself instead of under the mark.
+  const base =
+    'flex items-center gap-2.5 rounded-card px-3 py-1.5 type-caption transition-colors';
   const state = current
     ? 'bg-background-primary font-semibold text-text-primary shadow-card'
     : 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary';
@@ -115,7 +141,11 @@ function RailLink({
         rel="noopener noreferrer"
         className={`${base} ${state}`}
       >
-        {children} <span aria-hidden="true">↗</span>
+        {Icon && <Icon className="h-4 w-4 shrink-0" aria-hidden />}
+        <span className="min-w-0 flex-1">{children}</span>
+        <span aria-hidden="true" className="shrink-0">
+          ↗
+        </span>
       </a>
     );
   }
@@ -126,7 +156,8 @@ function RailLink({
       className={`${base} ${state}`}
       aria-current={current ? 'page' : undefined}
     >
-      {children}
+      {Icon && <Icon className="h-4 w-4 shrink-0" aria-hidden />}
+      <span className="min-w-0 flex-1">{children}</span>
     </Link>
   );
 }
@@ -244,6 +275,7 @@ export default async function LearnSidebar({
                 href={item.href}
                 current={item.href === activeHref}
                 external={item.external}
+                Icon={item.Icon}
               >
                 {item.label}
               </RailLink>

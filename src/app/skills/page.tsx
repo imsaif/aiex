@@ -17,7 +17,6 @@ import { NewspaperIcon } from '@heroicons/react/24/outline';
 import { ClaudeMark } from '@/components/icons/ClaudeMark';
 import {
   CyclingAgentMark,
-  AgentLogoRow,
 } from '@/components/skills/AgentMarks';
 
 export const revalidate = 3600;
@@ -92,23 +91,18 @@ export default function SkillsPage() {
           the page rather than starting below a full-width hero. */}
       <LearnShell sidebar={<LearnSidebar active="skills" />}>
 
-      {/* Split page header: what this is on the left, the thing you came to
-          copy on the right. The right column is a stack of hairline-separated
-          blocks rather than one boxed card — a card reads as a widget parked
-          in the corner, while blocks with their own icon, heading and footnote
-          read as content that happens to sit beside the title.
+      {/* Page header: what this is, then the two ways to get it.
+
+          The installs are blocks with their own mark, heading and footnote
+          rather than one boxed card — a card reads as a widget parked on the
+          page, while blocks read as content.
 
           Same typographic ladder as /patterns: display for the title on one
           line, h3 at normal weight for the lead, leading opened on both since
           those tokens are tuned for single lines. */}
       <header className="border-b border-border-primary pt-16 pb-12">
-        {/* Proportional split rather than a fixed 380px sidebar. A fixed width
-            squeezed the install column at every viewport the console is
-            actually read at: the command wrapped, the copy ran three words to
-            a line, and the whole thing read as a squashed sidebar. Roughly
-            60/40 gives the commands room to sit on one line. */}
-        <div className="lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-0">
-          <div className="lg:pr-12">
+        <div>
+          <div className="max-w-3xl">
             <p className="type-eyebrow mb-4 font-semibold uppercase text-accent-primary">
               Free Claude Code Skills
             </p>
@@ -123,34 +117,30 @@ export default function SkillsPage() {
               once, no prompting.
             </p>
 
-            {/* Moved up from the bottom of the install column, where it was the
-                last thing on the page and answered a question the reader has at
-                the top: the title says Claude Code, so "does this work with what
-                I use" is the first doubt, not the last. It sits under the lead
-                as a quiet qualifier rather than a section of its own. */}
-            <div>
-              <h2 className="type-eyebrow mb-3 uppercase text-text-secondary">
-                Works with any agent
-              </h2>
-              <AgentLogoRow />
-            </div>
-
           </div>
 
-          <div className="mt-10 lg:mt-0 lg:border-l lg:border-border-primary lg:pl-12">
-            {/* Each block: a small framed mark, a heading, one line of copy,
-                the command, then a footnote row splitting the secondary detail
-                left and the way out right.
+          {/* The two installs sit under the lead rather than beside it.
+
+              As a right-hand column they were squeezed into roughly a third of
+              the page, which is what pushed the copy to three or four words a
+              line and made a short section look like a dense one. Side by side
+              at full width they are the same words in half the lines.
+
+              The agent logo row went with the old layout. It was answering
+              "does this work with what I use", and the second block now answers
+              that by name — Cursor, Copilot, Codex — in the place where the
+              question actually arises. */}
+          <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-12">
+            {/* Each block: a mark, a heading, one line of copy, the command,
+                then a footnote row splitting the secondary detail left and the
+                way out right.
 
                 Deliberately quiet, and quiet in the way labels are quiet:
                 small caps in secondary ink, marks left unframed, footnotes a
                 step smaller again. Only the command itself keeps a surface,
-                because it is the one thing in this column anybody came to act
-                on. Leading is loose throughout — at this size air is what
-                makes a column readable rather than cramped, and it costs
-                nothing here since the column is shorter than the one beside
-                it. */}
-            {/* Two ways in, and the order is the recommendation.
+                because it is the one thing here anybody came to act on.
+
+                Two ways in, and the order is the recommendation.
 
                 They used to sit as separate sections with headings that did not
                 read as alternatives — "Install every skill" and "Claude Code" —
@@ -185,7 +175,9 @@ export default function SkillsPage() {
               </div>
             </section>
 
-            <section className="mt-9 border-t border-border-primary pt-9">
+            {/* Side by side now, so the rule between them is vertical and only
+                at the width where they actually sit in two columns. */}
+            <section className="border-t border-border-primary pt-9 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
               <h2 className="type-eyebrow mb-3 flex items-center gap-2 uppercase text-text-secondary">
                 <CyclingAgentMark />
                 Any other agent
