@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { patterns } from '@/data/patterns';
 import categories from '@/data/categories';
-import { guides } from '@/data/guides';
 import { siteConfig } from '@/config/seo';
 import { skillName } from '@/lib/skills/composeSkill';
 import { exampleProducts } from '@/lib/skills/usedBy';
@@ -67,27 +66,6 @@ export default function SkillsPage() {
       category: pattern.category,
       trigger: pattern.content.skillDescription ?? pattern.description,
       products: exampleProducts(pattern),
-    }));
-
-  // Two courses, not a menu: what a skill is, then the agent this page is
-  // named after. A third row turned a nudge into a directory and competed
-  // with the skills list further down, which is where browsing belongs.
-  // Titles and lesson counts are read from the guides data rather than typed
-  // here, so a renamed or re-cut course cannot leave a stale claim on this
-  // page.
-  const STARTING_COURSE_SLUGS = [
-    'ai-ux-skills-guide',
-    'claude-code-learning-path',
-  ];
-  const startingCourses = STARTING_COURSE_SLUGS.map((slug) =>
-    guides.find((g) => g.slug === slug)
-  )
-    .filter((g): g is NonNullable<typeof g> => g != null)
-    .map((g) => ({
-      slug: g.slug,
-      title: g.title,
-      tool: g.tool,
-      lessonCount: g.lessons?.length ?? g.lessonCount ?? 0,
     }));
 
   const itemList = {
@@ -157,56 +135,6 @@ export default function SkillsPage() {
               <AgentLogoRow />
             </div>
 
-            {/* The left column ran out of content well before the install
-                column did, leaving a large hole under the lead. It held a
-                sample skill file for a while, which answered "what is a skill"
-                but answered it to someone who had not yet asked — a wall of
-                frontmatter is the second question, not the first.
-
-                A course list is the better neighbour to an install command:
-                whoever is not ready to run the command is ready to read, and
-                these are the courses that end with them running it anyway.
-                Titles and lesson counts come from the guides data, so a course
-                renamed or re-cut here cannot go stale. */}
-            <div className="mt-10 rounded-card border border-border-primary">
-              <p className="type-caption border-b border-border-primary px-5 py-3 font-semibold text-text-primary">
-                New here? Start with a course
-              </p>
-              <ul>
-                {startingCourses.map((course, index) => (
-                  <li
-                    key={course.slug}
-                    className={index > 0 ? 'border-t border-border-primary' : ''}
-                  >
-                    <Link
-                      href={`/guides/${course.slug}`}
-                      className="group flex items-center gap-4 px-5 py-4 transition-colors hover:bg-surface-secondary"
-                    >
-                      <span className="min-w-0 flex-1">
-                        <span className="type-body block font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
-                          {course.title}
-                        </span>
-                        <span className="type-caption block text-text-secondary">
-                          {course.lessonCount} lessons · {course.tool}
-                        </span>
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="type-body shrink-0 text-text-secondary transition-colors group-hover:text-accent-primary"
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/guides"
-                className="type-caption block border-t border-border-primary px-5 py-3 text-text-secondary transition-colors hover:text-text-primary"
-              >
-                All courses ↗
-              </Link>
-            </div>
           </div>
 
           <div className="mt-10 lg:mt-0 lg:border-l lg:border-border-primary lg:pl-12">
