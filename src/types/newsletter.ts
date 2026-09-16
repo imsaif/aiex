@@ -39,6 +39,10 @@ export const NEWSLETTER_SOURCES = [
   'homepage-hero-pre-audit',
   'homepage-skills-pack',
   'pattern-skills-pack',
+  // Arrivals from a newsletter link that opens the skills dialog on landing.
+  // Separate from `homepage-skills-pack` so newsletter traffic can be judged on
+  // its own rather than blurred into people who found the gate by scrolling.
+  'newsletter-skills-pack',
 ] as const;
 
 export type NewsletterSource = (typeof NEWSLETTER_SOURCES)[number];

@@ -121,6 +121,39 @@ Important:
 - If no items are UX-relevant, return fewer items or explain in summary`;
 }
 
+/**
+ * Absolute origin for every link in the email body.
+ *
+ * This matters more here than on the site. The issue HTML is pasted into Beehiiv
+ * and read in a mail client, where a relative href has no page to resolve
+ * against — it either dies or resolves against the sender's domain. On the
+ * /news archive the same markup works fine, which is exactly why a relative link
+ * can sit in a template unnoticed.
+ *
+ * www, not the apex: the apex 307s to www, so an apex link costs every reader a
+ * redirect and muddies click attribution.
+ */
+const SITE = 'https://www.aiuxdesign.guide';
+
+/**
+ * Where the closing CTA sends people.
+ *
+ * `?skills=1` lands them on the homepage and opens the skill-pack dialog on
+ * arrival, rather than dropping them on /audit to find the ask themselves. A
+ * reader who clicked a link about the patterns has already said yes; making them
+ * hunt for the next step spends that intent for nothing.
+ */
+const SKILLS_CTA_URL = `${SITE}/?skills=1`;
+
+/**
+ * Counted from the registry this file already imports, never written as a
+ * literal. The CTA said "Explore All 28 Patterns" long after the library reached
+ * 38, because the number was hardcoded in the template and nothing here fails
+ * when it drifts — the email is generated, approved and sent without anyone
+ * re-reading the boilerplate under the stories.
+ */
+const PATTERN_COUNT = patterns.length;
+
 // Generate HTML content from Claude's response
 function generateHTML(data) {
   const itemsHTML = data.items
@@ -137,7 +170,7 @@ function generateHTML(data) {
   </div>
   <p style="margin: 0 0 12px; font-size: 18px; font-weight: 600; color: #0f172a; line-height: 1.4;">${item.headline}</p>
   <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: #555555;">${item.description} <a href="${item.sourceUrl}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin-left: 4px;">Source →</a></p>
-  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="/patterns/${item.patternSlug}" style="background: ${bgColor}; color: ${color}; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
+  <p style="margin: 0; font-size: 14px; color: #0f172a;"><strong>Pattern:</strong> <a href="${SITE}/patterns/${item.patternSlug}" style="background: ${bgColor}; color: ${color}; padding: 3px 10px; border-radius: 4px; font-size: 13px; text-decoration: none; font-weight: 500;">${getPatternTitle(item.patternSlug)}</a></p>
 </div>`;
     })
     .join('\n');
@@ -160,8 +193,8 @@ ${itemsHTML}
 
 <!-- CTA -->
 <div style="text-align: center; padding: 24px 0;">
-  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want to learn more about the patterns mentioned today?</p>
-  <a href="/" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Explore All 28 Patterns →</a>
+  <p style="margin: 0 0 24px; font-size: 16px; color: #64748b;">Want the patterns mentioned today as Claude skills?</p>
+  <a href="${SKILLS_CTA_URL}" style="display: inline-block; padding: 16px 32px; background-color: #0f172a; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">Get all ${PATTERN_COUNT} skills →</a>
 </div>
   `.trim();
 }

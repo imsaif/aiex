@@ -14,6 +14,7 @@ import { RemainingAuditsBanner } from '@/components/audit/RemainingAuditsBanner'
 import { useAuditCount } from '@/hooks/useAuditCount';
 import type { AnalysisResults, AuditStep, ProductType } from '@/types/audit';
 import { trackAuditEvent, setAuditSessionId } from '@/lib/audit/analytics';
+import type { NewsletterSource } from '@/types/newsletter';
 
 // Lazy load heavy components that aren't needed on initial paint
 
@@ -99,6 +100,21 @@ export default function AuditClient({
   // note on the 'interstitial' variant for why a hard gate would be the wrong
   // trade against ~4 completed audits a week.
   const [showSkillsGate, setShowSkillsGate] = useState(false);
+  // Newsletter arrivals open the dialog on landing rather than waiting for the
+  // hero CTA. Those readers already said yes by clicking a link about the pack,
+  // so making them find the ask again loses the intent they arrived with.
+  const [gateSource, setGateSource] = useState<NewsletterSource>('homepage-skills-pack');
+
+  // Read from window rather than useSearchParams on purpose: this page is
+  // statically rendered, and useSearchParams would force it dynamic (or demand a
+  // Suspense boundary) for what is a client-only trigger.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('skills') !== '1') return;
+    setGateSource('newsletter-skills-pack');
+    setShowSkillsGate(true);
+    trackAuditEvent('skills_gate_autoopened', { source: 'newsletter-skills-pack' });
+  }, []);
 
   const handleStartRealAudit = useCallback(() => {
     if (isPaywalled) {
@@ -326,7 +342,12 @@ export default function AuditClient({
         ariaLabel="Supercharge your design with Claude skills"
         size="lg"
       >
-        <SkillPackGate variant="interstitial" onDone={leaveForAudit} onDismiss={dismissSkillsGate} />
+        <SkillPackGate
+          variant="interstitial"
+          source={gateSource}
+          onDone={leaveForAudit}
+          onDismiss={dismissSkillsGate}
+        />
       </Dialog>
 
       {/* Paywall Modal */}
