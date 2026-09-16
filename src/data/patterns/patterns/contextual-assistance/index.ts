@@ -19,7 +19,7 @@ export const contextualassistance: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when help should arrive at the moment of need: proactive tips, inline suggestions, 'users do not know what to ask', onboarding hints, help without interrupting the workflow. Contextual Assistance offers timely guidance from context.",
+      "Use when help should arrive at the moment of need, or when the help itself has become the problem: proactive tips, inline suggestions, 'users do not know what to ask', onboarding hints. Equally: tips firing at the wrong moment, suggestions people keep dismissing, hints that will not go away. Contextual Assistance offers timely guidance from context, at a volume people accept.",
     problem: "Users need guidance but often don't know what or when to ask. Traditional help interrupts workflows.",
     solution: "Design intelligent assistance that proactively offers relevant help, suggestions, or information based on user context and behavior. Anticipate needs rather than waiting for explicit requests.",
     examples,

@@ -18,7 +18,7 @@ export const ambientintelligence: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when help should appear from context without being asked: proactive background assistance, sensing situation or environment, 'it should just know', assistance while attention is elsewhere. Ambient Intelligence assists without explicit interaction.",
+      "Use when help should appear from context without being asked, or when that background help has become intrusive: proactive assistance, sensing situation or environment, 'it should just know'. Equally: 'it keeps butting in', prompts nobody wanted, the product acting on context it misread. Ambient Intelligence assists without explicit interaction, and knows when to stay quiet.",
     problem: "Users need intelligent assistance without cognitive overhead, especially when attention is focused elsewhere.",
     solution: "Create AI systems that operate unobtrusively in the background, sensing context and providing assistance without interruption.",
     examples,

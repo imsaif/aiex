@@ -17,7 +17,7 @@ export const adaptiveinterfaces: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when the UI should adjust to how each person uses it: personalized layouts, reordering features by usage, 'the app should learn what I use most'. Adaptive Interfaces tune layout and functionality to individual behavior.",
+      "Use when the UI should adjust to how each person uses it, or when that adaptation has gone wrong: personalized layouts, reordering features by usage, 'the app should learn what I use most'. Equally: 'the layout keeps moving', controls that vanish because usage dropped, 'it changed and now I cannot find anything'. Adaptive Interfaces tune layout to behavior without destabilizing it.",
     problem: "Static interfaces treat all users identically, leading to inefficient workflows and feature discovery issues.",
     solution: "Design systems that observe user behavior to automatically adapt layout and feature visibility, remaining transparent and user-controllable.",
     examples,
