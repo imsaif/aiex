@@ -24,15 +24,12 @@ export default function LearnSection({
       id={section.id}
       className="scroll-mt-24 border-b border-border-primary py-16 last:border-b-0 md:py-20"
     >
-      {/* One measure for the whole section, centred in the column.
-          
-          The intro and the rows used to differ — intro capped, rows full bleed —
-          so the right edge was ragged. Giving both the same cap fixed that but
-          left the whole block hard against the left edge with 159px of slack
-          piled on the right, which reads as the page being off-centre rather
-          than as a margin. Centring splits it: an even gutter each side, and
-          the section rules still run the full width behind it. */}
-      <div className="mb-12 mx-auto max-w-[1100px]">
+      {/* No inner cap. The intro and the rows used to disagree — intro capped,
+          rows full bleed — and every fix for that was a width invented here to
+          undo one chosen in LearnShell. The frame is now tight enough that the
+          column is the measure, so everything in the section shares it by
+          default and there is nothing left to keep in sync. */}
+      <div className="mb-12">
         {/* The ordinal sits outside the text column so the heading and the
             intro share a left edge. Previously the ordinal pushed only the
             heading across, and the intro hung to the left of its own title. */}
@@ -55,17 +52,13 @@ export default function LearnSection({
         </div>
       </div>
 
-      <ol className="mx-auto max-w-[1100px] space-y-3">
+      <ol className="space-y-3">
         {section.items.map((item, i) => (
           <LearnItemCard key={item.href} item={item} ordinal={i + 1} />
         ))}
       </ol>
 
-      {/* Same measure as the rows above it. Without the cap this sat against
-          the section's own right edge, 80px past the cards it belongs to, so
-          the one control in the band was the only thing not lining up with
-          anything. */}
-      <div className="mx-auto mt-6 flex max-w-[1100px] justify-end">
+      <div className="mt-6 flex justify-end">
         <Link
           href={section.more.href}
           className="type-caption inline-flex items-center gap-2 rounded-card border border-border-primary px-4 py-2 font-semibold text-text-primary transition-colors hover:border-accent-primary/40 hover:text-accent-primary"
