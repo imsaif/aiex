@@ -56,9 +56,12 @@ export default function LearnItemCard({
         </span>
 
         <div className="min-w-0 flex-1">
-          {/* A bordered pill, not loose text — it reads as a label and gives
-              the title something to sit under, the way the reference does it. */}
-          <span className="type-eyebrow inline-flex items-center rounded border border-border-primary px-2.5 py-1 text-text-secondary">
+          {/* Loose small caps, not a bordered pill. As a chip it had a border,
+              a fill and padding of its own, which gave a line of metadata the
+              visual weight of a control and put it in competition with the
+              title underneath. It is the least important thing in the card and
+              should be read last. */}
+          <span className="type-footnote uppercase tracking-wide text-text-secondary">
             {meta.join(' · ')}
           </span>
 
@@ -67,7 +70,7 @@ export default function LearnItemCard({
               class does nothing, because the class sets font-weight from a
               variable. This heading has been rendering at 400. */}
           <h3
-            className="type-lead mt-3 max-w-[820px] text-text-primary group-hover:text-accent-primary"
+            className="type-lead mt-2 max-w-[820px] text-text-primary group-hover:text-accent-primary"
             style={{ ['--type-lead-weight' as string]: 600 }}
           >
             {item.title}
@@ -77,9 +80,15 @@ export default function LearnItemCard({
           </p>
         </div>
 
+        {/* Centred on the card, not aligned to its first line. The ordinal
+            belongs to the top line because it numbers the title; the arrow
+            belongs to the whole card, and on a three-line item it looked
+            stranded up beside the badge. `self-center` rather than switching
+            the row to items-center, which would drag the ordinal down with
+            it. */}
         <span
           aria-hidden="true"
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-border-primary text-text-secondary transition-colors group-hover:border-accent-primary/40 group-hover:text-accent-primary"
+          className="flex h-8 w-8 shrink-0 self-center items-center justify-center rounded-pill border border-border-primary text-text-secondary transition-colors group-hover:border-accent-primary/40 group-hover:text-accent-primary"
         >
           →
         </span>
