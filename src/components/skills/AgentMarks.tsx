@@ -120,11 +120,6 @@ export function AgentLogoRow() {
 const COURSE_TOOL_LOGOS: Record<string, string> = {
   'Claude Code': '/images/logos/claude.svg',
   'Claude Design': '/images/logos/simple-icons/claude-design.svg',
-  // Docs and Slides have no mark of their own: they are artifact types inside
-  // Claude, not products with their own logo. The Claude mark is the honest
-  // stand-in, and it keeps the column of logos even.
-  'Claude Docs': '/images/logos/claude.svg',
-  'Claude Slides': '/images/logos/claude.svg',
   Cursor: '/images/logos/cursor.svg',
   'GitHub Copilot': '/images/logos/simple-icons/githubcopilot.svg',
   GitHub: '/images/logos/simple-icons/github.svg',
@@ -154,9 +149,56 @@ function SubjectMark() {
   );
 }
 
+/**
+ * Docs and Slides are artifact types inside Claude, not products, so neither
+ * ships a logo of its own. Reusing the Claude mark for both put three identical
+ * marks in one column, which reads as a rendering fault rather than as three
+ * courses about three things.
+ *
+ * Claude gives each artifact type its own glyph in its artifact list: a page
+ * for a doc, stacked rectangles for a deck. These redraw those, filled to match
+ * the brand logos they sit beside, the same reasoning as `SubjectMark`.
+ */
+function DocMark() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M6 2h8l4 4v16H6V2zm7 1.5V7h3.5L13 3.5zM8.5 11h7v1.5h-7V11zm0 3.5h7V16h-7v-1.5zm0 3.5h4.5v1.5H8.5V18z" />
+    </svg>
+  );
+}
+
+function SlidesMark() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <path d="M7 3h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm-3 3v12a1 1 0 0 0 1 1h13v1.5a.5.5 0 0 1-.5.5H3.5a1.5 1.5 0 0 1-1.5-1.5V6.5a.5.5 0 0 1 .5-.5H4z" />
+    </svg>
+  );
+}
+
+const COURSE_TOOL_MARKS: Record<string, () => React.ReactElement> = {
+  'Claude Docs': DocMark,
+  'Claude Slides': SlidesMark,
+};
+
 export function CourseToolMark({ tool }: { tool?: string }) {
   const logoFilter = useThemeFilter('grayscale(100%)');
+  const drawn = tool ? COURSE_TOOL_MARKS[tool] : undefined;
   const logo = tool ? COURSE_TOOL_LOGOS[tool] : undefined;
+
+  if (drawn) {
+    const Mark = drawn;
+    return <Mark />;
+  }
 
   if (!logo) return <SubjectMark />;
 
