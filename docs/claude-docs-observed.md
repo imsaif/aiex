@@ -341,3 +341,59 @@ fonts choice the most designer-specific decision in the product. On this
 evidence it is close to no decision at all. The guide should test it once more
 on a deck with a migrated design system, where the fonts are actually custom,
 and say plainly what happens. Do not repeat Anthropic's framing untested.
+
+# Claude Design: two places, not one
+
+Checked at 2:13pm. Both of these exist and both work. The course audit assumed
+one had replaced the other. It has not.
+
+## A new Design artifact
+
+`claude.ai/cowork/cse_…?artifact=…`, the same split shell as Docs and Slides.
+
+- Empty state: **"Describe an idea and turn it into a design"**, with the same
+  **Choose design system…** picker, still empty
+- Canvas toolbar: page selector, select, pan, text, frame, sticky note, pen,
+  shapes. Zoom at 50%
+- *"This canvas has no artboards yet. Add one, or let Claude add some."* with
+  **Add an artboard**
+- A label reading "User-generated artifact content"
+
+No templates. No project list. Nothing you made before.
+
+## The standalone app at claude.ai/design
+
+Still live, still titled **Claude Design, Beta**, and it is where everything you
+own actually lives:
+
+- Prompt bar: *"Attach a file, link your design system, or describe what you want
+  to make"*, with a **Design system** button, a code button, and a **Model**
+  picker reading Sonnet 5
+- **Choose a template**, twelve of them: Blank, Mobile app design, **Slides**,
+  Document, Wireframe, Animation, UI mockups, Résumé, 3D object, Research,
+  HTML email, Color + type pairing
+- Three tabs: **Projects, Design systems, Templates**, with real project history
+  underneath
+
+## The distinction to write down
+
+**The standalone is the library. Artifacts is the workshop.** Your projects,
+your design systems and your templates live at claude.ai/design. New work is
+created as an artifact. That is the sentence the course needs, and neither the
+banner nor the tooltips say it.
+
+It also explains the empty picker in Slides: design systems are managed over
+there, and the artifact side only reads them.
+
+## Correcting the course audit
+
+Two corrections to `claude-design-course-audit.md`, made on this evidence:
+
+1. **Lesson 11 is incomplete, not wrong.** The standalone still offers a Slides
+   template, so a reader following it does get a deck. What they are not told is
+   that a second, different route now exists. Weaker fault than I wrote, same
+   fix: name both and say which to use when.
+2. **Lessons 7 and 8 hold up better than I said.** Extracting and publishing a
+   design system still happens at claude.ai/design, under the Design systems tab.
+   That part of the course is not stale at all. What is missing is the sentence
+   connecting it to the artifact side.
