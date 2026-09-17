@@ -431,3 +431,16 @@ artifact they make. They will assume the picker is broken.
 Lessons 7 and 8 need the migration step appended, not rewritten. The extraction
 and publishing they teach still works. What is missing is the sentence that says
 your published system does not reach the new surfaces until you migrate it.
+
+### Confirmed in Slides too, and it is a loop
+
+Same behaviour from a Slides artifact at 2:24pm. Choose design system offers only
+Manage design systems, which opens the settings modal, which lists ten systems
+every one of them tagged Legacy, none of them selectable from the artifact.
+
+The word "migrate" does not appear anywhere in that modal. The only migration
+action seen so far is the one in the banner on the artifacts page.
+
+So the path a designer naturally takes leads nowhere: picker, to a list, to a
+list of things the picker will not show. Worth stating plainly in both guides,
+because it reads as a bug and is not one.
