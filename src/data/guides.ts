@@ -9202,9 +9202,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "foundations",
         "sections": [
           {
-            "type": "intro",
-            "content": "A doc is the one artifact you can argue with in the margin.",
-            "icon": "info"
+            "type": "text",
+            "content": "A doc is the one artifact you can argue with in the margin."
           },
           {
             "type": "text",
@@ -9270,9 +9269,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "working",
         "sections": [
           {
-            "type": "intro",
-            "content": "This is the lesson that matters. Everything else is ordinary document software.",
-            "icon": "info"
+            "type": "text",
+            "content": "This is the lesson that matters. Everything else is ordinary document software."
           },
           {
             "type": "steps",
@@ -9356,9 +9354,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "working",
         "sections": [
           {
-            "type": "intro",
-            "content": "You can read a doc while it is still being written, which changes how the wait feels.",
-            "icon": "info"
+            "type": "text",
+            "content": "You can read a doc while it is still being written, which changes how the wait feels."
           },
           {
             "type": "text",
@@ -9410,9 +9407,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "working",
         "sections": [
           {
-            "type": "intro",
-            "content": "One doc holds several tabs, which is how you keep the detail out of the part people read.",
-            "icon": "info"
+            "type": "text",
+            "content": "One doc holds several tabs, which is how you keep the detail out of the part people read."
           },
           {
             "type": "text",
@@ -9468,9 +9464,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "judgement",
         "sections": [
           {
-            "type": "intro",
-            "content": "Asking for the wrong artifact costs you a session, and three tiles side by side make it easy to do.",
-            "icon": "warning"
+            "type": "text",
+            "content": "Asking for the wrong artifact costs you a session, and three tiles side by side make it easy to do."
           },
           {
             "type": "table",
@@ -9567,9 +9562,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "foundations",
         "sections": [
           {
-            "type": "intro",
-            "content": "Slides asks you a question before you have a single slide, and Docs never does.",
-            "icon": "info"
+            "type": "text",
+            "content": "Slides asks you a question before you have a single slide, and Docs never does."
           },
           {
             "type": "text",
@@ -9620,9 +9614,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "setup",
         "sections": [
           {
-            "type": "intro",
-            "content": "The picker looks broken. It is only empty, and the fix is not where you will look for it.",
-            "icon": "warning"
+            "type": "text",
+            "content": "The picker looks broken. It is only empty, and the fix is not where you will look for it."
           },
           {
             "type": "text",
@@ -9699,9 +9692,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "working",
         "sections": [
           {
-            "type": "intro",
-            "content": "The picker is optional, and the interesting part is that skipping it still produces a good deck.",
-            "icon": "info"
+            "type": "text",
+            "content": "The picker is optional, and the interesting part is that skipping it still produces a good deck."
           },
           {
             "type": "heading",
@@ -9773,9 +9765,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "working",
         "sections": [
           {
-            "type": "intro",
-            "content": "The anchored comment works on a canvas too. It is the spine of both products, not a Docs feature.",
-            "icon": "info"
+            "type": "text",
+            "content": "The anchored comment works on a canvas too. It is the spine of both products, not a Docs feature."
           },
           {
             "type": "text",
@@ -9827,9 +9818,8 @@ Audience: Early-stage VCs in the design-tools space.`,
         "module": "handoff",
         "sections": [
           {
-            "type": "intro",
-            "content": "Anthropic says the deck exports with editable text and shapes. We unpacked the file to check.",
-            "icon": "info"
+            "type": "text",
+            "content": "Anthropic says the deck exports with editable text and shapes. We unpacked the file to check."
           },
           {
             "type": "text",
