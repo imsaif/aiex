@@ -531,3 +531,16 @@ slides"*.
 
 Six minutes of blank canvas is a long time to look at a "Claude is working…"
 label. State the wait plainly in the lesson rather than pretending it is quick.
+
+**Caveat on the paragraph above, added immediately.** It is not established that
+a design system was applied to that second deck. The picker was never shown with
+a selection, and the migration was still running when the run began. The heading
+"a branded deck costs more time" assumes something not in evidence.
+
+What is in evidence: the second run read different reference files, created 11
+files rather than 6, and took over 6 minutes rather than about 2. The cause is
+unknown. It could be branding, a longer brief, or ordinary variance.
+
+Before this reaches a lesson, run one deck with a migrated system explicitly
+selected and one without, same prompt, and compare. Until then the honest line is
+"runs vary a lot in length", not a claim about branding.
