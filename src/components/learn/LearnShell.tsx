@@ -44,12 +44,7 @@ export default function LearnShell({
   return (
     <div className="learn-console-ground bg-background-console">
       <div
-        // 1600 was wider than the content ever wanted. On a 1710 viewport it
-        // left the reading column around 1260 wide, which is why every page in
-        // here had grown its own inner cap to claw that back — and why the caps
-        // disagreed with each other. Tightening the frame once fixes the gaps
-        // on all three pages and lets those per-page caps go.
-        className={`mx-auto max-w-[1400px] lg:grid lg:border-r lg:border-border-primary ${columns}`}
+        className={`mx-auto max-w-[1600px] lg:grid lg:border-r lg:border-border-primary ${columns}`}
       >
         <div className="bg-background-rail lg:border-r lg:border-border-primary">
           {sidebar}
