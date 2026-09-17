@@ -663,7 +663,7 @@ const renderSection = (
       // Keeps the schema additive and preserves the `alt` / `label` contract.
       const isVideo = !!section.src && /\.(mp4|webm|mov)$/i.test(section.src);
       return (
-        <div key={index} className="lesson-figure-block mb-8">
+        <div key={index} className="mb-8">
           {section.src ? (
             // `lesson-figure` lets the figure grow past the article's 820px
             // reading measure into the space the column actually has, and

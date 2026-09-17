@@ -95,18 +95,14 @@ export default function LearnShell({
             '--learn-rail': railWidth,
             '--learn-cols-lg': template.lg,
             '--learn-cols-xl': template.xl,
-            // How far a figure may grow past the 820px reading measure.
+            // The reading measure widens with the rail.
             //
-            // Prose keeps its measure, because a 1200px line is harder to read,
-            // not easier. Screenshots have the opposite need: they are the
-            // widest thing on the page and the first thing to suffer, and a
-            // browser screenshot at 820px is unreadable at a glance.
-            //
-            // The column is far wider than the text in both states. At the
-            // 1600px cap it runs to roughly 1020px with the rail open and
-            // 1230px with it collapsed, so these are the space that is actually
-            // there, not a guess.
-            '--lesson-bleed': collapsed ? '400px' : '180px',
+            // Typographic orthodoxy says hold a fixed measure and let the slack
+            // fall where it may. On this layout that put a 400px empty gutter
+            // between the text and the On this page rail, and collapsing the
+            // rail appeared to do nothing on a text-only screen. Collapsing is
+            // an explicit request for more room, so the content takes it.
+            '--lesson-measure': collapsed ? '1080px' : '820px',
           } as React.CSSProperties
         }
       >
@@ -142,8 +138,10 @@ export default function LearnShell({
           </div>
 
           {/* Hidden rather than unmounted, so the rail's scroll position and
-              any open course group survive a collapse and expand. */}
-          <div className={collapsed ? 'lg:hidden' : undefined}>{sidebar}</div>
+              any open course group survive a collapse and expand.
+              The right gutter keeps two-line lesson titles from running under
+              the sticky toggle, which sits over this column. */}
+          <div className={collapsed ? 'lg:hidden' : 'lg:pr-8'}>{sidebar}</div>
         </div>
 
         <div className="min-w-0 bg-background-primary px-6 lg:px-10">{children}</div>

@@ -53,7 +53,12 @@ export default function LessonImageZoom({
         type="button"
         onClick={() => setOpen(true)}
         aria-label={`Enlarge: ${alt}`}
-        className="block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
+        // Closing the overlay returns focus here, and the browser's default ring
+        // then draws a blue box around the screenshot, which reads as the image
+        // being selected rather than as a focus state. Suppressed for pointer
+        // use only: keyboard users still get a visible ring, because a control
+        // you cannot see yourself land on is not usable.
+        className="block w-full cursor-zoom-in rounded-card border-0 bg-transparent p-0 text-left focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary"
       >
         {children}
       </button>

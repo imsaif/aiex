@@ -1029,6 +1029,16 @@ nav[aria-label='On this page']::-webkit-scrollbar,
  * guess was wrong: the On this page rail is a column inside this track, not
  * outside it, so wide screenshots slid underneath it. Capping the text removes
  * the arithmetic entirely, and the layout can no longer disagree with itself. */
-.lesson-prose > *:not(.lesson-figure-block) {
-  max-width: 820px;
+/* Figures share the measure rather than exceeding it. Two different right
+ * edges on one column read as a mistake, whichever of them is "correct", and a
+ * screenshot that overhangs the paragraph above it looks like a bug rather than
+ * emphasis. The measure itself widens when the reader collapses the rail, so
+ * pictures still get more room; they just get it in step with the text. */
+.lesson-prose > * {
+  max-width: var(--lesson-measure, 820px);
+  transition: max-width 200ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-prose > * { transition: none; }
 }
