@@ -245,3 +245,39 @@ output as a black box.
 Slides is a separate guide, confirmed. Docs is text you brief by commenting.
 Slides is a styled artifact built from files, with a slow blank wait and a
 strong default look. Sharing one guide would flatten both.
+
+## Comments work on slides too, anchored to an element
+
+The same review-comment interaction from Docs exists on the canvas. Clicking into
+a card and typing `@Claude` opens a composer whose header names exactly what is
+being discussed: **"Slide 2 › Caption "A topic, an audience, a source doc…""**.
+The **Send to Claude** checkbox is there as well, ticked.
+
+So the anchored comment is not a Docs feature. It is the shared spine across
+both surfaces: point at the thing, ask there, get the change made in place. That
+is the sentence the hub page needs.
+
+## A house rule, enforced by pointing at a slide
+
+Two comments were left on one card: *"remove emdashes"*, then *"also give
+examples here"*. Claude did both across the deck and replied in the thread:
+*"Done both: pulled every em dash out of the deck (rewrote with colons/commas
+instead), and this card now reads…"*
+
+The before and after is visible in the deck's own subtitle:
+
+- before: "directly from your instructions — no template to wrestle with"
+- after: "directly from your instructions: no template to wrestle with"
+
+This is the best single demo in the whole cluster. A designer with a house style
+enforces it by commenting on the slide that breaks it, and it propagates.
+
+## Claude resolves its own threads
+
+The reply is attributed **"Claude · via Imran"**, the thread is marked
+**Resolved**, and the box underneath reads *"Reply to reopen…"*. The left panel
+confirmed: *"Done — replied in the comment thread and resolved it."*
+
+Also seen: *"Edited 4 files, loaded tools"* and *"Published; now replying in the
+comment thread and checking for other pending threads."* It tracks a queue of
+threads rather than handling one and stopping.
