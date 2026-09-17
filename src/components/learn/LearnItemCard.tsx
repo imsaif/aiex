@@ -28,7 +28,12 @@ export default function LearnItemCard({
 }) {
   // Duration only exists for courses. Kept beside the type rather than on its
   // own line — three facts stacked above the title was most of the clutter.
-  const meta = [item.badge];
+  // Sentence case. `item.badge` arrives as "COURSE" / "PATTERN" for the old
+  // pill treatment; lower-cased here rather than at the source, because the
+  // badge is still shown in caps elsewhere and this is a presentation choice
+  // local to the card.
+  const badge = item.badge.charAt(0) + item.badge.slice(1).toLowerCase();
+  const meta = [badge];
   if (item.lessonCount) meta.push(`${item.lessonCount} lessons`);
   if (item.readTime) meta.push(`${item.readTime} min`);
 
@@ -56,27 +61,34 @@ export default function LearnItemCard({
         </span>
 
         <div className="min-w-0 flex-1">
-          {/* Loose small caps, not a bordered pill. As a chip it had a border,
-              a fill and padding of its own, which gave a line of metadata the
-              visual weight of a control and put it in competition with the
-              title underneath. It is the least important thing in the card and
-              should be read last. */}
-          <span className="type-footnote uppercase tracking-wide text-text-secondary">
-            {meta.join(' · ')}
-          </span>
-
-          {/* Capped measure, not the full row. */}
+          {/* Title first. Capped measure, not the full row. */}
           {/* Same fix as the patterns list: `font-bold` beside a .type-*
               class does nothing, because the class sets font-weight from a
               variable. This heading has been rendering at 400. */}
           <h3
-            className="type-lead mt-2 max-w-[820px] text-text-primary group-hover:text-accent-primary"
+            className="type-lead max-w-[820px] text-text-primary group-hover:text-accent-primary"
             style={{ ['--type-lead-weight' as string]: 600 }}
           >
             {item.title}
           </h3>
-          <p className="type-caption mt-2 line-clamp-2 max-w-[820px] text-text-secondary">
+          <p className="type-caption mt-1.5 line-clamp-2 max-w-[820px] text-text-secondary">
             {item.description}
+          </p>
+
+          {/* Last, not first.
+
+              This started as a bordered pill above the title, then as small caps
+              above the title, and it kept pulling the eye either way — because
+              the problem was never the styling. Anything at the top of a card is
+              read first, and setting it in caps only added to that. It is the
+              least important thing here: you decide from the title whether you
+              want the item, and the format and length tell you what it will cost
+              once you already care.
+
+              Sentence case for the same reason. Caps are for labels that need
+              finding; this one needs to be available, not found. */}
+          <p className="type-footnote mt-2.5 text-text-secondary">
+            {meta.join(' · ')}
           </p>
         </div>
 
