@@ -167,7 +167,13 @@ function DocMark() {
       className="h-3.5 w-3.5 shrink-0"
       aria-hidden="true"
     >
-      <path d="M6 2h8l4 4v16H6V2zm7 1.5V7h3.5L13 3.5zM8.5 11h7v1.5h-7V11zm0 3.5h7V16h-7v-1.5zm0 3.5h4.5v1.5H8.5V18z" />
+      {/* A page with two lines of text. Drawn at 14px, so the folded corner
+          and three separate bars of the first attempt turned to mush: at this
+          size a glyph needs two or three shapes, not six. */}
+      <rect x="5" y="3" width="14" height="18" rx="2" />
+      <rect x="8" y="8" width="8" height="1.6" rx="0.8" fill="var(--background-rail)" />
+      <rect x="8" y="12" width="8" height="1.6" rx="0.8" fill="var(--background-rail)" />
+      <rect x="8" y="16" width="5" height="1.6" rx="0.8" fill="var(--background-rail)" />
     </svg>
   );
 }
@@ -180,7 +186,13 @@ function SlidesMark() {
       className="h-3.5 w-3.5 shrink-0"
       aria-hidden="true"
     >
-      <path d="M7 3h14a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm-3 3v12a1 1 0 0 0 1 1h13v1.5a.5.5 0 0 1-.5.5H3.5a1.5 1.5 0 0 1-1.5-1.5V6.5a.5.5 0 0 1 .5-.5H4z" />
+      {/* A slide: a frame with a title bar and a mark, which is what
+          Anthropic's own Slides tile shows. The stacked-pages version read as
+          a smudge at this size. */}
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <rect x="6" y="9" width="7" height="1.8" rx="0.9" fill="var(--background-rail)" />
+      <rect x="6" y="13" width="4" height="1.8" rx="0.9" fill="var(--background-rail)" />
+      <circle cx="16.5" cy="14" r="1.6" fill="var(--background-rail)" />
     </svg>
   );
 }
