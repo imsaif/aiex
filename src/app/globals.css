@@ -1042,3 +1042,31 @@ nav[aria-label='On this page']::-webkit-scrollbar,
 @media (prefers-reduced-motion: reduce) {
   .lesson-prose > * { transition: none; }
 }
+
+/* The rail's collapse control appears on hover.
+ *
+ * It is a preference control, not navigation: a reader sets it once and then
+ * wants it out of the way, and a permanent button floating over the course list
+ * competes with the lesson titles it sits beside.
+ *
+ * Three cases where it stays put, because a hidden control is only acceptable
+ * while there is another way to the same thing:
+ *   - collapsed, where it is the only route back to the navigation
+ *   - keyboard focus, so tabbing never lands on something invisible
+ *   - devices without hover, where the reveal would never fire at all
+ */
+@media (hover: hover) and (min-width: 1024px) {
+  .rail-toggle {
+    opacity: 0;
+  }
+
+  .group:hover .rail-toggle,
+  .rail-toggle:focus-visible,
+  .rail-toggle-pinned {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail-toggle { transition: none; }
+}

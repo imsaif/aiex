@@ -106,7 +106,7 @@ export default function LearnShell({
           } as React.CSSProperties
         }
       >
-        <div className="relative bg-background-rail lg:border-r lg:border-border-primary">
+        <div className="group relative bg-background-rail lg:border-r lg:border-border-primary">
           {/* Sticky, not absolute. Pinned to the top of a tall column the
               control scrolled away with the rail, so by the time a reader
               wanted more room for a screenshot the way to get it was several
@@ -119,7 +119,9 @@ export default function LearnShell({
             aria-expanded={!collapsed}
             aria-label={collapsed ? 'Expand course navigation' : 'Collapse course navigation'}
             title={collapsed ? 'Expand course navigation' : 'Collapse course navigation'}
-            className="mt-4 hidden h-7 w-7 cursor-pointer items-center justify-center rounded-button bg-background-rail text-text-secondary transition-colors hover:bg-background-secondary hover:text-text-primary lg:flex"
+            className={`rail-toggle mt-4 hidden h-7 w-7 cursor-pointer items-center justify-center rounded-button bg-background-rail text-text-secondary transition-[color,background-color,opacity] hover:bg-background-secondary hover:text-text-primary lg:flex ${
+              collapsed ? 'rail-toggle-pinned' : ''
+            }`}
           >
             <svg
               viewBox="0 0 24 24"
