@@ -7241,7 +7241,7 @@ export const guides: Guide[] = [
     readTime: 30,
     author: 'Design Team',
     publishedDate: '2026-04-21',
-    lastUpdatedDate: '2026-07-20',
+    lastUpdatedDate: '2026-09-17',
     status: 'ready',
     thumbnail: '/images/guides/claude-design-learning-path/thumbnail.svg',
     tags: ['claude-design', 'anthropic', 'learning-path', 'ai-design-tool', 'prototyping', 'design-systems', 'model-selection'],
@@ -7255,7 +7255,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: "Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups. You describe what you need; Claude builds a first version in its canvas, and you refine it together through chat, inline comments, or direct edits. You choose which Claude model powers your work from the Model selector in the prompt bar, and it's currently in beta (Anthropic Labs).",
+            content: "Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups. You describe what you need; Claude builds a first version in its canvas, and you refine it together through chat, inline comments, or direct edits. You choose which Claude model powers your work from the Model selector in the prompt bar, and it's currently in Beta.\n\nSince September 2026 Claude Design lives in two places at once, and knowing which is which saves a wasted session. The standalone app at claude.ai/design is your library: every project you have made, your design systems, and a dozen starting templates. New Design work is created as an artifact inside a Claude conversation, alongside Docs and Slides. The library holds what you own; the artifact is where you build.",
             icon: 'info',
           },
           {
@@ -7267,7 +7267,7 @@ export const guides: Guide[] = [
             type: 'list',
             items: [
               'Turning a rough idea into a clickable HTML prototype without writing code',
-              'Producing on-brand pitch decks from a bulleted outline',
+              'Producing on-brand pitch decks from a bulleted outline, though Claude Slides is now the more direct route (see Lesson 11)',
               'Exploring three layout directions before you commit to one',
               'Converting a written spec into a shareable mockup',
               'Extracting your existing design system from code or Figma so every new project matches',
@@ -8305,7 +8305,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
         sections: [
           {
             type: 'intro',
-            content: "Claude Design handles decks as well as product screens. The mental model is the same, goal, layout, content, audience, but the content block does more work. Feed it the full narrative (bullets per slide) and Claude produces an on-brand deck in minutes.",
+            content: "There are now two ways to make a deck. Claude Slides, one of the three artifact types, is purpose-built for it: a deck you can present, restyle with a design system, and export to PowerPoint with the text still editable. Claude Design also handles decks, and the standalone app keeps a Slides template. Use Slides when the deck is the deliverable. Use Design when the deck sits inside a wider set of screens you are already working on.\n\nEither way the mental model is the same, goal, layout, content, audience, but the content block does more work. Feed it the full narrative (bullets per slide) and Claude produces an on-brand deck in minutes.",
             icon: 'tip',
           },
           {
@@ -8527,7 +8527,7 @@ Audience: Early-stage VCs in the design-tools space.`,
         <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Who this is for</h2>
         <p class="text-gray-700 mb-4">
           Designers, PMs, and founders who want to use Claude Design seriously, not as a novelty. The guide
-          assumes you have a Claude Pro, Max, Team, or Enterprise plan and access to Claude Design in research preview.
+          assumes you have a Claude Pro, Max, Team, or Enterprise plan and access to Claude Design, which is in Beta.
         </p>
 
         <div class="p-6 bg-gray-900 text-white rounded-lg mt-8">
