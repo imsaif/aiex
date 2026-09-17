@@ -26,6 +26,13 @@ interface SaveToDashboardButtonProps {
    */
   showLabelOnHover?: boolean;
   /**
+   * Which side the hover label sits on. `top` suits a button in a row, where
+   * there is always space above it. `bottom` is for the card overlays, where
+   * the button sits at the card's top-right corner and a label above it would
+   * hang off the card.
+   */
+  labelPlacement?: 'top' | 'bottom';
+  /**
    * Override the visible text. The `block` variant on a pattern page sits on the
    * same screen as the `full` pill saving the same slug, so it says something
    * different ("Saved. Download it at checkout.") to read as confirmation of the
@@ -50,6 +57,7 @@ export default function SaveToDashboardButton({
   variant = 'icon',
   labels,
   showLabelOnHover = false,
+  labelPlacement = 'top',
   className = '',
 }: SaveToDashboardButtonProps) {
   const { isSaved, toggle, isLoading } = useHandoffKit();
@@ -138,7 +146,9 @@ export default function SaveToDashboardButton({
           accessible name; announcing it twice is noise, not help. */}
       <span
         aria-hidden="true"
-        className="type-footnote pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-card bg-text-primary px-2 py-1 text-background-primary opacity-0 transition-opacity group-focus-within/save:opacity-100 group-hover/save:opacity-100"
+        className={`type-footnote pointer-events-none absolute left-1/2 z-tooltip -translate-x-1/2 whitespace-nowrap rounded-card bg-text-primary px-2 py-1 text-background-primary opacity-0 transition-opacity group-focus-within/save:opacity-100 group-hover/save:opacity-100 ${
+          labelPlacement === 'bottom' ? 'top-full mt-1.5' : 'bottom-full mb-1.5'
+        }`}
       >
         {label}
       </span>

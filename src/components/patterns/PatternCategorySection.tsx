@@ -81,10 +81,16 @@ export default function PatternCategorySection({
                 </p>
               </Link>
 
+              {/* Same treatment as the skills list: one save control repeated
+                  down a long list is chrome, not an affordance. It reveals on
+                  hover and on keyboard focus, and stays put wherever there is
+                  no hover at all, because a control only a mouse can find is
+                  not a control on a phone. */}
               <SaveToDashboardButton
                 slug={pattern.slug}
                 variant="icon"
-                className="shrink-0"
+                showLabelOnHover
+                className="shrink-0 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
               />
             </div>
           </li>

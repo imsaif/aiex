@@ -197,6 +197,8 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                   <SaveToDashboardButton
                     slug={pattern.slug}
                     variant="icon"
+                    showLabelOnHover
+                    labelPlacement="bottom"
                     className="absolute top-4 right-4"
                   />
                   <Link

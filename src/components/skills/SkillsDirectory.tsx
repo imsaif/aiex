@@ -263,9 +263,15 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
               key={row.slug}
               className="relative transition-transform duration-200 ease-out hover:-translate-y-1.5"
             >
+              {/* Card overlay, so the label hangs below: above it would sit
+                  off the card's top edge. Always visible here, unlike in the
+                  list — on a card it is the only control, and there is no row
+                  of 38 identical copies for it to disappear into. */}
               <SaveToDashboardButton
                 slug={row.slug}
                 variant="icon"
+                showLabelOnHover
+                labelPlacement="bottom"
                 className="absolute top-4 right-4"
               />
               <div
