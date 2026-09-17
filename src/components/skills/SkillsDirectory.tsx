@@ -128,17 +128,26 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                       not a thing to read 38 times, so it appears on search and
                       filter, where the set is small enough for it to earn the
                       space. */}
-                  {/* "Seen in" said once, over the column it labels, rather
-                      than on all 38 rows. Without it the logos are a puzzle —
-                      a reader can recognise the marks and still not know what
-                      the claim is. With it on every row it becomes the same two
-                      words repeated down the page, which is exactly what the
-                      bookmarks were doing before they came out. */}
                   <div className="min-w-0">
-                    <p className="type-footnote mb-1 hidden text-right uppercase tracking-wide text-text-secondary sm:block">
-                      Seen in
-                    </p>
-                  <ul className="min-w-0">
+                    {/* "Seen in" once, over the column, not on all 38 rows:
+                        inline it became the same two words repeated down the
+                        page, which is what the bookmarks were doing before they
+                        came out.
+                        
+                        Aligned by mirroring the row rather than right-aligning
+                        to the container. The marks are not the last thing in a
+                        row — the save button is — so text-right pushed the
+                        label past them by that button's own width. The spacer
+                        stands in for it at the same gap, so the two edges stay
+                        together without a magic number. */}
+                    <div className="mb-1.5 hidden items-center gap-4 sm:flex">
+                      <span className="flex-1" />
+                      <p className="type-footnote uppercase tracking-wide text-text-secondary">
+                        Seen in
+                      </p>
+                      <span aria-hidden="true" className="h-9 w-9 shrink-0" />
+                    </div>
+                    <ul className="min-w-0">
                     {categoryRows.map((row, index) => (
                       <li
                         key={row.slug}
@@ -230,12 +239,13 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                           <SaveToDashboardButton
                             slug={row.slug}
                             variant="icon"
+                            showLabelOnHover
                             className="shrink-0 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
                           />
                         </div>
                       </li>
                     ))}
-                  </ul>
+                    </ul>
                   </div>
                 </section>
               );
