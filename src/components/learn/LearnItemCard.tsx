@@ -36,7 +36,17 @@ export default function LearnItemCard({
     <li>
       <Link
         href={item.href}
-        className="group flex items-start gap-5 rounded-card border border-border-primary bg-surface-primary px-6 py-6 transition-all hover:border-accent-primary/40 hover:shadow-card"
+        // The card was bg-surface-primary on a background-primary page, and
+        // those two tokens are the same colour — #ffffff on #ffffff in light,
+        // #0f0f0f on #0f0f0f in dark. So there was no card, only a hairline
+        // rectangle, and a list of them read as ruled paper rather than as a
+        // set of things to choose between.
+        //
+        // It now sits a step back from the page and comes forward on hover:
+        // fill lightens to the page's own white and the shadow lifts it. The
+        // movement is the highlight, which is what the reference does and what
+        // a border colour change alone cannot say.
+        className="group flex items-start gap-5 rounded-card border border-border-primary bg-surface-secondary px-6 py-5 transition-all hover:border-border-secondary hover:bg-surface-primary hover:shadow-card-hover"
       >
         <span
           aria-hidden="true"
@@ -63,7 +73,7 @@ export default function LearnItemCard({
 
         <span
           aria-hidden="true"
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-border-primary text-text-secondary transition-colors group-hover:border-accent-primary/40 group-hover:text-accent-primary"
+          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-border-primary bg-surface-primary text-text-secondary transition-colors group-hover:border-accent-primary/40 group-hover:text-accent-primary"
         >
           →
         </span>

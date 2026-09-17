@@ -48,7 +48,11 @@ export default function LearnSection({
         </div>
       </div>
 
-      <ol className="space-y-4">
+      {/* Capped to the width of the section's own intro above it. Run full
+          bleed, a card is over a thousand pixels of mostly empty row, and the
+          arrow ends up so far from the title that the two stop reading as one
+          control. */}
+      <ol className="max-w-[950px] space-y-3">
         {section.items.map((item, i) => (
           <LearnItemCard key={item.href} item={item} ordinal={i + 1} />
         ))}
