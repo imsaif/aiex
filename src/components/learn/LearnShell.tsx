@@ -95,6 +95,18 @@ export default function LearnShell({
             '--learn-rail': railWidth,
             '--learn-cols-lg': template.lg,
             '--learn-cols-xl': template.xl,
+            // How far a figure may grow past the 820px reading measure.
+            //
+            // Prose keeps its measure, because a 1200px line is harder to read,
+            // not easier. Screenshots have the opposite need: they are the
+            // widest thing on the page and the first thing to suffer, and a
+            // browser screenshot at 820px is unreadable at a glance.
+            //
+            // The column is far wider than the text in both states. At the
+            // 1600px cap it runs to roughly 1020px with the rail open and
+            // 1230px with it collapsed, so these are the space that is actually
+            // there, not a guess.
+            '--lesson-bleed': collapsed ? '400px' : '180px',
           } as React.CSSProperties
         }
       >

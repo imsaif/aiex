@@ -1017,3 +1017,40 @@ nav[aria-label='On this page']::-webkit-scrollbar,
 @media (prefers-reduced-motion: reduce) {
   .learn-console-grid { transition: none; }
 }
+
+/* A lesson figure may use the width the collapsed rail gave up.
+ *
+ * The article is capped at 820px because that is a readable line length and
+ * widening it would make the prose worse, not better. Screenshots have the
+ * opposite need: they are the widest thing on the page and the first thing to
+ * suffer. So the figure alone grows, by exactly the 212px the rail released,
+ * and only while the rail is collapsed. */
+.lesson-figure {
+  width: 100%;
+}
+
+/* Only from lg, where the rail is a column and there is space to take. Below
+ * that the figure is already the full width of a single-column page.
+ *
+ * Two limits, whichever is smaller:
+ *   1. how far we want to grow  (820px measure + the bleed)
+ *   2. how far we actually can  (the console, minus the rail, minus the
+ *      "On this page" column, minus the content padding)
+ *
+ * The second is what stops a figure sliding under the right-hand rail on a
+ * 1280px laptop, where the column is narrower than the reading measure itself.
+ * It is computed from the same --learn-rail the grid uses, so the two can
+ * never disagree. */
+@media (min-width: 1024px) {
+  .lesson-figure {
+    width: min(
+      calc(100% + var(--lesson-bleed, 0px)),
+      calc(min(100vw, 1600px) - var(--learn-rail, 260px) - 240px - 5rem)
+    );
+    transition: width 200ms ease-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-figure { transition: none; }
+}
