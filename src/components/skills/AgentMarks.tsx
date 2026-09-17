@@ -120,6 +120,11 @@ export function AgentLogoRow() {
 const COURSE_TOOL_LOGOS: Record<string, string> = {
   'Claude Code': '/images/logos/claude.svg',
   'Claude Design': '/images/logos/simple-icons/claude-design.svg',
+  // Docs and Slides have no mark of their own: they are artifact types inside
+  // Claude, not products with their own logo. The Claude mark is the honest
+  // stand-in, and it keeps the column of logos even.
+  'Claude Docs': '/images/logos/claude.svg',
+  'Claude Slides': '/images/logos/claude.svg',
   Cursor: '/images/logos/cursor.svg',
   'GitHub Copilot': '/images/logos/simple-icons/githubcopilot.svg',
   GitHub: '/images/logos/simple-icons/github.svg',

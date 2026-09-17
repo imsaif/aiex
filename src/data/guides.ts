@@ -9162,6 +9162,329 @@ Audience: Early-stage VCs in the design-tools space.`,
       },
     ],
   },
+  {
+    "id": "claude-docs-course",
+    "slug": "claude-docs-guide",
+    "title": "Claude Docs Course",
+    "description": "Claude Docs is a document you brief by commenting on it. Learn the anchored-comment loop, tabs, the Send to Claude checkbox, and when a doc is the wrong artifact to ask for.",
+    "excerpt": "A 5-lesson path through Claude Docs, written from a real session rather than from the feature list. You point at a line, ask there, and the answer arrives on that same line with the change already made. Covers what that interaction is good for and where it stops.",
+    "tool": "Claude Docs",
+    "useCase": "Learning Path",
+    "skillLevel": "Beginner",
+    "designDomain": "UX Design",
+    "readTime": 14,
+    "author": "Design Team",
+    "publishedDate": "2026-09-17",
+    "lastUpdatedDate": "2026-09-17",
+    "status": "ready",
+    "thumbnail": "/images/logos/simple-icons/anthropic.svg",
+    "tags": [
+      "claude-docs",
+      "anthropic",
+      "artifacts",
+      "learning-path",
+      "collaboration",
+      "writing"
+    ],
+    "relatedPatterns": [
+      "human-in-the-loop",
+      "progressive-disclosure",
+      "contextual-assistance"
+    ],
+    "lessonCount": 5,
+    "content": "",
+    "lessons": [
+      {
+        "id": "lesson-1",
+        "title": "What a Doc Is, and Why It Is Not a Chat",
+        "duration": 3,
+        "order": 1,
+        "module": "foundations",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Claude Docs is one of three artifact types, alongside Slides and Design, created from the Artifacts page in Claude. Anthropic describes it as a document your team reads, comments on and edits in place while Claude keeps it current. That is accurate, and it undersells the part that matters.",
+            "icon": "info"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The one-sentence version"
+          },
+          {
+            "type": "text",
+            "content": "A doc is a document you brief by commenting on it. You do not describe which paragraph you mean in a chat box. You point at the line, ask there, and the reply arrives on that same line with the edit already made. If you have ever left a comment on a spec and had someone action it, you already know this interaction."
+          },
+          {
+            "type": "text",
+            "content": "That is the whole reason to choose a doc over a chat reply. A chat gives you text you then have to place. A doc is already the place."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What you get on opening one"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A serif Title placeholder, and one line of instruction: start typing, or ask @Claude to write",
+              "A toolbar with tabs, tables, images and checklists",
+              "Share, a comment count, and an open-in-new-tab control along the top",
+              "Private by default. The card in the session panel reads Only you until you change it"
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "Ask for something doc-shaped",
+            "content": "A plan, a memo, a spec, a brief, notes, a review. Ask for one of those and Claude opens a doc instead of answering in chat. Ask a quick question and you get a chat reply, which is the right outcome. The shape of the request decides the shape of the answer.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You know what a doc is for",
+            "items": [
+              "Understand a doc as a briefable document, not a transcript",
+              "Know which requests open one",
+              "Know it is private until shared"
+            ],
+            "message": "Next: the interaction that makes it worth using."
+          }
+        ]
+      },
+      {
+        "id": "lesson-2",
+        "title": "The Anchored Comment: Brief It by Pointing",
+        "duration": 4,
+        "order": 2,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "This is the lesson that matters. Everything else in Claude Docs is ordinary document software. This part is not.",
+            "icon": "info"
+          },
+          {
+            "type": "steps",
+            "steps": [
+              {
+                "number": 1,
+                "title": "Type @claude where you mean it",
+                "content": "Put the cursor in the line you want changed and type @claude. A menu opens with two sections: Ask Claude, and Tabs. The same @ addresses the assistant or references another tab, so expect to hit the wrong one at least once."
+              },
+              {
+                "number": 2,
+                "title": "Write the ask inline",
+                "content": "Choosing Claude turns the line into a composer reading: tell Claude what to write or edit. Write the instruction the way you would write a review comment, because that is what it is."
+              },
+              {
+                "number": 3,
+                "title": "Watch it become a thread",
+                "content": "On submit it becomes an anchored comment on the right, the source text highlights amber, and the card shows that Claude is working on it. The conversation is now attached to that passage rather than floating in a chat."
+              },
+              {
+                "number": 4,
+                "title": "Read the reply in the thread",
+                "content": "When it finishes, Claude replies in that same thread, marks it resolved, and leaves a reply-to-reopen box underneath. The reply is short and points at what changed, because the edit itself is already in the page."
+              }
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "Send to Claude is one checkbox",
+            "content": "The reply box carries a Send to Claude tick, on by default. Ticked, your comment is an instruction. Unticked, it is an ordinary note for a human. That single checkbox is the whole difference between briefing and annotating, and it is easy to miss.",
+            "icon": "warning"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Two asks at once"
+          },
+          {
+            "type": "text",
+            "content": "Send a second comment while the first is still running and it does not queue silently. The card says Claude is finishing another turn and yours is next. A small thing, and the reason you do not sit wondering whether it registered."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Why this beats describing the change"
+          },
+          {
+            "type": "text",
+            "content": "House rules are the clearest case. Tell it to remove every em dash from a document and it rewrites them as colons and commas throughout, then tells you in the thread what it changed. You enforced a style rule by pointing at one sentence that broke it."
+          },
+          {
+            "type": "completion",
+            "title": "You can brief a doc",
+            "items": [
+              "Opened an anchored comment with @claude",
+              "Know what the Send to Claude tick does",
+              "Know where the answer appears"
+            ],
+            "message": "Next: what it does while you wait."
+          }
+        ]
+      },
+      {
+        "id": "lesson-3",
+        "title": "Watching It Work",
+        "duration": 2,
+        "order": 3,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Claude types into the page with a named cursor, the same labelled caret you see when a colleague is in a shared document. Structure lands first: headings appear while their sections are still empty, then the detail fills in underneath.",
+            "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "That ordering is worth naming because it changes how the wait feels. You can read the outline and judge whether the shape is right before any of the prose exists, and stop it early if it is not."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The session panel tells you what it did"
+          },
+          {
+            "type": "text",
+            "content": "Opening the conversation gives a two-panel view: the session on the left, the live doc on the right. The left panel narrates in plain language rather than jargon. A real run read: read 4 files, used Claude Docs integration, loaded tools. Then: now appending the remaining sections at the end of the doc. Then: wrote the guide into the doc and replied in the thread there."
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "Ask for a plan first on anything long",
+            "content": "A hint appears above the composer offering exactly this, with an Add to message button. On a long document it is worth taking. You get an outline to argue with before the prose is written, which is cheaper than reading three pages and then asking for a restructure.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You know what the wait looks like",
+            "items": [
+              "Structure first, detail second",
+              "The panel narrates the work in plain words",
+              "A plan can be requested up front"
+            ],
+            "message": "Next: tabs, and keeping one doc from sprawling."
+          }
+        ]
+      },
+      {
+        "id": "lesson-4",
+        "title": "Tabs, Sharing, and the Two Names Problem",
+        "duration": 2,
+        "order": 4,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "One doc holds several tabs. A main plan tab plus a Sources or Working notes tab keeps the detail-heavy material out of the document someone actually has to read.",
+            "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "You do not create tabs through a menu ritual. Ask Claude to add a tab, or to move a section into its own tab, and it does it. The Tabs control in the toolbar is there for when you want to move between them yourself."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "It persists, and it is private"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A doc outlives the conversation that made it. Reopen it later, keep editing, or hand it to someone else",
+              "Private by default, like any other artifact, until you choose to share",
+              "The doc alone lives at a claude.ai/artifact URL. The split view with the session has a longer cowork URL. Share the one you mean"
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "Your doc will end up with two names",
+            "content": "The doc keeps the title you typed. The browser tab and the session rename themselves to something adjacent but different, chosen by Claude rather than by you. Nothing breaks, but when you go looking for a doc later you may be searching for a name you never wrote.",
+            "icon": "warning"
+          },
+          {
+            "type": "completion",
+            "title": "You can keep a doc tidy",
+            "items": [
+              "Split detail into tabs by asking",
+              "Know which URL to share",
+              "Expect the second, auto-chosen name"
+            ],
+            "message": "Last lesson: when a doc is the wrong thing to ask for."
+          }
+        ]
+      },
+      {
+        "id": "lesson-5",
+        "title": "When a Doc Is the Wrong Ask",
+        "duration": 3,
+        "order": 5,
+        "module": "judgement",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Every guide to a new tool tells you what it does. This one is about the boundary, because asking for the wrong artifact costs you a session, and it is the easiest mistake to make now that three tiles sit side by side.",
+            "icon": "warning"
+          },
+          {
+            "type": "table",
+            "rows": [
+              {
+                "label": "Ask for a Doc when",
+                "content": "The deliverable is prose someone will read and comment on: a plan, a spec, a brief, a review, meeting notes, a written argument."
+              },
+              {
+                "label": "Ask for Slides when",
+                "content": "The deliverable is a deck you will present or send. Slides is built for it: it asks for a design system before you start, and exports to PowerPoint with the text still editable."
+              },
+              {
+                "label": "Ask for Design when",
+                "content": "The deliverable is screens, flows or graphics on a canvas of artboards you can rearrange by hand."
+              },
+              {
+                "label": "Stay in chat when",
+                "content": "You want an answer, not a document. A quick question gets a better reply in the conversation than as a one-paragraph artifact you now have to manage."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The honest limits"
+          },
+          {
+            "type": "list",
+            "items": [
+              "It is a writing surface, not a source of truth. It cannot know whether what it wrote is accurate unless you gave it the material",
+              "The review loop rewards specific asks. Vague comments on vague paragraphs produce vague edits",
+              "A doc you brief once and never revisit is just text. The value is in the second and third pass, which is also true of a design review"
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "The test worth applying",
+            "content": "Ask whether anyone will comment on this. If yes, it is a doc. If it is going on a screen in front of people, it is a deck. If nobody will ever open it again, it is a chat message, and making it an artifact has only given you filing to do.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You can choose the right artifact",
+            "items": [
+              "Know when a doc beats a chat reply",
+              "Know when to reach for Slides or Design instead",
+              "Know where the doc loop stops being useful"
+            ],
+            "message": "Course complete. The Claude Slides course covers the deck half of this decision."
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 /**
