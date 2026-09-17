@@ -756,8 +756,14 @@ export default function LessonRenderer({ sections }: LessonRendererProps) {
   // No wrapper rhythm — each section carries its own margins (a larger gap
   // before an h2, tighter within a group) so content visually groups under
   // its heading.
+  // `lesson-prose` belongs here, on the element whose direct children are the
+  // sections. The rule caps each block at the reading measure and exempts
+  // figures; on any ancestor it caps that ancestor instead and squeezes the
+  // figures along with the text, which is the bug it exists to prevent. Putting
+  // it inside the renderer means every course gets it, not just the pages that
+  // remembered to add the class.
   return (
-    <div>
+    <div className="lesson-prose">
       {sections.map((section, index) =>
         renderSection(section, index, headingIds)
       )}

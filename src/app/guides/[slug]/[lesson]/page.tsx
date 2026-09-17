@@ -322,9 +322,15 @@ export default async function LessonPage({ params }: LessonPageProps) {
                     than a paragraph, and the earlier attempt to let them break
                     out had to guess the track width from the viewport, which
                     put screenshots underneath the On this page rail. */}
-                <article className="lesson-prose w-full">
+                <article className="w-full">
 
-              {/* Lesson body — fully expanded, server-rendered for crawlers */}
+              {/* Lesson body — fully expanded, server-rendered for crawlers.
+                  `lesson-prose` must sit on the element whose DIRECT children
+                  are the rendered sections: the rule caps each block at the
+                  reading measure and exempts figures, and on any ancestor it
+                  would cap this wrapper instead, squeezing the figures with
+                  everything else. That is exactly the bug it was written to
+                  fix. */}
               <div className="mb-12">
                 <LessonRenderer sections={sections} />
               </div>
