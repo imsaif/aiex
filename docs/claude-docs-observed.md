@@ -502,3 +502,32 @@ saying in the lesson, because a reader with ten systems may expect to choose.
 Also worth noting: `aiuxdesign.guide Design System` already appeared in the
 Artifacts list before migrating, but with an external-link arrow instead of a row
 menu. Listed there, not usable there. That is the confusion in one row.
+
+### Migration progress, and how many actually migrate
+
+The dialog gains detail once it runs: *"Migrating… 1 of 3 design systems done"*
+with a progress bar, *"1 migrating now · 1 waiting"*, and two sections:
+
+- **Migrating now (1)**: Gist Design System, owner Imran
+- **Migrated (1)**: aiuxdesign.guide Design System, owner Imran, with an **Open**
+  link
+
+**Three, not ten.** The settings list showed ten Legacy systems; only three go
+across. So not every legacy system qualifies, and the settings count misleads.
+Do not tell readers their whole library migrates. Tell them to check the dialog
+for what actually moved.
+
+### A branded deck costs more time and more files
+
+Second Slides run, asked the same way: *"lets write a guide for how to use claude
+slides"*.
+
+- Reference files read this time: **fonts.md** and **deck-files.md**. The first
+  run read SKILL.md, craft.md and format.md. So the skill set pulled varies with
+  the job, which strengthens the point that Slides is skill-driven.
+- **"Created 11 files, ran 5 commands, read 2 files"**, including a **deck.json**,
+  then *"Now publishing everything in one Artifact call."*
+- Still working at **6m 4s**, against roughly two minutes for the unbranded deck.
+
+Six minutes of blank canvas is a long time to look at a "Claude is working…"
+label. State the wait plainly in the lesson rather than pretending it is quick.
