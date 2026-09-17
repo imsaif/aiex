@@ -36,18 +36,17 @@ export default function LearnItemCard({
     <li>
       <Link
         href={item.href}
-        // The card was bg-surface-primary on a background-primary page, and
-        // those two tokens are the same colour — #ffffff on #ffffff in light,
-        // #0f0f0f on #0f0f0f in dark. So there was no card, only a hairline
-        // rectangle, and a list of them read as ruled paper rather than as a
-        // set of things to choose between.
+        // Figure and ground, the other way round: the PAGE is tinted and the
+        // card is white. Same problem solved — surface-primary on
+        // background-primary is #ffffff on #ffffff, so there was no card — but
+        // the card is now the light thing on a darker field, which is how a
+        // card normally reads.
         //
-        // It now sits a step back from the page and comes forward on hover:
-        // fill lightens to the page's own white and a light shadow lifts it.
-        // The fill change is doing the work, so the shadow only has to suggest
-        // the lift — shadow-card-hover was loud enough to read as the card
-        // jumping rather than responding.
-        className="group flex items-start gap-5 rounded-card border border-border-primary bg-surface-secondary px-6 py-5 transition-all hover:border-border-secondary hover:bg-surface-primary hover:shadow-card"
+        // That leaves hover almost nothing to do, which is the point. A white
+        // card on a tint is already legible as a target, so the state change is
+        // the border alone. Both a fill swap and a shadow were louder than the
+        // event they were reporting.
+        className="group flex items-start gap-5 rounded-card border border-border-primary bg-surface-primary px-6 py-5 transition-colors hover:border-border-secondary"
       >
         <span
           aria-hidden="true"
@@ -80,7 +79,7 @@ export default function LearnItemCard({
 
         <span
           aria-hidden="true"
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-border-primary bg-surface-primary text-text-secondary transition-colors group-hover:border-accent-primary/40 group-hover:text-accent-primary"
+          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-pill border border-border-primary text-text-secondary transition-colors group-hover:border-accent-primary/40 group-hover:text-accent-primary"
         >
           →
         </span>
