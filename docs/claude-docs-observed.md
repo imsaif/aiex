@@ -206,3 +206,42 @@ progress versus a bare activity indicator.
 
 Do not soften this in the lesson. "Expect to wait, and here is why nothing
 appears" is more useful than pretending it is instant.
+
+## What a no-system deck actually looks like
+
+Five slides, landed after roughly two minutes. I had expected generic. It is not.
+
+- Dark title slide, then light content slides
+- Serif display headings at a confident size
+- A three-card row numbered 01 / 02 / 03, each card with a heading and two
+  lines, orange numerals as the only accent colour
+- Generous margins, one idea per slide
+- Filmstrip along the bottom: title, what it is, how to build a first deck,
+  design tips, and a closing dark slide
+
+Claude's own summary in the panel: *"5 slides walking through Getting Started
+with Claude Slides: a dark title slide, what the tool does (3-card breakdown),
+the 4-step workflow, a quick grid of design tips, and a closing call-to-action."*
+It then offered to change the tone, the palette, or rework any slide.
+
+**Correcting an assumption made earlier in this file:** the argument for
+migrating a design system is not that the default looks bad. The default has
+taste. The argument is brand fidelity, which is a different and more honest
+claim, and the guide should make that one.
+
+## A deck is a pile of files
+
+The panel read: **"Created 6 files, ran 3 commands, used a tool"**, then *"Now
+publishing all files in one call."*
+
+So a deck is not one opaque slide object. It is a set of files published
+together. That explains why PowerPoint, HTML and PDF export are all plausible
+from the same artifact, and it is the same file-shaped thinking as the skills.
+Worth one sentence in the guide; a designer who knows this stops treating the
+output as a black box.
+
+## Revised audit verdict
+
+Slides is a separate guide, confirmed. Docs is text you brief by commenting.
+Slides is a styled artifact built from files, with a slow blank wait and a
+strong default look. Sharing one guide would flatten both.
