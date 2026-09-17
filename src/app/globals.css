@@ -951,3 +951,45 @@ nav[aria-label='On this page']::-webkit-scrollbar,
   .animate-claude-spin,
   .animate-claude-pulse { animation: none; }
 }
+
+/* ── Navigation should never snap ──────────────────────────────────────────
+ *
+ * Clicking a lesson in the rail used to replace the whole page in one frame.
+ * Nothing moved, so there was no sense of going anywhere: the old content was
+ * simply gone and new content was in its place, which reads as a glitch rather
+ * than as navigation.
+ *
+ * `experimental.viewTransition` in next.config.mjs wraps client-side route
+ * changes in the browser's View Transitions API. These rules give that
+ * transition its shape: the outgoing view fades out slightly faster than the
+ * incoming one fades in, so the eye lands on the new content rather than on the
+ * crossfade. 180ms is long enough to read as motion and short enough that a
+ * reader clicking through six lessons never waits for it.
+ *
+ * Browsers without the API navigate exactly as before. Nothing here is required
+ * for the page to work.
+ */
+::view-transition-old(root) {
+  animation: navFadeOut 120ms ease-in both;
+}
+
+::view-transition-new(root) {
+  animation: navFadeIn 180ms ease-out both;
+}
+
+@keyframes navFadeOut {
+  to { opacity: 0; }
+}
+
+@keyframes navFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* A transition the reader did not ask for is worse than no transition. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

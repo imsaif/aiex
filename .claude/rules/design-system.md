@@ -76,3 +76,19 @@ The codebase has ~1,247 critical violations concentrated in pre-token code. They
 - Body/informational text: use `.type-*` classes or at least `text-sm`; avoid `text-xs` for content that conveys meaning.
 - Color contrast: `text-text-tertiary` is borderline in light mode and FAILS WCAG AA in dark mode (~4.0:1) — use `text-text-secondary` (≈7:1 dark, ≈13:1 light) or `text-text-primary` for anything that must be read.
 - The fixed `status-*` colors (`success #10b981`, `warning #f59e0b`) FAIL contrast as TEXT. Use them for tinted backgrounds/borders/dots only; keep the text itself `text-text-primary`/`text-text-secondary`, and never rely on color alone to convey meaning (pair with a label/icon).
+
+## Motion: a click should never snap
+
+**Rule: any click that changes what is on screen gets a transition. No exceptions for "it is just a page change".**
+
+An instant swap gives the reader no sense of having gone anywhere. The old view is simply gone and a new one is in its place, which reads as a glitch rather than as navigation, and it costs the reader a moment of re-orientation every single time. This was reported on the guides rail, where clicking through lessons replaced the whole page in one frame.
+
+How it is handled here:
+
+- **Route changes** are covered globally. `experimental.viewTransition` in `next.config.mjs` wraps client-side navigation in the browser's View Transitions API, and `::view-transition-old(root)` / `::view-transition-new(root)` in `globals.css` give it its shape: out in 120ms, in over 180ms with a 4px rise. Nothing per-page is needed, and nothing should re-implement it locally.
+- **In-place changes** (tabs, filters, accordions, expanding rows, showing results) get their own transition on the property that actually changes. Prefer `transition-colors`, `transition-opacity` or a height/`grid-template-rows` transition over a bare conditional render that pops.
+- **Never animate `display`.** Toggle with `hidden`/`el.hidden` and transition opacity or transform instead, or the transition silently does nothing.
+
+Timing: 120-200ms for anything a reader triggers repeatedly, and ease-out so it settles rather than decelerating into place. Longer than ~250ms and a reader clicking through six lessons starts waiting for the UI.
+
+**Always pair it with `@media (prefers-reduced-motion: reduce)`.** A transition the reader did not ask for is worse than no transition, and this is a WCAG requirement, not a preference. The existing block in `globals.css` covers the route transition; new motion adds itself to that pattern.
