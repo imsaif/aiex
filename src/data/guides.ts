@@ -9225,6 +9225,28 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "heading",
             "level": "h3",
+            "content": "How you get to one"
+          },
+          {
+            "type": "text",
+            "content": "There is no separate app and no URL worth bookmarking. Docs live inside Claude, so you reach one of two ways: open Artifacts in the Claude sidebar and pick the Docs tile, or simply ask for something doc-shaped in any conversation and Claude opens one for you."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-1/artifacts-page.webp",
+            "alt": "The Artifacts page in Claude, showing three tiles under Make something new: Docs, Slides and Design, each marked Beta, above a list of recently opened artifacts.",
+            "label": "The Artifacts page. Three tiles, one of them Docs, and everything you have already made underneath."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "Design used to live somewhere else",
+            "content": "If you have used Claude Design before, note the banner on this page: new Slides and Design projects are created as artifacts now. The standalone app at claude.ai/design still holds your projects and design systems, but new work starts here.",
+            "icon": "info"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
             "content": "What you get on opening one"
           },
           {
@@ -9572,6 +9594,21 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "text",
             "content": "Before you have a single slide, Slides wants to know what it should look like. Docs never asks. That difference at second zero tells you what each one is: a doc is text, a deck is a styled object, and the product admits it immediately."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "How you get to one"
+          },
+          {
+            "type": "text",
+            "content": "Open Artifacts in the Claude sidebar and pick the Slides tile. Asking for a deck in a conversation works too, and Claude opens one. There is no separate Slides app: it is an artifact type, alongside Docs and Design."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-1/artifacts-page.webp",
+            "alt": "The Artifacts page in Claude, showing three tiles under Make something new: Docs, Slides and Design, each marked Beta.",
+            "label": "Slides is the middle tile. Everything you have already made sits underneath."
           },
           {
             "type": "heading",
