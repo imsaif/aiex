@@ -9203,8 +9203,12 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "Claude Docs is one of three artifact types, alongside Slides and Design, created from the Artifacts page in Claude. Anthropic describes it as a document your team reads, comments on and edits in place while Claude keeps it current. That is accurate, and it undersells the part that matters.",
+            "content": "A doc is the one artifact you can argue with in the margin.",
             "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "Claude Docs is one of three artifact types, alongside Slides and Design, created from the Artifacts page in Claude. Anthropic describes it as a document your team reads, comments on and edits in place while Claude keeps it current. That is accurate, and it undersells the part that matters."
           },
           {
             "type": "heading",
@@ -9234,6 +9238,12 @@ Audience: Early-stage VCs in the design-tools space.`,
             ]
           },
           {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-1/empty-doc.webp",
+            "alt": "An empty Claude doc: a serif Title placeholder and one line of body text reading start typing, or ask @Claude to write, above a toolbar with tabs, table, image and checklist controls.",
+            "label": "A new doc. The whole onboarding is one line, and it names both ways in: type it yourself, or ask."
+          },
+          {
             "type": "callout",
             "calloutType": "tip",
             "title": "Ask for something doc-shaped",
@@ -9261,7 +9271,7 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "This is the lesson that matters. Everything else in Claude Docs is ordinary document software. This part is not.",
+            "content": "This is the lesson that matters. Everything else is ordinary document software.",
             "icon": "info"
           },
           {
@@ -9288,6 +9298,18 @@ Audience: Early-stage VCs in the design-tools space.`,
                 "content": "When it finishes, Claude replies in that same thread, marks it resolved, and leaves a reply-to-reopen box underneath. The reply is short and points at what changed, because the edit itself is already in the page."
               }
             ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-2/inline-composer.webp",
+            "alt": "A Claude doc with the cursor in a paragraph and an inline composer open beneath it, prefixed @Claude, ready for an instruction.",
+            "label": "The composer opens in the document, under the line you are talking about."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-2/anchored-comment.webp",
+            "alt": "The same doc after submitting: the source sentence highlighted amber, and a comment card on the right showing the request, the status Claude is working on it, and a reply box with a ticked Send to Claude checkbox.",
+            "label": "The ask becomes a thread anchored to the highlighted line. Note the Send to Claude tick in the reply box."
           },
           {
             "type": "callout",
@@ -9335,8 +9357,12 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "Claude types into the page with a named cursor, the same labelled caret you see when a colleague is in a shared document. Structure lands first: headings appear while their sections are still empty, then the detail fills in underneath.",
+            "content": "You can read a doc while it is still being written, which changes how the wait feels.",
             "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "Claude types into the page with a named cursor, the same labelled caret you see when a colleague is in a shared document. Structure lands first: headings appear while their sections are still empty, then the detail fills in underneath."
           },
           {
             "type": "text",
@@ -9350,6 +9376,12 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "text",
             "content": "Opening the conversation gives a two-panel view: the session on the left, the live doc on the right. The left panel narrates in plain language rather than jargon. A real run read: read 4 files, used Claude Docs integration, loaded tools. Then: now appending the remaining sections at the end of the doc. Then: wrote the guide into the doc and replied in the thread there."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-3/split-view.webp",
+            "alt": "Two-panel view: on the left the session narrating each step in plain language, on the right the live document with a resolved comment thread showing Claude's reply.",
+            "label": "The session on the left, the live doc on the right. Every step is narrated in words rather than tool names."
           },
           {
             "type": "callout",
@@ -9379,12 +9411,22 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "One doc holds several tabs. A main plan tab plus a Sources or Working notes tab keeps the detail-heavy material out of the document someone actually has to read.",
+            "content": "One doc holds several tabs, which is how you keep the detail out of the part people read.",
             "icon": "info"
           },
           {
             "type": "text",
+            "content": "A main plan tab plus a Sources or Working notes tab keeps the heavy material somewhere it can be found without being in the way."
+          },
+          {
+            "type": "text",
             "content": "You do not create tabs through a menu ritual. Ask Claude to add a tab, or to move a section into its own tab, and it does it. The Tabs control in the toolbar is there for when you want to move between them yourself."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-4/doc-with-diagram.webp",
+            "alt": "A finished Claude doc showing a rendered flow diagram of boxes and arrows inline in the page, with prose underneath and a resolved comment thread on the right.",
+            "label": "Docs render diagrams inline, not only prose. This flow was produced from the same comment as the text around it."
           },
           {
             "type": "heading",
@@ -9427,7 +9469,7 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "Every guide to a new tool tells you what it does. This one is about the boundary, because asking for the wrong artifact costs you a session, and it is the easiest mistake to make now that three tiles sit side by side.",
+            "content": "Asking for the wrong artifact costs you a session, and three tiles side by side make it easy to do.",
             "icon": "warning"
           },
           {
@@ -9526,8 +9568,12 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "Open a Claude Doc and it says: start typing, or ask Claude to write. Open Claude Slides and it says something different. Paste your ideas and turn them into slides, and underneath, a dropdown reading Choose design system.",
+            "content": "Slides asks you a question before you have a single slide, and Docs never does.",
             "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "Open a Claude Doc and it offers to start typing or to write for you. Open Claude Slides and it says: paste your ideas and turn them into slides. Underneath sits a dropdown reading Choose design system."
           },
           {
             "type": "text",
@@ -9575,8 +9621,12 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "Open Choose design system on a fresh account and it is empty. Open it on an account with ten published design systems and it is still empty. This is the single most confusing thing about Slides today, and it is not a bug.",
+            "content": "The picker looks broken. It is only empty, and the fix is not where you will look for it.",
             "icon": "warning"
+          },
+          {
+            "type": "text",
+            "content": "Open Choose design system on a fresh account and it is empty. Open it on an account with ten published design systems and it is still empty. This is the single most confusing thing about Slides today, and it is not a bug."
           },
           {
             "type": "heading",
@@ -9617,6 +9667,12 @@ Audience: Early-stage VCs in the design-tools space.`,
             ]
           },
           {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-2/migration-finished.webp",
+            "alt": "The Artifacts page banner after migrating, reading that the latest migration of your design systems finished and offering Migrate again to bring over new or changed ones.",
+            "label": "After it finishes, the banner changes to Migrate again. Run it after you edit a system, or the artifact side keeps the old one."
+          },
+          {
             "type": "callout",
             "calloutType": "tip",
             "title": "If you need to ship today",
@@ -9644,7 +9700,7 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "The picker is optional. Ask for a deck without choosing anything and it proceeds without complaint. The interesting part is that the result is good.",
+            "content": "The picker is optional, and the interesting part is that skipping it still produces a good deck.",
             "icon": "info"
           },
           {
@@ -9660,6 +9716,12 @@ Audience: Early-stage VCs in the design-tools space.`,
               "A three-card row numbered 01, 02, 03, with one accent colour and nothing else",
               "Generous margins, one idea per slide, and a closing call to action"
             ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-3/finished-deck.gif",
+            "alt": "A finished five-slide deck with no design system applied: a dark title slide, serif headings, and a row of three numbered cards with an orange accent.",
+            "label": "The default look, with nothing chosen. Restrained enough to send, and not yours."
           },
           {
             "type": "text",
@@ -9680,6 +9742,12 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "text",
             "content": "The session panel shows the working: it prints reference files before it draws anything. One run read SKILL.md, craft.md and format.md. Another read fonts.md and deck-files.md. Then it creates files, six for a plain deck and eleven for a branded one, including a deck.json, and publishes them in a single call."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-3/reads-skill-files.gif",
+            "alt": "The Slides session panel printing reference files, including SKILL.md, craft.md and format.md, before any slide exists, while the canvas shows a Claude is working label.",
+            "label": "Before it draws anything it reads its own instructions. The deck's quality comes from those files."
           },
           {
             "type": "text",
@@ -9706,7 +9774,7 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "The anchored comment from Claude Docs works here too, and this is the thing to take away from both products: it is the shared spine, not a Docs feature.",
+            "content": "The anchored comment works on a canvas too. It is the spine of both products, not a Docs feature.",
             "icon": "info"
           },
           {
@@ -9725,6 +9793,12 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "text",
             "content": "That is the strongest demonstration of the whole tool for a designer with a house style. You do not restate your style rules in a prompt and hope. You point at the slide that breaks one."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-4/comment-on-slide.gif",
+            "alt": "A comment thread open on a single slide card, its header naming the slide and the caption being discussed, with Claude's reply describing the change it made across the deck.",
+            "label": "The thread names exactly what it is anchored to: slide 2, and the caption within it."
           },
           {
             "type": "callout",
@@ -9754,8 +9828,12 @@ Audience: Early-stage VCs in the design-tools space.`,
         "sections": [
           {
             "type": "intro",
-            "content": "Anthropic says a deck exports to PowerPoint with editable text and shapes. That claim is the main reason a designer would choose Slides over anything that produces bullet points, so it is worth checking rather than repeating.",
+            "content": "Anthropic says the deck exports with editable text and shapes. We unpacked the file to check.",
             "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "That claim is the main reason a designer would choose Slides over anything that produces a list of bullet points, so it is worth verifying rather than repeating."
           },
           {
             "type": "heading",
@@ -9770,6 +9848,12 @@ Audience: Early-stage VCs in the design-tools space.`,
               "PowerPoint, current fonts",
               "PowerPoint, basic fonts, labelled: basic fonts work on any computer"
             ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-5/export-menu.gif",
+            "alt": "The Slides export menu open, listing PDF, Webpage as HTML, PowerPoint with current fonts, and PowerPoint with basic fonts, annotated that basic fonts work on any computer.",
+            "label": "Four ways out, and two of them are PowerPoint."
           },
           {
             "type": "text",
