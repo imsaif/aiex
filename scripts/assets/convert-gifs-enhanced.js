@@ -43,8 +43,14 @@ const OPTIMIZATION_CONFIG = {
 };
 
 // Directory configuration
+//
+// The default is the pattern-page media folder, which is where GIFs used to
+// live. Guide lessons carry them too now, so the directory is overridable:
+//   npm run convert-gifs -- public/images/guides
+// Without that the tool silently reports "0 GIF files found" while megabytes of
+// them sit one folder over.
 const config = {
-  sourceDir: './public/images/examples',
+  sourceDir: process.argv[2] || './public/images/examples',
   logLevel: 'info'
 };
 
@@ -127,7 +133,12 @@ async function convertToMP4(gifPath, outputPath) {
   try {
     log(`Converting to MP4: ${path.basename(gifPath)}`);
     
+    // h264 requires even pixel dimensions. A screen recording is whatever size
+    // the window was, so odd widths are normal, and without this filter ffmpeg
+    // exits with "width not divisible by 2" and leaves a 0-byte .mp4 behind:
+    // a file that exists, passes a glob, and plays nothing.
     const cmd = `ffmpeg -i "${gifPath}" \\
+      -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \\
       -c:v ${mp4.codec} \\
       -crf ${mp4.crf} \\
       -preset ${mp4.preset} \\
