@@ -9484,6 +9484,339 @@ Audience: Early-stage VCs in the design-tools space.`,
         ]
       }
     ]
+  },
+  {
+    "id": "claude-slides-course",
+    "slug": "claude-slides-guide",
+    "title": "Claude Slides Course",
+    "description": "Claude Slides asks for a design system before you have a single slide. Learn what happens if you skip it, why the wait is long, how comments work on a canvas, and what actually survives the PowerPoint export.",
+    "excerpt": "A 5-lesson path through Claude Slides, written from real decks rather than the feature list. Includes the export unpacked and inspected file by file, and the design-system trap that makes the picker look broken when it is only empty.",
+    "tool": "Claude Slides",
+    "useCase": "Learning Path",
+    "skillLevel": "Beginner",
+    "designDomain": "UX Design",
+    "readTime": 16,
+    "author": "Design Team",
+    "publishedDate": "2026-09-17",
+    "lastUpdatedDate": "2026-09-17",
+    "status": "ready",
+    "thumbnail": "/images/logos/simple-icons/anthropic.svg",
+    "tags": [
+      "claude-slides",
+      "anthropic",
+      "artifacts",
+      "learning-path",
+      "presentations",
+      "design-systems"
+    ],
+    "relatedPatterns": [
+      "human-in-the-loop",
+      "progressive-disclosure",
+      "error-recovery"
+    ],
+    "lessonCount": 5,
+    "content": "",
+    "lessons": [
+      {
+        "id": "lesson-1",
+        "title": "The Question Slides Asks First",
+        "duration": 3,
+        "order": 1,
+        "module": "foundations",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Open a Claude Doc and it says: start typing, or ask Claude to write. Open Claude Slides and it says something different. Paste your ideas and turn them into slides, and underneath, a dropdown reading Choose design system.",
+            "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "Before you have a single slide, Slides wants to know what it should look like. Docs never asks. That difference at second zero tells you what each one is: a doc is text, a deck is a styled object, and the product admits it immediately."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What is on screen"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A design-system picker, before anything exists",
+              "An object toolbar: text box, image, table, shapes. Docs gives document controls instead, like tabs and checklists",
+              "Download, present, a layout toggle and a zoom control along the top right",
+              "An empty deck reading: this deck has no slides yet. Add one, or let Claude add some"
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "Both hands are offered",
+            "content": "Add slide builds it yourself. Describing what you want lets Claude build it. Neither is the intended path over the other, which is unusual and worth knowing before you assume you have to prompt your way through everything.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You know what Slides is",
+            "items": [
+              "Know why the first question is about style, not content",
+              "Recognise the object toolbar",
+              "Know you can build by hand or by asking"
+            ],
+            "message": "Next: the design-system trap, and why the picker looks broken."
+          }
+        ]
+      },
+      {
+        "id": "lesson-2",
+        "title": "The Empty Picker, and the Legacy Trap",
+        "duration": 4,
+        "order": 2,
+        "module": "setup",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Open Choose design system on a fresh account and it is empty. Open it on an account with ten published design systems and it is still empty. This is the single most confusing thing about Slides today, and it is not a bug.",
+            "icon": "warning"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What is actually happening"
+          },
+          {
+            "type": "text",
+            "content": "Design systems published before Claude Design moved into artifacts are tagged Legacy. A legacy system does not appear in the picker inside a Slides or Design artifact. It still exists, it is still published, and it is still usable. It just cannot reach the new surfaces until it is migrated."
+          },
+          {
+            "type": "text",
+            "content": "The path a designer naturally takes leads nowhere. The picker offers Manage design systems, which opens Claude settings, which lists every system you own, none of which the picker will show. The row menu there offers only one thing: open legacy version. There is no migrate action in settings."
+          },
+          {
+            "type": "steps",
+            "steps": [
+              {
+                "number": 1,
+                "title": "Go to the Artifacts page",
+                "content": "The banner at the top reads that Claude Design lives there now, and that new Slides and Design projects are created as artifacts."
+              },
+              {
+                "number": 2,
+                "title": "Click Migrate team design systems",
+                "content": "It never asks which ones. One button takes everything eligible. A dialog reports progress, with Migrating now and Migrated sections, and you can close it while it keeps running."
+              },
+              {
+                "number": 3,
+                "title": "Check what actually moved",
+                "content": "Not everything qualifies. An account showing ten legacy systems in settings migrated three. Read the dialog rather than assuming your whole library came across."
+              },
+              {
+                "number": 4,
+                "title": "Reopen the picker",
+                "content": "A migrated system now appears in the list inside a Slides artifact. If it does not, it did not migrate."
+              }
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "If you need to ship today",
+            "content": "A legacy system is confined, not broken. Open it from Design systems in settings, choose open legacy version, and use the New design button on the system page. Everything is intact there: colours, type, components, spacing and UI kit. You just cannot use it from an artifact until it is migrated.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You can get a system into the picker",
+            "items": [
+              "Know why the picker looks empty",
+              "Know the migration lives in the banner, not in settings",
+              "Know the workaround if migration is not done"
+            ],
+            "message": "Next: what happens when you skip the system entirely."
+          }
+        ]
+      },
+      {
+        "id": "lesson-3",
+        "title": "Skipping the System, and What You Get",
+        "duration": 3,
+        "order": 3,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "The picker is optional. Ask for a deck without choosing anything and it proceeds without complaint. The interesting part is that the result is good.",
+            "icon": "info"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The default has taste"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A dark title slide, then light content slides",
+              "Serif display headings at a confident size",
+              "A three-card row numbered 01, 02, 03, with one accent colour and nothing else",
+              "Generous margins, one idea per slide, and a closing call to action"
+            ]
+          },
+          {
+            "type": "text",
+            "content": "So the reason to migrate a design system is not rescue. The default will not embarrass you. The reason is brand fidelity: this deck looks like Claude made it, not like your company made it. That is a real argument, and it is a different one from the argument most write-ups will make."
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "Expect a long, blank wait",
+            "content": "Docs puts headings on the page within seconds and fills them in while you watch. Slides holds everything back and shows a floating Claude is working label over an empty canvas. An unbranded deck took about two minutes. With a design system applied, the same ask took over six. Both are honest, only one is reassuring.",
+            "icon": "warning"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "It is built from files, and driven by a skill"
+          },
+          {
+            "type": "text",
+            "content": "The session panel shows the working: it prints reference files before it draws anything. One run read SKILL.md, craft.md and format.md. Another read fonts.md and deck-files.md. Then it creates files, six for a plain deck and eleven for a branded one, including a deck.json, and publishes them in a single call."
+          },
+          {
+            "type": "text",
+            "content": "A deck is a set of files, not one opaque object. That is why PowerPoint, HTML and PDF export are all plausible from the same artifact, and it is the same idea as a Claude Code skill: the quality comes from instructions in a file, not from magic in the model."
+          },
+          {
+            "type": "completion",
+            "title": "You know what to expect from a first deck",
+            "items": [
+              "Know the default look is defensible",
+              "Know the wait is long and the canvas stays blank",
+              "Understand a deck as files rather than slides"
+            ],
+            "message": "Next: fixing it by pointing at it."
+          }
+        ]
+      },
+      {
+        "id": "lesson-4",
+        "title": "Editing by Comment, on a Canvas",
+        "duration": 3,
+        "order": 4,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "The anchored comment from Claude Docs works here too, and this is the thing to take away from both products: it is the shared spine, not a Docs feature.",
+            "icon": "info"
+          },
+          {
+            "type": "text",
+            "content": "Click into a card, type @claude, and the composer names exactly what is being discussed. A real thread header read: slide 2, caption, followed by the first words of that caption. The Send to Claude checkbox is here as well, ticked by default, and it does the same job. Ticked is an instruction, unticked is a note."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "A house rule, enforced from one card"
+          },
+          {
+            "type": "text",
+            "content": "Two comments were left on a single card: remove em dashes, then also give examples here. Claude did both across the whole deck and replied in the thread saying it had pulled every em dash out and rewritten with colons and commas instead. The deck subtitle changed from an em dash to a colon, and so did every other slide."
+          },
+          {
+            "type": "text",
+            "content": "That is the strongest demonstration of the whole tool for a designer with a house style. You do not restate your style rules in a prompt and hope. You point at the slide that breaks one."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "It closes its own threads",
+            "content": "Claude replies, marks the thread resolved, and leaves a reply-to-reopen box. The reply is attributed as Claude via your name. It also works through a queue: the panel reported publishing, then replying in the comment thread, then checking for other pending threads.",
+            "icon": "info"
+          },
+          {
+            "type": "completion",
+            "title": "You can direct a deck",
+            "items": [
+              "Comment on a specific element rather than describing it",
+              "Know what the Send to Claude tick changes",
+              "Expect edits to propagate across every slide"
+            ],
+            "message": "Last lesson: getting the deck out."
+          }
+        ]
+      },
+      {
+        "id": "lesson-5",
+        "title": "The Export, Inspected",
+        "duration": 3,
+        "order": 5,
+        "module": "handoff",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Anthropic says a deck exports to PowerPoint with editable text and shapes. That claim is the main reason a designer would choose Slides over anything that produces bullet points, so it is worth checking rather than repeating.",
+            "icon": "info"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Four options, not more"
+          },
+          {
+            "type": "list",
+            "items": [
+              "PDF",
+              "Webpage, as HTML",
+              "PowerPoint, current fonts",
+              "PowerPoint, basic fonts, labelled: basic fonts work on any computer"
+            ]
+          },
+          {
+            "type": "text",
+            "content": "Slides exports narrower than Claude Design does. There is no PNG, no video, and no send to Miro or Claude Code from here. If you have read about those, you read about Design, which is a different tile."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What is actually inside the file"
+          },
+          {
+            "type": "text",
+            "content": "A five-slide deck exported as a 26.6 kB .pptx. That size is already the answer, because flattened images would run to megabytes. Unpacked and inspected, the file contains:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Live text throughout. Every headline and caption is a real text run, not a picture of one",
+              "Fourteen separate shapes on a single slide. The cards are individual objects you can move",
+              "No image files anywhere. Nothing was flattened",
+              "16:9 widescreen, a proper slide master, and a speaker-notes slide for each slide"
+            ]
+          },
+          {
+            "type": "text",
+            "content": "The claim holds. You can open the deck in PowerPoint or Keynote and edit it like anything else."
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "The font choice may mean less than it looks",
+            "content": "On an unbranded deck, current fonts exported Georgia and Helvetica, which exist on every machine anyway. The elegant serif on screen did not travel. Test this on your own branded deck before promising a client that their typeface survives, and when in doubt send basic fonts, which is predictable.",
+            "icon": "warning"
+          },
+          {
+            "type": "completion",
+            "title": "You can hand a deck over",
+            "items": [
+              "Know the four export paths and their limits",
+              "Know the PowerPoint file is genuinely editable",
+              "Know to verify fonts on your own brand before promising anything"
+            ],
+            "message": "Course complete. The Claude Docs course covers the writing half of this decision."
+          }
+        ]
+      }
+    ]
   }
 ];
 
