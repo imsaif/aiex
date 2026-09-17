@@ -98,3 +98,44 @@ same line, with the change already made in the page.
    has patterns for both. Worth linking rather than describing.
 4. **Two names for one doc is a real wrinkle**, and the kind of thing every other
    guide will leave out.
+
+---
+
+# Claude Slides, observed
+
+Same session, 1:59pm. One screenshot so far, of the empty state, and it already
+argues for a separate guide.
+
+## The empty state asks a different question
+
+Docs opens with *"Start typing, or ask @Claude to write"*. Slides opens with
+**"Paste your ideas and turn them into slides"** and, under it, a dropdown:
+**Choose design system…**
+
+That dropdown is the whole story. Before you have a single slide, Slides wants
+to know what it should look like. Docs never asks. A deck is a styled object, a
+doc is text, and the product admits that at second zero.
+
+The right panel says *"This deck has no slides yet. Add one, or let Claude add
+some."* with an **Add slide** button. So both hands are offered: yours or
+Claude's.
+
+## Different toolbar, different job
+
+Docs gave document controls: tabs, table, image, checklist. Slides gives object
+controls: text box, image, table, shapes. Plus, top right, download, present,
+a layout toggle, and a zoom control reading 100%.
+
+Same split-panel shell as Docs, same `claude.ai/cowork/cse_…?artifact=…` URL,
+same chat on the left. The shell is shared. What sits inside it is not.
+
+## The audit answer, so far
+
+**Slides needs its own guide, not a section in the Docs one.** Evidence, not a
+hunch: the two products ask for different things before you start. Docs wants a
+sentence. Slides wants a design system. A guide that covers both will bury that,
+and it is the single most useful thing to tell a designer.
+
+Still to capture for Slides: what the design-system dropdown actually contains,
+whether a migrated system appears there, what a paste of raw notes produces, and
+the PowerPoint export fidelity.
