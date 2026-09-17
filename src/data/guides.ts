@@ -9754,7 +9754,7 @@ Audience: Early-stage VCs in the design-tools space.`,
           },
           {
             "type": "image",
-            "src": "/images/guides/claude-slides-guide/lesson-3/finished-deck.gif",
+            "src": "/images/guides/claude-slides-guide/lesson-3/finished-deck.mp4",
             "alt": "A finished five-slide deck with no design system applied: a dark title slide, serif headings, and a row of three numbered cards with an orange accent.",
             "label": "The default look, with nothing chosen. Restrained enough to send, and not yours."
           },
@@ -9790,7 +9790,7 @@ Audience: Early-stage VCs in the design-tools space.`,
           },
           {
             "type": "image",
-            "src": "/images/guides/claude-slides-guide/lesson-3/reads-skill-files.gif",
+            "src": "/images/guides/claude-slides-guide/lesson-3/reads-skill-files.mp4",
             "alt": "The Slides session panel printing reference files, including SKILL.md, craft.md and format.md, before any slide exists, while the canvas shows a Claude is working label.",
             "label": "Before it draws anything it reads its own instructions. The deck's quality comes from those files."
           },
@@ -9840,7 +9840,7 @@ Audience: Early-stage VCs in the design-tools space.`,
           },
           {
             "type": "image",
-            "src": "/images/guides/claude-slides-guide/lesson-4/comment-on-slide.gif",
+            "src": "/images/guides/claude-slides-guide/lesson-4/comment-on-slide.mp4",
             "alt": "A comment thread open on a single slide card, its header naming the slide and the caption being discussed, with Claude's reply describing the change it made across the deck.",
             "label": "The thread names exactly what it is anchored to: slide 2, and the caption within it."
           },
@@ -9894,7 +9894,7 @@ Audience: Early-stage VCs in the design-tools space.`,
           },
           {
             "type": "image",
-            "src": "/images/guides/claude-slides-guide/lesson-5/export-menu.gif",
+            "src": "/images/guides/claude-slides-guide/lesson-5/export-menu.mp4",
             "alt": "The Slides export menu open, listing PDF, Webpage as HTML, PowerPoint with current fonts, and PowerPoint with basic fonts, annotated that basic fonts work on any computer.",
             "label": "Four ways out, and two of them are PowerPoint."
           },
