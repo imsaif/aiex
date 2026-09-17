@@ -482,3 +482,23 @@ artifact until it is migrated.
 
 That is the practical answer for a reader who needs to ship today, and it is
 better advice than "migrate or start over". Added to lesson 8 as a callout.
+
+### The migration itself
+
+The banner on `claude.ai/artifacts` carries two actions: **Visit the standalone
+homepage** and **Migrate team design systems**. The full banner text: *"Claude
+Design lives here now. New Slides and Design projects are created as artifacts.
+Migrate your design systems here to use them across all your artifacts and
+Claude sessions."*
+
+Clicking migrate opens a dialog: *"Getting your design systems ready…"* with
+*"You can close this window. The migration keeps running."* and a Close button.
+The banner button changes to "Migrating design systems…" with a **View details**
+link beside it.
+
+**It never asks which systems to migrate.** One button, the whole account. Worth
+saying in the lesson, because a reader with ten systems may expect to choose.
+
+Also worth noting: `aiuxdesign.guide Design System` already appeared in the
+Artifacts list before migrating, but with an external-link arrow instead of a row
+menu. Listed there, not usable there. That is the confusion in one row.
