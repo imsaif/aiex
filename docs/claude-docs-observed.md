@@ -157,3 +157,33 @@ For the guide: the honest first instruction for Slides is not "choose a design
 system". It is "you do not have one yet, here is what happens if you skip it,
 and here is what changes once you have one". The skip path needs capturing too,
 since most readers will take it.
+
+## Skipping the design system, and what the trace reveals
+
+Asked plainly: "Lets create a slide for getting started on claude slides". No
+design system chosen. It proceeded without complaint, so the picker is genuinely
+optional, not a gate.
+
+The left panel narrated the work, and this is the interesting part:
+
+- "Ran 2 commands, used a tool"
+- **"Print SKILL.md and craft.md reference files"**
+- **"Print format.md reference file"**
+- "Read an artifact"
+- "Thinking… · 24s"
+
+**Slides is driven by a skill.** Before placing anything it reads a `SKILL.md`
+plus `craft.md` and `format.md` references. That is the same file shape this
+site generates for all 38 patterns. The deck's quality is not magic in the
+model, it is instructions in a file, and a designer who understands that
+understands why a skill is worth installing.
+
+That is the strongest link we have between this guide cluster and the skill
+pack, and nobody writing a "how to use Claude Slides" post will notice it.
+
+On the canvas, a labelled cursor reading **"Claude is working…"** sits where the
+next object will land. Docs had the same presence cue in a line of text; Slides
+has it in space.
+
+The plan hint appears here too: *"Want to see the steps first? Ask Claude for a
+plan up front."*
