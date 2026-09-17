@@ -139,3 +139,21 @@ and it is the single most useful thing to tell a designer.
 Still to capture for Slides: what the design-system dropdown actually contains,
 whether a migrated system appears there, what a paste of raw notes produces, and
 the PowerPoint export fidelity.
+
+## The design-system dropdown is empty
+
+Opened at 2:00pm. It contains exactly one item: **Manage design systems**, with
+an external-link icon. No systems, no defaults, no samples.
+
+So the first thing Slides asks for is the one thing a new user does not have.
+The dropdown is a door to a setup flow, dressed as a choice.
+
+This connects directly to the banner seen on the artifacts page: *"Migrate your
+design systems here to use them across all your artifacts and Claude sessions."*
+Migration is not an optional tidy-up for existing Design users. It is how this
+dropdown ever gets an entry.
+
+For the guide: the honest first instruction for Slides is not "choose a design
+system". It is "you do not have one yet, here is what happens if you skip it,
+and here is what changes once you have one". The skip path needs capturing too,
+since most readers will take it.
