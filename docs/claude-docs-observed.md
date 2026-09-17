@@ -281,3 +281,28 @@ confirmed: *"Done — replied in the comment thread and resolved it."*
 Also seen: *"Edited 4 files, loaded tools"* and *"Published; now replying in the
 comment thread and checking for other pending threads."* It tracks a queue of
 threads rather than handling one and stopping.
+
+## The Slides export menu
+
+Four options, nothing more:
+
+- PDF (.pdf)
+- Webpage (.html)
+- **PowerPoint, current fonts (.pptx)**
+- **PowerPoint, basic fonts (.pptx)** with the helper line *"Basic fonts work on
+  any computer"*
+
+The two PowerPoint entries are the most designer-specific decision in the whole
+product. Current fonts keeps the typography that makes the default deck look
+good, and risks substitution on a machine that lacks the faces. Basic fonts
+survives anywhere and gives up the face. Nobody else writing about Slides will
+explain which to send to a client, and that is a whole lesson beat.
+
+**Slides exports narrower than Design.** The Design artifact menu recorded in
+the outline had Project HTML, PNG, Video (MP4) and Send to Claude Code, Lovable
+and Miro. None of those appear here. Do not describe one menu as if it were the
+other, which is exactly the mistake a merged guide would make.
+
+Still unverified: whether the .pptx actually opens with editable text and shapes,
+as Anthropic's tooltip claims. That claim is the strongest argument for Slides
+and it has not been tested yet.
