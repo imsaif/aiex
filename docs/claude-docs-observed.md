@@ -444,3 +444,22 @@ action seen so far is the one in the banner on the artifacts page.
 So the path a designer naturally takes leads nowhere: picker, to a list, to a
 list of things the picker will not show. Worth stating plainly in both guides,
 because it reads as a bug and is not one.
+
+### The row menu offers no migration
+
+The three-dot menu on a Legacy system contains exactly one item: **Open legacy
+version**, with an external-link arrow. No migrate, no convert, no duplicate.
+
+So the settings list is read-only for legacy systems. It shows you what you own
+and lets you go back and look at it in the old surface. That is all.
+
+**Two routes to a system the new artifacts can use:**
+
+1. **Migrate team design systems**, the action in the banner on the artifacts
+   page. The only migration path found anywhere.
+2. **New design system**, the button in this settings panel, which starts fresh
+   rather than bringing anything across.
+
+The lesson 8 steps written today already point at the banner, so that guidance
+stands. Worth adding one line: do not go looking in settings for the migration,
+because it is not there.
