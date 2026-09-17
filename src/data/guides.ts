@@ -7957,6 +7957,13 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             label: "The clip is condensed. A real run takes several minutes and scales with the size of your sources (a repo with hundreds of components will take longer than a handful of brand assets).",
           },
           {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Extracting is not the last step any more',
+            content: "Since September 2026 a system you extract and publish here is tagged Legacy, and a Legacy system does not appear in the design-system picker inside Slides or Design artifacts. It has to be migrated across before new work can use it. Lesson 8 covers how, and it takes a minute.",
+            icon: 'warning',
+          },
+          {
             type: 'completion',
             title: 'Claude has your design system',
             items: [
@@ -8076,6 +8083,43 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             links: [
               { title: 'Set up your design system in Claude Design', url: 'https://support.claude.com/en/articles/14604397-set-up-your-design-system-in-claude-design', source: 'Claude Help Center' },
             ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Migrating to artifacts (do this, or the system stays invisible)',
+          },
+          {
+            type: 'text',
+            content: "Publishing used to be the end of the job. It is not any more. Since Docs, Slides and Design became artifacts in September 2026, every system published the old way carries a Legacy tag, and Legacy systems do not reach the new surfaces. Open a Slides or Design artifact, click Choose design system, and the list comes up empty even though your systems are all still there.",
+          },
+          {
+            type: 'text',
+            content: "You can see this for yourself in Claude's settings, under Design systems, reached from Manage design systems in that same picker. Every published system is listed with its owner and publish date, each one tagged Legacy. Nothing is lost and nothing is broken. It simply has not been brought across.",
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                title: 'Open the artifacts page',
+                content: 'Go to Artifacts in the Claude sidebar. The banner at the top reads that Claude Design lives there now, and that new Slides and Design projects are created as artifacts.',
+              },
+              {
+                title: 'Use Migrate team design systems',
+                content: 'The action sits in that banner. It brings your published systems onto the artifact side so they can be applied to any artifact or Claude session, not just projects made in the standalone app.',
+              },
+              {
+                title: 'Check the picker',
+                content: 'Open a new Slides or Design artifact and click Choose design system. A migrated system appears in the list. If it does not, it is still Legacy.',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'The standalone app is your library, artifacts is the workshop',
+            content: "Both places still work, and knowing the split saves a wasted session. claude.ai/design holds everything you own: projects, design systems and a dozen templates. New work is created as an artifact inside a conversation. Migration is what connects the two.",
+            icon: 'tip',
           },
           {
             type: 'completion',
