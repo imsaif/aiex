@@ -420,19 +420,22 @@ const renderSection = (
   headingIds: Map<number, string>
 ) => {
   switch (section.type) {
+    // The opening line of a lesson, rendered as a lead paragraph rather than as
+    // a bordered card.
+    //
+    // It used to be a callout, and a callout means "step out of the flow for a
+    // moment". Putting the first sentence of the lesson in one boxed the flow
+    // itself, before anything had been said, on all 74 lessons that open this
+    // way. A reader met a container before they met a sentence.
+    //
+    // Size carries the emphasis instead of a border, which is what the rest of
+    // the type system does. The icon is dropped deliberately: an info glyph
+    // beside the opening line labels the lesson as an aside.
     case 'intro':
       return (
-        <div
-          key={index}
-          className={`flex gap-4 mb-10 p-5 md:p-6 ${CARD_SHELL}`}
-        >
-          {section.icon && section.icon !== 'none' && (
-            <div className="text-text-secondary flex-shrink-0">{getIcon(section.icon)}</div>
-          )}
-          <p className="m-0 text-text-secondary">
-            {linkifyPatterns(section.content, `intro-${index}`)}
-          </p>
-        </div>
+        <p key={index} className="type-lead mb-10 text-text-secondary">
+          {linkifyPatterns(section.content, `intro-${index}`)}
+        </p>
       );
 
     case 'heading': {
