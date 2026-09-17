@@ -677,11 +677,17 @@ const renderSection = (
                   className="w-full rounded-card border border-border-secondary"
                 />
               ) : (
+                // Lazy by default: a lesson can carry several screenshots, and
+                // the Slides course has GIFs that run to a megabyte between
+                // them. None of it is above the fold, so none of it should
+                // compete with the text for the first paint.
                 <img
                   src={section.src}
                   alt={section.alt}
                   width={800}
                   height={450}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full rounded-card border border-border-secondary"
                 />
               )}

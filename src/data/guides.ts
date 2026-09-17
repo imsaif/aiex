@@ -9607,8 +9607,8 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "image",
             "src": "/images/guides/claude-slides-guide/lesson-1/artifacts-page.webp",
-            "alt": "The Artifacts page in Claude, showing three tiles under Make something new: Docs, Slides and Design, each marked Beta.",
-            "label": "Slides is the middle tile. Everything you have already made sits underneath."
+            "alt": "The Artifacts page in Claude with the Slides tile hovered, showing a tooltip reading: a deck you can present, restyle with a design system and export to PowerPoint, above a Start with a prompt button.",
+            "label": "Slides is the middle tile. Hovering gives Anthropic's own one-line definition, and a Start with a prompt button."
           },
           {
             "type": "heading",
@@ -9698,6 +9698,12 @@ Audience: Early-stage VCs in the design-tools space.`,
           },
           {
             "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-2/picker-filled.webp",
+            "alt": "The Claude Slides empty state after migrating, where the control now reads Design system: aiuxdesign.guide Design System instead of an empty Choose design system dropdown.",
+            "label": "After migration the control names your system instead of asking you to choose one. This is what a working picker looks like."
+          },
+          {
+            "type": "image",
             "src": "/images/guides/claude-slides-guide/lesson-2/migration-finished.webp",
             "alt": "The Artifacts page banner after migrating, reading that the latest migration of your design systems finished and offering Migrate again to bring over new or changed ones.",
             "label": "After it finishes, the banner changes to Migrate again. Run it after you edit a system, or the artifact side keeps the old one."
@@ -9755,6 +9761,16 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "text",
             "content": "So the reason to migrate a design system is not rescue. The default will not embarrass you. The reason is brand fidelity: this deck looks like Claude made it, not like your company made it. That is a real argument, and it is a different one from the argument most write-ups will make."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-3/branded-deck.webp",
+            "alt": "The same request run with a design system applied: a navy title slide set in the site's own typeface, with a ten-slide filmstrip underneath.",
+            "label": "The same one-line brief with a design system applied. Navy and Satoshi, and ten slides instead of five."
+          },
+          {
+            "type": "text",
+            "content": "Claude's own summary of that run named the change without being asked: built in the site's navy-and-Satoshi look. Applying a system does not only recolour the deck, it changed the length as well, from five slides to ten."
           },
           {
             "type": "callout",
