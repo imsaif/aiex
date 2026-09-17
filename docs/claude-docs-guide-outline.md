@@ -1,89 +1,98 @@
-# Claude Docs guide — outline, not content
+# Docs, Slides or Design — guide outline
 
-Scaffold for a designer-angle guide on Claude's document work, opened 2026-09-17,
-the day after the launch.
+Scaffold for a designer-angle guide, opened 2026-09-17, the day after launch.
 
-## Read this before writing a word
+## What is confirmed, from the product
 
-**The content is deliberately not written.** A guide about a product that
-shipped yesterday, written by someone who has not used it, is inference dressed
-as instruction — the exact thing this site exists to argue against. Every lesson
-below states the question it must answer and the evidence needed to answer it.
-Fill them from the product, not from the press coverage.
+Verified in the product at `claude.ai/artifacts` on 2026-09-17, not from press
+coverage. An earlier version of this file doubted that Slides existed, on the
+basis that it had no marketing URL. That was wrong: these features live inside
+Claude, not on their own pages, so the absence of a URL proved nothing.
 
-## What is actually confirmed, and what is not
+**All three are Beta, and all three are created as artifacts.** Anthropic's own
+one-line definitions, copied exactly from the tile tooltips:
 
-Checked on 2026-09-17 against primary sources rather than taken from the alert:
-
-| Claim | Status |
+| Tile | Anthropic's description |
 |---|---|
-| Cowork retired as a separate product, folded into Claude | **Confirmed** — Engadget, 2026-09-16 |
-| Claude creates editable documents you can revise with it | **Confirmed** — Engadget headline and body |
-| Export to Google Docs / Word | Reported in the alert; **not verified** at source |
-| "Claude Slides" as a named product | **Not found** in the Engadget piece or on anthropic.com/news. May be an inference in the alert. Axios sits behind Cloudflare and could not be read. |
+| **Docs** | "A document your team reads, comments on and edits in place while Claude keeps it current." |
+| **Slides** | "A deck you can present, restyle with a design system and export to PowerPoint." |
+| **Design** | "Screens, flows and graphics laid out as artboards on one canvas you can edit by hand." |
 
-**Settle the Slides question before building any lesson on it.** If it does not
-exist under that name, a guide promising it will be wrong on its first line, and
-that is the line search engines show.
+Each tile offers "Start with a prompt".
 
-## Why this slot is worth taking
+**Claude Design has moved.** The banner on that page reads *"Claude Design lives
+here now — New Slides and Design projects are created as artifacts. Migrate your
+design systems here to use them across all your artifacts and Claude sessions."*
+There is a "Migrate team design systems" action and a link to the standalone
+homepage.
 
-The alert's finding, worth restating because it is the whole reason for speed:
-big outlets have the news, but what ranks for tutorial queries is older *Claude
-Design* content from April 2026 — Claude Academy, Jeff Su, Pietro Montaldo.
-Nobody has published a designer-angle how-to for the new document work yet.
+Export, seen on a Design artifact: PDF (instant, or re-formatted by Claude),
+Project HTML (.zip or standalone), **PowerPoint (editable text and shapes)**,
+PNG, Video (MP4), and Send to **Claude Code, Lovable, Miro**. Plus Present mode
+and Comment.
 
-That gap closes the moment those creators repoint their existing Claude Design
-material. Days, not weeks.
+## The consequence we should act on first
+
+**The existing Claude Design course is now partly stale.** Twelve lessons
+describing a product that has relocated into artifacts and gained a migration
+path. Wrong live content ranks worse than missing content, and this site already
+ranks for it.
+
+Audit that course before publishing anything new. It protects something we have;
+the guide below chases something we do not.
 
 ## The angle
 
-Not a feature tour. A feature tour is what everyone else will write, because it
-is what you can produce without using the thing.
+Not "how to use Claude Slides". That is what everyone else will write, because
+it is what you can produce without using the thing — and because the tile
+tooltips hand it to you.
 
-The guide takes **one real document from prompt to something you would actually
-send**, and the lessons are the decisions along the way. A designer finishes it
-with a document, not a list of capabilities.
+The real question, now that all three sit in one place, is **which one to ask
+for**. Ask for a doc when you wanted a deck and the session is wasted. The three
+definitions above are genuinely distinct, and nobody has written the designer's
+version of that decision.
 
-Candidate artefact: a one-page design rationale — the thing a designer writes
-after the work and usually writes badly because it is the last task of the week.
-Pick something the reader already has to do.
+Working title: *Docs, Slides or Design — which to ask Claude for.*
+
+Shape: one real piece of work taken through the choice, made, and exported. A
+designer finishes with an artefact, not a list of capabilities.
 
 ## Lesson outline
 
-Each lesson names the question it answers and what has to be verified in the
-product first. Duration is a placeholder until the steps are real.
+Each lesson names the question it must answer and what has to be verified in the
+product. Durations are placeholders until the steps are real.
 
 | # | Lesson | Must answer | Verify first |
 |---|---|---|---|
-| 1 | What changed on 16 September | Cowork is gone as a separate thing — where did its abilities go, and what does that mean for someone who never used it? | Whether Cowork's features are all present, or only some |
-| 2 | Your first document | What does the first prompt look like, and what comes back? | The actual first-run experience, including what it gets wrong |
-| 3 | Revising with it, not after it | How do you push back on a draft? Comments, chat, direct edit — which for what? | Which revision surfaces exist and how they differ |
-| 4 | The handoff | Getting it out — export targets, what survives and what breaks | Export formats, and what formatting is lost |
-| 5 | When not to use it | The honest limit: what it does badly enough that you should not start here | Found by using it, not by reading about it |
+| 1 | The three tiles | What each is for, in a designer's words rather than Anthropic's | That the tooltip distinctions hold up in practice |
+| 2 | Picking wrong on purpose | Ask for the wrong one and show what you get — the fastest way to teach the difference | What a deck request actually returns from Docs |
+| 3 | Making the real thing | One artefact, start to finish | The first-run experience, including what it gets wrong |
+| 4 | Getting it out | PowerPoint, PDF, Miro, Claude Code — what survives the export and what breaks | Each export path, and the formatting losses |
+| 5 | Design systems across sessions | The migration the banner offers, and what it buys you | What "use them across all your artifacts" means in practice |
+| 6 | When not to use any of them | The honest limit | Found by using them |
 
-Lesson 5 is not optional padding. Every competing guide will skip it, and it is
-the one a designer remembers.
+Lesson 6 is not padding. Every competing guide will skip it, and it is the one a
+designer remembers.
 
 ## Registry entry
 
 `src/data/guides.ts`, matching the existing shape:
 
-- `slug`: `claude-docs-guide`
-- `tool`: needs the product's real name once settled — **not** "Claude Design",
-  which is a different product and already has a course
+- `slug`: `claude-docs-slides-design`
+- `tool`: needs deciding — these are three tiles inside Claude, not one product,
+  so the existing per-tool convention does not fit cleanly
 - `useCase`: `Learning Path`
 - `skillLevel`: `Beginner`
-- `status`: `draft` until the lessons are written from real use
+- `status`: `draft` until the lessons come from real use
 
 Note for the rail: `railLabel()` strips "Course for Designers", "Learning Path"
-and "Course" suffixes, so the title can carry one without crowding the sidebar.
+and "Course" suffixes, so a title can carry one without crowding the sidebar.
 
 ## What NOT to do
 
-- Do not generate lesson bodies from the press coverage. It describes what the
-  product claims; a guide has to describe what it does.
-- Do not fold this into the Claude Design course. Different product, and
-  conflating them is what the current search results already get wrong.
-- Do not publish with `status: 'ready'` until someone has done the whole flow
-  end to end and produced the artefact the guide promises.
+- Do not generate lesson bodies from press coverage or from the tooltips. They
+  say what the tiles claim; a guide has to say what they do.
+- Do not merge this into the Claude Design course. Design is one of three tiles
+  now, and conflating them is what the current search results already get wrong.
+- Do not publish at `status: 'ready'` until someone has taken one artefact all
+  the way through and out.
