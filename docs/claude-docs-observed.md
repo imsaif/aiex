@@ -397,3 +397,37 @@ Two corrections to `claude-design-course-audit.md`, made on this evidence:
    design system still happens at claude.ai/design, under the Design systems tab.
    That part of the course is not stale at all. What is missing is the sentence
    connecting it to the artifact side.
+
+## Why the design-system picker is empty: Legacy
+
+"Manage design systems" opens Claude's settings, not the standalone app:
+`claude.ai/new#settings/design-systems`, a Design systems entry in the same
+sidebar as Preferences, Billing, Skills and Plugins.
+
+The list is not empty. Ten systems, all owned by this account, including
+**"aiuxdesign.guide Design System"** published Apr 21 2026 and another published
+Apr 27. **Every single one carries a "Legacy" tag.**
+
+None of them appear in the picker inside a Slides or Design artifact.
+
+**So the picker is not empty because nothing exists. It is empty because nothing
+has been migrated.** Legacy systems stay with the old surface until they are
+brought across, which is precisely what the artifacts banner offers: *"Migrate
+your design systems here to use them across all your artifacts and Claude
+sessions."*
+
+Anthropic's own description in this panel: *"Design systems give Claude your
+colors, type and components to use when making designs, decks and prototypes."*
+There is a **New design system** button as well, so you can start fresh instead
+of migrating.
+
+### What this does to the course
+
+This is now the most valuable single thing the Claude Design course can tell its
+readers, and it is not in it. Anyone who followed lessons 7 and 8 and published a
+system has one sitting in that list marked Legacy, invisible to every new
+artifact they make. They will assume the picker is broken.
+
+Lessons 7 and 8 need the migration step appended, not rewritten. The extraction
+and publishing they teach still works. What is missing is the sentence that says
+your published system does not reach the new surfaces until you migrate it.
