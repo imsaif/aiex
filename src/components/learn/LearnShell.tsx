@@ -111,13 +111,19 @@ export default function LearnShell({
         }
       >
         <div className="relative bg-background-rail lg:border-r lg:border-border-primary">
+          {/* Sticky, not absolute. Pinned to the top of a tall column the
+              control scrolled away with the rail, so by the time a reader
+              wanted more room for a screenshot the way to get it was several
+              screens back up. Zero height keeps it out of the flow, so the
+              navigation below does not shift down to make space for it. */}
+          <div className="sticky top-20 z-sticky flex h-0 justify-end overflow-visible pr-2">
           <button
             type="button"
             onClick={toggle}
             aria-expanded={!collapsed}
             aria-label={collapsed ? 'Expand course navigation' : 'Collapse course navigation'}
             title={collapsed ? 'Expand course navigation' : 'Collapse course navigation'}
-            className="absolute right-2 top-4 z-sticky hidden h-7 w-7 cursor-pointer items-center justify-center rounded-button text-text-secondary transition-colors hover:bg-background-secondary hover:text-text-primary lg:flex"
+            className="mt-4 hidden h-7 w-7 cursor-pointer items-center justify-center rounded-button bg-background-rail text-text-secondary transition-colors hover:bg-background-secondary hover:text-text-primary lg:flex"
           >
             <svg
               viewBox="0 0 24 24"
@@ -133,6 +139,7 @@ export default function LearnShell({
               <line x1="9" y1="4" x2="9" y2="20" />
             </svg>
           </button>
+          </div>
 
           {/* Hidden rather than unmounted, so the rail's scroll position and
               any open course group survive a collapse and expand. */}

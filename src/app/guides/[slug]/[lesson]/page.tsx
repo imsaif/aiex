@@ -316,7 +316,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
               {/* Body and TOC. The TOC starts under the header, so the lesson
                   title and its meta get the full width. */}
               <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_240px] xl:gap-12">
-                <article className="max-w-[820px]">
+                {/* The article fills its track; the measure is capped on the
+                    text itself (see `.lesson-prose` in globals.css). Capping
+                    the whole article instead meant figures could never be wider
+                    than a paragraph, and the earlier attempt to let them break
+                    out had to guess the track width from the viewport, which
+                    put screenshots underneath the On this page rail. */}
+                <article className="lesson-prose w-full">
 
               {/* Lesson body — fully expanded, server-rendered for crawlers */}
               <div className="mb-12">

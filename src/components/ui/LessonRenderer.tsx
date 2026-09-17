@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import LessonImageZoom from '@/components/ui/LessonImageZoom';
 import {
   InformationCircleIcon,
   ExclamationTriangleIcon,
@@ -662,7 +663,7 @@ const renderSection = (
       // Keeps the schema additive and preserves the `alt` / `label` contract.
       const isVideo = !!section.src && /\.(mp4|webm|mov)$/i.test(section.src);
       return (
-        <div key={index} className="mb-8">
+        <div key={index} className="lesson-figure-block mb-8">
           {section.src ? (
             // `lesson-figure` lets the figure grow past the article's 820px
             // reading measure into the space the column actually has, and
@@ -686,12 +687,10 @@ const renderSection = (
                 // the Slides course has GIFs that run to a megabyte between
                 // them. None of it is above the fold, so none of it should
                 // compete with the text for the first paint.
-                <a
-                  href={section.src}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Open full size"
-                  className="block cursor-zoom-in"
+                <LessonImageZoom
+                  src={section.src}
+                  alt={section.alt}
+                  label={section.label}
                 >
                   <img
                     src={section.src}
@@ -702,7 +701,7 @@ const renderSection = (
                     decoding="async"
                     className="w-full rounded-card border border-border-secondary"
                   />
-                </a>
+                </LessonImageZoom>
               )}
               {section.label && (
                 <figcaption className="p-3 text-text-secondary text-sm">
