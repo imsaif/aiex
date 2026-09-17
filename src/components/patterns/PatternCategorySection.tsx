@@ -1,7 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import SaveToDashboardButton from '@/components/handoff/SaveToDashboardButton';
+import { getProductLogoUrl, hasProductLogo } from '@/data/product-logos';
+import { useThemeFilter } from '@/hooks/useTheme';
 import type { PatternSummary, Category } from '@/types';
 
 /**
@@ -31,6 +34,22 @@ export default function PatternCategorySection({
   category: Category;
   patterns: PatternSummary[];
 }) {
+  // Before the empty-list return, not after: a hook behind a conditional return
+  // runs on some renders and not others, which is the one thing hooks cannot do.
+  // Same monochrome treatment the rest of the site gives brand marks.
+  const logoFilter = useThemeFilter('grayscale(100%)');
+
+  // Superhuman is excluded to match the card view, which has skipped it since
+  // before this list existed.
+  const logoProducts = new Map(
+    patterns.map((pattern) => [
+      pattern.id,
+      (pattern.products ?? [])
+        .filter((product) => product !== 'Superhuman' && hasProductLogo(product))
+        .slice(0, 3),
+    ]),
+  );
+
   if (patterns.length === 0) return null;
 
   return (
@@ -79,6 +98,41 @@ export default function PatternCategorySection({
                 <p className="type-caption text-text-secondary">
                   {pattern.description}
                 </p>
+
+                {/* Under the description, on its own line, because it answers
+                    the question the description raises: is this something
+                    people actually ship, or a thing someone thought of? On the
+                    skills list the marks sit to the right, where rows are one
+                    line; here the row is two, so a right-hand column would
+                    float beside the text rather than belong to it. */}
+                {logoProducts.get(pattern.id)!.length > 0 && (
+                  <ul className="mt-2 flex flex-wrap items-center gap-3">
+                    <li className="type-footnote uppercase tracking-wide text-text-secondary">
+                      Seen in
+                    </li>
+                    {logoProducts.get(pattern.id)!.map((product) => (
+                      <li
+                        key={product}
+                        className="group/logo relative flex items-center"
+                      >
+                        <Image
+                          src={getProductLogoUrl(product)}
+                          alt={product}
+                          width={18}
+                          height={18}
+                          className="h-[18px] w-[18px] opacity-50 transition-opacity group-hover/logo:opacity-100"
+                          style={{ filter: logoFilter }}
+                        />
+                        <span
+                          aria-hidden="true"
+                          className="type-footnote pointer-events-none absolute bottom-full left-1/2 z-tooltip mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-card bg-text-primary px-2 py-1 text-background-primary opacity-0 transition-opacity group-hover/logo:opacity-100"
+                        >
+                          {product}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </Link>
 
               {/* Same treatment as the skills list: one save control repeated
