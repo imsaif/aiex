@@ -24,13 +24,15 @@ export default function LearnSection({
       id={section.id}
       className="scroll-mt-24 border-b border-border-primary py-16 last:border-b-0 md:py-20"
     >
-      {/* One measure for the whole section — intro and rows share both edges.
-          They used to differ: the intro capped at 950 while the rows ran the
-          full 1259 of the column, so the right edge was ragged. Capping only
-          the rows swapped the problem for a 300px dead gutter. Both now sit on
-          the same width, and what is left over is page margin rather than a gap
-          between two things that ought to line up. */}
-      <div className="mb-12 max-w-[1100px]">
+      {/* One measure for the whole section, centred in the column.
+          
+          The intro and the rows used to differ — intro capped, rows full bleed —
+          so the right edge was ragged. Giving both the same cap fixed that but
+          left the whole block hard against the left edge with 159px of slack
+          piled on the right, which reads as the page being off-centre rather
+          than as a margin. Centring splits it: an even gutter each side, and
+          the section rules still run the full width behind it. */}
+      <div className="mb-12 mx-auto max-w-[1100px]">
         {/* The ordinal sits outside the text column so the heading and the
             intro share a left edge. Previously the ordinal pushed only the
             heading across, and the intro hung to the left of its own title. */}
@@ -53,7 +55,7 @@ export default function LearnSection({
         </div>
       </div>
 
-      <ol className="max-w-[1100px] space-y-3">
+      <ol className="mx-auto max-w-[1100px] space-y-3">
         {section.items.map((item, i) => (
           <LearnItemCard key={item.href} item={item} ordinal={i + 1} />
         ))}
