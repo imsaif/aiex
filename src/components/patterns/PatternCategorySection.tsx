@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import SaveToDashboardButton from '@/components/handoff/SaveToDashboardButton';
 import { getProductLogoUrl, hasProductLogo } from '@/data/product-logos';
+import { AgenticMark } from '@/components/patterns/AgenticMark';
 import { useThemeFilter } from '@/hooks/useTheme';
 import type { PatternSummary, Category } from '@/types';
 
@@ -104,8 +105,16 @@ export default function PatternCategorySection({
                 >
                   {pattern.title}
                   {pattern.tags?.includes('agentic') && (
-                    <span className="type-eyebrow ml-2 align-middle uppercase text-text-secondary">
-                      Agentic
+                    // The mark instead of the word. "AGENTIC" set in caps beside
+                    // the title competed with it for the start of the line, and
+                    // the filter that turns these patterns on already uses this
+                    // robot — so the mark is the thing a reader has been taught
+                    // to recognise. The word survives for screen readers.
+                    <span
+                      title="Agentic"
+                      className="ml-2 inline-flex align-middle text-text-secondary"
+                    >
+                      <AgenticMark label="Agentic" />
                     </span>
                   )}
                 </h3>
