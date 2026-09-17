@@ -94,7 +94,11 @@ function railLabel(title: string): string {
   return title
     .replace(/\s+Course for Designers$/i, '')
     .replace(/\s+Learning Path$/i, '')
-    .replace(/\s+Course$/i, '');
+    .replace(/\s+Course$/i, '')
+    // "…with Claude Code" is the one suffix that names a tool, and the row
+    // already carries that tool's logo two characters to its left. Kept it and
+    // the label wrapped to two lines to repeat what the mark had just said.
+    .replace(/\s+with Claude Code$/i, '');
 }
 
 /**

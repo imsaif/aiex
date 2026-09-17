@@ -15,6 +15,24 @@ interface SaveToDashboardButtonProps {
    */
   variant?: 'icon' | 'full' | 'block';
   /**
+   * `icon` only: show the button's own label on hover and focus, instead of
+   * leaving it to the browser's native tooltip.
+   *
+   * The label is already computed here and is state-aware ("Save to dashboard"
+   * / "Saved to dashboard"), so surfacing it is a rendering choice rather than
+   * new copy — which is the point. A tooltip written at the call site would be
+   * a second source of wording that could drift from the aria-label a screen
+   * reader hears.
+   */
+  showLabelOnHover?: boolean;
+  /**
+   * Which side the hover label sits on. `top` suits a button in a row, where
+   * there is always space above it. `bottom` is for the card overlays, where
+   * the button sits at the card's top-right corner and a label above it would
+   * hang off the card.
+   */
+  labelPlacement?: 'top' | 'bottom';
+  /**
    * Override the visible text. The `block` variant on a pattern page sits on the
    * same screen as the `full` pill saving the same slug, so it says something
    * different ("Saved. Download it at checkout.") to read as confirmation of the
@@ -38,6 +56,8 @@ export default function SaveToDashboardButton({
   slug,
   variant = 'icon',
   labels,
+  showLabelOnHover = false,
+  labelPlacement = 'top',
   className = '',
 }: SaveToDashboardButtonProps) {
   const { isSaved, toggle, isLoading } = useHandoffKit();
@@ -81,7 +101,7 @@ export default function SaveToDashboardButton({
         aria-pressed={saved}
         aria-label={label}
         title={label}
-        className={`inline-flex items-center gap-2 rounded-pill border px-4 py-2 text-base font-medium transition-colors ${
+        className={`inline-flex items-center gap-2 rounded-pill border px-4 py-2 text-base font-medium transition-colors cursor-pointer ${
           saved
             ? 'border-accent-primary bg-accent-subtle text-accent-primary'
             : 'border-border-primary bg-surface-primary text-text-secondary hover:text-text-primary hover:border-accent-primary'
@@ -98,20 +118,40 @@ export default function SaveToDashboardButton({
   }
 
   // icon variant — overlay button for cards
-  return (
+  const button = (
     <button
       type="button"
       onClick={handleClick}
       aria-pressed={saved}
       aria-label={label}
-      title={label}
-      className={`inline-flex items-center justify-center rounded-full p-2 transition-colors ${
+      // The native tooltip is dropped when we draw our own, so the same words
+      // do not appear twice, a second late, in a different style.
+      title={showLabelOnHover ? undefined : label}
+      className={`inline-flex items-center justify-center rounded-full p-2 transition-colors cursor-pointer ${
         saved
           ? 'bg-accent-subtle text-accent-primary'
           : 'bg-surface-primary/90 text-text-tertiary hover:text-accent-primary border border-border-primary'
-      } ${className}`}
+      } ${showLabelOnHover ? '' : className}`}
     >
       <Icon className="w-5 h-5" aria-hidden="true" />
     </button>
+  );
+
+  if (!showLabelOnHover) return button;
+
+  return (
+    <span className={`group/save relative inline-flex ${className}`}>
+      {button}
+      {/* aria-hidden because the button already carries this text as its
+          accessible name; announcing it twice is noise, not help. */}
+      <span
+        aria-hidden="true"
+        className={`type-footnote pointer-events-none absolute left-1/2 z-tooltip -translate-x-1/2 whitespace-nowrap rounded-card bg-text-primary px-2 py-1 text-background-primary opacity-0 transition-opacity group-focus-within/save:opacity-100 group-hover/save:opacity-100 ${
+          labelPlacement === 'bottom' ? 'top-full mt-1.5' : 'bottom-full mb-1.5'
+        }`}
+      >
+        {label}
+      </span>
+    </span>
   );
 }

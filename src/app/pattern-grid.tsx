@@ -15,6 +15,7 @@ import type { Product } from '../data/utils/product-utils';
 import type { Industry } from '../data/utils/industry-utils';
 import { categorySelectedStyle } from '../lib/categoryColors';
 import PatternCategorySection from '../components/patterns/PatternCategorySection';
+import { AgenticMark } from '../components/patterns/AgenticMark';
 
 // Lazy-load components that use framer-motion or aren't needed at first paint
 const CategoryFilterSheet = dynamic(() => import('../components/ui/CategoryFilterSheet'), { ssr: false });
@@ -161,7 +162,8 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                       : 'bg-surface-primary text-text-secondary border-primary hover:border-accent-primary hover:text-accent-primary'
                   }`}
                 >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" width="14" height="14" aria-hidden="true"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>
+                  {/* No label: the visible word sits right beside it. */}
+                  <AgenticMark />
                   Agentic
                 </button>
               </div>
@@ -197,6 +199,8 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                   <SaveToDashboardButton
                     slug={pattern.slug}
                     variant="icon"
+                    showLabelOnHover
+                    labelPlacement="bottom"
                     className="absolute top-4 right-4"
                   />
                   <Link

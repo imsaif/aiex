@@ -149,7 +149,11 @@ export default async function GuidesPage() {
         />
       ))}
 
-      <main className="min-h-screen bg-background-primary text-text-primary">
+      {/* Tinted, unlike the other console pages. This one is a list of cards
+          and cards need a field to sit on; /patterns and /skills are lists of
+          rows separated by rules, which want the plain page. LearnShell is
+          shared by all three, so the tint goes here rather than there. */}
+      <main className="min-h-screen bg-surface-secondary text-text-primary">
         <Navbar inConsole />
 
         {/* One two-column shell for the whole page. The rail starts at the
