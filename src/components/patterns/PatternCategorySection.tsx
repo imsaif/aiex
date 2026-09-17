@@ -87,7 +87,21 @@ export default function PatternCategorySection({
                 href={`/patterns/${pattern.slug}`}
                 className="min-w-0 flex-1 rounded-card transition-colors"
               >
-                <h3 className="type-body mb-1 font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+                {/* Weight is set through the token's own variable, not a
+                    utility. `.type-*` declares font-weight from a CSS variable,
+                    so a Tailwind weight class next to it loses silently — this
+                    title carried `font-semibold` and computed to 400, while the
+                    description under it computed to 500, because
+                    --type-caption-weight is heavier than --type-body-weight.
+                    The name was literally lighter than its own description.
+
+                    type-lead is the right size class regardless: the token
+                    comment for it reads "lead paragraphs, list-item titles",
+                    which is exactly this. */}
+                <h3
+                  className="type-lead mb-1.5 text-text-primary transition-colors group-hover:text-accent-primary"
+                  style={{ ['--type-lead-weight' as string]: 600 }}
+                >
                   {pattern.title}
                   {pattern.tags?.includes('agentic') && (
                     <span className="type-eyebrow ml-2 align-middle uppercase text-text-secondary">

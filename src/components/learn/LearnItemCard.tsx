@@ -64,7 +64,13 @@ export default function LearnItemCard({
           </span>
 
           {/* Capped measure, not the full row. */}
-          <h3 className="type-lead mt-3 max-w-[820px] font-bold text-text-primary group-hover:text-accent-primary">
+          {/* Same fix as the patterns list: `font-bold` beside a .type-*
+              class does nothing, because the class sets font-weight from a
+              variable. This heading has been rendering at 400. */}
+          <h3
+            className="type-lead mt-3 max-w-[820px] text-text-primary group-hover:text-accent-primary"
+            style={{ ['--type-lead-weight' as string]: 600 }}
+          >
             {item.title}
           </h3>
           <p className="type-caption mt-2 line-clamp-2 max-w-[820px] text-text-secondary">
