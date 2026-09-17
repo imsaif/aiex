@@ -43,10 +43,11 @@ export default function LearnItemCard({
         // set of things to choose between.
         //
         // It now sits a step back from the page and comes forward on hover:
-        // fill lightens to the page's own white and the shadow lifts it. The
-        // movement is the highlight, which is what the reference does and what
-        // a border colour change alone cannot say.
-        className="group flex items-start gap-5 rounded-card border border-border-primary bg-surface-secondary px-6 py-5 transition-all hover:border-border-secondary hover:bg-surface-primary hover:shadow-card-hover"
+        // fill lightens to the page's own white and a light shadow lifts it.
+        // The fill change is doing the work, so the shadow only has to suggest
+        // the lift — shadow-card-hover was loud enough to read as the card
+        // jumping rather than responding.
+        className="group flex items-start gap-5 rounded-card border border-border-primary bg-surface-secondary px-6 py-5 transition-all hover:border-border-secondary hover:bg-surface-primary hover:shadow-card"
       >
         <span
           aria-hidden="true"

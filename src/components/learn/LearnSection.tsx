@@ -24,8 +24,13 @@ export default function LearnSection({
       id={section.id}
       className="scroll-mt-24 border-b border-border-primary py-16 last:border-b-0 md:py-20"
     >
-      {/* Same capped measure as the hero. The rows below stay full width. */}
-      <div className="mb-12 max-w-[950px]">
+      {/* One measure for the whole section — intro and rows share both edges.
+          They used to differ: the intro capped at 950 while the rows ran the
+          full 1259 of the column, so the right edge was ragged. Capping only
+          the rows swapped the problem for a 300px dead gutter. Both now sit on
+          the same width, and what is left over is page margin rather than a gap
+          between two things that ought to line up. */}
+      <div className="mb-12 max-w-[1100px]">
         {/* The ordinal sits outside the text column so the heading and the
             intro share a left edge. Previously the ordinal pushed only the
             heading across, and the intro hung to the left of its own title. */}
@@ -48,11 +53,7 @@ export default function LearnSection({
         </div>
       </div>
 
-      {/* Capped to the width of the section's own intro above it. Run full
-          bleed, a card is over a thousand pixels of mostly empty row, and the
-          arrow ends up so far from the title that the two stop reading as one
-          control. */}
-      <ol className="max-w-[950px] space-y-3">
+      <ol className="max-w-[1100px] space-y-3">
         {section.items.map((item, i) => (
           <LearnItemCard key={item.href} item={item} ordinal={i + 1} />
         ))}

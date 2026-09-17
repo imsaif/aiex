@@ -106,7 +106,7 @@ export default function PatternCategorySection({
                     line; here the row is two, so a right-hand column would
                     float beside the text rather than belong to it. */}
                 {logoProducts.get(pattern.id)!.length > 0 && (
-                  <ul className="mt-2 flex flex-wrap items-center gap-3">
+                  <ul className="mt-2.5 flex flex-wrap items-center gap-2.5">
                     <li className="type-footnote uppercase tracking-wide text-text-secondary">
                       Seen in
                     </li>
@@ -118,9 +118,14 @@ export default function PatternCategorySection({
                         <Image
                           src={getProductLogoUrl(product)}
                           alt={product}
-                          width={18}
-                          height={18}
-                          className="h-[18px] w-[18px] opacity-50 transition-opacity group-hover/logo:opacity-100"
+                          width={14}
+                          height={14}
+                          // 14px at 40%, against a 18px/50% mark on the skills
+                          // list. There the marks are alone in their column and
+                          // can hold their own weight; here they sit under a
+                          // title and a description and have to read as the
+                          // third thing, not a competing third column.
+                          className="h-3.5 w-3.5 opacity-40 transition-opacity group-hover/logo:opacity-100"
                           style={{ filter: logoFilter }}
                         />
                         <span
