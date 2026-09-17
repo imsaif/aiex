@@ -93,7 +93,7 @@ export default function SaveToDashboardButton({
         aria-pressed={saved}
         aria-label={label}
         title={label}
-        className={`inline-flex items-center gap-2 rounded-pill border px-4 py-2 text-base font-medium transition-colors ${
+        className={`inline-flex items-center gap-2 rounded-pill border px-4 py-2 text-base font-medium transition-colors cursor-pointer ${
           saved
             ? 'border-accent-primary bg-accent-subtle text-accent-primary'
             : 'border-border-primary bg-surface-primary text-text-secondary hover:text-text-primary hover:border-accent-primary'
@@ -119,7 +119,7 @@ export default function SaveToDashboardButton({
       // The native tooltip is dropped when we draw our own, so the same words
       // do not appear twice, a second late, in a different style.
       title={showLabelOnHover ? undefined : label}
-      className={`inline-flex items-center justify-center rounded-full p-2 transition-colors ${
+      className={`inline-flex items-center justify-center rounded-full p-2 transition-colors cursor-pointer ${
         saved
           ? 'bg-accent-subtle text-accent-primary'
           : 'bg-surface-primary/90 text-text-tertiary hover:text-accent-primary border border-border-primary'
