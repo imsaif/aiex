@@ -133,17 +133,18 @@ const COURSE_TOOL_LOGOS: Record<string, string> = {
  */
 function SubjectMark() {
   return (
+    // Solid, not outlined, because everything it sits beside is a brand logo
+    // and those arrive filled. A trademark cannot be redrawn as a stroke to
+    // match, so the one mark we do draw matches them instead — otherwise a
+    // single hairline icon reads as lighter than the rest of the column and
+    // looks like a mistake rather than a choice.
     <svg
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.75}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor"
       className="h-3.5 w-3.5 shrink-0"
       aria-hidden="true"
     >
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+      <path d="M12 3C6.9 3 2.8 6.5 2.8 10.9c0 2.2 1 4.2 2.7 5.6-.1 1.1-.5 2.6-1.7 4 0 0 2.9-.3 4.9-2 1.1.4 2.3.6 3.6.6 5.1 0 9.2-3.6 9.2-8s-4.1-8.1-9.2-8.1z" />
     </svg>
   );
 }
