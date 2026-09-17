@@ -316,9 +316,21 @@ export default async function LessonPage({ params }: LessonPageProps) {
               {/* Body and TOC. The TOC starts under the header, so the lesson
                   title and its meta get the full width. */}
               <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_240px] xl:gap-12">
-                <article className="max-w-[820px]">
+                {/* The article fills its track; the measure is capped on the
+                    text itself (see `.lesson-prose` in globals.css). Capping
+                    the whole article instead meant figures could never be wider
+                    than a paragraph, and the earlier attempt to let them break
+                    out had to guess the track width from the viewport, which
+                    put screenshots underneath the On this page rail. */}
+                <article className="w-full">
 
-              {/* Lesson body — fully expanded, server-rendered for crawlers */}
+              {/* Lesson body — fully expanded, server-rendered for crawlers.
+                  `lesson-prose` must sit on the element whose DIRECT children
+                  are the rendered sections: the rule caps each block at the
+                  reading measure and exempts figures, and on any ancestor it
+                  would cap this wrapper instead, squeezing the figures with
+                  everything else. That is exactly the bug it was written to
+                  fix. */}
               <div className="mb-12">
                 <LessonRenderer sections={sections} />
               </div>

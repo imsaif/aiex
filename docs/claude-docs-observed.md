@@ -1,0 +1,559 @@
+# Claude Docs, observed
+
+Raw notes from a real session on 2026-09-17, captured as screenshots. Everything
+here was seen on screen. Nothing is from documentation or press coverage. This
+file is evidence; `claude-docs-guide-outline.md` is the plan that uses it.
+
+## The empty doc
+
+A new doc opens with a serif "Title" placeholder and one line of body prompt:
+*"Start typing, or ask @Claude to write"*. That single line is the whole
+onboarding. It tells you the two modes at once: you type, or you ask.
+
+Toolbar above the page: a **Tabs** dropdown, then table, image, checklist, and a
+`+` menu. Top bar carries the doc name as a dropdown, **Chat**, open-in-new-tab,
+a comment count, **Share**, and close.
+
+## Asking Claude, from inside the page
+
+Typing `@claude` in the body opens a two-section menu:
+
+- **Ask Claude** → Claude
+- **Tabs** → the tabs in this doc, listed by name
+
+So the same `@` does two different jobs: address the assistant, or reference
+another tab. Worth calling out, because a designer will hit it by accident.
+
+Choosing Claude turns the line into an inline composer: `@Claude` followed by
+*"Tell Claude what to write or edit"*. Submit it and it becomes an anchored
+comment on the right, with the source text highlighted amber in the page, and
+the status *"Claude is working on it…"* inside the comment card.
+
+**This is the interaction that makes Docs different.** You do not switch to a
+chat box and describe where you mean. You point at the line and ask there. That
+is a review comment, and designers already know what a review comment is.
+
+## Two comments at once
+
+Sending a second comment while the first is still running does not queue
+silently. The card says *"Claude is finishing another turn. Your ask is next."*
+
+The reply box carries a **Send to Claude** checkbox, ticked by default. So a
+comment can be either a note for a human or an instruction for Claude, and the
+difference is one checkbox. Untick it and you have left an ordinary comment.
+
+## The doc names itself, twice
+
+The doc kept the name typed into it, "Claude docs guide". The browser tab and
+the session became "Claude docs usage guide" on their own. Two names for one
+piece of work, and only one of them was chosen by a person.
+
+## The split view
+
+Opening the conversation gives a two-panel layout: the session on the left, the
+doc live on the right. URL shapes differ, which matters for anyone sharing links:
+
+- `claude.ai/artifact/<id>` is the doc on its own
+- `claude.ai/cowork/cse_<session>?artifact=<uuid>` is the split view
+
+The left panel shows the doc as a pinned card: **"Claude docs guide · Doc ·
+Only you"** with a Hide button. Private by default, stated on the card.
+
+Under it, the work is narrated in plain language:
+
+- "Read 4 files, used Claude Docs integration, loaded tools"
+- "Edit doc · 1 note" then "Now appending the remaining sections at the end of
+  the doc."
+- "Used Claude Docs integration · 2 notes"
+- "Create doc, tab, or comment"
+- Closing line: "Wrote the guide into the doc and replied in the thread there."
+
+A one-off hint appears above the composer: *"Want to see the steps first? Ask
+Claude for a plan up front."* with an **Add to message** button. Model picker at
+the bottom read **Manual / Sonnet 5 High**.
+
+## Watching it write
+
+Claude types into the page with a named cursor, the same labelled caret you see
+when someone else is in a shared document. The structure lands first, headings
+visible while sections are still empty, then the detail fills in.
+
+## It answers in the thread
+
+When it finished, the comment thread showed a reply from Claude at 13:57:
+*"Added the guide below — covers creating a doc, editing, tabs, comments, and
+sharing."* The thread collapsed to "Show 1 reply".
+
+So the loop closes where it started: comment on a line, get an answer on that
+same line, with the change already made in the page.
+
+## What this changes in the guide
+
+1. **Lesson 1 gets a concrete hook.** Docs is not "a document Claude keeps
+   current". It is a document you brief by commenting on it. That is the sentence
+   a designer needs, and it is not in Anthropic's tooltip.
+2. **The Send-to-Claude checkbox deserves its own beat.** It is the whole
+   distinction between a human comment and an instruction, and it is one tick.
+3. **The queue message and the plan hint are evidence of good AI UX.** This site
+   has patterns for both. Worth linking rather than describing.
+4. **Two names for one doc is a real wrinkle**, and the kind of thing every other
+   guide will leave out.
+
+---
+
+# Claude Slides, observed
+
+Same session, 1:59pm. One screenshot so far, of the empty state, and it already
+argues for a separate guide.
+
+## The empty state asks a different question
+
+Docs opens with *"Start typing, or ask @Claude to write"*. Slides opens with
+**"Paste your ideas and turn them into slides"** and, under it, a dropdown:
+**Choose design system…**
+
+That dropdown is the whole story. Before you have a single slide, Slides wants
+to know what it should look like. Docs never asks. A deck is a styled object, a
+doc is text, and the product admits that at second zero.
+
+The right panel says *"This deck has no slides yet. Add one, or let Claude add
+some."* with an **Add slide** button. So both hands are offered: yours or
+Claude's.
+
+## Different toolbar, different job
+
+Docs gave document controls: tabs, table, image, checklist. Slides gives object
+controls: text box, image, table, shapes. Plus, top right, download, present,
+a layout toggle, and a zoom control reading 100%.
+
+Same split-panel shell as Docs, same `claude.ai/cowork/cse_…?artifact=…` URL,
+same chat on the left. The shell is shared. What sits inside it is not.
+
+## The audit answer, so far
+
+**Slides needs its own guide, not a section in the Docs one.** Evidence, not a
+hunch: the two products ask for different things before you start. Docs wants a
+sentence. Slides wants a design system. A guide that covers both will bury that,
+and it is the single most useful thing to tell a designer.
+
+Still to capture for Slides: what the design-system dropdown actually contains,
+whether a migrated system appears there, what a paste of raw notes produces, and
+the PowerPoint export fidelity.
+
+## The design-system dropdown is empty
+
+Opened at 2:00pm. It contains exactly one item: **Manage design systems**, with
+an external-link icon. No systems, no defaults, no samples.
+
+So the first thing Slides asks for is the one thing a new user does not have.
+The dropdown is a door to a setup flow, dressed as a choice.
+
+This connects directly to the banner seen on the artifacts page: *"Migrate your
+design systems here to use them across all your artifacts and Claude sessions."*
+Migration is not an optional tidy-up for existing Design users. It is how this
+dropdown ever gets an entry.
+
+For the guide: the honest first instruction for Slides is not "choose a design
+system". It is "you do not have one yet, here is what happens if you skip it,
+and here is what changes once you have one". The skip path needs capturing too,
+since most readers will take it.
+
+## Skipping the design system, and what the trace reveals
+
+Asked plainly: "Lets create a slide for getting started on claude slides". No
+design system chosen. It proceeded without complaint, so the picker is genuinely
+optional, not a gate.
+
+The left panel narrated the work, and this is the interesting part:
+
+- "Ran 2 commands, used a tool"
+- **"Print SKILL.md and craft.md reference files"**
+- **"Print format.md reference file"**
+- "Read an artifact"
+- "Thinking… · 24s"
+
+**Slides is driven by a skill.** Before placing anything it reads a `SKILL.md`
+plus `craft.md` and `format.md` references. That is the same file shape this
+site generates for all 38 patterns. The deck's quality is not magic in the
+model, it is instructions in a file, and a designer who understands that
+understands why a skill is worth installing.
+
+That is the strongest link we have between this guide cluster and the skill
+pack, and nobody writing a "how to use Claude Slides" post will notice it.
+
+On the canvas, a labelled cursor reading **"Claude is working…"** sits where the
+next object will land. Docs had the same presence cue in a line of text; Slides
+has it in space.
+
+The plan hint appears here too: *"Want to see the steps first? Ask Claude for a
+plan up front."*
+
+## The wait is long, and the canvas stays empty
+
+At 1m 34s the deck was still blank. The status had moved from "Thinking… · 24s"
+to **"Working through a complex response… · 1m 34s"**, and the only thing on the
+canvas was the floating "Claude is working…" label and the Add slide button.
+
+Set against Docs, this is a real difference in felt speed. Docs put headings on
+the page within seconds and filled them in while you watched, so the wait was
+spent reading. Slides holds everything back and shows a label instead, so the
+same minute feels like nothing is happening.
+
+Both are honest. Only one is reassuring. For a guide aimed at designers this is
+the observation with the most teaching in it, and for this site it is a live
+example of patterns we already document: progressive disclosure of work in
+progress versus a bare activity indicator.
+
+Do not soften this in the lesson. "Expect to wait, and here is why nothing
+appears" is more useful than pretending it is instant.
+
+## What a no-system deck actually looks like
+
+Five slides, landed after roughly two minutes. I had expected generic. It is not.
+
+- Dark title slide, then light content slides
+- Serif display headings at a confident size
+- A three-card row numbered 01 / 02 / 03, each card with a heading and two
+  lines, orange numerals as the only accent colour
+- Generous margins, one idea per slide
+- Filmstrip along the bottom: title, what it is, how to build a first deck,
+  design tips, and a closing dark slide
+
+Claude's own summary in the panel: *"5 slides walking through Getting Started
+with Claude Slides: a dark title slide, what the tool does (3-card breakdown),
+the 4-step workflow, a quick grid of design tips, and a closing call-to-action."*
+It then offered to change the tone, the palette, or rework any slide.
+
+**Correcting an assumption made earlier in this file:** the argument for
+migrating a design system is not that the default looks bad. The default has
+taste. The argument is brand fidelity, which is a different and more honest
+claim, and the guide should make that one.
+
+## A deck is a pile of files
+
+The panel read: **"Created 6 files, ran 3 commands, used a tool"**, then *"Now
+publishing all files in one call."*
+
+So a deck is not one opaque slide object. It is a set of files published
+together. That explains why PowerPoint, HTML and PDF export are all plausible
+from the same artifact, and it is the same file-shaped thinking as the skills.
+Worth one sentence in the guide; a designer who knows this stops treating the
+output as a black box.
+
+## Revised audit verdict
+
+Slides is a separate guide, confirmed. Docs is text you brief by commenting.
+Slides is a styled artifact built from files, with a slow blank wait and a
+strong default look. Sharing one guide would flatten both.
+
+## Comments work on slides too, anchored to an element
+
+The same review-comment interaction from Docs exists on the canvas. Clicking into
+a card and typing `@Claude` opens a composer whose header names exactly what is
+being discussed: **"Slide 2 › Caption "A topic, an audience, a source doc…""**.
+The **Send to Claude** checkbox is there as well, ticked.
+
+So the anchored comment is not a Docs feature. It is the shared spine across
+both surfaces: point at the thing, ask there, get the change made in place. That
+is the sentence the hub page needs.
+
+## A house rule, enforced by pointing at a slide
+
+Two comments were left on one card: *"remove emdashes"*, then *"also give
+examples here"*. Claude did both across the deck and replied in the thread:
+*"Done both: pulled every em dash out of the deck (rewrote with colons/commas
+instead), and this card now reads…"*
+
+The before and after is visible in the deck's own subtitle:
+
+- before: "directly from your instructions — no template to wrestle with"
+- after: "directly from your instructions: no template to wrestle with"
+
+This is the best single demo in the whole cluster. A designer with a house style
+enforces it by commenting on the slide that breaks it, and it propagates.
+
+## Claude resolves its own threads
+
+The reply is attributed **"Claude · via Imran"**, the thread is marked
+**Resolved**, and the box underneath reads *"Reply to reopen…"*. The left panel
+confirmed: *"Done — replied in the comment thread and resolved it."*
+
+Also seen: *"Edited 4 files, loaded tools"* and *"Published; now replying in the
+comment thread and checking for other pending threads."* It tracks a queue of
+threads rather than handling one and stopping.
+
+## The Slides export menu
+
+Four options, nothing more:
+
+- PDF (.pdf)
+- Webpage (.html)
+- **PowerPoint, current fonts (.pptx)**
+- **PowerPoint, basic fonts (.pptx)** with the helper line *"Basic fonts work on
+  any computer"*
+
+The two PowerPoint entries are the most designer-specific decision in the whole
+product. Current fonts keeps the typography that makes the default deck look
+good, and risks substitution on a machine that lacks the faces. Basic fonts
+survives anywhere and gives up the face. Nobody else writing about Slides will
+explain which to send to a client, and that is a whole lesson beat.
+
+**Slides exports narrower than Design.** The Design artifact menu recorded in
+the outline had Project HTML, PNG, Video (MP4) and Send to Claude Code, Lovable
+and Miro. None of those appear here. Do not describe one menu as if it were the
+other, which is exactly the mistake a merged guide would make.
+
+Still unverified: whether the .pptx actually opens with editable text and shapes,
+as Anthropic's tooltip claims. That claim is the strongest argument for Slides
+and it has not been tested yet.
+
+## The PowerPoint export, opened and inspected
+
+Downloaded "PowerPoint, current fonts" and unpacked the .pptx. 26.6 kB for five
+slides, which is already the answer: flat images would run to megabytes.
+
+Verified inside the file:
+
+- **Live text throughout.** Every headline, caption and paragraph is a real text
+  run. The subtitle reads out as the corrected copy, colon and all, so the
+  comment-driven edit survived the export.
+- **14 separate shapes on slide 2.** The three cards are individual objects, not
+  one picture of a row of cards.
+- **No image files anywhere.** No `ppt/media` folder, and no slide references a
+  picture. Nothing was flattened.
+- 16:9 widescreen (12192000 x 6858000 EMU), with a slide master, one layout, and
+  a notes slide per slide.
+
+Anthropic's tooltip claim of "editable text and shapes" holds, fully.
+
+### The font caveat
+
+The slides use exactly two typefaces: **Helvetica** (99 runs) and **Georgia**
+(15 runs). The long font list in the theme is just Office's standard script
+fallbacks, not anything the deck uses.
+
+So the elegant serif on screen did not travel. "Current fonts" exported Georgia
+and Helvetica, which are on every machine anyway. Whatever the difference is
+between the two PowerPoint options, it did not show up in this deck.
+
+**Correcting what I wrote earlier in this file:** I called the current-vs-basic
+fonts choice the most designer-specific decision in the product. On this
+evidence it is close to no decision at all. The guide should test it once more
+on a deck with a migrated design system, where the fonts are actually custom,
+and say plainly what happens. Do not repeat Anthropic's framing untested.
+
+# Claude Design: two places, not one
+
+Checked at 2:13pm. Both of these exist and both work. The course audit assumed
+one had replaced the other. It has not.
+
+## A new Design artifact
+
+`claude.ai/cowork/cse_…?artifact=…`, the same split shell as Docs and Slides.
+
+- Empty state: **"Describe an idea and turn it into a design"**, with the same
+  **Choose design system…** picker, still empty
+- Canvas toolbar: page selector, select, pan, text, frame, sticky note, pen,
+  shapes. Zoom at 50%
+- *"This canvas has no artboards yet. Add one, or let Claude add some."* with
+  **Add an artboard**
+- A label reading "User-generated artifact content"
+
+No templates. No project list. Nothing you made before.
+
+## The standalone app at claude.ai/design
+
+Still live, still titled **Claude Design, Beta**, and it is where everything you
+own actually lives:
+
+- Prompt bar: *"Attach a file, link your design system, or describe what you want
+  to make"*, with a **Design system** button, a code button, and a **Model**
+  picker reading Sonnet 5
+- **Choose a template**, twelve of them: Blank, Mobile app design, **Slides**,
+  Document, Wireframe, Animation, UI mockups, Résumé, 3D object, Research,
+  HTML email, Color + type pairing
+- Three tabs: **Projects, Design systems, Templates**, with real project history
+  underneath
+
+## The distinction to write down
+
+**The standalone is the library. Artifacts is the workshop.** Your projects,
+your design systems and your templates live at claude.ai/design. New work is
+created as an artifact. That is the sentence the course needs, and neither the
+banner nor the tooltips say it.
+
+It also explains the empty picker in Slides: design systems are managed over
+there, and the artifact side only reads them.
+
+## Correcting the course audit
+
+Two corrections to `claude-design-course-audit.md`, made on this evidence:
+
+1. **Lesson 11 is incomplete, not wrong.** The standalone still offers a Slides
+   template, so a reader following it does get a deck. What they are not told is
+   that a second, different route now exists. Weaker fault than I wrote, same
+   fix: name both and say which to use when.
+2. **Lessons 7 and 8 hold up better than I said.** Extracting and publishing a
+   design system still happens at claude.ai/design, under the Design systems tab.
+   That part of the course is not stale at all. What is missing is the sentence
+   connecting it to the artifact side.
+
+## Why the design-system picker is empty: Legacy
+
+"Manage design systems" opens Claude's settings, not the standalone app:
+`claude.ai/new#settings/design-systems`, a Design systems entry in the same
+sidebar as Preferences, Billing, Skills and Plugins.
+
+The list is not empty. Ten systems, all owned by this account, including
+**"aiuxdesign.guide Design System"** published Apr 21 2026 and another published
+Apr 27. **Every single one carries a "Legacy" tag.**
+
+None of them appear in the picker inside a Slides or Design artifact.
+
+**So the picker is not empty because nothing exists. It is empty because nothing
+has been migrated.** Legacy systems stay with the old surface until they are
+brought across, which is precisely what the artifacts banner offers: *"Migrate
+your design systems here to use them across all your artifacts and Claude
+sessions."*
+
+Anthropic's own description in this panel: *"Design systems give Claude your
+colors, type and components to use when making designs, decks and prototypes."*
+There is a **New design system** button as well, so you can start fresh instead
+of migrating.
+
+### What this does to the course
+
+This is now the most valuable single thing the Claude Design course can tell its
+readers, and it is not in it. Anyone who followed lessons 7 and 8 and published a
+system has one sitting in that list marked Legacy, invisible to every new
+artifact they make. They will assume the picker is broken.
+
+Lessons 7 and 8 need the migration step appended, not rewritten. The extraction
+and publishing they teach still works. What is missing is the sentence that says
+your published system does not reach the new surfaces until you migrate it.
+
+### Confirmed in Slides too, and it is a loop
+
+Same behaviour from a Slides artifact at 2:24pm. Choose design system offers only
+Manage design systems, which opens the settings modal, which lists ten systems
+every one of them tagged Legacy, none of them selectable from the artifact.
+
+The word "migrate" does not appear anywhere in that modal. The only migration
+action seen so far is the one in the banner on the artifacts page.
+
+So the path a designer naturally takes leads nowhere: picker, to a list, to a
+list of things the picker will not show. Worth stating plainly in both guides,
+because it reads as a bug and is not one.
+
+### The row menu offers no migration
+
+The three-dot menu on a Legacy system contains exactly one item: **Open legacy
+version**, with an external-link arrow. No migrate, no convert, no duplicate.
+
+So the settings list is read-only for legacy systems. It shows you what you own
+and lets you go back and look at it in the old surface. That is all.
+
+**Two routes to a system the new artifacts can use:**
+
+1. **Migrate team design systems**, the action in the banner on the artifacts
+   page. The only migration path found anywhere.
+2. **New design system**, the button in this settings panel, which starts fresh
+   rather than bringing anything across.
+
+The lesson 8 steps written today already point at the banner, so that guidance
+stands. Worth adding one line: do not go looking in settings for the migration,
+because it is not there.
+
+### "Open legacy version" shows the system is fully intact
+
+The link goes to `claude.ai/design/p/<id>`, the standalone app, and the system is
+entirely there: Readme, Brand (hero grain band, product logos, brand mark),
+Colors (brand, semantic, light and dark themes), Components (buttons, filter
+chips, navbar, pattern card, search and newsletter input), Spacing (corner radii,
+shadows, scale), Type (body, display, Satoshi weights) and a Web UI Kit.
+
+The panel reads *"This design system is available for your team's new projects.
+You can keep editing it in the chat."* with **Published** ticked, **Set as org
+default**, and **Use this system → New design**.
+
+**So legacy means confined, not broken.** The system works, and you can start new
+work from it, but only in the standalone app. It cannot reach a Slides or Design
+artifact until it is migrated.
+
+That is the practical answer for a reader who needs to ship today, and it is
+better advice than "migrate or start over". Added to lesson 8 as a callout.
+
+### The migration itself
+
+The banner on `claude.ai/artifacts` carries two actions: **Visit the standalone
+homepage** and **Migrate team design systems**. The full banner text: *"Claude
+Design lives here now. New Slides and Design projects are created as artifacts.
+Migrate your design systems here to use them across all your artifacts and
+Claude sessions."*
+
+Clicking migrate opens a dialog: *"Getting your design systems ready…"* with
+*"You can close this window. The migration keeps running."* and a Close button.
+The banner button changes to "Migrating design systems…" with a **View details**
+link beside it.
+
+**It never asks which systems to migrate.** One button, the whole account. Worth
+saying in the lesson, because a reader with ten systems may expect to choose.
+
+Also worth noting: `aiuxdesign.guide Design System` already appeared in the
+Artifacts list before migrating, but with an external-link arrow instead of a row
+menu. Listed there, not usable there. That is the confusion in one row.
+
+### Migration progress, and how many actually migrate
+
+The dialog gains detail once it runs: *"Migrating… 1 of 3 design systems done"*
+with a progress bar, *"1 migrating now · 1 waiting"*, and two sections:
+
+- **Migrating now (1)**: Gist Design System, owner Imran
+- **Migrated (1)**: aiuxdesign.guide Design System, owner Imran, with an **Open**
+  link
+
+**Three, not ten.** The settings list showed ten Legacy systems; only three go
+across. So not every legacy system qualifies, and the settings count misleads.
+Do not tell readers their whole library migrates. Tell them to check the dialog
+for what actually moved.
+
+### A branded deck costs more time and more files
+
+Second Slides run, asked the same way: *"lets write a guide for how to use claude
+slides"*.
+
+- Reference files read this time: **fonts.md** and **deck-files.md**. The first
+  run read SKILL.md, craft.md and format.md. So the skill set pulled varies with
+  the job, which strengthens the point that Slides is skill-driven.
+- **"Created 11 files, ran 5 commands, read 2 files"**, including a **deck.json**,
+  then *"Now publishing everything in one Artifact call."*
+- Still working at **6m 4s**, against roughly two minutes for the unbranded deck.
+
+Six minutes of blank canvas is a long time to look at a "Claude is working…"
+label. State the wait plainly in the lesson rather than pretending it is quick.
+
+**Caveat on the paragraph above, added immediately.** It is not established that
+a design system was applied to that second deck. The picker was never shown with
+a selection, and the migration was still running when the run began. The heading
+"a branded deck costs more time" assumes something not in evidence.
+
+What is in evidence: the second run read different reference files, created 11
+files rather than 6, and took over 6 minutes rather than about 2. The cause is
+unknown. It could be branding, a longer brief, or ordinary variance.
+
+Before this reaches a lesson, run one deck with a migrated system explicitly
+selected and one without, same prompt, and compare. Until then the honest line is
+"runs vary a lot in length", not a claim about branding.
+
+**Caveat resolved, 2026-09-17.** Confirmed by Imran: the design system *was*
+selected for that second run. So the comparison stands on the evidence we have:
+
+| | no design system | design system applied |
+|---|---|---|
+| files created | 6 | 11 |
+| reference files read | SKILL.md, craft.md, format.md | fonts.md, deck-files.md |
+| time to first pixel | about 2 min | over 6 min |
+
+One run each, so treat it as an order of magnitude rather than a benchmark. The
+honest lesson line: applying your brand roughly triples the wait, and the canvas
+stays blank throughout.

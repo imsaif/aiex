@@ -30,6 +30,13 @@ const nextConfig = {
       'react-dropzone',
       'antd',
     ],
+
+    // Wrap client-side navigations in the browser's View Transitions API, so a
+    // route change cross-fades instead of swapping instantly. Without it, going
+    // from one lesson to the next replaces the whole page in a single frame,
+    // which reads as a snap. Browsers without support navigate as before, and
+    // the CSS honours prefers-reduced-motion.
+    viewTransition: true,
   },
 
   // Exclude large public directories from serverless function bundles

@@ -7241,7 +7241,7 @@ export const guides: Guide[] = [
     readTime: 30,
     author: 'Design Team',
     publishedDate: '2026-04-21',
-    lastUpdatedDate: '2026-07-20',
+    lastUpdatedDate: '2026-09-17',
     status: 'ready',
     thumbnail: '/images/guides/claude-design-learning-path/thumbnail.svg',
     tags: ['claude-design', 'anthropic', 'learning-path', 'ai-design-tool', 'prototyping', 'design-systems', 'model-selection'],
@@ -7255,7 +7255,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: "Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups. You describe what you need; Claude builds a first version in its canvas, and you refine it together through chat, inline comments, or direct edits. You choose which Claude model powers your work from the Model selector in the prompt bar, and it's currently in beta (Anthropic Labs).",
+            content: "Claude Design is Anthropic's AI collaborator for visual work, prototypes, slides, decks, one-pagers, mockups. You describe what you need; Claude builds a first version in its canvas, and you refine it together through chat, inline comments, or direct edits. You choose which Claude model powers your work from the Model selector in the prompt bar, and it's currently in Beta.\n\nSince September 2026 Claude Design lives in two places at once, and knowing which is which saves a wasted session. The standalone app at claude.ai/design is your library: every project you have made, your design systems, and a dozen starting templates. New Design work is created as an artifact inside a Claude conversation, alongside Docs and Slides. The library holds what you own; the artifact is where you build.",
             icon: 'info',
           },
           {
@@ -7267,7 +7267,7 @@ export const guides: Guide[] = [
             type: 'list',
             items: [
               'Turning a rough idea into a clickable HTML prototype without writing code',
-              'Producing on-brand pitch decks from a bulleted outline',
+              'Producing on-brand pitch decks from a bulleted outline, though Claude Slides is now the more direct route (see Lesson 11)',
               'Exploring three layout directions before you commit to one',
               'Converting a written spec into a shareable mockup',
               'Extracting your existing design system from code or Figma so every new project matches',
@@ -7957,6 +7957,13 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             label: "The clip is condensed. A real run takes several minutes and scales with the size of your sources (a repo with hundreds of components will take longer than a handful of brand assets).",
           },
           {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Extracting is not the last step any more',
+            content: "Since September 2026 a system you extract and publish here is tagged Legacy, and a Legacy system does not appear in the design-system picker inside Slides or Design artifacts. It has to be migrated across before new work can use it. Lesson 8 covers how, and it takes a minute.",
+            icon: 'warning',
+          },
+          {
             type: 'completion',
             title: 'Claude has your design system',
             items: [
@@ -8076,6 +8083,58 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             links: [
               { title: 'Set up your design system in Claude Design', url: 'https://support.claude.com/en/articles/14604397-set-up-your-design-system-in-claude-design', source: 'Claude Help Center' },
             ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Migrating to artifacts (do this, or the system stays invisible)',
+          },
+          {
+            type: 'text',
+            content: "Publishing used to be the end of the job. It is not any more. Since Docs, Slides and Design became artifacts in September 2026, every system published the old way carries a Legacy tag, and Legacy systems do not reach the new surfaces. Open a Slides or Design artifact, click Choose design system, and the list comes up empty even though your systems are all still there.",
+          },
+          {
+            type: 'text',
+            content: "You can see this for yourself in Claude's settings, under Design systems, reached from Manage design systems in that same picker. Every published system is listed with its owner and publish date, each one tagged Legacy. Nothing is lost and nothing is broken. It simply has not been brought across.",
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open the artifacts page',
+                content: 'Go to Artifacts in the Claude sidebar. The banner at the top reads that Claude Design lives there now, and that new Slides and Design projects are created as artifacts.',
+              },
+              {
+                number: 2,
+                title: 'Use Migrate team design systems',
+                content: 'The action sits in that banner. It brings your published systems onto the artifact side so they can be applied to any artifact or Claude session, not just projects made in the standalone app.',
+              },
+              {
+                number: 3,
+                title: 'Do not look for it in settings',
+                content: "The Manage design systems link in the picker opens Claude's settings, and the row menu there offers only Open legacy version. There is no migrate action in settings. The banner is the only route, other than starting a fresh system with New design system.",
+              },
+              {
+                number: 4,
+                title: 'Check the picker',
+                content: 'Open a new Slides or Design artifact and click Choose design system. A migrated system appears in the list. If it does not, it is still Legacy.',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Legacy is confined, not broken',
+            content: "If you need to work today and migration is not done, open the system from Design systems in settings, choose Open legacy version, and use the New design button on the system page. Everything is intact there: readme, brand, colours, components, spacing, type and UI kit, with Published and Set as org default still available. A legacy system is not damaged. It simply cannot reach the new artifact surfaces until it is migrated.",
+            icon: 'tip',
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'The standalone app is your library, artifacts is the workshop',
+            content: "Both places still work, and knowing the split saves a wasted session. claude.ai/design holds everything you own: projects, design systems and a dozen templates. New work is created as an artifact inside a conversation. Migration is what connects the two.",
+            icon: 'tip',
           },
           {
             type: 'completion',
@@ -8305,7 +8364,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
         sections: [
           {
             type: 'intro',
-            content: "Claude Design handles decks as well as product screens. The mental model is the same, goal, layout, content, audience, but the content block does more work. Feed it the full narrative (bullets per slide) and Claude produces an on-brand deck in minutes.",
+            content: "There are now two ways to make a deck. Claude Slides, one of the three artifact types, is purpose-built for it: a deck you can present, restyle with a design system, and export to PowerPoint with the text still editable. Claude Design also handles decks, and the standalone app keeps a Slides template. Use Slides when the deck is the deliverable. Use Design when the deck sits inside a wider set of screens you are already working on.\n\nEither way the mental model is the same, goal, layout, content, audience, but the content block does more work. Feed it the full narrative (bullets per slide) and Claude produces an on-brand deck in minutes.",
             icon: 'tip',
           },
           {
@@ -8527,7 +8586,7 @@ Audience: Early-stage VCs in the design-tools space.`,
         <h2 class="text-3xl font-bold text-gray-900 mt-10 mb-4">Who this is for</h2>
         <p class="text-gray-700 mb-4">
           Designers, PMs, and founders who want to use Claude Design seriously, not as a novelty. The guide
-          assumes you have a Claude Pro, Max, Team, or Enterprise plan and access to Claude Design in research preview.
+          assumes you have a Claude Pro, Max, Team, or Enterprise plan and access to Claude Design, which is in Beta.
         </p>
 
         <div class="p-6 bg-gray-900 text-white rounded-lg mt-8">
@@ -9103,6 +9162,789 @@ Audience: Early-stage VCs in the design-tools space.`,
       },
     ],
   },
+  {
+    "id": "claude-docs-course",
+    "slug": "claude-docs-guide",
+    "title": "Claude Docs Course",
+    "description": "Claude Docs is a document you brief by commenting on it. Learn the anchored-comment loop, tabs, the Send to Claude checkbox, and when a doc is the wrong artifact to ask for.",
+    "excerpt": "A 5-lesson path through Claude Docs, written from a real session rather than from the feature list. You point at a line, ask there, and the answer arrives on that same line with the change already made. Covers what that interaction is good for and where it stops.",
+    "tool": "Claude Docs",
+    "useCase": "Learning Path",
+    "skillLevel": "Beginner",
+    "designDomain": "UX Design",
+    "readTime": 14,
+    "author": "Design Team",
+    "publishedDate": "2026-09-17",
+    "lastUpdatedDate": "2026-09-17",
+    "status": "ready",
+    "thumbnail": "/images/logos/simple-icons/anthropic.svg",
+    "tags": [
+      "claude-docs",
+      "anthropic",
+      "artifacts",
+      "learning-path",
+      "collaboration",
+      "writing"
+    ],
+    "relatedPatterns": [
+      "human-in-the-loop",
+      "progressive-disclosure",
+      "contextual-assistance"
+    ],
+    "lessonCount": 5,
+    "content": "",
+    "lessons": [
+      {
+        "id": "lesson-1",
+        "title": "What a Doc Is, and Why It Is Not a Chat",
+        "duration": 3,
+        "order": 1,
+        "module": "foundations",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "A doc is the one artifact you can argue with in the margin."
+          },
+          {
+            "type": "text",
+            "content": "Claude Docs is one of three artifact types, alongside Slides and Design, created from the Artifacts page in Claude. Anthropic describes it as a document your team reads, comments on and edits in place while Claude keeps it current. That is accurate, and it undersells the part that matters."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The one-sentence version"
+          },
+          {
+            "type": "text",
+            "content": "A doc is a document you brief by commenting on it. You do not describe which paragraph you mean in a chat box. You point at the line, ask there, and the reply arrives on that same line with the edit already made. If you have ever left a comment on a spec and had someone action it, you already know this interaction."
+          },
+          {
+            "type": "text",
+            "content": "That is the whole reason to choose a doc over a chat reply. A chat gives you text you then have to place. A doc is already the place."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "How you get to one"
+          },
+          {
+            "type": "text",
+            "content": "There is no separate app and no URL worth bookmarking. Docs live inside Claude, so you reach one of two ways: open Artifacts in the Claude sidebar and pick the Docs tile, or simply ask for something doc-shaped in any conversation and Claude opens one for you."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-1/artifacts-page.webp",
+            "alt": "The Artifacts page in Claude, showing three tiles under Make something new: Docs, Slides and Design, each marked Beta, above a list of recently opened artifacts.",
+            "label": "The Artifacts page. Three tiles, one of them Docs, and everything you have already made underneath."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "Design used to live somewhere else",
+            "content": "If you have used Claude Design before, note the banner on this page: new Slides and Design projects are created as artifacts now. The standalone app at claude.ai/design still holds your projects and design systems, but new work starts here.",
+            "icon": "info"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What you get on opening one"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A serif Title placeholder, and one line of instruction: start typing, or ask @Claude to write",
+              "A toolbar with tabs, tables, images and checklists",
+              "Share, a comment count, and an open-in-new-tab control along the top",
+              "Private by default. The card in the session panel reads Only you until you change it"
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-1/empty-doc.webp",
+            "alt": "An empty Claude doc: a serif Title placeholder and one line of body text reading start typing, or ask @Claude to write, above a toolbar with tabs, table, image and checklist controls.",
+            "label": "A new doc. The whole onboarding is one line, and it names both ways in: type it yourself, or ask."
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "Ask for something doc-shaped",
+            "content": "A plan, a memo, a spec, a brief, notes, a review. Ask for one of those and Claude opens a doc instead of answering in chat. Ask a quick question and you get a chat reply, which is the right outcome. The shape of the request decides the shape of the answer.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You know what a doc is for",
+            "items": [
+              "Understand a doc as a briefable document, not a transcript",
+              "Know which requests open one",
+              "Know it is private until shared"
+            ],
+            "message": "Next: the interaction that makes it worth using."
+          }
+        ]
+      },
+      {
+        "id": "lesson-2",
+        "title": "The Anchored Comment: Brief It by Pointing",
+        "duration": 4,
+        "order": 2,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "This is the lesson that matters. Everything else is ordinary document software."
+          },
+          {
+            "type": "steps",
+            "steps": [
+              {
+                "number": 1,
+                "title": "Type @claude where you mean it",
+                "content": "Put the cursor in the line you want changed and type @claude. A menu opens with two sections: Ask Claude, and Tabs. The same @ addresses the assistant or references another tab, so expect to hit the wrong one at least once."
+              },
+              {
+                "number": 2,
+                "title": "Write the ask inline",
+                "content": "Choosing Claude turns the line into a composer reading: tell Claude what to write or edit. Write the instruction the way you would write a review comment, because that is what it is."
+              },
+              {
+                "number": 3,
+                "title": "Watch it become a thread",
+                "content": "On submit it becomes an anchored comment on the right, the source text highlights amber, and the card shows that Claude is working on it. The conversation is now attached to that passage rather than floating in a chat."
+              },
+              {
+                "number": 4,
+                "title": "Read the reply in the thread",
+                "content": "When it finishes, Claude replies in that same thread, marks it resolved, and leaves a reply-to-reopen box underneath. The reply is short and points at what changed, because the edit itself is already in the page."
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-2/inline-composer.webp",
+            "alt": "A Claude doc with the cursor in a paragraph and an inline composer open beneath it, prefixed @Claude, ready for an instruction.",
+            "label": "The composer opens in the document, under the line you are talking about."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-2/anchored-comment.webp",
+            "alt": "The same doc after submitting: the source sentence highlighted amber, and a comment card on the right showing the request, the status Claude is working on it, and a reply box with a ticked Send to Claude checkbox.",
+            "label": "The ask becomes a thread anchored to the highlighted line. Note the Send to Claude tick in the reply box."
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "Send to Claude is one checkbox",
+            "content": "The reply box carries a Send to Claude tick, on by default. Ticked, your comment is an instruction. Unticked, it is an ordinary note for a human. That single checkbox is the whole difference between briefing and annotating, and it is easy to miss.",
+            "icon": "warning"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Two asks at once"
+          },
+          {
+            "type": "text",
+            "content": "Send a second comment while the first is still running and it does not queue silently. The card says Claude is finishing another turn and yours is next. A small thing, and the reason you do not sit wondering whether it registered."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Why this beats describing the change"
+          },
+          {
+            "type": "text",
+            "content": "House rules are the clearest case. Tell it to remove every em dash from a document and it rewrites them as colons and commas throughout, then tells you in the thread what it changed. You enforced a style rule by pointing at one sentence that broke it."
+          },
+          {
+            "type": "completion",
+            "title": "You can brief a doc",
+            "items": [
+              "Opened an anchored comment with @claude",
+              "Know what the Send to Claude tick does",
+              "Know where the answer appears"
+            ],
+            "message": "Next: what it does while you wait."
+          }
+        ]
+      },
+      {
+        "id": "lesson-3",
+        "title": "Watching It Work",
+        "duration": 2,
+        "order": 3,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "You can read a doc while it is still being written, which changes how the wait feels."
+          },
+          {
+            "type": "text",
+            "content": "Claude types into the page with a named cursor, the same labelled caret you see when a colleague is in a shared document. Structure lands first: headings appear while their sections are still empty, then the detail fills in underneath."
+          },
+          {
+            "type": "text",
+            "content": "That ordering is worth naming because it changes how the wait feels. You can read the outline and judge whether the shape is right before any of the prose exists, and stop it early if it is not."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The session panel tells you what it did"
+          },
+          {
+            "type": "text",
+            "content": "Opening the conversation gives a two-panel view: the session on the left, the live doc on the right. The left panel narrates in plain language rather than jargon. A real run read: read 4 files, used Claude Docs integration, loaded tools. Then: now appending the remaining sections at the end of the doc. Then: wrote the guide into the doc and replied in the thread there."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-3/split-view.webp",
+            "alt": "Two-panel view: on the left the session narrating each step in plain language, on the right the live document with a resolved comment thread showing Claude's reply.",
+            "label": "The session on the left, the live doc on the right. Every step is narrated in words rather than tool names."
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "Ask for a plan first on anything long",
+            "content": "A hint appears above the composer offering exactly this, with an Add to message button. On a long document it is worth taking. You get an outline to argue with before the prose is written, which is cheaper than reading three pages and then asking for a restructure.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You know what the wait looks like",
+            "items": [
+              "Structure first, detail second",
+              "The panel narrates the work in plain words",
+              "A plan can be requested up front"
+            ],
+            "message": "Next: tabs, and keeping one doc from sprawling."
+          }
+        ]
+      },
+      {
+        "id": "lesson-4",
+        "title": "Tabs, Sharing, and the Two Names Problem",
+        "duration": 2,
+        "order": 4,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "One doc holds several tabs, which is how you keep the detail out of the part people read."
+          },
+          {
+            "type": "text",
+            "content": "A main plan tab plus a Sources or Working notes tab keeps the heavy material somewhere it can be found without being in the way."
+          },
+          {
+            "type": "text",
+            "content": "You do not create tabs through a menu ritual. Ask Claude to add a tab, or to move a section into its own tab, and it does it. The Tabs control in the toolbar is there for when you want to move between them yourself."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-docs-guide/lesson-4/doc-with-diagram.webp",
+            "alt": "A finished Claude doc showing a rendered flow diagram of boxes and arrows inline in the page, with prose underneath and a resolved comment thread on the right.",
+            "label": "Docs render diagrams inline, not only prose. This flow was produced from the same comment as the text around it."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "It persists, and it is private"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A doc outlives the conversation that made it. Reopen it later, keep editing, or hand it to someone else",
+              "Private by default, like any other artifact, until you choose to share",
+              "The doc alone lives at a claude.ai/artifact URL. The split view with the session has a longer cowork URL. Share the one you mean"
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "Your doc will end up with two names",
+            "content": "The doc keeps the title you typed. The browser tab and the session rename themselves to something adjacent but different, chosen by Claude rather than by you. Nothing breaks, but when you go looking for a doc later you may be searching for a name you never wrote.",
+            "icon": "warning"
+          },
+          {
+            "type": "completion",
+            "title": "You can keep a doc tidy",
+            "items": [
+              "Split detail into tabs by asking",
+              "Know which URL to share",
+              "Expect the second, auto-chosen name"
+            ],
+            "message": "Last lesson: when a doc is the wrong thing to ask for."
+          }
+        ]
+      },
+      {
+        "id": "lesson-5",
+        "title": "When a Doc Is the Wrong Ask",
+        "duration": 3,
+        "order": 5,
+        "module": "judgement",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Asking for the wrong artifact costs you a session, and three tiles side by side make it easy to do."
+          },
+          {
+            "type": "table",
+            "rows": [
+              {
+                "label": "Ask for a Doc when",
+                "content": "The deliverable is prose someone will read and comment on: a plan, a spec, a brief, a review, meeting notes, a written argument."
+              },
+              {
+                "label": "Ask for Slides when",
+                "content": "The deliverable is a deck you will present or send. Slides is built for it: it asks for a design system before you start, and exports to PowerPoint with the text still editable."
+              },
+              {
+                "label": "Ask for Design when",
+                "content": "The deliverable is screens, flows or graphics on a canvas of artboards you can rearrange by hand."
+              },
+              {
+                "label": "Stay in chat when",
+                "content": "You want an answer, not a document. A quick question gets a better reply in the conversation than as a one-paragraph artifact you now have to manage."
+              }
+            ]
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The honest limits"
+          },
+          {
+            "type": "list",
+            "items": [
+              "It is a writing surface, not a source of truth. It cannot know whether what it wrote is accurate unless you gave it the material",
+              "The review loop rewards specific asks. Vague comments on vague paragraphs produce vague edits",
+              "A doc you brief once and never revisit is just text. The value is in the second and third pass, which is also true of a design review"
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "The test worth applying",
+            "content": "Ask whether anyone will comment on this. If yes, it is a doc. If it is going on a screen in front of people, it is a deck. If nobody will ever open it again, it is a chat message, and making it an artifact has only given you filing to do.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You can choose the right artifact",
+            "items": [
+              "Know when a doc beats a chat reply",
+              "Know when to reach for Slides or Design instead",
+              "Know where the doc loop stops being useful"
+            ],
+            "message": "Course complete. The Claude Slides course covers the deck half of this decision."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "claude-slides-course",
+    "slug": "claude-slides-guide",
+    "title": "Claude Slides Course",
+    "description": "Claude Slides asks for a design system before you have a single slide. Learn what happens if you skip it, why the wait is long, how comments work on a canvas, and what actually survives the PowerPoint export.",
+    "excerpt": "A 5-lesson path through Claude Slides, written from real decks rather than the feature list. Includes the export unpacked and inspected file by file, and the design-system trap that makes the picker look broken when it is only empty.",
+    "tool": "Claude Slides",
+    "useCase": "Learning Path",
+    "skillLevel": "Beginner",
+    "designDomain": "UX Design",
+    "readTime": 16,
+    "author": "Design Team",
+    "publishedDate": "2026-09-17",
+    "lastUpdatedDate": "2026-09-17",
+    "status": "ready",
+    "thumbnail": "/images/logos/simple-icons/anthropic.svg",
+    "tags": [
+      "claude-slides",
+      "anthropic",
+      "artifacts",
+      "learning-path",
+      "presentations",
+      "design-systems"
+    ],
+    "relatedPatterns": [
+      "human-in-the-loop",
+      "progressive-disclosure",
+      "error-recovery"
+    ],
+    "lessonCount": 5,
+    "content": "",
+    "lessons": [
+      {
+        "id": "lesson-1",
+        "title": "The Question Slides Asks First",
+        "duration": 3,
+        "order": 1,
+        "module": "foundations",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Slides asks you a question before you have a single slide, and Docs never does."
+          },
+          {
+            "type": "text",
+            "content": "Open a Claude Doc and it offers to start typing or to write for you. Open Claude Slides and it says: paste your ideas and turn them into slides. Underneath sits a dropdown reading Choose design system."
+          },
+          {
+            "type": "text",
+            "content": "Before you have a single slide, Slides wants to know what it should look like. Docs never asks. That difference at second zero tells you what each one is: a doc is text, a deck is a styled object, and the product admits it immediately."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "How you get to one"
+          },
+          {
+            "type": "text",
+            "content": "Open Artifacts in the Claude sidebar and pick the Slides tile. Asking for a deck in a conversation works too, and Claude opens one. There is no separate Slides app: it is an artifact type, alongside Docs and Design."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-1/artifacts-page.webp",
+            "alt": "The Artifacts page in Claude with the Slides tile hovered, showing a tooltip reading: a deck you can present, restyle with a design system and export to PowerPoint, above a Start with a prompt button.",
+            "label": "Slides is the middle tile. Hovering gives Anthropic's own one-line definition, and a Start with a prompt button."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What is on screen"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A design-system picker, before anything exists",
+              "An object toolbar: text box, image, table, shapes. Docs gives document controls instead, like tabs and checklists",
+              "Download, present, a layout toggle and a zoom control along the top right",
+              "An empty deck reading: this deck has no slides yet. Add one, or let Claude add some"
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "Both hands are offered",
+            "content": "Add slide builds it yourself. Describing what you want lets Claude build it. Neither is the intended path over the other, which is unusual and worth knowing before you assume you have to prompt your way through everything.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You know what Slides is",
+            "items": [
+              "Know why the first question is about style, not content",
+              "Recognise the object toolbar",
+              "Know you can build by hand or by asking"
+            ],
+            "message": "Next: the design-system trap, and why the picker looks broken."
+          }
+        ]
+      },
+      {
+        "id": "lesson-2",
+        "title": "The Empty Picker, and the Legacy Trap",
+        "duration": 4,
+        "order": 2,
+        "module": "setup",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "The picker looks broken. It is only empty, and the fix is not where you will look for it."
+          },
+          {
+            "type": "text",
+            "content": "Open Choose design system on a fresh account and it is empty. Open it on an account with ten published design systems and it is still empty. This is the single most confusing thing about Slides today, and it is not a bug."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What is actually happening"
+          },
+          {
+            "type": "text",
+            "content": "Design systems published before Claude Design moved into artifacts are tagged Legacy. A legacy system does not appear in the picker inside a Slides or Design artifact. It still exists, it is still published, and it is still usable. It just cannot reach the new surfaces until it is migrated."
+          },
+          {
+            "type": "text",
+            "content": "The path a designer naturally takes leads nowhere. The picker offers Manage design systems, which opens Claude settings, which lists every system you own, none of which the picker will show. The row menu there offers only one thing: open legacy version. There is no migrate action in settings."
+          },
+          {
+            "type": "steps",
+            "steps": [
+              {
+                "number": 1,
+                "title": "Go to the Artifacts page",
+                "content": "The banner at the top reads that Claude Design lives there now, and that new Slides and Design projects are created as artifacts."
+              },
+              {
+                "number": 2,
+                "title": "Click Migrate team design systems",
+                "content": "It never asks which ones. One button takes everything eligible. A dialog reports progress, with Migrating now and Migrated sections, and you can close it while it keeps running."
+              },
+              {
+                "number": 3,
+                "title": "Check what actually moved",
+                "content": "Not everything qualifies. An account showing ten legacy systems in settings migrated three. Read the dialog rather than assuming your whole library came across."
+              },
+              {
+                "number": 4,
+                "title": "Reopen the picker",
+                "content": "A migrated system now appears in the list inside a Slides artifact. If it does not, it did not migrate."
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-2/picker-filled.webp",
+            "alt": "The Claude Slides empty state after migrating, where the control now reads Design system: aiuxdesign.guide Design System instead of an empty Choose design system dropdown.",
+            "label": "After migration the control names your system instead of asking you to choose one. This is what a working picker looks like."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-2/migration-finished.webp",
+            "alt": "The Artifacts page banner after migrating, reading that the latest migration of your design systems finished and offering Migrate again to bring over new or changed ones.",
+            "label": "After it finishes, the banner changes to Migrate again. Run it after you edit a system, or the artifact side keeps the old one."
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "If you need to ship today",
+            "content": "A legacy system is confined, not broken. Open it from Design systems in settings, choose open legacy version, and use the New design button on the system page. Everything is intact there: colours, type, components, spacing and UI kit. You just cannot use it from an artifact until it is migrated.",
+            "icon": "tip"
+          },
+          {
+            "type": "completion",
+            "title": "You can get a system into the picker",
+            "items": [
+              "Know why the picker looks empty",
+              "Know the migration lives in the banner, not in settings",
+              "Know the workaround if migration is not done"
+            ],
+            "message": "Next: what happens when you skip the system entirely."
+          }
+        ]
+      },
+      {
+        "id": "lesson-3",
+        "title": "Skipping the System, and What You Get",
+        "duration": 3,
+        "order": 3,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "The picker is optional, and the interesting part is that skipping it still produces a good deck."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The default has taste"
+          },
+          {
+            "type": "list",
+            "items": [
+              "A dark title slide, then light content slides",
+              "Serif display headings at a confident size",
+              "A three-card row numbered 01, 02, 03, with one accent colour and nothing else",
+              "Generous margins, one idea per slide, and a closing call to action"
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-3/finished-deck.gif",
+            "alt": "A finished five-slide deck with no design system applied: a dark title slide, serif headings, and a row of three numbered cards with an orange accent.",
+            "label": "The default look, with nothing chosen. Restrained enough to send, and not yours."
+          },
+          {
+            "type": "text",
+            "content": "So the reason to migrate a design system is not rescue. The default will not embarrass you. The reason is brand fidelity: this deck looks like Claude made it, not like your company made it. That is a real argument, and it is a different one from the argument most write-ups will make."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-3/branded-deck.webp",
+            "alt": "The same request run with a design system applied: a navy title slide set in the site's own typeface, with a ten-slide filmstrip underneath.",
+            "label": "The same one-line brief with a design system applied. Navy and Satoshi, and ten slides instead of five."
+          },
+          {
+            "type": "text",
+            "content": "Claude's own summary of that run named the change without being asked: built in the site's navy-and-Satoshi look. Applying a system does not only recolour the deck, it changed the length as well, from five slides to ten."
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "Expect a long, blank wait",
+            "content": "Docs puts headings on the page within seconds and fills them in while you watch. Slides holds everything back and shows a floating Claude is working label over an empty canvas. An unbranded deck took about two minutes. With a design system applied, the same ask took over six. Both are honest, only one is reassuring.",
+            "icon": "warning"
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "It is built from files, and driven by a skill"
+          },
+          {
+            "type": "text",
+            "content": "The session panel shows the working: it prints reference files before it draws anything. One run read SKILL.md, craft.md and format.md. Another read fonts.md and deck-files.md. Then it creates files, six for a plain deck and eleven for a branded one, including a deck.json, and publishes them in a single call."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-3/reads-skill-files.gif",
+            "alt": "The Slides session panel printing reference files, including SKILL.md, craft.md and format.md, before any slide exists, while the canvas shows a Claude is working label.",
+            "label": "Before it draws anything it reads its own instructions. The deck's quality comes from those files."
+          },
+          {
+            "type": "text",
+            "content": "A deck is a set of files, not one opaque object. That is why PowerPoint, HTML and PDF export are all plausible from the same artifact, and it is the same idea as a Claude Code skill: the quality comes from instructions in a file, not from magic in the model."
+          },
+          {
+            "type": "completion",
+            "title": "You know what to expect from a first deck",
+            "items": [
+              "Know the default look is defensible",
+              "Know the wait is long and the canvas stays blank",
+              "Understand a deck as files rather than slides"
+            ],
+            "message": "Next: fixing it by pointing at it."
+          }
+        ]
+      },
+      {
+        "id": "lesson-4",
+        "title": "Editing by Comment, on a Canvas",
+        "duration": 3,
+        "order": 4,
+        "module": "working",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "The anchored comment works on a canvas too. It is the spine of both products, not a Docs feature."
+          },
+          {
+            "type": "text",
+            "content": "Click into a card, type @claude, and the composer names exactly what is being discussed. A real thread header read: slide 2, caption, followed by the first words of that caption. The Send to Claude checkbox is here as well, ticked by default, and it does the same job. Ticked is an instruction, unticked is a note."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "A house rule, enforced from one card"
+          },
+          {
+            "type": "text",
+            "content": "Two comments were left on a single card: remove em dashes, then also give examples here. Claude did both across the whole deck and replied in the thread saying it had pulled every em dash out and rewritten with colons and commas instead. The deck subtitle changed from an em dash to a colon, and so did every other slide."
+          },
+          {
+            "type": "text",
+            "content": "That is the strongest demonstration of the whole tool for a designer with a house style. You do not restate your style rules in a prompt and hope. You point at the slide that breaks one."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-4/comment-on-slide.gif",
+            "alt": "A comment thread open on a single slide card, its header naming the slide and the caption being discussed, with Claude's reply describing the change it made across the deck.",
+            "label": "The thread names exactly what it is anchored to: slide 2, and the caption within it."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "It closes its own threads",
+            "content": "Claude replies, marks the thread resolved, and leaves a reply-to-reopen box. The reply is attributed as Claude via your name. It also works through a queue: the panel reported publishing, then replying in the comment thread, then checking for other pending threads.",
+            "icon": "info"
+          },
+          {
+            "type": "completion",
+            "title": "You can direct a deck",
+            "items": [
+              "Comment on a specific element rather than describing it",
+              "Know what the Send to Claude tick changes",
+              "Expect edits to propagate across every slide"
+            ],
+            "message": "Last lesson: getting the deck out."
+          }
+        ]
+      },
+      {
+        "id": "lesson-5",
+        "title": "The Export, Inspected",
+        "duration": 3,
+        "order": 5,
+        "module": "handoff",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Anthropic says the deck exports with editable text and shapes. We unpacked the file to check."
+          },
+          {
+            "type": "text",
+            "content": "That claim is the main reason a designer would choose Slides over anything that produces a list of bullet points, so it is worth verifying rather than repeating."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Four options, not more"
+          },
+          {
+            "type": "list",
+            "items": [
+              "PDF",
+              "Webpage, as HTML",
+              "PowerPoint, current fonts",
+              "PowerPoint, basic fonts, labelled: basic fonts work on any computer"
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/claude-slides-guide/lesson-5/export-menu.gif",
+            "alt": "The Slides export menu open, listing PDF, Webpage as HTML, PowerPoint with current fonts, and PowerPoint with basic fonts, annotated that basic fonts work on any computer.",
+            "label": "Four ways out, and two of them are PowerPoint."
+          },
+          {
+            "type": "text",
+            "content": "Slides exports narrower than Claude Design does. There is no PNG, no video, and no send to Miro or Claude Code from here. If you have read about those, you read about Design, which is a different tile."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What is actually inside the file"
+          },
+          {
+            "type": "text",
+            "content": "A five-slide deck exported as a 26.6 kB .pptx. That size is already the answer, because flattened images would run to megabytes. Unpacked and inspected, the file contains:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "Live text throughout. Every headline and caption is a real text run, not a picture of one",
+              "Fourteen separate shapes on a single slide. The cards are individual objects you can move",
+              "No image files anywhere. Nothing was flattened",
+              "16:9 widescreen, a proper slide master, and a speaker-notes slide for each slide"
+            ]
+          },
+          {
+            "type": "text",
+            "content": "The claim holds. You can open the deck in PowerPoint or Keynote and edit it like anything else."
+          },
+          {
+            "type": "callout",
+            "calloutType": "warning",
+            "title": "The font choice may mean less than it looks",
+            "content": "On an unbranded deck, current fonts exported Georgia and Helvetica, which exist on every machine anyway. The elegant serif on screen did not travel. Test this on your own branded deck before promising a client that their typeface survives, and when in doubt send basic fonts, which is predictable.",
+            "icon": "warning"
+          },
+          {
+            "type": "completion",
+            "title": "You can hand a deck over",
+            "items": [
+              "Know the four export paths and their limits",
+              "Know the PowerPoint file is genuinely editable",
+              "Know to verify fonts on your own brand before promising anything"
+            ],
+            "message": "Course complete. The Claude Docs course covers the writing half of this decision."
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 /**

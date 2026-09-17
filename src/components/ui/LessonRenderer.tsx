@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import LessonImageZoom from '@/components/ui/LessonImageZoom';
 import {
   InformationCircleIcon,
   ExclamationTriangleIcon,
@@ -420,19 +421,22 @@ const renderSection = (
   headingIds: Map<number, string>
 ) => {
   switch (section.type) {
+    // The opening line of a lesson, rendered as a lead paragraph rather than as
+    // a bordered card.
+    //
+    // It used to be a callout, and a callout means "step out of the flow for a
+    // moment". Putting the first sentence of the lesson in one boxed the flow
+    // itself, before anything had been said, on all 74 lessons that open this
+    // way. A reader met a container before they met a sentence.
+    //
+    // Size carries the emphasis instead of a border, which is what the rest of
+    // the type system does. The icon is dropped deliberately: an info glyph
+    // beside the opening line labels the lesson as an aside.
     case 'intro':
       return (
-        <div
-          key={index}
-          className={`flex gap-4 mb-10 p-5 md:p-6 ${CARD_SHELL}`}
-        >
-          {section.icon && section.icon !== 'none' && (
-            <div className="text-text-secondary flex-shrink-0">{getIcon(section.icon)}</div>
-          )}
-          <p className="m-0 text-text-secondary">
-            {linkifyPatterns(section.content, `intro-${index}`)}
-          </p>
-        </div>
+        <p key={index} className="type-lead mb-10 text-text-secondary">
+          {linkifyPatterns(section.content, `intro-${index}`)}
+        </p>
       );
 
     case 'heading': {
@@ -661,7 +665,12 @@ const renderSection = (
       return (
         <div key={index} className="mb-8">
           {section.src ? (
-            <figure className="m-0">
+            // `lesson-figure` lets the figure grow past the article's 820px
+            // reading measure into the space the column actually has, and
+            // further still when the reader collapses the rail. A browser
+            // screenshot shown at 820px is a picture of a screenshot, not a
+            // screenshot you can read.
+            <figure className="lesson-figure m-0">
               {isVideo ? (
                 <video
                   src={section.src}
@@ -674,13 +683,25 @@ const renderSection = (
                   className="w-full rounded-card border border-border-secondary"
                 />
               ) : (
-                <img
+                // Lazy by default: a lesson can carry several screenshots, and
+                // the Slides course has GIFs that run to a megabyte between
+                // them. None of it is above the fold, so none of it should
+                // compete with the text for the first paint.
+                <LessonImageZoom
                   src={section.src}
                   alt={section.alt}
-                  width={800}
-                  height={450}
-                  className="w-full rounded-card border border-border-secondary"
-                />
+                  label={section.label}
+                >
+                  <img
+                    src={section.src}
+                    alt={section.alt}
+                    width={800}
+                    height={450}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full rounded-card border border-border-secondary"
+                  />
+                </LessonImageZoom>
               )}
               {section.label && (
                 <figcaption className="p-3 text-text-secondary text-sm">
@@ -735,8 +756,14 @@ export default function LessonRenderer({ sections }: LessonRendererProps) {
   // No wrapper rhythm — each section carries its own margins (a larger gap
   // before an h2, tighter within a group) so content visually groups under
   // its heading.
+  // `lesson-prose` belongs here, on the element whose direct children are the
+  // sections. The rule caps each block at the reading measure and exempts
+  // figures; on any ancestor it caps that ancestor instead and squeezes the
+  // figures along with the text, which is the bug it exists to prevent. Putting
+  // it inside the renderer means every course gets it, not just the pages that
+  // remembered to add the class.
   return (
-    <div>
+    <div className="lesson-prose">
       {sections.map((section, index) =>
         renderSection(section, index, headingIds)
       )}

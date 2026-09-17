@@ -149,9 +149,68 @@ function SubjectMark() {
   );
 }
 
+/**
+ * Docs and Slides are artifact types inside Claude, not products, so neither
+ * ships a logo of its own. Reusing the Claude mark for both put three identical
+ * marks in one column, which reads as a rendering fault rather than as three
+ * courses about three things.
+ *
+ * Claude gives each artifact type its own glyph in its artifact list: a page
+ * for a doc, stacked rectangles for a deck. These redraw those, filled to match
+ * the brand logos they sit beside, the same reasoning as `SubjectMark`.
+ */
+function DocMark() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      {/* A page with two lines of text. Drawn at 14px, so the folded corner
+          and three separate bars of the first attempt turned to mush: at this
+          size a glyph needs two or three shapes, not six. */}
+      <rect x="5" y="3" width="14" height="18" rx="2" />
+      <rect x="8" y="8" width="8" height="1.6" rx="0.8" fill="var(--background-rail)" />
+      <rect x="8" y="12" width="8" height="1.6" rx="0.8" fill="var(--background-rail)" />
+      <rect x="8" y="16" width="5" height="1.6" rx="0.8" fill="var(--background-rail)" />
+    </svg>
+  );
+}
+
+function SlidesMark() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      {/* A slide: a frame with a title bar and a mark, which is what
+          Anthropic's own Slides tile shows. The stacked-pages version read as
+          a smudge at this size. */}
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <rect x="6" y="9" width="7" height="1.8" rx="0.9" fill="var(--background-rail)" />
+      <rect x="6" y="13" width="4" height="1.8" rx="0.9" fill="var(--background-rail)" />
+      <circle cx="16.5" cy="14" r="1.6" fill="var(--background-rail)" />
+    </svg>
+  );
+}
+
+const COURSE_TOOL_MARKS: Record<string, () => React.ReactElement> = {
+  'Claude Docs': DocMark,
+  'Claude Slides': SlidesMark,
+};
+
 export function CourseToolMark({ tool }: { tool?: string }) {
   const logoFilter = useThemeFilter('grayscale(100%)');
+  const drawn = tool ? COURSE_TOOL_MARKS[tool] : undefined;
   const logo = tool ? COURSE_TOOL_LOGOS[tool] : undefined;
+
+  if (drawn) {
+    const Mark = drawn;
+    return <Mark />;
+  }
 
   if (!logo) return <SubjectMark />;
 
