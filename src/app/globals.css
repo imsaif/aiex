@@ -993,3 +993,27 @@ nav[aria-label='On this page']::-webkit-scrollbar,
     animation: none;
   }
 }
+
+/* ── Collapsible course rail ───────────────────────────────────────────────
+ *
+ * The grid columns live in CSS variables set by LearnShell, because Tailwind
+ * cannot express a value that changes at runtime and at two breakpoints. The
+ * transition is on grid-template-columns, so the reading column and the images
+ * inside it widen with the rail instead of jumping to their new size.
+ */
+@media (min-width: 1024px) {
+  .learn-console-grid {
+    grid-template-columns: var(--learn-cols-lg);
+    transition: grid-template-columns 200ms ease-out;
+  }
+}
+
+@media (min-width: 1280px) {
+  .learn-console-grid {
+    grid-template-columns: var(--learn-cols-xl);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .learn-console-grid { transition: none; }
+}
