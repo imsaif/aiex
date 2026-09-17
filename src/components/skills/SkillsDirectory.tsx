@@ -128,6 +128,16 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                       not a thing to read 38 times, so it appears on search and
                       filter, where the set is small enough for it to earn the
                       space. */}
+                  {/* "Seen in" said once, over the column it labels, rather
+                      than on all 38 rows. Without it the logos are a puzzle —
+                      a reader can recognise the marks and still not know what
+                      the claim is. With it on every row it becomes the same two
+                      words repeated down the page, which is exactly what the
+                      bookmarks were doing before they came out. */}
+                  <div className="min-w-0">
+                    <p className="type-footnote mb-1 hidden text-right uppercase tracking-wide text-text-secondary sm:block">
+                      Seen in
+                    </p>
                   <ul className="min-w-0">
                     {categoryRows.map((row, index) => (
                       <li
@@ -139,17 +149,25 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                             href={`/patterns/${row.slug}`}
                             className="flex min-w-0 flex-1 flex-col gap-x-4 gap-y-0.5 sm:flex-row sm:items-baseline"
                           >
-                            {/* The skill's own name leads: it is what you type
-                                and what appears in your project, so it is the
-                                identifier, not the prose title. Fixed width at
-                                the sizes that have room, so the titles line up
-                                into a second column and the eye can run down
-                                either one. */}
-                            <span className="type-caption shrink-0 font-mono text-text-secondary sm:w-64">
-                              {row.skillName}
-                            </span>
-                            <span className="type-body min-w-0 truncate font-medium text-text-primary transition-colors group-hover:text-accent-primary">
+                            {/* Title first, identifier second.
+
+                                The mono name led at first, on the reasoning
+                                that it is what you type and what lands in your
+                                project. But a column of slugs is a column of
+                                lowercase-and-hyphens, and the eye has to parse
+                                each one to get the meaning that the title
+                                states outright. The slug is how you refer to a
+                                skill once you want it; the title is how you
+                                find the one you want.
+
+                                Fixed width at the sizes that have room, so the
+                                two line up as columns and either can be read
+                                straight down. */}
+                            <span className="type-body shrink-0 font-medium text-text-primary transition-colors group-hover:text-accent-primary sm:w-60">
                               {row.title}
+                            </span>
+                            <span className="type-caption min-w-0 truncate font-mono text-text-secondary">
+                              {row.skillName}
                             </span>
                           </Link>
 
@@ -163,16 +181,27 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                               they differ row to row, which is what makes a long
                               list worth scanning. */}
                           {row.products.length > 0 && (
-                            <ul className="hidden shrink-0 items-center gap-2 sm:flex">
+                            <ul className="hidden shrink-0 items-center gap-3 sm:flex">
                               {row.products.slice(0, 3).map((product) => (
-                                <li key={product.name} title={product.name}>
+                                // Grouped so the name can appear on hovering
+                                // THIS logo rather than the whole row — with
+                                // three marks in a row, a row-level reveal
+                                // would not say which one you are pointing at.
+                                <li
+                                  key={product.name}
+                                  className="group/logo relative flex items-center"
+                                >
                                   {product.logo ? (
                                     <Image
                                       src={product.logo}
                                       alt={product.name}
-                                      width={14}
-                                      height={14}
-                                      className="h-3.5 w-3.5"
+                                      width={18}
+                                      height={18}
+                                      // Grey at rest so a row of marks reads as
+                                      // one quiet group rather than three
+                                      // competing black shapes, and comes up to
+                                      // full strength under the pointer.
+                                      className="h-[18px] w-[18px] opacity-50 transition-opacity group-hover/logo:opacity-100"
                                       style={{ filter: logoFilter }}
                                     />
                                   ) : (
@@ -180,6 +209,15 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                                       {product.name}
                                     </span>
                                   )}
+                                  {/* The name, on hovering the mark. Pointer
+                                      events off so it cannot sit between the
+                                      cursor and the row link underneath. */}
+                                  <span
+                                    aria-hidden="true"
+                                    className="type-footnote pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-card bg-text-primary px-2 py-1 text-background-primary opacity-0 transition-opacity group-hover/logo:opacity-100"
+                                  >
+                                    {product.name}
+                                  </span>
                                 </li>
                               ))}
                             </ul>
@@ -198,6 +236,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                       </li>
                     ))}
                   </ul>
+                  </div>
                 </section>
               );
             })}
