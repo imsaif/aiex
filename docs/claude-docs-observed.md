@@ -306,3 +306,38 @@ other, which is exactly the mistake a merged guide would make.
 Still unverified: whether the .pptx actually opens with editable text and shapes,
 as Anthropic's tooltip claims. That claim is the strongest argument for Slides
 and it has not been tested yet.
+
+## The PowerPoint export, opened and inspected
+
+Downloaded "PowerPoint, current fonts" and unpacked the .pptx. 26.6 kB for five
+slides, which is already the answer: flat images would run to megabytes.
+
+Verified inside the file:
+
+- **Live text throughout.** Every headline, caption and paragraph is a real text
+  run. The subtitle reads out as the corrected copy, colon and all, so the
+  comment-driven edit survived the export.
+- **14 separate shapes on slide 2.** The three cards are individual objects, not
+  one picture of a row of cards.
+- **No image files anywhere.** No `ppt/media` folder, and no slide references a
+  picture. Nothing was flattened.
+- 16:9 widescreen (12192000 x 6858000 EMU), with a slide master, one layout, and
+  a notes slide per slide.
+
+Anthropic's tooltip claim of "editable text and shapes" holds, fully.
+
+### The font caveat
+
+The slides use exactly two typefaces: **Helvetica** (99 runs) and **Georgia**
+(15 runs). The long font list in the theme is just Office's standard script
+fallbacks, not anything the deck uses.
+
+So the elegant serif on screen did not travel. "Current fonts" exported Georgia
+and Helvetica, which are on every machine anyway. Whatever the difference is
+between the two PowerPoint options, it did not show up in this deck.
+
+**Correcting what I wrote earlier in this file:** I called the current-vs-basic
+fonts choice the most designer-specific decision in the product. On this
+evidence it is close to no decision at all. The guide should test it once more
+on a deck with a migrated design system, where the fonts are actually custom,
+and say plainly what happens. Do not repeat Anthropic's framing untested.
