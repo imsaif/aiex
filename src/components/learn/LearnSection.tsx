@@ -61,7 +61,11 @@ export default function LearnSection({
         ))}
       </ol>
 
-      <div className="mt-6 flex justify-end">
+      {/* Same measure as the rows above it. Without the cap this sat against
+          the section's own right edge, 80px past the cards it belongs to, so
+          the one control in the band was the only thing not lining up with
+          anything. */}
+      <div className="mx-auto mt-6 flex max-w-[1100px] justify-end">
         <Link
           href={section.more.href}
           className="type-caption inline-flex items-center gap-2 rounded-card border border-border-primary px-4 py-2 font-semibold text-text-primary transition-colors hover:border-accent-primary/40 hover:text-accent-primary"
