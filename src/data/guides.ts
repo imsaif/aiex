@@ -8101,18 +8101,33 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             type: 'steps',
             steps: [
               {
+                number: 1,
                 title: 'Open the artifacts page',
                 content: 'Go to Artifacts in the Claude sidebar. The banner at the top reads that Claude Design lives there now, and that new Slides and Design projects are created as artifacts.',
               },
               {
+                number: 2,
                 title: 'Use Migrate team design systems',
                 content: 'The action sits in that banner. It brings your published systems onto the artifact side so they can be applied to any artifact or Claude session, not just projects made in the standalone app.',
               },
               {
+                number: 3,
+                title: 'Do not look for it in settings',
+                content: "The Manage design systems link in the picker opens Claude's settings, and the row menu there offers only Open legacy version. There is no migrate action in settings. The banner is the only route, other than starting a fresh system with New design system.",
+              },
+              {
+                number: 4,
                 title: 'Check the picker',
                 content: 'Open a new Slides or Design artifact and click Choose design system. A migrated system appears in the list. If it does not, it is still Legacy.',
               },
             ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'Legacy is confined, not broken',
+            content: "If you need to work today and migration is not done, open the system from Design systems in settings, choose Open legacy version, and use the New design button on the system page. Everything is intact there: readme, brand, colours, components, spacing, type and UI kit, with Published and Set as org default still available. A legacy system is not damaged. It simply cannot reach the new artifact surfaces until it is migrated.",
+            icon: 'tip',
           },
           {
             type: 'callout',

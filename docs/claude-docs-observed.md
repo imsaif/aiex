@@ -463,3 +463,22 @@ and lets you go back and look at it in the old surface. That is all.
 The lesson 8 steps written today already point at the banner, so that guidance
 stands. Worth adding one line: do not go looking in settings for the migration,
 because it is not there.
+
+### "Open legacy version" shows the system is fully intact
+
+The link goes to `claude.ai/design/p/<id>`, the standalone app, and the system is
+entirely there: Readme, Brand (hero grain band, product logos, brand mark),
+Colors (brand, semantic, light and dark themes), Components (buttons, filter
+chips, navbar, pattern card, search and newsletter input), Spacing (corner radii,
+shadows, scale), Type (body, display, Satoshi weights) and a Web UI Kit.
+
+The panel reads *"This design system is available for your team's new projects.
+You can keep editing it in the chat."* with **Published** ticked, **Set as org
+default**, and **Use this system → New design**.
+
+**So legacy means confined, not broken.** The system works, and you can start new
+work from it, but only in the standalone app. It cannot reach a Slides or Design
+artifact until it is migrated.
+
+That is the practical answer for a reader who needs to ship today, and it is
+better advice than "migrate or start over". Added to lesson 8 as a callout.
