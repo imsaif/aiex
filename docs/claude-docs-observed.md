@@ -544,3 +544,16 @@ unknown. It could be branding, a longer brief, or ordinary variance.
 Before this reaches a lesson, run one deck with a migrated system explicitly
 selected and one without, same prompt, and compare. Until then the honest line is
 "runs vary a lot in length", not a claim about branding.
+
+**Caveat resolved, 2026-09-17.** Confirmed by Imran: the design system *was*
+selected for that second run. So the comparison stands on the evidence we have:
+
+| | no design system | design system applied |
+|---|---|---|
+| files created | 6 | 11 |
+| reference files read | SKILL.md, craft.md, format.md | fonts.md, deck-files.md |
+| time to first pixel | about 2 min | over 6 min |
+
+One run each, so treat it as an order of magnitude rather than a benchmark. The
+honest lesson line: applying your brand roughly triples the wait, and the canvas
+stays blank throughout.
