@@ -187,3 +187,22 @@ has it in space.
 
 The plan hint appears here too: *"Want to see the steps first? Ask Claude for a
 plan up front."*
+
+## The wait is long, and the canvas stays empty
+
+At 1m 34s the deck was still blank. The status had moved from "Thinking… · 24s"
+to **"Working through a complex response… · 1m 34s"**, and the only thing on the
+canvas was the floating "Claude is working…" label and the Add slide button.
+
+Set against Docs, this is a real difference in felt speed. Docs put headings on
+the page within seconds and filled them in while you watched, so the wait was
+spent reading. Slides holds everything back and shows a label instead, so the
+same minute feels like nothing is happening.
+
+Both are honest. Only one is reassuring. For a guide aimed at designers this is
+the observation with the most teaching in it, and for this site it is a live
+example of patterns we already document: progressive disclosure of work in
+progress versus a bare activity indicator.
+
+Do not soften this in the lesson. "Expect to wait, and here is why nothing
+appears" is more useful than pretending it is instant.
