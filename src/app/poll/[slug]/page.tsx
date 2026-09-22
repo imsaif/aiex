@@ -117,11 +117,11 @@ export default async function PollPage({ params, searchParams }: PollPageProps) 
       <section className="pt-12 md:pt-16 pb-16 md:pb-24">
         <div className="max-w-2xl mx-auto px-6">
           <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            {counted ? 'Thanks — that is logged.' : 'Here is how the issue landed.'}
+            {counted ? 'Thanks, that is logged.' : 'Here is how the issue landed.'}
           </h1>
           <p className="text-text-secondary mb-10">
             {poll.question}
-            {issue?.title ? ` — ${issue.title}` : ''}
+            {issue?.title ? ` · ${issue.title}` : ''}
           </p>
 
           <div className="space-y-4 mb-6">

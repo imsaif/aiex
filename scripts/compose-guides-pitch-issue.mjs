@@ -20,6 +20,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+// The poll definition is imported rather than restated, so a hand-composed issue
+// always asks the same question as a cron-generated one and the votes stay
+// comparable. Node strips the types on import.
+const { DEFAULT_POLL } = await import('../src/lib/newsletter/poll.ts');
+
 const SITE_URL = 'https://www.aiuxdesign.guide';
 const EMAIL_IMG_BASE = `${SITE_URL}/images/email`;
 
@@ -151,6 +156,29 @@ function renderFooterCTA() {
 </div>`.trim();
 }
 
+// The poll block, matching renderPoll() in the cron route. Plain links, one per
+// answer, pointing at this issue's own /poll/<slug>.
+//
+// Left untagged on purpose: beehiiv appends its own utm_campaign to any link
+// that arrives without one, so a vote stays attributable to an issue by campaign
+// as well as by slug.
+function renderPoll(issueSlug, poll) {
+  const buttons = poll.choices
+    .map(
+      (choice) =>
+        `<a href="${SITE_URL}/poll/${issueSlug}?c=${encodeURIComponent(choice.id)}" target="_blank" rel="noopener" style="display: inline-block; margin: 0 6px 10px 0; padding: 10px 18px; border: 1px solid ${EMAIL_HAIRLINE}; border-radius: 999px; background-color: #ffffff; color: ${EMAIL_INK} !important; text-decoration: none !important; font-size: 14px; font-weight: 500; letter-spacing: -0.1px;"><span style="color: ${EMAIL_INK} !important; text-decoration: none !important;">${choice.label}</span></a>`
+    )
+    .join('\n    ');
+
+  return `
+<div style="margin: 48px 0 0; padding: 28px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
+  <p style="margin: 0 0 16px; font-size: 15px; font-weight: 600; color: ${EMAIL_INK}; letter-spacing: -0.1px;">${poll.question}</p>
+  <p style="margin: 0;">
+    ${buttons}
+  </p>
+</div>`.trim();
+}
+
 function wrapEmailShell(inner) {
   return `<div style="font-family: ${EMAIL_FONT_STACK}; color: ${EMAIL_INK}; max-width: 640px; margin: 0 auto; padding: 0 8px;">
 ${inner}
@@ -201,7 +229,7 @@ const CARDS = [
   },
 ];
 
-function buildContent() {
+function buildContent(issueSlug) {
   const cards = CARDS.map((c, i) => renderCourseCard(c, i === CARDS.length - 1)).join('\n\n');
 
   const whichFirst = renderDarkCallout({
@@ -225,13 +253,16 @@ ${cards}
 ${whichFirst}
 
 ${renderFooterCTA()}
+
+${renderPoll(issueSlug, DEFAULT_POLL)}
   `.trim();
 
   return wrapEmailShell(body);
 }
 
 // --- Metadata ---
-const content = buildContent();
+// The slug is computed BEFORE the content, because the poll links in the body
+// have to point at this issue's own /poll/<slug>.
 const title = 'Claude Docs and Claude Slides, both courses in 30 minutes';
 const summary =
   'Claude shipped Docs and Slides as artifact types, and the feature list is still the only thing written about them. Two new courses cover both: the anchored comment that is the spine of each product, the empty design system picker that looks broken and is not, and the PowerPoint export unpacked to see what actually survives.';
@@ -240,6 +271,7 @@ const monthDay = new Date()
   .replace(' ', '-')
   .toLowerCase();
 const slug = `ai-ux-daily-${monthDay}-claude-docs-and-claude-slides-courses`;
+const content = buildContent(slug);
 
 // structuredData is rewritten wholesale. `items` carried the four stories this
 // issue replaces, and productsForIssue reads it, so leaving it would tag the
