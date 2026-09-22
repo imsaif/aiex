@@ -162,7 +162,7 @@ export default async function PollPage({ params, searchParams }: PollPageProps) 
 
           <p className="text-sm text-text-tertiary mb-12">
             {total === 0
-              ? 'No votes on this issue yet — yours may be the first to land.'
+              ? 'No votes on this issue yet. Yours may be the first to land.'
               : `${total} ${total === 1 ? 'reader has' : 'readers have'} answered this issue.`}
           </p>
 
