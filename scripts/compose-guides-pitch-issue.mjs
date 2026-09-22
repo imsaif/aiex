@@ -61,46 +61,75 @@ function renderSectionHeader(kicker, title) {
 <h2 style="margin: 0 0 40px; font-size: 26px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.4px; line-height: 1.25;">${ICON_NEWSPAPER}${title}</h2>`.trim();
 }
 
-// Course card. Same visual language as renderStoryCard, with a "what you can
-// use today" line carrying one concrete finding from the course rather than a
-// summary of it. The finding is the pitch.
-function renderCourseCard({ kicker, headline, body, covers, today, links }, isLast) {
-  const separator = isLast
-    ? ''
-    : `\n<div style="text-align: center; margin: 40px 0; color: ${EMAIL_MUTED}; letter-spacing: 12px; font-size: 18px;">&middot; &middot; &middot;</div>`;
+// Every screenshot in both courses is 1600x888. At the 624px content width that
+// is 346px tall. Both numbers are set as real width/height attributes as well as
+// in CSS, so a client that blocks images still reserves the right box instead of
+// collapsing the layout around a 0px gap.
+const SHOT_W = 624;
+const SHOT_H = 346;
 
-  const coversHtml = covers
+function renderShot({ src, alt, caption }) {
+  return `
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 22px;">
+  <tr>
+    <td style="padding: 0;">
+      <img src="${SITE_URL}${src}" alt="${alt}" width="${SHOT_W}" height="${SHOT_H}" style="width: 100%; max-width: ${SHOT_W}px; height: auto; display: block; border-radius: 12px; border: 1px solid ${EMAIL_HAIRLINE};" />
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 10px 2px 0;">
+      <p style="margin: 0; font-size: 12px; line-height: 1.5; color: ${EMAIL_MUTED};">${caption}</p>
+    </td>
+  </tr>
+</table>`.trim();
+}
+
+// The lesson list is a table, not a bulleted paragraph. Five numbered rows with
+// the duration on the right scan in about two seconds; the same five facts
+// written as sentences do not get read at all.
+function renderLessonTable(lessons) {
+  const rows = lessons
     .map(
-      (c) =>
-        `<li style="margin: 0 0 8px; font-size: 15px; line-height: 1.6; color: ${EMAIL_TEXT};">${c}</li>`
-    )
-    .join('\n    ');
-
-  const linksHtml = links
-    .map((l) =>
-      l.primary
-        ? `<a href="${l.href}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: -0.1px; margin: 0 8px 8px 0;"><span style="color: #ffffff !important; text-decoration: none !important;">${l.label} &rarr;</span></a>`
-        : `<a href="${l.href}" target="_blank" rel="noopener" style="display: inline-block; font-size: 13px; color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500; margin: 0 8px 8px 0;">${l.label} &rarr;</a>`
+      (l, i) => `
+    <tr>
+      <td width="34" valign="top" style="padding: 10px 0; font-size: 12px; font-weight: 700; color: ${EMAIL_MUTED}; letter-spacing: 0.5px;">${String(i + 1).padStart(2, '0')}</td>
+      <td valign="top" style="padding: 10px 0; font-size: 15px; line-height: 1.5; color: ${EMAIL_INK}; font-weight: 500;">${l.title}</td>
+      <td width="56" valign="top" align="right" style="padding: 10px 0; font-size: 12px; color: ${EMAIL_MUTED}; white-space: nowrap;">${l.minutes} min</td>
+    </tr>`
     )
     .join('');
 
   return `
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 22px; border-top: 1px solid ${EMAIL_HAIRLINE}; border-bottom: 1px solid ${EMAIL_HAIRLINE};">
+  <tbody>${rows}
+  </tbody>
+</table>`.trim();
+}
+
+// Course card. One screenshot, one sentence, the lesson list as a table, and a
+// single finding pulled out of the course. The finding is the pitch: a summary
+// of a course is not a reason to open it.
+function renderCourseCard({ kicker, headline, lede, shot, lessons, today, cta }, isLast) {
+  const separator = isLast
+    ? ''
+    : `\n<div style="text-align: center; margin: 44px 0; color: ${EMAIL_MUTED}; letter-spacing: 12px; font-size: 18px;">&middot; &middot; &middot;</div>`;
+
+  return `
 <div style="margin: 0; padding: 0;">
-  <p style="margin: 0 0 12px; font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${kicker}</p>
-  <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${headline}</h3>
-  <p style="margin: 0 0 18px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${body}</p>
-  <ul style="margin: 0 0 20px; padding: 0 0 0 20px;">
-    ${coversHtml}
-  </ul>
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 20px;">
+  <p style="margin: 0 0 10px; font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${kicker}</p>
+  <h3 style="margin: 0 0 12px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${headline}</h3>
+  <p style="margin: 0 0 22px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${lede}</p>
+  ${renderShot(shot)}
+  ${renderLessonTable(lessons)}
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 22px;">
     <tr>
       <td style="border-left: 3px solid ${EMAIL_INK}; padding: 2px 0 2px 16px;">
-        <p style="margin: 0 0 4px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 1.2px; text-transform: uppercase;">Worth having today</p>
+        <p style="margin: 0 0 5px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 1.2px; text-transform: uppercase;">Worth having today</p>
         <p style="margin: 0; font-size: 15px; line-height: 1.65; color: ${EMAIL_TEXT};">${today}</p>
       </td>
     </tr>
   </table>
-  <p style="margin: 0;">${linksHtml}</p>
+  <p style="margin: 0;"><a href="${cta.href}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important;">${cta.label} &rarr;</span></a></p>
 </div>${separator}`.trim();
 }
 
@@ -124,7 +153,7 @@ function renderFooterCTA() {
 <div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
   <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Both courses, free, no signup</p>
   <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Thirty minutes, and you stop guessing at three tiles</h2>
-  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Docs, Slides and Design sit side by side on the Artifacts page, and picking the wrong one costs you a session. Both courses are written from real sessions, including the parts that did not go smoothly.</p>
+  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Written from real sessions, including the parts that did not go smoothly.</p>
   <p style="margin: 0;"><a href="${SITE_URL}/guides" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important;">Open both courses</span></a></p>
 </div>`.trim();
 }
@@ -140,42 +169,50 @@ ${inner}
 // Every claim below is lifted from the courses themselves (src/data/guides.ts),
 // not written fresh for the email. If a course changes, this copy is stale.
 
-const LEAD = `Claude Docs and Claude Slides shipped as artifact types you create from the Artifacts page, next to Design. They are new enough that the feature list is still the only thing written about them. So today is the two courses instead of the usual four stories: what each one covers, and the one thing from each worth knowing before you open either product.`;
+const LEAD = `Claude Docs and Claude Slides shipped as artifact types, next to Design on the Artifacts page. Both are new enough that the feature list is still the only thing written about them. So today is two courses instead of four stories.`;
 
 const CARDS = [
   {
     kicker: 'New course &middot; 5 lessons &middot; 14 minutes',
     headline: 'Claude Docs: a document you brief by commenting on it',
-    body: 'A chat gives you text you then have to place. A doc is already the place. You point at a line, ask there, and the reply arrives on that same line with the edit already made. The course is written from a real session rather than from the feature list, so it also covers where the interaction stops being useful.',
-    covers: [
-      'The anchored comment, and why it is the only lesson that really matters',
-      'The Send to Claude checkbox, which decides whether your comment is an instruction or a note for a human',
-      'Reading a doc while it is still being written, and how that changes the wait',
-      'Tabs, sharing, and the two names problem every doc ends up with',
-      'When a doc is the wrong ask, and what to request instead',
+    lede: 'A chat gives you text you then have to place. A doc is already the place. You point at a line, ask there, and the reply arrives on that same line with the edit already made.',
+    shot: {
+      src: '/images/guides/claude-docs-guide/lesson-2/anchored-comment.webp',
+      alt: 'A doc with one sentence highlighted in amber and a comment card on the right showing the request, a working status, and a reply box with the Send to Claude checkbox ticked.',
+      caption:
+        'The ask becomes a thread anchored to the highlighted line. Note the Send to Claude tick in the reply box.',
+    },
+    lessons: [
+      { title: 'What a doc is, and why it is not a chat', minutes: 3 },
+      { title: 'The anchored comment: brief it by pointing', minutes: 4 },
+      { title: 'Watching it work', minutes: 2 },
+      { title: 'Tabs, sharing, and the two names problem', minutes: 2 },
+      { title: 'When a doc is the wrong ask', minutes: 3 },
     ],
     today:
-      'The test for which artifact to ask for. Will anyone comment on this? Then it is a doc. Is it going on a screen in front of people? Then it is a deck. Will nobody ever open it again? Then it is a chat message.',
-    links: [
-      { label: 'Start the Docs course', href: `${SITE_URL}/guides/claude-docs-guide`, primary: true },
-    ],
+      'The test for which artifact to ask for. Will anyone comment on this? Then it is a doc. Is it going on a screen in front of people? Then it is a deck. Will nobody ever open it again? Then it was only a chat message.',
+    cta: { label: 'Start the Docs course', href: `${SITE_URL}/guides/claude-docs-guide` },
   },
   {
     kicker: 'New course &middot; 5 lessons &middot; 16 minutes',
     headline: 'Claude Slides: it asks for a design system before you have a slide',
-    body: 'Slides opens with a question Docs never asks, and the design system picker it shows you will probably be empty. That looks broken. It is not, and the fix is not where you would look for it. The course is written from real decks, including the export unpacked and inspected file by file.',
-    covers: [
-      'The question Slides asks first, and both hands it offers you',
-      'The empty picker, the legacy trap, and the route out if you need to ship today',
-      'What you actually get when you skip the design system entirely',
-      'Editing by comment on a canvas, which turns out to be the spine of both products',
-      'The PowerPoint export, unpacked and checked against what Anthropic says survives',
+    lede: 'Slides opens with a question Docs never asks, and the design system picker it shows you will probably be empty. That looks broken. It is not, and the fix is not where you would look for it.',
+    shot: {
+      src: '/images/guides/claude-slides-guide/lesson-3/branded-deck.webp',
+      alt: 'A navy title slide set in a custom typeface, with a ten-slide filmstrip underneath.',
+      caption:
+        'The same one-line brief with a design system applied. Navy and Satoshi, and ten slides instead of five.',
+    },
+    lessons: [
+      { title: 'The question Slides asks first', minutes: 3 },
+      { title: 'The empty picker, and the legacy trap', minutes: 4 },
+      { title: 'Skipping the system, and what you get', minutes: 3 },
+      { title: 'Editing by comment, on a canvas', minutes: 3 },
+      { title: 'The export, inspected', minutes: 3 },
     ],
     today:
       'What survives the export. On an unbranded deck the fonts came out Georgia and Helvetica, which are on every machine anyway. The elegant serif on screen did not travel. Worth testing on your own branded deck before you promise anyone an editable file.',
-    links: [
-      { label: 'Start the Slides course', href: `${SITE_URL}/guides/claude-slides-guide`, primary: true },
-    ],
+    cta: { label: 'Start the Slides course', href: `${SITE_URL}/guides/claude-slides-guide` },
   },
 ];
 
