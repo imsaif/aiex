@@ -24,23 +24,23 @@ model Subscriber {
   // field is the only record for those, and only from mid-April 2026 onward.
   // Kept locally so churn-by-source (source x unsubscribedAt x unsubscribeReason)
   // is queryable without Beehiiv, and so it survives the Beehiiv migration.
-  source            String?
+  source String?
 
   @@index([source])
 }
 
 model NewsletterDraft {
-  id             String              @id @default(cuid())
+  id             String   @id @default(cuid())
   title          String
-  slug           String              @unique
+  slug           String   @unique
   summary        String
   content        String
   publishDate    DateTime
-  status         String              @default("pending_review")
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-  type           String              @default("daily")
-  sources        Json                @default("[]")
+  status         String   @default("pending_review")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  type           String   @default("daily")
+  sources        Json     @default("[]")
   structuredData Json?
 
   // Derived at write time from title + summary + structuredData.items, via
@@ -49,13 +49,13 @@ model NewsletterDraft {
   // time, and title+summary alone matched nothing on 43% of recent issues.
   // Denormalised, so it drifts if PRODUCT_KEYWORDS changes — re-run
   // scripts/newsletter/backfill-issue-metadata.mjs after editing that map.
-  products       String[]            @default([])
+  products String[] @default([])
 
   // Reading time in whole minutes, so the /news list no longer has to fetch
   // `content` (~18KB/row, ~1MB across the 60 listed issues) purely to count
   // words. 0 means empty content, which is also how the list detects a
   // quiet-day entry.
-  readMinutes    Int?
+  readMinutes Int?
 
   socialPosts    SocialPost[]
   patternMatches NewsPatternMatch[]
@@ -78,19 +78,19 @@ model NewsPatternMatch {
 }
 
 model PatternExampleCandidate {
-  id            String   @id @default(cuid())
-  patternSlug   String
-  sourceType    String
-  sourceUrl     String
-  sourceTitle   String?
-  imageUrl      String?
-  title         String
-  description   String
-  rationale     String
-  newsletterId  String?
-  status        String   @default("pending")
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  patternSlug  String
+  sourceType   String
+  sourceUrl    String
+  sourceTitle  String?
+  imageUrl     String?
+  title        String
+  description  String
+  rationale    String
+  newsletterId String?
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([status])
   @@index([patternSlug, status])
@@ -249,5 +249,30 @@ model UiEvent {
   userAgent  String?
 
   @@index([name, createdAt])
+  @@index([createdAt])
+}
+
+// A vote on a newsletter poll. Replaces beehiiv's poll block — see
+// docs/specs/newsletter-polls.md.
+//
+// There is no subscriber relation and there never can be: the newsletter ships
+// as one HTML document pasted into beehiiv, so every reader gets identical
+// links and a vote carries no identity. Do not add one later without solving
+// that first.
+model PollVote {
+  id        String   @id @default(cuid())
+  issueSlug String //  NewsletterDraft.slug — intentionally not a foreign key, so
+  //                  a vote on a deleted or regenerated draft still counts.
+  choiceId  String //  short stable string ('yes' | 'skim' | 'no'), not a row id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Best-effort de-duplication only. Salted per issue, so the same reader hashes
+  // differently on every issue and cannot be followed across them. Never treat
+  // this as identity and never surface it. See src/lib/newsletter/poll.ts.
+  voterHash String?
+
+  @@unique([issueSlug, voterHash])
+  @@index([issueSlug])
   @@index([createdAt])
 }

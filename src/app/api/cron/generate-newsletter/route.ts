@@ -10,6 +10,7 @@ import { patterns } from '@/data/patterns';
 import { isValidPatternSlug, sanitizePatternSlugs } from '@/lib/newsletter/pattern-slug';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { AUDIT_PATH } from '@/lib/audit/constants';
+import { DEFAULT_POLL, type PollDefinition } from '@/lib/newsletter/poll';
 
 // Initialize clients
 const anthropic = new Anthropic({
@@ -1969,6 +1970,31 @@ function auditUrl(campaign: string): string {
 //
 // The email now ends on the audit CTA. Set NEWSLETTER_ANNOUNCEMENT=off to drop
 // the CTA, which leaves beehiiv's footer as the only ending.
+// The poll block. Plain links, one per answer — no JavaScript, no embed, which
+// is the only thing that works across mail clients.
+//
+// These URLs are deliberately left untagged: beehiiv appends its own
+// utm_campaign to any link that arrives without one, so the vote stays
+// attributable to an issue by campaign as well as by slug. Do not run them
+// through stripFeedUtm() (that is for third-party source links) and do not
+// pre-tag them.
+function renderPoll(issueSlug: string, poll: PollDefinition): string {
+  const buttons = poll.choices
+    .map(
+      (choice) =>
+        `<a href="${SITE_URL}/poll/${issueSlug}?c=${encodeURIComponent(choice.id)}" target="_blank" rel="noopener" style="display: inline-block; margin: 0 6px 10px 0; padding: 10px 18px; border: 1px solid ${EMAIL_HAIRLINE}; border-radius: 999px; background-color: #ffffff; color: ${EMAIL_INK} !important; text-decoration: none !important; font-size: 14px; font-weight: 500; letter-spacing: -0.1px;"><span style="color: ${EMAIL_INK} !important; text-decoration: none !important;">${choice.label}</span></a>`
+    )
+    .join('\n    ');
+
+  return `
+<div style="margin: 48px 0 0; padding: 28px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
+  <p style="margin: 0 0 16px; font-size: 15px; font-weight: 600; color: ${EMAIL_INK}; letter-spacing: -0.1px;">${poll.question}</p>
+  <p style="margin: 0;">
+    ${buttons}
+  </p>
+</div>`.trim();
+}
+
 function renderFooterCTA(_type: NewsletterType, campaign: string): string {
   if (process.env.NEWSLETTER_ANNOUNCEMENT === 'off') return '';
   return `
@@ -1977,11 +2003,7 @@ function renderFooterCTA(_type: NewsletterType, campaign: string): string {
   <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Turn your design into Claude skills</h2>
   <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot. See which of the ${PATTERN_COUNT} patterns you are missing and take them away as Claude Code skills. Free, no signup for the first audit.</p>
   <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Get your Claude skills →</span></a></p>
-</div>
-<!-- POLL SLOT: beehiiv will not let you insert a block INTO pasted HTML, so the
-     poll block lands here, after everything. Question: "Was this issue worth your
-     time?" with the optional comment box enabled. Read results back via
-     GET /v2/publications/{pubId}/polls?expand[]=stats&expand[]=poll_responses -->`.trim();
+</div>`.trim();
 }
 
 function wrapEmailShell(inner: string): string {
@@ -1990,7 +2012,7 @@ ${inner}
 </div>`.trim();
 }
 
-function generateHTML(data: NewsletterData): string {
+function generateHTML(data: NewsletterData, issueSlug: string, poll: PollDefinition): string {
   const items = data.items
     .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
     .join('\n\n');
@@ -2018,12 +2040,14 @@ ${items}
 ${takeaway}
 
 ${renderFooterCTA('daily', 'daily-banner')}
+
+${renderPoll(issueSlug, poll)}
   `.trim();
 
   return wrapEmailShell(body);
 }
 
-function generateWeeklyHTML(data: WeeklyNewsletterData): string {
+function generateWeeklyHTML(data: WeeklyNewsletterData, issueSlug: string, poll: PollDefinition): string {
   const items = data.items
     .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
     .join('\n\n');
@@ -2077,6 +2101,8 @@ ${stealThis}
 ${patternToKnow}
 
 ${renderFooterCTA('weekly', 'weekly-banner')}
+
+${renderPoll(issueSlug, poll)}
   `.trim();
 
   return wrapEmailShell(body);
@@ -2568,6 +2594,13 @@ async function runGeneration(
   let htmlContent: string;
   let title: string;
   let summary: string;
+  // The slug is computed BEFORE the HTML rather than just before the insert,
+  // because the poll links in the email body have to point at this issue's own
+  // /poll/<slug> URL. generateSlug is deterministic given title + today's date,
+  // so this is the same value the insert used to compute for itself — but
+  // computing it once removes any chance of the email and the row disagreeing
+  // across a midnight boundary.
+  let slug: string;
 
   let parsedData;
   try {
@@ -2595,7 +2628,8 @@ async function runGeneration(
       );
       weeklyData.items = weeklyData.items.slice(0, WEEKLY_MAX_ITEMS);
     }
-    htmlContent = generateWeeklyHTML(weeklyData);
+    slug = generateSlug(weeklyData.title, 'weekly');
+    htmlContent = generateWeeklyHTML(weeklyData, slug, DEFAULT_POLL);
     title = weeklyData.title;
     summary = weeklyData.summary;
     structuredData = weeklyData;
@@ -2606,7 +2640,8 @@ async function runGeneration(
     // makes lead-ordering reliable), then guarantee concrete news leads a voice.
     enrichItemsWithSource(dailyData.items, newsItems);
     dailyData.items = enforceLeadPosition(dailyData.items);
-    htmlContent = generateHTML(dailyData);
+    slug = generateSlug(dailyData.title, 'daily');
+    htmlContent = generateHTML(dailyData, slug, DEFAULT_POLL);
     title = dailyData.title;
     summary = dailyData.summary;
     structuredData = dailyData;
@@ -2691,7 +2726,10 @@ async function runGeneration(
           enrichItemsWithSource(retryParsed.items, newsItems);
           retryParsed.items = enforceLeadPosition(retryParsed.items);
           structuredData = retryParsed;
-          htmlContent = generateHTML(retryParsed);
+          // Retry produced a different title, so the slug — and therefore every
+          // poll link in the body — has to be recomputed with it.
+          slug = generateSlug(retryParsed.title, 'daily');
+          htmlContent = generateHTML(retryParsed, slug, DEFAULT_POLL);
           title = retryParsed.title;
           summary = retryParsed.summary;
           qa = retryQA;
@@ -2746,10 +2784,19 @@ async function runGeneration(
     console.warn(`[newsletter] Selection rule violated: ${qa.selectionRuleViolation}. Flagging for review (draft still created) [retry=${retryOutcome}, budgetLeft=${retryBudgetLeftMs}ms, elapsed=${Date.now() - genStart}ms]`);
   }
 
-  const structuredDataWithQA = { ...structuredData, qa: { ...qa, retryOutcome, retryBudgetLeftMs, elapsedMs: Date.now() - genStart } };
+  // `poll` is stored with the issue so /poll/<slug> can render back the exact
+  // question and choice set this email shipped with, even after DEFAULT_POLL
+  // changes. Without it, editing the default would silently relabel historical
+  // votes.
+  const structuredDataWithQA = {
+    ...structuredData,
+    poll: DEFAULT_POLL,
+    qa: { ...qa, retryOutcome, retryBudgetLeftMs, elapsedMs: Date.now() - genStart },
+  };
 
   // Save draft (re-check for duplicates to guard against race conditions from concurrent triggers)
-  const slug = generateSlug(title, type);
+  // `slug` was computed at render time above — the poll links in the email body
+  // already embed it, so it must not be recomputed here.
   const duplicateCheck = await prisma.newsletterDraft.findFirst({
     where: {
       type,
