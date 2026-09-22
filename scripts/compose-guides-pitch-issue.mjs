@@ -61,24 +61,25 @@ function renderSectionHeader(kicker, title) {
 <h2 style="margin: 0 0 40px; font-size: 26px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.4px; line-height: 1.25;">${ICON_NEWSPAPER}${title}</h2>`.trim();
 }
 
-// Every screenshot in both courses is 1600x888. At the 624px content width that
-// is 346px tall. Both numbers are set as real width/height attributes as well as
-// in CSS, so a client that blocks images still reserves the right box instead of
-// collapsing the layout around a 0px gap.
-const SHOT_W = 624;
-const SHOT_H = 346;
+// Anthropic's own line art, from public/images/illustrations/anthropic (see the
+// README there for provenance). Used instead of our course screenshots because
+// a cropped UI grab reads as documentation; the illustration reads as a subject.
+//
+// The PNG, not the SVG: Gmail strips SVG entirely, so an .svg here renders as
+// nothing at all.
+//
+// The band is white rather than cream. Each illustration carries its own cream
+// (#FAF9F5) block inside the linework, and sitting that on a cream band renders
+// as two almost-but-not-quite matching creams. On white the block reads as part
+// of the drawing, which is what it is.
+const ART_SIZE = 168;
 
-function renderShot({ src, alt, caption }) {
+function renderArt({ src, alt }) {
   return `
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 22px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 24px; background-color: #ffffff; border: 1px solid ${EMAIL_HAIRLINE}; border-radius: 14px;">
   <tr>
-    <td style="padding: 0;">
-      <img src="${SITE_URL}${src}" alt="${alt}" width="${SHOT_W}" height="${SHOT_H}" style="width: 100%; max-width: ${SHOT_W}px; height: auto; display: block; border-radius: 12px; border: 1px solid ${EMAIL_HAIRLINE};" />
-    </td>
-  </tr>
-  <tr>
-    <td style="padding: 10px 2px 0;">
-      <p style="margin: 0; font-size: 12px; line-height: 1.5; color: ${EMAIL_MUTED};">${caption}</p>
+    <td align="center" style="padding: 28px 20px;">
+      <img src="${SITE_URL}${src}" alt="${alt}" width="${ART_SIZE}" height="${ART_SIZE}" style="width: ${ART_SIZE}px; max-width: 60%; height: auto; display: block; border: 0;" />
     </td>
   </tr>
 </table>`.trim();
@@ -106,10 +107,10 @@ function renderLessonTable(lessons) {
 </table>`.trim();
 }
 
-// Course card. One screenshot, one sentence, the lesson list as a table, and the
-// button. Nothing else: the lesson titles already say what is inside, and a
+// Course card. One illustration, one sentence, the lesson list as a table, and
+// the button. Nothing else: the lesson titles already say what is inside, and a
 // second block of prose underneath them only pushes the button further down.
-function renderCourseCard({ kicker, headline, lede, shot, lessons, cta }, isLast) {
+function renderCourseCard({ kicker, headline, lede, art, lessons, cta }, isLast) {
   const separator = isLast
     ? ''
     : `\n<div style="text-align: center; margin: 44px 0; color: ${EMAIL_MUTED}; letter-spacing: 12px; font-size: 18px;">&middot; &middot; &middot;</div>`;
@@ -119,7 +120,7 @@ function renderCourseCard({ kicker, headline, lede, shot, lessons, cta }, isLast
   <p style="margin: 0 0 10px; font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${kicker}</p>
   <h3 style="margin: 0 0 12px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${headline}</h3>
   <p style="margin: 0 0 22px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${lede}</p>
-  ${renderShot(shot)}
+  ${renderArt(art)}
   ${renderLessonTable(lessons)}
   <p style="margin: 0;"><a href="${cta.href}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important;">${cta.label} &rarr;</span></a></p>
 </div>${separator}`.trim();
@@ -168,11 +169,9 @@ const CARDS = [
     kicker: 'New course &middot; 5 lessons &middot; 14 minutes',
     headline: 'Claude Docs: a document you brief by commenting on it',
     lede: 'A chat gives you text you then have to place. A doc is already the place. You point at a line, ask there, and the reply arrives on that same line with the edit already made.',
-    shot: {
-      src: '/images/guides/claude-docs-guide/lesson-2/anchored-comment.webp',
-      alt: 'A doc with one sentence highlighted in amber and a comment card on the right showing the request, a working status, and a reply box with the Send to Claude checkbox ticked.',
-      caption:
-        'The ask becomes a thread anchored to the highlighted line. Note the Send to Claude tick in the reply box.',
+    art: {
+      src: '/images/illustrations/anthropic/writing-on-a-page.png',
+      alt: 'Line drawing of a hand writing on a page.',
     },
     lessons: [
       { title: 'What a doc is, and why it is not a chat', minutes: 3 },
@@ -187,11 +186,9 @@ const CARDS = [
     kicker: 'New course &middot; 5 lessons &middot; 16 minutes',
     headline: 'Claude Slides: it asks for a design system before you have a slide',
     lede: 'Slides opens with a question Docs never asks, and the design system picker it shows you will probably be empty. That looks broken. It is not, and the fix is not where you would look for it.',
-    shot: {
-      src: '/images/guides/claude-slides-guide/lesson-3/branded-deck.webp',
-      alt: 'A navy title slide set in a custom typeface, with a ten-slide filmstrip underneath.',
-      caption:
-        'The same one-line brief with a design system applied. Navy and Satoshi, and ten slides instead of five.',
+    art: {
+      src: '/images/illustrations/anthropic/presentation-screen.png',
+      alt: 'Line drawing of a pull-down presentation screen showing a line chart.',
     },
     lessons: [
       { title: 'The question Slides asks first', minutes: 3 },
