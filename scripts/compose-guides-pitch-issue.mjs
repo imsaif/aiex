@@ -106,10 +106,10 @@ function renderLessonTable(lessons) {
 </table>`.trim();
 }
 
-// Course card. One screenshot, one sentence, the lesson list as a table, and a
-// single finding pulled out of the course. The finding is the pitch: a summary
-// of a course is not a reason to open it.
-function renderCourseCard({ kicker, headline, lede, shot, lessons, today, cta }, isLast) {
+// Course card. One screenshot, one sentence, the lesson list as a table, and the
+// button. Nothing else: the lesson titles already say what is inside, and a
+// second block of prose underneath them only pushes the button further down.
+function renderCourseCard({ kicker, headline, lede, shot, lessons, cta }, isLast) {
   const separator = isLast
     ? ''
     : `\n<div style="text-align: center; margin: 44px 0; color: ${EMAIL_MUTED}; letter-spacing: 12px; font-size: 18px;">&middot; &middot; &middot;</div>`;
@@ -121,14 +121,6 @@ function renderCourseCard({ kicker, headline, lede, shot, lessons, today, cta },
   <p style="margin: 0 0 22px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${lede}</p>
   ${renderShot(shot)}
   ${renderLessonTable(lessons)}
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 0 0 22px;">
-    <tr>
-      <td style="border-left: 3px solid ${EMAIL_INK}; padding: 2px 0 2px 16px;">
-        <p style="margin: 0 0 5px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 1.2px; text-transform: uppercase;">Worth having today</p>
-        <p style="margin: 0; font-size: 15px; line-height: 1.65; color: ${EMAIL_TEXT};">${today}</p>
-      </td>
-    </tr>
-  </table>
   <p style="margin: 0;"><a href="${cta.href}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important;">${cta.label} &rarr;</span></a></p>
 </div>${separator}`.trim();
 }
@@ -189,8 +181,6 @@ const CARDS = [
       { title: 'Tabs, sharing, and the two names problem', minutes: 2 },
       { title: 'When a doc is the wrong ask', minutes: 3 },
     ],
-    today:
-      'The test for which artifact to ask for. Will anyone comment on this? Then it is a doc. Is it going on a screen in front of people? Then it is a deck. Will nobody ever open it again? Then it was only a chat message.',
     cta: { label: 'Start the Docs course', href: `${SITE_URL}/guides/claude-docs-guide` },
   },
   {
@@ -210,8 +200,6 @@ const CARDS = [
       { title: 'Editing by comment, on a canvas', minutes: 3 },
       { title: 'The export, inspected', minutes: 3 },
     ],
-    today:
-      'What survives the export. On an unbranded deck the fonts came out Georgia and Helvetica, which are on every machine anyway. The elegant serif on screen did not travel. Worth testing on your own branded deck before you promise anyone an editable file.',
     cta: { label: 'Start the Slides course', href: `${SITE_URL}/guides/claude-slides-guide` },
   },
 ];
