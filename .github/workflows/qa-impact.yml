@@ -164,6 +164,7 @@ jobs:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
           QA_PREVIEW_HOST: ${{ steps.pr.outputs.preview_host }}
         run: |
+          set -o pipefail  # without this, tee hides a failed agent run as green
           npm install -g @anthropic-ai/claude-code
           claude -p --model claude-sonnet-5 --max-turns 60 \
             --allowedTools "Read" "Grep" "Glob" "Edit(qa-out/**)" \
