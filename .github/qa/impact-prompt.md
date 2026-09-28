@@ -21,7 +21,9 @@ and so on, substitute those values yourself.
 - **Do not flag intended changes as problems.** A PR that renames a heading
   will change that heading. Report it under "Changed as intended", in one line.
 - **Plain words.** The reader is a designer. No file paths, function names or
-  jargon in the summary; they can go in the details section.
+  jargon in the summary; they can go in the details section. No em dashes.
+- **Quote, don't upgrade.** When you rely on testing the PR describes, repeat
+  exactly what it says was tested. "390px browser width" is not "a real phone".
 - Stay under 20 probe paths per PR run unless the change is genuinely
   site-wide (a token in `globals.css`, the root layout, the navbar, a shared
   component used everywhere). Then probe a representative page from every
