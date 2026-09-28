@@ -1,0 +1,122 @@
+# Weekly whole-site check.
+#
+# Catches what breaks with no PR to blame (an outside service changes, content
+# goes stale, a page drops out) and reviews the week's merged changes together
+# for knock-on effects. Probes every sitemap URL on production, read-only, and
+# opens a GitHub issue only if something needs attention.
+#
+# Monday 06:00 UTC, clear of the newsletter cron (03:10), perf (04:00) and
+# e2e (05:00). Needs the CLAUDE_CODE_OAUTH_TOKEN secret (see qa-impact.yml).
+
+name: QA weekly
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: qa-weekly
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PROD_URL: https://www.aiuxdesign.guide
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Build the prompt
+        id: prompt
+        run: |
+          mkdir -p qa-out
+          {
+            echo 'text<<QA_PROMPT_EOF'
+            cat .github/qa/impact-prompt.md
+            echo
+            echo '## Run inputs'
+            echo "- QA_MODE: weekly"
+            echo "- PROD_URL: $PROD_URL"
+            echo "- SINCE: $(date -u -d '7 days ago' +%Y-%m-%d)"
+            echo 'QA_PROMPT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run the weekly agent
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          prompt: ${{ steps.prompt.outputs.text }}
+          claude_args: >-
+            --model claude-sonnet-5
+            --max-turns 80
+            --allowedTools "Read" "Grep" "Glob" "Write"
+            "Bash(git log *)" "Bash(git diff *)" "Bash(git show *)"
+            "Bash(node scripts/qa/probe.mjs *)"
+
+      - name: Open an issue if something needs attention
+        if: always()
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          week="$(date -u +%Y-%m-%d)"
+          verdict="$(cat qa-out/verdict.txt 2>/dev/null || echo missing)"
+
+          if [ -s qa-out/report.md ]; then
+            cat qa-out/report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          if [ "$verdict" = "clean" ]; then
+            echo "Weekly check clean; no issue opened."
+            exit 0
+          fi
+
+          gh label create qa-weekly -R "$repo" --color FBCA04 \
+            --description "Found by the weekly QA check" 2>/dev/null || true
+
+          if [ "$verdict" = "attention" ] && [ -s qa-out/report.md ]; then
+            gh issue create -R "$repo" --label qa-weekly \
+              --title "Weekly site check $week: needs attention" \
+              --body-file qa-out/report.md
+          else
+            gh issue create -R "$repo" --label qa-weekly \
+              --title "Weekly site check $week did not finish" \
+              --body "The weekly check stopped before writing its report, so nothing was verified this week. [See the run]($RUN_URL)."
+          fi
+
+      - name: Keep the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-weekly
+          path: qa-out/
+          retention-days: 30

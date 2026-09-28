@@ -1,0 +1,191 @@
+# Change-impact check on every pull request.
+#
+# Runs when Vercel finishes a preview deployment, so the agent can compare the
+# preview against production. It traces what the PR's changes reach across the
+# site, probes those pages (read-only, see scripts/qa/probe.mjs) and posts one
+# comment on the PR, updated in place on later pushes.
+#
+# deployment_status runs the workflow file from the DEFAULT branch, not the
+# PR, so changes to this file only take effect once merged. Use the manual
+# trigger with a PR number to run it by hand.
+#
+# Needs two repo secrets:
+#   CLAUDE_CODE_OAUTH_TOKEN          from `/install-github-app` or `claude setup-token`
+#   VERCEL_AUTOMATION_BYPASS_SECRET  Vercel > Settings > Deployment Protection
+#                                    > Protection Bypass for Automation
+
+name: QA impact
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to check'
+        required: true
+
+concurrency:
+  group: qa-impact-${{ github.event.deployment.ref || inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  impact:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       startsWith(github.event.deployment.environment, 'Preview'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      deployments: read
+      id-token: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PROD_URL: https://www.aiuxdesign.guide
+
+    steps:
+      - name: Find the PR and its preview
+        id: pr
+        env:
+          EVENT: ${{ github.event_name }}
+          DEPLOY_SHA: ${{ github.event.deployment.sha }}
+          DEPLOY_URL: ${{ github.event.deployment_status.environment_url }}
+          INPUT_PR: ${{ inputs.pr_number }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            pr="$INPUT_PR"
+            sha=$(gh pr view "$pr" -R "$repo" --json headRefOid -q .headRefOid)
+            dep=$(gh api "repos/$repo/deployments?sha=$sha&per_page=10" \
+              --jq '[.[] | select(.environment | startswith("Preview"))][0].id // empty')
+            url=""
+            if [ -n "$dep" ]; then
+              url=$(gh api "repos/$repo/deployments/$dep/statuses" \
+                --jq '[.[] | select(.state=="success")][0].environment_url // empty')
+            fi
+          else
+            sha="$DEPLOY_SHA"
+            url="$DEPLOY_URL"
+            pr=$(gh api "repos/$repo/commits/$sha/pulls" --jq '[.[] | select(.state=="open")][0].number // empty')
+          fi
+
+          if [ -z "$pr" ] || [ -z "$url" ]; then
+            echo "No open PR or no preview URL for this deployment; nothing to check."
+            echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # PR code is checked out and its scripts run next to secrets, so
+          # only same-repo branches, never forks.
+          if [ "$(gh pr view "$pr" -R "$repo" --json isCrossRepository -q .isCrossRepository)" = "true" ]; then
+            echo "PR #$pr is from a fork; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          # Docs and session logs cannot break the site; not worth the quota.
+          changed=$(gh pr diff "$pr" -R "$repo" --name-only)
+          code=$(echo "$changed" | grep -vE '^docs/|\.md$' || true)
+          if [ -z "$code" ]; then
+            echo "PR #$pr only changes docs; skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+
+          {
+            echo "skip=false"
+            echo "number=$pr"
+            echo "sha=$sha"
+            echo "preview=$url"
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.pr.outputs.skip == 'false'
+        with:
+          ref: ${{ steps.pr.outputs.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        if: steps.pr.outputs.skip == 'false'
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: steps.pr.outputs.skip == 'false'
+        run: npm ci --ignore-scripts
+
+      - name: Cache Playwright browsers
+        if: steps.pr.outputs.skip == 'false'
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browser
+        if: steps.pr.outputs.skip == 'false'
+        run: npx playwright install --with-deps chromium
+
+      - name: Build the prompt
+        if: steps.pr.outputs.skip == 'false'
+        id: prompt
+        run: |
+          mkdir -p qa-out
+          {
+            echo 'text<<QA_PROMPT_EOF'
+            cat .github/qa/impact-prompt.md
+            echo
+            echo '## Run inputs'
+            echo "- QA_MODE: pr"
+            echo "- PR_NUMBER: ${{ steps.pr.outputs.number }}"
+            echo "- PREVIEW_URL: ${{ steps.pr.outputs.preview }}"
+            echo "- PROD_URL: $PROD_URL"
+            echo 'QA_PROMPT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run the impact agent
+        if: steps.pr.outputs.skip == 'false'
+        uses: anthropics/claude-code-action@v1
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          prompt: ${{ steps.prompt.outputs.text }}
+          claude_args: >-
+            --model claude-sonnet-5
+            --max-turns 60
+            --allowedTools "Read" "Grep" "Glob" "Write"
+            "Bash(gh pr view *)" "Bash(gh pr diff *)"
+            "Bash(git log *)" "Bash(git diff *)" "Bash(git show *)"
+            "Bash(node scripts/qa/probe.mjs *)"
+
+      - name: Post or update the PR comment
+        if: always() && steps.pr.outputs.skip == 'false'
+        env:
+          PR: ${{ steps.pr.outputs.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          repo="${{ github.repository }}"
+          if [ -s qa-out/report.md ]; then
+            body="$(cat qa-out/report.md)"
+          else
+            body=$'<!-- aiux-qa-impact -->\n## Change impact check\n\n**Verdict:** the check did not finish, so nothing was verified. [See the run]('"$RUN_URL"$').'
+          fi
+          existing=$(gh api "repos/$repo/issues/$PR/comments" --paginate \
+            --jq '[.[] | select(.body | startswith("<!-- aiux-qa-impact -->"))][0].id // empty')
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/$repo/issues/comments/$existing" -f body="$body" > /dev/null
+          else
+            gh pr comment "$PR" -R "$repo" --body "$body"
+          fi
+
+      - name: Keep the evidence
+        if: always() && steps.pr.outputs.skip == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-impact-pr-${{ steps.pr.outputs.number }}
+          path: qa-out/
+          retention-days: 14

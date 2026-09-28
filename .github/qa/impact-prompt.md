@@ -71,7 +71,7 @@ pick one or two real slugs by reading the data files). Then:
 - `pr` mode:
   `node scripts/qa/probe.mjs --base $PREVIEW_URL --compare $PROD_URL --paths-file qa-out/paths.txt --check-links --out qa-out/probe.json`
 - `weekly` mode (whole site, no comparison):
-  `node scripts/qa/probe.mjs --base $PROD_URL --sitemap --check-links --out qa-out/probe.json`
+  `node scripts/qa/probe.mjs --base $PROD_URL --sitemap --limit 1000 --check-links --out qa-out/probe.json`
   plus a second run on the traced paths if the week's changes reach pages the
   sitemap does not list.
 
