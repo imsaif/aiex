@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 import { useScrollLock } from '@/hooks/useScrollLock';
 
@@ -74,8 +75,16 @@ export default function LearnShell({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
   useFocusTrap(drawerRef, drawerOpen);
   useScrollLock(drawerOpen);
+  // Any press outside the drawer closes it, listened for on the document
+  // rather than trusted to the scrim alone. A tap on the dimmed page was
+  // reported not to close the drawer on a real device, which the scrim's own
+  // click handler could not be shown to cause; this does not depend on which
+  // element the press lands on.
+  useClickOutside(drawerRef, closeDrawer, drawerOpen);
 
   useEffect(() => {
     if (!drawerOpen) return;
@@ -168,9 +177,14 @@ export default function LearnShell({
         {/* Scrim behind the drawer. Phones only; tapping it closes. */}
         <div
           aria-hidden="true"
-          onClick={() => setDrawerOpen(false)}
-          className={`fixed inset-0 z-overlay bg-background-scrim transition-opacity duration-base ease-out-expo motion-reduce:transition-none lg:hidden ${
-            drawerOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+          onClick={closeDrawer}
+          // Stays in place while it fades out, like the drawer, so the tap
+          // that closed the menu cannot fall through and also press whatever
+          // link sits underneath.
+          className={`fixed inset-0 z-overlay cursor-pointer bg-background-scrim duration-base ease-out-expo motion-reduce:transition-none lg:hidden ${
+            drawerOpen
+              ? 'opacity-100 transition-opacity'
+              : 'invisible opacity-0 transition-[opacity,visibility]'
           }`}
         />
 
@@ -196,7 +210,7 @@ export default function LearnShell({
             <span className="type-eyebrow font-semibold text-text-secondary">Menu</span>
             <button
               type="button"
-              onClick={() => setDrawerOpen(false)}
+              onClick={closeDrawer}
               aria-label="Close menu"
               className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-button text-text-secondary transition-colors hover:bg-background-secondary hover:text-text-primary"
             >
