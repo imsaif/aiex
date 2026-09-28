@@ -15,6 +15,7 @@ export default {
           grain: 'var(--background-grain)',
           console: 'var(--background-console)',
           rail: 'var(--background-rail)',
+          scrim: 'var(--background-scrim)',
         },
         surface: {
           primary: 'var(--surface-primary)',

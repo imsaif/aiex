@@ -169,7 +169,7 @@ export default function LearnShell({
         <div
           aria-hidden="true"
           onClick={() => setDrawerOpen(false)}
-          className={`fixed inset-0 z-overlay bg-text-primary/40 transition-opacity duration-base ease-out-expo motion-reduce:transition-none lg:hidden ${
+          className={`fixed inset-0 z-overlay bg-background-scrim transition-opacity duration-base ease-out-expo motion-reduce:transition-none lg:hidden ${
             drawerOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
           }`}
         />
