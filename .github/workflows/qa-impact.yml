@@ -52,7 +52,6 @@ jobs:
       pull-requests: write
       issues: write
       deployments: read
-      id-token: write
     env:
       GH_TOKEN: ${{ github.token }}
       PROD_URL: https://www.aiuxdesign.guide
@@ -141,11 +140,9 @@ jobs:
 
       - name: Build the prompt
         if: steps.pr.outputs.skip == 'false'
-        id: prompt
         run: |
           mkdir -p qa-out
           {
-            echo 'text<<QA_PROMPT_EOF'
             cat .github/qa/impact-prompt.md
             echo
             echo '## Run inputs'
@@ -153,26 +150,27 @@ jobs:
             echo "- PR_NUMBER: ${{ steps.pr.outputs.number }}"
             echo "- PREVIEW_URL: ${{ steps.pr.outputs.preview }}"
             echo "- PROD_URL: $PROD_URL"
-            echo 'QA_PROMPT_EOF'
-          } >> "$GITHUB_OUTPUT"
+          } > "$RUNNER_TEMP/qa-prompt.md"
 
+      # Claude Code run directly, not through anthropics/claude-code-action:
+      # the action rejects deployment_status events ("Unsupported event
+      # type"), seen on the first run on PR #121. The CLI does not care what
+      # triggered the job. Writes are limited to qa-out/ so the agent cannot
+      # rewrite the probe it is allowed to run.
       - name: Run the impact agent
         if: steps.pr.outputs.skip == 'false'
-        uses: anthropics/claude-code-action@v1
         env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
           QA_PREVIEW_HOST: ${{ steps.pr.outputs.preview_host }}
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          github_token: ${{ github.token }}
-          prompt: ${{ steps.prompt.outputs.text }}
-          claude_args: >-
-            --model claude-sonnet-5
-            --max-turns 60
-            --allowedTools "Read" "Grep" "Glob" "Edit(qa-out/**)"
-            "Bash(gh pr view *)" "Bash(gh pr diff *)"
-            "Bash(git log *)" "Bash(git diff *)" "Bash(git show *)"
-            "Bash(node scripts/qa/probe.mjs *)"
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude -p --model claude-sonnet-5 --max-turns 60 \
+            --allowedTools "Read" "Grep" "Glob" "Edit(qa-out/**)" \
+              "Bash(gh pr view *)" "Bash(gh pr diff *)" \
+              "Bash(git log *)" "Bash(git diff *)" "Bash(git show *)" \
+              "Bash(node scripts/qa/probe.mjs *)" \
+            < "$RUNNER_TEMP/qa-prompt.md" | tee qa-out/agent-log.txt
 
       - name: Post or update the PR comment
         if: always() && steps.pr.outputs.skip == 'false'
