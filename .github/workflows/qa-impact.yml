@@ -5,9 +5,14 @@
 # site, probes those pages (read-only, see scripts/qa/probe.mjs) and posts one
 # comment on the PR, updated in place on later pushes.
 #
-# Both triggers run the workflow file from the DEFAULT branch, not the PR, so
-# changes to this file only take effect once merged. The manual trigger (Run
-# workflow, with a PR number) re-checks any open PR with the merged version.
+# Two automatic triggers, because either can happen first. The usual order
+# here is push, then open the PR a few minutes later, so the preview is often
+# ready before the PR exists: the deployment_status run then finds no PR and
+# skips, and the pull_request run (on open) picks up the finished preview. If
+# the PR is opened first, the pull_request run finds no preview yet and skips,
+# and the deployment_status run does the work. Seen on PR #121.
+#
+# The manual trigger (Run workflow, with a PR number) re-checks any open PR.
 #
 # The agent may write only under qa-out/. It can run the probe, so letting it
 # write anywhere would let it rewrite the probe and run code next to secrets.
@@ -21,6 +26,8 @@ name: QA impact
 
 on:
   deployment_status:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -28,13 +35,14 @@ on:
         required: true
 
 concurrency:
-  group: qa-impact-${{ github.event.deployment.ref || inputs.pr_number }}
+  group: qa-impact-${{ github.event.deployment.ref || github.head_ref || inputs.pr_number }}
   cancel-in-progress: true
 
 jobs:
   impact:
     if: >-
       github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && !github.event.pull_request.draft) ||
       (github.event.deployment_status.state == 'success' &&
        startsWith(github.event.deployment.environment, 'Preview'))
     runs-on: ubuntu-latest
@@ -56,11 +64,11 @@ jobs:
           EVENT: ${{ github.event_name }}
           DEPLOY_SHA: ${{ github.event.deployment.sha }}
           DEPLOY_URL: ${{ github.event.deployment_status.environment_url }}
-          INPUT_PR: ${{ inputs.pr_number }}
+          INPUT_PR: ${{ inputs.pr_number || github.event.pull_request.number }}
         run: |
           set -euo pipefail
           repo="${{ github.repository }}"
-          if [ "$EVENT" = "workflow_dispatch" ]; then
+          if [ "$EVENT" = "workflow_dispatch" ] || [ "$EVENT" = "pull_request" ]; then
             pr="$INPUT_PR"
             sha=$(gh pr view "$pr" -R "$repo" --json headRefOid -q .headRefOid)
             dep=$(gh api "repos/$repo/deployments?sha=$sha&per_page=10" \
