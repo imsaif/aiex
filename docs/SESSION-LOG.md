@@ -36,6 +36,14 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-09-28 (MacBook)
+- **Pattern:** Dark-mode rail fix, phone drawer for the course rail, and a change-impact QA agent
+- **Status:** Merged: PRs #120 and #121 on `master`; #120 verified live; first weekly QA run opened issue #122; main checkout updated, worktrees removed
+- **Files Changed:** 12 across both PRs (the script would report 0: everything was merged before /save)
+- **Tests Added/Modified:** 0 unit tests; verified in the browser (live + local 390px/1440px, both dark modes) and by the agent's own GitHub runs
+- **Notes:** **(1) Dark rail:** `html[data-theme="dark"]` lacked `--background-rail`, so picking dark on the site (OS light) left the rail #e8ebf2; OS-dark was always fine. **(2) Phone rail:** below lg the rail was `hidden` with nothing in its place. `LearnShell` now turns the same column into a drawer (not a copy: a second render breaks the named `<details>` group, doubles the rail's DB query and the Learn landmark), with focus trap, scroll lock, Escape, outside-press close (`useClickOutside`, after a real-device report that scrim taps didn't close it), and a new `--background-scrim` token (text-primary inverted to near-white in dark and greyed the page). Tailwind v4 moves with the `translate` property, not `transform`. **(3) QA agent:** `scripts/qa/probe.mjs` (read-only Playwright probe: blocks every `/api/*` on any host, non-GETs and analytics) + `.github/qa/impact-prompt.md` + `qa-impact.yml` (every PR, on preview-ready *and* PR-open, since we push before opening the PR) + `qa-weekly.yml` (Mon 06:00 UTC, whole sitemap, opens a `qa-weekly` issue only on attention). Runs the Claude Code CLI directly: `claude-code-action` rejects `deployment_status`. Plain fetches must not send `x-vercel-set-bypass-cookie`. Token saving took four tries: `claude setup-token` frames and wraps the token, so copies gained/lost characters; widen the Terminal and triple-click. Details in memory `project_qa_impact_agent`.
+- **Open, from the agent:** #122 says `/poll/<issue>` may expose unpublished issues (unconfirmed); Feb 17 newsletter links to `/patterns/autonomous-agents` (404); `/audit` has no h1; phone header icon links unnamed; unlabelled fields in two demos; current-lesson highlight faint in dark mode.
+
 ### Session 2026-09-18 00:28 (MacBook)
 - **Pattern:** Claude Docs/Slides/Design — two new courses, Claude Design course corrected, lesson layout rebuilt
 - **Status:** Merged — PRs #116 and #117 on `master`, deploys verified live, main checkout updated, worktree removed
