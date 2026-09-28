@@ -370,8 +370,11 @@ async function main() {
 
   let brokenLinks = [];
   if (args.checkLinks) {
-    const all = [...new Set(results.flatMap((r) => r.internalLinks ?? []))].filter((p) => !paths.includes(p));
-    brokenLinks = await checkLinks(args.base, all.slice(0, 1500));
+    // Remember where each link was seen, so a broken one can be found and fixed.
+    const foundOn = new Map();
+    for (const r of results) for (const l of r.internalLinks ?? []) if (!foundOn.has(l)) foundOn.set(l, r.path);
+    const all = [...foundOn.keys()].filter((p) => !paths.includes(p));
+    brokenLinks = (await checkLinks(args.base, all.slice(0, 1500))).map((b) => ({ ...b, foundOn: foundOn.get(b.path) }));
   }
 
   // Past this size, per-page entries are kept only for severe problems and
