@@ -101,18 +101,27 @@ async function sitemapPaths(base) {
 }
 
 /** Everything read-only enforcement needs, applied per browser context. */
-async function guardContext(context, base) {
-  const origin = new URL(base).origin;
+async function guardContext(context) {
+  const blocked = [];
+  const block = (route, why) => {
+    const u = new URL(route.request().url());
+    blocked.push(`${why} ${route.request().method()} ${u.host}${u.pathname}`);
+    return route.abort('blockedbyclient');
+  };
   await context.route('**/*', (route) => {
     const req = route.request();
     const url = new URL(req.url());
-    if (req.method() !== 'GET' && req.method() !== 'HEAD') return route.abort('blockedbyclient');
+    if (req.method() !== 'GET' && req.method() !== 'HEAD') return block(route, 'non-GET');
     if (BLOCKED_HOSTS.some((h) => url.hostname === h || url.hostname.endsWith(`.${h}`)))
       return route.abort('blockedbyclient');
-    if (url.origin === origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/health')
-      return route.abort('blockedbyclient');
+    // Any host, not just the base: the apex redirects to www, and a preview
+    // can link to production, so an origin check would let /api/ calls
+    // through after the first redirect.
+    if (url.pathname.startsWith('/api/') && url.pathname !== '/api/health')
+      return block(route, 'api');
     return route.continue();
   });
+  return blocked;
 }
 
 /** Runs inside the page. Returns plain facts, no judgement. */
@@ -187,7 +196,7 @@ async function probePath(browser, base, path, viewportName) {
     userAgent: USER_AGENT,
     extraHTTPHeaders: bypassHeaders(base),
   });
-  await guardContext(context, base);
+  const blocked = await guardContext(context);
   const page = await context.newPage();
   const consoleErrors = [];
   const failedRequests = [];
@@ -222,6 +231,8 @@ async function probePath(browser, base, path, viewportName) {
   }
   result.consoleErrors = [...new Set(consoleErrors)].slice(0, 10);
   result.failedRequests = [...new Set(failedRequests)].slice(0, 10);
+  // Proof the read-only guard held: what the page tried to call and was refused.
+  result.blockedRequests = [...new Set(blocked)].slice(0, 10);
   await context.close();
   return result;
 }
