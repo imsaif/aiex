@@ -273,8 +273,8 @@ export default async function LearnSidebar({
           : '/guides';
 
   return (
-    // Hidden below lg: the map itself is the mobile navigation, and a collapsed
-    // accordion above five sections of content would only push them down.
+    // Below lg LearnShell turns the column this sits in into a drawer, so the
+    // nav itself is always rendered and only the lg classes pin it.
     //
     // Pinned, with its own scroll and no visible scrollbar. A rail that scrolls
     // with the page snaps back to the top on every navigation, because Next
@@ -285,7 +285,7 @@ export default async function LearnSidebar({
       aria-label="Learn"
       // Border and column background come from LearnShell; the rail only owns
       // its own padding and scroll behaviour.
-      className="hidden lg:block lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:px-4 lg:pt-6 lg:pb-10 scrollbar-none"
+      className="px-4 pt-2 pb-10 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:self-start lg:overflow-y-auto lg:pt-6 scrollbar-none"
     >
       <RailRevealCurrent />
 

@@ -31,6 +31,9 @@ body {
      panel and the outer margin recedes. Content stays white. */
   --background-console: #f7f8fb;
   --background-rail: #e8ebf2;
+  /* Dims the page behind a drawer. Its own token because borrowing
+     text-primary for it inverts in dark mode and washes the page grey. */
+  --background-scrim: rgb(15 23 42 / 0.4);
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;
@@ -226,6 +229,7 @@ body {
     --background-grain: #162036;
     --background-console: #050505;
     --background-rail: #141414;
+  --background-scrim: rgb(0 0 0 / 0.6);
 
     --surface-primary: #0f0f0f;
     --surface-secondary: #171717;
@@ -292,6 +296,8 @@ html[data-theme="dark"] {
   --background-tertiary: #1f1f1f;
   --background-grain: #162036;
   --background-console: #050505;
+  --background-rail: #141414;
+  --background-scrim: rgb(0 0 0 / 0.6);
 
   --surface-primary: #0f0f0f;
   --surface-secondary: #171717;
@@ -356,6 +362,9 @@ html[data-theme="light"] {
      close to separate a nav rail from the page behind it. */
   --background-console: #f7f8fb;
   --background-rail: #e8ebf2;
+  /* Dims the page behind a drawer. Its own token because borrowing
+     text-primary for it inverts in dark mode and washes the page grey. */
+  --background-scrim: rgb(15 23 42 / 0.4);
 
   --surface-primary: #ffffff;
   --surface-secondary: #f9f9f9;

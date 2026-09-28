@@ -1,6 +1,10 @@
 'use client';
 
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useClickOutside } from '@/hooks/useClickOutside';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
+import { useScrollLock } from '@/hooks/useScrollLock';
 
 /**
  * The console shell: page ground, rail column, content column.
@@ -35,6 +39,24 @@ import { useEffect, useState, type ReactNode } from 'react';
  * preference, which means state, which means a client component. Children are
  * still rendered on the server and passed in as props, so nothing below this
  * becomes client-side.
+ *
+ * ## On phones the rail is a drawer
+ *
+ * Below lg there is no room for a rail column, and for a while the rail was
+ * simply hidden there, which left a phone reader with no lesson list, no way
+ * to another course, and no route to Patterns or Skills. The same rail now
+ * slides in from the left behind a Menu button.
+ *
+ * It is the same element, restyled, not a second copy. A copy would render
+ * every course's `<details name="learn-rail-course">` twice, and the browser
+ * lets only one member of a named group be open, so the current course would
+ * close itself in one of them. It would also run the rail's database query
+ * twice and give the page two "Learn" landmarks.
+ *
+ * Closed, the drawer is `invisible` as well as off-screen, so its hundred-odd
+ * links are out of the tab order and the accessibility tree rather than merely
+ * out of sight. From lg up every drawer class is scoped away and the rail is
+ * exactly what it was.
  */
 
 const STORAGE_KEY = 'aiux:learn-rail-collapsed';
@@ -50,6 +72,52 @@ export default function LearnShell({
   children: ReactNode;
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
+  useFocusTrap(drawerRef, drawerOpen);
+  useScrollLock(drawerOpen);
+  // Any press outside the drawer closes it, listened for on the document
+  // rather than trusted to the scrim alone. A tap on the dimmed page was
+  // reported not to close the drawer on a real device, which the scrim's own
+  // click handler could not be shown to cause; this does not depend on which
+  // element the press lands on.
+  useClickOutside(drawerRef, closeDrawer, drawerOpen);
+
+  useEffect(() => {
+    if (!drawerOpen) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setDrawerOpen(false);
+    }
+    document.addEventListener('keydown', onKeyDown);
+
+    // Open on the reader's place, not at the top of a nine-course list. The
+    // rail's own reveal only runs on page load, while the drawer is closed.
+    const drawer = drawerRef.current;
+    const current = drawer?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (drawer && current) {
+      const delta =
+        current.getBoundingClientRect().top -
+        drawer.getBoundingClientRect().top -
+        drawer.clientHeight / 2;
+      drawer.scrollTop = Math.max(0, drawer.scrollTop + delta);
+    }
+
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [drawerOpen]);
+
+  // Moving between lessons keeps this shell mounted, so the drawer would stay
+  // open over the page the reader just asked for. Closing on any link tap
+  // covers every route change the rail can start, without the shell needing to
+  // know the rail's structure.
+  function closeOnLinkTap(event: React.MouseEvent) {
+    if (drawerOpen && (event.target as HTMLElement).closest('a')) {
+      setDrawerOpen(false);
+    }
+  }
 
   // Read the stored preference after mount rather than during render, so the
   // server and the first client render agree. Reading localStorage during
@@ -106,7 +174,50 @@ export default function LearnShell({
           } as React.CSSProperties
         }
       >
-        <div className="group relative bg-background-rail lg:border-r lg:border-border-primary">
+        {/* Scrim behind the drawer. Phones only; tapping it closes. */}
+        <div
+          aria-hidden="true"
+          onClick={closeDrawer}
+          // Stays in place while it fades out, like the drawer, so the tap
+          // that closed the menu cannot fall through and also press whatever
+          // link sits underneath.
+          className={`fixed inset-0 z-overlay cursor-pointer bg-background-scrim duration-base ease-out-expo motion-reduce:transition-none lg:hidden ${
+            drawerOpen
+              ? 'opacity-100 transition-opacity'
+              : 'invisible opacity-0 transition-[opacity,visibility]'
+          }`}
+        />
+
+        <div
+          id="learn-drawer"
+          ref={drawerRef}
+          onClick={closeOnLinkTap}
+          role={drawerOpen ? 'dialog' : undefined}
+          aria-modal={drawerOpen ? true : undefined}
+          aria-label={drawerOpen ? 'Course navigation' : undefined}
+          className={`group relative bg-background-rail lg:border-r lg:border-border-primary max-lg:fixed max-lg:inset-y-0 max-lg:left-0 max-lg:z-modal max-lg:w-[85vw] max-lg:max-w-80 max-lg:overflow-y-auto max-lg:overscroll-contain max-lg:shadow-modal max-lg:duration-base max-lg:ease-out-expo max-lg:motion-reduce:transition-none ${
+            // Visibility is only animated on the way out, so the drawer stays
+            // visible while it slides away. On the way in it must flip at
+            // once: an element still invisible on the first frame cannot take
+            // focus, and the focus trap would miss the close button.
+            drawerOpen
+              ? 'max-lg:translate-x-0 max-lg:transition-[translate]'
+              : 'max-lg:invisible max-lg:-translate-x-full max-lg:transition-[translate,visibility]'
+          }`}
+        >
+          {/* First in the drawer so the focus trap lands on it. */}
+          <div className="sticky top-0 z-sticky flex items-center justify-between bg-background-rail px-default pt-snug pb-tight lg:hidden">
+            <span className="type-eyebrow font-semibold text-text-secondary">Menu</span>
+            <button
+              type="button"
+              onClick={closeDrawer}
+              aria-label="Close menu"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-button text-text-secondary transition-colors hover:bg-background-secondary hover:text-text-primary"
+            >
+              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+
           {/* Sticky, not absolute. Pinned to the top of a tall column the
               control scrolled away with the rail, so by the time a reader
               wanted more room for a screenshot the way to get it was several
@@ -146,7 +257,22 @@ export default function LearnShell({
           <div className={collapsed ? 'lg:hidden' : 'lg:pr-8'}>{sidebar}</div>
         </div>
 
-        <div className="min-w-0 bg-background-primary px-6 lg:px-10">{children}</div>
+        <div className="min-w-0 bg-background-primary px-6 lg:px-10">
+          {/* The way into the drawer on phones. Placed where the rail would
+              be, at the start of the content, rather than in the site header,
+              which every page shares. */}
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            aria-expanded={drawerOpen}
+            aria-controls="learn-drawer"
+            className="-mx-tight mt-default flex cursor-pointer items-center gap-tight rounded-button px-tight py-tight type-caption font-semibold text-text-primary transition-colors hover:bg-background-secondary lg:hidden"
+          >
+            <Bars3Icon className="h-5 w-5" aria-hidden="true" />
+            Menu
+          </button>
+          {children}
+        </div>
 
         {aside && (
           <div className="hidden bg-background-primary pr-6 xl:block">{aside}</div>
