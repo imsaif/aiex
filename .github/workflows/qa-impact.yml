@@ -5,9 +5,12 @@
 # site, probes those pages (read-only, see scripts/qa/probe.mjs) and posts one
 # comment on the PR, updated in place on later pushes.
 #
-# deployment_status runs the workflow file from the DEFAULT branch, not the
-# PR, so changes to this file only take effect once merged. Use the manual
-# trigger with a PR number to run it by hand.
+# Both triggers run the workflow file from the DEFAULT branch, not the PR, so
+# changes to this file only take effect once merged. The manual trigger (Run
+# workflow, with a PR number) re-checks any open PR with the merged version.
+#
+# The agent may write only under qa-out/. It can run the probe, so letting it
+# write anywhere would let it rewrite the probe and run code next to secrets.
 #
 # Needs two repo secrets:
 #   CLAUDE_CODE_OAUTH_TOKEN          from `/install-github-app` or `claude setup-token`
@@ -98,6 +101,7 @@ jobs:
             echo "number=$pr"
             echo "sha=$sha"
             echo "preview=$url"
+            echo "preview_host=$(echo "$url" | sed -E 's#^https?://([^/]+).*#\1#')"
           } >> "$GITHUB_OUTPUT"
 
       - uses: actions/checkout@v4
@@ -149,6 +153,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+          QA_PREVIEW_HOST: ${{ steps.pr.outputs.preview_host }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
@@ -156,7 +161,7 @@ jobs:
           claude_args: >-
             --model claude-sonnet-5
             --max-turns 60
-            --allowedTools "Read" "Grep" "Glob" "Write"
+            --allowedTools "Read" "Grep" "Glob" "Edit(qa-out/**)"
             "Bash(gh pr view *)" "Bash(gh pr diff *)"
             "Bash(git log *)" "Bash(git diff *)" "Bash(git show *)"
             "Bash(node scripts/qa/probe.mjs *)"

@@ -77,7 +77,10 @@ pick one or two real slugs by reading the data files). Then:
   plus a second run on the traced paths if the week's changes reach pages the
   sitemap does not list.
 
-Read `qa-out/probe.json`. `changesVsCompare` lists what differs between the
+Read `qa-out/probe.json`, starting with `problemRollup`: one line per distinct
+problem with how many pages have it. A problem on nearly every page usually
+comes from one shared component (the header, the footer, the layout); report
+it once as that, not as hundreds of pages. `changesVsCompare` lists what differs between the
 preview and production; `problems` lists what is wrong on the page itself.
 Separate problems this change introduced from ones production already had
 (in `pr` mode, a problem present on both sides is pre-existing).

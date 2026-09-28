@@ -77,7 +77,7 @@ jobs:
           claude_args: >-
             --model claude-sonnet-5
             --max-turns 80
-            --allowedTools "Read" "Grep" "Glob" "Write"
+            --allowedTools "Read" "Grep" "Glob" "Edit(qa-out/**)"
             "Bash(git log *)" "Bash(git diff *)" "Bash(git show *)"
             "Bash(node scripts/qa/probe.mjs *)"
 

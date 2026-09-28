@@ -30,8 +30,9 @@
  *   --check-links       Also request every internal link found (GET, no JS).
  *   --out <file>        Write JSON here instead of stdout.
  *
- * Env: VERCEL_AUTOMATION_BYPASS_SECRET, sent to *.vercel.app hosts only, so
- * protected preview deployments can be reached.
+ * Env: VERCEL_AUTOMATION_BYPASS_SECRET and QA_PREVIEW_HOST. The secret is
+ * sent only when --base is exactly that host, so a base URL chosen by anyone
+ * else (including the agent) can never receive it.
  */
 
 import { chromium } from '@playwright/test';
@@ -79,7 +80,8 @@ function parseArgs(argv) {
 
 function bypassHeaders(base) {
   const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
-  if (!secret || !new URL(base).hostname.endsWith('.vercel.app')) return {};
+  const host = process.env.QA_PREVIEW_HOST;
+  if (!secret || !host || new URL(base).hostname !== host) return {};
   return { 'x-vercel-protection-bypass': secret, 'x-vercel-set-bypass-cookie': 'true' };
 }
 
@@ -294,6 +296,39 @@ function diff(a, b) {
   return changes;
 }
 
+/**
+ * Problems that break a page for everyone, as opposed to quality issues that
+ * tend to repeat across every page from one shared component.
+ */
+const SEVERE = /failed to load|HTTP \d|not found|scrolls sideways|console error|failed asset|broken image/;
+
+/**
+ * One line per distinct problem with a page count, read before anything else.
+ * On a full-sitemap run a shared-component issue (the header, say) shows up on
+ * every page; listing it 400 times would bury the one page that is really down.
+ */
+function rollup(pages) {
+  const byKind = new Map();
+  const note = (kind, page) => {
+    const entry = byKind.get(kind) ?? { problem: kind, pageCount: 0, examples: [] };
+    entry.pageCount++;
+    if (entry.examples.length < 5) entry.examples.push(`${page.viewport} ${page.path}`);
+    byKind.set(kind, entry);
+  };
+  for (const page of pages) {
+    for (const prob of page.problems) {
+      if (/control\(s\) with no accessible name/.test(prob)) {
+        for (const c of page.unnamedControls) note(`control with no accessible name: ${c}`, page);
+      } else {
+        note(prob.replace(/^\d+ /, ''), page);
+      }
+    }
+  }
+  return [...byKind.values()].sort(
+    (a, b) => Number(SEVERE.test(b.problem)) - Number(SEVERE.test(a.problem)) || b.pageCount - a.pageCount,
+  );
+}
+
 /** A page is worth the agent's attention if any fact here is non-empty. */
 function problems(r) {
   const p = [];
@@ -339,6 +374,13 @@ async function main() {
     brokenLinks = await checkLinks(args.base, all.slice(0, 1500));
   }
 
+  // Past this size, per-page entries are kept only for severe problems and
+  // diffs; everything else is in the rollup.
+  const large = pages.length > 100;
+  const listed = pages.filter(
+    (p) => p.changesVsCompare?.length || (large ? p.problems.some((x) => SEVERE.test(x)) : p.problems.length),
+  );
+
   const report = {
     base: args.base,
     compare: args.compare ?? null,
@@ -350,11 +392,14 @@ async function main() {
       pagesChanged: compared ? pages.filter((p) => p.changesVsCompare.length).length : null,
       brokenLinks: brokenLinks.length,
     },
+    problemRollup: rollup(pages),
     brokenLinks,
     // Clean, unchanged pages are listed by path only, to keep the JSON small
     // enough for the agent to read in one go on a full-sitemap run.
-    pages: pages.filter((p) => p.problems.length || p.changesVsCompare?.length),
-    cleanPages: pages.filter((p) => !p.problems.length && !p.changesVsCompare?.length).map((p) => `${p.viewport} ${p.path}`),
+    pages: listed,
+    cleanPages: large
+      ? `${pages.filter((p) => !p.problems.length && !p.changesVsCompare?.length).length} pages (list omitted on large runs)`
+      : pages.filter((p) => !p.problems.length && !p.changesVsCompare?.length).map((p) => `${p.viewport} ${p.path}`),
   };
 
   const json = JSON.stringify(report, null, 2);
