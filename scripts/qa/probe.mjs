@@ -78,11 +78,20 @@ function parseArgs(argv) {
   return args;
 }
 
-function bypassHeaders(base) {
+/**
+ * `browser` adds the set-cookie companion, which a browser needs so the page's
+ * own follow-up requests (scripts, images) get through. A plain fetch must not
+ * send it: Vercel then answers with a cookie-setting redirect that fetch
+ * cannot keep, lands on the login page and fails. That made every link check
+ * on the first real preview run fail with a generic error.
+ */
+function bypassHeaders(base, { browser = false } = {}) {
   const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   const host = process.env.QA_PREVIEW_HOST;
   if (!secret || !host || new URL(base).hostname !== host) return {};
-  return { 'x-vercel-protection-bypass': secret, 'x-vercel-set-bypass-cookie': 'true' };
+  const headers = { 'x-vercel-protection-bypass': secret };
+  if (browser) headers['x-vercel-set-bypass-cookie'] = 'true';
+  return headers;
 }
 
 async function sitemapPaths(base) {
@@ -196,7 +205,7 @@ async function probePath(browser, base, path, viewportName) {
     hasTouch: vp.hasTouch,
     deviceScaleFactor: vp.deviceScaleFactor ?? 1,
     userAgent: USER_AGENT,
-    extraHTTPHeaders: bypassHeaders(base),
+    extraHTTPHeaders: bypassHeaders(base, { browser: true }),
   });
   const blocked = await guardContext(context);
   const page = await context.newPage();

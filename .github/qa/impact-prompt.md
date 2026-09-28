@@ -22,6 +22,9 @@ and so on, substitute those values yourself.
   will change that heading. Report it under "Changed as intended", in one line.
 - **Plain words.** The reader is a designer. No file paths, function names or
   jargon in the summary; they can go in the details section. No em dashes.
+- **Name things exactly as the probe does.** If it reports
+  `a[href=/news]` with no name, say "the News icon link", not a guess at what
+  the icons might be.
 - **Quote, don't upgrade.** When you rely on testing the PR describes, repeat
   exactly what it says was tested. "390px browser width" is not "a real phone".
 - Stay under 20 probe paths per PR run unless the change is genuinely
