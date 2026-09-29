@@ -94,9 +94,12 @@ export default async function PollPage({ params, searchParams }: PollPageProps) 
   const { slug } = await params;
   const { c } = await searchParams;
 
-  const issue = await prisma.newsletterDraft.findUnique({
-    where: { slug },
-    select: { title: true, slug: true, structuredData: true, status: true },
+  // Only issues that went out have a live poll. A draft still in review, or a
+  // rejected one, is treated like an unknown issue: no title shown, no vote
+  // recorded. Same rule /news uses for what readers can see.
+  const issue = await prisma.newsletterDraft.findFirst({
+    where: { slug, status: 'published' },
+    select: { title: true, slug: true, structuredData: true },
   });
 
   const poll = pollFromStructuredData(issue?.structuredData);
