@@ -147,7 +147,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </h1>
           <p className="text-lg leading-relaxed text-text-secondary mb-8">{event.tagline}</p>
 
-          <div className="space-y-5 mb-8 p-6 rounded-2xl border border-border-primary bg-surface-primary">
+          <div className="space-y-5 p-6 rounded-2xl border border-border-primary bg-surface-primary">
             <div className="flex items-center gap-4">
               <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary bg-surface-primary flex flex-col items-center justify-center leading-none">
                 <span className="text-[10px] font-semibold text-text-secondary">{month}</span>
@@ -180,14 +180,15 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 )}
               </div>
             </div>
+            <div className="pt-5 border-t border-border-primary">
+              <a
+                href="#book"
+                className="flex w-full sm:inline-flex sm:w-auto items-center justify-center px-6 py-3 rounded-xl font-medium bg-accent-primary text-text-on-accent hover:bg-accent-hover transition-colors"
+              >
+                Book your seat
+              </a>
+            </div>
           </div>
-
-          <a
-            href="#book"
-            className="inline-flex items-center justify-center px-6 py-3 rounded-xl font-medium bg-accent-primary text-text-on-accent hover:bg-accent-hover transition-colors"
-          >
-            Book your seat
-          </a>
 
           <Section title="About">
             <div className="space-y-5 leading-relaxed text-text-primary">

@@ -89,7 +89,7 @@ export const EVENTS: EventItem[] = [
     paymentLink: process.env.NEXT_PUBLIC_DODO_WORKSHOP_LINK ?? '',
     host: {
       name: 'Imran Mohammed',
-      role: 'Runs aiuxdesign.guide and the Claude Code course for designers',
+      role: 'Founder of aiuxdesign.guide and designwithclaude.com',
       url: 'https://www.imranai.design',
       links: [
         { label: 'aiuxdesign.guide', url: 'https://www.aiuxdesign.guide' },
