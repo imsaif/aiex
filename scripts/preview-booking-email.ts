@@ -11,7 +11,7 @@ const slug = process.argv[2] ?? EVENTS[0].slug;
 const out = process.argv[3] ?? 'booking-email-preview.html';
 const event = getEvent(slug);
 if (!event) throw new Error(`No event with slug ${slug}`);
-const mail = bookingEmail(event, 'Priya Sharma');
+const mail = bookingEmail(event, 'Priya Sharma', 'file://' + process.cwd() + '/public');
 writeFileSync(out, `<!-- ${mail.subject} -->\n${mail.html}`);
 console.log(mail.subject);
 console.log(`Wrote ${out}`);

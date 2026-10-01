@@ -45,6 +45,8 @@ export interface EventItem {
   coverImage?: string;
   /** Optional animated cover: the same illustration split into an ink layer and a dot layer. */
   coverLayers?: { lines: string; dots: string };
+  /** Wide (2:1) PNG of the cover for the top of the confirmation email. Email clients need PNG or JPG. */
+  emailBanner?: string;
   /** ISO 8601 with offset, e.g. 2026-10-10T10:00:00+05:30. */
   start: string;
   end: string;
@@ -90,6 +92,7 @@ export const EVENTS: EventItem[] = [
       lines: '/images/events/claude-code-hands-on-oct-10/lines.webp',
       dots: '/images/events/claude-code-hands-on-oct-10/dots.webp',
     },
+    emailBanner: '/images/events/claude-code-hands-on-oct-10/email-banner.png',
     format: 'in-person',
     // TODO(Imran): replace with the exact street address once confirmed.
     venue: {
@@ -161,7 +164,8 @@ export const formatEventDate = (event: EventItem) => {
     new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: TZ }).format(d);
   const month = new Intl.DateTimeFormat('en-IN', { month: 'short', timeZone: TZ }).format(start).toUpperCase();
   const dayNum = new Intl.DateTimeFormat('en-IN', { day: 'numeric', timeZone: TZ }).format(start);
-  return { day, timeRange: `${time(start)} to ${time(end)} IST`, month, dayNum };
+  const weekday = new Intl.DateTimeFormat('en-IN', { weekday: 'long', timeZone: TZ }).format(start);
+  return { day, weekday, timeRange: `${time(start)} to ${time(end)} IST`, month, dayNum };
 };
 
 /** Google Calendar "add event" link. */

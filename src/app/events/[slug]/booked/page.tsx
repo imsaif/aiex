@@ -9,7 +9,7 @@ import { EVENTS, getEvent, formatEventDate, googleCalendarUrl } from '@/data/eve
 // out of the index and the sitemap. It is still public to anyone with the URL,
 // which is why the session link is never shown here: it goes out by email.
 export const metadata: Metadata = {
-  title: 'You are booked',
+  title: 'Your seat is confirmed',
   robots: { index: false, follow: false },
 };
 
@@ -66,7 +66,7 @@ export default async function EventBookedPage({ params }: { params: Promise<{ sl
       <EventBookedTracker slug={event.slug} />
       <div className="max-w-3xl mx-auto px-4 md:px-6 pb-8">
         <div className="text-center mb-10 pt-6">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">You are booked.</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-3">Your seat is confirmed.</h1>
           <p className="text-lg text-text-primary">{event.title}</p>
           <p className="text-text-secondary mb-5">
             {day}, {timeRange}

@@ -19,8 +19,12 @@ const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif";
 const escape = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-export function bookingEmail(event: EventItem, customerName: string) {
-  const { day, timeRange } = formatEventDate(event);
+/**
+ * `assetBase` is where images are served from. Live emails need the public site;
+ * the local preview script passes a file path instead.
+ */
+export function bookingEmail(event: EventItem, customerName: string, assetBase = 'https://www.aiuxdesign.guide') {
+  const { day, weekday, timeRange } = formatEventDate(event);
   const first = escape(customerName.trim().split(/\s+/)[0] || 'there');
   const site = 'https://www.aiuxdesign.guide';
   const bookedUrl = `${site}/events/${event.slug}/booked`;
@@ -35,16 +39,21 @@ export function bookingEmail(event: EventItem, customerName: string) {
     `Ask Claude Code anything, then reply to this email with a screenshot of its answer.`,
   ];
 
-  const subject = `You are booked: ${event.title}, ${day}`;
+  const subject = `Seat confirmed: ${event.title}, ${day}`;
 
   const html = `
 <body style="margin:0;padding:0;background:${PAGE};">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PAGE};padding:32px 16px;">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CARD};border:1px solid ${RULE};border-radius:16px;font-family:${FONT};">
+        ${
+          event.emailBanner
+            ? `<tr><td style="padding:0;"><img src="${assetBase}${event.emailBanner}" width="560" alt="" style="display:block;width:100%;height:auto;border:0;border-radius:16px 16px 0 0;" /></td></tr>`
+            : ''
+        }
         <tr><td style="padding:32px 32px 8px;">
-          <h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;color:${NAVY};">You are booked, ${first}.</h1>
-          <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BODY};">Your seat for <strong style="color:${NAVY};">${escape(event.title)}</strong> is confirmed.</p>
+          <h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;color:${NAVY};">See you on ${escape(weekday)}, ${first}.</h1>
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:${BODY};">Your seat at <strong style="color:${NAVY};">${escape(event.title)}</strong> is confirmed.</p>
           <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;font-size:15px;line-height:1.6;color:${BODY};">
             <tr><td style="padding:0 0 6px;width:64px;color:${NAVY};font-weight:700;">When</td><td style="padding:0 0 6px;">${escape(day)}, ${escape(timeRange)}</td></tr>
             <tr><td style="padding:0;width:64px;color:${NAVY};font-weight:700;vertical-align:top;">Where</td><td style="padding:0;">${where}</td></tr>
@@ -71,7 +80,8 @@ export function bookingEmail(event: EventItem, customerName: string) {
 </body>`;
 
   const text = [
-    `You are booked, ${customerName.trim().split(/\s+/)[0] || 'there'}.`,
+    `See you on ${weekday}, ${customerName.trim().split(/\s+/)[0] || 'there'}.`,
+    `Your seat at ${event.title} is confirmed.`,
     '',
     `${event.title}`,
     `When: ${day}, ${timeRange}`,
