@@ -1,0 +1,154 @@
+/**
+ * Paid events, sold on this site instead of Luma. One entry per event; the page
+ * at /events/[slug] and its post-payment page at /events/[slug]/booked are both
+ * built from it.
+ *
+ * Why not Luma: a free ticket with "Require approval" left ~100 people believing
+ * they were already in, so nobody paid and nobody came (Sep 2026). Here paying is
+ * the only way in, so there is no pending state to misread.
+ *
+ * Payment happens on a Dodo Static Payment Link, NOT in this repo (same decision
+ * as /call, see src/lib/call-offer.ts): no checkout code, no webhook, no payment
+ * state in the database. Each event's Dodo link must set its redirect_url to
+ * /events/<slug>/booked.
+ *
+ * The session link (or full venue address, if it is kept private) is never put
+ * here. /events/<slug>/booked is noindex but public, so anything on it is free to
+ * anyone who guesses the URL. It goes out by email after the setup check.
+ */
+
+export type EventFormat = 'online' | 'in-person';
+
+export interface EventHost {
+  name: string;
+  role: string;
+  /** Path under /public. Initials are shown when absent. */
+  photo?: string;
+  url?: string;
+}
+
+export interface EventVenue {
+  name: string;
+  /** Shown on the page and used for the map. */
+  address: string;
+  area: string;
+}
+
+export interface EventItem {
+  slug: string;
+  title: string;
+  /** One line under the title. */
+  tagline: string;
+  /** Path under /public, ideally square (1080x1080). A typographic cover is drawn when absent. */
+  coverImage?: string;
+  /** ISO 8601 with offset, e.g. 2026-10-03T10:00:00+05:30. */
+  start: string;
+  end: string;
+  format: EventFormat;
+  /** For online events: what the call runs on. */
+  platform?: string;
+  /** For in-person events. */
+  venue?: EventVenue;
+  /** Keep in sync with the amount on the Dodo link. */
+  priceLabel: string;
+  /** Shown as a limit. Dodo links do not cap quantity, so closing early is manual. */
+  seats?: number;
+  /** Dodo Static Payment Link. Empty keeps registration closed. */
+  paymentLink: string;
+  host: EventHost;
+  about: string[];
+  whyAttend: { title: string; body: string }[];
+  whoFor: string[];
+  agenda: { time: string; item: string }[];
+  /** Said before the pay button: costs on top of the ticket belong here. */
+  bring: string[];
+  finePrint: string[];
+  /** Where buyers send their setup screenshot. Already public on the site. */
+  contactEmail: string;
+}
+
+export const EVENTS: EventItem[] = [
+  {
+    slug: 'claude-code-hands-on-oct-3',
+    title: 'Claude Code, Hands-On: Build a Real Feature',
+    tagline: 'Build one working feature on your own project in 90 minutes, with help when you get stuck.',
+    start: '2026-10-03T10:00:00+05:30',
+    end: '2026-10-03T11:30:00+05:30',
+    format: 'online',
+    platform: 'Google Meet',
+    priceLabel: '₹599',
+    seats: 24,
+    paymentLink: process.env.NEXT_PUBLIC_DODO_WORKSHOP_LINK ?? '',
+    host: {
+      name: 'Imran Mohammed',
+      role: 'Runs aiuxdesign.guide and the Claude Code course for designers',
+      url: 'https://www.imranai.design',
+    },
+    // DRAFT copy for Imran to edit. Keep claims to what the session actually does.
+    about: [
+      'A small, hands-on session where you build with Claude Code instead of watching a demo of it.',
+      'You bring a project, or pick one of the starter ideas. We agree what the feature is, plan it with Claude Code, then build it. By the end you have something working and a repeatable way to do it again on your own.',
+    ],
+    whyAttend: [
+      { title: 'Leave with something built', body: 'A working feature on your own project, not notes about one.' },
+      { title: 'Setup is solved before the day', body: 'Everyone shows Claude Code running before the session, so the 90 minutes go on building.' },
+      { title: 'Help when you get stuck', body: 'A small group, so questions get answered as they come up.' },
+    ],
+    whoFor: [
+      'Designers and product people who want to build, not just prototype in Figma.',
+      'Developers new to Claude Code who want a guided first project.',
+      'Anyone who has installed Claude Code and not known what to do next.',
+    ],
+    agenda: [
+      { time: '10:00', item: 'Welcome, and pick the feature each person will build' },
+      { time: '10:10', item: 'Plan it with Claude Code: brief, plan mode, agreeing the scope' },
+      { time: '10:25', item: 'Build session, with help as you go' },
+      { time: '11:15', item: 'Show what you built, and what to try next on your own' },
+    ],
+    bring: [
+      'Your own paid Claude plan (Pro or higher) or Anthropic API credits. Free Claude accounts cannot run Claude Code.',
+      'A laptop running macOS, Windows or Linux, where you can install software.',
+      'About 20 minutes before the day to install Claude Code and check it runs.',
+    ],
+    finePrint: [
+      'Your seat is confirmed as soon as you book. There is no waiting list or approval step.',
+      'The session link is emailed once you have shown Claude Code running on your own account.',
+      'Booking takes a minute and accepts UPI and cards.',
+    ],
+    contactEmail: 'imranrizom@gmail.com',
+  },
+];
+
+export const getEvent = (slug: string): EventItem | undefined =>
+  EVENTS.find((e) => e.slug === slug);
+
+/** Registration opens only once there is a link to pay on. */
+export const isRegistrationOpen = (event: EventItem): boolean =>
+  event.paymentLink.length > 0 && new Date(event.end).getTime() > Date.now();
+
+const TZ = 'Asia/Kolkata';
+
+export const formatEventDate = (event: EventItem) => {
+  const start = new Date(event.start);
+  const end = new Date(event.end);
+  const day = new Intl.DateTimeFormat('en-IN', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ }).format(start);
+  const time = (d: Date) =>
+    new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: TZ }).format(d);
+  const month = new Intl.DateTimeFormat('en-IN', { month: 'short', timeZone: TZ }).format(start).toUpperCase();
+  const dayNum = new Intl.DateTimeFormat('en-IN', { day: 'numeric', timeZone: TZ }).format(start);
+  return { day, timeRange: `${time(start)} to ${time(end)} IST`, month, dayNum };
+};
+
+/** Google Calendar "add event" link. */
+export const googleCalendarUrl = (event: EventItem): string => {
+  const fmt = (iso: string) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const where = event.format === 'online' ? `Online (${event.platform ?? 'link by email'})` : event.venue?.address ?? '';
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: event.title,
+    dates: `${fmt(event.start)}/${fmt(event.end)}`,
+    details: `${event.tagline}\n\nhttps://www.aiuxdesign.guide/events/${event.slug}`,
+    location: where,
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};

@@ -5,6 +5,7 @@ import { guides } from '@/data/guides';
 import { getAllLessonParams } from '@/lib/guides/lesson-urls';
 import { siteConfig } from '@/config/seo';
 import { getNewsletters } from '@/data/newsletters';
+import { EVENTS } from '@/data/events';
 import { prisma } from '@/lib/prisma';
 
 async function getPublishedNewsSlugs(): Promise<Array<{ slug: string; publishDate: Date }>> {
@@ -120,14 +121,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
-    {
-      // Paid online workshop. /workshop/booked is absent for the same reason as
-      // /call/booked: it sits behind payment and is marked noindex.
-      url: `${baseUrl}/workshop`,
+    // Paid events. Each /events/<slug>/booked is absent for the same reason as
+    // /call/booked: it sits behind payment and is marked noindex.
+    ...EVENTS.map((e) => ({
+      url: `${baseUrl}/events/${e.slug}`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'weekly' as const,
       priority: 0.7,
-    },
+    })),
     {
       url: `${baseUrl}/handbook`,
       lastModified: new Date(),
