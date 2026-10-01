@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import EventShell from '@/components/events/EventShell';
 import EventRegistration from '@/components/events/EventRegistration';
 import EventTimeline from '@/components/events/EventTimeline';
+import EventCoverAnimated from '@/components/events/EventCoverAnimated';
 import {
   EVENTS,
   getEvent,
@@ -47,6 +48,9 @@ const initials = (name: string) =>
     .toUpperCase();
 
 function Cover({ event }: { event: EventItem }) {
+  if (event.coverLayers) {
+    return <EventCoverAnimated title={event.title} lines={event.coverLayers.lines} dots={event.coverLayers.dots} />;
+  }
   if (event.coverImage) {
     return (
       // Framed in the same white card as the date box, so it sits on the band as

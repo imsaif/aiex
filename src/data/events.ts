@@ -43,6 +43,8 @@ export interface EventItem {
   tagline: string;
   /** Path under /public, ideally square (1080x1080). A typographic cover is drawn when absent. */
   coverImage?: string;
+  /** Optional animated cover: the same illustration split into an ink layer and a dot layer. */
+  coverLayers?: { lines: string; dots: string };
   /** ISO 8601 with offset, e.g. 2026-10-03T10:00:00+05:30. */
   start: string;
   end: string;
@@ -78,6 +80,10 @@ export const EVENTS: EventItem[] = [
     start: '2026-10-03T10:00:00+05:30',
     end: '2026-10-03T11:30:00+05:30',
     coverImage: '/images/events/claude-code-hands-on-oct-3/cover.webp',
+    coverLayers: {
+      lines: '/images/events/claude-code-hands-on-oct-3/lines.webp',
+      dots: '/images/events/claude-code-hands-on-oct-3/dots.webp',
+    },
     format: 'in-person',
     // TODO(Imran): replace with the exact street address once confirmed.
     venue: {

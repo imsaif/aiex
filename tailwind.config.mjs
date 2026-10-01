@@ -18,6 +18,7 @@ export default {
           scrim: 'var(--background-scrim)',
           event: 'var(--background-event)',
           'event-strong': 'var(--background-event-strong)',
+          'event-cover': 'var(--background-event-cover)',
         },
         surface: {
           primary: 'var(--surface-primary)',

@@ -25,6 +25,7 @@ body {
   --background-grain: #F0F1F5;
   --background-event: #E6E4E0;        /* event hero band: matches the cover illustration ground */
   --background-event-strong: #CDC8C1; /* event timeline segments on the band */
+  --background-event-cover: #E6E4E0; /* paper ground of the animated cover, same in both themes */
   /* Ground the learn console sits on. Its own token because the neutral
      ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
      close to separate a nav rail from the page behind it. */
@@ -231,6 +232,7 @@ body {
     --background-grain: #162036;
     --background-event: #1E1C1A;
     --background-event-strong: #3A3632;
+    --background-event-cover: #E6E4E0; /* paper ground of the animated cover, same in both themes */
     --background-console: #050505;
     --background-rail: #141414;
   --background-scrim: rgb(0 0 0 / 0.6);
@@ -301,6 +303,7 @@ html[data-theme="dark"] {
   --background-grain: #162036;
   --background-event: #1E1C1A;
   --background-event-strong: #3A3632;
+  --background-event-cover: #E6E4E0; /* paper ground of the animated cover, same in both themes */
   --background-console: #050505;
   --background-rail: #141414;
   --background-scrim: rgb(0 0 0 / 0.6);
@@ -365,6 +368,7 @@ html[data-theme="light"] {
   --background-grain: #F0F1F5;
   --background-event: #E6E4E0;        /* event hero band: matches the cover illustration ground */
   --background-event-strong: #CDC8C1; /* event timeline segments on the band */
+  --background-event-cover: #E6E4E0; /* paper ground of the animated cover, same in both themes */
   /* Ground the learn console sits on. Its own token because the neutral
      ladder steps only 5 units (#fff -> #fafafa -> #f5f5f5), which is too
      close to separate a nav rail from the page behind it. */
@@ -1086,4 +1090,31 @@ nav[aria-label='On this page']::-webkit-scrollbar,
 
 @media (prefers-reduced-motion: reduce) {
   .rail-toggle { transition: none; }
+}
+
+
+/* Event cover: the illustration split into ink and dot layers, animated with a
+   hand-drawn "line boil" (three displacement frames at ~6 fps) and a slow drift
+   of the dot network. Filters live in EventCoverAnimated. Off for reduced motion. */
+@keyframes event-boil {
+  0% { filter: url(#event-boil-1); }
+  33% { filter: url(#event-boil-2); }
+  66% { filter: url(#event-boil-3); }
+}
+@keyframes event-drift {
+  from { transform: translate(0, 0) rotate(0deg); }
+  to { transform: translate(-1.2%, 0.8%) rotate(-2.5deg); }
+}
+.event-cover-lines {
+  animation: event-boil 0.5s step-end infinite;
+}
+.event-cover-dots {
+  transform-origin: 40% 35%;
+  animation: event-boil 0.5s step-end infinite, event-drift 7s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .event-cover-lines,
+  .event-cover-dots {
+    animation: none;
+  }
 }
