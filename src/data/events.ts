@@ -45,7 +45,7 @@ export interface EventItem {
   coverImage?: string;
   /** Optional animated cover: the same illustration split into an ink layer and a dot layer. */
   coverLayers?: { lines: string; dots: string };
-  /** ISO 8601 with offset, e.g. 2026-10-03T10:00:00+05:30. */
+  /** ISO 8601 with offset, e.g. 2026-10-10T10:00:00+05:30. */
   start: string;
   end: string;
   format: EventFormat;
@@ -59,6 +59,12 @@ export interface EventItem {
   seats?: number;
   /** Dodo Static Payment Link. Empty keeps registration closed. */
   paymentLink: string;
+  /**
+   * Dodo product id (pdt_...) behind the payment link. The payment webhook uses
+   * it to tell which event was booked. Add `?metadata_event=<slug>` to the link
+   * as well, as a second way to match.
+   */
+  dodoProductId?: string;
   host: EventHost;
   about: string[];
   whyAttend: { title: string; body: string }[];
@@ -74,15 +80,15 @@ export interface EventItem {
 
 export const EVENTS: EventItem[] = [
   {
-    slug: 'claude-code-hands-on-oct-3',
+    slug: 'claude-code-hands-on-oct-10',
     title: 'Claude Code, Hands-On: Build a Real Feature',
     tagline: 'Build one working feature on your own project in 90 minutes, with help when you get stuck.',
-    start: '2026-10-03T10:00:00+05:30',
-    end: '2026-10-03T11:30:00+05:30',
-    coverImage: '/images/events/claude-code-hands-on-oct-3/cover.webp',
+    start: '2026-10-10T10:00:00+05:30',
+    end: '2026-10-10T11:30:00+05:30',
+    coverImage: '/images/events/claude-code-hands-on-oct-10/cover.webp',
     coverLayers: {
-      lines: '/images/events/claude-code-hands-on-oct-3/lines.webp',
-      dots: '/images/events/claude-code-hands-on-oct-3/dots.webp',
+      lines: '/images/events/claude-code-hands-on-oct-10/lines.webp',
+      dots: '/images/events/claude-code-hands-on-oct-10/dots.webp',
     },
     format: 'in-person',
     // TODO(Imran): replace with the exact street address once confirmed.
@@ -195,3 +201,18 @@ export const agendaSegments = (event: EventItem) => {
 
 export const totalMinutes = (event: EventItem) =>
   Math.round((new Date(event.end).getTime() - new Date(event.start).getTime()) / 60000);
+
+/**
+ * Which event a Dodo payment was for: by product id first, then by the
+ * `metadata_event` tag on the payment link.
+ */
+export const findEventForPayment = (payment: {
+  product_cart?: { product_id: string }[] | null;
+  metadata?: Record<string, unknown> | null;
+}): EventItem | undefined => {
+  const ids = new Set((payment.product_cart ?? []).map((p) => p.product_id));
+  const byProduct = EVENTS.find((e) => e.dodoProductId && ids.has(e.dodoProductId));
+  if (byProduct) return byProduct;
+  const tag = payment.metadata?.event;
+  return typeof tag === 'string' ? getEvent(tag) : undefined;
+};

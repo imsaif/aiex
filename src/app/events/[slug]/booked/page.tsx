@@ -50,14 +50,12 @@ export default async function EventBookedPage({ params }: { params: Promise<{ sl
       title: 'Send a screenshot',
       body: (
         <>
-          Ask Claude Code anything, then email a screenshot of its reply to{' '}
+          Ask Claude Code anything, then reply to your confirmation email with a screenshot of its answer. No
+          email yet? Send it to{' '}
           <a href={`mailto:${event.contactEmail}?subject=${encodeURIComponent(`Setup check: ${event.title}`)}`} className={linkClass}>
             {event.contactEmail}
           </a>{' '}
-          from the email you booked with.{' '}
-          {event.format === 'online'
-            ? 'The session link comes back to you by email.'
-            : 'I will reply to confirm, with the exact venue address.'}
+          from the email you booked with.
         </>
       ),
     },
