@@ -49,8 +49,12 @@ const initials = (name: string) =>
 function Cover({ event }: { event: EventItem }) {
   if (event.coverImage) {
     return (
-      <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
-        <Image src={event.coverImage} alt={event.title} fill className="object-cover" priority />
+      // Framed in the same white card as the date box, so it sits on the band as
+      // an object rather than dissolving into it.
+      <div className="p-3 rounded-2xl bg-surface-primary">
+        <div className="relative aspect-square w-full overflow-hidden rounded-xl">
+          <Image src={event.coverImage} alt={event.title} fill className="object-cover" priority />
+        </div>
       </div>
     );
   }
