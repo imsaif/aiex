@@ -3,6 +3,7 @@ import { resend } from '@/lib/resend';
 import { verifyWebhook } from '@/lib/events/verify-webhook';
 import { bookingEmail, hostNotification } from '@/lib/events/booking-email';
 import { findEventForPayment } from '@/data/events';
+import { signBookingToken } from '@/lib/events/booking-token';
 
 /**
  * Dodo Payments webhook. On `payment.succeeded` for an event booking, emails the
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const mail = bookingEmail(event, name);
+    const mail = bookingEmail(event, name, undefined, signBookingToken(event.slug, payment.payment_id));
     const sent = await resend.emails.send(
       {
         from: 'AIUX Design Guide <imran@aiuxdesign.guide>',

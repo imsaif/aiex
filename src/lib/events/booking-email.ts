@@ -23,11 +23,18 @@ const escape = (s: string) =>
  * `assetBase` is where images are served from. Live emails need the public site;
  * the local preview script passes a file path instead.
  */
-export function bookingEmail(event: EventItem, customerName: string, assetBase = 'https://www.aiuxdesign.guide') {
+export function bookingEmail(
+  event: EventItem,
+  customerName: string,
+  assetBase = 'https://www.aiuxdesign.guide',
+  /** Signed booking token; adds a "View your booking" link that works on any device. */
+  bookingToken?: string
+) {
   const { day, weekday, timeRange } = formatEventDate(event);
   const first = escape(customerName.trim().split(/\s+/)[0] || 'there');
   const site = 'https://www.aiuxdesign.guide';
   const bookedUrl = `${site}/events/${event.slug}/booked`;
+  const viewUrl = bookingToken ? `${site}/events/${event.slug}?booking=${encodeURIComponent(bookingToken)}` : '';
   const where =
     event.format === 'online'
       ? `Online${event.platform ? `, on ${escape(event.platform)}` : ''}. The link comes once your setup check is done.`
@@ -60,6 +67,11 @@ export function bookingEmail(event: EventItem, customerName: string, assetBase =
           </table>
           <p style="margin:20px 0 0;">
             <a href="${googleCalendarUrl(event)}" style="display:inline-block;padding:10px 18px;border-radius:10px;background:${NAVY};color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;">Add to Google Calendar</a>
+            ${
+              viewUrl
+                ? `<a href="${viewUrl}" style="display:inline-block;margin-left:8px;padding:9px 17px;border-radius:10px;border:1px solid ${RULE};color:${NAVY};text-decoration:none;font-size:14px;font-weight:600;">View your booking</a>`
+                : ''
+            }
           </p>
         </td></tr>
         <tr><td style="padding:24px 32px 0;"><div style="height:1px;background:${RULE};"></div></td></tr>
@@ -87,6 +99,7 @@ export function bookingEmail(event: EventItem, customerName: string, assetBase =
     `When: ${day}, ${timeRange}`,
     `Where: ${where.replace(/<[^>]+>/g, '')}`,
     `Add to calendar: ${googleCalendarUrl(event)}`,
+    ...(viewUrl ? [`View your booking: ${viewUrl}`] : []),
     '',
     'Before the day, get Claude Code running on your own account:',
     '1. Install Claude Code (install lesson: https://www.aiuxdesign.guide/guides/claude-code-learning-path).',

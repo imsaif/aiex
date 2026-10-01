@@ -16,6 +16,8 @@ import EventShell from '@/components/events/EventShell';
 import EventRegistration from '@/components/events/EventRegistration';
 import EventTimeline from '@/components/events/EventTimeline';
 import EventCover from '@/components/events/EventCover';
+import HeroBookingAction from '@/components/events/HeroBookingAction';
+import BookingLinkCatcher from '@/components/events/BookingLinkCatcher';
 import {
   EVENTS,
   getEvent,
@@ -161,12 +163,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               </div>
             </div>
           </div>
-          <a
-            href="#book"
-            className="flex w-full sm:w-auto shrink-0 items-center justify-center px-7 py-3.5 rounded-xl font-medium bg-accent-primary text-text-on-accent hover:bg-accent-hover transition-colors"
-          >
-            Book your seat
-          </a>
+          <HeroBookingAction slug={event.slug} />
         </div>
       </div>
     </div>
@@ -174,6 +171,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
 
   return (
     <EventShell hero={hero}>
+      <BookingLinkCatcher slug={event.slug} />
       {/* Phone order: details, then host. Desktop: host on the left, details on the right. */}
       <div className="max-w-6xl mx-auto px-4 md:px-6 pt-10 md:pt-14 grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-16 items-start">
         <aside className="order-last md:order-none">
