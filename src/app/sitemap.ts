@@ -121,6 +121,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      // Paid online workshop. /workshop/booked is absent for the same reason as
+      // /call/booked: it sits behind payment and is marked noindex.
+      url: `${baseUrl}/workshop`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/handbook`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

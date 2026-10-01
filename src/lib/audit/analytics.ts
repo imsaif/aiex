@@ -124,6 +124,11 @@ export const AUDIT_EVENT_NAMES = [
   // Fired on /call/booked, which is reached only via the Dodo redirect. The gap
   // between call_checkout_clicked and this is the paid-but-never-booked leak.
   'call_booking_page_viewed',
+  // Paid online workshop (src/lib/workshop-offer.ts). Same three steps as the
+  // call offer: reached the page, started checkout, came back from Dodo paid.
+  'workshop_page_viewed',
+  'workshop_checkout_clicked',
+  'workshop_booked_page_viewed',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
