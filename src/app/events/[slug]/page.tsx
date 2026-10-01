@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import type { ComponentType, SVGProps } from 'react';
 import {
   BookOpenIcon,
+  CameraIcon,
   ComputerDesktopIcon,
   LightBulbIcon,
   MapPinIcon,
@@ -223,6 +224,24 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               ))}
             </ul>
           </Section>
+
+          {event.photos && event.photos.items.length > 0 && (
+            <Section title={event.photos.title} icon={CameraIcon}>
+              <div className="grid grid-cols-2 gap-3">
+                {event.photos.items.map((photo) => (
+                  <div key={photo.src} className="relative aspect-[3/2] overflow-hidden rounded-xl bg-background-secondary">
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      sizes="(min-width: 768px) 360px, 50vw"
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </Section>
+          )}
 
           <Section title="Who it is for" icon={UserGroupIcon}>
             <ul className="space-y-3 leading-relaxed text-text-primary">

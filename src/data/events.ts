@@ -45,6 +45,11 @@ export interface EventItem {
   coverImage?: string;
   /** Optional animated cover: the same illustration split into an ink layer and a dot layer. */
   coverLayers?: { lines: string; dots: string };
+  /**
+   * Photos from a past session, shown as proof the session is real. Pick
+   * building moments over faces; get attendees' OK for any clear face.
+   */
+  photos?: { title: string; items: { src: string; alt: string }[] };
   /** Wide (2:1) PNG of the cover for the top of the confirmation email. Email clients need PNG or JPG. */
   emailBanner?: string;
   /** ISO 8601 with offset, e.g. 2026-10-10T10:00:00+05:30. */
@@ -93,6 +98,15 @@ export const EVENTS: EventItem[] = [
       dots: '/images/events/claude-code-hands-on-oct-10/dots.webp',
     },
     emailBanner: '/images/events/claude-code-hands-on-oct-10/email-banner.png',
+    photos: {
+      title: 'From the last session, 19 September',
+      items: [
+        { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-teaching.webp', alt: 'The host explaining the plan to the room while attendees work on their laptops' },
+        { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-hands.webp', alt: 'Close-up of hands pointing at code on a laptop screen' },
+        { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-helping.webp', alt: 'Attendees working side by side on their own laptops' },
+        { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-building.webp', alt: 'Someone working on a laptop, with attendees building in the background' },
+      ],
+    },
     format: 'in-person',
     // TODO(Imran): replace with the exact street address once confirmed.
     venue: {
