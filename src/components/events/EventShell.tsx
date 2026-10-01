@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { RoughIconFilter } from '@/components/events/RoughIcon';
 
 /**
  * Event pages sit outside the guides and patterns: no site navbar or footer, so
@@ -20,6 +21,7 @@ export function EventShell({ hero, children }: { hero?: ReactNode; children: Rea
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
+      <RoughIconFilter />
       {hero ? (
         <div className="bg-background-event">
           {header}

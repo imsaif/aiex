@@ -1,4 +1,15 @@
 import { Metadata } from 'next';
+import type { ComponentType, SVGProps } from 'react';
+import {
+  BookOpenIcon,
+  ComputerDesktopIcon,
+  LightBulbIcon,
+  MapPinIcon,
+  UserCircleIcon,
+  UserGroupIcon,
+  VideoCameraIcon,
+} from '@heroicons/react/24/outline';
+import RoughIcon from '@/components/events/RoughIcon';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import EventShell from '@/components/events/EventShell';
@@ -98,10 +109,21 @@ function linkify(text: string, links: { label: string; url: string }[] = []) {
 
 // Every block on the page is the same box as the booking card: a heading strip
 // over a padded body, so content reads as grouped rather than floating.
-function Section({ title, children, className = 'mt-6' }: { title: string; children: React.ReactNode; className?: string }) {
+function Section({
+  title,
+  icon,
+  children,
+  className = 'mt-6',
+}: {
+  title: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <section className={`${className} rounded-2xl border border-border-primary bg-surface-primary overflow-hidden`}>
-      <h2 className="px-6 py-4 text-sm font-medium text-text-secondary bg-background-secondary border-b border-border-primary">
+      <h2 className="px-6 py-4 flex items-center gap-3 text-sm font-medium text-text-primary bg-background-secondary border-b border-border-primary">
+        <RoughIcon icon={icon} />
         {title}
       </h2>
       <div className="p-6 md:p-7">{children}</div>
@@ -145,9 +167,9 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             <div className="flex items-center gap-4">
               <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary flex items-center justify-center text-text-secondary">
                 {event.format === 'online' ? (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2" /><path d="M16 10l5-3v10l-5-3" /></svg>
+                  <RoughIcon icon={VideoCameraIcon} />
                 ) : (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11z" /><circle cx="12" cy="10" r="2.5" /></svg>
+                  <RoughIcon icon={MapPinIcon} />
                 )}
               </span>
               <div>
@@ -181,7 +203,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       {/* Phone order: details, then host. Desktop: host on the left, details on the right. */}
       <div className="max-w-6xl mx-auto px-4 md:px-6 pt-10 md:pt-14 grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-16 items-start">
         <aside className="order-last md:order-none">
-          <Section title="Hosted by" className="">
+          <Section title="Hosted by" icon={UserCircleIcon} className="">
             <div className="flex items-center gap-3">
               {event.host.photo ? (
                 <Image src={event.host.photo} alt={event.host.name} width={40} height={40} className="rounded-full object-cover" />
@@ -211,7 +233,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         </aside>
 
         <div className="min-w-0">
-          <Section title="About" className="">
+          <Section title="About" icon={BookOpenIcon} className="">
             <div className="space-y-5 leading-relaxed text-text-primary">
               {event.about.map((p) => (
                 <p key={p}>{p}</p>
@@ -219,7 +241,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             </div>
           </Section>
 
-          <Section title="Why attend">
+          <Section title="Why attend" icon={LightBulbIcon}>
             <ul className="space-y-4 leading-relaxed">
               {event.whyAttend.map((w) => (
                 <li key={w.title} className="text-text-primary">
@@ -230,7 +252,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             </ul>
           </Section>
 
-          <Section title="Who it is for">
+          <Section title="Who it is for" icon={UserGroupIcon}>
             <ul className="space-y-3 leading-relaxed text-text-primary">
               {event.whoFor.map((w) => (
                 <li key={w}>{w}</li>
@@ -238,7 +260,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             </ul>
           </Section>
 
-          <Section title="What you will need">
+          <Section title="What you will need" icon={ComputerDesktopIcon}>
             <ul className="list-disc pl-5 space-y-3 leading-relaxed text-text-primary">
               {event.bring.map((b) => (
                 <li key={b}>{b}</li>
@@ -258,7 +280,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             />
           </div>
 
-          <Section title="Location">
+          <Section title="Location" icon={MapPinIcon}>
             {event.format === 'online' ? (
               <p className="text-text-primary">
                 Online{event.platform ? ` on ${event.platform}` : ''}. Join from anywhere; the link is emailed once

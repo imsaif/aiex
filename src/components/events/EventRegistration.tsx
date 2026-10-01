@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
+import { TicketIcon } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import RoughIcon from '@/components/events/RoughIcon';
 
 interface Props {
   slug: string;
@@ -25,7 +27,8 @@ export function EventRegistration({ slug, open, priceLabel, seats, paymentLink, 
 
   return (
     <div className="rounded-2xl border border-border-primary bg-surface-primary overflow-hidden">
-      <div className="px-6 py-4 text-sm font-medium text-text-secondary bg-background-secondary border-b border-border-primary">
+      <div className="px-6 py-4 flex items-center gap-3 text-sm font-medium text-text-primary bg-background-secondary border-b border-border-primary">
+        <RoughIcon icon={TicketIcon} />
         Book your seat
       </div>
       <div className="p-6 md:p-7">
