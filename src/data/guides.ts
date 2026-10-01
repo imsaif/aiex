@@ -2502,7 +2502,7 @@ export const guides: Guide[] = [
               {
                 number: 3,
                 title: 'Choose Your Plan',
-                content: 'You\'ll automatically get a one-week Pro trial with full features. Explore everything! After the trial, the Free plan stays active.',
+                content: 'Cursor starts you on the free Hobby plan, with no credit card needed and a limited number of Agent requests. Upgrade to Pro ($20/month) if you hit the limit.',
                 icon: 'star',
               },
             ],
@@ -2511,7 +2511,7 @@ export const guides: Guide[] = [
             type: 'callout',
             calloutType: 'success',
             title: 'Welcome to Cursor!',
-            content: 'You now have Cursor installed and a one-week free trial of the Pro plan. This gives you access to all features—Tab completions, Chat, Composer, Agent mode, and more. Use this time to explore and see what\'s possible with AI-powered development.',
+            content: 'You now have Cursor installed on the free Hobby plan. Use it to work through the lessons ahead and see what\'s possible with AI-powered development before deciding whether you need Pro.',
             icon: 'success',
           },
           {
@@ -2538,7 +2538,7 @@ export const guides: Guide[] = [
             items: [
               'Cursor is installed on your computer',
               'Your account is set up and verified',
-              'You have a one-week Pro trial',
+              'You are on the free Hobby plan',
               'All AI features are ready to use',
             ],
             message: 'Congratulations! You\'re ready to meet the Cursor interface and start learning AI-powered coding.',
@@ -2643,7 +2643,7 @@ export const guides: Guide[] = [
               '**Cmd+Shift+I** / **Ctrl+Shift+I**: Open Composer (full-screen)',
               '**Cmd+Enter** / **Ctrl+Enter**: Give AI your full codebase as context',
               '**Cmd+P** / **Ctrl+P**: Quick file search and navigation',
-              '**Cmd+/** / **Ctrl+**: Toggle comment on selected code',
+              '**Cmd+/** / **Ctrl+/**: Toggle comment on selected code',
               '**Tab**: Accept autocomplete suggestion',
               '**Escape**: Reject autocomplete or close panels',
             ],
@@ -2800,7 +2800,7 @@ export const guides: Guide[] = [
               'Stage files by clicking the + button',
               'Write a commit message',
               'Click the checkmark to commit',
-              'Push or pull from the command palette (Cmd+P)',
+              'Push or pull from the command palette (Cmd+Shift+P)',
             ],
           },
           {
@@ -3862,7 +3862,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Pro feature ($20/month): Enable Privacy Mode in Settings. Your code is never:',
+            content: 'Privacy Mode is free on every plan, including Hobby. Turn it on in Settings. Your code is never:',
           },
           {
             type: 'list',
@@ -4346,7 +4346,7 @@ export const guides: Guide[] = [
             { number: 5, title: 'You\'re Ready!', content: 'Once signed in, you\'ll see a small Copilot icon in VS Code. You\'re now ready to use AI-powered code suggestions!' }
           ] },
           { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-1/marketplace.png', alt: 'GitHub Copilot extension in VS Code marketplace with Install button visible', label: 'VS Code Extensions marketplace showing GitHub Copilot extension' },
-          { type: 'callout', calloutType: 'info', title: 'About Copilot+', content: 'GitHub Copilot offers a free trial (60 minutes per month). After the trial, it\'s $10/month or $100/year. Individual plans are available—check github.com/copilot/plans for current pricing.' }
+          { type: 'callout', calloutType: 'info', title: 'About Copilot Plans', content: 'Copilot Free costs nothing and includes 2,000 code completions a month plus a limited allowance for chat. Paid plans are Pro ($10/month), Pro+ ($39/month) and Max ($100/month). Check github.com/features/copilot/plans for current pricing.' }
         ]
       },
       {
@@ -4389,8 +4389,8 @@ export const guides: Guide[] = [
           ] },
           { type: 'code', language: 'json', label: 'Recommended VS Code Settings', code: '{\n  "github.copilot.enable": {\n    "*": true,\n    "plaintext": false,\n    "markdown": false\n  },\n  "editor.inlineSuggest.enabled": true,\n  "editor.inlineSuggest.suppressSuggestions": false,\n  "editor.tabCompletion": "on"\n}' },
           { type: 'heading', level: 'h3', content: 'Key Keyboard Shortcuts' },
-          { type: 'list', items: ['Tab = Accept suggestion', 'Escape = Reject suggestion', 'Alt+[ = See previous suggestion', 'Alt+] = See next suggestion', 'Ctrl+Enter / Cmd+Enter = Open Copilot Chat (quick explanations)'] },
-          { type: 'callout', calloutType: 'warning', title: 'Privacy Tip', content: 'GitHub Copilot uses your code to improve suggestions. If you work on sensitive projects, you can disable Copilot for those files by adding them to .copilotignore in your project folder.' }
+          { type: 'list', items: ['Tab = Accept suggestion', 'Escape = Reject suggestion', 'Alt+[ = See previous suggestion', 'Alt+] = See next suggestion', 'Ctrl+Enter (Windows and Mac) = Open a panel with more suggestions'] },
+          { type: 'callout', calloutType: 'warning', title: 'Privacy Tip', content: 'On Copilot Free, Pro and Pro+, GitHub uses your prompts, code snippets and Copilot\'s replies to train its AI models unless you opt out. If you work on sensitive projects, turn this off under Privacy at github.com/settings/copilot.' }
         ]
       },
       {
@@ -4426,7 +4426,7 @@ export const guides: Guide[] = [
           { type: 'text', content: 'Copilot Chat is like having a developer in your editor. When you see code you don\'t understand, or need advice on implementation, open Chat and ask. Copilot will explain code, answer questions, and help you learn.' },
           { type: 'heading', level: 'h3', content: 'Opening Copilot Chat' },
           { type: 'steps', steps: [
-            { number: 1, title: 'Open the Chat Panel', content: 'Press Ctrl+Alt+I (Windows) or Cmd+Alt+I (Mac), or click the Copilot icon in the top-right corner of the editor' },
+            { number: 1, title: 'Open the Chat Panel', content: 'Press Ctrl+Alt+I (Windows) or Ctrl+Cmd+I (Mac), or click the Copilot icon in the top-right corner of the editor' },
             { number: 2, title: 'Ask Your Question', content: 'Type your question in the chat box at the bottom. Examples: "Explain this CSS Grid code" or "How do I make this button accessible?"' },
             { number: 3, title: 'Get Instant Help', content: 'Copilot responds with an explanation, code snippet, or suggestion. You can ask follow-up questions in the same chat.' }
           ] },
@@ -4457,7 +4457,7 @@ export const guides: Guide[] = [
             { number: 1, title: 'Highlight the Code', content: 'Select (highlight) the code you don\'t understand' },
             { number: 2, title: 'Right-Click and Explain', content: 'Right-click on the selection and look for "Copilot: Explain This" option' },
             { number: 3, title: 'Read the Explanation', content: 'Copilot will break down what the code does in simple language, line by line' },
-            { number: 4, title: 'Ask Follow-ups', content: 'If you still have questions, ask them in Copilot Chat (Ctrl+Alt+I / Cmd+Alt+I)' }
+            { number: 4, title: 'Ask Follow-ups', content: 'If you still have questions, ask them in Copilot Chat (Ctrl+Alt+I on Windows, Ctrl+Cmd+I on Mac)' }
           ] },
           { type: 'code', language: 'javascript', label: 'Example Code That Needs Explanation', code: 'const handleFormSubmit = (e) => {\n  e.preventDefault();\n  const formData = new FormData(e.target);\n  const data = Object.fromEntries(formData);\n  fetch(\'/api/submit\', {\n    method: \'POST\',\n    headers: { \'Content-Type\': \'application/json\' },\n    body: JSON.stringify(data)\n  });\n};\n\n// Step by step:\n// 1. e.preventDefault() stops the form from refreshing the page\n// 2. FormData captures all the input values\n// 3. fetch sends the data to the server\n// 4. The server responds with confirmation' },
           { type: 'image', src: '/images/guides/github-copilot-learning-path/lesson-6/explanation.png', alt: 'VS Code showing Copilot explanation of JavaScript function alongside the code', label: 'Copilot explaining complex code in simple terms' },
@@ -4532,7 +4532,7 @@ export const guides: Guide[] = [
           { type: 'steps', steps: [
             { number: 1, title: 'Read the PR Description', content: 'Developers will explain what changed. Read this first to understand the "why."' },
             { number: 2, title: 'Look at the Changes', content: 'GitHub shows green (added) and red (removed) lines. Scan for anything that looks off.' },
-            { number: 3, title: 'Use Copilot to Understand', content: 'Highlight confusing code and right-click to "Explain This." Copilot breaks it down in simple language.' },
+            { number: 3, title: 'Use Copilot to Understand', content: 'If your plan includes Copilot code review, request Copilot from the Reviewers list on the pull request and it comments on what changed. To dig into one file, open it in VS Code, select the confusing code and press Cmd+I (Mac) or Ctrl+I (Windows) to ask Copilot to explain it.' },
             { number: 4, title: 'Ask Smart Questions', content: 'Use Copilot Chat to generate thoughtful questions: "Will this animation work on older phones?" or "How does this form validation work?"' },
             { number: 5, title: 'Leave Feedback', content: 'Comment on the PR with specific feedback. Developers appreciate designers who understand the code!' }
           ] },
@@ -4676,7 +4676,7 @@ export const guides: Guide[] = [
         <section class="mb-12">
           <h3 class="text-2xl font-bold mb-6">Ready to Get Started?</h3>
           <p class="text-lg text-gray-700 mb-6">
-            You'll need VS Code installed (free at code.visualstudio.com). GitHub Copilot offers a free trial with 60 minutes per month of AI assistance.
+            You'll need VS Code installed (free at code.visualstudio.com). GitHub Copilot has a free plan with 2,000 code completions a month and limited chat, so you can start without paying.
             That's enough to get started and see the value before deciding to upgrade.
           </p>
           <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded">
