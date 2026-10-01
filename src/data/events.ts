@@ -25,6 +25,8 @@ export interface EventHost {
   /** Path under /public. Initials are shown when absent. */
   photo?: string;
   url?: string;
+  /** Sites shown under the host, e.g. their products. */
+  links?: { label: string; url: string }[];
 }
 
 export interface EventVenue {
@@ -74,8 +76,14 @@ export const EVENTS: EventItem[] = [
     tagline: 'Build one working feature on your own project in 90 minutes, with help when you get stuck.',
     start: '2026-10-03T10:00:00+05:30',
     end: '2026-10-03T11:30:00+05:30',
-    format: 'online',
-    platform: 'Google Meet',
+    coverImage: '/images/events/claude-code-hands-on-oct-3/cover.webp',
+    format: 'in-person',
+    // TODO(Imran): replace with the exact street address once confirmed.
+    venue: {
+      name: '@Work Gachibowli',
+      address: 'Gachibowli, Hyderabad',
+      area: 'Gachibowli, Hyderabad',
+    },
     priceLabel: '₹599',
     seats: 24,
     paymentLink: process.env.NEXT_PUBLIC_DODO_WORKSHOP_LINK ?? '',
@@ -83,6 +91,10 @@ export const EVENTS: EventItem[] = [
       name: 'Imran Mohammed',
       role: 'Runs aiuxdesign.guide and the Claude Code course for designers',
       url: 'https://www.imranai.design',
+      links: [
+        { label: 'aiuxdesign.guide', url: 'https://www.aiuxdesign.guide' },
+        { label: 'designwithclaude.com', url: 'https://designwithclaude.com' },
+      ],
     },
     // DRAFT copy for Imran to edit. Keep claims to what the session actually does.
     about: [
@@ -112,7 +124,7 @@ export const EVENTS: EventItem[] = [
     ],
     finePrint: [
       'Your seat is confirmed as soon as you book. There is no waiting list or approval step.',
-      'The session link is emailed once you have shown Claude Code running on your own account.',
+      'Before the day, show Claude Code running on your own account, so the session goes on building rather than setup.',
       'Booking takes a minute and accepts UPI and cards.',
     ],
     contactEmail: 'imranrizom@gmail.com',
@@ -142,7 +154,7 @@ export const formatEventDate = (event: EventItem) => {
 /** Google Calendar "add event" link. */
 export const googleCalendarUrl = (event: EventItem): string => {
   const fmt = (iso: string) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  const where = event.format === 'online' ? `Online (${event.platform ?? 'link by email'})` : event.venue?.address ?? '';
+  const where = event.format === 'online' ? `Online (${event.platform ?? 'link by email'})` : (event.venue ? `${event.venue.name}, ${event.venue.address}` : '');
   const params = new URLSearchParams({
     action: 'TEMPLATE',
     text: event.title,

@@ -115,6 +115,22 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 <p className="text-sm text-text-secondary">{event.host.role}</p>
               </div>
             </div>
+            {event.host.links && event.host.links.length > 0 && (
+              <ul className="mt-5 space-y-2">
+                {event.host.links.map((l) => (
+                  <li key={l.url}>
+                    <a
+                      href={l.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-medium text-text-primary underline underline-offset-2 hover:text-accent-primary"
+                    >
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
             <a
               href={`mailto:${event.contactEmail}?subject=${encodeURIComponent(event.title)}`}
               className="mt-4 inline-block text-sm text-text-secondary hover:text-accent-primary"
