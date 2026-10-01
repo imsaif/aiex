@@ -121,6 +121,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/events`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
     // Paid events. Each /events/<slug>/booked is absent for the same reason as
     // /call/booked: it sits behind payment and is marked noindex.
     ...EVENTS.map((e) => ({

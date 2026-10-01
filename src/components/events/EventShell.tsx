@@ -13,9 +13,14 @@ import { RoughIconFilter } from '@/components/events/RoughIcon';
 export function EventShell({ hero, children }: { hero?: ReactNode; children: ReactNode }) {
   const header = (
     <header className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8 flex items-center justify-between">
-      <Link href="/" className="text-sm font-semibold text-text-primary hover:text-text-secondary">
-        aiux <span className="font-normal text-text-secondary">events</span>
-      </Link>
+      <span className="text-sm">
+        <Link href="/" className="font-semibold text-text-primary hover:text-text-secondary">
+          aiux
+        </Link>{' '}
+        <Link href="/events" className="text-text-secondary hover:text-text-primary">
+          events
+        </Link>
+      </span>
     </header>
   );
 

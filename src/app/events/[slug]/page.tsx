@@ -28,6 +28,10 @@ import {
   type EventItem,
 } from '@/data/events';
 
+// Registration closes by the clock (isRegistrationOpen), so re-render hourly
+// rather than freezing the page as it was at deploy.
+export const revalidate = 3600;
+
 export function generateStaticParams() {
   return EVENTS.map((e) => ({ slug: e.slug }));
 }

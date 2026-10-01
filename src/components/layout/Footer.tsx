@@ -176,6 +176,14 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
+                      href="/events"
+                      className="text-base text-text-secondary hover:text-accent-primary transition-colors"
+                    >
+                      Events
+                    </a>
+                  </li>
+                  <li>
+                    <a
                       href="/design-system"
                       className="text-base text-text-secondary hover:text-accent-primary transition-colors"
                     >
