@@ -5,6 +5,7 @@ import { ChatBubbleLeftEllipsisIcon, MapPinIcon, VideoCameraIcon, WrenchScrewdri
 import EventShell from '@/components/events/EventShell';
 import EventCover from '@/components/events/EventCover';
 import EventBookedTracker from '@/components/events/EventBookedTracker';
+import BookedSentTo from '@/components/events/BookedSentTo';
 import RoughIcon from '@/components/events/RoughIcon';
 import { eventTheme } from '@/components/events/theme';
 import { EVENTS, getEvent, formatEventDate, googleCalendarUrl } from '@/data/events';
@@ -77,7 +78,7 @@ export default async function EventBookedPage({ params }: { params: Promise<{ sl
           Your seat is confirmed.
         </h1>
         <p className="text-lg md:text-xl leading-relaxed text-text-primary mb-8">
-          {event.title}. A confirmation with these details is on its way to your inbox.
+          {event.title}. <BookedSentTo slug={event.slug} contactEmail={event.contactEmail} />
         </p>
 
         <div className="p-6 rounded-2xl bg-surface-primary flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">

@@ -31,7 +31,20 @@ interface DodoPayment {
   customer?: { email?: string; name?: string } | null;
   product_cart?: { product_id: string }[] | null;
   metadata?: Record<string, unknown> | null;
+  /** Smallest currency unit (paise for INR), in the currency the buyer paid. */
+  total_amount?: number | null;
+  currency?: string | null;
 }
+
+/** '₹599.00' from 59900 + 'INR'. Empty when Dodo leaves either out. */
+const formatPaid = (amount?: number | null, currency?: string | null) => {
+  if (typeof amount !== 'number' || !currency) return '';
+  try {
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency }).format(amount / 100);
+  } catch {
+    return '';
+  }
+};
 
 export async function POST(request: Request) {
   const secret = process.env.DODO_PAYMENTS_WEBHOOK_KEY;
@@ -90,7 +103,15 @@ export async function POST(request: Request) {
     if (sent.error) throw new Error(sent.error.message);
 
     const ref = typeof payment.metadata?.ref === 'string' ? payment.metadata.ref : undefined;
-    const note = hostNotification(event, { name, email }, payment.payment_id, ref);
+    const note = hostNotification(
+      event,
+      { name, email },
+      payment.payment_id,
+      ref,
+      // Only trust Dodo's figure in the event's own currency; a converted
+      // settlement figure (e.g. USD) would misstate what the buyer paid.
+      payment.currency === event.currency ? formatPaid(payment.total_amount, payment.currency) : ''
+    );
     await resend.emails.send(
       {
         from: 'AIUX Design Guide <imran@aiuxdesign.guide>',

@@ -117,12 +117,15 @@ export function hostNotification(
   event: EventItem,
   customer: { name: string; email: string },
   paymentId: string,
-  ref?: string
+  ref?: string,
+  /** What was charged, e.g. '₹599.00'. Falls back to the event's listed price. */
+  amountLabel?: string
 ) {
   return {
     subject: `New booking: ${customer.name} for ${event.title}${ref ? ` (via ${ref})` : ''}`,
     text: [
       `${customer.name} <${customer.email}> booked ${event.title}.`,
+      `Paid: ${amountLabel || event.priceLabel}`,
       `Payment: ${paymentId}`,
       `Came from: ${ref || 'direct or untagged link'}`,
       `Confirmation email sent. Watch for their setup screenshot.`,

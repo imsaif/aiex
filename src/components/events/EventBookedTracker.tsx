@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { rememberBooking } from '@/components/events/useEventBooking';
+import { sentToKey, SENT_TO_CHANGED } from '@/components/events/BookedSentTo';
 
 /**
  * Runs once on /events/[slug]/booked, which is reached via the Dodo redirect.
@@ -14,6 +15,8 @@ import { rememberBooking } from '@/components/events/useEventBooking';
  *   "You're booked" on return.
  * - Strips Dodo's query string, which includes the buyer's email, from the
  *   address bar so it does not linger in history or get shared by accident.
+ *   The email is kept for this tab first, so BookedSentTo can show where the
+ *   confirmation went.
  */
 export function EventBookedTracker({ slug }: { slug: string }) {
   useEffect(() => {
@@ -22,6 +25,15 @@ export function EventBookedTracker({ slug }: { slug: string }) {
     const paymentId = url.searchParams.get('payment_id');
     if (paymentId && url.searchParams.get('status') === 'succeeded') {
       rememberBooking(slug, paymentId);
+    }
+    const email = url.searchParams.get('email');
+    if (email) {
+      try {
+        window.sessionStorage.setItem(sentToKey(slug), email);
+      } catch {
+        // Blocked storage: the page falls back to the generic line.
+      }
+      window.dispatchEvent(new Event(SENT_TO_CHANGED));
     }
     if (url.search) window.history.replaceState(null, '', url.pathname + url.hash);
   }, [slug]);
