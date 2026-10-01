@@ -64,6 +64,29 @@ function Cover({ event }: { event: EventItem }) {
   );
 }
 
+// Turns any link label that appears in the text into that link, so a host line
+// like "Founder of aiuxdesign.guide" links in place instead of repeating below.
+function linkify(text: string, links: { label: string; url: string }[] = []) {
+  if (links.length === 0) return text;
+  const pattern = new RegExp(`(${links.map((l) => l.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`);
+  return text.split(pattern).map((part, i) => {
+    const link = links.find((l) => l.label === part);
+    return link ? (
+      <a
+        key={i}
+        href={link.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-text-primary underline underline-offset-2 hover:text-accent-primary"
+      >
+        {part}
+      </a>
+    ) : (
+      part
+    );
+  });
+}
+
 // Every block on the page is the same box as the booking card: a heading strip
 // over a padded body, so content reads as grouped rather than floating.
 function Section({ title, children, className = 'mt-6' }: { title: string; children: React.ReactNode; className?: string }) {
@@ -112,25 +135,9 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 ) : (
                   <span className="font-medium text-text-primary">{event.host.name}</span>
                 )}
-                <p className="text-sm text-text-secondary">{event.host.role}</p>
+                <p className="text-sm text-text-secondary">{linkify(event.host.role, event.host.links)}</p>
               </div>
             </div>
-            {event.host.links && event.host.links.length > 0 && (
-              <ul className="mt-5 space-y-2">
-                {event.host.links.map((l) => (
-                  <li key={l.url}>
-                    <a
-                      href={l.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm font-medium text-text-primary underline underline-offset-2 hover:text-accent-primary"
-                    >
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
             <a
               href={`mailto:${event.contactEmail}?subject=${encodeURIComponent(event.title)}`}
               className="mt-4 inline-block text-sm text-text-secondary hover:text-accent-primary"
