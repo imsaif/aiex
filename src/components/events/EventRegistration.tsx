@@ -10,6 +10,7 @@ interface Props {
   seats?: number;
   paymentLink: string;
   calendarUrl: string;
+  finePrint?: string[];
 }
 
 /**
@@ -17,7 +18,7 @@ interface Props {
  * two halves of the metric live in one place: how many people reached the page,
  * and how many of those started checkout.
  */
-export function EventRegistration({ slug, open, priceLabel, seats, paymentLink, calendarUrl }: Props) {
+export function EventRegistration({ slug, open, priceLabel, seats, paymentLink, calendarUrl, finePrint = [] }: Props) {
   useEffect(() => {
     trackAuditEvent('event_page_viewed', { slug });
   }, [slug]);
@@ -58,6 +59,14 @@ export function EventRegistration({ slug, open, priceLabel, seats, paymentLink, 
         >
           Add to Google Calendar
         </a>
+
+        {finePrint.length > 0 && (
+          <ul className="mt-6 pt-5 border-t border-border-primary list-disc pl-5 space-y-2 text-sm leading-relaxed text-text-secondary">
+            {finePrint.map((f) => (
+              <li key={f}>{f}</li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

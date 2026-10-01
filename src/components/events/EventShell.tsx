@@ -5,15 +5,29 @@ import type { ReactNode } from 'react';
  * Event pages sit outside the guides and patterns: no site navbar or footer, so
  * the page reads as an event, not as another article. Only a slim top bar back
  * to the site and a one-line footer.
+ *
+ * `hero` renders on the event band (the cover's own ground colour) together with
+ * the top bar, so the cover blends into the page instead of sitting in a box.
  */
-export function EventShell({ children }: { children: ReactNode }) {
+export function EventShell({ hero, children }: { hero?: ReactNode; children: ReactNode }) {
+  const header = (
+    <header className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8 flex items-center justify-between">
+      <Link href="/" className="text-sm font-semibold text-text-primary hover:text-text-secondary">
+        aiux <span className="font-normal text-text-secondary">events</span>
+      </Link>
+    </header>
+  );
+
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
-      <header className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8 mb-4 md:mb-10 flex items-center justify-between">
-        <Link href="/" className="text-sm font-semibold text-text-primary hover:text-accent-primary">
-          aiux <span className="font-normal text-text-secondary">events</span>
-        </Link>
-      </header>
+      {hero ? (
+        <div className="bg-background-event">
+          {header}
+          {hero}
+        </div>
+      ) : (
+        <div className="mb-4 md:mb-10">{header}</div>
+      )}
       {children}
       <footer className="max-w-6xl mx-auto px-4 md:px-6 pt-16 pb-12 text-xs text-text-secondary">
         Hosted on aiuxdesign.guide

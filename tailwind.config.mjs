@@ -16,6 +16,8 @@ export default {
           console: 'var(--background-console)',
           rail: 'var(--background-rail)',
           scrim: 'var(--background-scrim)',
+          event: 'var(--background-event)',
+          'event-strong': 'var(--background-event-strong)',
         },
         surface: {
           primary: 'var(--surface-primary)',

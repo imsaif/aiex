@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import EventShell from '@/components/events/EventShell';
 import EventRegistration from '@/components/events/EventRegistration';
+import EventTimeline from '@/components/events/EventTimeline';
 import {
   EVENTS,
   getEvent,
@@ -109,54 +110,22 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const open = isRegistrationOpen(event);
   const mapQuery = event.venue ? encodeURIComponent(`${event.venue.name}, ${event.venue.address}`) : '';
 
-  return (
-    <EventShell>
-      {/* Phone order: cover, event, host. Desktop: cover and host on the left, event on the right. */}
-      <div className="max-w-6xl mx-auto px-4 md:px-6 pb-8 grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:grid-rows-[auto_1fr] md:gap-x-16 md:gap-y-10">
-        <div className="md:col-start-1 md:row-start-1">
-          <Cover event={event} />
-        </div>
+  const hero = (
+    <div className="max-w-6xl mx-auto px-4 md:px-6 pt-2 pb-12 md:pb-20 grid gap-8 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-16 items-start">
+      <Cover event={event} />
 
-        <aside className="order-last md:order-none md:col-start-1 md:row-start-2">
-          <Section title="Hosted by" className="">
-            <div className="flex items-center gap-3">
-              {event.host.photo ? (
-                <Image src={event.host.photo} alt={event.host.name} width={40} height={40} className="rounded-full object-cover" />
-              ) : (
-                <span className="w-10 h-10 rounded-full bg-accent-subtle text-accent-primary flex items-center justify-center text-sm font-semibold">
-                  {initials(event.host.name)}
-                </span>
-              )}
-              <div>
-                {event.host.url ? (
-                  <a href={event.host.url} target="_blank" rel="noopener noreferrer" className="font-medium text-text-primary hover:text-accent-primary">
-                    {event.host.name}
-                  </a>
-                ) : (
-                  <span className="font-medium text-text-primary">{event.host.name}</span>
-                )}
-                <p className="text-sm text-text-secondary">{linkify(event.host.role, event.host.links)}</p>
-              </div>
-            </div>
-            <a
-              href={`mailto:${event.contactEmail}?subject=${encodeURIComponent(event.title)}`}
-              className="mt-4 inline-block text-sm text-text-secondary hover:text-accent-primary"
-            >
-              Contact the host
-            </a>
-          </Section>
-        </aside>
+      <div className="min-w-0">
+        <h1 className="text-4xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-5" style={{ color: 'var(--text-hero)' }}>
+          {event.title}
+        </h1>
+        <p className="text-lg md:text-xl leading-relaxed text-text-primary mb-10">{event.tagline}</p>
 
-        {/* Right: what, when, where, details, then booking */}
-        <div className="min-w-0 md:col-start-2 md:row-start-1 md:row-span-2">
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-5" style={{ color: 'var(--text-hero)' }}>
-            {event.title}
-          </h1>
-          <p className="text-lg leading-relaxed text-text-secondary mb-8">{event.tagline}</p>
+        <EventTimeline event={event} />
 
-          <div className="space-y-5 p-6 rounded-2xl border border-border-primary bg-surface-primary">
+        <div className="mt-10 p-6 rounded-2xl bg-surface-primary flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary bg-surface-primary flex flex-col items-center justify-center leading-none">
+              <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary flex flex-col items-center justify-center leading-none">
                 <span className="text-[10px] font-semibold text-text-secondary">{month}</span>
                 <span className="text-lg font-bold text-text-primary">{dayNum}</span>
               </span>
@@ -166,7 +135,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary bg-surface-primary flex items-center justify-center text-text-secondary">
+              <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary flex items-center justify-center text-text-secondary">
                 {event.format === 'online' ? (
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="6" width="13" height="12" rx="2" /><path d="M16 10l5-3v10l-5-3" /></svg>
                 ) : (
@@ -187,17 +156,54 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 )}
               </div>
             </div>
-            <div className="pt-5 border-t border-border-primary">
-              <a
-                href="#book"
-                className="flex w-full sm:inline-flex sm:w-auto items-center justify-center px-6 py-3 rounded-xl font-medium bg-accent-primary text-text-on-accent hover:bg-accent-hover transition-colors"
-              >
-                Book your seat
-              </a>
-            </div>
           </div>
+          <a
+            href="#book"
+            className="flex w-full sm:w-auto shrink-0 items-center justify-center px-7 py-3.5 rounded-xl font-medium bg-accent-primary text-text-on-accent hover:bg-accent-hover transition-colors"
+          >
+            Book your seat
+          </a>
+        </div>
+      </div>
+    </div>
+  );
 
-          <Section title="About">
+  return (
+    <EventShell hero={hero}>
+      {/* Phone order: details, then host. Desktop: host on the left, details on the right. */}
+      <div className="max-w-6xl mx-auto px-4 md:px-6 pt-10 md:pt-14 grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-16 items-start">
+        <aside className="order-last md:order-none">
+          <Section title="Hosted by" className="">
+            <div className="flex items-center gap-3">
+              {event.host.photo ? (
+                <Image src={event.host.photo} alt={event.host.name} width={40} height={40} className="rounded-full object-cover" />
+              ) : (
+                <span className="w-10 h-10 shrink-0 rounded-full bg-background-event text-text-primary flex items-center justify-center text-sm font-semibold">
+                  {initials(event.host.name)}
+                </span>
+              )}
+              <div>
+                {event.host.url ? (
+                  <a href={event.host.url} target="_blank" rel="noopener noreferrer" className="font-medium text-text-primary hover:text-text-secondary">
+                    {event.host.name}
+                  </a>
+                ) : (
+                  <span className="font-medium text-text-primary">{event.host.name}</span>
+                )}
+                <p className="text-sm text-text-secondary">{linkify(event.host.role, event.host.links)}</p>
+              </div>
+            </div>
+            <a
+              href={`mailto:${event.contactEmail}?subject=${encodeURIComponent(event.title)}`}
+              className="mt-4 inline-block text-sm text-text-secondary hover:text-text-primary"
+            >
+              Contact the host
+            </a>
+          </Section>
+        </aside>
+
+        <div className="min-w-0">
+          <Section title="About" className="">
             <div className="space-y-5 leading-relaxed text-text-primary">
               {event.about.map((p) => (
                 <p key={p}>{p}</p>
@@ -217,22 +223,11 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </Section>
 
           <Section title="Who it is for">
-            <ul className="list-disc pl-5 space-y-3 leading-relaxed text-text-primary">
+            <ul className="space-y-3 leading-relaxed text-text-primary">
               {event.whoFor.map((w) => (
                 <li key={w}>{w}</li>
               ))}
             </ul>
-          </Section>
-
-          <Section title="Agenda">
-            <ol className="space-y-4">
-              {event.agenda.map((a) => (
-                <li key={a.time} className="flex gap-4">
-                  <span className="w-14 shrink-0 font-mono text-sm text-text-secondary pt-0.5">{a.time}</span>
-                  <span className="text-text-primary">{a.item}</span>
-                </li>
-              ))}
-            </ol>
           </Section>
 
           <Section title="What you will need">
@@ -251,16 +246,9 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               seats={event.seats}
               paymentLink={event.paymentLink}
               calendarUrl={googleCalendarUrl(event)}
+              finePrint={event.finePrint}
             />
           </div>
-
-          <Section title="The fine print">
-            <ul className="list-disc pl-5 space-y-3 leading-relaxed text-text-secondary text-sm">
-              {event.finePrint.map((f) => (
-                <li key={f}>{f}</li>
-              ))}
-            </ul>
-          </Section>
 
           <Section title="Location">
             {event.format === 'online' ? (

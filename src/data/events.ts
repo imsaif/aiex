@@ -61,7 +61,8 @@ export interface EventItem {
   about: string[];
   whyAttend: { title: string; body: string }[];
   whoFor: string[];
-  agenda: { time: string; item: string }[];
+  /** Each part of the session. Drawn as a timeline sized by duration, ending at `end`. */
+  agenda: { time: string; label: string; item: string }[];
   /** Said before the pay button: costs on top of the ticket belong here. */
   bring: string[];
   finePrint: string[];
@@ -107,15 +108,15 @@ export const EVENTS: EventItem[] = [
       { title: 'Help when you get stuck', body: 'A small group, so questions get answered as they come up.' },
     ],
     whoFor: [
-      'Designers and product people who want to build, not just prototype in Figma.',
+      'Designers who want to build, not just prototype in Figma.',
       'Developers new to Claude Code who want a guided first project.',
-      'Anyone who has installed Claude Code and not known what to do next.',
+      'Anyone who installed Claude Code and stalled on what to do next.',
     ],
     agenda: [
-      { time: '10:00', item: 'Welcome, and pick the feature each person will build' },
-      { time: '10:10', item: 'Plan it with Claude Code: brief, plan mode, agreeing the scope' },
-      { time: '10:25', item: 'Build session, with help as you go' },
-      { time: '11:15', item: 'Show what you built, and what to try next on your own' },
+      { time: '10:00', label: 'Kick off', item: 'Welcome, and pick the feature each person will build' },
+      { time: '10:10', label: 'Plan', item: 'Plan it with Claude Code: brief, plan mode, agreeing the scope' },
+      { time: '10:25', label: 'Build', item: 'Build it, with help as you go' },
+      { time: '11:15', label: 'Show', item: 'Show what you built, and what to try next on your own' },
     ],
     bring: [
       'Your own paid Claude plan (Pro or higher) or Anthropic API credits. Free Claude accounts cannot run Claude Code.',
@@ -164,3 +165,27 @@ export const googleCalendarUrl = (event: EventItem): string => {
   });
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };
+
+/** Minutes since midnight for an "HH:MM" agenda time. */
+const toMinutes = (hhmm: string) => {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+};
+
+/** Agenda parts with their length in minutes, the last one running to `end`. */
+export const agendaSegments = (event: EventItem) => {
+  const endLocal = new Intl.DateTimeFormat('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: TZ,
+  }).format(new Date(event.end));
+  const endMin = toMinutes(endLocal);
+  return event.agenda.map((a, i) => {
+    const next = i + 1 < event.agenda.length ? toMinutes(event.agenda[i + 1].time) : endMin;
+    return { ...a, minutes: next - toMinutes(a.time) };
+  });
+};
+
+export const totalMinutes = (event: EventItem) =>
+  Math.round((new Date(event.end).getTime() - new Date(event.start).getTime()) / 60000);
