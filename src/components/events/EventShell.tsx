@@ -1,54 +1,70 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import { RoughIconFilter } from '@/components/events/RoughIcon';
 import { eventTheme, type EventTheme } from '@/components/events/theme';
 
 /**
- * Event pages sit outside the guides and patterns: no site navbar or footer, so
- * the page reads as an event, not as another article. Only a slim top bar back
- * to the site and a one-line footer.
+ * Two levels of chrome:
  *
- * `hero` renders on the event band (the cover's own ground colour) together with
- * the top bar, so the cover blends into the page instead of sitting in a box.
+ * - `site`: the /events list is a site page, so it gets the full site navbar
+ *   and footer. Someone browsing events may well want the guides next.
+ * - default: an individual event page stays focused on booking. A slim bar
+ *   (Home · Guides · Events) gives the way back without a full menu competing
+ *   with the booking card, and the site footer sits at the very bottom.
+ *
+ * `hero` renders on the band (the event's theme colour, or the site's own) so
+ * the cover and title sit on one surface.
  */
 export function EventShell({
   hero,
   theme,
+  site = false,
   children,
 }: {
   hero?: ReactNode;
   /** Colour of the hero band. Site pages leave it unset (the site's own look). */
   theme?: EventTheme;
+  /** Full site navbar and footer, for site-level pages like the events list. */
+  site?: boolean;
   children: ReactNode;
 }) {
-  const header = (
+  const slimBar = (
     <header className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8 flex items-center justify-between">
-      <span className="text-sm">
-        <Link href="/" className="font-semibold text-text-primary hover:text-text-secondary">
-          aiux
-        </Link>{' '}
-        <Link href="/events" className="text-text-secondary hover:text-text-primary">
-          events
+      <Link href="/" className="text-sm font-semibold text-text-primary hover:text-text-secondary">
+        aiux
+      </Link>
+      <nav aria-label="Site" className="flex items-center gap-5 text-sm">
+        <Link href="/" className="text-text-secondary hover:text-text-primary">
+          Home
         </Link>
-      </span>
+        <Link href="/guides" className="text-text-secondary hover:text-text-primary">
+          Guides
+        </Link>
+        <Link href="/events" className="text-text-secondary hover:text-text-primary">
+          Events
+        </Link>
+      </nav>
     </header>
   );
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
       <RoughIconFilter />
+      {site && <Navbar />}
       {hero ? (
-        <div className={eventTheme(theme).band}>
-          {header}
+        <div className={`${eventTheme(theme).band} ${site ? 'pt-10 md:pt-14' : ''}`}>
+          {!site && slimBar}
           {hero}
         </div>
       ) : (
-        <div className="mb-4 md:mb-10">{header}</div>
+        !site && <div className="mb-4 md:mb-10">{slimBar}</div>
       )}
       {children}
-      <footer className="max-w-6xl mx-auto px-4 md:px-6 pt-16 pb-12 text-xs text-text-secondary">
-        Hosted on aiuxdesign.guide
-      </footer>
+      <div className="pt-16">
+        <Footer />
+      </div>
     </main>
   );
 }

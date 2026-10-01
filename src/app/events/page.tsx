@@ -86,7 +86,7 @@ export default function EventsPage() {
   );
 
   return (
-    <EventShell hero={hero}>
+    <EventShell hero={hero} site>
       <div className="max-w-4xl mx-auto px-4 md:px-6 pt-10 md:pt-14">
         <h2 className="text-sm font-medium text-text-secondary mb-4">Upcoming</h2>
         {upcoming.length > 0 ? (
