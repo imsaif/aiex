@@ -66,8 +66,8 @@ function Cover({ event }: { event: EventItem }) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-10">
-      <h2 className="text-sm font-medium text-text-secondary pb-2 mb-4 border-b border-border-primary">{title}</h2>
+    <section className="mt-14">
+      <h2 className="text-sm font-medium text-text-secondary pb-3 mb-6 border-b border-border-primary">{title}</h2>
       {children}
     </section>
   );
@@ -85,14 +85,14 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   return (
     <EventShell>
       {/* Phone order: cover, event, host. Desktop: cover and host on the left, event on the right. */}
-      <div className="max-w-6xl mx-auto px-4 md:px-6 pb-8 grid gap-8 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:grid-rows-[auto_1fr] md:gap-x-12 md:gap-y-6">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 pb-8 grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:grid-rows-[auto_1fr] md:gap-x-16 md:gap-y-10">
         <div className="md:col-start-1 md:row-start-1">
           <Cover event={event} />
         </div>
 
         <aside className="order-last md:order-none md:col-start-1 md:row-start-2">
           <div>
-            <h2 className="text-sm font-medium text-text-secondary pb-2 mb-3 border-b border-border-primary">Hosted by</h2>
+            <h2 className="text-sm font-medium text-text-secondary pb-3 mb-5 border-b border-border-primary">Hosted by</h2>
             <div className="flex items-center gap-3">
               {event.host.photo ? (
                 <Image src={event.host.photo} alt={event.host.name} width={40} height={40} className="rounded-full object-cover" />
@@ -123,12 +123,12 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
 
         {/* Right: what, when, where, details, then booking */}
         <div className="min-w-0 md:col-start-2 md:row-start-1 md:row-span-2">
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-3" style={{ color: 'var(--text-hero)' }}>
+          <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-5" style={{ color: 'var(--text-hero)' }}>
             {event.title}
           </h1>
-          <p className="text-lg text-text-secondary mb-6">{event.tagline}</p>
+          <p className="text-lg leading-relaxed text-text-secondary mb-8">{event.tagline}</p>
 
-          <div className="space-y-4 mb-6">
+          <div className="space-y-5 mb-10">
             <div className="flex items-center gap-4">
               <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary bg-surface-primary flex flex-col items-center justify-center leading-none">
                 <span className="text-[10px] font-semibold text-text-secondary">{month}</span>
@@ -171,7 +171,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </a>
 
           <Section title="About">
-            <div className="space-y-4 text-text-primary">
+            <div className="space-y-5 leading-relaxed text-text-primary">
               {event.about.map((p) => (
                 <p key={p}>{p}</p>
               ))}
@@ -179,7 +179,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </Section>
 
           <Section title="Why attend">
-            <ul className="space-y-3">
+            <ul className="space-y-4 leading-relaxed">
               {event.whyAttend.map((w) => (
                 <li key={w.title} className="text-text-primary">
                   <span className="font-semibold">{w.title}.</span>{' '}
@@ -190,7 +190,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </Section>
 
           <Section title="Who it is for">
-            <ul className="list-disc pl-5 space-y-2 text-text-primary">
+            <ul className="list-disc pl-5 space-y-3 leading-relaxed text-text-primary">
               {event.whoFor.map((w) => (
                 <li key={w}>{w}</li>
               ))}
@@ -198,7 +198,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </Section>
 
           <Section title="Agenda">
-            <ol className="space-y-3">
+            <ol className="space-y-4">
               {event.agenda.map((a) => (
                 <li key={a.time} className="flex gap-4">
                   <span className="w-14 shrink-0 font-mono text-sm text-text-secondary pt-0.5">{a.time}</span>
@@ -209,14 +209,14 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </Section>
 
           <Section title="What you will need">
-            <ul className="list-disc pl-5 space-y-2 text-text-primary">
+            <ul className="list-disc pl-5 space-y-3 leading-relaxed text-text-primary">
               {event.bring.map((b) => (
                 <li key={b}>{b}</li>
               ))}
             </ul>
           </Section>
 
-          <div id="book" className="mt-10 scroll-mt-6">
+          <div id="book" className="mt-14 scroll-mt-8">
             <EventRegistration
               slug={event.slug}
               open={open}
@@ -228,7 +228,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </div>
 
           <Section title="The fine print">
-            <ul className="list-disc pl-5 space-y-2 text-text-secondary text-sm">
+            <ul className="list-disc pl-5 space-y-3 leading-relaxed text-text-secondary text-sm">
               {event.finePrint.map((f) => (
                 <li key={f}>{f}</li>
               ))}

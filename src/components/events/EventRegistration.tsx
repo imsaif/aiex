@@ -24,17 +24,17 @@ export function EventRegistration({ slug, open, priceLabel, seats, paymentLink, 
 
   return (
     <div className="rounded-2xl border border-border-primary bg-surface-primary overflow-hidden">
-      <div className="px-5 py-3 text-sm font-medium text-text-secondary bg-background-secondary border-b border-border-primary">
+      <div className="px-6 py-4 text-sm font-medium text-text-secondary bg-background-secondary border-b border-border-primary">
         Book your seat
       </div>
-      <div className="p-5">
+      <div className="p-6 md:p-7">
         <div className="flex items-baseline justify-between mb-1">
           <span className="text-2xl font-bold text-text-primary">
             {priceLabel} <span className="text-base font-normal text-text-secondary">per seat</span>
           </span>
           {seats ? <span className="text-sm text-text-secondary">Limited to {seats}</span> : null}
         </div>
-        <p className="text-sm text-text-secondary mb-5">
+        <p className="text-sm leading-relaxed text-text-secondary mt-2 mb-6">
           {open
             ? 'Includes the live session and help getting Claude Code set up before the day.'
             : 'Booking opens soon. Check back shortly.'}
