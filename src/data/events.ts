@@ -62,6 +62,9 @@ export interface EventItem {
   venue?: EventVenue;
   /** Keep in sync with the amount on the Dodo link. */
   priceLabel: string;
+  /** Same price as a number and ISO currency, for Google's event listing. */
+  price: number;
+  currency: string;
   /** Shown as a limit. Dodo links do not cap quantity, so closing early is manual. */
   seats?: number;
   /** Dodo Static Payment Link. Empty keeps registration closed. */
@@ -115,6 +118,8 @@ export const EVENTS: EventItem[] = [
       area: 'Gachibowli, Hyderabad',
     },
     priceLabel: '₹599',
+    price: 599,
+    currency: 'INR',
     seats: 24,
     // Public checkout URL: the event tag lets the webhook match the payment, and
     // redirect_url lands buyers on the setup page after paying.

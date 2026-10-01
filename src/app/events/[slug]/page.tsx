@@ -117,6 +117,46 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   const open = isRegistrationOpen(event);
   const mapQuery = event.venue ? encodeURIComponent(`${event.venue.name}, ${event.venue.address}`) : '';
 
+  // Lets Google show this as an event (date, venue, price) in search. Mirrors
+  // the visible page; schema.org/Event.
+  const site = 'https://www.aiuxdesign.guide';
+  const eventJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    description: event.tagline,
+    startDate: event.start,
+    endDate: event.end,
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode:
+      event.format === 'online'
+        ? 'https://schema.org/OnlineEventAttendanceMode'
+        : 'https://schema.org/OfflineEventAttendanceMode',
+    location:
+      event.format === 'online'
+        ? { '@type': 'VirtualLocation', url: `${site}/events/${event.slug}` }
+        : {
+            '@type': 'Place',
+            name: event.venue?.name,
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: event.venue?.address,
+              addressLocality: 'Hyderabad',
+              addressRegion: 'Telangana',
+              addressCountry: 'IN',
+            },
+          },
+    ...(event.coverImage ? { image: [`${site}${event.coverImage}`] } : {}),
+    organizer: { '@type': 'Person', name: event.host.name, url: event.host.url ?? site },
+    offers: {
+      '@type': 'Offer',
+      url: `${site}/events/${event.slug}`,
+      price: String(event.price),
+      priceCurrency: event.currency,
+      availability: 'https://schema.org/InStock',
+    },
+  };
+
   const hero = (
     <div className="max-w-6xl mx-auto px-4 md:px-6 pt-2 pb-12 md:pb-20 grid gap-8 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-16 items-start">
       <EventCover event={event} />
@@ -173,6 +213,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   return (
     <EventShell hero={hero}>
       <BookingLinkCatcher slug={event.slug} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />
       {/* Phone order: details, then host. Desktop: host on the left, details on the right. */}
       <div className="max-w-6xl mx-auto px-4 md:px-6 pt-10 md:pt-14 grid gap-10 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-16 items-start">
         <aside className="order-last md:order-none">

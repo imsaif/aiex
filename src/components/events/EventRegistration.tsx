@@ -5,6 +5,7 @@ import { TicketIcon } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import RoughIcon from '@/components/events/RoughIcon';
 import { useEventBooking } from '@/components/events/useEventBooking';
+import { useEventRef } from '@/components/events/useEventRef';
 
 interface Props {
   slug: string;
@@ -23,9 +24,12 @@ interface Props {
  */
 export function EventRegistration({ slug, open, priceLabel, seats, paymentLink, calendarUrl, finePrint = [] }: Props) {
   const booked = useEventBooking(slug);
+  const { ref, ready } = useEventRef();
+  // Fires once, after the channel has been read (empty = direct or untagged).
   useEffect(() => {
-    trackAuditEvent('event_page_viewed', { slug });
-  }, [slug]);
+    if (ready) trackAuditEvent('event_page_viewed', { slug, ref: ref || 'direct' });
+  }, [slug, ref, ready]);
+  const checkoutUrl = ref ? `${paymentLink}&metadata_ref=${encodeURIComponent(ref)}` : paymentLink;
 
   if (booked) {
     return (
@@ -79,8 +83,8 @@ export function EventRegistration({ slug, open, priceLabel, seats, paymentLink, 
 
         {open && (
           <a
-            href={paymentLink}
-            onClick={() => trackAuditEvent('event_checkout_clicked', { slug })}
+            href={checkoutUrl}
+            onClick={() => trackAuditEvent('event_checkout_clicked', { slug, ref: ref || 'direct' })}
             className="flex w-full items-center justify-center px-6 py-3.5 rounded-xl font-medium bg-accent-primary text-text-on-accent hover:bg-accent-hover transition-colors"
           >
             Book your seat

@@ -113,12 +113,18 @@ export function bookingEmail(
 }
 
 /** Short heads-up to the host for every booking, which doubles as a seat count. */
-export function hostNotification(event: EventItem, customer: { name: string; email: string }, paymentId: string) {
+export function hostNotification(
+  event: EventItem,
+  customer: { name: string; email: string },
+  paymentId: string,
+  ref?: string
+) {
   return {
-    subject: `New booking: ${customer.name} for ${event.title}`,
+    subject: `New booking: ${customer.name} for ${event.title}${ref ? ` (via ${ref})` : ''}`,
     text: [
       `${customer.name} <${customer.email}> booked ${event.title}.`,
       `Payment: ${paymentId}`,
+      `Came from: ${ref || 'direct or untagged link'}`,
       `Confirmation email sent. Watch for their setup screenshot.`,
     ].join('\n'),
   };

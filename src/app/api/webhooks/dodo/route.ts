@@ -89,7 +89,8 @@ export async function POST(request: Request) {
     );
     if (sent.error) throw new Error(sent.error.message);
 
-    const note = hostNotification(event, { name, email }, payment.payment_id);
+    const ref = typeof payment.metadata?.ref === 'string' ? payment.metadata.ref : undefined;
+    const note = hostNotification(event, { name, email }, payment.payment_id, ref);
     await resend.emails.send(
       {
         from: 'AIUX Design Guide <imran@aiuxdesign.guide>',
