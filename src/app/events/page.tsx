@@ -7,12 +7,12 @@ import RoughIcon from '@/components/events/RoughIcon';
 import { EVENTS, formatEventDate, type EventItem } from '@/data/events';
 
 export const metadata: Metadata = {
-  title: 'Events | Hands-on Claude Code sessions',
-  description: 'Small, hands-on sessions where you build with Claude Code on your own project, with help when you get stuck.',
+  title: 'Events | Hands-on sessions with AI design and build tools',
+  description: 'Small, hands-on sessions where you build with the AI tools from our guides, on your own project, with help when you get stuck.',
   alternates: { canonical: 'https://www.aiuxdesign.guide/events' },
   openGraph: {
     title: 'Events | aiuxdesign.guide',
-    description: 'Small, hands-on Claude Code sessions in Hyderabad and online.',
+    description: 'Small, hands-on sessions with the AI tools from our guides, in Hyderabad and online.',
     url: 'https://www.aiuxdesign.guide/events',
     siteName: 'aiuxdesign.guide',
     type: 'website',
@@ -30,7 +30,7 @@ function EventRow({ event, past }: { event: EventItem; past: boolean }) {
       href={`/events/${event.slug}`}
       className="group flex flex-col sm:flex-row gap-5 p-4 rounded-2xl border border-border-primary bg-surface-primary hover:border-text-secondary transition-colors"
     >
-      <div className="relative w-full sm:w-44 shrink-0 aspect-square overflow-hidden rounded-xl bg-background-event">
+      <div className="relative w-full sm:w-44 shrink-0 aspect-square overflow-hidden rounded-xl bg-background-secondary">
         {event.coverImage && (
           <Image
             src={event.coverImage}
@@ -52,6 +52,9 @@ function EventRow({ event, past }: { event: EventItem; past: boolean }) {
             <p className="text-sm text-text-secondary">{timeRange}</p>
           </div>
         </div>
+        <span className="self-start px-2.5 py-1 rounded-full text-xs font-medium border border-border-primary text-text-secondary">
+          {event.tool}
+        </span>
         <h2 className="text-xl md:text-2xl font-bold leading-snug text-text-primary group-hover:underline underline-offset-4">
           {event.title}
         </h2>
@@ -77,7 +80,7 @@ export default function EventsPage() {
         Events
       </h1>
       <p className="max-w-2xl text-lg md:text-xl leading-relaxed text-text-primary">
-        Small, hands-on sessions where you build with Claude Code on your own project, with help when you get stuck.
+        Small, hands-on sessions where you build with the AI tools from our guides, on your own project, with help when you get stuck.
       </p>
     </div>
   );

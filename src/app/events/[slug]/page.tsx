@@ -11,6 +11,7 @@ import {
   VideoCameraIcon,
 } from '@heroicons/react/24/outline';
 import RoughIcon from '@/components/events/RoughIcon';
+import { eventTheme } from '@/components/events/theme';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import EventShell from '@/components/events/EventShell';
@@ -208,14 +209,14 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               </div>
             </div>
           </div>
-          <HeroBookingAction slug={event.slug} />
+          <HeroBookingAction slug={event.slug} theme={event.theme} />
         </div>
       </div>
     </div>
   );
 
   return (
-    <EventShell hero={hero}>
+    <EventShell hero={hero} theme={event.theme}>
       <BookingLinkCatcher slug={event.slug} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }} />
       {/* Phone order: details, then host. Desktop: host on the left, details on the right. */}
@@ -226,7 +227,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
               {event.host.photo ? (
                 <Image src={event.host.photo} alt={event.host.name} width={40} height={40} className="rounded-full object-cover" />
               ) : (
-                <span className="w-10 h-10 shrink-0 rounded-full bg-background-event text-text-primary flex items-center justify-center text-sm font-semibold">
+                <span className={`w-10 h-10 shrink-0 rounded-full ${eventTheme(event.theme).soft} text-text-primary flex items-center justify-center text-sm font-semibold`}>
                   {initials(event.host.name)}
                 </span>
               )}

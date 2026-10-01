@@ -19,6 +19,8 @@
 
 export type EventFormat = 'online' | 'in-person';
 
+import type { EventTheme } from '@/components/events/theme';
+
 export interface EventHost {
   name: string;
   role: string;
@@ -39,6 +41,8 @@ export interface EventVenue {
 export interface EventItem {
   slug: string;
   title: string;
+  /** The tool the session teaches, as named in the guides (Claude Code, Cursor, Claude Design...). Shown on the events list. */
+  tool: string;
   /** One line under the title. */
   tagline: string;
   /** Path under /public, ideally square (1080x1080). A typographic cover is drawn when absent. */
@@ -56,6 +60,8 @@ export interface EventItem {
   start: string;
   end: string;
   format: EventFormat;
+  /** Colour theme of the event page; the subject's look (e.g. 'claude'). Defaults to the site's own. */
+  theme?: EventTheme;
   /** For online events: what the call runs on. */
   platform?: string;
   /** For in-person events. */
@@ -91,6 +97,7 @@ export interface EventItem {
 export const EVENTS: EventItem[] = [
   {
     slug: 'claude-code-hands-on-oct-10',
+    tool: 'Claude Code',
     title: 'Claude Code, Hands-On: Build a Real Feature',
     tagline: 'Build one working feature on your own project in 90 minutes, with help when you get stuck.',
     start: '2026-10-10T10:00:00+05:30',
@@ -111,6 +118,7 @@ export const EVENTS: EventItem[] = [
       ],
     },
     format: 'in-person',
+    theme: 'claude',
     // TODO(Imran): replace with the exact street address once confirmed.
     venue: {
       name: '@Work Gachibowli',

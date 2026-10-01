@@ -6,6 +6,7 @@ import EventShell from '@/components/events/EventShell';
 import EventCover from '@/components/events/EventCover';
 import EventBookedTracker from '@/components/events/EventBookedTracker';
 import RoughIcon from '@/components/events/RoughIcon';
+import { eventTheme } from '@/components/events/theme';
 import { EVENTS, getEvent, formatEventDate, googleCalendarUrl } from '@/data/events';
 
 // The Dodo link's redirect_url points here. Reached after booking, so it stays
@@ -124,7 +125,7 @@ export default async function EventBookedPage({ params }: { params: Promise<{ sl
   );
 
   return (
-    <EventShell hero={hero}>
+    <EventShell hero={hero} theme={event.theme}>
       <EventBookedTracker slug={event.slug} />
       <div className="max-w-3xl mx-auto px-4 md:px-6 pt-10 md:pt-14">
         <section className="rounded-2xl border border-border-primary bg-surface-primary overflow-hidden">
@@ -139,7 +140,7 @@ export default async function EventBookedPage({ params }: { params: Promise<{ sl
             <ol className="space-y-6">
               {steps.map((step, i) => (
                 <li key={step.title} className="flex gap-4">
-                  <span className="w-8 h-8 shrink-0 rounded-full bg-background-event text-text-primary flex items-center justify-center text-sm font-semibold">
+                  <span className={`w-8 h-8 shrink-0 rounded-full ${eventTheme(event.theme).soft} text-text-primary flex items-center justify-center text-sm font-semibold`}>
                     {i + 1}
                   </span>
                   <div>

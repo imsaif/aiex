@@ -1,4 +1,5 @@
 import { agendaSegments, totalMinutes, type EventItem } from '@/data/events';
+import { eventTheme } from '@/components/events/theme';
 
 /**
  * The session drawn to scale: one bar, split by how long each part takes. The
@@ -8,6 +9,7 @@ import { agendaSegments, totalMinutes, type EventItem } from '@/data/events';
 export function EventTimeline({ event }: { event: EventItem }) {
   const segments = agendaSegments(event);
   const longest = Math.max(...segments.map((s) => s.minutes));
+  const { strong } = eventTheme(event.theme);
 
   return (
     <div>
@@ -16,7 +18,7 @@ export function EventTimeline({ event }: { event: EventItem }) {
         {segments.map((s) => (
           <span
             key={s.time}
-            className={`rounded-full ${s.minutes === longest ? 'bg-accent-primary' : 'bg-background-event-strong'}`}
+            className={`rounded-full ${s.minutes === longest ? 'bg-accent-primary' : strong}`}
             style={{ flexGrow: s.minutes, flexBasis: 0 }}
           />
         ))}
