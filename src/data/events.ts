@@ -102,7 +102,13 @@ export const EVENTS: EventItem[] = [
     },
     priceLabel: '₹599',
     seats: 24,
-    paymentLink: process.env.NEXT_PUBLIC_DODO_WORKSHOP_LINK ?? '',
+    // Public checkout URL: the event tag lets the webhook match the payment, and
+    // redirect_url lands buyers on the setup page after paying.
+    paymentLink:
+      'https://checkout.dodopayments.com/buy/pdt_0Nomwsk4JuVGedtPxubYL?quantity=1' +
+      '&redirect_url=' + encodeURIComponent('https://www.aiuxdesign.guide/events/claude-code-hands-on-oct-10/booked') +
+      '&metadata_event=claude-code-hands-on-oct-10',
+    dodoProductId: 'pdt_0Nomwsk4JuVGedtPxubYL',
     host: {
       name: 'Imran Mohammed',
       role: 'Founder of aiuxdesign.guide and designwithclaude.com',
