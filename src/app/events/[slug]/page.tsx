@@ -15,7 +15,7 @@ import { notFound } from 'next/navigation';
 import EventShell from '@/components/events/EventShell';
 import EventRegistration from '@/components/events/EventRegistration';
 import EventTimeline from '@/components/events/EventTimeline';
-import EventCoverAnimated from '@/components/events/EventCoverAnimated';
+import EventCover from '@/components/events/EventCover';
 import {
   EVENTS,
   getEvent,
@@ -57,32 +57,6 @@ const initials = (name: string) =>
     .join('')
     .slice(0, 2)
     .toUpperCase();
-
-function Cover({ event }: { event: EventItem }) {
-  if (event.coverLayers) {
-    return <EventCoverAnimated title={event.title} lines={event.coverLayers.lines} dots={event.coverLayers.dots} />;
-  }
-  if (event.coverImage) {
-    return (
-      // Framed in the same white card as the date box, so it sits on the band as
-      // an object rather than dissolving into it.
-      <div className="p-3 rounded-2xl bg-surface-primary">
-        <div className="relative aspect-square w-full overflow-hidden rounded-xl">
-          <Image src={event.coverImage} alt={event.title} fill className="object-cover" priority />
-        </div>
-      </div>
-    );
-  }
-  // Typographic cover until a real image is supplied.
-  return (
-    <div className="aspect-square w-full rounded-2xl bg-accent-primary text-text-on-accent p-8 flex flex-col justify-between">
-      <span className="text-sm font-medium opacity-80">
-        {event.format === 'online' ? 'Online workshop' : 'Workshop'}
-      </span>
-      <span className="text-3xl md:text-4xl font-bold leading-tight">{event.title}</span>
-    </div>
-  );
-}
 
 // Turns any link label that appears in the text into that link, so a host line
 // like "Founder of aiuxdesign.guide" links in place instead of repeating below.
@@ -142,7 +116,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
 
   const hero = (
     <div className="max-w-6xl mx-auto px-4 md:px-6 pt-2 pb-12 md:pb-20 grid gap-8 md:grid-cols-[minmax(0,340px)_minmax(0,1fr)] md:gap-x-16 items-start">
-      <Cover event={event} />
+      <EventCover event={event} />
 
       <div className="min-w-0">
         <h1 className="text-4xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-5" style={{ color: 'var(--text-hero)' }}>
