@@ -102,7 +102,7 @@ export const EVENTS: EventItem[] = [
       title: 'From the last session, 19 September',
       items: [
         { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-teaching.webp', alt: 'The host explaining the plan to the room while attendees work on their laptops' },
-        { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-hands.webp', alt: 'Close-up of hands pointing at code on a laptop screen' },
+        { src: '/images/events/claude-code-hands-on-oct-10/photos/claude-code-terminal.webp', alt: 'Claude Code open in a terminal, ready for a first prompt' },
         { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-helping.webp', alt: 'Attendees working side by side on their own laptops' },
         { src: '/images/events/claude-code-hands-on-oct-10/photos/sep-19-building.webp', alt: 'Someone working on a laptop, with attendees building in the background' },
       ],
