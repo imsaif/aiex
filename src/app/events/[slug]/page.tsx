@@ -64,11 +64,15 @@ function Cover({ event }: { event: EventItem }) {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+// Every block on the page is the same box as the booking card: a heading strip
+// over a padded body, so content reads as grouped rather than floating.
+function Section({ title, children, className = 'mt-6' }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <section className="mt-14">
-      <h2 className="text-sm font-medium text-text-secondary pb-3 mb-6 border-b border-border-primary">{title}</h2>
-      {children}
+    <section className={`${className} rounded-2xl border border-border-primary bg-surface-primary overflow-hidden`}>
+      <h2 className="px-6 py-4 text-sm font-medium text-text-secondary bg-background-secondary border-b border-border-primary">
+        {title}
+      </h2>
+      <div className="p-6 md:p-7">{children}</div>
     </section>
   );
 }
@@ -91,8 +95,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         </div>
 
         <aside className="order-last md:order-none md:col-start-1 md:row-start-2">
-          <div>
-            <h2 className="text-sm font-medium text-text-secondary pb-3 mb-5 border-b border-border-primary">Hosted by</h2>
+          <Section title="Hosted by" className="">
             <div className="flex items-center gap-3">
               {event.host.photo ? (
                 <Image src={event.host.photo} alt={event.host.name} width={40} height={40} className="rounded-full object-cover" />
@@ -118,7 +121,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             >
               Contact the host
             </a>
-          </div>
+          </Section>
         </aside>
 
         {/* Right: what, when, where, details, then booking */}
@@ -128,7 +131,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           </h1>
           <p className="text-lg leading-relaxed text-text-secondary mb-8">{event.tagline}</p>
 
-          <div className="space-y-5 mb-10">
+          <div className="space-y-5 mb-8 p-6 rounded-2xl border border-border-primary bg-surface-primary">
             <div className="flex items-center gap-4">
               <span className="w-12 h-12 shrink-0 rounded-xl border border-border-primary bg-surface-primary flex flex-col items-center justify-center leading-none">
                 <span className="text-[10px] font-semibold text-text-secondary">{month}</span>
@@ -216,7 +219,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             </ul>
           </Section>
 
-          <div id="book" className="mt-14 scroll-mt-8">
+          <div id="book" className="mt-6 scroll-mt-8">
             <EventRegistration
               slug={event.slug}
               open={open}

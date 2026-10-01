@@ -8,7 +8,7 @@ import type { ReactNode } from 'react';
  */
 export function EventShell({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-screen bg-background-secondary text-text-primary">
+    <main className="min-h-screen bg-background-primary text-text-primary">
       <header className="max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-8 mb-4 md:mb-10 flex items-center justify-between">
         <Link href="/" className="text-sm font-semibold text-text-primary hover:text-accent-primary">
           aiux <span className="font-normal text-text-secondary">events</span>
