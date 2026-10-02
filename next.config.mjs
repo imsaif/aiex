@@ -181,6 +181,11 @@ const nextConfig = {
       // Cursor course rewrite (Oct 2026): lesson URLs are slugs of lesson titles,
       // so a retitled lesson keeps its old address alive here.
       {
+        source: '/guides/cursor-learning-path/convert-designs-to-components',
+        destination: '/guides/cursor-learning-path/from-figma-frame-to-working-code',
+        permanent: true,
+      },
+      {
         source: '/guides/cursor-learning-path/customize-your-workspace',
         destination: '/guides/cursor-learning-path/teach-cursor-your-design-system-with-rules',
         permanent: true,
