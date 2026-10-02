@@ -181,6 +181,11 @@ const nextConfig = {
       // Cursor course rewrite (Oct 2026): lesson URLs are slugs of lesson titles,
       // so a retitled lesson keeps its old address alive here.
       {
+        source: '/guides/cursor-learning-path/navigate-the-interface',
+        destination: '/guides/cursor-learning-path/find-your-way-agents-window-and-editor',
+        permanent: true,
+      },
+      {
         source: '/guides/cursor-learning-path/build-with-composer',
         destination: '/guides/cursor-learning-path/edit-your-prototype-with-design-mode',
         permanent: true,

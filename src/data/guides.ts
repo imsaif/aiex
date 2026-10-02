@@ -2547,174 +2547,136 @@ export const guides: Guide[] = [
       },
       {
         id: 'lesson-2',
-        title: 'Navigate the Interface',
-        duration: 2,
+        title: 'Find Your Way: Agents Window and Editor',
+        duration: 5,
         order: 2,
         module: 'setup',
         sections: [
           {
             type: 'intro',
-            content: 'Cursor looks and feels like VS Code—because it\'s built on it. But it adds AI tools you won\'t find anywhere else. Let\'s explore where everything is.',
-            icon: 'compass',
+            content: 'Cursor has two windows. The Agents Window is where you talk to the agent and see your app running. The editor is the classic code view. You will spend most of this course in the first one.',
+            icon: 'book',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'The Main Layout',
+            content: 'The Agents Window',
           },
           {
             type: 'text',
-            content: 'When you open Cursor, you\'ll see the familiar VS Code layout. The interface has these main areas:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Left Sidebar**: File explorer, search, Git, and extensions',
-              '**Main Editor**: Where your code lives. Open multiple files in tabs.',
-              '**Right Side Panels**: Chat panel (AI assistant) and other tools',
-              '**Bottom Panel**: Terminal, problems, output, and debug info',
-            ],
+            content: 'This is what opens when you start Cursor. It is built around one thing: describing what you want and watching the agent do it.',
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-2/cursor-interface-layout.png',
-            alt: 'Cursor interface layout showing sidebar, editor, chat panel, and terminal areas with labeled annotations',
-            label: 'Overview of the main Cursor interface with AI-specific elements highlighted',
+            src: '/images/guides/cursor-learning-path/lesson-2/agents-window.webp',
+            alt: 'The Cursor Agents Window: a sidebar with New Chat, Search, Automations, Customize, Projects and Repositories on the left, and a prompt box in the middle with the project, branch and This Mac selected above it',
+            label: 'The Agents Window, with a project selected above the prompt box',
           },
           {
-            type: 'heading',
-            level: 'h3',
-            content: 'AI-Specific Elements',
-          },
-          {
-            type: 'text',
-            content: 'Cursor adds special UI elements for AI features. Here\'s what\'s unique:',
-          },
-          {
-            type: 'heading',
-            level: 'h4',
-            content: 'The Chat Panel (Right Side)',
-          },
-          {
-            type: 'text',
-            content: 'This is your AI assistant. Open it with Cmd+L (Mac) or Ctrl+L (Windows). Ask questions, explain errors, or get code suggestions. You can close and reopen it anytime.',
-          },
-          {
-            type: 'heading',
-            level: 'h4',
-            content: 'The Prompt Bars',
-          },
-          {
-            type: 'text',
-            content: 'Three quick ways to invoke AI:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Cmd+L (Chat)**: Ask AI a question in the Chat panel',
-              '**Cmd+K (Inline Edit)**: Highlight code and press Cmd+K to edit it with natural language',
-              '**Tab (Autocomplete)**: Start typing and the AI suggests the next line(s)',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h4',
-            content: 'Composer (Cmd+I)',
-          },
-          {
-            type: 'text',
-            content: 'This is your multi-file AI editor. It can create or modify multiple files at once. Opens as a floating window or full-screen mode. Perfect for generating entire components or features.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Essential Keyboard Shortcuts',
-          },
-          {
-            type: 'text',
-            content: 'Memorizing these will supercharge your workflow:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Cmd+L** (Mac) / **Ctrl+L** (Windows): Open Chat panel',
-              '**Cmd+K** / **Ctrl+K**: Inline edit with AI (highlight code first)',
-              '**Cmd+I** / **Ctrl+I**: Open Composer (floating)',
-              '**Cmd+Shift+I** / **Ctrl+Shift+I**: Open Composer (full-screen)',
-              '**Cmd+Enter** / **Ctrl+Enter**: Give AI your full codebase as context',
-              '**Cmd+P** / **Ctrl+P**: Quick file search and navigation',
-              '**Cmd+/** / **Ctrl+/**: Toggle comment on selected code',
-              '**Tab**: Accept autocomplete suggestion',
-              '**Escape**: Reject autocomplete or close panels',
+            type: 'table',
+            rows: [
+              { label: 'Sidebar', content: 'New Chat starts a conversation. Search finds past ones. Customize holds rules, skills and plugins. Repositories lists your projects, each with its chats underneath.' },
+              { label: 'Above the prompt', content: 'Three menus: which project, which branch, and where the agent runs. **This Mac** means on your computer.' },
+              { label: 'The prompt box', content: 'Type what you want. Type **/** for skills or **@** to point at a file. The model name sits underneath, and the mic lets you speak instead of type.' },
+              { label: 'Quick starts', content: '**Plan New Idea** (or Shift+Tab) plans before building. Suggestions such as Build from a design and Start with a plan set up a first message for you.' },
             ],
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'File Explorer (Left Sidebar)',
-          },
-          {
-            type: 'text',
-            content: 'This works just like VS Code. Browse your project files, create folders and files, and drag to organize. The top button opens a folder or creates a new project.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Terminal (Bottom)',
-          },
-          {
-            type: 'text',
-            content: 'Click the Terminal tab at the bottom to open the command line. You can run commands, start a dev server, or commit to Git. Press Ctrl+K (or Cmd+K) in the terminal to ask AI to generate a command.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Opening a Project',
-          },
-          {
-            type: 'text',
-            content: 'To start working:',
+            content: 'Open your project',
           },
           {
             type: 'steps',
             steps: [
-              {
-                number: 1,
-                title: 'File menu',
-                content: 'Click File → Open Folder',
-                icon: 'folder',
-              },
-              {
-                number: 2,
-                title: 'Choose your project',
-                content: 'Navigate to where your code lives on your computer',
-                icon: 'search',
-              },
-              {
-                number: 3,
-                title: 'Click Open',
-                content: 'Cursor loads your project and shows all files in the left sidebar',
-                icon: 'check',
-              },
+              { number: 1, title: 'Add it to Repositories', content: 'Click the folder icon with a plus next to Repositories, then type your project\'s name and pick it.' },
+              { number: 2, title: 'If it is not listed', content: 'A brand-new folder may not show up yet. Use **File → Open Folder** in the menu bar and choose it once. After that it appears under Repositories.' },
+              { number: 3, title: 'Select it', content: 'Pick the project in the menu above the prompt box. Everything you ask now happens in that project.' },
             ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Once the agent is working',
+          },
+          {
+            type: 'text',
+            content: 'After your first message the window splits. The conversation sits on the left. On the right, tabs show **Changes** (every file the agent edited) and a browser with your app. Under the conversation, buttons open the **Terminal**, **Design Mode** and **Commit & Push**, and a box takes your next message.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The editor',
+          },
+          {
+            type: 'text',
+            content: 'The editor is Cursor\'s classic view: your files on the left, the code in the middle, and the agent in a panel on the right. Use it when you want to read or tweak code yourself. Tab completions and inline edits (lessons 4 and 6) live here.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-2/editor.webp',
+            alt: 'The Cursor editor: a file tree on the left, an empty code area in the middle listing shortcuts, and the agent panel on the right with the Agent mode menu and the model name',
+            label: 'The editor, with the agent panel on the right',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Switching between them',
+          },
+          {
+            type: 'list',
+            items: [
+              '**To the editor:** click **IDE** at the top right of the Agents Window. It opens your current project in the editor.',
+              '**Back to the Agents Window:** both windows stay open. Pick it from the **Window** menu, or press **Cmd+`** (backtick) to move between Cursor windows.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Same keys, different jobs',
+          },
+          {
+            type: 'text',
+            content: 'A few shortcuts do different things depending on which window you are in. This catches people out early.',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Cmd+K', content: 'In the editor: edit the selected code by describing the change. In the Agents Window: search.' },
+              { label: 'Cmd+L', content: 'In the editor: open the agent panel. In Design Mode: add the selected element to the chat.' },
+              { label: 'Cmd+Shift+D', content: 'Turns Design Mode on and off. It only works in the Agents Window browser.' },
+            ],
+          },
+          {
+            type: 'list',
+            items: [
+              '**Cmd+N:** new chat',
+              '**Cmd+P:** find a file by name',
+              '**Cmd+J:** show the terminal (editor)',
+              '**Shift+Tab:** switch the agent between modes (lesson 5)',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'On Windows, use Ctrl in place of Cmd.',
           },
           {
             type: 'callout',
-            calloutType: 'info',
+            calloutType: 'success',
             title: 'Pro Tip',
-            content: 'You can also drag a folder onto the Cursor icon in your dock (Mac) or taskbar (Windows) to open it instantly.',
-            icon: 'info',
+            content: 'Start every task in the Agents Window. Drop into the editor only when you want to look at the code yourself, then switch back.',
+            icon: 'success',
           },
           {
             type: 'completion',
-            title: 'Interface Mastery!',
+            title: 'You know your way around',
             items: [
-              'You understand the main layout and panels',
-              'You know where the AI tools are (Chat, Composer, prompts)',
-              'You\'ve learned the essential keyboard shortcuts',
-              'You can open projects and navigate files',
+              'You know what the Agents Window and the editor are each for',
+              'You can add a project and select it',
+              'You can switch between the two windows',
+              'You know which shortcuts change meaning between them',
             ],
-            message: 'You\'re now comfortable navigating Cursor. Next, we\'ll learn how to edit code with AI assistance.',
+            message: 'Next, you will make your first AI-assisted edit.',
           },
         ],
       },
