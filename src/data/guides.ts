@@ -2173,6 +2173,12 @@ export const guides: Guide[] = [
             ],
           },
           {
+            type: 'image',
+            src: '/images/guides/claude-code-learning-path/lesson-24/mods-build.mp4',
+            alt: 'A Claude Code session. The prompt "make a mod that shows the current git branch above the prompt" is sent, Claude Code asks "Enable hot reloading for this session?" and Enable for this session is chosen, Claude finishes and a line reading main appears above the prompt, then /plugin opens with "1 mod active · git-branch-band" under the tabs.',
+            label: 'One prompt to a working mod. Approve hot reloading, and the branch appears above the prompt; /plugin confirms it is active.',
+          },
+          {
             type: 'text',
             content: 'A few prompts to start from:',
           },
