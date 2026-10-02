@@ -74,7 +74,7 @@ For a structured, AI-readable summary of what aiuxdesign.guide is, who it's for,
 
 Free, self-paced courses positioned as the depth the audit recommends — not standalone paid cohorts. Not affiliated with Maven, Smashing, IxDF, Reforge, or Design+Code:
 
-- [Claude Code for Designers](https://www.aiuxdesign.guide/guides/claude-code-learning-path): 23 lessons on using Claude Code for design-to-code workflows
+- [Claude Code for Designers](https://www.aiuxdesign.guide/guides/claude-code-learning-path): 24 lessons on using Claude Code for design-to-code workflows and customizing it with mods
 - [Claude Design for Designers](https://www.aiuxdesign.guide/guides/claude-design-learning-path): 12 lessons on Anthropic's Claude Design tool for prototyping and design systems
 - [Cursor for Designers](https://www.aiuxdesign.guide/guides/cursor-learning-path): AI-powered code editor guide for designers
 - [GitHub Copilot for Designers](https://www.aiuxdesign.guide/guides/github-copilot-learning-path): Code suggestions and AI pair programming for designers
