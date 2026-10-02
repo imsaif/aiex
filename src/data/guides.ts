@@ -2557,7 +2557,7 @@ export const guides: Guide[] = [
     slug: 'cursor-learning-path',
     title: 'Cursor Course for Designers',
     description: 'Master Cursor, the AI-powered code editor for designers.',
-    excerpt: 'Your complete Cursor education: 12 sequential lessons covering setup, features, and advanced workflows. Unlock faster development with AI pair programming.',
+    excerpt: 'Twelve lessons on Cursor 3 for designers: the Agents Window, the agent and its modes, Design Mode, building from Figma, and rules for your design system.',
     tool: 'Cursor',
     useCase: 'Learning Path',
     skillLevel: 'Beginner',
@@ -2588,7 +2588,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Cursor works on Windows, macOS 10.15+, and Linux. You need at least 4 GB of RAM and 2 GB of free disk space. If you can run VS Code, you can run Cursor.',
+            content: 'Cursor runs on macOS 12 or later, Windows 10 or later, and Linux. If your computer can run VS Code, it can run Cursor.',
           },
           {
             type: 'heading',
@@ -2664,9 +2664,9 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Make the .AppImage executable: chmod +x cursor-*.AppImage',
-              'Run it: ./cursor-*.AppImage',
-              'Or use your package manager if available for your distro',
+              'Pick the download for your system: .deb (Ubuntu, Debian), .rpm (Fedora) or AppImage',
+              'Install the .deb or .rpm by opening it, or with your package manager',
+              'For the AppImage: run chmod +x on the file, then open it'
             ],
           },
           {
@@ -2696,7 +2696,7 @@ export const guides: Guide[] = [
               {
                 number: 3,
                 title: 'Choose Your Plan',
-                content: 'Cursor starts you on the free Hobby plan, with no credit card needed and a limited number of Agent requests. Upgrade to Pro ($20/month) if you hit the limit.',
+                content: 'Cursor starts you on the free Hobby plan, with no credit card needed and a limited number of agent requests. If you hit the limit, Pro is $20/month. In India there is also a Start plan at ₹649/month, payable by UPI, which covers Cursor\'s own models.',
                 icon: 'star',
               },
             ],
@@ -2741,174 +2741,136 @@ export const guides: Guide[] = [
       },
       {
         id: 'lesson-2',
-        title: 'Navigate the Interface',
-        duration: 2,
+        title: 'Find Your Way: Agents Window and Editor',
+        duration: 5,
         order: 2,
         module: 'setup',
         sections: [
           {
             type: 'intro',
-            content: 'Cursor looks and feels like VS Code—because it\'s built on it. But it adds AI tools you won\'t find anywhere else. Let\'s explore where everything is.',
-            icon: 'compass',
+            content: 'Cursor has two windows. The Agents Window is where you talk to the agent and see your app running. The editor is the classic code view. You will spend most of this course in the first one.',
+            icon: 'book',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'The Main Layout',
+            content: 'The Agents Window',
           },
           {
             type: 'text',
-            content: 'When you open Cursor, you\'ll see the familiar VS Code layout. The interface has these main areas:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Left Sidebar**: File explorer, search, Git, and extensions',
-              '**Main Editor**: Where your code lives. Open multiple files in tabs.',
-              '**Right Side Panels**: Chat panel (AI assistant) and other tools',
-              '**Bottom Panel**: Terminal, problems, output, and debug info',
-            ],
+            content: 'This is what opens when you start Cursor. It is built around one thing: describing what you want and watching the agent do it.',
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-2/cursor-interface-layout.png',
-            alt: 'Cursor interface layout showing sidebar, editor, chat panel, and terminal areas with labeled annotations',
-            label: 'Overview of the main Cursor interface with AI-specific elements highlighted',
+            src: '/images/guides/cursor-learning-path/lesson-2/agents-window.webp',
+            alt: 'The Cursor Agents Window: a sidebar with New Chat, Search, Automations, Customize, Projects and Repositories on the left, and a prompt box in the middle with the project, branch and This Mac selected above it',
+            label: 'The Agents Window, with a project selected above the prompt box',
           },
           {
-            type: 'heading',
-            level: 'h3',
-            content: 'AI-Specific Elements',
-          },
-          {
-            type: 'text',
-            content: 'Cursor adds special UI elements for AI features. Here\'s what\'s unique:',
-          },
-          {
-            type: 'heading',
-            level: 'h4',
-            content: 'The Chat Panel (Right Side)',
-          },
-          {
-            type: 'text',
-            content: 'This is your AI assistant. Open it with Cmd+L (Mac) or Ctrl+L (Windows). Ask questions, explain errors, or get code suggestions. You can close and reopen it anytime.',
-          },
-          {
-            type: 'heading',
-            level: 'h4',
-            content: 'The Prompt Bars',
-          },
-          {
-            type: 'text',
-            content: 'Three quick ways to invoke AI:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Cmd+L (Chat)**: Ask AI a question in the Chat panel',
-              '**Cmd+K (Inline Edit)**: Highlight code and press Cmd+K to edit it with natural language',
-              '**Tab (Autocomplete)**: Start typing and the AI suggests the next line(s)',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h4',
-            content: 'Composer (Cmd+I)',
-          },
-          {
-            type: 'text',
-            content: 'This is your multi-file AI editor. It can create or modify multiple files at once. Opens as a floating window or full-screen mode. Perfect for generating entire components or features.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Essential Keyboard Shortcuts',
-          },
-          {
-            type: 'text',
-            content: 'Memorizing these will supercharge your workflow:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Cmd+L** (Mac) / **Ctrl+L** (Windows): Open Chat panel',
-              '**Cmd+K** / **Ctrl+K**: Inline edit with AI (highlight code first)',
-              '**Cmd+I** / **Ctrl+I**: Open Composer (floating)',
-              '**Cmd+Shift+I** / **Ctrl+Shift+I**: Open Composer (full-screen)',
-              '**Cmd+Enter** / **Ctrl+Enter**: Give AI your full codebase as context',
-              '**Cmd+P** / **Ctrl+P**: Quick file search and navigation',
-              '**Cmd+/** / **Ctrl+/**: Toggle comment on selected code',
-              '**Tab**: Accept autocomplete suggestion',
-              '**Escape**: Reject autocomplete or close panels',
+            type: 'table',
+            rows: [
+              { label: 'Sidebar', content: 'New Chat starts a conversation. Search finds past ones. Customize holds rules, skills and plugins. Repositories lists your projects, each with its chats underneath.' },
+              { label: 'Above the prompt', content: 'Three menus: which project, which branch, and where the agent runs. **This Mac** means on your computer.' },
+              { label: 'The prompt box', content: 'Type what you want. Type **/** for skills or **@** to point at a file. The model name sits underneath, and the mic lets you speak instead of type.' },
+              { label: 'Quick starts', content: '**Plan New Idea** (or Shift+Tab) plans before building. Suggestions such as Build from a design and Start with a plan set up a first message for you.' },
             ],
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'File Explorer (Left Sidebar)',
-          },
-          {
-            type: 'text',
-            content: 'This works just like VS Code. Browse your project files, create folders and files, and drag to organize. The top button opens a folder or creates a new project.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Terminal (Bottom)',
-          },
-          {
-            type: 'text',
-            content: 'Click the Terminal tab at the bottom to open the command line. You can run commands, start a dev server, or commit to Git. Press Ctrl+K (or Cmd+K) in the terminal to ask AI to generate a command.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Opening a Project',
-          },
-          {
-            type: 'text',
-            content: 'To start working:',
+            content: 'Open your project',
           },
           {
             type: 'steps',
             steps: [
-              {
-                number: 1,
-                title: 'File menu',
-                content: 'Click File → Open Folder',
-                icon: 'folder',
-              },
-              {
-                number: 2,
-                title: 'Choose your project',
-                content: 'Navigate to where your code lives on your computer',
-                icon: 'search',
-              },
-              {
-                number: 3,
-                title: 'Click Open',
-                content: 'Cursor loads your project and shows all files in the left sidebar',
-                icon: 'check',
-              },
+              { number: 1, title: 'Add it to Repositories', content: 'Click the folder icon with a plus next to Repositories, then type your project\'s name and pick it.' },
+              { number: 2, title: 'If it is not listed', content: 'A brand-new folder may not show up yet. Use **File → Open Folder** in the menu bar and choose it once. After that it appears under Repositories.' },
+              { number: 3, title: 'Select it', content: 'Pick the project in the menu above the prompt box. Everything you ask now happens in that project.' },
             ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Once the agent is working',
+          },
+          {
+            type: 'text',
+            content: 'After your first message the window splits. The conversation sits on the left. On the right, tabs show **Changes** (every file the agent edited) and a browser with your app. Under the conversation, buttons open the **Terminal**, **Design Mode** and **Commit & Push**, and a box takes your next message.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The editor',
+          },
+          {
+            type: 'text',
+            content: 'The editor is Cursor\'s classic view: your files on the left, the code in the middle, and the agent in a panel on the right. Use it when you want to read or tweak code yourself. Tab completions and inline edits (lessons 4 and 6) live here.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-2/editor.webp',
+            alt: 'The Cursor editor: a file tree on the left, an empty code area in the middle listing shortcuts, and the agent panel on the right with the Agent mode menu and the model name',
+            label: 'The editor, with the agent panel on the right',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Switching between them',
+          },
+          {
+            type: 'list',
+            items: [
+              '**To the editor:** click **IDE** at the top right of the Agents Window. It opens your current project in the editor.',
+              '**Back to the Agents Window:** both windows stay open. Pick it from the **Window** menu, or press **Cmd+`** (backtick) to move between Cursor windows.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Same keys, different jobs',
+          },
+          {
+            type: 'text',
+            content: 'A few shortcuts do different things depending on which window you are in. This catches people out early.',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Cmd+K', content: 'In the editor: edit the selected code by describing the change. In the Agents Window: search.' },
+              { label: 'Cmd+L', content: 'In the editor: open the agent panel. In Design Mode: add the selected element to the chat.' },
+              { label: 'Cmd+Shift+D', content: 'Turns Design Mode on and off. It only works in the Agents Window browser.' },
+            ],
+          },
+          {
+            type: 'list',
+            items: [
+              '**Cmd+N:** new chat',
+              '**Cmd+P:** find a file by name',
+              '**Cmd+J:** show the terminal (editor)',
+              '**Shift+Tab:** switch the agent between modes (lesson 5)',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'On Windows, use Ctrl in place of Cmd.',
           },
           {
             type: 'callout',
-            calloutType: 'info',
+            calloutType: 'success',
             title: 'Pro Tip',
-            content: 'You can also drag a folder onto the Cursor icon in your dock (Mac) or taskbar (Windows) to open it instantly.',
-            icon: 'info',
+            content: 'Start every task in the Agents Window. Drop into the editor only when you want to look at the code yourself, then switch back.',
+            icon: 'success',
           },
           {
             type: 'completion',
-            title: 'Interface Mastery!',
+            title: 'You know your way around',
             items: [
-              'You understand the main layout and panels',
-              'You know where the AI tools are (Chat, Composer, prompts)',
-              'You\'ve learned the essential keyboard shortcuts',
-              'You can open projects and navigate files',
+              'You know what the Agents Window and the editor are each for',
+              'You can add a project and select it',
+              'You can switch between the two windows',
+              'You know which shortcuts change meaning between them',
             ],
-            message: 'You\'re now comfortable navigating Cursor. Next, we\'ll learn how to edit code with AI assistance.',
+            message: 'Next, you will make your first AI-assisted edit.',
           },
         ],
       },
@@ -3126,13 +3088,13 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'On the Free plan, you get basic autocomplete. The Pro plan ($20/month) includes unlimited tab completions and longer context windows for smarter suggestions.',
+            content: 'On the free Hobby plan, Tab is included with limited usage. Paid plans from Pro ($20/month) include unlimited Tab completions.',
           },
           {
             type: 'callout',
             calloutType: 'success',
             title: 'Pro Tip',
-            content: 'Tab autocomplete works best on straightforward, predictable code (components, loops, API calls). For complex logic, use Chat (Cmd+L) instead.',
+            content: 'Tab autocomplete works best on straightforward, predictable code (components, loops, API calls). For bigger changes, ask the agent instead (lesson 5).',
             icon: 'success',
           },
           {
@@ -3144,136 +3106,158 @@ export const guides: Guide[] = [
               'You know how to write code that gets better suggestions',
               'You\'ve seen real examples of autocomplete in action',
             ],
-            message: 'Excellent! Tab completion is your speed tool. Next, let\'s meet Chat—your conversational AI assistant.',
+            message: 'Tab completion is your speed tool. Next, the agent: describing what you want and letting it build.',
           },
         ],
       },
       {
         id: 'lesson-5',
-        title: 'Chat with AI (Cmd+L)',
-        duration: 2,
+        title: 'Talk to the Agent: Choose the Right Mode',
+        duration: 6,
         order: 5,
         module: 'prototype',
         sections: [
           {
             type: 'intro',
-            content: 'Chat (Cmd+L) is your AI pair programmer. Ask questions, explain errors, request code—it\'s a full conversation. Unlike autocomplete, Chat is perfect for explanations, debugging, and larger tasks.',
+            content: 'The agent is how you build in Cursor. You describe what you want, it reads your project, changes the files and runs what it needs. Its modes decide how much it does on its own, and how.',
             icon: 'chat',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Opening Chat',
+            content: 'Where you talk to it',
           },
           {
-            type: 'steps',
-            steps: [
-              {
-                number: 1,
-                title: 'Press Cmd+L (Mac) or Ctrl+L (Windows)',
-                content: 'The Chat panel opens on the right side.',
-                icon: 'keyboard',
-              },
-              {
-                number: 2,
-                title: 'Type your question or request',
-                content: 'Anything from "What does this function do?" to "Create a form component"',
-                icon: 'edit',
-              },
-              {
-                number: 3,
-                title: 'Press Enter',
-                content: 'Cursor AI responds with an answer, explanation, or code.',
-                icon: 'send',
-              },
+            type: 'list',
+            items: [
+              '**In the Agents Window:** the prompt box in the middle (lesson 2). This is the main place.',
+              '**In the editor:** the agent panel on the right. Press **Cmd+I** or **Cmd+L** to open or close it.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The modes',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Agent', content: 'The default. It builds: creates and edits files, runs commands, checks the result. Use it for most work.' },
+              { label: 'Ask', content: 'Read-only. It explains and answers but changes nothing. Use it to understand code before touching it.' },
+              { label: 'Plan', content: 'It asks you questions, then writes a plan you can read and edit. Nothing is built until you approve. Use it for anything bigger than a small change.' },
+              { label: 'Debug', content: 'For bugs that are hard to pin down. It adds logging, asks you to make the bug happen, then fixes it from what it saw.' },
+              { label: 'Multitask', content: 'Splits a bigger request into independent parts and hands them to several agents working at the same time. Use it when the parts do not depend on each other.' },
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Switching modes',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Shift+Tab** in the prompt box steps through the modes.',
+              'In the editor panel, click the mode name under the prompt box (it starts as **Agent**) and pick one.',
+              'In the Agents Window, **Plan New Idea** under the prompt box starts in Plan mode.',
             ],
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-5/chat-panel.png',
-            alt: 'Real Cursor Chat panel interface showing AI conversation with code context and apply feature',
-            label: 'Cursor Chat (Cmd+L) interface with conversation and code suggestions',
+            src: '/images/guides/cursor-learning-path/lesson-5/mode-menu.webp',
+            alt: 'The mode menu open under the prompt box in the Cursor agent panel, listing Agent (Cmd+I), Plan, Debug, Multitask and Ask',
+            label: 'The mode menu in the agent panel',
+          },
+          {
+            type: 'text',
+            content: 'Each mode starts a fresh conversation, so switching clears what the agent was holding in mind. Switch at the start of a task, not halfway through.',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Adding Code Context to Chat',
+            content: 'Plan first, then build',
           },
           {
             type: 'text',
-            content: 'To ask about specific code, highlight it first, then:',
+            content: 'Plan mode is the closest thing to a design review before any code is written. You see the approach, change it, and only then let the agent build.',
           },
           {
             type: 'steps',
             steps: [
-              {
-                number: 1,
-                title: 'Highlight code in your editor',
-                content: 'Select the code you want to discuss.',
-                icon: 'select',
-              },
-              {
-                number: 2,
-                title: 'Press Ctrl+L (add to Chat)',
-                content: 'On macOS, this is Cmd+L. That code is added to the Chat input.',
-                icon: 'add',
-              },
-              {
-                number: 3,
-                title: 'Type your question',
-                content: 'Now ask about that code: "Why does this error occur?" or "How can I optimize this?"',
-                icon: 'edit',
-              },
+              { number: 1, title: 'Switch to Plan', content: 'Press Shift+Tab until the mode reads Plan, or click Plan New Idea.' },
+              { number: 2, title: 'Describe the goal', content: 'Say what you want and who it is for. Answer the questions it comes back with.' },
+              { number: 3, title: 'Read the plan', content: 'It opens in its own tab: the approach, the changes it will make, how it will check them, and a to-do list at the end. Edit anything you disagree with, directly or by replying in the chat.' },
+              { number: 4, title: 'Build', content: 'Click Build, on the plan or on the Review Plan card in the chat (or press Cmd+Return). The arrow next to Build offers Build in Parallel, which runs independent steps at the same time.' },
             ],
           },
           {
-            type: 'heading',
-            level: 'h3',
-            content: 'Ask Mode vs Edit Mode',
-          },
-          {
-            type: 'text',
-            content: 'Chat has two modes (toggle at the top of the Chat panel):',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Ask Mode**: Get suggestions and answers without changing your code',
-              '**Edit Mode**: Let AI modify your code directly (great for refactoring)',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Example Questions You Can Ask',
-          },
-          {
-            type: 'list',
-            items: [
-              '"Explain this JavaScript function in simple terms"',
-              '"Why am I getting this error? [paste error message]"',
-              '"How do I create a React component that does [what you want]?"',
-              '"What\'s the best way to style this with Tailwind?"',
-              '"Refactor this code to use async/await"',
-            ],
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-5/plan-result.webp',
+            alt: 'Cursor after Plan mode: the chat on the left shows a Created Plan card and a Review Plan card with a Build button; the plan for a dark mode toggle is open in its own tab on the right with Approach, Header UI, Theming, Verify and a to-do list',
+            label: 'A finished plan in its own tab, with Build ready in the chat and on the plan',
           },
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Pro Tip',
-            content: 'Be specific! "Create a button" is vague. "Create a React button component with a blue background, white text, and a hover effect that scales up" gives Cursor much better direction.',
+            title: 'If the build goes wrong',
+            content: 'Go back to the plan instead of piling on fixes. Click Revert on an earlier message, sharpen the plan, and build again. A better plan beats ten follow-up corrections.',
             icon: 'info',
           },
           {
-            type: 'completion',
-            title: 'Chat Fluency Achieved!',
+            type: 'heading',
+            level: 'h3',
+            content: 'Give it context',
+          },
+          {
+            type: 'list',
             items: [
-              'You can open Chat and ask questions',
-              'You can add code context to your questions',
-              'You understand Ask vs Edit mode',
-              'You\'re comfortable with the Chat workflow',
+              '**@ a file or folder** to point at it, for example @App.jsx.',
+              '**Paste or drag a screenshot** into the prompt box. It reads images, so a mockup or a bug screenshot works.',
+              '**@Browser** shares what is open in Cursor\'s browser.',
+              'If you are not sure which file matters, skip the @. The agent searches the project on its own.',
             ],
-            message: 'Great! Chat is your AI partner for in-depth help. Next, let\'s learn Cmd+K for quick inline edits.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'While it works',
+          },
+          {
+            type: 'list',
+            items: [
+              'Type your next message and press **Return**. It waits its turn.',
+              'Press **Cmd+Return** to send it right away and steer what the agent is doing.',
+              'To undo, hover an earlier message and click **Restore Checkpoint**. Your files go back to how they were at that point.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Write requests it can act on',
+          },
+          {
+            type: 'code',
+            code: 'Vague:\nMake a button.\n\nSpecific:\nAdd a secondary button next to "View project" on each card.\nSame height, outlined instead of filled, label "Share".\nKeep the existing spacing between cards.',
+            language: 'text',
+            label: 'The same request, vague and specific',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Pro Tip',
+            content: 'Describe the outcome and the constraints, the way you would brief a developer. Leave out how to code it. The agent is better at that part than at guessing what you meant.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'You can direct the agent',
+            items: [
+              'You know the modes and when to use each',
+              'You can switch modes with Shift+Tab or the mode menu',
+              'You can plan a change before anything is built',
+              'You can add context and undo with checkpoints',
+            ],
+            message: 'Next, quick edits in the editor with Cmd+K.',
           },
         ],
       },
@@ -3286,7 +3270,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Cmd+K is your quick-edit tool. Highlight code and press Cmd+K to refactor, fix, or modify it with natural language instructions. No Chat panel needed.',
+            content: 'Cmd+K is your quick-edit tool in the editor. Highlight code and press Cmd+K to change it by describing what you want. No agent conversation needed. In the Agents Window, Cmd+K searches instead.',
             icon: 'edit',
           },
           {
@@ -3357,7 +3341,7 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
-            content: 'Cmd+K vs Chat (Cmd+L): When to Use Which',
+            content: 'Cmd+K or the agent: when to use which',
           },
           {
             type: 'text',
@@ -3367,7 +3351,8 @@ export const guides: Guide[] = [
             type: 'list',
             items: [
               '**Cmd+K**: Quick changes to existing code (refactor, fix, adjust)',
-              '**Chat (Cmd+L)**: Explanations, debugging, understanding code, creating new code from scratch',
+              '**The agent (lesson 5)**: New features, changes across several files, explanations (Ask mode) and debugging',
+              '**Cmd+L** with code selected sends it to the agent if a quick edit turns out to be bigger',
             ],
           },
           {
@@ -3420,275 +3405,318 @@ export const guides: Guide[] = [
             title: 'Inline Editing Mastered!',
             items: [
               'You can select code and use Cmd+K to edit it',
-              'You understand the difference between Cmd+K and Chat',
+              'You know when to use Cmd+K and when to use the agent',
               'You know how to use Cmd+K in the terminal',
               'You\'re confident with quick, targeted edits',
             ],
-            message: 'Perfect! Cmd+K is your speed tool for edits. Next, meet Composer—the power tool for generating entire features.',
+            message: 'Cmd+K is your quick tool for small edits in the editor. Next, Design Mode: changing a running prototype by pointing at it.',
           },
         ],
       },
       {
         id: 'lesson-7',
-        title: 'Build with Composer',
-        duration: 2,
+        title: 'Edit Your Prototype with Design Mode',
+        duration: 6,
         order: 7,
         module: 'prototype',
         sections: [
           {
             type: 'intro',
-            content: 'Composer is Cursor\'s superpower. While Tab handles single suggestions and Chat handles questions, Composer creates entire features—multiple files at once. This is where you build fast.',
+            content: 'Design Mode lets you change a running prototype by pointing at it. Click a button, circle a section or say what is wrong, and the agent edits the code behind it while you watch the page update.',
             icon: 'sparkles',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Opening Composer',
+            content: 'What Design Mode is',
           },
           {
             type: 'text',
-            content: 'Two ways to open Composer:',
+            content: 'Describing a UI change in words is slow: "the second card, the grey label under the title, make it a bit smaller". Design Mode replaces that sentence with a click. You select the element on the live page, and Cursor sends the agent exactly which component it is, its styles and a screenshot of where it sits. You only say what should change.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Where it lives',
+            content: 'Design Mode works in the browser inside the **Agents Window**, the window Cursor opens on startup. It is not available in the classic editor view yet. If you are in the editor, press **Cmd+Shift+P** and choose **Open Agents Window**.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Before you start',
           },
           {
             type: 'list',
             items: [
-              '**Cmd+I** (floating window): Smaller, dockable window while you work',
-              '**Cmd+Shift+I** (full screen): Dedicated workspace, better for complex tasks',
+              '**A project open in the Agents Window.** Any prototype you have built in earlier lessons works.',
+              '**The app running.** Design Mode edits a live page, so your project needs to be running on your computer (a local address such as localhost:3000).',
+              '**A React app gets the most precise results.** Cursor reads component details from React apps. Other pages still get a screenshot of what you selected.',
             ],
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Normal vs Agent Mode',
+            content: 'Open your app in Cursor\'s browser',
           },
           {
-            type: 'text',
-            content: 'Composer has two modes:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Normal Mode**: You guide each step. You see the changes and approve them.',
-              '**Agent Mode**: AI is autonomous. It gathers context, makes decisions, and iterates. Perfect for complex builds.',
-            ],
-          },
-          {
-            type: 'text',
-            content: 'Toggle Agent Mode at the top of the Composer panel.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Adding Context to Composer',
-          },
-          {
-            type: 'text',
-            content: 'Help Composer understand your project by adding context:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**@filename**: Reference specific files (e.g., "@app.jsx" to include that file in context)',
-              '**#filename**: Add entire files to Composer workspace',
-              '**/** menu: Add all open editors, Git changes, PR info, etc.',
-              '**Cmd+Enter**: Add your entire codebase to context (powerful!)',
+            type: 'steps',
+            steps: [
+              { number: 1, title: 'Ask the agent to run it', content: 'In the Agents Window, type: "Start the dev server for this project and open it in the browser." The agent finds the right command and the right port.' },
+              { number: 2, title: 'Check the browser pane', content: 'Your app opens in a browser pane on the right, next to the chat. Its address is a local one, such as localhost:5173.' },
             ],
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-7/composer-interface.png',
-            alt: 'Composer interface showing @-mentions and context references for multi-file generation',
-            label: 'Composer with context added for generating related files',
+            src: '/images/guides/cursor-learning-path/lesson-7/app-in-browser.webp',
+            alt: 'The Cursor Agents Window with a prototype running in the built-in browser pane next to the agent chat',
+            label: 'Your prototype running in the browser inside the Agents Window',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Example: Create a React Component with Composer',
+            content: 'Turn on Design Mode',
           },
           {
             type: 'text',
-            content: 'Try this prompt in Composer:',
+            content: 'Click **Design Mode** in the row of buttons under the chat, or press **Cmd+Shift+D** with the browser focused. A **Design** label appears in the browser\'s toolbar, and clicking the page now selects elements instead of pressing them. To go back to normal browsing, click the × on that label. On Windows, use Ctrl in place of Cmd and Alt in place of Option.',
           },
           {
-            type: 'code',
-            code: 'Create a React card component with image, title, description, and a clickable button. Use Tailwind CSS for styling. Make it responsive. Save as Card.jsx',
-            language: 'text',
-            label: 'Composer prompt',
-          },
-          {
-            type: 'text',
-            content: 'Composer generates the complete component file, ready to use.',
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-7/design-mode-select.webp',
+            alt: 'Design Mode on in Cursor: the Pricing page card is outlined in blue, with a request box under it, and the chat on the left shows an earlier edit and the files it changed',
+            label: 'Select an element and a request box appears right under it',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'YOLO Mode: Autonomous Iteration',
+            content: 'Four ways to point',
           },
           {
-            type: 'text',
-            content: 'Advanced feature: Enable YOLO Mode in settings. It lets Agent Mode:',
-          },
-          {
-            type: 'list',
-            items: [
-              'Automatically run tests',
-              'Build your code',
-              'Fix errors and iterate until everything passes',
-              'All without asking you each step',
+            type: 'table',
+            rows: [
+              { label: 'Click', content: 'Click one element. Use it for a single fix: this button, this heading.' },
+              { label: 'Multi-select', content: 'Select two or more elements. Use it for consistency: "make this card match that one".' },
+              { label: 'Area', content: 'Shift+drag a box, or draw a circle on the page. Use it for a whole region: "tighten the spacing in this section".' },
+              { label: 'Voice', content: 'Click the mic and say the change. Use it to keep iterating while your eyes stay on the page.' },
             ],
           },
           {
             type: 'text',
-            content: 'Perfect for rapid prototyping where you just want a working feature ASAP.',
+            content: 'When you select something, a small box appears under it saying **Describe the change**. Type what should change there and press Return. The agent picks it up, and the chat on the left shows its progress and which files it edited. To discuss the element in the main chat instead, press **Cmd+L**.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-7/design-mode-edit.mp4',
+            alt: 'Screen recording: Design Mode is on, the Settings panel card is selected, the request "add an icon here too" is typed in the box under it, and after the agent works the card gets an icon matching the other two',
+            label: 'One request in Design Mode: select the card, describe the change, watch it land',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What the agent receives',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Which element it is:** the component, its attributes and its current styles, so the agent edits the right file and the right line.',
+              '**A screenshot:** the element in place, with what surrounds it, so changes fit the layout around them.',
+            ],
+          },
+          {
+            type: 'text',
+            content: 'This is why short requests work. "Smaller" is enough when the agent can see exactly what you selected.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Try it: tidy a card',
+          },
+          {
+            type: 'steps',
+            steps: [
+              { number: 1, title: 'Select the label', content: 'Turn on Design Mode and click the small label above a card title.' },
+              { number: 2, title: 'Say the change', content: 'In the Describe the change box, type: "Make this 2px smaller and use our secondary text colour." Press Return and watch the page update.' },
+              { number: 3, title: 'Match the others', content: 'Select two cards with different padding and type: "Make both cards use the same padding as the first one."' },
+              { number: 4, title: 'Keep going', content: 'Select the next thing while the agent works. Edits can run side by side, so you do not have to wait for each one.' },
+            ],
+          },
+          {
+            type: 'code',
+            code: 'Make this 2px smaller and use our secondary text colour.\nMake both cards use the same padding as the first one.\nThis section feels cramped. Add more space between the heading and the list.',
+            language: 'text',
+            label: 'Example Design Mode requests',
           },
           {
             type: 'callout',
             calloutType: 'success',
             title: 'Pro Tip',
-            content: 'Composer works best when you give it context about your project structure and dependencies. More context = better results.',
+            content: 'Cursor recommends its **Composer 2.5** model for Design Mode. Pick it from the model menu at the top of the chat if edits feel slow.',
             icon: 'success',
           },
           {
-            type: 'completion',
-            title: 'Composer Power Unlocked!',
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'If selections land in the wrong place',
+            content: 'On scaled displays the screenshot can be offset from what you clicked. Set your main display to its default scaling and press **Cmd+0** in the browser to reset zoom to 100%.',
+            icon: 'warning',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Design Mode or the chat?',
+          },
+          {
+            type: 'list',
             items: [
-              'You can open Composer in floating or full-screen mode',
-              'You understand Normal vs Agent mode',
-              'You know how to add context with @-mentions and #-files',
-              'You\'ve created multi-file code with Composer',
+              '**Use Design Mode** for visual fixes you can point at: spacing, sizes, colours, alignment, copy on the page.',
+              '**Use the chat** for things you cannot point at: new pages, data, logic, or "add a settings screen".',
             ],
-            message: 'Excellent! You\'re now an AI developer. Next, we\'ll focus on design-to-code—converting designs into working React components.',
+          },
+          {
+            type: 'completion',
+            title: 'You can edit by pointing',
+            items: [
+              'You can open your running app in the Agents Window browser',
+              'You can turn Design Mode on and off with Cmd+Shift+D',
+              'You know the four ways to point: click, multi-select, area and voice',
+              'You know when to use Design Mode and when to use the chat',
+            ],
+            message: 'Next, we go from design files to code: turning Figma frames and screenshots into working components.',
           },
         ],
       },
       {
         id: 'lesson-8',
-        title: 'Convert Designs to Components',
-        duration: 2,
+        title: 'From Figma Frame to Working Code',
+        duration: 7,
         order: 8,
         module: 'design-to-code',
         sections: [
           {
             type: 'intro',
-            content: 'This is where designers shine. Take a design from Figma (or any source), upload it to Cursor, and watch it transform into working React code. No manual translation needed.',
-            icon: 'palette',
+            content: 'Connect Figma once, then paste a frame link into Cursor. The agent reads the frame itself (layers, colours, sizes and spacing) instead of guessing from a picture, and builds it into your project.',
+            icon: 'sparkles',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'The Design-to-Code Workflow',
+            content: 'Why a link beats a screenshot',
           },
           {
             type: 'text',
-            content: 'The process is simple:',
-          },
-          {
-            type: 'list',
-            items: [
-              'Export your design as a screenshot (PNG, JPG)',
-              'Open Chat in Cursor (Cmd+L)',
-              'Upload the image',
-              'Describe what you want (or let Cursor analyze it)',
-              'Get working React code with Tailwind styling',
-            ],
+            content: 'A screenshot is pixels. The agent has to estimate that a gap is 24px or that a grey is #EEEEEE. A Figma link gives it the actual values from your file, so the first build is much closer to the design and you spend less time correcting it.',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Step-by-Step: Figma Design to React',
+            content: 'Connect Figma (once)',
           },
           {
             type: 'steps',
             steps: [
-              {
-                number: 1,
-                title: 'Screenshot your design',
-                content: 'In Figma, select the component/frame you want to convert. Take a clean screenshot without overlays or UI chrome.',
-                icon: 'camera',
-              },
-              {
-                number: 2,
-                title: 'Open Chat (Cmd+L)',
-                content: 'Open the Chat panel on the right side of Cursor.',
-                icon: 'chat',
-              },
-              {
-                number: 3,
-                title: 'Upload image',
-                content: 'Click the attachment icon or drag the screenshot into Chat.',
-                icon: 'paperclip',
-              },
-              {
-                number: 4,
-                title: 'Describe or ask',
-                content: 'Write: "Convert this design to a React component using Tailwind CSS. Make it responsive and match the design exactly."',
-                icon: 'edit',
-              },
-              {
-                number: 5,
-                title: 'Get code',
-                content: 'Cursor generates React code. Copy it or apply it directly to your project.',
-                icon: 'code',
-              },
+              { number: 1, title: 'Open MCPs', content: 'In the Agents Window sidebar, click Customize, then the MCPs tab. Figma is listed as a plugin. If it is not there, click Browse Marketplace, find Figma and install it.' },
+              { number: 2, title: 'Authenticate', content: 'Next to figma, click Authenticate. Your browser opens a Figma page.' },
+              { number: 3, title: 'Allow access', content: 'Check it is the Figma account you want, then click Agree & Allow Access. When the page says Authorization complete, click Open Cursor.' },
+              { number: 4, title: 'Check it is connected', content: 'Back in Cursor, figma moves under Connected with its tools enabled.' },
             ],
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-8/figma-to-react-new.png',
-            alt: 'Cursor Chat showing code suggestions with apply button to accept generated React code from design',
-            label: 'Cursor accepting and applying generated code from design input',
+            src: '/images/guides/cursor-learning-path/lesson-8/figma-authenticate.webp',
+            alt: 'Cursor Customize, MCPs tab: figma listed under Needs Attention, waiting for authentication',
+            label: 'Figma waiting to be authenticated',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-8/figma-allow-access.webp',
+            alt: 'Figma browser page: Cursor MCP Client would like to access your account, with an Agree & Allow Access button',
+            label: 'Allow Cursor to read your Figma files',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-8/figma-connected.webp',
+            alt: 'Cursor MCPs tab with figma under Connected, 40 tools and 117 resources enabled',
+            label: 'Connected',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'What you are agreeing to',
+            content: 'Allowing access gives Cursor read and write access to your Figma account through this connection. You can disconnect any time: click figma in MCPs and choose Logout.',
+            icon: 'info',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Iterative Refinement',
+            content: 'Build a frame',
+          },
+          {
+            type: 'steps',
+            steps: [
+              { number: 1, title: 'Copy the frame link', content: 'In Figma, right-click the frame and choose Copy link to selection. Keep frames small to start: one card, one section, one screen.' },
+              { number: 2, title: 'Paste it with a request', content: 'In the Agents Window, with your project selected, paste the link and say where it goes: "Build this Figma frame as a new section under the cards."' },
+              { number: 3, title: 'Let it work', content: 'The agent pulls the design from Figma, finds where it fits in your code, builds it and checks it in the browser. It may ask before running a browser action; click Run.' },
+              { number: 4, title: 'Review the result', content: 'Compare the browser with Figma. The chat lists the files it changed and what it matched.' },
+            ],
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-8/figma-link-prompt.webp',
+            alt: 'The Cursor prompt box with a Figma frame link pasted, followed by "build this Figma frame as a new section under the cards"',
+            label: 'A Figma link and one sentence is enough',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-8/figma-build.mp4',
+            alt: 'Screen recording, sped up: the agent reads the Figma frame, explores the project, asks to run a browser check, then edits two files',
+            label: 'The agent reading the frame and building it (sped up)',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-8/figma-result.webp',
+            alt: 'Result: the agent\'s summary on the left lists the exact colours and sizes it matched; on the right, the page shows the new section of two teal action buttons under the project cards',
+            label: 'The frame built under the cards, with the values it matched',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Refine it',
+          },
+          {
+            type: 'list',
+            items: [
+              '**Small visual fixes:** use Design Mode (lesson 7). Select the element and describe the change.',
+              '**Mismatch with Figma:** say what differs: "The buttons should be 48px, not 56px, as in the frame."',
+              '**Use your components:** "Rebuild this with our Button component instead of new markup." A design-system rule (lesson 10) makes this the default.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'No Figma? Use a screenshot',
           },
           {
             type: 'text',
-            content: 'The first version rarely perfect. Refine it:',
-          },
-          {
-            type: 'list',
-            items: [
-              'Say "Make the button red instead of blue"',
-              'Ask "Can you add an icon to the left of the text?"',
-              'Request "Adjust spacing to match the design more closely"',
-              'Each time, Cursor updates the code',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Pro Tips for Better Conversions',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Clear backgrounds**: Screenshot on a clean background for better AI understanding',
-              '**High resolution**: Use clear, high-quality images',
-              '**One component per screenshot**: Don\'t mix multiple designs in one image',
-              '**Describe your stack**: Tell Cursor what framework/version you\'re using',
-              '**Provide context**: Reference existing design tokens or style files in your project',
-              '**Use Composer for multi-component**: Use Composer (Cmd+I) to generate a whole page with multiple components',
-            ],
+            content: 'Paste or drag a screenshot into the prompt box and describe it: "Build this as a responsive section. Match the spacing and colours as closely as you can." It works, but expect a few more rounds of refining, because the agent is reading pixels instead of real values.',
           },
           {
             type: 'callout',
             calloutType: 'success',
-            title: 'Designer Superpower',
-            content: 'You just converted a design to working code in minutes instead of hours. This is what AI development looks like for designers.',
+            title: 'Pro Tip',
+            content: 'Name your Figma layers and use variables for colours and spacing. The agent reads those names, so "Card/Title" and a colour variable turn into clearer code than "Frame 412" and a loose hex value.',
             icon: 'success',
           },
           {
             type: 'completion',
-            title: 'Design-to-Code Ninja!',
+            title: 'From frame to code',
             items: [
-              'You can convert Figma designs to React components',
-              'You understand the iterative refinement process',
-              'You know how to provide good context and descriptions',
-              'You\'ve experienced the design-to-code workflow',
+              'You can connect Figma to Cursor',
+              'You can build a frame from a Figma link',
+              'You know how to refine the result',
+              'You can fall back to a screenshot when there is no Figma file',
             ],
-            message: 'Amazing! You now bridge design and code. Next, let\'s go deeper into frontend development with React and Tailwind.',
+            message: 'Next, building interfaces with React and Tailwind.',
           },
         ],
       },
@@ -3729,7 +3757,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Use Chat or Composer to generate:',
+            content: 'Ask the agent to generate:',
           },
           {
             type: 'code',
@@ -3829,8 +3857,8 @@ export const guides: Guide[] = [
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Design System in .cursorrules',
-            content: 'Create a .cursorrules file with your design tokens (colors, spacing, fonts). Cursor uses this to generate code that matches your brand automatically.',
+            title: 'Design system in a rule',
+            content: 'Put your design tokens (colours, spacing, fonts) in a project rule or AGENTS.md, as in lesson 10. The agent then follows them in every component it generates.',
             icon: 'info',
           },
           {
@@ -3848,296 +3876,293 @@ export const guides: Guide[] = [
       },
       {
         id: 'lesson-10',
-        title: 'Customize Your Workspace',
-        duration: 2,
+        title: 'Teach Cursor Your Design System with Rules',
+        duration: 6,
         order: 10,
         module: 'practices',
         sections: [
           {
             type: 'intro',
-            content: 'Cursor is yours to customize. Set it up exactly how you work. Personalization makes you faster and happier.',
+            content: 'Rules are a standing brief for the agent. Write your colours, spacing and component choices down once, and every request follows them without you repeating yourself.',
             icon: 'settings',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Editor Settings',
+            content: 'Why rules matter for designers',
           },
           {
             type: 'text',
-            content: 'Customize the look and feel:',
+            content: 'Without rules, the agent makes sensible guesses: a blue button here, 15px of padding there. Each guess is reasonable and together they drift from your system. A rule turns your design decisions into instructions the agent reads before it writes anything.',
           },
           {
-            type: 'list',
-            items: [
-              '**Theme**: Dark, light, or custom (Settings → Theme)',
-              '**Font**: Change font family and size',
-              '**Keybindings**: Remap keys to match your muscle memory',
-              '**Tabs vs Spaces**: Choose your indentation style',
-              '**Auto-save**: Enable/disable automatic saving',
+            type: 'heading',
+            level: 'h3',
+            content: 'Where rules live',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Project rules', content: 'Files in a .cursor/rules folder inside your project, ending in .mdc. They travel with the project, so anyone who opens it gets the same rules. This is where a design system belongs.' },
+              { label: 'AGENTS.md', content: 'One plain Markdown file in the project root. The simplest option: no settings, just write. Other AI tools read it too.' },
+              { label: 'User rules', content: 'Short personal preferences that apply to every chat in every project, such as "explain changes in plain language". You add them in Customize → Rules.' },
+              { label: 'Team rules', content: 'Set once for a whole team in Cursor\'s dashboard. Teams and Enterprise plans only.' },
             ],
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Extensions: Power Up Your Editor',
+            content: 'Add a user rule',
           },
           {
-            type: 'text',
-            content: 'Extensions add capabilities. Click the Extensions icon (puzzle) in the left sidebar:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Prettier**: Auto-format code to be clean and consistent',
-              '**ESLint**: Catch code errors and style issues',
-              '**Tailwind CSS IntelliSense**: Smart Tailwind class suggestions',
-              '**Thunder Client**: Test APIs without leaving Cursor',
-              '**Live Server**: Preview changes in browser in real-time',
-              '**GitHub Copilot** (optional): Add GitHub\'s Copilot alongside Cursor\'s AI',
+            type: 'steps',
+            steps: [
+              { number: 1, title: 'Open Rules', content: 'In the Agents Window sidebar, click Customize, then the Rules tab.' },
+              { number: 2, title: 'Click + New', content: 'A small box opens: New User Rule. Type one instruction, such as "Explain every change in plain language, no jargon."' },
+              { number: 3, title: 'Confirm', content: 'The rule appears in the list. Use the menu on its right to edit or remove it later.' },
             ],
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-10/rules-new-user-rule.webp',
+            alt: 'The New User Rule box in Cursor: a heading saying User Rules apply to all of your chats, a text field with the placeholder Style request, response language, tone, and Cancel and Confirm buttons',
+            label: 'Adding a user rule',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-10/rules-screen.webp',
+            alt: 'The Rules tab in Cursor Customize, between Subagents and Commands, listing a user rule with a + New button',
+            label: 'Customize → Rules, with a user rule added',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: '.cursorrules: Train Your AI',
+            content: 'Create a project rule',
           },
           {
             type: 'text',
-            content: 'Create a .cursorrules file in your project root with instructions for the AI:',
+            content: 'Your design system belongs in a project rule, so it travels with the project. Type **/create-rule** in the prompt box with your project selected, and describe what the rule should cover, for example: "a design-system rule with our colours, spacing scale and components". The agent writes the file into .cursor/rules for you. You can also ask in plain words: "Create a project rule for our design system."',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'A design-system rule to start from',
           },
           {
             type: 'code',
-            code: '# Design System\nUse Tailwind CSS for all styling. Primary color: blue-600. Secondary: gray-900.\n\n# Components\nAll components go in /components directory. Use PascalCase for names.\n\n# Testing\nWrite tests for all components using Vitest.\n\n# Best Practices\n- Use functional components with hooks\n- Keep components under 200 lines\n- Add proper error handling\n- Make components responsive\n- Include accessibility (WCAG AA)',
-            language: 'text',
-            label: '.cursorrules example',
+            code: '---\ndescription: Design system for all UI work\nalwaysApply: true\n---\n\n# Design system\n\n## Colour\n- Use the CSS variables in @src/index.css. Never hard-code hex values.\n- Primary actions use --color-primary. One primary button per view.\n\n## Spacing\n- Spacing scale: 4, 8, 12, 16, 24, 32, 48. Nothing in between.\n- Cards use 24px padding and 16px gaps.\n\n## Components\n- Reuse what is in @src/components before creating anything new.\n- Buttons: Button component only, variants primary, secondary, ghost.\n\n## Accessibility\n- Text contrast at least 4.5:1.\n- Every interactive element reachable by keyboard, with a visible focus state.',
+            language: 'markdown',
+            label: '.cursor/rules/design-system.mdc',
           },
           {
             type: 'text',
-            content: 'Cursor reads this file and uses it to guide code generation. Whenever it generates code, it follows your rules.',
+            content: 'The part between the --- lines is settings. alwaysApply: true means the agent reads this rule on every request. The @ references point the agent at real files instead of copying their contents into the rule.',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Rules for AI: Chat Settings',
+            content: 'When a rule applies',
           },
           {
-            type: 'text',
-            content: 'Go to Settings → Features → Chat & Composer → Rules for AI. Add custom instructions:',
-          },
-          {
-            type: 'list',
-            items: [
-              '"Always add comments to complex code"',
-              '"Prefer modern React hooks over class components"',
-              '"Include TypeScript types"',
-              '"Make accessibility a priority"',
+            type: 'table',
+            rows: [
+              { label: 'Always Apply', content: 'Read on every request. Right for a design system.' },
+              { label: 'Apply Intelligently', content: 'The agent reads the rule\'s description and decides when it is relevant. Good for "how we write empty states".' },
+              { label: 'Apply to Specific Files', content: 'Used when matching files are involved, for example only components. You set this with a file pattern.' },
+              { label: 'Apply Manually', content: 'Only when you mention it, for example @launch-checklist.' },
             ],
           },
           {
+            type: 'text',
+            content: 'The type is set in the settings lines at the top of the rule file. When the agent creates a rule for you, tell it which behaviour you want, for example "apply this to every request".',
+          },
+          {
             type: 'heading',
             level: 'h3',
-            content: 'Terminal Integration',
+            content: 'The quick version: AGENTS.md',
           },
           {
             type: 'text',
-            content: 'The terminal at the bottom of Cursor is powerful:',
+            content: 'If one file of guidance is enough, create AGENTS.md in the root of your project and write plain instructions. No settings needed. The agent reads it on every request.',
           },
           {
-            type: 'list',
-            items: [
-              'Use Cmd+K to generate shell commands',
-              'Run npm scripts, git commands, builds',
-              'See output in real-time',
-              'Stay in Cursor, no need to switch apps',
+            type: 'code',
+            code: '# Notes for the agent\n\n- This is a prototype for usability testing, so favour clarity over completeness.\n- Use the colours and spacing in src/index.css.\n- Keep copy short and in sentence case.',
+            language: 'markdown',
+            label: 'AGENTS.md',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Two things that trip people up',
+            content: 'Rules in .cursor/rules must end in .mdc. A plain .md file there is ignored. And if an older project has a .cursorrules file, it is the legacy format and is being phased out. Move its contents into .cursor/rules or AGENTS.md.',
+            icon: 'warning',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Try it',
+          },
+          {
+            type: 'steps',
+            steps: [
+              { number: 1, title: 'Add the rule', content: 'Create a design-system rule with your real spacing scale and colours.' },
+              { number: 2, title: 'Ask for something new', content: 'In the Agents Window, ask: "Add a newsletter sign-up section under the cards."' },
+              { number: 3, title: 'Check it', content: 'The new section should use your spacing steps and colour variables. If it does not, make the rule more specific and ask again.' },
             ],
           },
           {
             type: 'callout',
             calloutType: 'success',
             title: 'Pro Tip',
-            content: 'Import settings from VS Code if you have them. Cursor will preserve your themes, extensions, and keybindings.',
+            content: 'Keep each rule short and specific. Cursor recommends staying under 500 lines. Several focused rules work better than one long document.',
             icon: 'success',
           },
           {
             type: 'completion',
-            title: 'Workspace Customized!',
+            title: 'The agent knows your system',
             items: [
-              'You\'ve customized the editor to match your style',
-              'You\'ve installed key extensions',
-              'You\'ve created a .cursorrules file for your project',
-              'You understand Rules for AI in settings',
+              'You know the difference between project rules, AGENTS.md and user rules',
+              'You can add a user rule in Customize and a project rule with /create-rule',
+              'You have a design-system rule to adapt',
+              'You know when each type of rule applies',
             ],
-            message: 'Perfect! Cursor is now set up exactly how you work. Next, let\'s explore advanced AI features.',
+            message: 'Next, choosing models and controlling what the agent can do on its own.',
           },
         ],
       },
       {
         id: 'lesson-11',
-        title: 'Master Advanced Features',
-        duration: 2,
+        title: 'Models, Approvals and the Browser',
+        duration: 6,
         order: 11,
         module: 'practices',
         sections: [
           {
             type: 'intro',
-            content: 'You\'ve learned the basics. Now, advanced features that take you to expert level: codebase indexing, multi-model AI, context management, and team collaboration.',
-            icon: 'crown',
+            content: 'Three settings shape how the agent works for you: which model does the thinking, what it may run without asking, and how it checks its work in the browser.',
+            icon: 'settings',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Codebase Indexing: AI Knows Your Code',
+            content: 'Picking a model',
           },
           {
             type: 'text',
-            content: 'When you open a project, Cursor automatically indexes it. The AI scans every file and creates a semantic understanding of your codebase. This is why it can suggest relevant code from anywhere in your project.',
+            content: 'The model name sits under the prompt box. Click it to switch, or press **Cmd+/** to cycle through models. Set your default in Cursor Settings → Models.',
           },
           {
-            type: 'heading',
-            level: 'h3',
-            content: '@-Mentions: Direct Context',
-          },
-          {
-            type: 'text',
-            content: 'In Chat or Composer, use @-mentions to reference specific files or symbols:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**@filename.jsx**: Reference a specific file',
-              '**@functionName**: Reference a specific function',
-              '**@className**: Reference a class',
-              'Type @ and see all available options',
+            type: 'table',
+            rows: [
+              { label: 'Free plan', content: 'Cursor picks from its own models, such as Composer 2.5 and Grok. Clicking the model name shows Upgrade to unlock more models.' },
+              { label: 'Paid plans', content: 'The full list, including Claude, GPT and Gemini models. **Auto** picks a model for each request.' },
+              { label: 'Teams', content: 'Auto can be set to favour cost, balance or intelligence.' },
             ],
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-11/at-mentions.png',
-            alt: 'Cursor Chat showing @-mentions context menu with available files and symbols for reference',
-            label: 'Real @-mentions context menu in Cursor Chat for adding codebase context',
-          },
-          {
-            type: 'text',
-            content: 'This tells the AI exactly what to consider when generating code.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Multi-Model AI: Choose Your Brain',
-          },
-          {
-            type: 'text',
-            content: 'Cursor supports multiple AI models. Switch between them in the Chat panel:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Claude Sonnet & Opus** (Anthropic): Best for analysis and refactoring',
-              '**GPT-5** (OpenAI): Great for creative code generation',
-              '**Gemini** (Google): Good for general tasks',
-              '**xAI models**: Latest experimental models',
-            ],
-          },
-          {
-            type: 'text',
-            content: 'Different models excel at different tasks. Feel free to try different ones for different work.',
-          },
-          {
-            type: 'code',
-            code: '# .cursorrules - Tell Cursor about your project\n\nYou are an expert React developer working on a design system.\n\n## Code Style\n- Use TypeScript with strict mode\n- Use Tailwind CSS for styling (never write raw CSS)\n- Follow functional components with hooks\n- Component exports should be default exports\n\n## Design System\n- Primary color: #0066FF (blue-600)\n- Spacing: Use Tailwind spacing scale (gap-4, p-2, etc.)\n- Fonts: Use system fonts (font-sans) or Inter\n\n## Naming Conventions\n- Components: PascalCase (Button, Card, Header)\n- Variables: camelCase (buttonText, cardContent)\n- Files: kebab-case (button.jsx, card.jsx)\n\n## Testing\n- Always add JSDoc comments\n- Make components responsive mobile-first',
-            language: 'markdown',
-            label: 'Example .cursorrules file for a design system project',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Privacy Mode: Your Code Stays Private',
-          },
-          {
-            type: 'text',
-            content: 'Privacy Mode is free on every plan, including Hobby. Turn it on in Settings. Your code is never:',
-          },
-          {
-            type: 'list',
-            items: [
-              'Sent to AI providers for training',
-              'Logged or stored on servers',
-              'Used to improve AI models',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Context Management: Work Smarter',
-          },
-          {
-            type: 'text',
-            content: 'AI works better with relevant context. Strategies:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Close tabs**: Only open files you\'re actively using',
-              '**Use @-mentions**: Reference specific files instead of context-dumping',
-              '**Provide .cursorrules**: Let your project guidelines guide the AI',
-              '**Use Cmd+Enter for full context**: When you truly need codebase-wide understanding',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Bugbot: AI Code Review',
-          },
-          {
-            type: 'text',
-            content: 'Advanced feature: Bugbot automatically reviews your GitHub PRs and suggests improvements:',
-          },
-          {
-            type: 'list',
-            items: [
-              'Detects bugs and logic errors',
-              'Suggests security fixes',
-              'Recommends performance improvements',
-              '​One-click "Fix in Cursor" to apply suggestions',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Team Features (Cursor Teams/Enterprise)',
-          },
-          {
-            type: 'text',
-            content: 'For teams ($40/user/month):',
-          },
-          {
-            type: 'list',
-            items: [
-              'Shared .cursorrules across team',
-              'Centralized billing and usage tracking',
-              'SSO authentication',
-              'Team-wide privacy settings',
-              'Collaboration features',
-            ],
+            src: '/images/guides/cursor-learning-path/lesson-11/model-locked.webp',
+            alt: 'The model name under the Cursor prompt box with a lock icon, and a popover reading Upgrade to unlock more models, More models are only available on paid plans, with an Upgrade to Pro button',
+            label: 'On the free plan the model is fixed',
           },
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Pro Tip',
-            content: 'Always review AI-generated code before using it. AI is fast, but human judgment catches edge cases and security issues.',
+            title: 'Which one to use',
+            content: 'Start with the default. Cursor recommends Composer 2.5 for Design Mode and quick visual edits. Switch to a stronger model only when a task keeps going wrong, such as a tricky layout or a bug the agent cannot pin down.',
             icon: 'info',
           },
           {
-            type: 'completion',
-            title: 'Advanced Features Unlocked!',
-            items: [
-              'You understand codebase indexing and how AI knows your code',
-              'You can use @-mentions for precise context',
-              'You know how to switch between multiple AI models',
-              'You\'re aware of privacy features and team collaboration',
+            type: 'heading',
+            level: 'h3',
+            content: 'What the agent may do without asking',
+          },
+          {
+            type: 'text',
+            content: 'The agent edits files in your project freely. Running commands, opening pages and using connected tools such as Figma are different: by default it stops and asks.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-11/approval-prompt.webp',
+            alt: 'An approval card in the Cursor chat: Running navigate_page in chrome-devtools, with the page address it wants to open, and Skip, Always Run and Run buttons',
+            label: 'The agent asking before it opens a page to check its work',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Run', content: 'Allow this one action.' },
+              { label: 'Always Run', content: 'Allow it now and from now on. Use it for actions you will see again and trust, like opening your local app.' },
+              { label: 'Skip', content: 'Refuse. The agent carries on without it or tries another way.' },
             ],
-            message: 'Excellent! You\'re now using Cursor like an expert. The final lesson covers best practices and team workflows.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Run Mode: setting the default',
+          },
+          {
+            type: 'text',
+            content: 'Open Cursor Settings (the gear at the bottom of the sidebar), choose **Agents** and scroll to **Execution and Approvals**. **Run Mode** decides how much runs without a prompt.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-11/run-mode.webp',
+            alt: 'Cursor Settings, Agents, Execution and Approvals: the Run Mode menu open with Allowlist, Allowlist (with Sandbox) selected, Auto-Review (with Sandbox) and Run Everything (Unsandboxed)',
+            label: 'Run Mode in Cursor Settings',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Allowlist', content: 'Only commands on your allowlist run on their own. Everything else asks you.' },
+              { label: 'Allowlist (with Sandbox)', content: 'The same, but many other commands also run on their own inside a sandbox, a fenced-off space where they cannot touch the rest of your computer.' },
+              { label: 'Auto-Review (with Sandbox)', content: 'Cursor checks each action itself and only asks you when something looks risky. Fewest interruptions with a safety net.' },
+              { label: 'Run Everything (Unsandboxed)', content: 'Nothing asks. Avoid this one on your main computer.' },
+            ],
+          },
+          {
+            type: 'text',
+            content: 'For prototyping, either sandboxed option is a good balance. If prompts get in your way, add the commands you trust to the **Command Allowlist** on the same page, or click Always Run when the prompt appears.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The browser checks the agent\'s work',
+          },
+          {
+            type: 'list',
+            items: [
+              'When you ask the agent to run your app, it opens it in a browser tab inside Cursor (lesson 7).',
+              'The agent can use that browser itself: open pages, click, type, take screenshots and read errors. That is how it checks its own work, as in the Figma build in lesson 8.',
+              'Type **@Browser** in a message to share what is on screen with the agent.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Privacy',
+          },
+          {
+            type: 'text',
+            content: 'In Cursor Settings → General, **Privacy Mode** stops your code from being used to train models. It is on by default for teams. Turn it on if you work on client or unreleased projects.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Pro Tip',
+            content: 'Read approval prompts before clicking Run. They show exactly what the agent wants to do, such as the address it will open or the command it will run. That habit matters more than any setting.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'You are in control',
+            items: [
+              'You can see and switch the model, and know what the free plan includes',
+              'You know what Run, Always Run and Skip do',
+              'You can choose a Run Mode that suits how you work',
+              'You know how the agent uses the browser to check its work',
+            ],
+            message: 'Last lesson: best practices and working with your team.',
           },
         ],
       },
@@ -4277,7 +4302,7 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Share .cursorrules file (design system, code standards)',
+              'Share project rules or AGENTS.md (design system, code standards)',
               'PR reviews: Have humans and Bugbot review PRs',
               'Code pairing: Use Cursor together for better decisions',
               'Documentation: Let AI generate docs, humans refine them',
@@ -4371,7 +4396,7 @@ export const guides: Guide[] = [
             <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
               <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">2</div>
               <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">AI Features</h4>
-              <p class="text-sm text-gray-700 flex-grow text-center">Master Tab, Chat, Cmd+K, and Composer</p>
+              <p class="text-sm text-gray-700 flex-grow text-center">Tab, Cmd+K, the agent and Design Mode</p>
               <div class="mt-6 pt-4 border-t border-gray-200">
                 <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Build</div>
               </div>
@@ -4445,7 +4470,7 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Download and install Cursor for your OS</span></li>
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Navigate the VS Code-based interface</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Find your way around the Agents Window and the editor</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Learn basic code editing and Git</span></li>
                 </ul>
               </td>
@@ -4456,8 +4481,8 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Tab completions for instant code suggestions</span></li>
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Chat (Cmd+L) for conversational help</span></li>
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Cmd+K for inline editing and Composer for multi-file generation</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>The agent and its modes, including Plan</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Cmd+K for quick edits and Design Mode for visual changes</span></li>
                 </ul>
               </td>
             </tr>
@@ -4466,7 +4491,7 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">Convert designs to working code</td>
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Transform Figma designs to React components</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Build Figma frames into working code</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Build responsive frontends with React and Tailwind</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Rapid prototyping and design iteration</span></li>
                 </ul>
@@ -4477,7 +4502,7 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">Leverage advanced Cursor capabilities</td>
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Customize with extensions and .cursorrules</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Teach Cursor your design system with rules</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Codebase indexing and @-mentions for smart context</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Best practices for sustainable AI development</span></li>
                 </ul>
@@ -4491,7 +4516,7 @@ export const guides: Guide[] = [
       <p class="text-gray-700 mb-4">Choose the path that fits your needs:</p>
       <ul class="space-y-3 mb-8">
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">New to Cursor?</strong> Start from the beginning and follow sequentially. You'll be building with AI in less than 30 minutes.</li>
-        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Cursor installed?</strong> Jump to Module 2 (AI Features) and start using Tab, Chat, and Composer right away.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Cursor installed?</strong> Jump to Module 2 (AI Features) and start with the agent and Design Mode right away.</li>
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Want to design-to-code?</strong> Skip to Module 3 (Design-to-Code) to convert Figma designs to React components immediately.</li>
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Build at your own pace</strong> — Each lesson takes 2 minutes. Pause between modules to practice and experiment.</li>
       </ul>

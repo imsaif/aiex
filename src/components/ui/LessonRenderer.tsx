@@ -81,6 +81,50 @@ function linkifyPatterns(
   return <>{parts}</>;
 }
 
+// Lesson copy in guides.ts uses **double asterisks** for emphasis, but nothing
+// ever turned them into bold: about 100 phrases across the courses rendered with
+// the asterisks showing. This renders **x** as <strong>, and keeps linking
+// pattern names in the plain parts. Unpaired asterisks are left as written.
+const BOLD_RE = /\*\*(.+?)\*\*/g;
+
+function renderInline(
+  text: string,
+  keyPrefix: string,
+  linked?: Set<string>
+): React.ReactNode {
+  if (typeof text !== 'string' || !text.includes('**')) {
+    return typeof text === 'string' ? linkifyPatterns(text, keyPrefix, linked) : text;
+  }
+  const parts: React.ReactNode[] = [];
+  let lastIdx = 0;
+  let n = 0;
+  let match: RegExpExecArray | null;
+  BOLD_RE.lastIndex = 0;
+  while ((match = BOLD_RE.exec(text)) !== null) {
+    if (match.index > lastIdx) {
+      parts.push(
+        <React.Fragment key={`${keyPrefix}-t-${n++}`}>
+          {linkifyPatterns(text.slice(lastIdx, match.index), `${keyPrefix}-${n}`, linked)}
+        </React.Fragment>
+      );
+    }
+    parts.push(
+      <strong key={`${keyPrefix}-b-${n++}`} className="font-semibold text-text-primary">
+        {match[1]}
+      </strong>
+    );
+    lastIdx = match.index + match[0].length;
+  }
+  if (lastIdx < text.length) {
+    parts.push(
+      <React.Fragment key={`${keyPrefix}-t-${n++}`}>
+        {linkifyPatterns(text.slice(lastIdx), `${keyPrefix}-${n}`, linked)}
+      </React.Fragment>
+    );
+  }
+  return <>{parts}</>;
+}
+
 interface LessonRendererProps {
   sections: LessonSection[];
 }
@@ -385,7 +429,7 @@ function renderRichText(content: string, indexKey: number): React.ReactNode {
               key={key}
               className="mb-4 text-text-secondary leading-relaxed text-base whitespace-pre-line"
             >
-              {linkifyPatterns(block.text, key, linked)}
+              {renderInline(block.text, key, linked)}
             </p>
           );
         }
@@ -398,13 +442,13 @@ function renderRichText(content: string, indexKey: number): React.ReactNode {
           <div key={key} className="mb-4">
             {block.intro && (
               <p className="mb-3 text-text-secondary leading-relaxed text-base">
-                {linkifyPatterns(block.intro, `${key}-intro`, linked)}
+                {renderInline(block.intro, `${key}-intro`, linked)}
               </p>
             )}
             <ListTag className={listClass}>
               {block.items.map((item, j) => (
                 <li key={j} className="leading-relaxed">
-                  {linkifyPatterns(item, `${key}-li-${j}`, linked)}
+                  {renderInline(item, `${key}-li-${j}`, linked)}
                 </li>
               ))}
             </ListTag>
@@ -435,7 +479,7 @@ const renderSection = (
     case 'intro':
       return (
         <p key={index} className="type-lead mb-10 text-text-secondary">
-          {linkifyPatterns(section.content, `intro-${index}`)}
+          {renderInline(section.content, `intro-${index}`)}
         </p>
       );
 
@@ -488,7 +532,7 @@ const renderSection = (
         >
           {section.items.map((item, i) => (
             <li key={i} className="mb-2">
-              {item}
+              {renderInline(item, `list-${index}-${i}`)}
             </li>
           ))}
         </ul>
@@ -545,12 +589,12 @@ const renderSection = (
                 </h4>
               </div>
               {typeof step.content === 'string' ? (
-                <p className="m-0 text-text-secondary">{step.content}</p>
+                <p className="m-0 text-text-secondary">{renderInline(step.content, `step-${index}-${step.number}`)}</p>
               ) : (
                 <ul className="m-0 pl-6 text-text-secondary">
                   {step.content.map((item, i) => (
                     <li key={i} className="mb-2">
-                      {item}
+                      {renderInline(item, `step-${index}-${step.number}-${i}`)}
                     </li>
                   ))}
                 </ul>
@@ -579,7 +623,7 @@ const renderSection = (
                 {row.label}
               </dt>
               <dd className="m-0 px-5 py-4 text-text-secondary leading-relaxed">
-                {row.content}
+                {renderInline(row.content, `row-${index}-${row.label}`)}
               </dd>
             </div>
           ))}
@@ -738,7 +782,7 @@ const renderSection = (
             {section.items.map((item, i) => (
               <li key={i} className="mb-2 flex gap-2">
                 <CheckIcon className="w-5 h-5 text-status-success flex-shrink-0" />
-                {item}
+                <span>{renderInline(item, `done-${index}-${i}`)}</span>
               </li>
             ))}
           </ul>
