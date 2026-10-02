@@ -2363,7 +2363,7 @@ export const guides: Guide[] = [
     slug: 'cursor-learning-path',
     title: 'Cursor Course for Designers',
     description: 'Master Cursor, the AI-powered code editor for designers.',
-    excerpt: 'Your complete Cursor education: 12 sequential lessons covering setup, features, and advanced workflows. Unlock faster development with AI pair programming.',
+    excerpt: 'Twelve lessons on Cursor 3 for designers: the Agents Window, the agent and its modes, Design Mode, building from Figma, and rules for your design system.',
     tool: 'Cursor',
     useCase: 'Learning Path',
     skillLevel: 'Beginner',
@@ -2394,7 +2394,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Cursor works on Windows, macOS 10.15+, and Linux. You need at least 4 GB of RAM and 2 GB of free disk space. If you can run VS Code, you can run Cursor.',
+            content: 'Cursor runs on macOS 12 or later, Windows 10 or later, and Linux. If your computer can run VS Code, it can run Cursor.',
           },
           {
             type: 'heading',
@@ -2470,9 +2470,9 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Make the .AppImage executable: chmod +x cursor-*.AppImage',
-              'Run it: ./cursor-*.AppImage',
-              'Or use your package manager if available for your distro',
+              'Pick the download for your system: .deb (Ubuntu, Debian), .rpm (Fedora) or AppImage',
+              'Install the .deb or .rpm by opening it, or with your package manager',
+              'For the AppImage: run chmod +x on the file, then open it'
             ],
           },
           {
@@ -2502,7 +2502,7 @@ export const guides: Guide[] = [
               {
                 number: 3,
                 title: 'Choose Your Plan',
-                content: 'Cursor starts you on the free Hobby plan, with no credit card needed and a limited number of Agent requests. Upgrade to Pro ($20/month) if you hit the limit.',
+                content: 'Cursor starts you on the free Hobby plan, with no credit card needed and a limited number of agent requests. If you hit the limit, Pro is $20/month. In India there is also a Start plan at ₹649/month, payable by UPI, which covers Cursor\'s own models.',
                 icon: 'star',
               },
             ],
@@ -2894,13 +2894,13 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'On the Free plan, you get basic autocomplete. The Pro plan ($20/month) includes unlimited tab completions and longer context windows for smarter suggestions.',
+            content: 'On the free Hobby plan, Tab is included with limited usage. Paid plans from Pro ($20/month) include unlimited Tab completions.',
           },
           {
             type: 'callout',
             calloutType: 'success',
             title: 'Pro Tip',
-            content: 'Tab autocomplete works best on straightforward, predictable code (components, loops, API calls). For complex logic, use Chat (Cmd+L) instead.',
+            content: 'Tab autocomplete works best on straightforward, predictable code (components, loops, API calls). For bigger changes, ask the agent instead (lesson 5).',
             icon: 'success',
           },
           {
@@ -2912,7 +2912,7 @@ export const guides: Guide[] = [
               'You know how to write code that gets better suggestions',
               'You\'ve seen real examples of autocomplete in action',
             ],
-            message: 'Excellent! Tab completion is your speed tool. Next, let\'s meet Chat—your conversational AI assistant.',
+            message: 'Tab completion is your speed tool. Next, the agent: describing what you want and letting it build.',
           },
         ],
       },
@@ -3076,7 +3076,7 @@ export const guides: Guide[] = [
         sections: [
           {
             type: 'intro',
-            content: 'Cmd+K is your quick-edit tool. Highlight code and press Cmd+K to refactor, fix, or modify it with natural language instructions. No Chat panel needed.',
+            content: 'Cmd+K is your quick-edit tool in the editor. Highlight code and press Cmd+K to change it by describing what you want. No agent conversation needed. In the Agents Window, Cmd+K searches instead.',
             icon: 'edit',
           },
           {
@@ -3147,7 +3147,7 @@ export const guides: Guide[] = [
           {
             type: 'heading',
             level: 'h3',
-            content: 'Cmd+K vs Chat (Cmd+L): When to Use Which',
+            content: 'Cmd+K or the agent: when to use which',
           },
           {
             type: 'text',
@@ -3157,7 +3157,8 @@ export const guides: Guide[] = [
             type: 'list',
             items: [
               '**Cmd+K**: Quick changes to existing code (refactor, fix, adjust)',
-              '**Chat (Cmd+L)**: Explanations, debugging, understanding code, creating new code from scratch',
+              '**The agent (lesson 5)**: New features, changes across several files, explanations (Ask mode) and debugging',
+              '**Cmd+L** with code selected sends it to the agent if a quick edit turns out to be bigger',
             ],
           },
           {
@@ -3210,7 +3211,7 @@ export const guides: Guide[] = [
             title: 'Inline Editing Mastered!',
             items: [
               'You can select code and use Cmd+K to edit it',
-              'You understand the difference between Cmd+K and Chat',
+              'You know when to use Cmd+K and when to use the agent',
               'You know how to use Cmd+K in the terminal',
               'You\'re confident with quick, targeted edits',
             ],
@@ -3562,7 +3563,7 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Use Chat or Composer to generate:',
+            content: 'Ask the agent to generate:',
           },
           {
             type: 'code',
@@ -3662,8 +3663,8 @@ export const guides: Guide[] = [
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Design System in .cursorrules',
-            content: 'Create a .cursorrules file with your design tokens (colors, spacing, fonts). Cursor uses this to generate code that matches your brand automatically.',
+            title: 'Design system in a rule',
+            content: 'Put your design tokens (colours, spacing, fonts) in a project rule or AGENTS.md, as in lesson 10. The agent then follows them in every component it generates.',
             icon: 'info',
           },
           {
@@ -4141,7 +4142,7 @@ export const guides: Guide[] = [
           {
             type: 'list',
             items: [
-              'Share .cursorrules file (design system, code standards)',
+              'Share project rules or AGENTS.md (design system, code standards)',
               'PR reviews: Have humans and Bugbot review PRs',
               'Code pairing: Use Cursor together for better decisions',
               'Documentation: Let AI generate docs, humans refine them',
@@ -4235,7 +4236,7 @@ export const guides: Guide[] = [
             <div class="flex flex-col h-full p-6 bg-white border-2 border-gray-900 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
               <div class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white font-bold text-lg mb-6 mx-auto">2</div>
               <h4 class="text-lg font-bold text-gray-900 mb-3 text-center">AI Features</h4>
-              <p class="text-sm text-gray-700 flex-grow text-center">Master Tab, Chat, Cmd+K, and Composer</p>
+              <p class="text-sm text-gray-700 flex-grow text-center">Tab, Cmd+K, the agent and Design Mode</p>
               <div class="mt-6 pt-4 border-t border-gray-200">
                 <div class="text-xs font-semibold uppercase tracking-wide text-gray-900 border border-gray-900 px-3 py-1 rounded text-center block">Build</div>
               </div>
@@ -4309,7 +4310,7 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Download and install Cursor for your OS</span></li>
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Navigate the VS Code-based interface</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Find your way around the Agents Window and the editor</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Learn basic code editing and Git</span></li>
                 </ul>
               </td>
@@ -4320,8 +4321,8 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Tab completions for instant code suggestions</span></li>
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Chat (Cmd+L) for conversational help</span></li>
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Cmd+K for inline editing and Composer for multi-file generation</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>The agent and its modes, including Plan</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Cmd+K for quick edits and Design Mode for visual changes</span></li>
                 </ul>
               </td>
             </tr>
@@ -4330,7 +4331,7 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">Convert designs to working code</td>
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Transform Figma designs to React components</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Build Figma frames into working code</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Build responsive frontends with React and Tailwind</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Rapid prototyping and design iteration</span></li>
                 </ul>
@@ -4341,7 +4342,7 @@ export const guides: Guide[] = [
               <td class="py-4 px-4 text-gray-700 align-top">Leverage advanced Cursor capabilities</td>
               <td class="py-4 px-4 text-gray-700 align-top">
                 <ul class="space-y-1">
-                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Customize with extensions and .cursorrules</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Teach Cursor your design system with rules</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Codebase indexing and @-mentions for smart context</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Best practices for sustainable AI development</span></li>
                 </ul>
@@ -4355,7 +4356,7 @@ export const guides: Guide[] = [
       <p class="text-gray-700 mb-4">Choose the path that fits your needs:</p>
       <ul class="space-y-3 mb-8">
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">New to Cursor?</strong> Start from the beginning and follow sequentially. You'll be building with AI in less than 30 minutes.</li>
-        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Cursor installed?</strong> Jump to Module 2 (AI Features) and start using Tab, Chat, and Composer right away.</li>
+        <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Already have Cursor installed?</strong> Jump to Module 2 (AI Features) and start with the agent and Design Mode right away.</li>
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Want to design-to-code?</strong> Skip to Module 3 (Design-to-Code) to convert Figma designs to React components immediately.</li>
         <li class="p-4 bg-gray-50 rounded-lg text-gray-700"><strong class="text-gray-900">Build at your own pace</strong> — Each lesson takes 2 minutes. Pause between modules to practice and experiment.</li>
       </ul>
