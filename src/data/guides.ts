@@ -3839,170 +3839,136 @@ export const guides: Guide[] = [
       },
       {
         id: 'lesson-11',
-        title: 'Master Advanced Features',
-        duration: 2,
+        title: 'Models, Approvals and the Browser',
+        duration: 6,
         order: 11,
         module: 'practices',
         sections: [
           {
             type: 'intro',
-            content: 'You\'ve learned the basics. Now, advanced features that take you to expert level: codebase indexing, multi-model AI, context management, and team collaboration.',
-            icon: 'crown',
+            content: 'Three settings shape how the agent works for you: which model does the thinking, what it may run without asking, and how it checks its work in the browser.',
+            icon: 'settings',
           },
           {
             type: 'heading',
             level: 'h3',
-            content: 'Codebase Indexing: AI Knows Your Code',
+            content: 'Picking a model',
           },
           {
             type: 'text',
-            content: 'When you open a project, Cursor automatically indexes it. The AI scans every file and creates a semantic understanding of your codebase. This is why it can suggest relevant code from anywhere in your project.',
+            content: 'The model name sits under the prompt box. Click it to switch, or press **Cmd+/** to cycle through models. Set your default in Cursor Settings → Models.',
           },
           {
-            type: 'heading',
-            level: 'h3',
-            content: '@-Mentions: Direct Context',
-          },
-          {
-            type: 'text',
-            content: 'In Chat or Composer, use @-mentions to reference specific files or symbols:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**@filename.jsx**: Reference a specific file',
-              '**@functionName**: Reference a specific function',
-              '**@className**: Reference a class',
-              'Type @ and see all available options',
+            type: 'table',
+            rows: [
+              { label: 'Free plan', content: 'Cursor picks from its own models, such as Composer 2.5 and Grok. Clicking the model name shows Upgrade to unlock more models.' },
+              { label: 'Paid plans', content: 'The full list, including Claude, GPT and Gemini models. **Auto** picks a model for each request.' },
+              { label: 'Teams', content: 'Auto can be set to favour cost, balance or intelligence.' },
             ],
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-11/at-mentions.png',
-            alt: 'Cursor Chat showing @-mentions context menu with available files and symbols for reference',
-            label: 'Real @-mentions context menu in Cursor Chat for adding codebase context',
-          },
-          {
-            type: 'text',
-            content: 'This tells the AI exactly what to consider when generating code.',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Multi-Model AI: Choose Your Brain',
-          },
-          {
-            type: 'text',
-            content: 'Cursor supports multiple AI models. Switch between them in the Chat panel:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Claude Sonnet & Opus** (Anthropic): Best for analysis and refactoring',
-              '**GPT-5** (OpenAI): Great for creative code generation',
-              '**Gemini** (Google): Good for general tasks',
-              '**xAI models**: Latest experimental models',
-            ],
-          },
-          {
-            type: 'text',
-            content: 'Different models excel at different tasks. Feel free to try different ones for different work.',
-          },
-          {
-            type: 'code',
-            code: '# .cursorrules - Tell Cursor about your project\n\nYou are an expert React developer working on a design system.\n\n## Code Style\n- Use TypeScript with strict mode\n- Use Tailwind CSS for styling (never write raw CSS)\n- Follow functional components with hooks\n- Component exports should be default exports\n\n## Design System\n- Primary color: #0066FF (blue-600)\n- Spacing: Use Tailwind spacing scale (gap-4, p-2, etc.)\n- Fonts: Use system fonts (font-sans) or Inter\n\n## Naming Conventions\n- Components: PascalCase (Button, Card, Header)\n- Variables: camelCase (buttonText, cardContent)\n- Files: kebab-case (button.jsx, card.jsx)\n\n## Testing\n- Always add JSDoc comments\n- Make components responsive mobile-first',
-            language: 'markdown',
-            label: 'Example .cursorrules file for a design system project',
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Privacy Mode: Your Code Stays Private',
-          },
-          {
-            type: 'text',
-            content: 'Privacy Mode is free on every plan, including Hobby. Turn it on in Settings. Your code is never:',
-          },
-          {
-            type: 'list',
-            items: [
-              'Sent to AI providers for training',
-              'Logged or stored on servers',
-              'Used to improve AI models',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Context Management: Work Smarter',
-          },
-          {
-            type: 'text',
-            content: 'AI works better with relevant context. Strategies:',
-          },
-          {
-            type: 'list',
-            items: [
-              '**Close tabs**: Only open files you\'re actively using',
-              '**Use @-mentions**: Reference specific files instead of context-dumping',
-              '**Provide .cursorrules**: Let your project guidelines guide the AI',
-              '**Use Cmd+Enter for full context**: When you truly need codebase-wide understanding',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Bugbot: AI Code Review',
-          },
-          {
-            type: 'text',
-            content: 'Advanced feature: Bugbot automatically reviews your GitHub PRs and suggests improvements:',
-          },
-          {
-            type: 'list',
-            items: [
-              'Detects bugs and logic errors',
-              'Suggests security fixes',
-              'Recommends performance improvements',
-              '​One-click "Fix in Cursor" to apply suggestions',
-            ],
-          },
-          {
-            type: 'heading',
-            level: 'h3',
-            content: 'Team Features (Cursor Teams/Enterprise)',
-          },
-          {
-            type: 'text',
-            content: 'For teams ($40/user/month):',
-          },
-          {
-            type: 'list',
-            items: [
-              'Shared .cursorrules across team',
-              'Centralized billing and usage tracking',
-              'SSO authentication',
-              'Team-wide privacy settings',
-              'Collaboration features',
-            ],
+            src: '/images/guides/cursor-learning-path/lesson-11/model-locked.webp',
+            alt: 'The model name under the Cursor prompt box with a lock icon, and a popover reading Upgrade to unlock more models, More models are only available on paid plans, with an Upgrade to Pro button',
+            label: 'On the free plan the model is fixed',
           },
           {
             type: 'callout',
             calloutType: 'info',
-            title: 'Pro Tip',
-            content: 'Always review AI-generated code before using it. AI is fast, but human judgment catches edge cases and security issues.',
+            title: 'Which one to use',
+            content: 'Start with the default. Cursor recommends Composer 2.5 for Design Mode and quick visual edits. Switch to a stronger model only when a task keeps going wrong, such as a tricky layout or a bug the agent cannot pin down.',
             icon: 'info',
           },
           {
-            type: 'completion',
-            title: 'Advanced Features Unlocked!',
-            items: [
-              'You understand codebase indexing and how AI knows your code',
-              'You can use @-mentions for precise context',
-              'You know how to switch between multiple AI models',
-              'You\'re aware of privacy features and team collaboration',
+            type: 'heading',
+            level: 'h3',
+            content: 'What the agent may do without asking',
+          },
+          {
+            type: 'text',
+            content: 'The agent edits files in your project freely. Running commands, opening pages and using connected tools such as Figma are different: by default it stops and asks.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-11/approval-prompt.webp',
+            alt: 'An approval card in the Cursor chat: Running navigate_page in chrome-devtools, with the page address it wants to open, and Skip, Always Run and Run buttons',
+            label: 'The agent asking before it opens a page to check its work',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Run', content: 'Allow this one action.' },
+              { label: 'Always Run', content: 'Allow it now and from now on. Use it for actions you will see again and trust, like opening your local app.' },
+              { label: 'Skip', content: 'Refuse. The agent carries on without it or tries another way.' },
             ],
-            message: 'Excellent! You\'re now using Cursor like an expert. The final lesson covers best practices and team workflows.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Run Mode: setting the default',
+          },
+          {
+            type: 'text',
+            content: 'Open Cursor Settings (the gear at the bottom of the sidebar), choose **Agents** and scroll to **Execution and Approvals**. **Run Mode** decides how much runs without a prompt.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/cursor-learning-path/lesson-11/run-mode.webp',
+            alt: 'Cursor Settings, Agents, Execution and Approvals: the Run Mode menu open with Allowlist, Allowlist (with Sandbox) selected, Auto-Review (with Sandbox) and Run Everything (Unsandboxed)',
+            label: 'Run Mode in Cursor Settings',
+          },
+          {
+            type: 'table',
+            rows: [
+              { label: 'Allowlist', content: 'Only commands on your allowlist run on their own. Everything else asks you.' },
+              { label: 'Allowlist (with Sandbox)', content: 'The same, but many other commands also run on their own inside a sandbox, a fenced-off space where they cannot touch the rest of your computer.' },
+              { label: 'Auto-Review (with Sandbox)', content: 'Cursor checks each action itself and only asks you when something looks risky. Fewest interruptions with a safety net.' },
+              { label: 'Run Everything (Unsandboxed)', content: 'Nothing asks. Avoid this one on your main computer.' },
+            ],
+          },
+          {
+            type: 'text',
+            content: 'For prototyping, either sandboxed option is a good balance. If prompts get in your way, add the commands you trust to the **Command Allowlist** on the same page, or click Always Run when the prompt appears.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'The browser checks the agent\'s work',
+          },
+          {
+            type: 'list',
+            items: [
+              'When you ask the agent to run your app, it opens it in a browser tab inside Cursor (lesson 7).',
+              'The agent can use that browser itself: open pages, click, type, take screenshots and read errors. That is how it checks its own work, as in the Figma build in lesson 8.',
+              'Type **@Browser** in a message to share what is on screen with the agent.',
+            ],
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Privacy',
+          },
+          {
+            type: 'text',
+            content: 'In Cursor Settings → General, **Privacy Mode** stops your code from being used to train models. It is on by default for teams. Turn it on if you work on client or unreleased projects.',
+          },
+          {
+            type: 'callout',
+            calloutType: 'success',
+            title: 'Pro Tip',
+            content: 'Read approval prompts before clicking Run. They show exactly what the agent wants to do, such as the address it will open or the command it will run. That habit matters more than any setting.',
+            icon: 'success',
+          },
+          {
+            type: 'completion',
+            title: 'You are in control',
+            items: [
+              'You can see and switch the model, and know what the free plan includes',
+              'You know what Run, Always Run and Skip do',
+              'You can choose a Run Mode that suits how you work',
+              'You know how the agent uses the browser to check its work',
+            ],
+            message: 'Last lesson: best practices and working with your team.',
           },
         ],
       },
