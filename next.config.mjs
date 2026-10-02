@@ -181,6 +181,11 @@ const nextConfig = {
       // Cursor course rewrite (Oct 2026): lesson URLs are slugs of lesson titles,
       // so a retitled lesson keeps its old address alive here.
       {
+        source: '/guides/cursor-learning-path/customize-your-workspace',
+        destination: '/guides/cursor-learning-path/teach-cursor-your-design-system-with-rules',
+        permanent: true,
+      },
+      {
         source: '/guides/cursor-learning-path/chat-with-ai-cmd-l',
         destination: '/guides/cursor-learning-path/talk-to-the-agent-choose-the-right-mode',
         permanent: true,
