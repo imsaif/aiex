@@ -14,18 +14,18 @@ export const guides: Guide[] = [
     description:
       'Master Claude Code for design and prototyping with AI-powered assistance. Now with bidirectional Figma MCP integration: design-to-code and code-to-design.',
     excerpt:
-      'Your complete Claude Code education: 23 sequential lessons covering setup, bidirectional Figma workflows, prototyping, version control, and professional best practices. Go from zero to confident in one comprehensive course.',
+      'Your complete Claude Code education: 24 sequential lessons covering setup, bidirectional Figma workflows, prototyping, version control, professional best practices, and customizing Claude Code with mods. Go from zero to confident in one comprehensive course.',
     tool: 'Claude Code',
     useCase: 'Learning Path',
     skillLevel: 'Beginner',
     designDomain: 'UX Design',
-    readTime: 39,
+    readTime: 41,
     author: 'Design Team',
     publishedDate: '2025-10-28',
-    lastUpdatedDate: '2026-07-20',
+    lastUpdatedDate: '2026-10-02',
     status: 'ready',
     thumbnail: 'https://commons.wikimedia.org/wiki/Special:FilePath/Claude_AI_symbol.svg',
-    tags: ['claude-code', 'learning-path', 'getting-started', 'course', 'comprehensive', 'figma-mcp', 'design-to-code'],
+    tags: ['claude-code', 'learning-path', 'getting-started', 'course', 'comprehensive', 'figma-mcp', 'design-to-code', 'mods'],
     lessons: [
       // Setup Lessons (1-3)
       {
@@ -2084,6 +2084,199 @@ export const guides: Guide[] = [
               'Documented design intent so developers know the why, not just the what',
               'Used Figma MCP to short-circuit the "the padding looks off" loop',
             ],
+            message: 'Next up: make Claude Code itself work the way you do, with mods.',
+          },
+        ],
+      },
+      {
+        id: 'lesson-24',
+        title: 'Customize Claude Code with Mods',
+        duration: 2,
+        order: 23,
+        module: 'practices',
+        sections: [
+          {
+            type: 'intro',
+            content: 'Mods change how Claude Code itself looks and behaves: a panel beside the conversation, a line above the prompt box, a new slash command, or a check that pauses before something risky. You don\'t need to code to use one. Install one in a few keystrokes, or describe the one you want and Claude builds it for you.',
+            icon: 'cog',
+          },
+          {
+            type: 'heading',
+            level: 'h2',
+            content: 'Customize Claude Code with Mods',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What a Mod Can Do',
+          },
+          {
+            type: 'text',
+            content: 'Think of a mod as a small add-on for Claude Code\'s own interface. Skills change what Claude knows. Mods change the tool you\'re working in. Some of Claude Code\'s built-in features are already mods, such as the /diff view of what changed.',
+          },
+          {
+            type: 'list',
+            items: [
+              'Add a panel beside the conversation, with tabs and buttons',
+              'Show a live line above the prompt box, like how full the conversation is getting',
+              'Restyle parts of the interface Claude Code draws, such as the spinner',
+              'Add your own slash command that answers instantly',
+              'Pause a risky action and ask you first, with buttons to go ahead or cancel',
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'Check your version first',
+            content: 'Mods need Claude Code v2.1.287 or later. Run claude --version in your Terminal to check, and claude update if yours is older. They work in the Terminal and in the Code tab of the Claude Desktop app. The VS Code chat panel runs them but doesn\'t show their panels.',
+            icon: 'info',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option A: Ask Claude to Make One',
+          },
+          {
+            type: 'text',
+            content: 'This is the fastest way in, and it fits how you already work: describe the outcome, let Claude handle the build.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Describe the mod',
+                content: [
+                  'In a Claude Code session, ask in plain words, for example: "make a mod that shows the current git branch above the prompt"',
+                  'Claude Code asks before Claude saves each of the mod\'s files, because they go in a protected settings folder. Approve each one',
+                ],
+                icon: 'chat',
+              },
+              {
+                number: 2,
+                title: 'Turn it on',
+                content: [
+                  'When the first file is saved, Claude Code asks whether to enable hot reloading for the session',
+                  'Choose "Enable for this session". The mod loads as soon as Claude finishes its turn',
+                ],
+                icon: 'check',
+              },
+              {
+                number: 3,
+                title: 'Try it and refine it',
+                content: [
+                  'Use what you asked for. If it\'s not quite right, tell Claude what to change',
+                  'The mod reloads after every change, so you can review it straight away, like iterating on a component',
+                ],
+                icon: 'edit',
+              },
+            ],
+          },
+          {
+            type: 'text',
+            content: 'A few prompts to start from:',
+          },
+          {
+            type: 'code',
+            code: 'make a mod that shows how full the conversation is above the prompt\n\nmake a mod that asks me before you delete any file\n\nmake a mod that adds a /changes command listing every file you edited in this session',
+            language: 'text',
+            label: 'Claude Code',
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'A mod Claude writes lasts for one session',
+            content: 'It loads only in the session that made it, and Claude Code clears it out later. If you want to keep it, ask Claude to copy the mod to a folder of your own, such as ~/mods, and to tell you how to load it next time.',
+            icon: 'warning',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Option B: Install One Someone Else Made',
+          },
+          {
+            type: 'text',
+            content: 'Mods are packaged as plugins, so you install them the same way as any Claude Code plugin.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Open the plugin browser',
+                content: [
+                  'In the Terminal: type /plugin and press Enter. It opens on the Discover tab',
+                  'In the Desktop app\'s Code tab: click the + next to the prompt box, then Plugins, then Add plugin',
+                ],
+                icon: 'terminal',
+              },
+              {
+                number: 2,
+                title: 'Find the mod',
+                content: [
+                  'Type to search, then press Enter on a result to open its details',
+                  'If someone sent you an install command instead, paste it, for example /plugin install name@marketplace',
+                ],
+                icon: 'select',
+              },
+              {
+                number: 3,
+                title: 'Read before you install',
+                content: [
+                  'The details show what the plugin will add',
+                  'Choose "Install for you" to have it in every project, or limit it to the current one',
+                ],
+                icon: 'download',
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'warning',
+            title: 'Only install mods from people you trust',
+            content: 'A mod isn\'t a theme. It runs with the same access you have: it can read your files, see what you type, and act without asking. Treat installing one like handing someone your laptop. Stick to Anthropic and authors you know.',
+            icon: 'warning',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'See, Pause, or Remove a Mod',
+          },
+          {
+            type: 'list',
+            items: [
+              'See what\'s running: type /plugin. A dim line under the tabs reads something like "1 mod active · git-branch"',
+              'Turn one off: in /plugin, press Tab to reach Installed, select the mod and press Space',
+              'Remove one: on the Installed tab, press Enter on the mod and choose Uninstall',
+              'Something feels off? Start Claude Code with claude --safe-mode to run a session with every mod you installed switched off',
+            ],
+          },
+          {
+            type: 'further-reading',
+            links: [
+              {
+                title: 'Mods overview',
+                url: 'https://code.claude.com/docs/en/plugins/mods',
+                source: 'Claude Code docs',
+                description: 'What mods can reach, where they run, and the mods built into Claude Code.',
+              },
+              {
+                title: 'Install and manage plugins',
+                url: 'https://code.claude.com/docs/en/plugins/install',
+                source: 'Claude Code docs',
+                description: 'The full /plugin flow in the Terminal, Desktop app, and VS Code.',
+              },
+            ],
+          },
+          {
+            type: 'completion',
+            title: 'Claude Code, customized',
+            items: [
+              'Know what a mod is and how it differs from a skill',
+              'Asked Claude to build a mod and refined it in the same session',
+              'Can install, pause, and remove mods from /plugin',
+              'Know to install only from authors you trust',
+            ],
             message: 'Last lesson coming up. Things will go wrong eventually; knowing how to fix them keeps the workflow running.',
           },
         ],
@@ -2092,7 +2285,7 @@ export const guides: Guide[] = [
         id: 'lesson-18',
         title: 'Troubleshooting Common Issues',
         duration: 1,
-        order: 23,
+        order: 24,
         module: 'practices',
         sections: [
           {
@@ -2173,10 +2366,10 @@ export const guides: Guide[] = [
         ],
       },
     ],
-    lessonCount: 23,
+    lessonCount: 24,
     content: `
       <h2 class="text-3xl font-bold text-gray-900 mb-4">Welcome to Claude Code Learning Path for Designers</h2>
-      <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Now with bidirectional Figma MCP integration: design-to-code and code-to-design. <strong>Complete this course in 39 minutes and go from zero to confident.</strong></p>
+      <p class="text-lg text-gray-700 mb-8">Claude Code is an AI-powered development tool that lets you build interactive prototypes, test design ideas in code, and collaborate with developers. Now with bidirectional Figma MCP integration: design-to-code and code-to-design. <strong>Complete this course in 41 minutes and go from zero to confident.</strong></p>
 
       <h3 class="text-3xl font-bold text-gray-900 mt-12 mb-3">What You'll Learn</h3>
       <p class="text-lg text-gray-700 mb-8">This learning path is structured in 5 sequential modules that build on each other. Complete all lessons in order for the best learning experience.</p>
@@ -2266,7 +2459,7 @@ export const guides: Guide[] = [
             </div>
             <div class="text-center">
               <p class="text-xs font-semibold uppercase tracking-wide text-gray-600">Lessons</p>
-              <p class="text-3xl font-bold text-gray-900 mt-1">23</p>
+              <p class="text-3xl font-bold text-gray-900 mt-1">24</p>
             </div>
           </div>
         </div>
@@ -2335,6 +2528,7 @@ export const guides: Guide[] = [
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Write clear, specific prompts for better results</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Test across browsers and devices</span></li>
                   <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Hand off work to developers professionally</span></li>
+                  <li class="flex items-start gap-2"><span class="text-gray-400 flex-shrink-0">•</span> <span>Customize Claude Code with mods</span></li>
                 </ul>
               </td>
             </tr>
