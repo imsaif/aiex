@@ -3284,12 +3284,12 @@ export const guides: Guide[] = [
             type: 'steps',
             steps: [
               { number: 1, title: 'Ask the agent to run it', content: 'In the Agents Window, type: "Start the dev server for this project and open it in the browser." The agent finds the right command and the right port.' },
-              { number: 2, title: 'Check the browser pane', content: 'Your app opens in a browser pane inside Cursor. Click around once to make sure it loaded the page you want to change.' },
+              { number: 2, title: 'Check the browser pane', content: 'Your app opens in a browser pane on the right, next to the chat. Its address is a local one, such as localhost:5173.' },
             ],
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-7/app-in-browser.png',
+            src: '/images/guides/cursor-learning-path/lesson-7/app-in-browser.webp',
             alt: 'The Cursor Agents Window with a prototype running in the built-in browser pane next to the agent chat',
             label: 'Your prototype running in the browser inside the Agents Window',
           },
@@ -3300,13 +3300,13 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'With the browser pane focused, press **Cmd+Shift+D**. Clicking the page now selects elements instead of pressing them. Press **Cmd+Shift+D** again to go back to normal browsing. On Windows, use Ctrl in place of Cmd and Alt in place of Option.',
+            content: 'Click **Design Mode** in the row of buttons under the chat, or press **Cmd+Shift+D** with the browser focused. A **Design** label appears in the browser\'s toolbar, and clicking the page now selects elements instead of pressing them. To go back to normal browsing, click the × on that label. On Windows, use Ctrl in place of Cmd and Alt in place of Option.',
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-7/design-mode-select.png',
-            alt: 'Design Mode switched on in the Cursor browser, with one element outlined and selected',
-            label: 'Design Mode on: the selected element is outlined',
+            src: '/images/guides/cursor-learning-path/lesson-7/design-mode-select.webp',
+            alt: 'Design Mode on in Cursor: the Pricing page card is outlined in blue, with a request box under it, and the chat on the left shows an earlier edit and the files it changed',
+            label: 'Select an element and a request box appears right under it',
           },
           {
             type: 'heading',
@@ -3324,13 +3324,13 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: 'Once something is selected, press **Cmd+L** to add it to the chat, or **Option+click** an element to drop it into the message you are typing. Then write what should change.',
+            content: 'When you select something, a small box appears under it saying **Describe the change**. Type what should change there and press Return. The agent picks it up, and the chat on the left shows its progress and which files it edited. To discuss the element in the main chat instead, press **Cmd+L**.',
           },
           {
             type: 'image',
-            src: '/images/guides/cursor-learning-path/lesson-7/selection-in-chat.png',
-            alt: 'The agent chat in Cursor with a selected element attached and a request typed underneath',
-            label: 'The selected element attached to your request',
+            src: '/images/guides/cursor-learning-path/lesson-7/design-mode-edit.mp4',
+            alt: 'Screen recording: Design Mode is on, the Settings panel card is selected, the request "add an icon here too" is typed in the box under it, and after the agent works the card gets an icon matching the other two',
+            label: 'One request in Design Mode: select the card, describe the change, watch it land',
           },
           {
             type: 'heading',
@@ -3356,8 +3356,8 @@ export const guides: Guide[] = [
           {
             type: 'steps',
             steps: [
-              { number: 1, title: 'Select the label', content: 'Turn on Design Mode and click the small label under a card title.' },
-              { number: 2, title: 'Say the change', content: 'Type: "Make this 2px smaller and use our secondary text colour." Watch the page reload with the change.' },
+              { number: 1, title: 'Select the label', content: 'Turn on Design Mode and click the small label above a card title.' },
+              { number: 2, title: 'Say the change', content: 'In the Describe the change box, type: "Make this 2px smaller and use our secondary text colour." Press Return and watch the page update.' },
               { number: 3, title: 'Match the others', content: 'Select two cards with different padding and type: "Make both cards use the same padding as the first one."' },
               { number: 4, title: 'Keep going', content: 'Select the next thing while the agent works. Edits can run side by side, so you do not have to wait for each one.' },
             ],
