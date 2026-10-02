@@ -2248,7 +2248,7 @@ export const guides: Guide[] = [
               'See what\'s running: type /plugin. A dim line under the tabs reads something like "1 mod active · git-branch"',
               'Turn one off: in /plugin, press Tab to reach Installed, select the mod and press Space',
               'Remove one: on the Installed tab, press Enter on the mod and choose Uninstall',
-              'Something feels off? Start Claude Code with claude --safe-mode to run a session with every mod you installed switched off',
+              'Something feels off? Start Claude Code with claude --safe-mode to run a session with every mod you installed, and your other customizations, switched off',
             ],
           },
           {
