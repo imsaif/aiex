@@ -178,6 +178,13 @@ const nextConfig = {
         destination: '/patterns/feedback-loops',
         permanent: true,
       },
+      // Cursor course rewrite (Oct 2026): lesson URLs are slugs of lesson titles,
+      // so a retitled lesson keeps its old address alive here.
+      {
+        source: '/guides/cursor-learning-path/build-with-composer',
+        destination: '/guides/cursor-learning-path/edit-your-prototype-with-design-mode',
+        permanent: true,
+      },
       // Removed guide
       {
         source: '/guides/replit-ai-learning-path',
