@@ -8827,14 +8827,21 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             type: 'heading',
             level: 'h3',
-            content: 'Two handoff paths',
+            content: 'Three handoff paths',
           },
           {
             type: 'table',
             rows: [
               { label: 'Handoff bundle', content: "Export a ZIP with the generated HTML, CSS, and assets. Drop it into a Claude Code session with a prompt like 'Port this to our Next.js codebase using our existing component library'." },
-              { label: 'Direct to Claude Code', content: "In the standalone app at claude.ai/design, Export offers Send to local coding agent or Send to Claude Code Web. Claude Code opens with the design context pre-loaded and starts scaffolding the implementation. Designing inside a chat? The in-chat Export menu has no Claude Code send, so download the HTML, or run /design in Claude Code to pull the design into your codebase." },
+              { label: 'Direct to Claude Code', content: "In the standalone app at claude.ai/design, Export offers Send to local coding agent or Send to Claude Code Web. Claude Code opens with the design context pre-loaded and starts scaffolding the implementation. The in-chat Export menu has no Claude Code send; use the next row instead." },
+              { label: 'Ask in the chat', content: "Type \"Hand this design off to Claude Code so I can build it\". Claude writes HANDOFF.md, a build spec covering design tokens, layout, components, states, responsive rules, edge cases, accessibility and a build order, plus Main.dc.html, a visual reference with the exact values. Click Download all, put both files in an empty project folder, open Claude Code there, and paste the prompt Claude gives you." },
             ],
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-12/chat-handoff.mp4',
+            alt: 'In the Lineup chat, the request "Hand this design off to Claude Code so I can build it" is sent. Claude creates HANDOFF.md, then replies with the files to download, Handoff (Markdown) and Main.dc (HTML), a Download all button, and a prompt to paste into Claude Code. The handoff spec opens beside the chat with sections for how to read the spec, suggested stack, design tokens with colour values, layout and responsive rules.',
+            label: 'Asking in the chat: Claude writes the build spec and the prompt for Claude Code.',
           },
           {
             type: 'callout',
