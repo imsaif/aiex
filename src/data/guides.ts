@@ -8844,6 +8844,16 @@ Audience: Early-stage VCs in the design-tools space.`,
             icon: 'info',
           },
           {
+            type: 'text',
+            content: 'For a quick file, each artboard on the canvas has its own download button (top right of the artboard). It offers PNG at 1x or 2x, a PDF, an HTML .zip with the page and its images, or every artboard as one PDF.',
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-12/artboard-download.webp',
+            alt: "The Lineup kanban board on the Claude Design canvas with the artboard's download menu open: PNG 1x (1440 px wide, full length), PNG 2x (2880 px wide), PDF (one page, or Letter pages if it scrolls), HTML .zip (page plus its images and runtime), All artboards as one PDF, and Selected artboards.",
+            label: "The artboard download menu: images, PDF or HTML in one click.",
+          },
+          {
             type: 'heading',
             level: 'h3',
             content: 'Before you hand off',
