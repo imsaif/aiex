@@ -8924,6 +8924,30 @@ Audience: Early-stage VCs in the design-tools space.`,
     `,
     relatedPatterns: ['Augmented Creation', 'Collaborative AI', 'Contextual Assistance'],
     relatedGuides: ['claude-code-learning-path'],
+    // Second course by traffic (Sep 2026), so the next to get the picker.
+    startPoints: [
+      {
+        level: 'Beginner',
+        label: 'I\'m new to Claude Design',
+        lessonId: 'lesson-1',
+      },
+      {
+        level: 'Intermediate',
+        label: 'I\'ve made my first design',
+        lessonId: 'lesson-4',
+      },
+      {
+        level: 'Advanced',
+        label: 'I want prototypes, decks, or handoff',
+        lessonId: 'lesson-10',
+      },
+    ],
+    moduleLevels: {
+      setup: 'Beginner',
+      iteration: 'Intermediate',
+      'design-system': 'Advanced',
+      workflows: 'Advanced',
+    },
   },
   {
     id: 'ai-ux-skills-course',

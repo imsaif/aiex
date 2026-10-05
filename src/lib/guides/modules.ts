@@ -15,6 +15,11 @@ export const MODULE_TITLES: Record<string, string> = {
   building: 'Building',
   advanced: 'Advanced Patterns',
   polish: 'Ship It',
+  // Claude Design course. Without these the course page printed the raw keys
+  // ("iteration", "design-system") as section names.
+  iteration: 'Iteration',
+  'design-system': 'Design System',
+  workflows: 'Workflows',
 };
 
 // Short per-module "what you'll learn" descriptions used on the overview page.
