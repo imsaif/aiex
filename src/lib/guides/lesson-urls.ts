@@ -100,7 +100,12 @@ export interface LessonLink {
 /** Enumerate every lesson in a course with its resolved URL. */
 export function getLessonsForCourse(courseSlug: string): LessonLink[] {
   const guide = guides.find((g) => g.slug === courseSlug);
-  if (!guide || !guide.lessons) return [];
+  return guide ? getLessonLinks(guide) : [];
+}
+
+/** The same links, for a guide already in hand. Same order as guide.lessons. */
+export function getLessonLinks(guide: Guide): LessonLink[] {
+  if (!guide.lessons) return [];
 
   const perCourse = new Set<string>();
   return guide.lessons.map((lesson) => {

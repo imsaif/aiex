@@ -130,6 +130,9 @@ export const AUDIT_EVENT_NAMES = [
   'event_page_viewed',
   'event_checkout_clicked',
   'event_booked_page_viewed',
+  // Course page "Where are you starting?" picker, tagged with the course and
+  // the level chosen. Counts how many visitors are beginners vs already set up.
+  'course_start_point_clicked',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
