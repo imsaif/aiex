@@ -37,16 +37,21 @@ describe('resolveStartPoints', () => {
     const guide = {
       ...baseGuide,
       startPoints: [
-        { level: 'Beginner', label: 'New', description: 'd1', lessonId: 'lesson-1' },
-        { level: 'Intermediate', label: 'Figma', description: 'd2', lessonId: 'lesson-7' },
+        { level: 'Beginner', label: 'New', lessonId: 'lesson-1' },
+        { level: 'Intermediate', label: 'Figma', lessonId: 'lesson-7' },
       ],
     } as Guide;
     expect(resolveStartPoints(guide)).toEqual([
-      { level: 'Beginner', label: 'New', description: 'd1', url: '/guides/demo-course/sign-in' },
+      {
+        level: 'Beginner',
+        label: 'New',
+        destination: 'Setup',
+        url: '/guides/demo-course/sign-in',
+      },
       {
         level: 'Intermediate',
         label: 'Figma',
-        description: 'd2',
+        destination: 'Figma ↔ Code',
         url: '/guides/demo-course/set-up-figma',
       },
     ]);
@@ -55,7 +60,7 @@ describe('resolveStartPoints', () => {
   it('drops a choice whose lesson no longer exists rather than linking nowhere', () => {
     const guide = {
       ...baseGuide,
-      startPoints: [{ level: 'Advanced', label: 'Gone', description: 'd', lessonId: 'lesson-99' }],
+      startPoints: [{ level: 'Advanced', label: 'Gone', lessonId: 'lesson-99' }],
     } as Guide;
     expect(resolveStartPoints(guide)).toEqual([]);
   });

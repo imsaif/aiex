@@ -335,7 +335,6 @@ export type GuideLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 export interface GuideStartPoint {
   level: GuideLevel;
   label: string; // first person, e.g. "I'm new to Claude Code"
-  description: string;
   lessonId: string; // the GuideLesson.id this choice jumps to
 }
 

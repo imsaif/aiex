@@ -2563,19 +2563,16 @@ export const guides: Guide[] = [
       {
         level: 'Beginner',
         label: 'I\'m new to Claude Code',
-        description: 'Install it, sign in, and build your first prototype.',
         lessonId: 'lesson-1',
       },
       {
         level: 'Intermediate',
-        label: 'I have it, and I design in Figma',
-        description: 'Connect Figma and turn your frames into working code.',
+        label: 'I design in Figma',
         lessonId: 'lesson-19',
       },
       {
         level: 'Advanced',
         label: 'I use it already',
-        description: 'Sharper prompts, testing, handoff, and customizing Claude Code with mods.',
         lessonId: 'lesson-14',
       },
     ],
