@@ -13,7 +13,9 @@ import dynamic from 'next/dynamic';
 import { useSavedCount } from '@/hooks/useSavedCount';
 import { AiuxMarkOutline } from '@/components/icons/AiuxMarkOutline';
 
-// Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened
+// Lazy-load SearchModal to defer loading pattern/guide/newsletter data until search is opened.
+// dynamic() alone is not enough: a mounted dynamic component fetches its chunk at once,
+// so the modal is only mounted after the first open (see searchMounted below).
 const SearchModal = dynamic(() => import('../ui/SearchModal'), { ssr: false });
 
 const Navbar = ({
@@ -22,6 +24,12 @@ const Navbar = ({
 }: { inConsole?: boolean } = {}) => {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  // Stays true after the first open so the close animation still plays.
+  const [searchMounted, setSearchMounted] = useState(false);
+  const openSearch = () => {
+    setSearchMounted(true);
+    setIsSearchOpen(true);
+  };
   const { count: savedCount } = useSavedCount();
 
   // Pattern routes mount SavedItemsBar, which shows the same number in a sticky
@@ -36,6 +44,7 @@ const Navbar = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
+        setSearchMounted(true);
         setIsSearchOpen(true);
       }
     };
@@ -169,7 +178,7 @@ const Navbar = ({
 
             {/* Search Button */}
             <button
-              onClick={() => setIsSearchOpen(true)}
+              onClick={openSearch}
               className="flex items-center gap-2 px-3 py-2 text-text-secondary hover:text-text-primary transition-colors rounded-lg hover:bg-surface-secondary cursor-pointer"
               aria-label="Search (⌘K)"
             >
@@ -180,7 +189,9 @@ const Navbar = ({
       </div>
 
       {/* Search Modal */}
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      {searchMounted && (
+        <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      )}
     </nav>
   );
 };
