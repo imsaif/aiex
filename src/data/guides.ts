@@ -8038,7 +8038,13 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
           },
           {
             type: 'text',
-            content: "Layout works the same way. Drag an element to move it, pull its edges to resize it, and use the alignment controls to line things up, all without a prompt. Use this for nudges you can see; describe the change in chat when it's about structure.",
+            content: "Layout works the same way. Click Edit in the top toolbar, select an element, then drag it to move it or pull its corner handles to resize it, and use the alignment controls to line things up, all without a prompt. Click Save to keep the change or Discard to drop it. Use this for nudges you can see; describe the change in chat when it's about structure.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-5/canvas-resize.mp4',
+            alt: 'Claude Design in Edit mode on an accessibility checklist page. The checklist panel is selected with blue corner handles and resized by dragging its bottom-right corner, then items inside it are selected one by one. The left panel shows the Simple, Pro, Code and Tweaks tabs with the layer tree, drawing tools and a CSS field; Discard and Save sit at the top.',
+            label: 'Edit mode: select, drag the corner handle, and Save. No prompt needed.',
           },
           {
             type: 'callout',
