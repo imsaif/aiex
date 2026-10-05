@@ -268,7 +268,9 @@ export default async function GuidePage({ params }: GuidePageProps) {
                 >
                   About this course
                 </h2>
-                <div className="prose prose-lg dark:prose-invert max-w-none text-text-secondary leading-relaxed">
+                {/* Spacing set directly: the typography plugin `prose` relies on
+                    is not wired up, so it left these paragraphs with no gap. */}
+                <div className="space-y-default text-lg text-text-secondary leading-relaxed">
                   <p>{guide.description}</p>
                   {guide.excerpt && guide.excerpt !== guide.description && (
                     <p>{guide.excerpt}</p>

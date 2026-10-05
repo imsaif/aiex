@@ -563,7 +563,9 @@ const renderSection = (
                   {section.title}
                 </strong>
               )}
-              <div className="text-text-secondary">
+              {/* Rich-text paragraphs each carry mb-4; drop the last one's so the
+                  callout's bottom padding matches its top. */}
+              <div className="text-text-secondary [&>*:last-child]:mb-0">
                 {renderRichText(section.content, index)}
               </div>
             </div>
