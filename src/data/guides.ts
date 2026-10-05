@@ -2557,6 +2557,35 @@ export const guides: Guide[] = [
       </div>
     `,
     relatedPatterns: ['Contextual Assistance', 'Augmented Creation'],
+    // Page views (Sep 2026) showed most visitors leave at lesson 1 and Figma
+    // users skip straight to the Figma module, so the page offers three ways in.
+    startPoints: [
+      {
+        level: 'Beginner',
+        label: 'I\'m new to Claude Code',
+        description: 'Install it, sign in, and build your first prototype.',
+        lessonId: 'lesson-1',
+      },
+      {
+        level: 'Intermediate',
+        label: 'I have it, and I design in Figma',
+        description: 'Connect Figma and turn your frames into working code.',
+        lessonId: 'lesson-19',
+      },
+      {
+        level: 'Advanced',
+        label: 'I use it already',
+        description: 'Sharper prompts, testing, handoff, and customizing Claude Code with mods.',
+        lessonId: 'lesson-14',
+      },
+    ],
+    moduleLevels: {
+      setup: 'Beginner',
+      figma: 'Intermediate',
+      prototype: 'Beginner',
+      github: 'Beginner',
+      practices: 'Advanced',
+    },
   },
   {
     id: 'cursor-course',

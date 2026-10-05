@@ -323,6 +323,20 @@ export interface Guide {
   // Relations
   relatedPatterns?: string[]; // Pattern slugs
   relatedGuides?: string[]; // Guide slugs
+
+  // "Where are you starting?" picker on the course page. Only courses that
+  // define these show the picker and the per-module level tags.
+  startPoints?: GuideStartPoint[];
+  moduleLevels?: Record<string, GuideLevel>; // module key → level tag
+}
+
+export type GuideLevel = 'Beginner' | 'Intermediate' | 'Advanced';
+
+export interface GuideStartPoint {
+  level: GuideLevel;
+  label: string; // first person, e.g. "I'm new to Claude Code"
+  description: string;
+  lessonId: string; // the GuideLesson.id this choice jumps to
 }
 
 /**

@@ -13,6 +13,8 @@ import ScrollToTop from '@/components/ui/ScrollToTop';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
 import OnThisPage from '@/components/guides/OnThisPage';
+import CourseStartPicker from '@/components/guides/CourseStartPicker';
+import { resolveStartPoints } from '@/lib/guides/start-points';
 import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import type { LessonHeading } from '@/lib/guides/headings';
@@ -150,7 +152,12 @@ export default async function GuidePage({ params }: GuidePageProps) {
 
   // Synthetic headings so OnThisPage can anchor into the middle-column sections.
   // Ids match the `id` attributes on the h2s below.
+  const startPoints = resolveStartPoints(guide);
+
   const headings: LessonHeading[] = [
+    ...(startPoints.length > 0
+      ? [{ id: 'start-here', text: 'Where are you starting?', level: 'h2' as const }]
+      : []),
     { id: 'about', text: 'About this course', level: 'h2' },
     { id: 'what-youll-learn', text: "What you'll learn", level: 'h2' },
     { id: 'all-lessons', text: 'All lessons', level: 'h2' },
@@ -251,6 +258,8 @@ export default async function GuidePage({ params }: GuidePageProps) {
               <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_240px] xl:gap-12">
                 <article className="max-w-[820px]">
 
+              <CourseStartPicker courseSlug={guide.slug} startPoints={startPoints} />
+
               {/* About this course */}
               <section className="mb-12">
                 <h2
@@ -336,8 +345,13 @@ export default async function GuidePage({ params }: GuidePageProps) {
                         {/* Module header */}
                         <div className="px-5 py-4 border-b border-border-primary bg-background-primary">
                           <div className="flex flex-wrap items-baseline justify-between gap-2">
-                            <h3 className="text-base font-semibold text-text-primary">
+                            <h3 className="flex items-center gap-tight text-base font-semibold text-text-primary">
                               {title}
+                              {guide.moduleLevels?.[moduleKey] && (
+                                <span className="type-eyebrow rounded-pill border border-border-primary px-tight text-text-secondary">
+                                  {guide.moduleLevels[moduleKey]}
+                                </span>
+                              )}
                             </h3>
                             <span className="text-xs text-text-secondary tabular-nums">
                               {lessons.length}{' '}
