@@ -8359,7 +8359,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
         sections: [
           {
             type: 'intro',
-            content: 'A design system sits as a Draft until you flip one toggle. Published systems show up in every new project\'s setup flow, so anyone in the org can pick the right system at creation time. No re-uploading brand assets, no repeating brand prompts.',
+            content: 'A new design system is not published until you tick one box. Published systems show up in the Design system picker for everyone in your organization, so anyone can pick the right system when they start. No re-uploading brand assets, no repeating brand prompts.',
             icon: 'check',
           },
           {
@@ -8372,35 +8372,29 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             steps: [
               {
                 number: 1,
-                title: 'Open organization settings',
-                content: "Click your organization name in the lower-left, then the 'Design systems' tab at the top. Every system you've created appears in the list, each with its own Draft/Published toggle.",
+                title: 'Open the Design systems tab',
+                content: "At claude.ai/design, scroll below the prompt to the tabs Projects, Design systems and Templates, and click Design systems. Every system is listed with when it was updated, its owner, and a Published column.",
                 icon: 'cog',
               },
               {
                 number: 2,
-                title: 'Flip the toggle',
-                content: "Click the toggle in the right-hand column of your system's row. It switches from 'Draft' to 'Published' inline, no confirm dialog, no separate screen.",
+                title: 'Tick Published',
+                content: "Open the system and tick Published on its page; the list then shows a tick in the Published column. To make it the one everybody starts with, open the row's ⋯ menu and choose Set as org default. Set as my default pre-selects it for you alone.",
                 icon: 'check',
               },
               {
                 number: 3,
-                title: 'Check the sidebar',
-                content: "Head back to the homescreen. The New-prototype panel now shows a 'Design system' dropdown above Wireframe / High fidelity, proof your system is available for any new project.",
+                title: 'Check the picker',
+                content: "Click the Design system button under the prompt. Your system is now in the list, and the org default carries an Org default tag.",
                 icon: 'monitor',
               },
             ],
           },
           {
             type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-8/design-system-draft.webp',
-            alt: "Claude Design 'Organization settings → Design systems' view. Multiple design systems are listed, each with a Make default button and a Draft/Published toggle. aiuxdesign.guide Design System is in Draft. The New-prototype panel on the left shows a 'Set up design system' CTA because no system is published yet.",
-            label: "Before. Draft toggle means the system exists but isn't selectable at project creation. New prototypes fall back to a generic look.",
-          },
-          {
-            type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-8/design-system-published.webp',
-            alt: "Same view after flipping aiuxdesign.guide Design System to Published. The toggle is now blue and labeled 'Published'. The New-prototype panel on the left now shows a 'Design system' dropdown selector above the Wireframe / High fidelity cards, the system is now pickable at project creation.",
-            label: "After. Once published, the system shows up as a selectable option in the New-prototype panel.",
+            src: '/images/guides/claude-design-learning-path/lesson-8/design-systems-list.webp',
+            alt: "The Design systems tab at claude.ai/design, listing each system with Updated, All owners, Published and Access columns. The aiuxdesign.guide Design System and the Org default system both show a tick under Published. The ⋯ menu is open on a row: Open in new tab, Copy link, Add to favorites, Duplicate, Rename, Set as my default, Set as org default, Delete Project.",
+            label: "The Design systems tab: ticks show what's published, and the ⋯ menu sets the default.",
           },
           {
             type: 'image',
@@ -8411,11 +8405,11 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
           {
             type: 'heading',
             level: 'h3',
-            content: 'Published vs. Make default',
+            content: 'Published vs. org default',
           },
           {
             type: 'text',
-            content: "The 'Make default' button next to each system is a separate setting from the Publish toggle. Published means 'pickable at project creation'. Default means 'pre-selected in the dropdown'. You can publish many systems but only one is the default, useful when you have a primary brand plus a couple of sub-brands or white-label variants, and you want the primary one auto-selected.",
+            content: "Setting a system as the org default is separate from publishing it. Published means 'pickable in the Design system picker'. Org default means 'pre-selected for everyone', and the picker tags it Org default. Set as my default does the same for you alone. You can publish many systems but only one is the default, useful when you have a primary brand plus a couple of sub-brands or white-label variants, and you want the primary one auto-selected.",
           },
           {
             type: 'heading',
