@@ -8404,9 +8404,9 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
           },
           {
             type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-8/design-system-picker.webp',
-            alt: "The Design system selector open on the Claude Design home screen. A searchable list shows the org-default 'Design System' (badged 'Org default'), the 'aiuxdesign.guide Design System', and several others, with a 'Multi' toggle for applying more than one at once.",
-            label: "How it looks from the create bar: every published system is a click away when you start a new project, and the 'Multi' toggle lets you combine more than one.",
+            src: '/images/guides/claude-design-learning-path/lesson-8/design-system-picker.mp4',
+            alt: "Inside a Claude Design project, the + menu under the prompt opens Design system. A picker lists the org-default 'Design System' (tagged Org default), the aiuxdesign.guide Design System and others, with a preview of the selected system's colour tokens. Select multiple adds a second system, Done closes the picker, and the prompt bar reads '2 design systems'.",
+            label: "Applying systems inside a project: + > Design system, preview, Select multiple, Done.",
           },
           {
             type: 'heading',
