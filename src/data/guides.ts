@@ -8961,9 +8961,9 @@ Audience: Early-stage VCs in the design-tools space.`,
         <figure class="my-8">
           <img
             src="/images/guides/claude-design-learning-path/overview-hero.webp"
-            alt="The Claude Design home screen titled 'What should we create?' with a prompt bar showing design-system, template, and model selectors, a gallery of templates (Mobile app design, Slides, Document, Wireframe, and more), and a list of recent projects below"
-            width="1600"
-            height="863"
+            alt="The Claude Design home screen titled 'What should we create?': a prompt bar with +, Design system, code and Model (Sonnet 5.5) controls, above twelve templates: Blank, Mobile app design, Slides, Document, Wireframe, Animation, UI mockups, Résumé, 3D object, Research, HTML email, and Color + type pairing"
+            width="1400"
+            height="840"
             loading="lazy"
             class="w-full h-auto rounded-lg border border-gray-200"
           />
