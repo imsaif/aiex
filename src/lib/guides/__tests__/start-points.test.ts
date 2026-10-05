@@ -1,4 +1,4 @@
-import { getGuideBySlug } from '@/data/guides';
+import { guides } from '@/data/guides';
 import { MODULE_TITLES } from '@/lib/guides/modules';
 import { resolveStartPoints } from '@/lib/guides/start-points';
 import type { Guide } from '@/types';
@@ -37,16 +37,21 @@ describe('resolveStartPoints', () => {
     const guide = {
       ...baseGuide,
       startPoints: [
-        { level: 'Beginner', label: 'New', description: 'd1', lessonId: 'lesson-1' },
-        { level: 'Intermediate', label: 'Figma', description: 'd2', lessonId: 'lesson-7' },
+        { level: 'Beginner', label: 'New', lessonId: 'lesson-1' },
+        { level: 'Intermediate', label: 'Figma', lessonId: 'lesson-7' },
       ],
     } as Guide;
     expect(resolveStartPoints(guide)).toEqual([
-      { level: 'Beginner', label: 'New', description: 'd1', url: '/guides/demo-course/sign-in' },
+      {
+        level: 'Beginner',
+        label: 'New',
+        destination: 'Setup',
+        url: '/guides/demo-course/sign-in',
+      },
       {
         level: 'Intermediate',
         label: 'Figma',
-        description: 'd2',
+        destination: 'Figma ↔ Code',
         url: '/guides/demo-course/set-up-figma',
       },
     ]);
@@ -55,30 +60,40 @@ describe('resolveStartPoints', () => {
   it('drops a choice whose lesson no longer exists rather than linking nowhere', () => {
     const guide = {
       ...baseGuide,
-      startPoints: [{ level: 'Advanced', label: 'Gone', description: 'd', lessonId: 'lesson-99' }],
+      startPoints: [{ level: 'Advanced', label: 'Gone', lessonId: 'lesson-99' }],
     } as Guide;
     expect(resolveStartPoints(guide)).toEqual([]);
   });
 });
 
-describe('Claude Code course start points', () => {
-  const guide = getGuideBySlug('claude-code-learning-path');
+// Every course that offers the picker: all three levels in order, every
+// choice lands on a real lesson, and every module it uses carries a tag.
+describe.each(guides.filter((g) => g.startPoints).map((g) => [g.slug, g] as const))(
+  '%s start points',
+  (_slug, guide) => {
+    it('offers all three levels, in order', () => {
+      expect(guide.startPoints?.map((p) => p.level)).toEqual([
+        'Beginner',
+        'Intermediate',
+        'Advanced',
+      ]);
+    });
 
-  it('offers all three levels, in order', () => {
-    expect(guide?.startPoints?.map((p) => p.level)).toEqual([
-      'Beginner',
-      'Intermediate',
-      'Advanced',
-    ]);
-  });
+    it('every choice resolves to a real lesson', () => {
+      expect(resolveStartPoints(guide)).toHaveLength(guide.startPoints!.length);
+    });
 
-  it('every choice resolves to a real lesson', () => {
-    expect(resolveStartPoints(guide!)).toHaveLength(guide!.startPoints!.length);
-  });
+    it('tags every module the course uses, and only those', () => {
+      const used = new Set((guide.lessons || []).map((l) => l.module));
+      expect(new Set(Object.keys(guide.moduleLevels || {}))).toEqual(used);
+      for (const key of used) expect(Object.keys(MODULE_TITLES)).toContain(key);
+    });
+  }
+);
 
-  it('tags every module the course uses, and only those', () => {
-    const used = new Set((guide?.lessons || []).map((l) => l.module));
-    expect(new Set(Object.keys(guide?.moduleLevels || {}))).toEqual(used);
-    for (const key of used) expect(Object.keys(MODULE_TITLES)).toContain(key);
-  });
+it('the picker is on the Claude Code and Claude Design courses', () => {
+  expect(guides.filter((g) => g.startPoints).map((g) => g.slug).sort()).toEqual([
+    'claude-code-learning-path',
+    'claude-design-learning-path',
+  ]);
 });

@@ -2563,19 +2563,16 @@ export const guides: Guide[] = [
       {
         level: 'Beginner',
         label: 'I\'m new to Claude Code',
-        description: 'Install it, sign in, and build your first prototype.',
         lessonId: 'lesson-1',
       },
       {
         level: 'Intermediate',
-        label: 'I have it, and I design in Figma',
-        description: 'Connect Figma and turn your frames into working code.',
+        label: 'I design in Figma',
         lessonId: 'lesson-19',
       },
       {
         level: 'Advanced',
         label: 'I use it already',
-        description: 'Sharper prompts, testing, handoff, and customizing Claude Code with mods.',
         lessonId: 'lesson-14',
       },
     ],
@@ -8927,6 +8924,30 @@ Audience: Early-stage VCs in the design-tools space.`,
     `,
     relatedPatterns: ['Augmented Creation', 'Collaborative AI', 'Contextual Assistance'],
     relatedGuides: ['claude-code-learning-path'],
+    // Second course by traffic (Sep 2026), so the next to get the picker.
+    startPoints: [
+      {
+        level: 'Beginner',
+        label: 'I\'m new to Claude Design',
+        lessonId: 'lesson-1',
+      },
+      {
+        level: 'Intermediate',
+        label: 'I\'ve made my first design',
+        lessonId: 'lesson-4',
+      },
+      {
+        level: 'Advanced',
+        label: 'I want prototypes, decks, or handoff',
+        lessonId: 'lesson-10',
+      },
+    ],
+    moduleLevels: {
+      setup: 'Beginner',
+      iteration: 'Intermediate',
+      'design-system': 'Advanced',
+      workflows: 'Advanced',
+    },
   },
   {
     id: 'ai-ux-skills-course',

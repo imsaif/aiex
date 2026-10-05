@@ -11,19 +11,21 @@ interface CourseStartPickerProps {
 }
 
 /**
- * "Where are you starting?" on a course page: one link per level, each jumping
- * straight to the lesson that level should begin at. Clicks are logged so we
- * can see how many visitors arrive as beginners versus already set up.
+ * "Where are you starting?" on a course page: one row per level, each jumping
+ * straight to the lesson that level should begin at. Styled like the lesson
+ * rows further down the page so it reads as part of the course, not a banner.
+ * Clicks are logged so we can see how many visitors arrive as beginners versus
+ * already set up.
  */
 export function CourseStartPicker({ courseSlug, startPoints }: CourseStartPickerProps) {
   if (startPoints.length === 0) return null;
 
   return (
     <section className="mb-12" aria-labelledby="start-here">
-      <h2 id="start-here" className="scroll-mt-24 text-2xl md:text-3xl font-bold mb-4">
+      <h2 id="start-here" className="type-eyebrow scroll-mt-24 mb-snug text-text-secondary">
         Where are you starting?
       </h2>
-      <ul className="grid gap-snug sm:grid-cols-3">
+      <ul className="overflow-hidden rounded-card border border-border-primary bg-surface-primary divide-y divide-border-primary">
         {startPoints.map((point) => (
           <li key={point.level}>
             <Link
@@ -34,17 +36,19 @@ export function CourseStartPicker({ courseSlug, startPoints }: CourseStartPicker
                   level: point.level,
                 })
               }
-              className="group flex h-full flex-col rounded-card border border-border-primary bg-surface-primary p-loose transition-colors hover:border-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2"
+              className="group flex items-center gap-default px-default py-snug transition-colors hover:bg-background-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-primary"
             >
-              <span className="type-eyebrow text-text-secondary">{point.level}</span>
-              <span className="mt-tight font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
+              <span className="type-eyebrow w-28 flex-shrink-0 text-text-secondary">
+                {point.level}
+              </span>
+              <span className="flex-1 text-sm font-medium text-text-primary transition-colors group-hover:text-accent-primary">
                 {point.label}
               </span>
-              <span className="mt-tight flex-1 text-sm text-text-secondary">
-                {point.description}
+              <span className="hidden text-sm text-text-secondary sm:inline">
+                {point.destination}
               </span>
               <ArrowRightIcon
-                className="mt-snug h-4 w-4 text-text-secondary group-hover:text-accent-primary transition-colors"
+                className="h-4 w-4 flex-shrink-0 text-text-secondary transition-colors group-hover:text-accent-primary"
                 aria-hidden="true"
               />
             </Link>

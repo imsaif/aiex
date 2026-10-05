@@ -137,6 +137,12 @@ interface LessonRendererProps {
 const CARD_SHELL =
   'bg-surface-elevated border border-border-secondary rounded-card';
 
+// Shared grid for boxed sections (steps, callouts): one padding, one 32px
+// marker column and one gap, so the text in every box starts at the same x.
+const BOX_PADDING = 'p-loose';
+const BOX_GAP = 'gap-snug';
+const BOX_MARKER = 'flex w-8 flex-shrink-0 items-center justify-center';
+
 const getIcon = (iconType: IconType) => {
   const iconClass = 'w-6 h-6';
   switch (iconType) {
@@ -549,12 +555,12 @@ const renderSection = (
       return (
         <div
           key={index}
-          className={`mb-6 p-5 md:p-6 ${CARD_SHELL}`}
+          className={`mb-6 ${BOX_PADDING} ${CARD_SHELL}`}
         >
-          <div className="flex items-start gap-4">
-            <div
-              className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-background-secondary border border-border-primary text-text-primary flex-shrink-0"
-            >
+          <div className={`flex items-start ${BOX_GAP}`}>
+            {/* Same marker column as a step's number, so every box's text
+                starts on one line; mt-px centres the icon on the first line. */}
+            <div className={`${BOX_MARKER} mt-px h-6 text-text-primary`}>
               {getIcon(iconType)}
             </div>
             <div className="flex-1 min-w-0">
@@ -563,7 +569,9 @@ const renderSection = (
                   {section.title}
                 </strong>
               )}
-              <div className="text-text-secondary">
+              {/* Rich-text paragraphs each carry mb-4; drop the last one's so the
+                  callout's bottom padding matches its top. */}
+              <div className="text-text-secondary [&>*:last-child]:mb-0">
                 {renderRichText(section.content, index)}
               </div>
             </div>
@@ -574,31 +582,38 @@ const renderSection = (
 
     case 'steps':
       return (
-        <div key={index} className="grid gap-4 mb-8">
+        <div key={index} className="grid gap-default mb-8">
           {section.steps.map((step) => (
             <div
               key={step.number}
-              className={`p-5 ${CARD_SHELL}`}
+              className={`${BOX_PADDING} ${CARD_SHELL}`}
             >
-              <div className="flex gap-3 mb-4">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent-primary text-text-on-accent font-semibold text-sm flex-shrink-0">
+              <div className={`flex items-start ${BOX_GAP}`}>
+                <div className={`${BOX_MARKER} h-8 rounded-full bg-accent-primary text-text-on-accent font-semibold text-sm`}>
                   {step.number}
                 </div>
-                <h4 className="m-0 font-bold text-text-primary type-lead">
-                  {step.title}
-                </h4>
+                {/* Title and items share one text column, so the items sit
+                    directly under the title instead of at their own indent.
+                    leading-8 matches the number circle's height to centre them. */}
+                <div className="flex-1 min-w-0">
+                  <h4 className="m-0 text-lg font-semibold leading-8 text-text-primary">
+                    {step.title}
+                  </h4>
+                  {typeof step.content === 'string' ? (
+                    <p className="mt-tight mb-0 text-text-secondary">
+                      {renderInline(step.content, `step-${index}-${step.number}`)}
+                    </p>
+                  ) : (
+                    <ul className="mt-tight mb-0 list-disc space-y-1 pl-default text-text-secondary marker:text-text-secondary">
+                      {step.content.map((item, i) => (
+                        <li key={i}>
+                          {renderInline(item, `step-${index}-${step.number}-${i}`)}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
-              {typeof step.content === 'string' ? (
-                <p className="m-0 text-text-secondary">{renderInline(step.content, `step-${index}-${step.number}`)}</p>
-              ) : (
-                <ul className="m-0 pl-6 text-text-secondary">
-                  {step.content.map((item, i) => (
-                    <li key={i} className="mb-2">
-                      {renderInline(item, `step-${index}-${step.number}-${i}`)}
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
           ))}
         </div>
