@@ -8078,7 +8078,7 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
         sections: [
           {
             type: 'intro',
-            content: "Tweaks lives in Edit mode. Click Edit in the top toolbar, then the Tweaks tab in the left panel, and a control panel appears, with toggles and sliders Claude auto-generated for this specific design. Click through them and the canvas re-renders live. No chat round-trip, no prompts, no waiting.",
+            content: "Tweaks lives in Edit mode. Click Edit in the top toolbar, then the Tweaks tab in the left panel. Once a design has controls, they sit in a bar above the canvas: pick a different option and the canvas re-renders live. No chat round-trip, no prompts, no waiting.",
             icon: 'tip',
           },
           {
@@ -8091,25 +8091,33 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             content: "Most design iteration is exploring the same handful of dimensions: theme, density, color direction, layout balance. Tweaks turns those into one-click toggles instead of one-prompt-per-variant. Twenty iterations in twenty clicks rather than twenty chat messages.",
           },
           {
-            type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-6/cdlineup9.webp',
-            alt: 'Claude Design Tweaks panel on the Lineup canvas. Clicking between Theme (Light/Dark) and Density (airy, balanced, dense) re-renders the canvas instantly without a chat round-trip.',
-            label: 'Tweaks in action. Click a toggle, watch the canvas update live.',
-          },
-          {
             type: 'heading',
             level: 'h3',
-            content: 'Tweaks are design-specific',
+            content: 'Getting controls onto a design',
           },
           {
             type: 'text',
-            content: "Claude picks the dimensions based on the canvas it generated. Lineup exposes Theme and Density because those are the meaningful variables for a kanban board. A marketing landing page might get color-temperature and hero-layout instead. A dashboard might get chart-style and grid-density. You don't configure Tweaks, Claude builds them as part of the initial generation.",
+            content: "Some designs arrive with Tweaks already: Claude sometimes builds a few while generating, such as an accent colour on a dashboard or board. Others start empty, and the Tweaks tab says so: \"This design has no tweakable controls yet.\" Either way, you add what you need.",
+          },
+          {
+            type: 'steps',
+            steps: [
+              { number: 1, title: 'Describe a tweak', content: 'In the Tweaks tab, type what you want to adjust into Describe a tweak, or click Ideas for suggestions. For example: "make the heading more actionable".' },
+              { number: 2, title: 'Let Claude build the panel', content: 'Claude studies the design and adds two or three controls that change the feel, not single pixel values. It takes a minute or two.' },
+              { number: 3, title: 'Flip between options', content: 'The controls appear as menus in a bar above the canvas. Pick an option and the design updates in place.' },
+            ],
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-6/tweaks-add.mp4',
+            alt: 'In Claude Design Edit mode, the Tweaks tab says the design has no tweakable controls yet. "Make the heading more actionable" is typed into Describe a tweak. Claude adds tweakable controls, and a bar appears above the canvas with headline (Actionable), detail (full) and badges (severity) menus; the checklist headline changes to "Check these 10 things before you ship AI-generated design".',
+            label: 'Adding Tweaks: describe what to adjust, and Claude builds the controls. The waiting is sped up.',
           },
           {
             type: 'callout',
             calloutType: 'tip',
-            title: 'Not seeing a tweak you want? Ask.',
-            content: "If Claude didn't surface a dimension you care about, ask in chat: \"Add a tweak for typography scale from compact to expressive.\" Claude extends the existing Tweaks panel with a new control, same live-rerender behavior.",
+            title: 'Ask for feel, not pixels',
+            content: "Claude picks the dimensions that matter for the design in front of it: a checklist got headline tone, detail level and badge style; a kanban board might get theme and density. Describe the direction you want to explore, and let Claude decide the controls.",
             icon: 'tip',
           },
           {
@@ -8144,8 +8152,8 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             title: 'You can explore variations without chat',
             items: [
               'Know where Tweaks lives: Edit, then the Tweaks tab',
-              "Understand that Tweaks are auto-generated per canvas",
-              'Know how to ask Claude to add a new tweak',
+              'Can add Tweaks to a design that has none',
+              'Know the controls appear in a bar above the canvas',
               'Know when a chat round-trip is still the right call',
             ],
             message: "Module 3 next: teaching Claude your design system so every project matches your brand by default.",
