@@ -7753,10 +7753,16 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
             content: 'Everything comes in through the + button under the prompt: attach a file or folder, connect code, upload a .fig file, or pick a design system, skills, or connectors.',
           },
           {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-3/attach-docx.mp4',
+            alt: 'Inside a Claude Design project, + > Attach file opens the file picker; a Word document is chosen and appears as a DOCX chip in the prompt bar, ready to send with the next message.',
+            label: '+ > Attach file: a Word document lands in the prompt as a DOCX chip.',
+          },
+          {
             type: 'table',
             rows: [
               { label: 'Screenshots & images', content: 'PNG, JPG, GIF, WebP. Your current product, competitor products, inspiration references.' },
-              { label: 'Documents', content: 'DOCX, PPTX, XLSX. Great for turning a written spec or an old deck into an updated visual.' },
+              { label: 'Documents', content: 'Word (DOCX), PDF, PowerPoint (PPTX) and Excel (XLSX). Great for turning a written spec or an old deck into an updated visual.' },
               { label: 'Code repositories', content: 'Connect GitHub, or choose Link local code to point at a folder on your computer. Claude reads your component architecture and CSS to inform the output.' },
               { label: 'Figma designs', content: 'Upload a .fig file. It is read in your browser and never uploaded. Claude extracts colors, typography, spacing, and reusable components.' },
               { label: 'Other projects', content: 'Reference another project to reuse its look or content in the new one.' },
