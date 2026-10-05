@@ -7609,31 +7609,23 @@ export const guides: Guide[] = [
           },
           {
             type: 'text',
-            content: "Here's the exact sequence we captured building Lineup, the kanban board used throughout this guide. Claude asks a short round of clarifying questions first, confirms direction, then generates the full board in one pass.",
+            content: "Here's Lineup, the kanban board used throughout this guide, built from the four-part prompt below inside a normal Claude chat: Output set to Design, no design system. Claude asks you to confirm creating the artifact, opens the canvas beside the chat, and builds the whole board in one pass.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-2/lineup-in-chat.mp4',
+            alt: 'A Claude chat with Output set to Claude Design and No design system. The four-part Lineup prompt is pasted and sent; Claude says it is starting the Lineup board as a Design artifact and asks to confirm Create artifact; the canvas opens on the right while Claude works, and the finished four-column kanban board with sample cards appears, with a summary in the chat.',
+            label: 'One detailed prompt, one pass: the Lineup board built inside a chat.',
+          },
+          {
+            type: 'text',
+            content: "Because this prompt covers all four parts, Claude had nothing to ask. When a prompt leaves gaps, Claude asks a short round of clarifying questions before it builds, like this:",
           },
           {
             type: 'image',
             src: '/images/guides/claude-design-learning-path/lesson-2/clarifying-questions.webp',
             alt: "The current Claude Design UI mid-first-prompt: a 'Claude has some questions' panel in the left chat, and the canvas showing a generated set of multiple-choice clarifying questions (design type, submission method, output format) before it commits to a full design.",
-            label: "What this looks like in the current UI (here on a different project). The step-by-step clips below were captured on an earlier build, but the flow, clarifying questions first, then a full first pass, is the same.",
-          },
-          {
-            type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-2/cdlineup1.mp4',
-            alt: 'Claude Design responding to the Lineup prompt with an initial round of clarifying questions about product type, audience, and visual direction',
-            label: 'Step 1. Claude asks clarifying questions before generating the canvas.',
-          },
-          {
-            type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-2/cdlineup2.mp4',
-            alt: 'Follow-up clarification round. Claude confirms decisions and starts staging the kanban board on the canvas',
-            label: 'Step 2. After answering, Claude confirms direction and begins laying out the board.',
-          },
-          {
-            type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-2/cdlineup3.mp4',
-            alt: 'The Lineup kanban board fully rendered on the Claude Design canvas with 4 columns and ~12 populated cards',
-            label: 'Step 3. The board renders end-to-end in one pass, ready to iterate on.',
+            label: "A vaguer prompt on a different project: Claude asks before it designs. Answer, and it builds.",
           },
           {
             type: 'heading',
