@@ -34,7 +34,7 @@ export function CourseStartPicker({ courseSlug, startPoints }: CourseStartPicker
                   level: point.level,
                 })
               }
-              className="group flex h-full flex-col rounded-card border border-border-primary bg-surface-primary p-loose transition-colors hover:border-accent-primary focus-visible:border-accent-primary"
+              className="group flex h-full flex-col rounded-card border border-border-primary bg-surface-primary p-loose transition-colors hover:border-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2"
             >
               <span className="type-eyebrow text-text-secondary">{point.level}</span>
               <span className="mt-tight font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
