@@ -7843,12 +7843,12 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
           },
           {
             type: 'text',
-            content: "Here's an iteration pass on Lineup, asking Claude to add a sidebar to the kanban board we generated in Lesson 2. See how Claude reads the existing canvas, proposes the sidebar structure, and drops it in without disturbing the column layout.",
+            content: "Here's an iteration pass on Lineup, the kanban board from Lesson 2. One message, \"add a left sidebar with project navigation\", and Claude reads the existing canvas, builds the sidebar, and drops it in without disturbing the column layout. It then tells you what it added and which choices it made for you.",
           },
           {
             type: 'image',
-            src: '/images/guides/claude-design-learning-path/lesson-4/cdlineup6.webp',
-            alt: 'Chat iteration on the Lineup kanban board: Claude Design adds a left-hand sidebar with navigation and filters while preserving the existing column layout',
+            src: '/images/guides/claude-design-learning-path/lesson-4/chat-sidebar.mp4',
+            alt: 'In the Lineup chat, "add a left sidebar with project navigation" is sent. Claude works through designing and styling the sidebar, then the board updates: a left sidebar lists projects (Q2 Product Launch highlighted, Mobile App v2, Pricing Experiments, Customer Research, Design System), This project links (Board, List, Timeline, Archive) and a members footer, while the four columns stay as they were. Claude summarises what it added in the chat.',
             label: 'Iterating via chat. One message, one sidebar, existing layout untouched.',
           },
           {
