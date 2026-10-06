@@ -8737,6 +8737,21 @@ want speed and keyboard-shortcut focus, not enterprise controls.`,
           {
             type: 'heading',
             level: 'h3',
+            content: 'Presenting from Claude',
+          },
+          {
+            type: 'text',
+            content: "A Slides deck presents straight from the canvas. Click the play button at the top right and choose Present, or Present with speaker notes. The deck goes full screen with a slide counter and arrows at the bottom; press Esc to leave.",
+          },
+          {
+            type: 'image',
+            src: '/images/guides/claude-design-learning-path/lesson-11/present-menu.webp',
+            alt: 'A Claude Slides deck titled "Getting Started with Claude Slides" open on the canvas, with the slide strip along the bottom. The play button at the top right is open, offering Present and Present with speaker notes.',
+            label: 'Present, or Present with speaker notes, from the play button.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
             content: 'Deck-specific prompt structure',
           },
           {
