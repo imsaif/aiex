@@ -57,13 +57,17 @@ describe('SkillsDirectory', () => {
   // heading, not a card. Cards are for the filtered and searched views, where
   // the set is small enough to be worth the space, so Used-by logos only
   // appear once something is narrowed.
+  // Since #114 a default row is one line, title and skill name; the trigger
+  // sentence only appears once the set is narrowed (see the filter tests).
   it('lists every skill grouped under its category heading by default', () => {
     renderDirectory();
     expect(screen.getByText('aiux-human-in-the-loop')).toBeInTheDocument();
-    expect(screen.getByText('Use when a UI shows too much at once.')).toBeInTheDocument();
+    expect(screen.getByText('Progressive Disclosure')).toBeInTheDocument();
+    expect(screen.getByText('aiux-progressive-disclosure')).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'User Experience' })
     ).toBeInTheDocument();
+    expect(screen.queryByText('Use when a UI shows too much at once.')).not.toBeInTheDocument();
   });
 
   it('renders cards with Used-by once a category is chosen', () => {
