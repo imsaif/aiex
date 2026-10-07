@@ -33,6 +33,7 @@ const TINT = '#EEF0F6';      // pale navy page behind the cards
 const SLATE = '#475569';     // secondary text on white (AA on white and on TINT)
 const HAIR = '#eef0f4';
 const PILL = '#d5d9e3';
+const PANEL = '#F3F5F9';     // Designer's Takeaway panel: our voice, set apart from the story
 const ON_NAVY = '#cbd5e1';   // body text on navy (AA)
 const ON_NAVY_MUTED = '#94a3b8';
 
@@ -47,6 +48,7 @@ const STYLE_BLOCK = `<style>
 @media (prefers-color-scheme: dark) {
   .aiux-tint { background-color: #141821 !important; }
   .aiux-card { background-color: #1c2130 !important; }
+  .aiux-panel { background-color: #242b3c !important; }
   .aiux-ink, .aiux-ink span { color: #f1f5f9 !important; }
   .aiux-sub, .aiux-sub span { color: #a7b0c0 !important; }
   .aiux-rule { border-color: #2a3142 !important; }
@@ -146,7 +148,10 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 20px;"><tr><td class="aiux-card" bgcolor="#ffffff" style="background-color: #ffffff; border-radius: 14px; padding: 32px 30px 28px;">
   <p class="aiux-ink" style="margin: 0 0 18px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: ${NAVY};">${logo}${escapeHtml(story.badgeLabel)} <span class="aiux-sub" style="font-weight: 400; color: ${SLATE}; text-transform: none; letter-spacing: 0;">· ${escapeHtml(story.metaLabel)}</span></p>
   <h3 class="aiux-ink" style="margin: 0 0 14px; font-family: ${FONT}; font-size: 19px; font-weight: 700; line-height: 1.32; letter-spacing: -0.2px; color: ${NAVY};">${escapeHtml(story.headline)}</h3>
-  <p class="aiux-sub" style="margin: 0; font-family: ${FONT}; font-size: 15px; line-height: 1.65; color: ${SLATE};">${escapeHtml(story.takeaway)}</p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="aiux-panel" bgcolor="${PANEL}" style="background-color: ${PANEL}; border-radius: 10px; padding: 14px 16px;">
+    <p class="aiux-sub" style="margin: 0 0 6px; font-family: ${FONT}; font-size: 10px; font-weight: 700; letter-spacing: 1.4px; color: ${SLATE};">DESIGNER'S TAKEAWAY</p>
+    <p class="aiux-ink" style="margin: 0; font-family: ${FONT}; font-size: 15px; line-height: 1.6; font-weight: 500; color: ${NAVY};">${escapeHtml(story.takeaway)}</p>
+  </td></tr></table>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr>
     <td class="aiux-rule" style="padding: 18px 12px 0 0; border-top: 1px solid ${HAIR}; font-family: ${FONT}; font-size: 13px; font-weight: 500; white-space: nowrap;">${link(story.sourceUrl, 'Source →', SLATE, '', 'aiux-sub')}</td>
     ${pattern}
