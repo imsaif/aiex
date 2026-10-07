@@ -1,0 +1,8 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A balanced scale for fairness and accountability"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <path d="M130 30V172M92 172h76"></path>
+        <circle cx="130" cy="30" r="6" fill="#ffffff" stroke="none"></circle>
+        <path d="M54 56H206"></path>
+        <path d="M54 56l-26 56M54 56l26 56M206 56l-26 56M206 56l26 56" stroke-opacity="0.6"></path>
+        <path d="M24 112a30 14 0 0 0 60 0z" fill="#ffffff" stroke="none"></path>
+        <path d="M176 112a30 14 0 0 0 60 0z" fill="#ffffff" stroke="none"></path>
+      </svg>

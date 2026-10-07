@@ -1,0 +1,8 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="The agent shows what it has learned from corrections"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="20" y="16" width="220" height="104" rx="14" stroke-opacity="0.45"></rect>
+        <text x="38" y="42" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">What I've learned</text>
+        <path d="M38 64l5 5l9-10M38 92l5 5l9-10"></path>
+        <g fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" fill-opacity="0.85"><text x="60" y="69">You like short titles</text><text x="60" y="97">No emoji in reports</text></g>
+        <path d="M30 184l40-14l40 4l40-22l40-6l40-24" stroke-width="2.5"></path>
+        <circle cx="230" cy="122" r="5" fill="#ffffff" stroke="none"></circle>
+      </svg>

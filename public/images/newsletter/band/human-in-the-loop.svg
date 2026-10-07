@@ -1,0 +1,12 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Approve or edit an AI suggestion"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <path d="M86 8H204A16 16 0 0 1 220 24V38A16 16 0 0 1 204 54H202L208 68L186 54H86A16 16 0 0 1 70 38V24A16 16 0 0 1 86 8Z" stroke-opacity="0.4"></path>
+        <path d="M90 26h70M90 38h44" stroke-opacity="0.4"></path>
+        <rect x="20" y="78" width="200" height="42" rx="21" fill="#ffffff" fill-opacity="0.06" stroke-opacity="0.5"></rect>
+        <path d="M42 99h96" stroke-opacity="0.35"></path><path d="M150 90v18" stroke-width="2.5"></path>
+        <circle cx="200" cy="99" r="12" fill="#ffffff" stroke="none"></circle><path d="M200 105v-12M195 98l5-5l5 5" stroke="#162036"></path>
+        <rect x="70" y="142" width="84" height="34" rx="17" fill="#ffffff" stroke="none"></rect>
+        <text x="112" y="164" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">Approve</text>
+        <rect x="162" y="142" width="70" height="34" rx="17" stroke-opacity="0.5"></rect>
+        <text x="197" y="164" text-anchor="middle" fill="#ffffff" fill-opacity="0.8" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13">Edit</text>
+        <path d="M138 166l14 34l5-14l14-5z" fill="#ffffff" stroke="#162036" stroke-width="1.5"></path>
+      </svg>

@@ -1,0 +1,10 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="When the agent is unsure it hands the decision to a person"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <circle cx="42" cy="100" r="22" fill="#ffffff" stroke="none"></circle>
+        <path d="M42 90l3 7l7 3l-7 3l-3 7l-3-7l-7-3l7-3z" fill="#162036" stroke="none"></path>
+        <path d="M64 100h34"></path><path d="M92 94l6 6l-6 6"></path>
+        <path d="M130 68l32 32l-32 32l-32-32z" stroke-opacity="0.7"></path>
+        <text x="130" y="105" text-anchor="middle" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="700">?</text>
+        <path d="M162 100h34"></path><path d="M190 94l6 6l-6 6"></path>
+        <circle cx="222" cy="92" r="9"></circle><path d="M206 126c0-12 7-18 16-18s16 6 16 18"></path>
+        <text x="130" y="166" text-anchor="middle" fill="#ffffff" fill-opacity="0.75" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">Unsure? Ask a human</text>
+      </svg>

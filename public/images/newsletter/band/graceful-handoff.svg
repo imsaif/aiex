@@ -1,0 +1,9 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A chatbot hands the conversation to a person"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <path d="M46 14H170A14 14 0 0 1 184 28V44A14 14 0 0 1 170 58H50L36 68L38 56A14 14 0 0 1 32 44V28A14 14 0 0 1 46 14Z" stroke-opacity="0.45"></path>
+        <path d="M50 36h96" stroke-opacity="0.4"></path>
+        <path d="M30 98h60M170 98h60" stroke-opacity="0.3"></path>
+        <text x="130" y="102" text-anchor="middle" fill="#ffffff" fill-opacity="0.75" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11">Maya joined</text>
+        <path d="M90 134H214A14 14 0 0 1 228 148V164A14 14 0 0 1 214 178H90A14 14 0 0 1 76 164V148A14 14 0 0 1 90 134Z" fill="#ffffff" stroke="none"></path>
+        <path d="M94 156h96" stroke="#162036" stroke-opacity="0.6"></path>
+        <circle cx="50" cy="160" r="9"></circle><path d="M36 188c0-10 6-14 14-14s14 4 14 14" stroke-opacity="0.9"></path>
+      </svg>

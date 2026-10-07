@@ -1,0 +1,12 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="An answer with a confidence meter and sources"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="20" y="10" width="220" height="116" rx="16" stroke-opacity="0.4"></rect>
+        <path d="M40 34h150M40 48h120" stroke-opacity="0.4"></path>
+        <text x="40" y="78" fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">Confidence</text>
+        <text x="220" y="78" text-anchor="end" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">82%</text>
+        <rect x="40" y="90" width="180" height="10" rx="5" stroke-opacity="0.4"></rect>
+        <rect x="40" y="90" width="148" height="10" rx="5" fill="#ffffff" stroke="none"></rect>
+        <rect x="20" y="146" width="86" height="32" rx="16" fill="#ffffff" stroke="none"></rect>
+        <text x="63" y="167" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">3 sources</text>
+        <rect x="114" y="146" width="104" height="32" rx="16" stroke-opacity="0.5"></rect>
+        <text x="166" y="167" text-anchor="middle" fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">Why this?</text>
+      </svg>

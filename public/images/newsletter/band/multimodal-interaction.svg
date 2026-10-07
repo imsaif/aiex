@@ -1,0 +1,9 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Voice, touch, text and image inputs all feeding one AI"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <circle cx="130" cy="100" r="26" fill="#ffffff" stroke="none"></circle>
+        <path d="M130 86l4 10l10 4l-10 4l-4 10l-4-10l-10-4l10-4z" fill="#162036" stroke="none"></path>
+        <circle cx="46" cy="44" r="22" stroke-opacity="0.6"></circle><rect x="41" y="32" width="10" height="16" rx="5"></rect><path d="M36 46a10 10 0 0 0 20 0M46 56v4"></path>
+        <circle cx="214" cy="44" r="22" stroke-opacity="0.6"></circle><rect x="202" y="36" width="24" height="17" rx="3"></rect><circle cx="209" cy="42" r="2" fill="#ffffff" stroke="none"></circle><path d="M203 52l7-6l5 4l4-3l6 5" stroke-width="1.5"></path>
+        <circle cx="46" cy="156" r="22" stroke-opacity="0.6"></circle><text x="46" y="161" text-anchor="middle" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700">Aa</text>
+        <circle cx="214" cy="156" r="22" stroke-opacity="0.6"></circle><path d="M208 166v-14a3 3 0 0 1 6 0v8M214 158a3 3 0 0 1 6 0v6c0 4-3 7-7 7h-2c-3 0-5-2-6-4l-4-6a2.5 2.5 0 0 1 4-3l3 3" stroke-width="1.6"></path>
+        <path d="M64 58l44 28M196 58l-44 28M64 142l44-28M196 142l-44-28" stroke-opacity="0.35" stroke-dasharray="3 5"></path>
+      </svg>

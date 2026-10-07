@@ -1,0 +1,11 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A long session gets a check-in instead of drifting"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="24" y="16" width="120" height="20" rx="10" stroke-opacity="0.25"></rect>
+        <rect x="60" y="44" width="120" height="20" rx="10" stroke-opacity="0.35"></rect>
+        <rect x="24" y="72" width="140" height="20" rx="10" stroke-opacity="0.45"></rect>
+        <rect x="76" y="100" width="104" height="20" rx="10" stroke-opacity="0.55"></rect>
+        <circle cx="212" cy="66" r="26" stroke-opacity="0.35"></circle>
+        <path d="M212 40a26 26 0 1 1 -24 36" stroke-width="3"></path>
+        <path d="M212 54v13l8 6"></path>
+        <rect x="24" y="140" width="212" height="40" rx="14" fill="#ffffff" stroke="none"></rect>
+        <text x="130" y="165" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">2 hours in. Want a fresh start?</text>
+      </svg>

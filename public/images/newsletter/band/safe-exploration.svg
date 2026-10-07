@@ -1,0 +1,11 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A sandbox where changes can be tried and thrown away"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="20" y="20" width="220" height="116" rx="16" stroke-dasharray="7 7" stroke-opacity="0.7"></rect>
+        <rect x="36" y="10" width="72" height="20" rx="10" fill="#162036" stroke-opacity="0.7"></rect>
+        <text x="72" y="24" text-anchor="middle" fill="#ffffff" stroke="none" font-family="ui-monospace, Menlo, monospace" font-size="10">SANDBOX</text>
+        <circle cx="90" cy="82" r="26" fill="#ffffff" stroke="none"></circle>
+        <rect x="140" y="58" width="66" height="50" rx="10" stroke-opacity="0.8"></rect>
+        <rect x="40" y="152" width="84" height="32" rx="16" stroke-opacity="0.5"></rect>
+        <text x="82" y="173" text-anchor="middle" fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">Discard</text>
+        <rect x="134" y="152" width="84" height="32" rx="16" fill="#ffffff" stroke="none"></rect>
+        <text x="176" y="173" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Keep</text>
+      </svg>

@@ -1,0 +1,10 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Adjustable text size and a visible focus ring"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <text x="20" y="74" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="60" font-weight="700">Aa</text>
+        <text x="20" y="112" fill="#ffffff" fill-opacity="0.6" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13">A</text>
+        <text x="122" y="114" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="19">A</text>
+        <path d="M36 108h78" stroke-opacity="0.4"></path><circle cx="90" cy="108" r="7" fill="#ffffff" stroke="none"></circle>
+        <circle cx="208" cy="34" r="6"></circle><path d="M188 48h40M208 48v18l-12 22M208 66l12 22"></path>
+        <rect x="70" y="140" width="128" height="44" rx="22" stroke-width="2.5"></rect>
+        <rect x="78" y="148" width="112" height="28" rx="14" fill="#ffffff" stroke="none"></rect>
+        <text x="134" y="167" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Continue</text>
+      </svg>

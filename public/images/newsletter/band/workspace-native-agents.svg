@@ -1,0 +1,11 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="An AI panel docked inside the user's existing app"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="14" y="14" width="232" height="172" rx="14" stroke-opacity="0.45"></rect>
+        <path d="M14 40H246" stroke-opacity="0.3"></path>
+        <circle cx="30" cy="27" r="3" fill="#ffffff" fill-opacity="0.5" stroke="none"></circle><circle cx="42" cy="27" r="3" fill="#ffffff" fill-opacity="0.5" stroke="none"></circle><circle cx="54" cy="27" r="3" fill="#ffffff" fill-opacity="0.5" stroke="none"></circle>
+        <rect x="30" y="56" width="110" height="60" rx="8" stroke-opacity="0.35"></rect>
+        <path d="M30 134h110M30 150h80" stroke-opacity="0.3"></path>
+        <rect x="158" y="52" width="76" height="122" rx="10" fill="#ffffff" stroke="none"></rect>
+        <path d="M172 70l2 5l5 2l-5 2l-2 5l-2-5l-5-2l5-2z" fill="#162036" stroke="none"></path>
+        <path d="M170 100h50M170 114h38M170 128h46" stroke="#162036" stroke-opacity="0.5"></path>
+        <rect x="168" y="146" width="56" height="18" rx="9" stroke="#162036" stroke-opacity="0.6" stroke-width="1.5"></rect>
+      </svg>

@@ -1,0 +1,11 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Quiet help that appears from context without being asked"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <circle cx="70" cy="120" r="10" fill="#ffffff" stroke="none"></circle>
+        <path d="M50 100a28 28 0 0 1 40 0" stroke-opacity="0.7"></path>
+        <path d="M36 86a48 48 0 0 1 68 0" stroke-opacity="0.45"></path>
+        <path d="M22 72a68 68 0 0 1 96 0" stroke-opacity="0.25"></path>
+        <path d="M40 170h60" stroke-opacity="0.3"></path>
+        <path d="M136 98H226A14 14 0 0 1 240 112V138A14 14 0 0 1 226 152H136A14 14 0 0 1 122 138V112A14 14 0 0 1 136 98Z" fill="#ffffff" stroke="none"></path>
+        <path d="M138 118l2 5l5 2l-5 2l-2 5l-2-5l-5-2l5-2z" fill="#162036" stroke="none"></path>
+        <text x="152" y="122" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700">Leave in 10 min</text>
+        <text x="152" y="140" fill="#162036" fill-opacity="0.65" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="10">Traffic is heavy</text>
+      </svg>

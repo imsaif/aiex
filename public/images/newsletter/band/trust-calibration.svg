@@ -1,0 +1,11 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A track record of correct answers unlocking more autonomy"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <text x="24" y="40" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">Track record · 9 of 10</text>
+        <g>
+          <circle cx="36" cy="80" r="11" fill="#ffffff" stroke="none"></circle><circle cx="68" cy="80" r="11" fill="#ffffff" stroke="none"></circle><circle cx="100" cy="80" r="11" fill="#ffffff" stroke="none"></circle><circle cx="132" cy="80" r="11" fill="#ffffff" stroke="none"></circle><circle cx="164" cy="80" r="11" fill="#ffffff" stroke="none"></circle>
+          <circle cx="36" cy="114" r="11" fill="#ffffff" stroke="none"></circle><circle cx="68" cy="114" r="11" fill="#ffffff" stroke="none"></circle><circle cx="100" cy="114" r="11" stroke-opacity="0.7"></circle><circle cx="132" cy="114" r="11" fill="#ffffff" stroke="none"></circle><circle cx="164" cy="114" r="11" fill="#ffffff" stroke="none"></circle>
+        </g>
+        <path d="M95 109l10 10M105 109l-10 10" stroke-opacity="0.8"></path>
+        <rect x="198" y="88" width="34" height="28" rx="6"></rect><path d="M206 88v-10a10 10 0 0 1 19-4"></path>
+        <rect x="24" y="148" width="148" height="32" rx="16" fill="#ffffff" stroke="none"></rect>
+        <text x="98" y="169" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Let it send drafts</text>
+      </svg>

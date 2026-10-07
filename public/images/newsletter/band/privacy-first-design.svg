@@ -1,0 +1,13 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Privacy toggles for memory and data sharing"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="20" y="14" width="22" height="18" rx="4" stroke-opacity="0.7"></rect><path d="M25 14v-5a6 6 0 0 1 12 0v5" stroke-opacity="0.7"></path>
+        <text x="52" y="29" fill="#ffffff" fill-opacity="0.7" stroke="none" font-family="ui-monospace, Menlo, monospace" font-size="11">YOUR DATA</text>
+        <g font-family="Helvetica, Arial, sans-serif" font-size="13">
+          <text x="20" y="74" fill="#ffffff" stroke="none">Memory</text>
+          <text x="20" y="124" fill="#ffffff" stroke="none">Personalise</text>
+          <text x="20" y="174" fill="#ffffff" fill-opacity="0.6" stroke="none">Train on my data</text>
+        </g>
+        <path d="M20 92h220M20 142h220" stroke-opacity="0.15"></path>
+        <rect x="190" y="56" width="50" height="26" rx="13" fill="#ffffff" stroke="none"></rect><circle cx="227" cy="69" r="9" fill="#162036" stroke="none"></circle>
+        <rect x="190" y="106" width="50" height="26" rx="13" fill="#ffffff" stroke="none"></rect><circle cx="227" cy="119" r="9" fill="#162036" stroke="none"></circle>
+        <rect x="190" y="156" width="50" height="26" rx="13" stroke-opacity="0.5"></rect><circle cx="203" cy="169" r="8" fill="#ffffff" fill-opacity="0.6" stroke="none"></circle>
+      </svg>

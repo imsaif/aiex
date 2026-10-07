@@ -1,0 +1,9 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Search predicts what the user wants before they finish typing"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="20" y="20" width="220" height="40" rx="20" stroke-opacity="0.6"></rect>
+        <circle cx="44" cy="40" r="7" stroke-opacity="0.7"></circle><path d="M49 45l5 5" stroke-opacity="0.7"></path>
+        <text x="64" y="45" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="14">Fli</text><path d="M84 31v18"></path>
+        <rect x="20" y="72" width="220" height="40" rx="12" fill="#ffffff" stroke="none"></rect>
+        <path d="M40 86l2 5l5 2l-5 2l-2 5l-2-5l-5-2l5-2z" fill="#162036" stroke="none"></path>
+        <text x="58" y="97" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">Flights to Dubai, Fri</text>
+        <path d="M40 136h140M40 164h110" stroke-opacity="0.35"></path>
+      </svg>

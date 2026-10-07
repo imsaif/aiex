@@ -1,0 +1,9 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A timely suggestion appears next to the text being written"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <path d="M30 116h50M30 140h190M30 164h150" stroke-opacity="0.35"></path>
+        <rect x="86" y="106" width="76" height="20" rx="4" fill="#ffffff" fill-opacity="0.15" stroke="none"></rect>
+        <path d="M92 116h64"></path>
+        <path d="M60 22H214A14 14 0 0 1 228 36V68A14 14 0 0 1 214 82H134L124 96L114 82H60A14 14 0 0 1 46 68V36A14 14 0 0 1 60 22Z" fill="#ffffff" stroke="none"></path>
+        <path d="M64 44l2 5l5 2l-5 2l-2 5l-2-5l-5-2l5-2z" fill="#162036" stroke="none"></path>
+        <text x="80" y="50" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Shorter title?</text>
+        <text x="80" y="68" fill="#162036" fill-opacity="0.7" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11">Tab to accept</text>
+      </svg>

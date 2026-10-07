@@ -1,0 +1,14 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A guided task broken into steps with the current one highlighted"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <path d="M46 40H214" stroke-opacity="0.3"></path><path d="M46 40H102" stroke-width="3"></path>
+        <circle cx="46" cy="40" r="12" fill="#ffffff" stroke="none"></circle><path d="M41 40l4 4l7-8" stroke="#162036"></path>
+        <circle cx="102" cy="40" r="12" fill="#ffffff" stroke="none"></circle>
+        <text x="102" y="44" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700">2</text>
+        <circle cx="158" cy="40" r="12" fill="#162036" stroke-opacity="0.5"></circle><circle cx="214" cy="40" r="12" fill="#162036" stroke-opacity="0.5"></circle>
+        <g fill="#ffffff" fill-opacity="0.6" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle"><text x="158" y="44">3</text><text x="214" y="44">4</text></g>
+        <rect x="24" y="76" width="212" height="108" rx="14" stroke-opacity="0.45"></rect>
+        <text x="42" y="102" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">Step 2 of 4</text>
+        <path d="M42 122h150M42 138h110" stroke-opacity="0.4"></path>
+        <rect x="42" y="152" width="70" height="22" rx="11" fill="#ffffff" stroke="none"></rect>
+        <text x="77" y="167" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700">Next</text>
+        <text x="126" y="167" fill="#ffffff" fill-opacity="0.7" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11">Show me a hint</text>
+      </svg>

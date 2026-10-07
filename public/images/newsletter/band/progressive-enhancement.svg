@@ -1,0 +1,9 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="An answer streaming in while the rest loads"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <circle cx="216" cy="38" r="22" stroke-opacity="0.35"></circle>
+        <path d="M218 24l-10 16h10l-2 12l10-16h-10z" fill="#ffffff" stroke="none"></path>
+        <path d="M20 40h160M20 60h150M20 80h170" stroke-opacity="0.85"></path>
+        <path d="M20 100h86"></path><rect x="112" y="92" width="8" height="16" fill="#ffffff" stroke="none"></rect>
+        <rect x="20" y="130" width="220" height="12" rx="6" fill="#ffffff" fill-opacity="0.12" stroke="none"></rect>
+        <rect x="20" y="152" width="180" height="12" rx="6" fill="#ffffff" fill-opacity="0.12" stroke="none"></rect>
+        <rect x="20" y="174" width="120" height="12" rx="6" fill="#ffffff" fill-opacity="0.12" stroke="none"></rect>
+      </svg>

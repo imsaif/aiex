@@ -1,0 +1,10 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A short summary with more detail revealed on request"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="24" y="14" width="212" height="74" rx="14" stroke-opacity="0.55"></rect>
+        <text x="42" y="40" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">Summary</text>
+        <path d="M42 60h150" stroke-opacity="0.5"></path>
+        <rect x="24" y="96" width="212" height="88" rx="14" stroke-dasharray="6 6" stroke-opacity="0.4"></rect>
+        <path d="M42 122h160M42 140h130M42 158h146" stroke-opacity="0.25"></path>
+        <rect x="88" y="74" width="84" height="28" rx="14" fill="#ffffff" stroke="none"></rect>
+        <text x="122" y="92" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700">Show more</text>
+        <path d="M154 85l5 5l5-5" stroke="#162036"></path>
+      </svg>

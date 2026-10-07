@@ -1,0 +1,10 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="The assistant offers a direct line to a real person for support"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="24" y="16" width="212" height="168" rx="18" stroke-opacity="0.45"></rect>
+        <circle cx="62" cy="58" r="20" fill="#ffffff" stroke="none"></circle>
+        <path d="M54 50c0 10 6 16 16 16l3-4l-5-3l-2 2c-3-1-5-3-6-6l2-2l-3-5z" fill="#162036" stroke="none"></path>
+        <text x="94" y="54" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">You don't have to</text>
+        <text x="94" y="72" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">do this alone</text>
+        <path d="M44 106h170M44 122h120" stroke-opacity="0.35"></path>
+        <rect x="44" y="142" width="172" height="30" rx="15" fill="#ffffff" stroke="none"></rect>
+        <text x="130" y="162" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Talk to someone now</text>
+      </svg>

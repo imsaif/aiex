@@ -1,0 +1,12 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A slider from suggest to full autonomy"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <text x="30" y="60" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">How much can it do?</text>
+        <path d="M30 104H230" stroke-opacity="0.4"></path>
+        <path d="M30 104H97" stroke-width="4"></path>
+        <circle cx="30" cy="104" r="5" fill="#ffffff" stroke="none"></circle>
+        <circle cx="163" cy="104" r="5" stroke-opacity="0.5"></circle>
+        <circle cx="230" cy="104" r="5" stroke-opacity="0.5"></circle>
+        <circle cx="97" cy="104" r="13" fill="#ffffff" stroke="none"></circle>
+        <g fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle">
+          <text x="30" y="136" fill-opacity="0.7">Suggest</text><text x="97" y="136" font-weight="700">Ask first</text><text x="163" y="136" fill-opacity="0.7">Act</text><text x="226" y="136" fill-opacity="0.7">Auto</text>
+        </g>
+      </svg>

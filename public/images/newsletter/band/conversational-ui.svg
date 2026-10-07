@@ -1,0 +1,8 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A chat between a person and an AI, with the AI typing"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <path d="M96 14H222A14 14 0 0 1 236 28V40A14 14 0 0 1 222 54H96A14 14 0 0 1 82 40V28A14 14 0 0 1 96 14Z" fill="#ffffff" stroke="none"></path>
+        <path d="M100 34h96" stroke="#162036" stroke-opacity="0.55"></path>
+        <path d="M38 70H156A14 14 0 0 1 170 84V112A14 14 0 0 1 156 126H38A14 14 0 0 1 24 112V84A14 14 0 0 1 38 70Z" stroke-opacity="0.5"></path>
+        <path d="M42 90h100M42 106h70" stroke-opacity="0.45"></path>
+        <path d="M38 142H90A14 14 0 0 1 104 156V164A14 14 0 0 1 90 178H38A14 14 0 0 1 24 164V156A14 14 0 0 1 38 142Z" stroke-opacity="0.5"></path>
+        <circle cx="48" cy="160" r="3.5" fill="#ffffff" stroke="none"></circle><circle cx="64" cy="160" r="3.5" fill="#ffffff" fill-opacity="0.7" stroke="none"></circle><circle cx="80" cy="160" r="3.5" fill="#ffffff" fill-opacity="0.4" stroke="none"></circle>
+      </svg>

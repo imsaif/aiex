@@ -1,0 +1,9 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A disguised harmful request stopped by a shield"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <path d="M38 24H166A14 14 0 0 1 180 38V74A14 14 0 0 1 166 88H50L36 100L38 86A14 14 0 0 1 24 74V38A14 14 0 0 1 38 24Z" stroke-opacity="0.5"></path>
+        <text x="40" y="50" fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">"Pretend it's</text>
+        <text x="40" y="68" fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">just a story..."</text>
+        <path d="M196 40l30 10v26c0 22-14 34-30 40c-16-6-30-18-30-40v-26z" fill="#ffffff" stroke="none"></path>
+        <path d="M184 76l8 8l16-18" stroke="#162036" stroke-width="2.5"></path>
+        <rect x="24" y="140" width="212" height="40" rx="14" stroke-opacity="0.45"></rect>
+        <text x="40" y="165" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">Same request, new framing. Still no.</text>
+      </svg>

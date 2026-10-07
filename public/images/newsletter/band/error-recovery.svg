@@ -1,0 +1,9 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="An error with clear ways to recover"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="20" y="14" width="220" height="172" rx="18" stroke-opacity="0.45"></rect>
+        <circle cx="130" cy="58" r="22" stroke-opacity="0.8"></circle><path d="M122 50l16 16M138 50l-16 16"></path>
+        <text x="130" y="108" text-anchor="middle" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">That didn't work</text>
+        <rect x="40" y="132" width="80" height="32" rx="16" fill="#ffffff" stroke="none"></rect>
+        <text x="80" y="153" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Try again</text>
+        <rect x="128" y="132" width="92" height="32" rx="16" stroke-opacity="0.5"></rect>
+        <text x="174" y="153" text-anchor="middle" fill="#ffffff" fill-opacity="0.85" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">Keep last draft</text>
+      </svg>

@@ -1,0 +1,11 @@
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Switching between two conversation topics without losing the thread"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
+        <rect x="20" y="16" width="96" height="32" rx="16" fill="#ffffff" stroke="none"></rect>
+        <text x="68" y="37" text-anchor="middle" fill="#162036" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Trip</text>
+        <rect x="124" y="16" width="96" height="32" rx="16" stroke-opacity="0.5"></rect>
+        <text x="172" y="37" text-anchor="middle" fill="#ffffff" fill-opacity="0.8" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">Budget</text>
+        <path d="M172 52c0 22-40 22-80 34" stroke-opacity="0.6" stroke-dasharray="4 5"></path><path d="M98 80l-8 6l9 4" stroke-opacity="0.6"></path>
+        <rect x="20" y="104" width="220" height="80" rx="14" stroke-opacity="0.45"></rect>
+        <text x="38" y="130" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="700">Back to Trip.</text>
+        <text x="38" y="148" fill="#ffffff" fill-opacity="0.75" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="12">You'd picked Friday flights.</text>
+        <path d="M38 166h120" stroke-opacity="0.3"></path>
+      </svg>
