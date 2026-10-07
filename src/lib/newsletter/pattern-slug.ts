@@ -25,6 +25,8 @@ export function isValidPatternSlug(slug: unknown): slug is string {
 export interface PatternSlugCarrier {
   items?: Array<{ headline?: string; patternSlug?: string }>;
   patternToKnow?: { patternSlug?: string };
+  /** Daily "Today's Idea": its slug picks the band illustration. */
+  takeaway?: { patternSlug?: string };
 }
 
 /**
@@ -58,6 +60,15 @@ export function sanitizePatternSlugs(data: PatternSlugCarrier): number {
       `[newsletter] Dropping invalid patternToKnow.patternSlug "${deepDive.patternSlug}" — not in the pattern catalogue.`
     );
     deepDive.patternSlug = undefined;
+    dropped++;
+  }
+
+  const idea = data.takeaway;
+  if (idea?.patternSlug !== undefined && !isValidPatternSlug(idea.patternSlug)) {
+    console.warn(
+      `[newsletter] Dropping invalid takeaway.patternSlug "${idea.patternSlug}" — not in the pattern catalogue.`
+    );
+    idea.patternSlug = undefined;
     dropped++;
   }
 
