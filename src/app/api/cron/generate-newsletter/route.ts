@@ -1560,7 +1560,7 @@ const WRITING_STYLE_BLOCK = `WRITING STYLE (applies to every string you write, i
   "less X, more Y", "X is the new Y". State the point directly instead.
 - BANNED WORDS: load-bearing, seamless, unlock, elevate, leverage, delve,
   dive into, game-changer, revolutionize, empower, robust, landscape, realm,
-  testament, crucial, pivotal, underscore, "in today's fast-paced world",
+  testament, crucial, pivotal, underscore, seam, seams, "in today's fast-paced world",
   "we've got you covered".
 - Do not open with a throat-clearing clause ("As AI continues to...",
   "In an era where..."). Start on the actual point.
