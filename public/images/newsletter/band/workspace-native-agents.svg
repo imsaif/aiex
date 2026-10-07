@@ -1,11 +1,8 @@
-<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="An AI panel docked inside the user's existing app"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
-        <rect x="14" y="14" width="232" height="172" rx="14" stroke-opacity="0.45"></rect>
-        <path d="M14 40H246" stroke-opacity="0.3"></path>
-        <circle cx="30" cy="27" r="3" fill="#ffffff" fill-opacity="0.5" stroke="none"></circle><circle cx="42" cy="27" r="3" fill="#ffffff" fill-opacity="0.5" stroke="none"></circle><circle cx="54" cy="27" r="3" fill="#ffffff" fill-opacity="0.5" stroke="none"></circle>
-        <rect x="30" y="56" width="110" height="60" rx="8" stroke-opacity="0.35"></rect>
-        <path d="M30 134h110M30 150h80" stroke-opacity="0.3"></path>
-        <rect x="158" y="52" width="76" height="122" rx="10" fill="#ffffff" stroke="none"></rect>
-        <path d="M172 70l2 5l5 2l-5 2l-2 5l-2-5l-5-2l5-2z" fill="#162036" stroke="none"></path>
-        <path d="M170 100h50M170 114h38M170 128h46" stroke="#162036" stroke-opacity="0.5"></path>
-        <rect x="168" y="146" width="56" height="18" rx="9" stroke="#162036" stroke-opacity="0.6" stroke-width="1.5"></rect>
-      </svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200" fill="none">
+<rect width="200" height="200" fill="#162036"/>
+<path d="M0 20H200M20 0V200M0 40H200M40 0V200M0 60H200M60 0V200M0 80H200M80 0V200M0 100H200M100 0V200M0 120H200M120 0V200M0 140H200M140 0V200M0 160H200M160 0V200M0 180H200M180 0V200" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+<circle cx="100" cy="100" r="92" stroke="#ffffff" stroke-opacity="0.1"/>
+<circle cx="100" cy="100" r="66" stroke="#ffffff" stroke-opacity="0.18"/>
+<circle cx="100" cy="100" r="40" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.35"/>
+<g transform="translate(100 100) scale(1.7) translate(-12 -12)" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/></g>
+</svg>

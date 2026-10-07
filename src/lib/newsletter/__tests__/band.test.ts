@@ -2,6 +2,22 @@ import fs from 'fs';
 import path from 'path';
 import { patterns } from '@/data/patterns';
 import { BAND_DRAWINGS, DEFAULT_BAND_SLUG, pickBandSlug } from '../band';
+import { monogram } from '../daily-email';
+
+describe('monogram', () => {
+  it('uses the first letter, upper-cased', () => {
+    expect(monogram('Instinct')).toBe('I');
+    expect(monogram('design with AI')).toBe('D');
+  });
+
+  it('skips leading punctuation', () => {
+    expect(monogram('"Quoted" source')).toBe('Q');
+  });
+
+  it('falls back to a dot when there is nothing to use', () => {
+    expect(monogram('—')).toBe('•');
+  });
+});
 
 describe('band drawings', () => {
   it('has a drawing for every pattern in the catalogue', () => {

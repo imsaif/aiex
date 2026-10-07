@@ -1,10 +1,8 @@
-<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Protections that switch on for younger or vulnerable users"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
-        <path d="M66 20l42 14v36c0 30-20 48-42 56c-22-8-42-26-42-56v-36z" stroke-opacity="0.7"></path>
-        <circle cx="66" cy="64" r="10" fill="#ffffff" stroke="none"></circle>
-        <path d="M48 104c0-14 8-20 18-20s18 6 18 20" fill="#ffffff" stroke="none"></path>
-        <g font-family="Helvetica, Arial, sans-serif" font-size="12"><text x="132" y="54" fill="#ffffff" stroke="none">Teen mode</text><text x="132" y="110" fill="#ffffff" stroke="none">Break reminders</text></g>
-        <rect x="132" y="64" width="44" height="24" rx="12" fill="#ffffff" stroke="none"></rect><circle cx="164" cy="76" r="8" fill="#162036" stroke="none"></circle>
-        <rect x="132" y="120" width="44" height="24" rx="12" fill="#ffffff" stroke="none"></rect><circle cx="164" cy="132" r="8" fill="#162036" stroke="none"></circle>
-        <path d="M24 172h212" stroke-opacity="0.2"></path>
-        <text x="24" y="190" fill="#ffffff" fill-opacity="0.65" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11">On by default, explained in plain words</text>
-      </svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200" fill="none">
+<rect width="200" height="200" fill="#162036"/>
+<path d="M0 20H200M20 0V200M0 40H200M40 0V200M0 60H200M60 0V200M0 80H200M80 0V200M0 100H200M100 0V200M0 120H200M120 0V200M0 140H200M140 0V200M0 160H200M160 0V200M0 180H200M180 0V200" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+<circle cx="100" cy="100" r="92" stroke="#ffffff" stroke-opacity="0.1"/>
+<circle cx="100" cy="100" r="66" stroke="#ffffff" stroke-opacity="0.18"/>
+<circle cx="100" cy="100" r="40" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.35"/>
+<g transform="translate(100 100) scale(1.7) translate(-12 -12)" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66"/><path d="m18 15-2-2"/><path d="m15 18-2-2"/></g>
+</svg>

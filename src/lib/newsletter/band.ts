@@ -1,12 +1,15 @@
 /**
- * Which illustration sits in the daily email's navy band.
+ * Which pattern icon sits in the daily email's navy band.
  *
- * Every pattern has a pre-rendered drawing in public/images/newsletter/band/
- * (<slug>.png for the email, <slug>.svg as the editable source). The band shows
- * Today's Idea, so the drawing follows the idea's pattern first; the stories'
+ * Every pattern has a pre-rendered band image in public/images/newsletter/band/
+ * (<slug>.png for the email, <slug>.svg as the source): the grid-and-rings motif
+ * from the site's pattern cards with ONE Lucide icon for that pattern. The band
+ * shows Today's Idea, so the icon follows the idea's pattern first; the stories'
  * patterns are the fallback for an idea the model left untagged.
  *
  * Nothing renders per issue: the pick is a lookup, and the PNGs are static files.
+ * To change an icon or add a pattern, edit the map in
+ * scripts/newsletter/build-band-icons.cjs and re-run it.
  */
 
 import { isValidPatternSlug } from './pattern-slug';

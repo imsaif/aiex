@@ -1,12 +1,8 @@
-<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" width="520" height="400" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="A slider from suggest to full autonomy"><rect width="260" height="200" fill="#162036" stroke="none"></rect>
-        <text x="30" y="60" fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700">How much can it do?</text>
-        <path d="M30 104H230" stroke-opacity="0.4"></path>
-        <path d="M30 104H97" stroke-width="4"></path>
-        <circle cx="30" cy="104" r="5" fill="#ffffff" stroke="none"></circle>
-        <circle cx="163" cy="104" r="5" stroke-opacity="0.5"></circle>
-        <circle cx="230" cy="104" r="5" stroke-opacity="0.5"></circle>
-        <circle cx="97" cy="104" r="13" fill="#ffffff" stroke="none"></circle>
-        <g fill="#ffffff" stroke="none" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle">
-          <text x="30" y="136" fill-opacity="0.7">Suggest</text><text x="97" y="136" font-weight="700">Ask first</text><text x="163" y="136" fill-opacity="0.7">Act</text><text x="226" y="136" fill-opacity="0.7">Auto</text>
-        </g>
-      </svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200" fill="none">
+<rect width="200" height="200" fill="#162036"/>
+<path d="M0 20H200M20 0V200M0 40H200M40 0V200M0 60H200M60 0V200M0 80H200M80 0V200M0 100H200M100 0V200M0 120H200M120 0V200M0 140H200M140 0V200M0 160H200M160 0V200M0 180H200M180 0V200" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+<circle cx="100" cy="100" r="92" stroke="#ffffff" stroke-opacity="0.1"/>
+<circle cx="100" cy="100" r="66" stroke="#ffffff" stroke-opacity="0.18"/>
+<circle cx="100" cy="100" r="40" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.35"/>
+<g transform="translate(100 100) scale(1.7) translate(-12 -12)" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></g>
+</svg>

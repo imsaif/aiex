@@ -2044,9 +2044,13 @@ function generateHTML(
 
   const stories = data.items.map((item) => {
     const publisherLabel = voicePublisherLabel(item);
+    // '' makes the layout draw a monogram. Used for publisher badges (a company
+    // logo would misattribute the post) and for products with no known logo,
+    // where getProductIconImg would otherwise return its grey fallback dot.
+    const productIcon = getProductIconImg(item.product);
     return {
       badgeLabel: publisherLabel ?? item.product,
-      badgeIconHtml: publisherLabel ? '' : getProductIconImg(item.product),
+      badgeIconHtml: publisherLabel || productIcon.includes('/fallback.png') ? '' : productIcon,
       metaLabel: digestProvenanceLabel(item) ?? item.date,
       headline: item.headline,
       takeaway: item.designerTakeaway,
@@ -2062,7 +2066,7 @@ function generateHTML(
     dateLabel: formatBandDate(new Date()),
     idea: { title: data.takeaway.title, body: data.takeaway.body },
     bandSlug,
-    bandAlt: `Illustration: ${getPatternTitle(bandSlug)}`,
+    bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
     stories,
     cta: process.env.NEWSLETTER_ANNOUNCEMENT === 'off'
       ? null
