@@ -91,16 +91,28 @@ ${grid()}
 }
 
 // Background for the navy audit CTA: the band's grid and rings, cropped at the top
-// right, so the bottom of the email echoes the header. Shown at 300x200.
+// right, so the bottom of the email echoes the header. The icon is FIXED (scan:
+// the audit), not the day's pattern, so it never repeats the header's icon. The
+// grid fades in from the left so the CTA copy always sits on clean navy.
+// Shown at 300x200.
+const CTA_ICON = 'scan-search';
 function ctaSvg() {
   const d = [];
   for (let i = 20; i < 300; i += 20) d.push(`M${i} 0V200`);
   for (let i = 20; i < 200; i += 20) d.push(`M0 ${i}H300`);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 300 200" fill="none">
+<defs>
+<linearGradient id="fade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="1"/></linearGradient>
+<mask id="m"><rect width="300" height="200" fill="url(#fade)"/></mask>
+</defs>
 <rect width="300" height="200" fill="#162036"/>
+<g mask="url(#m)">
 <path d="${d.join('')}" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
-<circle cx="230" cy="60" r="92" stroke="#ffffff" stroke-opacity="0.1"/>
-<circle cx="230" cy="60" r="66" stroke="#ffffff" stroke-opacity="0.16"/>
+<circle cx="230" cy="62" r="92" stroke="#ffffff" stroke-opacity="0.1"/>
+<circle cx="230" cy="62" r="66" stroke="#ffffff" stroke-opacity="0.16"/>
+</g>
+<circle cx="230" cy="62" r="34" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.35"/>
+<g transform="translate(230 62) scale(1.45) translate(-12 -12)" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">${iconNode(CTA_ICON).map(toSvg).join('')}</g>
 </svg>
 `;
 }
