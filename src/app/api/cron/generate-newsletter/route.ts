@@ -11,6 +11,8 @@ import { isValidPatternSlug, sanitizePatternSlugs } from '@/lib/newsletter/patte
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { AUDIT_PATH } from '@/lib/audit/constants';
 import { DEFAULT_POLL, type PollDefinition } from '@/lib/newsletter/poll';
+import { pickBandSlug } from '@/lib/newsletter/band';
+import { renderDailyEmail, formatBandDate } from '@/lib/newsletter/daily-email';
 
 // Initialize clients
 const anthropic = new Anthropic({
@@ -1193,7 +1195,11 @@ interface NewsletterData {
   takeaway: {
     title: string;
     body: string;
+    // Picks the band illustration. Optional: sanitizePatternSlugs drops invented ones.
+    patternSlug?: string;
   };
+  // Drawing the band used, stored so tomorrow's issue can avoid repeating it.
+  bandSlug?: string;
 }
 
 // Practitioner/opinion "voice" tiers — first-person essays, analyst takes, and
@@ -1554,7 +1560,7 @@ const WRITING_STYLE_BLOCK = `WRITING STYLE (applies to every string you write, i
   "less X, more Y", "X is the new Y". State the point directly instead.
 - BANNED WORDS: load-bearing, seamless, unlock, elevate, leverage, delve,
   dive into, game-changer, revolutionize, empower, robust, landscape, realm,
-  testament, crucial, pivotal, underscore, "in today's fast-paced world",
+  testament, crucial, pivotal, underscore, seam, seams, "in today's fast-paced world",
   "we've got you covered".
 - Do not open with a throat-clearing clause ("As AI continues to...",
   "In an era where..."). Start on the actual point.
@@ -1671,9 +1677,9 @@ YOUR TASK:
 
 2. For each selected item:
    - Write a short description of what happened
-   - Write a "Designer's Takeaway" - actionable insight for UX/product designers (1-2 sentences starting with a verb like "Consider...", "Notice how...", "Apply this by...")
+   - Write a "Designer's Takeaway" - ONE sentence of at most 14 words, starting with a verb, saying what a designer should do. The email shows only the headline and this line, so it has to stand on its own.
 3. Match each item to one of the available patterns (use the slug exactly)
-4. Write a "Today's Takeaway" insight summarizing the key theme
+4. Write a "Today's Takeaway" insight summarizing the key theme, and tag it with the ONE available pattern it is most about (use the slug exactly). It picks the illustration at the top of the email.
 5. Create a title and summary for the newsletter
 
 RESPOND IN THIS EXACT JSON FORMAT:
@@ -1684,16 +1690,17 @@ RESPOND IN THIS EXACT JSON FORMAT:
     {
       "product": "Product Name (e.g., ChatGPT, Claude, Gemini)",
       "date": "Dec 21",
-      "headline": "Short headline describing the update",
+      "headline": "Max 10 words. The update itself, specific enough to be worth a click.",
       "description": "Max 40 words. What happened, concretely. No preamble.",
-      "designerTakeaway": "ONE sentence, max 25 words. What a designer should DO differently.",
+      "designerTakeaway": "ONE sentence, max 14 words. What a designer should DO differently.",
       "sourceUrl": "URL from the news item",
       "patternSlug": "pattern-slug-from-list"
     }
   ],
   "takeaway": {
     "title": "Max 8 words. The insight itself, not a label for it.",
-    "body": "TWO sentences, max 40 words total. Sentence one: the pattern across today's stories. Sentence two: what a designer does about it. No preamble, no recap of the stories above, no contrast constructions."
+    "body": "TWO sentences, max 30 words total. Sentence one: the pattern across today's stories. Sentence two: what a designer does about it. No preamble, no recap of the stories above, no contrast constructions.",
+    "patternSlug": "pattern-slug-from-list"
   }
 }`;
 }
@@ -2012,39 +2019,77 @@ ${inner}
 </div>`.trim();
 }
 
-function generateHTML(data: NewsletterData, issueSlug: string, poll: PollDefinition): string {
-  const items = data.items
-    .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
-    .join('\n\n');
+// Daily layout (Oct 2026 redesign): Today's Idea in a navy band with a pattern
+// illustration, then short story cards. Layout lives in src/lib/newsletter/
+// daily-email.ts; this resolves the route-only pieces (publisher badge, digest
+// provenance, product icon, stripped URL, poll) and picks the band drawing.
+//
+// Story descriptions are deliberately NOT in the email any more (headline +
+// takeaway only). They stay in structuredData for /news and RSS.
+//
+// Side effect: sets data.bandSlug, which lands in structuredData so tomorrow's
+// pick can avoid repeating the drawing.
+function generateHTML(
+  data: NewsletterData,
+  issueSlug: string,
+  poll: PollDefinition,
+  previousBandSlug: string | null = null,
+): string {
+  const bandSlug = pickBandSlug({
+    ideaSlug: data.takeaway.patternSlug,
+    itemSlugs: data.items.map((item) => item.patternSlug),
+    previousSlug: previousBandSlug,
+  });
+  data.bandSlug = bandSlug;
 
-  const takeaway = renderCallout({
-    kicker: "Today's Idea",
-    title: data.takeaway.title,
-    body: data.takeaway.body,
+  const stories = data.items.map((item) => {
+    const publisherLabel = voicePublisherLabel(item);
+    // '' makes the layout draw a monogram. Used for publisher badges (a company
+    // logo would misattribute the post) and for products with no known logo,
+    // where getProductIconImg would otherwise return its grey fallback dot.
+    const productIcon = getProductIconImg(item.product);
+    return {
+      badgeLabel: publisherLabel ?? item.product,
+      badgeIconHtml: publisherLabel || productIcon.includes('/fallback.png') ? '' : productIcon,
+      metaLabel: digestProvenanceLabel(item) ?? item.date,
+      headline: item.headline,
+      takeaway: item.designerTakeaway,
+      sourceUrl: stripFeedUtm(item.sourceUrl),
+      pattern: isValidPatternSlug(item.patternSlug)
+        ? { slug: item.patternSlug, title: getPatternTitle(item.patternSlug) }
+        : undefined,
+    };
   });
 
-  // Note: data.summary is intentionally NOT rendered in the email body. It
-  // already lives in the page <title>/meta description, the email subject
-  // line preview, and the admin review header — repeating it as the lead
-  // paragraph was redundant. The "Today's Idea" callout at the bottom
-  // (data.takeaway) carries the editorial framing instead.
-  const body = `
-${renderMasthead('daily', data.items.length)}
+  return renderDailyEmail({
+    siteUrl: SITE_URL,
+    dateLabel: formatBandDate(new Date()),
+    idea: { title: data.takeaway.title, body: data.takeaway.body },
+    bandSlug,
+    bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
+    stories,
+    cta: process.env.NEWSLETTER_ANNOUNCEMENT === 'off'
+      ? null
+      : { href: auditUrl('daily-banner'), patternCount: PATTERN_COUNT },
+    pollHtml: renderPoll(issueSlug, poll),
+  });
+}
 
-${renderSectionHeader('The stories', 'Today in AI Products')}
-
-${items}
-
-<div style="height: 56px; line-height: 56px; font-size: 1px;">&nbsp;</div>
-
-${takeaway}
-
-${renderFooterCTA('daily', 'daily-banner')}
-
-${renderPoll(issueSlug, poll)}
-  `.trim();
-
-  return wrapEmailShell(body);
+// The band drawing the most recent daily before today used, or null. Read-only;
+// a failure here must never block generation, it only risks a repeated drawing.
+async function getPreviousBandSlug(todayStart: Date): Promise<string | null> {
+  try {
+    const previous = await prisma.newsletterDraft.findFirst({
+      where: { type: 'daily', createdAt: { lt: todayStart }, status: { in: ['published', 'pending_review'] } },
+      orderBy: { createdAt: 'desc' },
+      select: { structuredData: true },
+    });
+    const slug = (previous?.structuredData as { bandSlug?: unknown } | null)?.bandSlug;
+    return typeof slug === 'string' ? slug : null;
+  } catch (err) {
+    console.warn('[newsletter] Could not read previous band slug:', err);
+    return null;
+  }
 }
 
 function generateWeeklyHTML(data: WeeklyNewsletterData, issueSlug: string, poll: PollDefinition): string {
@@ -2601,6 +2646,8 @@ async function runGeneration(
   // computing it once removes any chance of the email and the row disagreeing
   // across a midnight boundary.
   let slug: string;
+  // Daily only: the band drawing the previous issue used (avoid repeating it).
+  let previousBandSlug: string | null = null;
 
   let parsedData;
   try {
@@ -2641,7 +2688,8 @@ async function runGeneration(
     enrichItemsWithSource(dailyData.items, newsItems);
     dailyData.items = enforceLeadPosition(dailyData.items);
     slug = generateSlug(dailyData.title, 'daily');
-    htmlContent = generateHTML(dailyData, slug, DEFAULT_POLL);
+    previousBandSlug = await getPreviousBandSlug(todayStart);
+    htmlContent = generateHTML(dailyData, slug, DEFAULT_POLL, previousBandSlug);
     title = dailyData.title;
     summary = dailyData.summary;
     structuredData = dailyData;
@@ -2729,7 +2777,7 @@ async function runGeneration(
           // Retry produced a different title, so the slug — and therefore every
           // poll link in the body — has to be recomputed with it.
           slug = generateSlug(retryParsed.title, 'daily');
-          htmlContent = generateHTML(retryParsed, slug, DEFAULT_POLL);
+          htmlContent = generateHTML(retryParsed, slug, DEFAULT_POLL, previousBandSlug);
           title = retryParsed.title;
           summary = retryParsed.summary;
           qa = retryQA;
