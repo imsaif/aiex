@@ -312,6 +312,35 @@ export default async function LearnSidebar({
         <ul className="space-y-1">
           {guides.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
+
+            // Only the course you are in carries its lessons. Every other
+            // course used to ship its full lesson list too, hidden in a closed
+            // <details>: about 80 KB on every course and lesson page, a third of
+            // the page, read back from Vercel's ISR cache on each miss. That
+            // pushed the account past its ISR read allowance (Oct 2026). Other
+            // courses are now a link to their overview, keeping the same row.
+            if (!isCurrent) {
+              return (
+                <li key={guide.slug}>
+                  <Link
+                    href={`/guides/${guide.slug}`}
+                    className="flex items-center gap-2 rounded-card px-3 py-2 type-caption leading-relaxed text-text-secondary transition-colors hover:bg-surface-secondary hover:text-text-primary"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="rail-chevron shrink-0 text-text-secondary"
+                    >
+                      ›
+                    </span>
+                    <CourseToolMark tool={guide.tool} />
+                    <span className="min-w-0 flex-1">
+                      {railLabel(guide.title)}
+                    </span>
+                  </Link>
+                </li>
+              );
+            }
+
             return (
               <li key={guide.slug}>
                 {/* A native <details>, so opening a course is a disclosure and
