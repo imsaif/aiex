@@ -42,6 +42,7 @@ const STYLE_BLOCK = `<style>
 @media only screen and (max-width: 480px) {
   .aiux-idea { font-size: 23px !important; }
   .aiux-band-art { width: 88px !important; }
+  .aiux-band-art-cell { width: 88px !important; }
 }
 @media (prefers-color-scheme: dark) {
   .aiux-tint { background-color: #141821 !important; }
@@ -127,7 +128,7 @@ function renderBand(input: DailyEmailInput): string {
       <p style="margin: 0 0 12px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${ON_NAVY};">TODAY'S IDEA</p>
       <h2 class="aiux-idea" style="margin: 0; font-family: ${FONT}; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.8px; color: #ffffff;">${escapeHtml(input.idea.title)}</h2>
     </td>
-    <td valign="middle" width="150" align="right" style="width: 150px;">
+    <td class="aiux-band-art-cell" valign="middle" width="150" align="right" style="width: 150px;">
       <img class="aiux-band-art" src="${bandImageUrl(input.siteUrl, input.bandSlug)}" alt="${escapeHtml(input.bandAlt)}" width="150" height="150" style="display: block; width: 150px; height: auto; border: 0;" />
     </td>
   </tr></table>
@@ -139,7 +140,7 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
   const logo = story.badgeIconHtml
     || `<span class="aiux-mono" style="display: inline-block; width: 16px; height: 16px; line-height: 16px; border-radius: 4px; background-color: ${NAVY}; color: #ffffff; font-size: 9px; font-weight: 800; text-align: center; letter-spacing: 0; vertical-align: -3px; margin-right: 6px;">${escapeHtml(monogram(story.badgeLabel))}</span>`;
   const pattern = story.pattern
-    ? `<td align="right" class="aiux-rule" style="padding: 16px 0 0; border-top: 1px solid ${HAIR};"><a href="${siteUrl}/patterns/${story.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span><span style="color: ${NAVY} !important;">${escapeHtml(story.pattern.title)} →</span></a></td>`
+    ? `<td align="right" class="aiux-rule" style="padding: 16px 0 0; border-top: 1px solid ${HAIR};"><a href="${siteUrl}/patterns/${story.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; text-align: left; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span><span style="color: ${NAVY} !important;">${escapeHtml(story.pattern.title)} →</span></a></td>`
     : '';
   return `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 16px;"><tr><td class="aiux-card" bgcolor="#ffffff" style="background-color: #ffffff; border-radius: 14px; padding: 26px 26px 22px;">
@@ -147,7 +148,7 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
   <h3 class="aiux-ink" style="margin: 0 0 12px; font-family: ${FONT}; font-size: 19px; font-weight: 700; line-height: 1.32; letter-spacing: -0.2px; color: ${NAVY};">${escapeHtml(story.headline)}</h3>
   <p class="aiux-sub" style="margin: 0; font-family: ${FONT}; font-size: 15px; line-height: 1.6; color: ${SLATE};">${escapeHtml(story.takeaway)}</p>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 20px 0 0;"><tr>
-    <td class="aiux-rule" style="padding: 16px 0 0; border-top: 1px solid ${HAIR}; font-family: ${FONT}; font-size: 13px; font-weight: 500;">${link(story.sourceUrl, 'Source →', SLATE, '', 'aiux-sub')}</td>
+    <td class="aiux-rule" style="padding: 16px 12px 0 0; border-top: 1px solid ${HAIR}; font-family: ${FONT}; font-size: 13px; font-weight: 500; white-space: nowrap;">${link(story.sourceUrl, 'Source →', SLATE, '', 'aiux-sub')}</td>
     ${pattern}
   </tr></table>
 </td></tr></table>`.trim();
