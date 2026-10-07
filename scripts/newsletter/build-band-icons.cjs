@@ -96,7 +96,10 @@ ${grid()}
 // grid fades in from the left so the CTA copy always sits on clean navy.
 // Shown at 300x200.
 const CTA_ICON = 'pen-tool';
-function ctaSvg() {
+// `strength` scales every stroke and fill: 1 for desktop, lower for the phone
+// variant, where the image sits behind a larger share of the copy.
+function ctaSvg(strength = 1) {
+  const o = (v) => (v * strength).toFixed(3);
   const d = [];
   for (let i = 20; i < 300; i += 20) d.push(`M${i} 0V200`);
   for (let i = 20; i < 200; i += 20) d.push(`M0 ${i}H300`);
@@ -107,12 +110,12 @@ function ctaSvg() {
 </defs>
 <rect width="300" height="200" fill="#162036"/>
 <g mask="url(#m)">
-<path d="${d.join('')}" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
-<circle cx="230" cy="62" r="92" stroke="#ffffff" stroke-opacity="0.1"/>
-<circle cx="230" cy="62" r="66" stroke="#ffffff" stroke-opacity="0.16"/>
+<path d="${d.join('')}" stroke="#ffffff" stroke-opacity="${o(0.07)}" stroke-width="1"/>
+<circle cx="230" cy="62" r="92" stroke="#ffffff" stroke-opacity="${o(0.1)}"/>
+<circle cx="230" cy="62" r="66" stroke="#ffffff" stroke-opacity="${o(0.16)}"/>
 </g>
-<circle cx="230" cy="62" r="34" fill="#ffffff" fill-opacity="0.07" stroke="#ffffff" stroke-opacity="0.35"/>
-<g transform="translate(230 62) scale(1.45) translate(-12 -12)" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">${iconNode(CTA_ICON).map(toSvg).join('')}</g>
+<circle cx="230" cy="62" r="34" fill="#ffffff" fill-opacity="${o(0.07)}" stroke="#ffffff" stroke-opacity="${o(0.35)}"/>
+<g transform="translate(230 62) scale(1.45) translate(-12 -12)" stroke="#ffffff" stroke-opacity="${o(1)}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none">${iconNode(CTA_ICON).map(toSvg).join('')}</g>
 </svg>
 `;
 }
@@ -120,6 +123,7 @@ function ctaSvg() {
 (async () => {
   const ctaOut = path.join(__dirname, '../../public/images/newsletter/cta-grid.png');
   await sharp(Buffer.from(ctaSvg())).png({ compressionLevel: 9, palette: true }).toFile(ctaOut);
+  await sharp(Buffer.from(ctaSvg(0.4))).png({ compressionLevel: 9, palette: true }).toFile(ctaOut.replace('.png', '-light.png'));
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   for (const f of fs.readdirSync(OUT_DIR)) fs.unlinkSync(path.join(OUT_DIR, f));

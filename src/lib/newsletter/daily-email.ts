@@ -39,11 +39,14 @@ const ON_NAVY_MUTED = '#94a3b8';
 
 // Dark-mode overrides, keyed by class. Light values above stay inline so the
 // email is complete without this block.
-const STYLE_BLOCK = `<style>
+// On phones the CTA grid sits behind most of the copy, so it swaps to a lighter,
+// smaller variant there.
+const styleBlock = (siteUrl: string) => `<style>
 @media only screen and (max-width: 480px) {
   .aiux-idea { font-size: 23px !important; }
   .aiux-band-art { width: 88px !important; }
   .aiux-band-art-cell { width: 88px !important; }
+  .aiux-cta { background-image: url('${siteUrl}/images/newsletter/cta-grid-light.png') !important; background-size: 200px 133px !important; }
 }
 @media (prefers-color-scheme: dark) {
   .aiux-tint { background-color: #141821 !important; }
@@ -165,7 +168,7 @@ function renderCta(cta: NonNullable<DailyEmailInput['cta']>, siteUrl: string): s
   // Outlook) show plain navy, which is the intended fallback.
   const grid = `${siteUrl}/images/newsletter/cta-grid.png`;
   return `
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr><td bgcolor="${NAVY}" background="${grid}" style="background-color: ${NAVY}; background-image: url('${grid}'); background-repeat: no-repeat; background-position: right top; background-size: 300px 200px; border: 1px solid #2c3650; border-radius: 14px; padding: 26px 26px 24px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr><td class="aiux-cta" bgcolor="${NAVY}" background="${grid}" style="background-color: ${NAVY}; background-image: url('${grid}'); background-repeat: no-repeat; background-position: right top; background-size: 300px 200px; border: 1px solid #2c3650; border-radius: 14px; padding: 26px 26px 24px;">
   <p style="margin: 0 0 4px; font-family: ${FONT}; font-size: 17px; font-weight: 700; color: #ffffff;">Turn your design into Claude skills</p>
   <p style="margin: 0 0 16px; font-family: ${FONT}; font-size: 14px; line-height: 1.55; color: ${ON_NAVY};">Drop a screenshot, see which of the ${cta.patternCount} patterns you are missing. Free, no signup for the first audit.</p>
   <a href="${cta.href}" target="_blank" rel="noopener" style="display: inline-block; background-color: #ffffff; color: ${NAVY} !important; text-decoration: none !important; padding: 12px 22px; border-radius: 999px; font-family: ${FONT}; font-size: 14px; font-weight: 700;"><span style="color: ${NAVY} !important; text-decoration: none !important;">Try the free audit →</span></a>
@@ -175,7 +178,7 @@ function renderCta(cta: NonNullable<DailyEmailInput['cta']>, siteUrl: string): s
 export function renderDailyEmail(input: DailyEmailInput): string {
   const stories = input.stories.map((s) => renderStory(s, input.siteUrl));
   return `
-${STYLE_BLOCK}
+${styleBlock(input.siteUrl)}
 <div style="font-family: ${FONT}; color: ${NAVY}; max-width: 640px; margin: 0 auto;">
 <table class="aiux-tint" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${TINT}" style="background-color: ${TINT}; border-radius: 16px;">
 ${renderBand(input)}
