@@ -80,8 +80,11 @@ function renderBand(input: DailyEmailInput): string {
   const count = input.stories.length;
   const storyLabel = `${count} ${count === 1 ? 'STORY' : 'STORIES'}`;
   const img = bandImageUrl(input.siteUrl, input.bandSlug);
-  // Two inline-block columns: side by side at 640px, stacked on a phone, with no
+  // Two inline-block columns: side by side on desktop, stacked on a phone, with no
   // media query (Gmail apps ignore them). Text column first so it leads on mobile.
+  // 330 + 190 = 520px leaves room inside beehiiv's content column, which is
+  // narrower than 640. The idea title is an h2: /news/[slug] renders this HTML
+  // under its own page h1.
   return `
 <tr><td bgcolor="${NAVY}" style="background-color: ${NAVY}; padding: 26px 24px 30px; border-radius: 16px 16px 0 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
@@ -89,12 +92,12 @@ function renderBand(input: DailyEmailInput): string {
     <td align="right" style="font-family: ${MONO}; font-size: 11px; letter-spacing: 1px; color: ${ON_NAVY_MUTED}; padding: 0 0 14px; border-bottom: 1px solid #2c3650;">${input.dateLabel} · ${storyLabel}</td>
   </tr></table>
   <div style="font-size: 0; margin: 26px 0 0;">
-    <div style="display: inline-block; width: 100%; max-width: 360px; vertical-align: bottom; font-size: 16px;">
+    <div style="display: inline-block; width: 100%; max-width: 330px; vertical-align: bottom; font-size: 16px;">
       <p style="margin: 0 0 12px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${ON_NAVY};">TODAY'S IDEA</p>
-      <h1 style="margin: 0 0 16px; font-family: ${FONT}; font-size: 32px; font-weight: 800; line-height: 1.08; letter-spacing: -0.8px; color: #ffffff;">${escapeHtml(input.idea.title)}</h1>
+      <h2 style="margin: 0 0 16px; font-family: ${FONT}; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.8px; color: #ffffff;">${escapeHtml(input.idea.title)}</h2>
     </div>
-    <div style="display: inline-block; width: 100%; max-width: 220px; vertical-align: bottom; font-size: 16px; text-align: right;">
-      <img src="${img}" alt="${escapeHtml(input.bandAlt)}" width="200" height="154" style="display: inline-block; width: 200px; max-width: 100%; height: auto; border: 0; margin: 0 0 12px;" />
+    <div style="display: inline-block; width: 100%; max-width: 190px; vertical-align: bottom; font-size: 16px; text-align: right;">
+      <img src="${img}" alt="${escapeHtml(input.bandAlt)}" width="180" height="138" style="display: inline-block; width: 180px; max-width: 100%; height: auto; border: 0; margin: 0 0 12px;" />
     </div>
   </div>
   <p style="margin: 0; font-family: ${FONT}; font-size: 15px; line-height: 1.6; color: ${ON_NAVY};">${escapeHtml(input.idea.body)}</p>
