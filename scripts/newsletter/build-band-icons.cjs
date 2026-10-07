@@ -91,11 +91,11 @@ ${grid()}
 }
 
 // Background for the navy audit CTA: the band's grid and rings, cropped at the top
-// right, so the bottom of the email echoes the header. The icon is FIXED (scan:
-// the audit), not the day's pattern, so it never repeats the header's icon. The
+// right, so the bottom of the email echoes the header. The icon is FIXED (a pen
+// tool: design work), not the day's pattern, so it never repeats the header's icon. The
 // grid fades in from the left so the CTA copy always sits on clean navy.
 // Shown at 300x200.
-const CTA_ICON = 'scan-search';
+const CTA_ICON = 'pen-tool';
 function ctaSvg() {
   const d = [];
   for (let i = 20; i < 300; i += 20) d.push(`M${i} 0V200`);
