@@ -90,7 +90,25 @@ ${grid()}
 `;
 }
 
+// Background for the navy audit CTA: the band's grid and rings, cropped at the top
+// right, so the bottom of the email echoes the header. Shown at 300x200.
+function ctaSvg() {
+  const d = [];
+  for (let i = 20; i < 300; i += 20) d.push(`M${i} 0V200`);
+  for (let i = 20; i < 200; i += 20) d.push(`M0 ${i}H300`);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 300 200" fill="none">
+<rect width="300" height="200" fill="#162036"/>
+<path d="${d.join('')}" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+<circle cx="230" cy="60" r="92" stroke="#ffffff" stroke-opacity="0.1"/>
+<circle cx="230" cy="60" r="66" stroke="#ffffff" stroke-opacity="0.16"/>
+</svg>
+`;
+}
+
 (async () => {
+  const ctaOut = path.join(__dirname, '../../public/images/newsletter/cta-grid.png');
+  await sharp(Buffer.from(ctaSvg())).png({ compressionLevel: 9, palette: true }).toFile(ctaOut);
+
   fs.mkdirSync(OUT_DIR, { recursive: true });
   for (const f of fs.readdirSync(OUT_DIR)) fs.unlinkSync(path.join(OUT_DIR, f));
   for (const [slug, icon] of Object.entries(ICON_FOR_PATTERN)) {
