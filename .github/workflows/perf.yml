@@ -3,16 +3,10 @@ name: Performance
 on:
   schedule:
     - cron: '0 4 * * *'   # 04:00 UTC daily (after newsletter cron at 03:00)
-  pull_request:
-    paths:
-      - 'src/**'
-      - 'public/**'
-      - 'next.config.*'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'lighthouserc.json'
-      - 'budget.json'
-      - '.github/workflows/perf.yml'
+  # No pull_request trigger: lighthouserc.json audits the production URLs, so a
+  # PR run measured the live site, not the PR, while its 24 page loads counted
+  # against Vercel's ISR read allowance (exceeded Oct 2026). Run it by hand
+  # after a merge if a change needs checking before the nightly run.
   workflow_dispatch:
 
 jobs:

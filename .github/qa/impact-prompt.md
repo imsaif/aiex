@@ -27,10 +27,12 @@ and so on, substitute those values yourself.
   the icons might be.
 - **Quote, don't upgrade.** When you rely on testing the PR describes, repeat
   exactly what it says was tested. "390px browser width" is not "a real phone".
-- Stay under 20 probe paths per PR run unless the change is genuinely
-  site-wide (a token in `globals.css`, the root layout, the navbar, a shared
-  component used everywhere). Then probe a representative page from every
-  route family instead of every page.
+- Stay under 8 probe paths per PR run, and never more than 12, even when the
+  change is site-wide (a token in `globals.css`, the root layout, the navbar,
+  a shared component used everywhere). For site-wide changes probe one
+  representative page per route family instead of every page. Every probe of
+  a fresh preview is a cold cache miss that counts against the account's
+  Vercel ISR read allowance, which was exceeded in Oct 2026.
 
 ## Step 1: understand the change
 
