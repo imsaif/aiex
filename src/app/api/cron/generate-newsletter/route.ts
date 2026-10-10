@@ -2019,10 +2019,11 @@ ${inner}
 </div>`.trim();
 }
 
-// Daily layout (Oct 2026 redesign): Today's Idea in a navy band with a pattern
-// illustration, then short story cards. Layout lives in src/lib/newsletter/
-// daily-email.ts; this resolves the route-only pieces (publisher badge, digest
-// provenance, product icon, stripped URL, poll) and picks the band drawing.
+// Daily layout (Oct 2026 redesign): the issue title (subject line) in a navy band
+// with the lead story's pattern icon, short story cards, then Today's Idea as a
+// wrap-up. Layout lives in src/lib/newsletter/daily-email.ts; this resolves the
+// route-only pieces (publisher badge, digest provenance, product icon, stripped
+// URL, poll) and picks the band icon.
 //
 // Story descriptions are deliberately NOT in the email any more (headline +
 // takeaway only). They stay in structuredData for /news and RSS.
@@ -2064,6 +2065,7 @@ function generateHTML(
   return renderDailyEmail({
     siteUrl: SITE_URL,
     dateLabel: formatBandDate(new Date()),
+    headline: data.title,
     idea: { title: data.takeaway.title, body: data.takeaway.body },
     bandSlug,
     bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
