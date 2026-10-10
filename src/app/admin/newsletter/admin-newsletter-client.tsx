@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import DOMPurify from 'dompurify';
 import { syncBandTitle } from '@/lib/newsletter/daily-email';
+import { syncBandIcon } from '@/lib/newsletter/band-icons';
+import { BandIconPicker } from './band-icon-picker';
 
 interface NewsletterDraftSummary {
   id: string;
@@ -619,6 +621,10 @@ export default function AdminNewsletterClient({
                     onChange={(e) => setEditedSummary(e.target.value)}
                     className="mt-2 text-sm md:text-base text-text-secondary w-full border border-dashed border-border-secondary rounded px-2 py-1 focus:ring-1 focus:ring-accent-primary focus:border-accent-primary resize-none bg-transparent"
                     rows={2}
+                  />
+                  <BandIconPicker
+                    html={editedContent}
+                    onPick={(slug) => setEditedContent((html) => syncBandIcon(html, slug))}
                   />
                 </div>
 

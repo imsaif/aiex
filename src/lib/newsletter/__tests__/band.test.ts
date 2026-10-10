@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { patterns } from '@/data/patterns';
-import { BAND_DRAWINGS, DEFAULT_BAND_SLUG, pickBandSlug } from '../band';
+import { BAND_DRAWINGS, BAND_ICONS, DEFAULT_BAND_SLUG, pickBandSlug, bandSlugFromHtml, syncBandIcon } from '../band';
 import { monogram, tidyDateLabel, stripIssuePrefix, syncBandTitle, renderDailyEmail } from '../daily-email';
 
 describe('tidyDateLabel', () => {
@@ -105,5 +105,40 @@ describe('pickBandSlug', () => {
 
   it('uses the default when nothing in the issue has a pattern', () => {
     expect(pickBandSlug({ itemSlugs: [undefined, undefined] })).toBe(DEFAULT_BAND_SLUG);
+  });
+});
+
+describe('band icon picker', () => {
+  it('names every icon exactly as the pattern registry does', () => {
+    const drift = patterns.filter((p) => BAND_ICONS[p.slug] !== p.title).map((p) => `${p.slug}: ${BAND_ICONS[p.slug]} != ${p.title}`);
+    expect(drift).toEqual([]);
+  });
+
+  const html = renderDailyEmail({
+    siteUrl: 'https://example.test',
+    dateLabel: 'SAT 10.10.26',
+    headline: 'Title',
+    idea: { title: 'Idea', body: 'Body.' },
+    bandSlug: 'trust-calibration',
+    bandAlt: 'Trust Calibration pattern icon',
+    stories: [],
+    cta: null,
+    pollHtml: '',
+  });
+
+  it('reads the icon a draft shows', () => {
+    expect(bandSlugFromHtml(html)).toBe('trust-calibration');
+    expect(bandSlugFromHtml('<p>weekly issue</p>')).toBeNull();
+  });
+
+  it('swaps the icon and its alt text', () => {
+    const swapped = syncBandIcon(html, 'selective-memory');
+    expect(bandSlugFromHtml(swapped)).toBe('selective-memory');
+    expect(swapped).toContain('band/selective-memory.png" alt="Selective Memory pattern icon"');
+    expect(swapped).not.toContain('trust-calibration');
+  });
+
+  it('ignores unknown icons', () => {
+    expect(syncBandIcon(html, 'not-a-pattern')).toBe(html);
   });
 });
