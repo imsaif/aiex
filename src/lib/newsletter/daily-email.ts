@@ -72,8 +72,8 @@ const styleBlock = (siteUrl: string) => `<style>
 export interface DailyEmailStory {
   /** Publisher for voice items, product for news. Plain text. */
   badgeLabel: string;
-  /** Pre-built <img> for a known product logo, or '' to show a monogram. */
-  badgeIconHtml: string;
+  /** URL of a known product logo (square PNG), or '' to show a monogram. */
+  badgeIconUrl: string;
   /** Date, or "via TLDR Design" for digest-scraped items. */
   metaLabel: string;
   headline: string;
@@ -162,7 +162,7 @@ function renderBand(input: DailyEmailInput): string {
   return `
 <tr><td bgcolor="${NAVY}" style="background-color: ${NAVY}; padding: 24px 24px 26px; border-radius: 16px 16px 0 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-    <td style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${FONT}; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; color: #ffffff;"><img src="${mark}" alt="aiux" width="26" height="26" style="width: 26px; height: 26px; border: 0; vertical-align: middle; margin-right: 8px;" />aiux <span style="font-weight: 400; color: ${ON_NAVY};">daily</span></td>
+    <td style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${FONT}; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; color: #ffffff;"><img src="${mark}" alt="aiux" width="26" height="26" style="display: inline-block; width: 26px; height: 26px; border: 0; vertical-align: middle; margin-right: 8px;" />aiux <span style="font-weight: 400; color: ${ON_NAVY};">daily</span></td>
     <td align="right" style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${MONO}; font-size: 11px; letter-spacing: 1px; color: ${ON_NAVY_MUTED};">${input.dateLabel} · ${storyLabel}</td>
   </tr></table>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 22px 0 0;"><tr>
@@ -189,16 +189,19 @@ function renderIdea(idea: DailyEmailInput['idea']): string {
 
 function renderStory(story: DailyEmailStory, siteUrl: string): string {
   // The logo sits in its own cell, vertically centred against the label: inline
-  // images and spans aligned to the text baseline sat a few pixels off.
-  const logo = story.badgeIconHtml
-    || `<span class="aiux-mono" style="display: block; width: 16px; height: 16px; line-height: 16px; border-radius: 4px; background-color: ${NAVY}; color: #ffffff; font-family: ${FONT}; font-size: 9px; font-weight: 800; text-align: center; letter-spacing: 0;">${escapeHtml(monogram(story.badgeLabel))}</span>`;
+  // images and spans aligned to the text baseline sat a few pixels off. The size
+  // is locked (min/max width, no margin): a host page whose styles set
+  // img { max-width: 100% } let a long label squeeze the cell and squash the logo.
+  const logo = story.badgeIconUrl
+    ? `<img src="${story.badgeIconUrl}" alt="" width="16" height="16" style="display: block; width: 16px; min-width: 16px; max-width: none; height: 16px; border: 0;" />`
+    : `<span class="aiux-mono" style="display: block; width: 16px; height: 16px; line-height: 16px; border-radius: 4px; background-color: ${NAVY}; color: #ffffff; font-family: ${FONT}; font-size: 9px; font-weight: 800; text-align: center; letter-spacing: 0;">${escapeHtml(monogram(story.badgeLabel))}</span>`;
   const pattern = story.pattern
     ? `<td align="right" class="aiux-rule" style="padding: 18px 0 0; border-top: 1px solid ${HAIR};"><a href="${siteUrl}/patterns/${story.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; text-align: left; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span><span style="color: ${NAVY} !important;">${escapeHtml(story.pattern.title)}&nbsp;→</span></a></td>`
     : '';
   return `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 20px;"><tr><td class="aiux-card" bgcolor="#ffffff" style="background-color: #ffffff; border-radius: 14px; padding: 30px 22px 26px;">
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 18px;"><tr>
-    <td valign="middle" width="16" style="width: 16px; line-height: 0; font-size: 0; padding: 0 8px 0 0;">${logo}</td>
+    <td valign="middle" width="16" style="width: 16px; min-width: 16px; line-height: 0; font-size: 0; padding: 0 8px 0 0;">${logo}</td>
     <td valign="middle" class="aiux-ink" style="font-family: ${FONT}; font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: ${NAVY};">${escapeHtml(story.badgeLabel)} <span class="aiux-sub" style="font-weight: 400; color: ${SLATE}; text-transform: none; letter-spacing: 0;">· ${escapeHtml(tidyDateLabel(story.metaLabel))}</span></td>
   </tr></table>
   <h3 class="aiux-ink" style="margin: 0 0 14px; font-family: ${FONT}; font-size: 19px; font-weight: 700; line-height: 1.32; letter-spacing: -0.2px; color: ${NAVY};">${escapeHtml(story.headline)}</h3>
@@ -220,7 +223,7 @@ function renderCta(cta: NonNullable<DailyEmailInput['cta']>, siteUrl: string): s
   // padding keeps the copy off the graphic on desktop; phones release it.
   const grid = `${siteUrl}/images/newsletter/cta-grid.png`;
   return `
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr><td class="aiux-cta" bgcolor="${NAVY}" background="${grid}" style="background-color: ${NAVY}; background-image: url('${grid}'); background-repeat: no-repeat; background-position: right top; background-size: 300px 200px; border: 1px solid #2c3650; border-radius: 14px; padding: 26px 190px 24px 26px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr><td class="aiux-cta" bgcolor="${NAVY}" background="${grid}" style="background-color: ${NAVY}; background-image: url('${grid}'); background-repeat: no-repeat; background-position: right top; background-size: 300px 200px; border-radius: 14px; padding: 26px 190px 24px 26px;">
   <p style="margin: 0 0 4px; font-family: ${FONT}; font-size: 17px; font-weight: 700; color: #ffffff;">Turn your design into Claude skills</p>
   <p style="margin: 0 0 16px; font-family: ${FONT}; font-size: 14px; line-height: 1.55; color: ${ON_NAVY};">Drop a screenshot, see which of the ${cta.patternCount} patterns you are missing. Free, no signup for the first audit.</p>
   <a href="${cta.href}" target="_blank" rel="noopener" style="display: inline-block; background-color: #ffffff; color: ${NAVY} !important; text-decoration: none !important; padding: 12px 22px; border-radius: 999px; font-family: ${FONT}; font-size: 14px; font-weight: 700;"><span style="color: ${NAVY} !important; text-decoration: none !important;">Get your design skills →</span></a>
