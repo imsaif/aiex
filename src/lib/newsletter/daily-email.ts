@@ -29,7 +29,7 @@
  *   with !important on the anchor AND a nested span.
  */
 
-import { bandImageUrl } from './band';
+import { bandImageUrl } from './band-icons';
 
 const FONT = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif`;
 const MONO = `ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
