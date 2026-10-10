@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import DOMPurify from 'dompurify';
+import { syncBandTitle } from '@/lib/newsletter/daily-email';
 
 interface NewsletterDraftSummary {
   id: string;
@@ -122,7 +123,9 @@ export default function AdminNewsletterClient({
       const data = await res.json();
       if (data && data.id) {
         setActiveDraft(data);
-        setEditedContent(data.content);
+        // The daily email's band repeats the title (the subject line), so keep the
+        // two in step: a title saved earlier must already show in the band.
+        setEditedContent(syncBandTitle(data.content ?? '', data.title));
         setEditedTitle(data.title);
         setEditedSummary(data.summary);
       }
@@ -602,7 +605,13 @@ export default function AdminNewsletterClient({
                   <input
                     type="text"
                     value={editedTitle}
-                    onChange={(e) => setEditedTitle(e.target.value)}
+                    onChange={(e) => {
+                      // Retitling also rewrites the band headline in the HTML, so the
+                      // preview, Save, Publish and Copy HTML all carry the new title.
+                      const title = e.target.value;
+                      setEditedTitle(title);
+                      setEditedContent((html) => syncBandTitle(html, title));
+                    }}
                     className="text-lg md:text-xl font-bold text-text-primary w-full border border-dashed border-border-secondary rounded px-2 py-1 focus:ring-1 focus:ring-accent-primary focus:border-accent-primary bg-transparent"
                   />
                   <textarea

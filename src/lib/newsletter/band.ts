@@ -4,8 +4,8 @@
  * Every pattern has a pre-rendered band image in public/images/newsletter/band/
  * (<slug>.png for the email, <slug>.svg as the source): the grid-and-rings motif
  * from the site's pattern cards with ONE Lucide icon for that pattern. The band
- * shows Today's Idea, so the icon follows the idea's pattern first; the stories'
- * patterns are the fallback for an idea the model left untagged.
+ * shows the issue title, which names the stories, so the icon follows the lead
+ * story's pattern; the idea's pattern is the last fallback.
  *
  * Nothing renders per issue: the pick is a lookup, and the PNGs are static files.
  * To change an icon or add a pattern, edit the map in
@@ -43,13 +43,14 @@ export interface BandPickInput {
 }
 
 /**
- * Order: the idea's pattern, then each story's pattern, skipping yesterday's
- * drawing. If every candidate equals yesterday's, repeating it beats showing an
- * unrelated drawing. With no candidates at all, the default.
+ * Order: each story's pattern in issue order (the lead story first), then the
+ * idea's pattern, skipping yesterday's icon. If every candidate equals
+ * yesterday's, repeating it beats showing an unrelated icon. With no candidates
+ * at all, the default.
  */
 export function pickBandSlug({ ideaSlug, itemSlugs, previousSlug }: BandPickInput): string {
   const candidates: string[] = [];
-  for (const slug of [ideaSlug, ...itemSlugs]) {
+  for (const slug of [...itemSlugs, ideaSlug]) {
     if (isValidPatternSlug(slug) && BAND_DRAWINGS.has(slug) && !candidates.includes(slug)) {
       candidates.push(slug);
     }

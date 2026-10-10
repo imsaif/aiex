@@ -12,6 +12,7 @@ import { PATTERN_COUNT } from '@/data/pattern-count';
 import { AUDIT_PATH } from '@/lib/audit/constants';
 import { DEFAULT_POLL, type PollDefinition } from '@/lib/newsletter/poll';
 import { pickBandSlug } from '@/lib/newsletter/band';
+import { extractPublisherUrl } from '@/lib/newsletter/google-news';
 import { renderDailyEmail, formatBandDate } from '@/lib/newsletter/daily-email';
 
 // Initialize clients
@@ -379,15 +380,19 @@ const PRODUCT_ICON_NAMES: string[] = [
   'ubereats', 'posthog',
 ];
 
-function getProductIconImg(productName: string): string {
+/** Logo URL for a known product, or null. */
+function getProductIconUrl(productName: string): string | null {
   const name = productName.toLowerCase();
   const nameNoSpaces = name.replace(/\s+/g, '');
   for (const key of PRODUCT_ICON_NAMES) {
-    if (name.includes(key) || nameNoSpaces.includes(key)) {
-      return `<img src="${EMAIL_IMG_BASE}/${key}.png" alt="" width="14" height="14" style="width: 14px; height: 14px; display: inline; vertical-align: -2px; margin-right: 5px;" />`;
-    }
+    if (name.includes(key) || nameNoSpaces.includes(key)) return `${EMAIL_IMG_BASE}/${key}.png`;
   }
-  return `<img src="${EMAIL_IMG_BASE}/fallback.png" alt="" width="14" height="14" style="width: 14px; height: 14px; display: inline; vertical-align: -2px; margin-right: 5px;" />`;
+  return null;
+}
+
+function getProductIconImg(productName: string): string {
+  const src = getProductIconUrl(productName) ?? `${EMAIL_IMG_BASE}/fallback.png`;
+  return `<img src="${src}" alt="" width="14" height="14" style="width: 14px; height: 14px; display: inline; vertical-align: -2px; margin-right: 5px;" />`;
 }
 
 // Primary AI product sources - these get priority
@@ -1385,7 +1390,7 @@ async function resolveGoogleNewsUrl(url: string, timeoutMs = 8000): Promise<stri
       signal: ctrl.signal,
     });
     const text = await res.text();
-    return text.match(/https?:\/\/(?!news\.google)[^\\"]+/)?.[0] || null;
+    return extractPublisherUrl(text);
   } catch {
     return null;
   } finally {
@@ -2019,10 +2024,11 @@ ${inner}
 </div>`.trim();
 }
 
-// Daily layout (Oct 2026 redesign): Today's Idea in a navy band with a pattern
-// illustration, then short story cards. Layout lives in src/lib/newsletter/
-// daily-email.ts; this resolves the route-only pieces (publisher badge, digest
-// provenance, product icon, stripped URL, poll) and picks the band drawing.
+// Daily layout (Oct 2026 redesign): the issue title (subject line) in a navy band
+// with the lead story's pattern icon, short story cards, then Today's Idea as a
+// wrap-up. Layout lives in src/lib/newsletter/daily-email.ts; this resolves the
+// route-only pieces (publisher badge, digest provenance, product icon, stripped
+// URL, poll) and picks the band icon.
 //
 // Story descriptions are deliberately NOT in the email any more (headline +
 // takeaway only). They stay in structuredData for /news and RSS.
@@ -2045,12 +2051,10 @@ function generateHTML(
   const stories = data.items.map((item) => {
     const publisherLabel = voicePublisherLabel(item);
     // '' makes the layout draw a monogram. Used for publisher badges (a company
-    // logo would misattribute the post) and for products with no known logo,
-    // where getProductIconImg would otherwise return its grey fallback dot.
-    const productIcon = getProductIconImg(item.product);
+    // logo would misattribute the post) and for products with no known logo.
     return {
       badgeLabel: publisherLabel ?? item.product,
-      badgeIconHtml: publisherLabel || productIcon.includes('/fallback.png') ? '' : productIcon,
+      badgeIconUrl: publisherLabel ? '' : (getProductIconUrl(item.product) ?? ''),
       metaLabel: digestProvenanceLabel(item) ?? item.date,
       headline: item.headline,
       takeaway: item.designerTakeaway,
@@ -2064,6 +2068,7 @@ function generateHTML(
   return renderDailyEmail({
     siteUrl: SITE_URL,
     dateLabel: formatBandDate(new Date()),
+    headline: data.title,
     idea: { title: data.takeaway.title, body: data.takeaway.body },
     bandSlug,
     bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
