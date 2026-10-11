@@ -12,7 +12,8 @@ paths:
 
 ## Newsletter & Email Management
 - `npm run send-newsletter` — generate a pattern-update HTML blob that admin pastes into a new Beehiiv post
-- Newsletter broadcasts via **Beehiiv (manual compose)**: admin clicks Publish in our admin UI → post goes live on /news → admin clicks "Copy HTML" → pastes into a new Beehiiv post → Beehiiv sends to subscribers. Beehiiv free/Launch tier has no Posts API, so delivery is intentionally manual.
+- **Since Oct 2026 the newsletter SENDS through Resend broadcasts, not a beehiiv paste** ([ADR 0008](../../docs/adr/0008-resend-newsletter-delivery.md)). beehiiv's free plan no longer accepts custom HTML. Review is unchanged: admin reviews and Publishes in `/admin/newsletter` → **Send test to me** → **Send to subscribers** (`POST /api/newsletter/send`, once per issue, recorded in `structuredData.send`). Before each send the Resend segment "AI UX Daily" is synced from the local `Subscriber` table (Resend-side unsubscribes mirrored back first, never re-added). The email footer (unsubscribe link + postal address from `NEWSLETTER_POSTAL_ADDRESS`) is added at send time by `wrapEmail()`, never stored, so /news stays clean. First import / big catch-ups: `npm run newsletter:import-resend` (dry run; `-- --apply` to write). **The bullets below that describe pasting into beehiiv are history.**
+- (Before Oct 2026) Newsletter broadcasts via **Beehiiv (manual compose)**: admin clicks Publish in our admin UI → post goes live on /news → admin clicks "Copy HTML" → pastes into a new Beehiiv post → Beehiiv sends to subscribers.
 - Welcome emails via **Beehiiv Automations** (keyed on `signup_source` custom field, triggered by subscriber sync).
 - Transactional emails (audit reports, admin watchdog alerts, cron failure alerts) via **Resend free tier** — ~150 emails/month, well under the 3,000/month cap.
 - See [Newsletter Documentation](../../docs/NEWSLETTER.md) for complete setup and usage guide

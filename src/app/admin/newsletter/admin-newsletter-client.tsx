@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import { syncBandTitle } from '@/lib/newsletter/daily-email';
 import { syncBandIcon } from '@/lib/newsletter/band-icons';
 import { BandIconPicker } from './band-icon-picker';
+import { SendPanel } from './send-panel';
 
 interface NewsletterDraftSummary {
   id: string;
@@ -39,7 +40,7 @@ interface NewsletterQA {
 interface NewsletterDraft extends NewsletterDraftSummary {
   content: string;
   sources: unknown;
-  structuredData?: { qa?: NewsletterQA } | null;
+  structuredData?: { qa?: NewsletterQA; send?: { sentAt?: string; recipients?: number } } | null;
 }
 
 interface AdminNewsletterClientProps {
@@ -193,6 +194,8 @@ export default function AdminNewsletterClient({
       });
 
       if (response.ok) {
+        // Keep the stored copy in step, so the send panel knows nothing is unsaved.
+        setActiveDraft((d) => (d ? { ...d, title: editedTitle, summary: editedSummary, content: editedContent } : d));
         setMessage({ type: 'success', text: 'Draft saved successfully' });
       } else {
         throw new Error('Failed to save draft');
@@ -484,14 +487,13 @@ export default function AdminNewsletterClient({
                           >
                             {isCopied ? 'Copied ✓' : 'Copy HTML'}
                           </button>
-                          <a
-                            href="https://app.beehiiv.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-3 md:px-4 py-2 bg-background-secondary text-text-primary rounded-md hover:bg-background-tertiary transition-colors text-xs md:text-sm font-medium whitespace-nowrap"
-                          >
-                            Open Beehiiv ↗
-                          </a>
+                          {/* Sending moved from a beehiiv paste to Resend (Oct 2026):
+                              beehiiv's free plan no longer accepts custom HTML. */}
+                          <SendPanel
+                            draftId={activeDraft.id}
+                            dirty={editedContent !== activeDraft.content || editedTitle !== activeDraft.title || editedSummary !== activeDraft.summary}
+                            initialSent={activeDraft.structuredData?.send?.sentAt ? activeDraft.structuredData.send : null}
+                          />
                         </>
                       )}
                       <button

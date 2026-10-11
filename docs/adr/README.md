@@ -30,7 +30,8 @@ Each ADR is a numbered Markdown file (`NNNN-short-title.md`) with this shape:
 | 0003 | [Vercel for hosting](./0003-vercel-hosting.md)                  | Accepted |
 | 0004 | [Tailwind CSS v4 with enforced design tokens](./0004-tailwind-design-tokens.md) | Accepted |
 | 0005 | [Prisma + Neon Postgres for persistence](./0005-prisma-neon-postgres.md) | Accepted |
-| 0006 | [Beehiiv + Resend for email](./0006-beehiiv-resend-email.md)    | Accepted |
+| 0006 | [Beehiiv + Resend for email](./0006-beehiiv-resend-email.md)    | Delivery superseded by 0008 |
 | 0007 | [External cron (cron-job.org), not Vercel cron](./0007-external-cron.md) | Accepted |
+| 0008 | [Newsletter delivery via Resend broadcasts](./0008-resend-newsletter-delivery.md) | Accepted |
 </content>
 </invoke>
