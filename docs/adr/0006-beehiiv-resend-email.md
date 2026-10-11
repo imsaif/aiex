@@ -1,6 +1,6 @@
 # 0006 — Beehiiv + Resend for email
 
-**Status:** Accepted
+**Status:** Accepted; newsletter delivery superseded by [0008](./0008-resend-newsletter-delivery.md) (Oct 2026)
 
 ## Context
 
