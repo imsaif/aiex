@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       draft,
-      message: 'Published to /news. Now copy the HTML and paste into Beehiiv to send.',
+      message: 'Published to /news. Now Send test to me, then Send to subscribers.',
     });
   } catch (error) {
     console.error('Failed to publish newsletter:', error);

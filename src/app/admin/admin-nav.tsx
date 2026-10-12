@@ -7,7 +7,6 @@ const links = [
   { href: '/admin/newsletter', label: 'Newsletter' },
   { href: '/admin/subscribers', label: 'Subscribers' },
   { href: '/admin/social', label: 'Social' },
-  { href: '/admin/publish', label: 'Publish' },
   { href: '/admin/audit-samples', label: 'Audit Samples' },
   { href: '/admin/patterns/review', label: 'New Patterns' },
 ];
