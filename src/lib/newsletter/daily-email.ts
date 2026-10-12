@@ -49,7 +49,7 @@ const ON_NAVY_MUTED = '#94a3b8';
 // On phones the CTA grid sits behind most of the copy, so it swaps to a lighter,
 // smaller variant tucked into the bottom corner, and the desktop right-hand gutter
 // that keeps copy clear of the grid is released.
-const styleBlock = (siteUrl: string) => `<style>
+export const emailStyleBlock = (siteUrl: string) => `<style>
 @media only screen and (max-width: 480px) {
   .aiux-idea { font-size: 23px !important; }
   .aiux-band-art { width: 88px !important; }
@@ -280,7 +280,7 @@ export function renderDailyEmail(input: DailyEmailInput): string {
     ...(input.panels ?? []),
   ];
   return `
-${styleBlock(input.siteUrl)}
+${emailStyleBlock(input.siteUrl)}
 <div style="font-family: ${FONT}; color: ${NAVY}; max-width: 680px; margin: 0 auto;">
 <table class="aiux-tint" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${TINT}" style="background-color: ${TINT}; border-radius: 16px;">
 ${renderBand(input)}

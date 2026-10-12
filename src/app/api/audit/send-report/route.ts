@@ -6,6 +6,7 @@ import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { getPatternSlug } from '@/utils/pattern-links';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
+import { sendWelcomeEmail } from '@/lib/newsletter/welcome-email';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
 
 // Request validation schema
@@ -94,6 +95,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Auto-subscribe to newsletter (non-blocking — don't fail the email)
+    let becameActive = false;
     try {
       const existingSubscriber = await prisma.subscriber.findUnique({
         where: { email },
@@ -101,8 +103,10 @@ export async function POST(request: NextRequest) {
 
       if (!existingSubscriber) {
         await prisma.subscriber.create({ data: { email } });
+        becameActive = true;
       } else if (!existingSubscriber.active) {
         await prisma.subscriber.update({ where: { email }, data: { active: true } });
+        becameActive = true;
       }
     } catch {
       // DB unreachable — email already sent, subscriber sync is best-effort
@@ -117,6 +121,9 @@ export async function POST(request: NextRequest) {
     } catch (err) {
       console.error('[audit/send-report] Beehiiv sync failed:', err);
     }
+
+    // Welcome only when the report made them a new (or rejoining) subscriber.
+    if (becameActive) await sendWelcomeEmail(email);
 
     return NextResponse.json(
       { message: 'Report sent successfully! Check your inbox.' },
