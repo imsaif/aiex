@@ -55,6 +55,71 @@ export const BAND_ICONS: Readonly<Record<string, string>> = {
 
 export const BAND_DRAWINGS: ReadonlySet<string> = new Set(Object.keys(BAND_ICONS));
 
+/** Topic icons: extra picker choices for when no pattern fits the issue. Never
+ *  picked automatically. Built by scripts/newsletter/build-band-icons.cjs
+ *  (ICON_FOR_TOPIC there); band.test.ts fails if one has no PNG. */
+export const TOPIC_ICONS: Readonly<Record<string, string>> = {
+  'topic-ai-agents': 'AI agents',
+  'topic-ai-features': 'AI features',
+  'topic-voice': 'Voice & audio',
+  'topic-search': 'Search',
+  'topic-security': 'Security & safety',
+  'topic-access': 'Login & access',
+  'topic-code': 'Code & developers',
+  'topic-design-tools': 'Design tools',
+  'topic-canvas': 'Canvas & layout',
+  'topic-prototyping': 'Prototyping',
+  'topic-design-systems': 'Design systems',
+  'topic-components': 'Components',
+  'topic-analytics': 'Data & analytics',
+  'topic-pricing': 'Pricing & money',
+  'topic-funding': 'Funding & growth',
+  'topic-launch': 'Launches',
+  'topic-mobile': 'Mobile',
+  'topic-web': 'Web & browsers',
+  'topic-image': 'Images',
+  'topic-video': 'Video',
+  'topic-writing': 'Writing',
+  'topic-chat': 'Chat',
+  'topic-workflows': 'Workflows',
+  'topic-integrations': 'Integrations',
+  'topic-apis': 'APIs & MCP',
+  'topic-models': 'Models',
+  'topic-benchmarks': 'Benchmarks',
+  'topic-regulation': 'Policy & regulation',
+  'topic-education': 'Learning',
+  'topic-health': 'Health',
+  'topic-commerce': 'Shopping',
+  'topic-scheduling': 'Time & scheduling',
+  'topic-documents': 'Documents',
+  'topic-email': 'Email',
+  'topic-teams': 'Teams',
+  'topic-wearables': 'AR & wearables',
+  'topic-mobility': 'Cars & mobility',
+  'topic-risk': 'Risks & failures',
+  'topic-quality': 'Bugs & quality',
+  'topic-vision': 'Vision',
+  'topic-location': 'Maps & location',
+  'topic-language': 'Language',
+  'topic-games': 'Games',
+  'topic-open-source': 'Open source',
+  'topic-news': 'News & media',
+  'topic-marketing': 'Marketing',
+  'topic-enterprise': 'Enterprise',
+};
+
+/** The image's alt text: patterns say so, topics are just named. */
+function iconAlt(slug: string): string | null {
+  if (BAND_ICONS[slug]) return `${BAND_ICONS[slug]} pattern icon`;
+  if (TOPIC_ICONS[slug]) return `${TOPIC_ICONS[slug]} icon`;
+  return null;
+}
+
+/** Display name for any band icon, pattern or topic. */
+export function bandIconTitle(slug: string): string | null {
+  return BAND_ICONS[slug] ?? TOPIC_ICONS[slug] ?? null;
+}
+
 export function bandImageUrl(siteUrl: string, slug: string): string {
   return `${siteUrl}/images/newsletter/band/${slug}.png`;
 }
@@ -71,7 +136,7 @@ export function bandSlugFromHtml(html: string): string | null {
 /** Swaps the band icon (and its alt text) in a draft's HTML. The admin's icon
  *  picker uses this when the generated pick doesn't fit the issue. */
 export function syncBandIcon(html: string, slug: string): string {
-  const title = BAND_ICONS[slug];
-  if (!title) return html;
-  return html.replace(BAND_IMG, (_, start: string, _old: string, mid: string, end: string) => `${start}${slug}${mid}${title} pattern icon${end}`);
+  const alt = iconAlt(slug);
+  if (!alt) return html;
+  return html.replace(BAND_IMG, (_, start: string, _old: string, mid: string, end: string) => `${start}${slug}${mid}${alt.replace(/&/g, '&amp;')}${end}`);
 }

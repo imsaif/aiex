@@ -58,6 +58,61 @@ const ICON_FOR_PATTERN = {
   'workspace-native-agents': 'panel-right',
 };
 
+// Topic icons (Oct 2026): extra choices for the admin's band icon picker when no
+// pattern fits the issue. Never picked automatically. Slugs carry a `topic-`
+// prefix so they can't collide with a pattern slug. Keep in step with
+// TOPIC_ICONS in src/lib/newsletter/band-icons.ts (band.test.ts checks every
+// listed topic has a PNG). 'pen-tool' is left out: it is the CTA's icon.
+const ICON_FOR_TOPIC = {
+  'topic-ai-agents': 'bot',
+  'topic-ai-features': 'sparkles',
+  'topic-voice': 'audio-lines',
+  'topic-search': 'text-search',
+  'topic-security': 'shield-check',
+  'topic-access': 'lock-keyhole',
+  'topic-code': 'code-xml',
+  'topic-design-tools': 'palette',
+  'topic-canvas': 'frame',
+  'topic-prototyping': 'mouse-pointer-click',
+  'topic-design-systems': 'layout-template',
+  'topic-components': 'blocks',
+  'topic-analytics': 'chart-line',
+  'topic-pricing': 'circle-dollar-sign',
+  'topic-funding': 'trending-up',
+  'topic-launch': 'rocket',
+  'topic-mobile': 'smartphone',
+  'topic-web': 'globe',
+  'topic-image': 'image',
+  'topic-video': 'clapperboard',
+  'topic-writing': 'pen-line',
+  'topic-chat': 'message-square',
+  'topic-workflows': 'workflow',
+  'topic-integrations': 'plug',
+  'topic-apis': 'braces',
+  'topic-models': 'cpu',
+  'topic-benchmarks': 'trophy',
+  'topic-regulation': 'gavel',
+  'topic-education': 'graduation-cap',
+  'topic-health': 'heart-pulse',
+  'topic-commerce': 'shopping-cart',
+  'topic-scheduling': 'calendar-clock',
+  'topic-documents': 'file-text',
+  'topic-email': 'mail',
+  'topic-teams': 'users-round',
+  'topic-wearables': 'glasses',
+  'topic-mobility': 'car',
+  'topic-risk': 'triangle-alert',
+  'topic-quality': 'bug',
+  'topic-vision': 'scan-eye',
+  'topic-location': 'map-pin',
+  'topic-language': 'languages',
+  'topic-games': 'gamepad-2',
+  'topic-open-source': 'git-fork',
+  'topic-news': 'newspaper',
+  'topic-marketing': 'megaphone',
+  'topic-enterprise': 'building-2',
+};
+
 function iconNode(name) {
   const file = path.join(ICONS_DIR, `${name}.js`);
   if (!fs.existsSync(file)) throw new Error(`missing lucide icon: ${name}`);
@@ -127,12 +182,13 @@ function ctaSvg(strength = 1) {
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
   for (const f of fs.readdirSync(OUT_DIR)) fs.unlinkSync(path.join(OUT_DIR, f));
-  for (const [slug, icon] of Object.entries(ICON_FOR_PATTERN)) {
+  const all = { ...ICON_FOR_PATTERN, ...ICON_FOR_TOPIC };
+  for (const [slug, icon] of Object.entries(all)) {
     const svg = bandSvg(icon);
     fs.writeFileSync(path.join(OUT_DIR, `${slug}.svg`), svg);
     await sharp(Buffer.from(svg)).png({ compressionLevel: 9, palette: true }).toFile(path.join(OUT_DIR, `${slug}.png`));
   }
-  console.log(`Built ${Object.keys(ICON_FOR_PATTERN).length} band images in ${path.relative(process.cwd(), OUT_DIR)}`);
+  console.log(`Built ${Object.keys(all).length} band images (${Object.keys(ICON_FOR_TOPIC).length} topics) in ${path.relative(process.cwd(), OUT_DIR)}`);
 })().catch((e) => {
   console.error(e.message);
   process.exit(1);

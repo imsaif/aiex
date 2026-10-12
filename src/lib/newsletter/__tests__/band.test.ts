@@ -2,6 +2,20 @@ import fs from 'fs';
 import path from 'path';
 import { patterns } from '@/data/patterns';
 import { BAND_DRAWINGS, BAND_ICONS, DEFAULT_BAND_SLUG, pickBandSlug, bandSlugFromHtml, syncBandIcon } from '../band';
+import { TOPIC_ICONS } from '../band-icons';
+
+describe('topic icons', () => {
+  it('has a PNG on disk for every topic', () => {
+    const dir = path.join(process.cwd(), 'public/images/newsletter/band');
+    const missing = Object.keys(TOPIC_ICONS).filter((slug) => !fs.existsSync(path.join(dir, `${slug}.png`)));
+    expect(missing).toEqual([]);
+  });
+
+  it('never shares a slug with a pattern, and is never picked automatically', () => {
+    expect(Object.keys(TOPIC_ICONS).filter((slug) => !slug.startsWith('topic-') || BAND_DRAWINGS.has(slug))).toEqual([]);
+    expect(pickBandSlug({ itemSlugs: ['topic-voice'] })).toBe(DEFAULT_BAND_SLUG);
+  });
+});
 import { monogram, tidyDateLabel, stripIssuePrefix, syncBandTitle, renderDailyEmail, formatWeekLabel } from '../daily-email';
 
 describe('weekly edition', () => {
@@ -173,6 +187,12 @@ describe('band icon picker', () => {
     expect(bandSlugFromHtml(swapped)).toBe('selective-memory');
     expect(swapped).toContain('band/selective-memory.png" alt="Selective Memory pattern icon"');
     expect(swapped).not.toContain('trust-calibration');
+  });
+
+  it('swaps in a topic icon with a plain description', () => {
+    const swapped = syncBandIcon(html, 'topic-security');
+    expect(bandSlugFromHtml(swapped)).toBe('topic-security');
+    expect(swapped).toContain('alt="Security &amp; safety icon"');
   });
 
   it('ignores unknown icons', () => {
