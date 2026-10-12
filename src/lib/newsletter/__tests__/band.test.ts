@@ -2,7 +2,58 @@ import fs from 'fs';
 import path from 'path';
 import { patterns } from '@/data/patterns';
 import { BAND_DRAWINGS, BAND_ICONS, DEFAULT_BAND_SLUG, pickBandSlug, bandSlugFromHtml, syncBandIcon } from '../band';
-import { monogram, tidyDateLabel, stripIssuePrefix, syncBandTitle, renderDailyEmail } from '../daily-email';
+import { TOPIC_ICONS } from '../band-icons';
+
+describe('topic icons', () => {
+  it('has a PNG on disk for every topic', () => {
+    const dir = path.join(process.cwd(), 'public/images/newsletter/band');
+    const missing = Object.keys(TOPIC_ICONS).filter((slug) => !fs.existsSync(path.join(dir, `${slug}.png`)));
+    expect(missing).toEqual([]);
+  });
+
+  it('never shares a slug with a pattern, and is never picked automatically', () => {
+    expect(Object.keys(TOPIC_ICONS).filter((slug) => !slug.startsWith('topic-') || BAND_DRAWINGS.has(slug))).toEqual([]);
+    expect(pickBandSlug({ itemSlugs: ['topic-voice'] })).toBe(DEFAULT_BAND_SLUG);
+  });
+});
+import { monogram, tidyDateLabel, stripIssuePrefix, syncBandTitle, renderDailyEmail, formatWeekLabel } from '../daily-email';
+
+describe('weekly edition', () => {
+  it('labels the seven days before the Monday run', () => {
+    expect(formatWeekLabel(new Date('2026-10-12T03:10:00Z'))).toBe('OCT 5–11');
+    expect(formatWeekLabel(new Date('2026-10-05T03:10:00Z'))).toBe('SEP 28–OCT 4');
+  });
+
+  it('strips the weekly title prefix', () => {
+    expect(stripIssuePrefix('This Week in AIUX: Agent Oversight')).toBe('Agent Oversight');
+  });
+
+  const html = renderDailyEmail({
+    siteUrl: 'https://example.test',
+    edition: 'weekly',
+    dateLabel: 'OCT 5–11',
+    headline: 'This Week in AIUX: Agent Oversight',
+    storiesLabel: "THIS WEEK'S STORIES",
+    bandSlug: 'human-in-the-loop',
+    bandAlt: 'icon',
+    stories: [],
+    panels: [
+      { label: "THIS WEEK'S TAKEAWAY", body: 'Takeaway.' },
+      { label: 'PATTERN DEEP-DIVE', title: 'Human-in-the-Loop', body: 'Why.', note: 'When.', pattern: { slug: 'human-in-the-loop', title: 'Human-in-the-Loop' } },
+    ],
+    cta: null,
+    pollHtml: '',
+  });
+
+  it('renders the weekly wordmark, label and panels in order', () => {
+    expect(html).toContain('aiux <span style="font-weight: 400; color: #cbd5e1;">weekly</span>');
+    expect(html).toContain("THIS WEEK&#39;S STORIES".replace('&#39;', "'"));
+    expect(html.indexOf("THIS WEEK'S TAKEAWAY")).toBeLessThan(html.indexOf('PATTERN DEEP-DIVE'));
+    expect(html).toContain('/patterns/human-in-the-loop');
+    expect(html).toContain('<!--aiux:title-->Agent Oversight<!--/aiux:title-->');
+    expect(html).not.toContain("TODAY'S IDEA");
+  });
+});
 
 describe('tidyDateLabel', () => {
   it('drops a leading zero from the day', () => {
@@ -136,6 +187,12 @@ describe('band icon picker', () => {
     expect(bandSlugFromHtml(swapped)).toBe('selective-memory');
     expect(swapped).toContain('band/selective-memory.png" alt="Selective Memory pattern icon"');
     expect(swapped).not.toContain('trust-calibration');
+  });
+
+  it('swaps in a topic icon with a plain description', () => {
+    const swapped = syncBandIcon(html, 'topic-security');
+    expect(bandSlugFromHtml(swapped)).toBe('topic-security');
+    expect(swapped).toContain('alt="Security &amp; safety icon"');
   });
 
   it('ignores unknown icons', () => {
