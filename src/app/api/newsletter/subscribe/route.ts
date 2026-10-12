@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
+import { sendWelcomeEmail } from '@/lib/newsletter/welcome-email';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { NEWSLETTER_SOURCES, PDF_DOWNLOAD_SOURCES } from '@/types/newsletter';
 import type { NewsletterSource } from '@/types/newsletter';
@@ -75,10 +76,12 @@ export async function POST(request: NextRequest) {
 
     // Sync to Beehiiv synchronously — guarantees the sync completes before the
     // HTTP response returns (fire-and-forget gets cancelled when Vercel
-    // suspends the function, causing silent data loss). Beehiiv handles the
-    // welcome email via publication-level welcome + optional Automations
-    // keyed on signup_source.
+    // suspends the function, causing silent data loss).
     await addSubscriberToBeehiiv(email, { utmSource: source, signupSource: source });
+
+    // The welcome email comes from us via Resend since Oct 2026: beehiiv's
+    // welcome stopped sending after the downgrade. Never throws.
+    await sendWelcomeEmail(email);
 
     const message = isPdfFlow
       ? 'Your download is ready!'

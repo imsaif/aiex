@@ -5,6 +5,7 @@ import { generateGuideToken } from '@/lib/guide-token';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
+import { sendWelcomeEmail } from '@/lib/newsletter/welcome-email';
 
 const requestSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -52,6 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     const existingSubscriber = await prisma.subscriber.findUnique({ where: { email } });
+    const becameActive = !existingSubscriber?.active;
 
     if (existingSubscriber && !existingSubscriber.active) {
       await prisma.subscriber.update({ where: { email }, data: { active: true, source: 'guides' } });
@@ -65,6 +67,9 @@ export async function POST(request: NextRequest) {
     } catch (err) {
       console.error('[guides/download-pdf] Beehiiv sync failed:', err);
     }
+
+    // Welcome only on a new or rejoining subscriber, not on a repeat download.
+    if (becameActive) await sendWelcomeEmail(email);
 
     const token = generateGuideToken(email, guideSlug);
     const downloadUrl = `${getBaseUrl(request)}/api/guides/download?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
