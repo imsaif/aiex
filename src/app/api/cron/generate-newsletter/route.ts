@@ -13,7 +13,7 @@ import { AUDIT_PATH } from '@/lib/audit/constants';
 import { DEFAULT_POLL, type PollDefinition } from '@/lib/newsletter/poll';
 import { pickBandSlug } from '@/lib/newsletter/band';
 import { extractPublisherUrl } from '@/lib/newsletter/google-news';
-import { renderDailyEmail, formatBandDate } from '@/lib/newsletter/daily-email';
+import { renderDailyEmail, formatBandDate, formatWeekLabel } from '@/lib/newsletter/daily-email';
 
 // Initialize clients
 const anthropic = new Anthropic({
@@ -371,8 +371,6 @@ function getPatternTitle(slug: string): string {
 // Email-safe icon helpers (hosted PNGs, since email clients strip inline SVGs)
 const EMAIL_IMG_BASE = `${SITE_URL}/images/email`;
 
-const ICON_NEWSPAPER = `<img src="${EMAIL_IMG_BASE}/icon-newspaper.png" alt="" width="18" height="18" style="width: 18px; height: 18px; display: inline; vertical-align: -3px; margin-right: 6px;" />`;
-
 // Product logo image names (match filenames in /public/images/email/)
 const PRODUCT_ICON_NAMES: string[] = [
   'openai', 'vercel', 'figma', 'github', 'google', 'microsoft',
@@ -388,11 +386,6 @@ function getProductIconUrl(productName: string): string | null {
     if (name.includes(key) || nameNoSpaces.includes(key)) return `${EMAIL_IMG_BASE}/${key}.png`;
   }
   return null;
-}
-
-function getProductIconImg(productName: string): string {
-  const src = getProductIconUrl(productName) ?? `${EMAIL_IMG_BASE}/fallback.png`;
-  return `<img src="${src}" alt="" width="14" height="14" style="width: 14px; height: 14px; display: inline; vertical-align: -2px; margin-right: 5px;" />`;
 }
 
 // Primary AI product sources - these get priority
@@ -1791,44 +1784,10 @@ RESPOND IN THIS EXACT JSON FORMAT:
 // Email HTML rendering helpers
 // ============================================================
 
-const EMAIL_FONT_STACK = `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif`;
-// Brand palette (mirrors tokens in src/app/globals.css :root)
+// The email layout itself lives in src/lib/newsletter/daily-email.ts (daily and
+// weekly). These two colours are only for the poll block below.
 const EMAIL_INK = '#162036';       // --text-primary / --accent-primary (brand navy)
-const EMAIL_TEXT = '#20294C';      // --text-secondary (navy-slate body)
-const EMAIL_MUTED = '#64748b';     // --text-tertiary (slate-500)
-const EMAIL_SUBTLE = '#475569';    // slate-600, sits between body and muted
 const EMAIL_HAIRLINE = '#e5e7eb';  // --border-primary (gray-200)
-const DARK_CANVAS = '#162036';     // brand navy as dark surface
-const DARK_TEXT = '#cbd5e1';       // slate-300 on navy (WCAG AA)
-const DARK_STRONG = '#ffffff';
-const DARK_LINK = '#93c5fd';       // blue-300 on navy (WCAG AA)
-
-function formatIssueDate(type: NewsletterType): string {
-  const date = new Date();
-  if (type === 'weekly') {
-    return `Week of ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`;
-  }
-  return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-}
-
-function renderMasthead(type: NewsletterType, itemCount: number): string {
-  const wordmark = type === 'weekly' ? 'AI UX WEEKLY' : 'AI UX DAILY';
-  const dateStr = formatIssueDate(type);
-  const itemLabel = itemCount === 1 ? 'story' : 'stories';
-
-  return `
-<div style="padding: 0 0 28px 0; margin: 0 0 36px 0; border-bottom: 1px solid ${EMAIL_HAIRLINE};">
-  <p style="margin: 0 0 10px; font-size: 12px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">${wordmark}</p>
-  <p style="margin: 0 0 4px; font-size: 15px; font-weight: 600; color: ${EMAIL_INK}; letter-spacing: -0.1px;">${dateStr}</p>
-  <p style="margin: 0; font-size: 13px; color: ${EMAIL_MUTED};">${itemCount} ${itemLabel} · curated for designers</p>
-</div>`.trim();
-}
-
-function renderSectionHeader(kicker: string, title: string): string {
-  return `
-<p style="margin: 0 0 10px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">${kicker}</p>
-<h2 style="margin: 0 0 40px; font-size: 26px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.4px; line-height: 1.25;">${ICON_NEWSPAPER}${title}</h2>`.trim();
-}
 
 // Strip the SOURCE FEED's utm_* params off an outbound link before it reaches a
 // reader. Curated items keep whatever the feed attached — measured 2026-08-10 on
@@ -1864,89 +1823,6 @@ function stripFeedUtm(url: string): string {
   }
 }
 
-function renderStoryCard(item: NewsletterItem, isLast: boolean): string {
-  const separator = isLast
-    ? ''
-    : `\n<div style="text-align: center; margin: 40px 0; color: #64748b; letter-spacing: 12px; font-size: 18px;">· · ·</div>`;
-
-  // Source badge: for practitioner/opinion items, show the real publication
-  // (e.g. "Design with AI"), NOT Claude's subject label ("Claude / Anthropic")
-  // which would misread as official company content. These carry no product icon
-  // (a company icon would reintroduce the same misattribution); the product icon
-  // stays only on concrete product-news items where the subject IS the source.
-  const publisherLabel = voicePublisherLabel(item);
-  const badgeLabel = publisherLabel ?? item.product;
-  const badgeIcon = publisherLabel ? '' : getProductIconImg(item.product);
-
-  // Digest-scraped items carry the digest's send-date, not the article's real
-  // date — show provenance instead of a misleading date (see digestProvenanceLabel).
-  const dateLabel = digestProvenanceLabel(item) ?? item.date;
-
-  // No chip when the model failed to match a real pattern (sanitizePatternSlugs
-  // drops invented slugs). Better a card that ends at the takeaway than a chip
-  // linking to a pattern page that 404s.
-  const patternChip = isValidPatternSlug(item.patternSlug)
-    ? `<p style="margin: 0;"><a href="${SITE_URL}/patterns/${item.patternSlug}" target="_blank" rel="noopener" style="display: inline-block; background-color: transparent; color: ${EMAIL_INK}; padding: 8px 14px; border: 1px solid ${EMAIL_HAIRLINE}; border-radius: 999px; font-size: 12px; font-weight: 500; text-decoration: none; letter-spacing: 0.2px;"><span style="color: ${EMAIL_MUTED}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; font-size: 10px; margin-right: 6px;">Pattern</span>${getPatternTitle(item.patternSlug)} →</a></p>`
-    : '';
-
-  return `
-<div style="margin: 0; padding: 0;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;"><tr>
-    <td style="font-size: 11px; color: ${EMAIL_SUBTLE}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;">${badgeIcon}${badgeLabel}</td>
-    <td align="right" style="font-size: 13px; color: ${EMAIL_MUTED};">${dateLabel}</td>
-  </tr></table>
-  <h3 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${EMAIL_INK}; line-height: 1.35; letter-spacing: -0.2px;">${item.headline}</h3>
-  <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.7; color: ${EMAIL_TEXT};">${item.description}</p>
-  <p style="margin: 0 0 24px;"><a href="${stripFeedUtm(item.sourceUrl)}" target="_blank" rel="noopener" style="display: inline-block; font-size: 13px; color: ${EMAIL_INK}; text-decoration: underline; text-underline-offset: 3px; font-weight: 500;">Read the source →</a></p>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 24px;">
-    <tr>
-      <td valign="top" style="width: 32px; padding: 0; font-size: 40px; line-height: 1; color: ${EMAIL_INK}; font-weight: 700; font-family: Georgia, 'Times New Roman', serif;">&ldquo;</td>
-      <td valign="top" style="padding: 2px 0 0 4px;">
-        <p style="margin: 0 0 8px; font-size: 16px; line-height: 1.6; color: ${EMAIL_INK}; font-style: italic;">${item.designerTakeaway}</p>
-        <p style="margin: 0; font-size: 11px; font-weight: 600; color: ${EMAIL_SUBTLE}; letter-spacing: 0.8px; text-transform: uppercase;">— Designer's Takeaway</p>
-      </td>
-    </tr>
-  </table>
-  ${patternChip}
-</div>${separator}`.trim();
-}
-
-// Two callouts used to render as identical dark blocks stacked back to back
-// ("Steal this week" then "Pattern deep-dive"), which read as one long slab and
-// gave the reader no hierarchy. `variant` differentiates them: 'light' is a
-// hairline-bordered card on white, 'dark' stays the navy anchor. Only ONE dark
-// block per issue — it marks the block that carries the CTA.
-function renderCallout(opts: {
-  kicker: string;
-  title: string;
-  body: string;
-  subBody?: string;
-  cta?: { label: string; href: string };
-  variant?: 'dark' | 'light';
-}): string {
-  const isLight = opts.variant === 'light';
-  const canvas = isLight ? '#ffffff' : DARK_CANVAS;
-  const border = isLight ? `border: 1px solid ${EMAIL_HAIRLINE};` : '';
-  const kickerColor = isLight ? EMAIL_SUBTLE : 'rgba(255, 255, 255, 0.6)';
-  const titleColor = isLight ? EMAIL_INK : DARK_STRONG;
-  const bodyColor = isLight ? EMAIL_TEXT : DARK_TEXT;
-  const linkColor = isLight ? EMAIL_INK : DARK_LINK;
-
-  const subBodyHTML = opts.subBody
-    ? `\n  <p style="margin: 14px 0 0; font-size: 15px; line-height: 1.6; color: ${bodyColor};"><strong style="color: ${titleColor};">Use it when:</strong> ${opts.subBody}</p>`
-    : '';
-  const ctaHTML = opts.cta
-    ? `\n  <p style="margin: 20px 0 0;"><a href="${opts.cta.href}" target="_blank" rel="noopener" style="color: ${linkColor} !important; text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 500; font-style: normal !important;"><span style="color: ${linkColor} !important; font-style: normal !important;">${opts.cta.label} →</span></a></p>`
-    : '';
-
-  return `
-<div style="background-color: ${canvas}; ${border} padding: 32px; border-radius: 16px; margin: 0 0 24px;">
-  <p style="margin: 0 0 14px; font-size: 11px; font-weight: 700; color: ${kickerColor}; letter-spacing: 2px; text-transform: uppercase;">${opts.kicker}</p>
-  <h2 style="margin: 0 0 14px; font-size: 22px; font-weight: 700; color: ${titleColor}; letter-spacing: -0.3px; line-height: 1.3;">${opts.title}</h2>
-  <p style="margin: 0; font-size: 16px; line-height: 1.7; color: ${bodyColor};">${opts.body}</p>${subBodyHTML}${ctaHTML}
-</div>`.trim();
-}
-
 // Points at `/audit`, NOT `/`. The reader has already expressed intent by
 // clicking a button that says "Get your Claude skills" — `/audit` renders
 // AuditClient with initialStep="screenshot" and drops them straight into
@@ -1968,20 +1844,6 @@ function auditUrl(campaign: string): string {
   return `${SITE_URL}${AUDIT_PATH}?utm_source=newsletter&utm_medium=email&utm_campaign=${campaign}`;
 }
 
-// Unified sign-off. Absorbs what used to be a separate renderAnnouncementBanner
-// block so the email has ONE ending instead of two stacked closing blocks
-// (the old order was callout → grey CTA box → footer → beehiiv footer, which
-// gave the reader four "this is ending" signals in a row).
-//
-// The identity block (wordmark / "Curated by Imran" / "Read past issues" /
-// permission line) was REMOVED 2026-08-10: it repeated what beehiiv's own
-// appended footer already says, and it pushed a second ending below the CTA.
-// beehiiv's footer supplies the unsubscribe link and physical postal address,
-// which is what CAN-SPAM actually requires — the "you're getting this because"
-// line was best-practice, not law, so dropping it is legally safe.
-//
-// The email now ends on the audit CTA. Set NEWSLETTER_ANNOUNCEMENT=off to drop
-// the CTA, which leaves beehiiv's footer as the only ending.
 // The poll block. Plain links, one per answer — no JavaScript, no embed, which
 // is the only thing that works across mail clients.
 //
@@ -2004,23 +1866,6 @@ function renderPoll(issueSlug: string, poll: PollDefinition): string {
   <p style="margin: 0;">
     ${buttons}
   </p>
-</div>`.trim();
-}
-
-function renderFooterCTA(_type: NewsletterType, campaign: string): string {
-  if (process.env.NEWSLETTER_ANNOUNCEMENT === 'off') return '';
-  return `
-<div style="margin: 56px 0 0; padding: 32px 0 0; border-top: 1px solid ${EMAIL_HAIRLINE}; text-align: center;">
-  <p style="margin: 0 0 12px; font-size: 11px; font-weight: 700; color: ${EMAIL_SUBTLE}; letter-spacing: 2px; text-transform: uppercase;">Stop shipping AI slop</p>
-  <h2 style="margin: 0 0 12px; font-size: 24px; font-weight: 700; color: ${EMAIL_INK}; letter-spacing: -0.3px; line-height: 1.25;">Turn your design into Claude skills</h2>
-  <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: ${EMAIL_TEXT};">Drop a screenshot. See which of the ${PATTERN_COUNT} patterns you are missing and take them away as Claude Code skills. Free, no signup for the first audit.</p>
-  <p style="margin: 0;"><a href="${auditUrl(campaign)}" target="_blank" rel="noopener" style="display: inline-block; background-color: ${EMAIL_INK}; color: #ffffff !important; text-decoration: none !important; font-style: normal !important; padding: 14px 28px; border-radius: 999px; font-size: 15px; font-weight: 600; letter-spacing: -0.1px;"><span style="color: #ffffff !important; text-decoration: none !important; font-style: normal !important;">Get your Claude skills →</span></a></p>
-</div>`.trim();
-}
-
-function wrapEmailShell(inner: string): string {
-  return `<div style="font-family: ${EMAIL_FONT_STACK}; color: ${EMAIL_INK}; max-width: 640px; margin: 0 auto; padding: 0 8px;">
-${inner}
 </div>`.trim();
 }
 
@@ -2048,7 +1893,24 @@ function generateHTML(
   });
   data.bandSlug = bandSlug;
 
-  const stories = data.items.map((item) => {
+  return renderDailyEmail({
+    siteUrl: SITE_URL,
+    dateLabel: formatBandDate(new Date()),
+    headline: data.title,
+    idea: { title: data.takeaway.title, body: data.takeaway.body },
+    bandSlug,
+    bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
+    stories: toEmailStories(data.items),
+    cta: process.env.NEWSLETTER_ANNOUNCEMENT === 'off'
+      ? null
+      : { href: auditUrl('daily-banner'), patternCount: PATTERN_COUNT },
+    pollHtml: renderPoll(issueSlug, poll),
+  });
+}
+
+// The story cards' plain-string inputs, shared by the daily and the weekly.
+function toEmailStories(items: NewsletterItem[]) {
+  return items.map((item) => {
     const publisherLabel = voicePublisherLabel(item);
     // '' makes the layout draw a monogram. Used for publisher badges (a company
     // logo would misattribute the post) and for products with no known logo.
@@ -2063,20 +1925,6 @@ function generateHTML(
         ? { slug: item.patternSlug, title: getPatternTitle(item.patternSlug) }
         : undefined,
     };
-  });
-
-  return renderDailyEmail({
-    siteUrl: SITE_URL,
-    dateLabel: formatBandDate(new Date()),
-    headline: data.title,
-    idea: { title: data.takeaway.title, body: data.takeaway.body },
-    bandSlug,
-    bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
-    stories,
-    cta: process.env.NEWSLETTER_ANNOUNCEMENT === 'off'
-      ? null
-      : { href: auditUrl('daily-banner'), patternCount: PATTERN_COUNT },
-    pollHtml: renderPoll(issueSlug, poll),
   });
 }
 
@@ -2097,65 +1945,50 @@ async function getPreviousBandSlug(todayStart: Date): Promise<string | null> {
   }
 }
 
+// Weekly layout (Oct 2026): the daily's "D" layout, so both editions read as one
+// newsletter. Band: "aiux weekly", the week's dates and the issue title, with the
+// deep-dive pattern's icon (the week's theme; the lead story's pattern is the
+// fallback). Then the story cards and three wrap-up panels: the week's takeaway,
+// Steal this week, and the Pattern deep-dive with its pill.
+// data.summary stays out of the body: it is the email's preview text.
 function generateWeeklyHTML(data: WeeklyNewsletterData, issueSlug: string, poll: PollDefinition): string {
-  const items = data.items
-    .map((item, idx) => renderStoryCard(item, idx === data.items.length - 1))
-    .join('\n\n');
-
-  const stealThis = renderCallout({
-    kicker: 'Steal this week',
-    title: `${data.stealThisWeek.product}'s ${data.stealThisWeek.feature}`,
-    body: data.stealThisWeek.insight,
-    variant: 'light',
-  });
-
-  // Stays dark: it's the one block carrying a CTA, so it should be the anchor.
-  // CTA label was `Deep dive on ${title}` which restated the heading directly
-  // above it word for word.
-  // Slug may have been dropped by sanitizePatternSlugs. Keep the callout (the
-  // explanation still earns its place) but fall back to the model's own title and
-  // drop the CTA rather than link to a pattern page that does not exist.
   const deepDiveSlug = data.patternToKnow.patternSlug;
-  const patternToKnow = renderCallout({
-    kicker: 'Pattern deep-dive',
-    title: isValidPatternSlug(deepDiveSlug)
-      ? getPatternTitle(deepDiveSlug)
-      : data.patternToKnow.title,
-    body: data.patternToKnow.explanation,
-    subBody: data.patternToKnow.whenToUse,
-    cta: isValidPatternSlug(deepDiveSlug)
-      ? {
-          label: 'See the pattern',
-          href: `${SITE_URL}/patterns/${deepDiveSlug}`,
-        }
-      : undefined,
+  const deepDiveIsReal = isValidPatternSlug(deepDiveSlug);
+  const bandSlug = pickBandSlug({
+    itemSlugs: [deepDiveIsReal ? deepDiveSlug : undefined, ...data.items.map((item) => item.patternSlug)],
   });
 
-  // Note: data.summary is intentionally NOT rendered in the email body. It
-  // already lives in the page <title>/meta description, the email subject
-  // line preview, and the admin review header. data.weeklyTakeaway carries
-  // the editorial framing of the week and stays as the lead paragraph.
-  const body = `
-${renderMasthead('weekly', data.items.length)}
-
-<p style="margin: 0 0 48px; font-size: 17px; line-height: 1.7; color: ${EMAIL_TEXT};">${data.weeklyTakeaway}</p>
-
-${renderSectionHeader('The stories', 'This Week in AI Products')}
-
-${items}
-
-<div style="height: 56px; line-height: 56px; font-size: 1px;">&nbsp;</div>
-
-${stealThis}
-
-${patternToKnow}
-
-${renderFooterCTA('weekly', 'weekly-banner')}
-
-${renderPoll(issueSlug, poll)}
-  `.trim();
-
-  return wrapEmailShell(body);
+  return renderDailyEmail({
+    siteUrl: SITE_URL,
+    edition: 'weekly',
+    dateLabel: formatWeekLabel(new Date()),
+    headline: data.title,
+    storiesLabel: "THIS WEEK'S STORIES",
+    bandSlug,
+    bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
+    stories: toEmailStories(data.items),
+    panels: [
+      { label: "THIS WEEK'S TAKEAWAY", body: data.weeklyTakeaway },
+      {
+        label: 'STEAL THIS WEEK',
+        title: `${data.stealThisWeek.product}: ${data.stealThisWeek.feature}`,
+        body: data.stealThisWeek.insight,
+      },
+      {
+        label: 'PATTERN DEEP-DIVE',
+        // The slug may have been dropped by sanitizePatternSlugs: keep the
+        // explanation, fall back to the model's title and drop the pill.
+        title: deepDiveIsReal ? getPatternTitle(deepDiveSlug) : data.patternToKnow.title,
+        body: data.patternToKnow.explanation,
+        note: data.patternToKnow.whenToUse,
+        pattern: deepDiveIsReal ? { slug: deepDiveSlug, title: getPatternTitle(deepDiveSlug) } : undefined,
+      },
+    ],
+    cta: process.env.NEWSLETTER_ANNOUNCEMENT === 'off'
+      ? null
+      : { href: auditUrl('weekly-banner'), patternCount: PATTERN_COUNT },
+    pollHtml: renderPoll(issueSlug, poll),
+  });
 }
 
 function generateSlug(title: string, type: NewsletterType = 'daily'): string {

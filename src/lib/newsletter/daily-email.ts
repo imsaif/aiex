@@ -84,13 +84,32 @@ export interface DailyEmailStory {
   pattern?: { slug: string; title: string };
 }
 
+/** A light wrap-up panel after the stories (Today's Idea; the weekly's three). */
+export interface EmailPanel {
+  /** Small caps label, e.g. "TODAY'S IDEA". */
+  label: string;
+  title?: string;
+  body: string;
+  /** A second, quieter paragraph (the weekly's "when to use"). */
+  note?: string;
+  /** A pattern pill under the text, same as on the story cards. */
+  pattern?: { slug: string; title: string };
+}
+
 export interface DailyEmailInput {
   siteUrl: string;
-  /** e.g. "WED 07.10.26" */
+  /** Wordmark beside the logo. Defaults to daily. */
+  edition?: 'daily' | 'weekly';
+  /** e.g. "WED 07.10.26", or "OCT 5–11" for the weekly. */
   dateLabel: string;
-  /** The issue title (subject line). The "AI UX Daily:" prefix is stripped. */
+  /** The issue title (subject line). The "AI UX Daily:" / "This Week in AIUX:" prefix is stripped. */
   headline: string;
-  idea: { title: string; body: string };
+  /** Today's Idea (daily). Shorthand for a single panel. */
+  idea?: { title: string; body: string };
+  /** Wrap-up panels after the stories, in order. Rendered after `idea`. */
+  panels?: EmailPanel[];
+  /** Label above the cards. Defaults to "TODAY'S STORIES". */
+  storiesLabel?: string;
   bandSlug: string;
   bandAlt: string;
   stories: DailyEmailStory[];
@@ -121,9 +140,21 @@ export function tidyDateLabel(label: string): string {
   return label.replace(/^([A-Za-z]{3,9}) 0(\d)$/, '$1 $2');
 }
 
-/** "AI UX Daily: Context libraries…" → "Context libraries…". The logo already says it. */
+/** "AI UX Daily: Context libraries…" → "Context libraries…". The logo already says it.
+ *  Same for the weekly's "This Week in AIUX:". */
 export function stripIssuePrefix(title: string): string {
-  return title.replace(/^\s*AI UX Daily\s*[:\-–]\s*/i, '').trim();
+  return title.replace(/^\s*(AI UX Daily|This Week in AIUX)\s*[:\-–]\s*/i, '').trim();
+}
+
+/** The week a Monday weekly covers: the seven days before `runDate`, e.g.
+ *  "OCT 5–11", or "SEP 28–OCT 4" across a month boundary. */
+export function formatWeekLabel(runDate: Date): string {
+  const end = new Date(runDate.getTime() - 24 * 60 * 60 * 1000);
+  const start = new Date(runDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
+  const startLabel = `${month(start)} ${start.getUTCDate()}`;
+  const endLabel = month(end) === month(start) ? `${end.getUTCDate()}` : `${month(end)} ${end.getUTCDate()}`;
+  return `${startLabel}–${endLabel}`;
 }
 
 const TITLE_OPEN = '<!--aiux:title-->';
@@ -162,7 +193,7 @@ function renderBand(input: DailyEmailInput): string {
   return `
 <tr><td bgcolor="${NAVY}" style="background-color: ${NAVY}; padding: 24px 24px 26px; border-radius: 16px 16px 0 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-    <td style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${FONT}; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; color: #ffffff;"><img src="${mark}" alt="aiux" width="26" height="26" style="display: inline-block; width: 26px; height: 26px; border: 0; vertical-align: middle; margin-right: 8px;" />aiux <span style="font-weight: 400; color: ${ON_NAVY};">daily</span></td>
+    <td style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${FONT}; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; color: #ffffff;"><img src="${mark}" alt="aiux" width="26" height="26" style="display: inline-block; width: 26px; height: 26px; border: 0; vertical-align: middle; margin-right: 8px;" />aiux <span style="font-weight: 400; color: ${ON_NAVY};">${input.edition === 'weekly' ? 'weekly' : 'daily'}</span></td>
     <td align="right" style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${MONO}; font-size: 11px; letter-spacing: 1px; color: ${ON_NAVY_MUTED};">${input.dateLabel} · ${storyLabel}</td>
   </tr></table>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 22px 0 0;"><tr>
@@ -176,14 +207,26 @@ function renderBand(input: DailyEmailInput): string {
 </td></tr>`.trim();
 }
 
-// Today's Idea, after the stories: the wrap-up once the reader has the facts.
-// A light navy tint, so it reads as ours without competing with the navy CTA.
-function renderIdea(idea: DailyEmailInput['idea']): string {
+// Wrap-up panels after the stories (Today's Idea; the weekly's takeaway, Steal
+// this week and Pattern deep-dive): ours, once the reader has the facts. A light
+// navy tint, so they read as ours without competing with the navy CTA.
+function renderPanel(panel: EmailPanel, siteUrl: string): string {
+  const title = panel.title
+    ? `<p class="aiux-ink" style="margin: 0 0 10px; font-family: ${FONT}; font-size: 22px; font-weight: 800; line-height: 1.22; letter-spacing: -0.4px; color: ${NAVY};">${escapeHtml(panel.title)}</p>`
+    : '';
+  const note = panel.note
+    ? `<p class="aiux-ink" style="margin: 12px 0 0; font-family: ${FONT}; font-size: 14px; line-height: 1.6; color: ${NAVY};"><span class="aiux-sub" style="font-weight: 700; color: ${SLATE};">When to use: </span>${escapeHtml(panel.note)}</p>`
+    : '';
+  const pill = panel.pattern
+    ? `<p style="margin: 16px 0 0;"><a href="${siteUrl}/patterns/${panel.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; background-color: #ffffff; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span><span style="color: ${NAVY} !important;">${escapeHtml(panel.pattern.title)}&nbsp;→</span></a></p>`
+    : '';
   return `
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 4px 0 0;"><tr><td class="aiux-idea-panel" bgcolor="${IDEA_PANEL}" style="background-color: ${IDEA_PANEL}; border-radius: 14px; padding: 28px 22px 26px;">
-  <p style="margin: 0 0 10px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${SLATE};" class="aiux-sub">TODAY'S IDEA</p>
-  <p class="aiux-ink" style="margin: 0 0 10px; font-family: ${FONT}; font-size: 22px; font-weight: 800; line-height: 1.22; letter-spacing: -0.4px; color: ${NAVY};">${escapeHtml(idea.title)}</p>
-  <p class="aiux-ink" style="margin: 0; font-family: ${FONT}; font-size: 15px; line-height: 1.6; color: ${NAVY};">${escapeHtml(idea.body)}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 16px;"><tr><td class="aiux-idea-panel" bgcolor="${IDEA_PANEL}" style="background-color: ${IDEA_PANEL}; border-radius: 14px; padding: 28px 22px 26px;">
+  <p style="margin: 0 0 10px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${SLATE};" class="aiux-sub">${escapeHtml(panel.label)}</p>
+  ${title}
+  <p class="aiux-ink" style="margin: 0; font-family: ${FONT}; font-size: 15px; line-height: 1.6; color: ${NAVY};">${escapeHtml(panel.body)}</p>
+  ${note}
+  ${pill}
 </td></tr></table>`.trim();
 }
 
@@ -232,15 +275,19 @@ function renderCta(cta: NonNullable<DailyEmailInput['cta']>, siteUrl: string): s
 
 export function renderDailyEmail(input: DailyEmailInput): string {
   const stories = input.stories.map((s) => renderStory(s, input.siteUrl));
+  const panels: EmailPanel[] = [
+    ...(input.idea ? [{ label: "TODAY'S IDEA", title: input.idea.title, body: input.idea.body }] : []),
+    ...(input.panels ?? []),
+  ];
   return `
 ${styleBlock(input.siteUrl)}
 <div style="font-family: ${FONT}; color: ${NAVY}; max-width: 680px; margin: 0 auto;">
 <table class="aiux-tint" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${TINT}" style="background-color: ${TINT}; border-radius: 16px;">
 ${renderBand(input)}
 <tr><td style="padding: 20px 6px 24px;">
-  <p class="aiux-sub" style="margin: 0 0 12px 8px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${SLATE};">TODAY'S STORIES</p>
+  <p class="aiux-sub" style="margin: 0 0 12px 8px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${SLATE};">${escapeHtml(input.storiesLabel ?? "TODAY'S STORIES")}</p>
   ${stories.join('\n  ')}
-  ${renderIdea(input.idea)}
+  ${panels.map((p) => renderPanel(p, input.siteUrl)).join('\n  ')}
   ${input.cta ? renderCta(input.cta, input.siteUrl) : ''}
 </td></tr>
 </table>
