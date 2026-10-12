@@ -111,7 +111,10 @@ export async function POST(request: NextRequest) {
         replyTo: 'imran@aiuxdesign.guide',
         subject: draft.title,
         previewText: draft.summary,
-        name: draft.slug,
+        // Internal label in the Resend dashboard. Resend caps it at 70 characters
+        // and long issue slugs run past that (the 2026-10-12 weekly was 85), which
+        // rejected the whole send.
+        name: draft.slug.slice(0, 70),
         html,
       });
       if (error || !data) throw new Error(error?.message ?? 'Resend returned no broadcast');
