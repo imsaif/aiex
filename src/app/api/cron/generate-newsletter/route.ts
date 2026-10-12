@@ -1460,19 +1460,15 @@ interface WeeklyNewsletterData {
   title: string;
   summary: string;
   items: NewsletterItem[];
-  stealThisWeek: {
-    product: string;
-    feature: string;
-    insight: string;
-  };
-  patternToKnow: {
+  // This Week's Idea: the one panel after the stories, same shape as the daily's
+  // Today's Idea. Replaced the takeaway / Steal this week / Pattern deep-dive trio
+  // (Oct 2026): three closing panels was too much for the reader.
+  takeaway: {
+    title: string;
+    body: string;
     // Optional for the same reason as NewsletterItem.patternSlug.
     patternSlug?: string;
-    title: string;
-    explanation: string;
-    whenToUse: string;
   };
-  weeklyTakeaway: string;
 }
 
 type NewsletterType = 'daily' | 'weekly';
@@ -1593,10 +1589,8 @@ YOUR TASK:
 
 2. Keep the original descriptions but you may slightly enhance them for the weekly context.
 3. Rewrite each "Designer's Takeaway" so it names a concrete designer action (a flow change, a pattern to ship, a study to run). Drop items where you cannot do this honestly.
-4. Identify ONE standout feature for "Steal This Week" - a feature other products should copy.
-5. Identify ONE pattern that appeared multiple times for "Pattern to Know" deep dive.
-6. Write a weekly takeaway that ties the themes together.
-7. Create a title and summary. Keep the "This Week in AIUX:" prefix, then follow it with 4-8 words that name the week's concrete topics using terms a designer would actually type into search: real pattern names, UX concepts, or product categories (e.g. "Consent Patterns and Trust in AI Assistants"). Front-load the single most searchable term. Do NOT use abstract, poetic, or alliterative phrases ("Cumulative Drift", "Trust and Control", "Signals and Noise"). They read well but nobody searches them.
+4. Write "This Week's Idea": ONE insight that ties the week's stories together, with the single pattern it points to. It is the only thing after the stories, so make it the most useful line in the issue.
+5. Create a title and summary. Keep the "This Week in AIUX:" prefix, then follow it with 4-8 words that name the week's concrete topics using terms a designer would actually type into search: real pattern names, UX concepts, or product categories (e.g. "Consent Patterns and Trust in AI Assistants"). Front-load the single most searchable term. Do NOT use abstract, poetic, or alliterative phrases ("Cumulative Drift", "Trust and Control", "Signals and Noise"). They read well but nobody searches them.
 
 RESPOND IN THIS EXACT JSON FORMAT:
 {
@@ -1613,18 +1607,11 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "patternSlug": "pattern-slug"
     }
   ],
-  "stealThisWeek": {
-    "product": "Product with the standout feature",
-    "feature": "Feature name",
-    "insight": "ONE sentence, max 25 words. What to copy and why. No preamble."
-  },
-  "patternToKnow": {
-    "patternSlug": "pattern-slug",
-    "title": "Why [Pattern Name] dominated this week",
-    "explanation": "ONE sentence, max 25 words on why this pattern kept showing up.",
-    "whenToUse": "A short fragment, max 12 words. Do not start with the word When; it follows the label Use it when."
-  },
-  "weeklyTakeaway": "One sentence theme tying everything together"
+  "takeaway": {
+    "title": "Max 8 words. The week's insight itself, not a label for it.",
+    "body": "TWO sentences, max 30 words total. Sentence one: the pattern across this week's stories. Sentence two: what a designer does about it. No preamble, no recap of the stories above, no contrast constructions.",
+    "patternSlug": "pattern-slug-from-list"
+  }
 }`;
 }
 
@@ -1745,10 +1732,8 @@ YOUR TASK:
    - Write a description of what happened
    - Write a "Designer's Takeaway" - actionable insight for UX/product designers
 3. Match each item to one of the available patterns (use the slug exactly)
-4. Write "Steal This Week" - highlight ONE standout feature that other products should copy
-5. Write "Pattern to Know" - deep dive on one pattern that appeared multiple times this week
-6. Write a weekly takeaway that ties the theme together
-7. Create a title and summary for the newsletter. Keep the "This Week in AIUX:" prefix, then follow it with 4-8 words that name the week's concrete topics using terms a designer would actually type into search: real pattern names, UX concepts, or product categories (e.g. "Consent Patterns and Trust in AI Assistants"). Front-load the single most searchable term. Do NOT use abstract, poetic, or alliterative phrases ("Cumulative Drift", "Trust and Control", "Signals and Noise"). They read well but nobody searches them.
+4. Write "This Week's Idea": ONE insight that ties the week's stories together, with the single pattern it points to. It is the only thing after the stories, so make it the most useful line in the issue.
+5. Create a title and summary for the newsletter. Keep the "This Week in AIUX:" prefix, then follow it with 4-8 words that name the week's concrete topics using terms a designer would actually type into search: real pattern names, UX concepts, or product categories (e.g. "Consent Patterns and Trust in AI Assistants"). Front-load the single most searchable term. Do NOT use abstract, poetic, or alliterative phrases ("Cumulative Drift", "Trust and Control", "Signals and Noise"). They read well but nobody searches them.
 
 RESPOND IN THIS EXACT JSON FORMAT:
 {
@@ -1765,18 +1750,11 @@ RESPOND IN THIS EXACT JSON FORMAT:
       "patternSlug": "pattern-slug-from-list"
     }
   ],
-  "stealThisWeek": {
-    "product": "Product name with the standout feature",
-    "feature": "Name of the feature to steal",
-    "insight": "ONE sentence, max 25 words. What to copy and why. No preamble."
-  },
-  "patternToKnow": {
-    "patternSlug": "pattern-slug-from-list",
-    "title": "Why [Pattern Name] dominated this week",
-    "explanation": "ONE sentence, max 25 words on why this pattern kept showing up.",
-    "whenToUse": "A short fragment, max 12 words. Do not start with the word When; it follows the label Use it when."
-  },
-  "weeklyTakeaway": "One sentence theme that ties everything together this week"
+  "takeaway": {
+    "title": "Max 8 words. The week's insight itself, not a label for it.",
+    "body": "TWO sentences, max 30 words total. Sentence one: the pattern across this week's stories. Sentence two: what a designer does about it. No preamble, no recap of the stories above, no contrast constructions.",
+    "patternSlug": "pattern-slug-from-list"
+  }
 }`;
 }
 
@@ -1947,15 +1925,15 @@ async function getPreviousBandSlug(todayStart: Date): Promise<string | null> {
 
 // Weekly layout (Oct 2026): the daily's "D" layout, so both editions read as one
 // newsletter. Band: "aiux weekly", the week's dates and the issue title, with the
-// deep-dive pattern's icon (the week's theme; the lead story's pattern is the
-// fallback). Then the story cards and three wrap-up panels: the week's takeaway,
-// Steal this week, and the Pattern deep-dive with its pill.
+// idea's pattern icon (the week's theme; the lead story's pattern is the
+// fallback). Then the story cards and ONE panel, This Week's Idea, with its
+// pattern pill: the weekly counterpart of Today's Idea.
 // data.summary stays out of the body: it is the email's preview text.
 function generateWeeklyHTML(data: WeeklyNewsletterData, issueSlug: string, poll: PollDefinition): string {
-  const deepDiveSlug = data.patternToKnow.patternSlug;
-  const deepDiveIsReal = isValidPatternSlug(deepDiveSlug);
+  const ideaSlug = data.takeaway.patternSlug;
+  const ideaIsReal = isValidPatternSlug(ideaSlug);
   const bandSlug = pickBandSlug({
-    itemSlugs: [deepDiveIsReal ? deepDiveSlug : undefined, ...data.items.map((item) => item.patternSlug)],
+    itemSlugs: [ideaIsReal ? ideaSlug : undefined, ...data.items.map((item) => item.patternSlug)],
   });
 
   return renderDailyEmail({
@@ -1968,20 +1946,12 @@ function generateWeeklyHTML(data: WeeklyNewsletterData, issueSlug: string, poll:
     bandAlt: `${getPatternTitle(bandSlug)} pattern icon`,
     stories: toEmailStories(data.items),
     panels: [
-      { label: "THIS WEEK'S TAKEAWAY", body: data.weeklyTakeaway },
       {
-        label: 'STEAL THIS WEEK',
-        title: `${data.stealThisWeek.product}: ${data.stealThisWeek.feature}`,
-        body: data.stealThisWeek.insight,
-      },
-      {
-        label: 'PATTERN DEEP-DIVE',
-        // The slug may have been dropped by sanitizePatternSlugs: keep the
-        // explanation, fall back to the model's title and drop the pill.
-        title: deepDiveIsReal ? getPatternTitle(deepDiveSlug) : data.patternToKnow.title,
-        body: data.patternToKnow.explanation,
-        note: data.patternToKnow.whenToUse,
-        pattern: deepDiveIsReal ? { slug: deepDiveSlug, title: getPatternTitle(deepDiveSlug) } : undefined,
+        label: "THIS WEEK'S IDEA",
+        title: data.takeaway.title,
+        body: data.takeaway.body,
+        // No pill when sanitizePatternSlugs dropped an invented slug.
+        pattern: ideaIsReal ? { slug: ideaSlug, title: getPatternTitle(ideaSlug) } : undefined,
       },
     ],
     cta: process.env.NEWSLETTER_ANNOUNCEMENT === 'off'
