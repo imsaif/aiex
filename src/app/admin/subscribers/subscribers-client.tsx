@@ -161,7 +161,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
   };
 
   const reconcileWithBeehiiv = async () => {
-    if (!confirm('Pull active subscriber list from Beehiiv and mark any local rows that Beehiiv no longer has as inactive. Continue?')) {
+    if (!confirm('Import new signups from Beehiiv and turn off anyone Beehiiv no longer lists. Nobody who unsubscribed here is switched back on. Continue?')) {
       return;
     }
     setIsReconciling(true);
@@ -171,7 +171,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
       if (response.ok) {
         const parts = [`${data.beehiivActive} active in Beehiiv`];
         if (data.createdFromBeehiiv) parts.push(`${data.createdFromBeehiiv} imported`);
-        if (data.reactivated) parts.push(`${data.reactivated} reactivated`);
+        if (data.keptInactive) parts.push(`${data.keptInactive} unsubscribed here, kept off`);
         if (data.markedInactive) parts.push(`${data.markedInactive} marked inactive`);
         setMessage({
           type: 'success',
@@ -273,7 +273,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
                   </span>
                   <span className="text-text-tertiary">·</span>
                   <span className="text-text-tertiary">{stats.total} total</span>
-                  <span className="text-xs text-text-tertiary">(active = matches Beehiiv)</span>
+                  <span className="text-xs text-text-tertiary">(active = gets the newsletter)</span>
                 </span>
               ) : (
                 'Manage newsletter subscribers'
@@ -285,7 +285,7 @@ export default function SubscribersClient({ initialAuth = false }: SubscribersCl
               onClick={reconcileWithBeehiiv}
               disabled={isReconciling}
               className="px-4 py-2 border border-border-primary text-text-primary rounded-md hover:bg-background-secondary transition-colors disabled:opacity-50"
-              title="Pull Beehiiv's active list and mark stale local rows inactive"
+              title="Import new Beehiiv signups and turn off people Beehiiv dropped; never re-subscribes anyone"
             >
               {isReconciling ? 'Syncing…' : 'Sync from Beehiiv'}
             </button>

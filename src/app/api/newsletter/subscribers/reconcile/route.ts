@@ -64,9 +64,14 @@ export async function POST(request: NextRequest) {
     });
     const localByEmail = new Map(localAll.map((s) => [s.email.toLowerCase(), s]));
 
-    // Pass 1: Beehiiv-active emails → ensure local row exists + active=true
+    // Pass 1: Beehiiv-active emails we have never seen → import them. A local row
+    // that is INACTIVE stays inactive. Since Oct 2026 the newsletter sends from
+    // Resend, and people unsubscribe through Resend or our own /unsubscribe page,
+    // neither of which tells beehiiv. beehiiv still lists them as active, so the
+    // old "reactivate" branch here would have silently re-subscribed everyone who
+    // had left. The local table is the source of truth; beehiiv only adds signups.
     let createdCount = 0;
-    let reactivatedCount = 0;
+    let keptInactive = 0;
     for (const sub of beehiivActive) {
       const lower = sub.email.toLowerCase();
       const local = localByEmail.get(lower);
@@ -80,11 +85,7 @@ export async function POST(request: NextRequest) {
           console.warn('[reconcile] failed to create local row for', sub.email, err);
         }
       } else if (!local.active) {
-        await prisma.subscriber.update({
-          where: { id: local.id },
-          data: { active: true, unsubscribeReason: null, unsubscribedAt: null },
-        });
-        reactivatedCount += 1;
+        keptInactive += 1;
       }
     }
 
@@ -114,7 +115,8 @@ export async function POST(request: NextRequest) {
       beehiivActive: beehiivActive.length,
       localActiveBefore: localActive.length,
       createdFromBeehiiv: createdCount,
-      reactivated: reactivatedCount,
+      // Unsubscribed here but still active in beehiiv; deliberately left off.
+      keptInactive,
       markedInactive,
       staleEmails: stale.map((s) => s.email),
       stats: {

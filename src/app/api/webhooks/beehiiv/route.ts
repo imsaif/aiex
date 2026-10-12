@@ -123,13 +123,11 @@ export async function POST(request: NextRequest) {
         });
         return NextResponse.json({ ok: true, action: 'deactivated' });
       }
-      if (status === 'active') {
-        await prisma.subscriber.updateMany({
-          where: { email, active: false },
-          data: { active: true, unsubscribeReason: null, unsubscribedAt: null },
-        });
-        return NextResponse.json({ ok: true, action: 'reactivated' });
-      }
+      // 'active' is deliberately a no-op (Oct 2026). The newsletter sends from
+      // Resend now, and unsubscribes through Resend or our /unsubscribe page never
+      // reach beehiiv, so beehiiv still reports those people as active; reacting
+      // to it would re-subscribe them. Someone re-subscribing on our site is
+      // switched back on by /api/newsletter/subscribe itself.
       return NextResponse.json({ ok: true, action: 'noop', status });
     }
 

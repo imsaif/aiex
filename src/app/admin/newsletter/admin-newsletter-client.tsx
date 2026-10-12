@@ -237,7 +237,7 @@ export default function AdminNewsletterClient({
         );
         setMessage({
           type: 'success',
-          text: data.message || 'Published to /news. Now copy the HTML and paste into Beehiiv.',
+          text: data.message || 'Published to /news. Now Send test to me, then Send to subscribers.',
         });
       } else {
         throw new Error('Failed to publish');
