@@ -62,7 +62,7 @@ export function buildChannelTable(pageViews: EventRow[], conversions: EventRow[]
     if (!visitors.has(ch)) visitors.set(ch, new Set());
     visitors.get(ch)!.add(vid);
     const ref = props(row).ref;
-    if (ref) {
+    if (ref && ch !== 'newsletter') {
       if (!posts.has(ch)) posts.set(ch, new Set());
       posts.get(ch)!.add(ref);
     }
@@ -132,12 +132,13 @@ export interface PostRow {
   signups: number;
 }
 
-/** Tagged links (utm_campaign), one row per tag, most visitors first. */
+/** Tagged social links (utm_campaign), one row per tag, most visitors first. Newsletter links excluded. */
 export function buildPostTable(pageViews: EventRow[], signups: EventRow[]): PostRow[] {
   const byRef = new Map<string, { channel: Channel; vids: Set<string>; signups: number }>();
   for (const row of pageViews) {
     const { ref, vid } = props(row);
-    if (!ref || !vid) continue;
+    // Newsletter links carry the issue's own tags; they are not posts.
+    if (!ref || !vid || channelOf(row) === 'newsletter') continue;
     if (!byRef.has(ref)) byRef.set(ref, { channel: channelOf(row), vids: new Set(), signups: 0 });
     byRef.get(ref)!.vids.add(vid);
   }

@@ -182,3 +182,12 @@ describe('signups per post', () => {
     expect(t.find((r) => r.channel === 'search')).toMatchObject({ posts: 0, signupsPerPost: null });
   });
 });
+
+describe('newsletter links are not posts', () => {
+  it('leaves newsletter tags out of post counts and the posts list', () => {
+    const views = [view('newsletter', 'a', 'daily-banner'), view('linkedin', 'b', 'weekly')];
+    const t = buildChannelTable(views, []);
+    expect(t.find((r) => r.channel === 'newsletter')).toMatchObject({ posts: 0, signupsPerPost: null });
+    expect(buildPostTable(views, []).map((r) => r.ref)).toEqual(['weekly']);
+  });
+});
