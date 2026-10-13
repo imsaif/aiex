@@ -171,3 +171,14 @@ describe('buildFormTable', () => {
     expect(formLabel('beehiiv')).toBe('beehiiv (recommendations)');
   });
 });
+
+describe('signups per post', () => {
+  it('divides a channel\'s signups by its distinct tagged posts', () => {
+    const t = buildChannelTable(
+      [view('linkedin', 'a', 'post-1'), view('linkedin', 'b', 'post-1'), view('linkedin', 'c', 'post-2'), view('search', 'd')],
+      [signup('linkedin'), signup('linkedin'), signup('linkedin'), signup('search')],
+    );
+    expect(t.find((r) => r.channel === 'linkedin')).toMatchObject({ posts: 2, signupsPerPost: 1.5 });
+    expect(t.find((r) => r.channel === 'search')).toMatchObject({ posts: 0, signupsPerPost: null });
+  });
+});

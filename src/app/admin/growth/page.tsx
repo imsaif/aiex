@@ -135,6 +135,8 @@ export default async function GrowthPage() {
                   <th className="py-tight text-right font-semibold">Skill packs</th>
                   <th className="py-tight text-right font-semibold">Audits</th>
                   <th className="py-tight text-right font-semibold">Signups per 100</th>
+                  <th className="py-tight text-right font-semibold">Tagged posts</th>
+                  <th className="py-tight text-right font-semibold">Signups per post</th>
                 </tr>
               </thead>
               <tbody>
@@ -146,6 +148,8 @@ export default async function GrowthPage() {
                     <td className="py-snug text-right text-text-primary">{c.skillPacks}</td>
                     <td className="py-snug text-right text-text-primary">{c.audits}</td>
                     <td className="py-snug text-right text-text-primary">{c.signupsPer100 ?? 'n/a'}</td>
+                    <td className="py-snug text-right text-text-primary">{c.posts || '-'}</td>
+                    <td className="py-snug text-right font-bold text-text-primary">{c.signupsPerPost ?? '-'}</td>
                   </tr>
                 ))}
               </tbody>

@@ -42,6 +42,10 @@ export interface ChannelRow {
   audits: number;
   /** Signups per 100 visitors, or null when there are no visitors to divide by. */
   signupsPer100: number | null;
+  /** Distinct tagged posts (utm_campaign) that brought visitors from this channel. */
+  posts: number;
+  /** Signups per tagged post: the return on your time. Null with no tagged posts. */
+  signupsPerPost: number | null;
 }
 
 /**
@@ -50,18 +54,24 @@ export interface ChannelRow {
  */
 export function buildChannelTable(pageViews: EventRow[], conversions: EventRow[]): ChannelRow[] {
   const visitors = new Map<Channel, Set<string>>();
+  const posts = new Map<Channel, Set<string>>();
   for (const row of pageViews) {
     const vid = props(row).vid;
     if (!vid) continue;
     const ch = channelOf(row);
     if (!visitors.has(ch)) visitors.set(ch, new Set());
     visitors.get(ch)!.add(vid);
+    const ref = props(row).ref;
+    if (ref) {
+      if (!posts.has(ch)) posts.set(ch, new Set());
+      posts.get(ch)!.add(ref);
+    }
   }
 
   const rows = new Map<Channel, ChannelRow>();
   const get = (ch: Channel) => {
     if (!rows.has(ch)) {
-      rows.set(ch, { channel: ch, label: CHANNEL_LABELS[ch], visitors: visitors.get(ch)?.size ?? 0, signups: 0, skillPacks: 0, audits: 0, signupsPer100: null });
+      rows.set(ch, { channel: ch, label: CHANNEL_LABELS[ch], visitors: visitors.get(ch)?.size ?? 0, signups: 0, skillPacks: 0, audits: 0, signupsPer100: null, posts: posts.get(ch)?.size ?? 0, signupsPerPost: null });
     }
     return rows.get(ch)!;
   };
@@ -78,7 +88,13 @@ export function buildChannelTable(pageViews: EventRow[], conversions: EventRow[]
   }
 
   return Array.from(rows.values())
-    .map((r) => ({ ...r, signupsPer100: r.visitors > 0 ? Math.round((r.signups / r.visitors) * 1000) / 10 : null }))
+    .map((r) => ({
+      ...r,
+      signupsPer100: r.visitors > 0 ? Math.round((r.signups / r.visitors) * 1000) / 10 : null,
+      // Counts every signup from the channel, tagged or not, against the
+      // tagged posts: untagged visits are usually your own bio or profile links.
+      signupsPerPost: r.posts > 0 ? Math.round((r.signups / r.posts) * 10) / 10 : null,
+    }))
     .sort((a, b) => b.signups - a.signups || b.visitors - a.visitors);
 }
 
