@@ -159,3 +159,53 @@ export function emailClickStats(events: EventRow[]): EmailClickStats {
     rate: delivered.size > 0 ? Math.round((clickers.size / delivered.size) * 1000) / 10 : null,
   };
 }
+
+// Signup forms grouped the way they read on the site. Anything unlisted shows
+// under its raw name, so a new form is visible rather than silently lumped in.
+const FORM_GROUPS: Array<[string, string[]]> = [
+  ['Courses', ['guides', 'guides-hero']],
+  ['News issues', ['news']],
+  ['Skill packs', ['pattern-skills-pack', 'homepage-skills-pack', 'newsletter-skills-pack', 'skills-hero']],
+  ['Handbook', ['handbook']],
+  ['Pattern pages', ['patterns', 'patterns-hero', 'patterns-grid']],
+  ['Audit', ['audit', 'audit-report', 'audit-kit', 'audit-unlock', 'audit-waitlist']],
+  ['Homepage', ['homepage-hero', 'homepage-hero-pre-audit', 'direct']],
+  ['Checklists', ['agentic-checklist', 'accessibility-checklist', 'toolkit']],
+  ['Site footer', ['footer']],
+  ['beehiiv (recommendations)', ['beehiiv']],
+];
+
+export const FORM_NOT_RECORDED = 'Not recorded';
+
+export function formLabel(source: string | null): string {
+  if (!source) return FORM_NOT_RECORDED;
+  const group = FORM_GROUPS.find(([, sources]) => sources.includes(source));
+  return group ? group[0] : source;
+}
+
+export interface FormRow {
+  label: string;
+  joined: number;
+  stillSubscribed: number;
+}
+
+interface SourceCount {
+  source: string | null;
+  count: number;
+}
+
+/** Signups per form, most first, with "Not recorded" always last. */
+export function buildFormTable(joined: SourceCount[], active: SourceCount[]): FormRow[] {
+  const rows = new Map<string, FormRow>();
+  const get = (label: string) => {
+    if (!rows.has(label)) rows.set(label, { label, joined: 0, stillSubscribed: 0 });
+    return rows.get(label)!;
+  };
+  joined.forEach((j) => (get(formLabel(j.source)).joined += j.count));
+  active.forEach((a) => (get(formLabel(a.source)).stillSubscribed += a.count));
+  return Array.from(rows.values()).sort((a, b) => {
+    if (a.label === FORM_NOT_RECORDED) return 1;
+    if (b.label === FORM_NOT_RECORDED) return -1;
+    return b.joined - a.joined;
+  });
+}

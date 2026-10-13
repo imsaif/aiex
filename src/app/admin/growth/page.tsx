@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { checkAdminAuth } from '@/lib/admin-auth';
 import { getGrowthData } from '@/lib/analytics/growth-data';
 import { CHANNEL_LABELS } from '@/lib/analytics/visit-source';
+import { FORM_NOT_RECORDED } from '@/lib/analytics/growth';
 import LinkTagger from './link-tagger';
 
 export const metadata: Metadata = {
@@ -43,6 +44,15 @@ export default async function GrowthPage() {
   const lastWeek = d.weeks[3].loads;
   const prevWeek = d.weeks[2].loads;
   const maxLoads = Math.max(1, ...d.weeks.map((w) => w.loads));
+  const maxForm = Math.max(1, ...d.byForm.map((f) => f.joined));
+  const formTotal = d.byForm.reduce((n, f) => n + f.joined, 0);
+  const topForm = d.byForm.find((f) => f.label !== FORM_NOT_RECORDED);
+  // Until channels have enough signups to compare, the best form is the
+  // most useful thing to say: it is real data from the subscriber list.
+  const headline =
+    d.focus.ready || !topForm
+      ? d.focus.text
+      : `Most signups came from ${topForm.label}: ${topForm.joined} of ${formTotal} in the last 4 weeks. Channels get compared once each has 5 signups.`;
   const trackingDays = d.trackingSince ? Math.max(1, Math.round((Date.now() - d.trackingSince.getTime()) / 86_400_000)) : 0;
 
   return (
@@ -54,7 +64,7 @@ export default async function GrowthPage() {
 
       <section className="mb-default rounded-card bg-accent-primary p-loose text-white">
         <p className="text-xs font-bold uppercase tracking-widest opacity-80">Where your time pays off</p>
-        <p className="mt-tight text-xl font-semibold">{d.focus.text}</p>
+        <p className="mt-tight text-xl font-semibold">{headline}</p>
       </section>
 
       <div className="mb-default grid grid-cols-1 gap-default sm:grid-cols-2 lg:grid-cols-5">
@@ -72,6 +82,38 @@ export default async function GrowthPage() {
         <Stat label="Skill packs" value={fmt(d.skillPacks)} note="Downloaded, last 4 weeks" />
         <Stat label="Audits finished" value={fmt(d.auditsFinished)} note="Last 4 weeks" />
       </div>
+
+      <Card className="mb-default">
+        <div className="flex flex-wrap items-baseline justify-between gap-tight">
+          <h2 className="text-lg font-bold text-text-primary">Signups by form</h2>
+          <p className="text-sm text-text-secondary">Which part of the site people subscribed from · last 4 weeks</p>
+        </div>
+        {d.byForm.length === 0 ? (
+          <p className="mt-default text-text-secondary">No signups in the last 4 weeks.</p>
+        ) : (
+          <ul className="mt-default divide-y divide-border-primary text-sm">
+            {d.byForm.map((f) => (
+              <li key={f.label} className="grid grid-cols-[minmax(0,12rem)_1fr_auto] items-center gap-snug py-tight">
+                <span className="font-semibold text-text-primary">{f.label}</span>
+                <span className="h-2 rounded-pill bg-background-secondary">
+                  <span
+                    className="block h-2 rounded-pill bg-accent-primary"
+                    style={{ width: `${Math.round((f.joined / maxForm) * 100)}%` }}
+                  />
+                </span>
+                <span className="text-right text-text-secondary">
+                  <strong className="text-text-primary">{f.joined}</strong> joined · {f.stillSubscribed} still subscribed
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+        {d.byForm.some((f) => f.label === FORM_NOT_RECORDED) && (
+          <p className="mt-tight text-sm text-text-secondary">
+            Not recorded: audit-report signups and beehiiv-side signups before 14 Oct 2026, when both started saving their form.
+          </p>
+        )}
+      </Card>
 
       <Card className="mb-default">
         <div className="flex flex-wrap items-baseline justify-between gap-tight">

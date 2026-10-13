@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       // New addresses are subscribed. Someone who unsubscribed stays
       // unsubscribed: asking for a report is not asking for the newsletter back.
       if (!existingSubscriber) {
-        await prisma.subscriber.create({ data: { email } });
+        await prisma.subscriber.create({ data: { email, source: 'audit-report' } });
         becameActive = true;
       }
     } catch {
