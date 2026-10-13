@@ -41,3 +41,10 @@ export function visitorId(): string | null {
     return null;
   }
 }
+
+// Localhost and Vercel previews write to the production database, so their
+// events would read as visitors. Same rule as WebVitalsReporter.
+export function isNonProductionHost(): boolean {
+  const h = window.location.hostname;
+  return h === 'localhost' || h === '127.0.0.1' || h === '::1' || h.endsWith('.local') || h.endsWith('.vercel.app');
+}

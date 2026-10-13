@@ -77,14 +77,26 @@ function hostChannel(host: string): Channel | null {
 /**
  * Classify a landing load. An explicit utm_source wins over the referrer,
  * because LinkedIn and email clients often strip the referrer entirely.
- * Returns null for an internal arrival (same-site referrer, no utm), which
- * means "keep whatever this visit already had".
+ * Returns null for an internal arrival (same-site referrer), which means
+ * "keep whatever this visit already had".
  */
 export function classifyVisit(
   referrer: string,
   search: string,
   siteHost: string,
 ): VisitSource | null {
+  let refHost = '';
+  try {
+    refHost = referrer ? new URL(referrer).host.toLowerCase().replace(/^www\./, '') : '';
+  } catch {
+    refHost = '';
+  }
+  const ownHost = siteHost.toLowerCase().replace(/^www\./, '');
+  // A click from inside the site never changes the visit's source, even when
+  // the link carries a tag: 126 stored /news issues link back here with
+  // utm_source=newsletter, which would relabel every website reader.
+  if (refHost && refHost === ownHost) return null;
+
   const params = new URLSearchParams(search);
   const rawRef = params.get('utm_campaign') || params.get('ref');
   const ref = rawRef ? rawRef.trim().slice(0, REF_MAX) || null : null;
@@ -94,16 +106,6 @@ export function classifyVisit(
     const channel = SOURCE_PARAM_CHANNELS[utm] ?? hostChannel(utm) ?? 'other';
     return { channel, ref };
   }
-
-  let refHost = '';
-  try {
-    refHost = referrer ? new URL(referrer).host.toLowerCase().replace(/^www\./, '') : '';
-  } catch {
-    refHost = '';
-  }
-  const ownHost = siteHost.toLowerCase().replace(/^www\./, '');
-
-  if (refHost && refHost === ownHost) return ref ? { channel: 'direct', ref } : null;
   if (!refHost) return { channel: 'direct', ref };
   return { channel: hostChannel(refHost) ?? 'other', ref };
 }

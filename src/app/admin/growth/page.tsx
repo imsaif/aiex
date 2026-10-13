@@ -67,7 +67,7 @@ export default async function GrowthPage() {
         <Stat
           label="Newsletter clicks"
           value={d.email.rate === null ? 'n/a' : `${d.email.rate}%`}
-          note={d.email.rate === null ? 'Starts with the next send' : `${d.email.clickers} of ${d.email.delivered} readers, last issue`}
+          note={d.email.rate === null ? 'Shows a day after the next send' : `${d.email.clickers} of ${d.email.delivered} readers clicked, newest issue over a day old`}
         />
         <Stat label="Skill packs" value={fmt(d.skillPacks)} note="Downloaded, last 4 weeks" />
         <Stat label="Audits finished" value={fmt(d.auditsFinished)} note="Last 4 weeks" />

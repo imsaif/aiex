@@ -4,7 +4,7 @@
  * in our own Postgres, not just Clarity (which is client-side + sampled).
  */
 
-import { currentVisit, visitorId } from '@/lib/analytics/visit-client';
+import { currentVisit, isNonProductionHost, visitorId } from '@/lib/analytics/visit-client';
 
 // Single source of truth for the event names. Exported as a runtime array so the
 // server-side /api/events route can allowlist against the exact same set. The
@@ -168,6 +168,7 @@ export function setAuditSessionId(id: string | null) {
 function beaconEvent(event: AuditEvent, properties?: Record<string, unknown>) {
   if (process.env.NODE_ENV !== 'production') return;
   try {
+    if (isNonProductionHost()) return;
     let role: string | null = null;
     try {
       role = window.localStorage.getItem('aiux:role');

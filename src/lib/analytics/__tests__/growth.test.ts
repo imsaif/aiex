@@ -34,6 +34,10 @@ describe('classifyVisit', () => {
     expect(classifyVisit('https://aiuxdesign.guide/', '', HOST)).toBeNull();
   });
 
+  it('ignores a newsletter tag on a link clicked from inside the site', () => {
+    expect(classifyVisit('https://www.aiuxdesign.guide/news/ai-ux-daily-oct-13', '?utm_source=newsletter&utm_medium=email', HOST)).toBeNull();
+  });
+
   it('calls a bare arrival direct', () => {
     expect(classifyVisit('', '', HOST)).toEqual({ channel: 'direct', ref: null });
   });

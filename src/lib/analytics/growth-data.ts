@@ -82,7 +82,9 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
     }),
     prisma.uiEvent.findFirst({ where: { name: 'page_viewed' }, orderBy: { createdAt: 'asc' }, select: { createdAt: true } }),
     prisma.uiEvent.findFirst({
-      where: { name: 'email_delivered', sessionId: { not: null } },
+      // A daily goes out every morning, so the newest send is usually hours
+      // old and still collecting clicks. Read the newest one past a full day.
+      where: { name: 'email_delivered', sessionId: { not: null }, createdAt: { lte: new Date(now.getTime() - DAY) } },
       orderBy: { createdAt: 'desc' },
       select: { sessionId: true, properties: true, createdAt: true },
     }),
