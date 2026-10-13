@@ -84,7 +84,7 @@ export default function PatternCategorySection({
             className={index > 0 ? 'border-t border-border-primary' : ''}
           >
             <div className="group relative flex items-start gap-4 py-4">
-              <Link
+              <Link prefetch={false}
                 href={`/patterns/${pattern.slug}`}
                 className="min-w-0 flex-1 rounded-card transition-colors"
               >

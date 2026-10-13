@@ -62,6 +62,41 @@ function isExcludedSession(): boolean {
   }
 }
 
+// Readings are queued and sent together when the page is hidden or closed,
+// which is also when web-vitals reports the final CLS and INP. One beacon per
+// page instead of up to five cuts function invocations and requests on
+// Vercel's Hobby meters (2026-10). A cap flushes early on long sessions.
+const FLUSH_AT = 10;
+let queue: object[] = [];
+let listening = false;
+
+function flush() {
+  if (queue.length === 0) return;
+  const payload = JSON.stringify(queue);
+  queue = [];
+  try {
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/vitals', new Blob([payload], { type: 'application/json' }));
+    } else {
+      fetch('/api/vitals', { method: 'POST', body: payload, keepalive: true });
+    }
+  } catch {
+    // Reporting is best-effort; never throw into the render path.
+  }
+}
+
+function enqueue(reading: object) {
+  queue.push(reading);
+  if (!listening) {
+    listening = true;
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') flush();
+    });
+    window.addEventListener('pagehide', flush);
+  }
+  if (queue.length >= FLUSH_AT) flush();
+}
+
 export default function WebVitalsReporter() {
   const pathname = usePathname();
 
@@ -70,7 +105,7 @@ export default function WebVitalsReporter() {
     if (isExcludedSession()) return;
 
     const device = window.innerWidth < 1024 ? 'mobile' : 'desktop';
-    const payload = JSON.stringify({
+    enqueue({
       metric: metric.name,
       value: metric.value,
       rating: (metric as { rating?: string }).rating ?? ratingFor(metric.name, metric.value),
@@ -78,16 +113,6 @@ export default function WebVitalsReporter() {
       device,
       navigationId: metric.id,
     });
-
-    try {
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon('/api/vitals', new Blob([payload], { type: 'application/json' }));
-      } else {
-        fetch('/api/vitals', { method: 'POST', body: payload, keepalive: true });
-      }
-    } catch {
-      // Reporting is best-effort; never throw into the render path.
-    }
   });
 
   return null;

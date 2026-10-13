@@ -250,13 +250,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
               >
                 <ol className="flex flex-wrap items-center gap-2">
                   <li>
-                    <Link href="/guides" className="hover:text-text-primary">
+                    <Link prefetch={false} href="/guides" className="hover:text-text-primary">
                       Guides
                     </Link>
                   </li>
                   <li aria-hidden="true">/</li>
                   <li>
-                    <Link
+                    <Link prefetch={false}
                       href={`/guides/${guide.slug}`}
                       className="hover:text-text-primary"
                     >
@@ -387,7 +387,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   </h2>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {relatedPatterns.map((pattern) => (
-                      <Link
+                      <Link prefetch={false}
                         key={pattern.slug}
                         href={`/patterns/${pattern.slug}`}
                         className="block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors group"
@@ -425,7 +425,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 aria-label="Lesson navigation"
               >
                 {previous ? (
-                  <Link
+                  <Link prefetch={false}
                     href={previous.url}
                     className="group flex items-center gap-4 border-b border-border-primary py-8 pr-8 sm:border-b-0 sm:border-r"
                   >
@@ -449,7 +449,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 )}
 
                 {next ? (
-                  <Link
+                  <Link prefetch={false}
                     href={next.url}
                     className="group flex items-center justify-between gap-4 bg-background-rail py-8 pl-8 pr-6"
                   >
@@ -474,7 +474,7 @@ export default async function LessonPage({ params }: LessonPageProps) {
               </nav>
 
               <div className="border-t border-border-primary py-8 text-center">
-                <Link
+                <Link prefetch={false}
                   href={`/guides/${guide.slug}`}
                   className="type-caption inline-flex items-center gap-2 text-text-secondary hover:text-text-primary"
                 >

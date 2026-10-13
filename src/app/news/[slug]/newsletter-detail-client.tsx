@@ -73,7 +73,7 @@ export default function NewsletterDetailClient({
       <section className="pt-12 md:pt-16 pb-8 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
         <div className="max-w-4xl mx-auto px-6">
           {/* Back link */}
-          <Link
+          <Link prefetch={false}
             href="/news"
             className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors mb-8"
           >
@@ -89,7 +89,7 @@ export default function NewsletterDetailClient({
           {(newsletter.products?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {newsletter.products!.map((product) => (
-                <Link
+                <Link prefetch={false}
                   key={product}
                   href={`/news?product=${encodeURIComponent(product)}`}
                   className="px-3 py-1 rounded-full text-xs font-medium bg-accent-subtle text-accent-primary border border-info hover:border-accent-primary transition-colors"
@@ -164,7 +164,7 @@ export default function NewsletterDetailClient({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Previous */}
             {previousNewsletter ? (
-              <Link
+              <Link prefetch={false}
                 href={`/news/${previousNewsletter.slug}`}
                 className="group p-4 rounded-xl border border-primary hover:border-secondary transition-colors"
               >
@@ -189,7 +189,7 @@ export default function NewsletterDetailClient({
 
             {/* Next */}
             {nextNewsletter ? (
-              <Link
+              <Link prefetch={false}
                 href={`/news/${nextNewsletter.slug}`}
                 className="group p-4 rounded-xl border border-primary hover:border-secondary transition-colors md:text-right"
               >

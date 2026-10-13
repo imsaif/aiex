@@ -43,7 +43,7 @@ export default function GuideSidebar({
     >
       {/* Course overview link */}
       <div>
-        <Link
+        <Link prefetch={false}
           href={`/guides/${guide.slug}`}
           aria-current={currentIsOverview ? 'page' : undefined}
           className={`block font-semibold transition-colors ${
@@ -65,13 +65,13 @@ export default function GuideSidebar({
             <p className="text-xs font-semibold uppercase tracking-wide text-text-secondary mb-2">
               {moduleTitle}
             </p>
-            <ul className="space-y-1 border-l border-gray-200 dark:border-gray-700">
+            <ul className="space-y-1 border-l border-border-primary">
               {lessons.map((lesson) => {
                 const slug = lesson.url.split('/').pop() || '';
                 const isCurrent = slug === currentLessonSlug;
                 return (
                   <li key={lesson.url}>
-                    <Link
+                    <Link prefetch={false}
                       href={lesson.url}
                       aria-current={isCurrent ? 'page' : undefined}
                       className={`block pl-4 py-1 -ml-px border-l transition-colors ${

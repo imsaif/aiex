@@ -28,7 +28,7 @@ export function CourseStartPicker({ courseSlug, startPoints }: CourseStartPicker
       <ul className="overflow-hidden rounded-card border border-border-primary bg-surface-primary divide-y divide-border-primary">
         {startPoints.map((point) => (
           <li key={point.level}>
-            <Link
+            <Link prefetch={false}
               href={point.url}
               onClick={() =>
                 trackAuditEvent('course_start_point_clicked', {

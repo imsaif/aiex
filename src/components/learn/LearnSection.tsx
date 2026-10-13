@@ -66,7 +66,7 @@ export default function LearnSection({
           the one control in the band was the only thing not lining up with
           anything. */}
       <div className="mx-auto mt-6 flex max-w-[1100px] justify-end">
-        <Link
+        <Link prefetch={false}
           href={section.more.href}
           className="type-caption inline-flex items-center gap-2 rounded-card border border-border-primary px-4 py-2 font-semibold text-text-primary transition-colors hover:border-accent-primary/40 hover:text-accent-primary"
         >

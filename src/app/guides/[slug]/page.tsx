@@ -189,7 +189,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               >
                 <ol className="flex flex-wrap items-center gap-2">
                   <li>
-                    <Link href="/guides" className="hover:text-text-primary">
+                    <Link prefetch={false} href="/guides" className="hover:text-text-primary">
                       Guides
                     </Link>
                   </li>
@@ -236,7 +236,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               </div>
                 {firstLesson && (
                   <div className="flex">
-                  <Link
+                  <Link prefetch={false}
                     href={firstLesson.url}
                       className="type-body inline-flex items-center gap-3 whitespace-nowrap rounded-pill bg-accent-primary px-6 py-3 font-medium text-text-on-accent transition-colors hover:bg-accent-hover"
                   >
@@ -372,7 +372,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                         <ol className="divide-y divide-border-primary">
                           {lessons.map((lesson, i) => (
                             <li key={lesson.url}>
-                              <Link
+                              <Link prefetch={false}
                                 href={lesson.url}
                                 className="flex items-center gap-4 px-5 py-3 hover:bg-background-primary transition-colors group"
                               >
@@ -399,7 +399,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
               {/* Start CTA again at the bottom — momentum nudge */}
               {firstLesson && (
                 <div className="mt-12 pt-8 border-t border-border-primary text-center">
-                  <Link
+                  <Link prefetch={false}
                     href={firstLesson.url}
                     className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent-primary text-white dark:text-gray-900 font-medium hover:bg-accent-hover transition-colors"
                   >
@@ -422,7 +422,7 @@ export default async function GuidePage({ params }: GuidePageProps) {
                   </h2>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     {relatedPatterns.map((pattern) => (
-                      <Link
+                      <Link prefetch={false}
                         key={pattern.slug}
                         href={`/patterns/${pattern.slug}`}
                         className="block p-5 rounded-xl border border-border-primary hover:border-accent-primary/40 hover:bg-surface-primary transition-colors group"

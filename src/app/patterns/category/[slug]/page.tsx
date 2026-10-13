@@ -266,7 +266,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           <nav className="text-sm text-text-secondary" aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center gap-2">
               <li>
-                <Link href="/patterns" className="hover:text-text-primary">
+                <Link prefetch={false} href="/patterns" className="hover:text-text-primary">
                   Patterns
                 </Link>
               </li>
@@ -298,10 +298,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <section className="max-w-5xl mx-auto px-6 pb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {categoryPatterns.map((pattern) => (
-              <Link
+              <Link prefetch={false}
                 key={pattern.slug}
                 href={`/patterns/${pattern.slug}`}
-                className="block p-6 rounded-2xl border border-gray-200 dark:border-gray-700 bg-surface-primary hover:border-accent-primary/40 hover:shadow-card-hover transition-all"
+                className="block p-6 rounded-2xl border border-border-primary bg-surface-primary hover:border-accent-primary/40 hover:shadow-card-hover transition-all"
               >
                 <h2 className="text-xl font-semibold mb-2 text-text-primary group-hover:text-accent-primary">
                   {pattern.title}
@@ -316,7 +316,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
         {/* Back to all patterns */}
         <section className="max-w-5xl mx-auto px-6 pb-16 text-center">
-          <Link
+          <Link prefetch={false}
             href="/patterns"
             className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary"
           >

@@ -32,7 +32,7 @@ export default async function RelatedPatternsForNews({ newsletterId }: { newslet
       <ul className="space-y-3">
         {items.map((it) => (
           <li key={it.slug} className="border border-border-primary rounded-lg p-4 bg-surface-primary">
-            <Link href={`/patterns/${it.slug}`} className="font-semibold text-text-primary hover:text-accent-primary">
+            <Link prefetch={false} href={`/patterns/${it.slug}`} className="font-semibold text-text-primary hover:text-accent-primary">
               {it.title}
             </Link>
             <span className="text-xs text-text-tertiary ml-2">{it.category}</span>
