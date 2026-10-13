@@ -110,7 +110,7 @@ export default async function GrowthPage() {
         )}
         {d.byForm.some((f) => f.label === FORM_NOT_RECORDED) && (
           <p className="mt-tight text-sm text-text-secondary">
-            Not recorded: audit-report signups and beehiiv-side signups before 14 Oct 2026, when both started saving their form.
+            Not recorded: audit-report signups and beehiiv-side signups before 13 Oct 2026, when both started saving their form.
           </p>
         )}
       </Card>
