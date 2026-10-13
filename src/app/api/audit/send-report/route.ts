@@ -7,6 +7,7 @@ import { getPatternSlug } from '@/utils/pattern-links';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 import { sendWelcomeEmail } from '@/lib/newsletter/welcome-email';
+import { logSignup } from '@/lib/analytics/signup-event';
 import type { AnalysisResults, PatternResult } from '@/types/audit';
 
 // Request validation schema
@@ -124,6 +125,7 @@ export async function POST(request: NextRequest) {
 
       // Welcome only when the report made them a new subscriber.
       await sendWelcomeEmail(email);
+      await logSignup(request, 'audit');
     }
 
     return NextResponse.json(

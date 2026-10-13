@@ -6,6 +6,7 @@ import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 import { sendWelcomeEmail } from '@/lib/newsletter/welcome-email';
+import { logSignup } from '@/lib/analytics/signup-event';
 
 const requestSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -69,7 +70,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Welcome only on a new or rejoining subscriber, not on a repeat download.
-    if (becameActive) await sendWelcomeEmail(email);
+    if (becameActive) {
+      await sendWelcomeEmail(email);
+      await logSignup(request, 'guides');
+    }
 
     const token = generateGuideToken(email, guideSlug);
     const downloadUrl = `${getBaseUrl(request)}/api/guides/download?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;

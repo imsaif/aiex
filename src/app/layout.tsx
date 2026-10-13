@@ -5,6 +5,7 @@ import { defaultMetadata, siteConfig } from "@/config/seo";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
+import PageViewTracker from "@/components/PageViewTracker";
 
 const satoshi = localFont({
   src: [
@@ -122,6 +123,7 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
         <WebVitalsReporter />
+        <PageViewTracker />
       </body>
     </html>
   );

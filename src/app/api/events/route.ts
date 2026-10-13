@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { hashIp } from '@/lib/audit/sample';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { AUDIT_EVENT_NAMES } from '@/lib/audit/analytics';
+import { isSyntheticUserAgent } from '@/lib/analytics/bots';
 
 // Ingest endpoint for UI event beacons from trackAuditEvent() (client-side).
 // Node runtime (Prisma isn't edge-compatible here). Fire-and-forget via
@@ -35,6 +36,12 @@ export async function POST(request: NextRequest) {
 
     const body = JSON.parse(raw) as EventBeacon;
     const name = String(body.name || '');
+
+    // Speed tests and crawlers run the page's JS too; their beacons are not
+    // visitors. Filtered here so no caller can forget (see lib/analytics/bots).
+    if (isSyntheticUserAgent(request.headers.get('user-agent'))) {
+      return new NextResponse(null, { status: 204 });
+    }
 
     if (!ALLOWED_NAMES.has(name)) {
       // Unknown/forged event name — swallow silently.

@@ -4,6 +4,8 @@
  * in our own Postgres, not just Clarity (which is client-side + sampled).
  */
 
+import { currentVisit, visitorId } from '@/lib/analytics/visit-client';
+
 // Single source of truth for the event names. Exported as a runtime array so the
 // server-side /api/events route can allowlist against the exact same set. The
 // AuditEvent union is derived from it, so adding an event here keeps both in sync.
@@ -133,6 +135,10 @@ export const AUDIT_EVENT_NAMES = [
   // Course page "Where are you starting?" picker, tagged with the course and
   // the level chosen. Counts how many visitors are beginners vs already set up.
   'course_start_point_clicked',
+  // Site-wide, not audit: one per page shown (hard load or in-app navigation),
+  // fired by PageViewTracker. Every event below also carries the visit's
+  // source (channel, ref) and an anonymous visitor id; see beaconEvent.
+  'page_viewed',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
@@ -173,9 +179,12 @@ function beaconEvent(event: AuditEvent, properties?: Record<string, unknown>) {
     const explicitSessionId =
       properties && typeof properties.sessionId === 'string' ? properties.sessionId : null;
     const sessionId = explicitSessionId ?? currentAuditSessionId ?? undefined;
+    // Every event carries where its visit came from, so skill packs and audits
+    // can be counted per channel on the admin Growth page.
+    const visit = currentVisit();
     const payload = JSON.stringify({
       name: event,
-      properties: properties ?? null,
+      properties: { ...(properties ?? {}), channel: visit.channel, ref: visit.ref, vid: visitorId() },
       path: window.location.pathname,
       role,
       sessionId,
@@ -213,4 +222,14 @@ export function trackAuditEvent(event: AuditEvent, properties?: Record<string, u
 
   // Also persist to our own DB so the funnel is queryable outside Clarity.
   beaconEvent(event, properties);
+}
+
+// One per page shown. Goes straight to our own log: a Clarity custom event per
+// page view would only add noise there, since Clarity already records pages.
+export function trackPageView() {
+  if (typeof window === 'undefined') return;
+  if (window.location.pathname.startsWith('/admin')) return;
+  beaconEvent('page_viewed', {
+    device: window.innerWidth < 1024 ? 'mobile' : 'desktop',
+  });
 }

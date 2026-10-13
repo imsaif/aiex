@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isSyntheticUserAgent } from '@/lib/analytics/bots';
 
 // Ingest endpoint for real-user Core Web Vitals beacons from WebVitalsReporter.
 // Node runtime (Prisma is not edge-compatible here). Fire-and-forget from the
@@ -36,6 +37,12 @@ export async function POST(request: NextRequest) {
     if (!raw) return new NextResponse(null, { status: 204 });
 
     const body = JSON.parse(raw) as VitalBeacon;
+
+    // Lighthouse no longer marks its UA, so the client-side check misses it;
+    // see lib/analytics/bots for the measured scale of that leak.
+    if (isSyntheticUserAgent(request.headers.get('user-agent'))) {
+      return new NextResponse(null, { status: 204 });
+    }
 
     const metric = String(body.metric || '').toUpperCase();
     const rating = String(body.rating || '');
