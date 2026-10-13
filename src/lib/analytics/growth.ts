@@ -1,0 +1,161 @@
+import { CHANNELS, CHANNEL_LABELS, type Channel } from './visit-source';
+
+// Pure calculations behind the admin Growth page, kept apart from the queries
+// so they can be tested without a database.
+
+export const SKILL_PACK_EVENTS = ['skill_pack_downloaded', 'skills_gate_pack_downloaded'];
+export const AUDIT_DONE_EVENT = 'audit_session_completed';
+
+/** Below these, a single signup reorders the table, so no channel is named. */
+export const FOCUS_MIN_SIGNUPS = 5;
+export const FOCUS_MIN_VISITORS = 100;
+
+/** Clicks this soon after sending are corporate link scanners, not readers. */
+export const SCANNER_CLICK_SECONDS = 15;
+
+export interface EventRow {
+  name: string;
+  properties: unknown;
+}
+
+interface Props {
+  channel?: string;
+  ref?: string | null;
+  vid?: string | null;
+}
+
+function props(row: EventRow): Props {
+  return row.properties && typeof row.properties === 'object' ? (row.properties as Props) : {};
+}
+
+function channelOf(row: EventRow): Channel {
+  const c = props(row).channel;
+  return c && (CHANNELS as readonly string[]).includes(c) ? (c as Channel) : 'direct';
+}
+
+export interface ChannelRow {
+  channel: Channel;
+  label: string;
+  visitors: number;
+  signups: number;
+  skillPacks: number;
+  audits: number;
+  /** Signups per 100 visitors, or null when there are no visitors to divide by. */
+  signupsPer100: number | null;
+}
+
+/**
+ * One row per channel that has any activity, ranked by signups (then visitors).
+ * Visitors are distinct anonymous ids from page_viewed, not page views.
+ */
+export function buildChannelTable(pageViews: EventRow[], conversions: EventRow[]): ChannelRow[] {
+  const visitors = new Map<Channel, Set<string>>();
+  for (const row of pageViews) {
+    const vid = props(row).vid;
+    if (!vid) continue;
+    const ch = channelOf(row);
+    if (!visitors.has(ch)) visitors.set(ch, new Set());
+    visitors.get(ch)!.add(vid);
+  }
+
+  const rows = new Map<Channel, ChannelRow>();
+  const get = (ch: Channel) => {
+    if (!rows.has(ch)) {
+      rows.set(ch, { channel: ch, label: CHANNEL_LABELS[ch], visitors: visitors.get(ch)?.size ?? 0, signups: 0, skillPacks: 0, audits: 0, signupsPer100: null });
+    }
+    return rows.get(ch)!;
+  };
+  Array.from(visitors.keys()).forEach(get);
+  for (const row of conversions) {
+    // Events logged before visit tracking began carry no channel. They still
+    // count in the headline numbers, but filing them under Direct would invent
+    // a source for them.
+    if (!props(row).channel) continue;
+    const r = get(channelOf(row));
+    if (row.name === 'newsletter_subscribed') r.signups++;
+    else if (SKILL_PACK_EVENTS.includes(row.name)) r.skillPacks++;
+    else if (row.name === AUDIT_DONE_EVENT) r.audits++;
+  }
+
+  return Array.from(rows.values())
+    .map((r) => ({ ...r, signupsPer100: r.visitors > 0 ? Math.round((r.signups / r.visitors) * 1000) / 10 : null }))
+    .sort((a, b) => b.signups - a.signups || b.visitors - a.visitors);
+}
+
+export interface Focus {
+  ready: boolean;
+  text: string;
+}
+
+/** The one-line answer at the top of the page. Says nothing until the data can bear it. */
+export function pickFocus(table: ChannelRow[]): Focus {
+  const eligible = table.filter(
+    (r) => r.signups >= FOCUS_MIN_SIGNUPS && r.visitors >= FOCUS_MIN_VISITORS && r.signupsPer100 !== null,
+  );
+  if (eligible.length === 0) {
+    const tracked = table.reduce((n, r) => n + r.signups, 0);
+    return {
+      ready: false,
+      text: `Not enough data yet. ${tracked} signup${tracked === 1 ? '' : 's'} tracked by source so far; a channel needs ${FOCUS_MIN_SIGNUPS} before it can be compared.`,
+    };
+  }
+  const best = [...eligible].sort((a, b) => (b.signupsPer100 ?? 0) - (a.signupsPer100 ?? 0))[0];
+  const biggest = [...table].sort((a, b) => b.visitors - a.visitors)[0];
+  const contrast =
+    biggest && biggest.channel !== best.channel ? `, against ${biggest.signupsPer100 ?? 0} from ${biggest.label}, your biggest source` : '';
+  return {
+    ready: true,
+    text: `${best.label} turns visitors into subscribers best: ${best.signupsPer100} signups per 100 visitors${contrast}.`,
+  };
+}
+
+export interface PostRow {
+  ref: string;
+  channel: Channel;
+  visitors: number;
+  signups: number;
+}
+
+/** Tagged links (utm_campaign), one row per tag, most visitors first. */
+export function buildPostTable(pageViews: EventRow[], signups: EventRow[]): PostRow[] {
+  const byRef = new Map<string, { channel: Channel; vids: Set<string>; signups: number }>();
+  for (const row of pageViews) {
+    const { ref, vid } = props(row);
+    if (!ref || !vid) continue;
+    if (!byRef.has(ref)) byRef.set(ref, { channel: channelOf(row), vids: new Set(), signups: 0 });
+    byRef.get(ref)!.vids.add(vid);
+  }
+  for (const row of signups) {
+    const ref = props(row).ref;
+    if (ref && byRef.has(ref)) byRef.get(ref)!.signups++;
+  }
+  return Array.from(byRef.entries())
+    .map(([ref, v]) => ({ ref, channel: v.channel, visitors: v.vids.size, signups: v.signups }))
+    .sort((a, b) => b.visitors - a.visitors);
+}
+
+export interface EmailClickStats {
+  delivered: number;
+  clickers: number;
+  rate: number | null;
+}
+
+/** Unique readers who clicked a real link, over unique recipients delivered to. */
+export function emailClickStats(events: EventRow[]): EmailClickStats {
+  const delivered = new Set<string>();
+  const clickers = new Set<string>();
+  for (const row of events) {
+    const p = row.properties as { recipient?: string; secondsAfterSend?: number } | null;
+    if (!p?.recipient) continue;
+    if (row.name === 'email_delivered') delivered.add(p.recipient);
+    if (row.name === 'email_clicked') {
+      if (typeof p.secondsAfterSend === 'number' && p.secondsAfterSend < SCANNER_CLICK_SECONDS) continue;
+      clickers.add(p.recipient);
+    }
+  }
+  return {
+    delivered: delivered.size,
+    clickers: clickers.size,
+    rate: delivered.size > 0 ? Math.round((clickers.size / delivered.size) * 1000) / 10 : null,
+  };
+}
