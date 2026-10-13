@@ -1,6 +1,6 @@
 import { classifyVisit, decodeVisit, encodeVisit } from '../visit-source';
 import { isSyntheticUserAgent } from '../bots';
-import { buildChannelTable, buildPostTable, emailClickStats, pickFocus } from '../growth';
+import { buildChannelTable, buildFormTable, buildPostTable, emailClickStats, formLabel, pickFocus } from '../growth';
 import { toEmailEventRow } from '../email-events';
 
 const HOST = 'www.aiuxdesign.guide';
@@ -138,5 +138,47 @@ describe('email events', () => {
       ev('email_clicked', 'r1', 600), ev('email_clicked', 'r1', 900), ev('email_clicked', 'r2', 3),
     ]);
     expect(stats).toEqual({ delivered: 4, clickers: 1, rate: 25 });
+  });
+});
+
+describe('buildFormTable', () => {
+  it('groups forms the way they read on the site, unrecorded last', () => {
+    const rows = buildFormTable(
+      [
+        { source: null, count: 9 },
+        { source: 'guides', count: 7 },
+        { source: 'guides-hero', count: 2 },
+        { source: 'news', count: 8 },
+        { source: 'pattern-skills-pack', count: 3 },
+        { source: 'homepage-skills-pack', count: 2 },
+      ],
+      [
+        { source: 'guides', count: 6 },
+        { source: 'news', count: 7 },
+      ],
+    );
+    expect(rows.map((r) => [r.label, r.joined, r.stillSubscribed])).toEqual([
+      ['Courses', 9, 6],
+      ['News issues', 8, 7],
+      ['Skill packs', 5, 0],
+      ['Not recorded', 9, 0],
+    ]);
+  });
+
+  it('shows an unknown form under its own name', () => {
+    expect(formLabel('brand-new-form')).toBe('brand-new-form');
+    expect(formLabel('audit-report')).toBe('Audit');
+    expect(formLabel('beehiiv')).toBe('beehiiv (recommendations)');
+  });
+});
+
+describe('signups per post', () => {
+  it('divides a channel\'s signups by its distinct tagged posts', () => {
+    const t = buildChannelTable(
+      [view('linkedin', 'a', 'post-1'), view('linkedin', 'b', 'post-1'), view('linkedin', 'c', 'post-2'), view('search', 'd')],
+      [signup('linkedin'), signup('linkedin'), signup('linkedin'), signup('search')],
+    );
+    expect(t.find((r) => r.channel === 'linkedin')).toMatchObject({ posts: 2, signupsPerPost: 1.5 });
+    expect(t.find((r) => r.channel === 'search')).toMatchObject({ posts: 0, signupsPerPost: null });
   });
 });

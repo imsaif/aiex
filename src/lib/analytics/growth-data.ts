@@ -13,6 +13,8 @@ import {
   type EmailClickStats,
   type Focus,
   type PostRow,
+  type FormRow,
+  buildFormTable,
 } from './growth';
 
 const DAY = 86_400_000;
@@ -58,13 +60,15 @@ export interface GrowthData {
   focus: Focus;
   posts: PostRow[];
   trackingSince: Date | null;
+  /** Which signup form people used, from the subscriber list itself. */
+  byForm: FormRow[];
 }
 
 export async function getGrowthData(now = new Date()): Promise<GrowthData> {
   const since = new Date(now.getTime() - WINDOW_DAYS * DAY);
   const weekAgo = new Date(now.getTime() - 7 * DAY);
 
-  const [loads, joined, left, active, conversions, pageViews, firstView, lastDelivery] = await Promise.all([
+  const [loads, joined, left, active, conversions, pageViews, firstView, lastDelivery, forms, formsActive] = await Promise.all([
     prisma.webVitalMetric.findMany({
       where: { metric: 'TTFB', createdAt: { gte: since } },
       select: { path: true, value: true, createdAt: true },
@@ -88,6 +92,8 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
       orderBy: { createdAt: 'desc' },
       select: { sessionId: true, properties: true, createdAt: true },
     }),
+    prisma.subscriber.groupBy({ by: ['source'], where: { subscribedAt: { gte: since } }, _count: true }),
+    prisma.subscriber.groupBy({ by: ['source'], where: { subscribedAt: { gte: since }, active: true }, _count: true }),
   ]);
 
   const realLoads = loads.filter((l) => !(SPEED_TEST_PATHS.includes(l.path) && l.value < 80));
@@ -121,5 +127,9 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
     focus: pickFocus(channels),
     posts: buildPostTable(pageViews, signups).slice(0, 8),
     trackingSince: firstView?.createdAt ?? null,
+    byForm: buildFormTable(
+      forms.map((f) => ({ source: f.source, count: f._count })),
+      formsActive.map((f) => ({ source: f.source, count: f._count })),
+    ),
   };
 }

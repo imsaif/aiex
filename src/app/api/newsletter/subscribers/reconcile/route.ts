@@ -78,7 +78,10 @@ export async function POST(request: NextRequest) {
       if (!local) {
         try {
           await prisma.subscriber.create({
-            data: { email: sub.email, active: true, emailFrequency: 'all' },
+            // 'beehiiv' marks signups that started on beehiiv's side
+            // (recommendations, its own forms), so the Growth page can tell
+            // them apart from rows with no recorded form.
+            data: { email: sub.email, active: true, emailFrequency: 'all', source: 'beehiiv' },
           });
           createdCount += 1;
         } catch (err) {
