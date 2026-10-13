@@ -189,13 +189,13 @@ export default function SkillsPage() {
                 nobody was weighing up at this point — it was three facts
                 occupying the row where the two ways onward live. */}
             <div className="mt-10 flex flex-wrap items-center gap-6">
-              <Link
+              <Link prefetch={false}
                 href="/dashboard"
                 className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
               >
                 Only need a few? Build a pack ↗
               </Link>
-              <Link
+              <Link prefetch={false}
                 href="/guides/ai-ux-skills-guide"
                 className="type-footnote text-text-secondary transition-colors hover:text-text-primary"
               >
@@ -234,15 +234,15 @@ export default function SkillsPage() {
           <h2 className="text-2xl md:text-3xl font-semibold mb-4">Want several at once?</h2>
           <p className="text-text-secondary text-lg leading-relaxed mb-8 max-w-xl mx-auto">
             Save patterns as you browse and download them as one pack from your{' '}
-            <Link href="/dashboard" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+            <Link prefetch={false} href="/dashboard" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
               dashboard
             </Link>
             . Not sure which patterns your product needs?{' '}
-            <Link href="/audit" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+            <Link prefetch={false} href="/audit" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
               Run the free audit
             </Link>
             . First time using skills?{' '}
-            <Link href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
+            <Link prefetch={false} href="/guides/ai-ux-skills-guide" className="text-accent-primary hover:text-accent-hover font-medium transition-colors">
               Learn how skills work
             </Link>
             .

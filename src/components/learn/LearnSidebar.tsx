@@ -174,7 +174,7 @@ function RailLink({
   }
 
   return (
-    <Link
+    <Link prefetch={false}
       href={href}
       className={`${base} ${state}`}
       aria-current={current ? 'page' : undefined}
@@ -322,7 +322,7 @@ export default async function LearnSidebar({
             if (!isCurrent) {
               return (
                 <li key={guide.slug}>
-                  <Link
+                  <Link prefetch={false}
                     href={`/guides/${guide.slug}`}
                     className="flex items-center gap-2 rounded-card px-3 py-2 type-caption leading-relaxed text-text-secondary transition-colors hover:bg-surface-secondary hover:text-text-primary"
                   >

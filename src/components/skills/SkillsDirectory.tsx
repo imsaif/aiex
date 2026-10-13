@@ -154,7 +154,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                         className={index > 0 ? 'border-t border-border-primary' : ''}
                       >
                         <div className="group relative flex items-center gap-4 py-2.5">
-                          <Link
+                          <Link prefetch={false}
                             href={`/patterns/${row.slug}`}
                             className="flex min-w-0 flex-1 flex-col gap-x-4 gap-y-0.5 sm:flex-row sm:items-baseline"
                           >
@@ -279,7 +279,7 @@ export function SkillsDirectory({ rows, categories }: SkillsDirectoryProps) {
                             hover:shadow-card-hover hover:border-border-primary transition-all duration-300 h-full
                             flex flex-col"
               >
-                <Link href={`/patterns/${row.slug}`} className="group flex flex-col flex-grow">
+                <Link prefetch={false} href={`/patterns/${row.slug}`} className="group flex flex-col flex-grow">
                   {/* Title */}
                   <h3 className="text-lg font-semibold text-text-primary mb-1 transition-colors">
                     {row.title}

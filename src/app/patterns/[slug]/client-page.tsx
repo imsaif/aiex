@@ -80,7 +80,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
       {/* Previous / Next Navigation */}
       <nav className="flex items-center justify-between text-sm mb-6">
         {previousPattern ? (
-          <Link
+          <Link prefetch={false}
             href={`/patterns/${previousPattern.slug}`}
             className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors group"
           >
@@ -92,7 +92,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         ) : <div />}
 
         {nextPattern ? (
-          <Link
+          <Link prefetch={false}
             href={`/patterns/${nextPattern.slug}`}
             className="flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors group text-right"
           >
@@ -108,7 +108,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
       <div className="mb-10">
         <div className="mb-3">
           <div className="flex items-center gap-2 flex-wrap">
-            <Link
+            <Link prefetch={false}
               href={`/patterns?category=${categories.find(c => c.title === pattern.category)?.slug || ''}`}
               className={`inline-block px-3 py-1 rounded-full text-sm font-medium hover:opacity-80 transition-opacity ${getCategoryClasses(categories.find(c => c.title === pattern.category)?.color)}`}
             >
@@ -217,7 +217,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {relatedGuides.map((guide) => (
-                <Link
+                <Link prefetch={false}
                   key={guide.slug}
                   href={`/guides/${guide.slug}`}
                   className="group block"
@@ -399,7 +399,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {categoryPatterns.map((catPattern) => (
-                <Link
+                <Link prefetch={false}
                   key={catPattern.id}
                   href={`/patterns/${catPattern.slug}`}
                   className="group block"
@@ -436,7 +436,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
         {/* Previous/Next Pattern Navigation */}
         <div className="flex flex-col sm:flex-row justify-between items-center border-t border-border-primary pt-8 mt-12">
           {previousPattern ? (
-            <Link
+            <Link prefetch={false}
               href={`/patterns/${previousPattern.slug}`}
               className="flex items-center text-text-secondary hover:text-text-primary group mb-4 sm:mb-0"
             >
@@ -451,7 +451,7 @@ export default function ClientPage({ pattern, previousPattern, nextPattern, cate
           ) : <div />}
 
           {nextPattern ? (
-            <Link
+            <Link prefetch={false}
               href={`/patterns/${nextPattern.slug}`}
               className="flex items-center text-text-secondary hover:text-text-primary text-right group mt-4 sm:mt-0"
             >

@@ -203,7 +203,7 @@ export default function PatternGrid({ patterns, categories, allProducts, allIndu
                     labelPlacement="bottom"
                     className="absolute top-4 right-4"
                   />
-                  <Link
+                  <Link prefetch={false}
                     href={`/patterns/${pattern.slug}`}
                     className="block group"
                   >

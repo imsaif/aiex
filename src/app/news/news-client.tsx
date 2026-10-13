@@ -460,7 +460,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                   </div>
                 ) : (
                   // Regular newsletter - with link
-                  <Link
+                  <Link prefetch={false}
                     href={`/news/${newsletter.slug}`}
                     className={`group flex items-start gap-4 py-4 border-b border-border-secondary hover:bg-surface-secondary/50 -mx-4 px-4 transition-colors ${
                       itemIsToday ? 'bg-accent-subtle/30' : ''

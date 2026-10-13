@@ -7,7 +7,6 @@ import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import SavedItemsBar from '@/components/handoff/SavedItemsBar';
-import { InlineNewsletterSignup } from '@/components/newsletter/InlineNewsletterSignup';
 import LazyLogoCarousel from '@/components/ui/LazyLogoCarousel';
 import { NewspaperIcon } from '@heroicons/react/24/outline';
 import PatternGrid from '../pattern-grid';
@@ -183,7 +182,7 @@ export default function PatternsIndexPage() {
               <p className="type-eyebrow uppercase text-text-secondary">
                 {patterns.length} patterns · {categories.length} categories ·
                 free ·{' '}
-                <Link
+                <Link prefetch={false}
                   href="/skills"
                   className="font-semibold text-accent-primary transition-colors hover:text-accent-hover"
                 >

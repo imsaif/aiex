@@ -38,7 +38,7 @@ export default async function FeaturedInNewsForPattern({ patternSlug }: { patter
       <ul className="grid gap-4 sm:grid-cols-2">
         {items.map((it) => (
           <li key={it.id} className="border border-border-primary rounded-lg p-4 bg-surface-primary">
-            <Link href={`/news/${it.slug}`} className="font-semibold text-text-primary hover:text-accent-primary">
+            <Link prefetch={false} href={`/news/${it.slug}`} className="font-semibold text-text-primary hover:text-accent-primary">
               {it.title}
             </Link>
             <p className="text-xs text-text-tertiary mt-1">

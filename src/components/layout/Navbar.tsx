@@ -99,7 +99,7 @@ const Navbar = ({
         }
       >
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-text-primary">
+          <Link prefetch={false} href="/" className="flex items-center gap-2 text-text-primary">
             <span className="flex items-center justify-center w-8 h-8 bg-accent-subtle rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +125,7 @@ const Navbar = ({
             {/* The audit is the product, and it had no entry in the bar at all
                 — /patterns was standing in for it. First position, ahead of the
                 learning material. */}
-            <Link href="/audit" className={getLinkClasses('/audit')}>
+            <Link prefetch={false} href="/audit" className={getLinkClasses('/audit')}>
               <AiuxMarkOutline className="w-5 h-5" />
               <span className="hidden sm:inline relative">
                 Tool
@@ -135,7 +135,7 @@ const Navbar = ({
               </span>
             </Link>
 
-            <Link href="/guides" className={getLinkClasses('/guides')}>
+            <Link prefetch={false} href="/guides" className={getLinkClasses('/guides')}>
               <AcademicCapIcon className="w-5 h-5" />
               <span className="hidden sm:inline relative">
                 Courses
@@ -145,7 +145,7 @@ const Navbar = ({
               </span>
             </Link>
 
-            <Link href="/news" className={getLinkClasses('/news')}>
+            <Link prefetch={false} href="/news" className={getLinkClasses('/news')}>
               <NewspaperIcon className="w-5 h-5" />
               <span className="hidden sm:inline relative">
                 News
@@ -156,7 +156,7 @@ const Navbar = ({
             </Link>
 
 
-            <Link href="/dashboard" className={getLinkClasses('/dashboard')}>
+            <Link prefetch={false} href="/dashboard" className={getLinkClasses('/dashboard')}>
               <span className="relative inline-flex">
                 <BookmarkIcon className="w-5 h-5" />
                 {showBadge && (
