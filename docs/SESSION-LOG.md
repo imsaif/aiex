@@ -36,6 +36,14 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-10-14 (MacBook)
+- **Pattern:** Newsletter on Resend + admin Growth dashboard + Vercel usage
+- **Status:** Merged — PRs #142 to #152 on `master`, deploys verified live, main checkout updated, worktrees removed
+- **Files Changed:** across 11 PRs (see `git log 6063232^..ae01781`)
+- **Tests Added/Modified:** `src/lib/analytics/__tests__/growth.test.ts` (21 tests, force-added)
+- **Notes:** Moved newsletter sending from beehiiv to Resend broadcasts (#144), with welcome email (#148) and click tracking at links.aiuxdesign.guide. Built the admin Growth page (#149-#151): visit source per page view (session cookie, `page_viewed`), signups by form, signups per tagged post, link tagger, Resend email events via `/api/webhooks/resend` (registered, secret in Vercel, end-to-end tested). Cut Vercel usage (#152): `prefetch={false}` on header and big link lists, one batched Web Vitals beacon per page.
+- **The finding worth remembering:** current Lighthouse no longer says it is Lighthouse (UA `moto g power (2022)`, no `Chrome-Lighthouse`), so ~2,900 of 11,150 page loads and 171 of 688 audit demo views were robots; now filtered at ingest. A JS crawler swept all 251 /news issues Sep 29-Oct 6, which faked a 2,986 → 1,810 weekly "slip". Vercel Hobby ISR Reads were 1.11M of 1M (Sep 6-Oct 6); re-check ~Nov 7. Open: switch Growth "Page loads" to `page_viewed` on/after Oct 27 (INBOX), Vercel Firewall bot rules and Pro decision (Hobby is non-commercial; site takes payments).
+
 ### Session 2026-09-18 00:28 (MacBook)
 - **Pattern:** Claude Docs/Slides/Design — two new courses, Claude Design course corrected, lesson layout rebuilt
 - **Status:** Merged — PRs #116 and #117 on `master`, deploys verified live, main checkout updated, worktree removed
