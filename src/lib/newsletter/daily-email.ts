@@ -83,7 +83,7 @@ export interface DailyEmailStory {
   badgeLabel: string;
   /** URL of a known product logo (square PNG), or '' to show a monogram. */
   badgeIconUrl: string;
-  /** Date, or "via TLDR Design" for digest-scraped items. */
+  /** The story's date, or '' when it has none we trust (digest-scraped items). */
   metaLabel: string;
   headline: string;
   takeaway: string;
@@ -280,7 +280,7 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 20px;"><tr><td class="aiux-card" bgcolor="#ffffff" style="background-color: #ffffff; border-radius: 14px; padding: 30px 22px 26px;">
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 18px;"><tr>
     <td valign="middle" width="16" style="width: 16px; min-width: 16px; line-height: 0; font-size: 0; padding: 0 8px 0 0;">${logo}</td>
-    <td valign="middle" class="aiux-ink" style="font-family: ${FONT}; font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: ${NAVY};">${escapeHtml(story.badgeLabel)} <span class="aiux-sub" style="font-weight: 400; color: ${SLATE}; text-transform: none; letter-spacing: 0;">· ${escapeHtml(tidyDateLabel(story.metaLabel))}</span></td>
+    <td valign="middle" class="aiux-ink" style="font-family: ${FONT}; font-size: 11px; line-height: 16px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: ${NAVY};">${escapeHtml(story.badgeLabel)}${story.metaLabel ? ` <span class="aiux-sub" style="font-weight: 400; color: ${SLATE}; text-transform: none; letter-spacing: 0;">· ${escapeHtml(tidyDateLabel(story.metaLabel))}</span>` : ''}</td>
   </tr></table>
   <h3 class="aiux-ink" style="margin: 0 0 14px; font-family: ${FONT}; font-size: 19px; font-weight: 700; line-height: 1.32; letter-spacing: -0.2px; color: ${NAVY};">${escapeHtml(story.headline)}</h3>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td class="aiux-panel" bgcolor="${PANEL}" style="background-color: ${PANEL}; border-radius: 10px; padding: 14px 16px;">
