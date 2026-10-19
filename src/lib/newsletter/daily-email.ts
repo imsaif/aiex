@@ -51,9 +51,18 @@ const ON_NAVY_MUTED = '#94a3b8';
 // that keeps copy clear of the grid is released.
 export const emailStyleBlock = (siteUrl: string) => `<style>
 @media only screen and (max-width: 480px) {
-  .aiux-idea { font-size: 23px !important; }
-  .aiux-band-art { width: 88px !important; }
-  .aiux-band-art-cell { width: 88px !important; }
+  .aiux-idea { font-size: 26px !important; }
+  .aiux-band { padding: 20px 18px 22px !important; }
+  .aiux-band-art, .aiux-band-art-cell { display: none !important; width: 0 !important; max-height: 0 !important; overflow: hidden !important; }
+  .aiux-band-text { padding: 0 !important; }
+  .aiux-phone-hide { display: none !important; }
+  .aiux-stories { padding: 16px 0 20px !important; }
+  .aiux-stories-label { margin-left: 16px !important; }
+  .aiux-card { padding: 24px 16px 22px !important; }
+  .aiux-panel { padding: 12px 12px !important; }
+  .aiux-idea-panel { padding: 22px 16px 20px !important; }
+  .aiux-foot-cell { display: block !important; width: 100% !important; padding: 0 !important; text-align: left !important; }
+  .aiux-foot-pill { padding-top: 12px !important; }
   .aiux-cta { background-image: url('${siteUrl}/images/newsletter/cta-grid-light.png') !important; background-size: 200px 133px !important; background-position: right bottom !important; padding-right: 22px !important; }
 }
 @media (prefers-color-scheme: dark) {
@@ -187,17 +196,18 @@ function renderBand(input: DailyEmailInput): string {
   const count = input.stories.length;
   const storyLabel = `${count} ${count === 1 ? 'STORY' : 'STORIES'}`;
   const mark = `${input.siteUrl}/images/email/aiux-mark.png`;
-  // Headline and icon sit side by side at every width (picked on the canvas over
-  // stacking); the phone media query only shrinks both. No label and no body: the
+  // Headline and icon sit side by side on desktop (picked on the canvas over
+  // stacking). Phones hide the icon: beside it the headline got ~160px and broke
+  // into four lines in the Gmail app (reported 2026-10-19). No label and no body: the
   // band is the subject line, and Today's Idea follows the stories.
   return `
-<tr><td bgcolor="${NAVY}" style="background-color: ${NAVY}; padding: 24px 24px 26px; border-radius: 16px 16px 0 0;">
+<tr><td class="aiux-band" bgcolor="${NAVY}" style="background-color: ${NAVY}; padding: 24px 24px 26px; border-radius: 16px 16px 0 0;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-    <td style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${FONT}; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; color: #ffffff;"><img src="${mark}" alt="aiux" width="26" height="26" style="display: inline-block; width: 26px; height: 26px; border: 0; vertical-align: middle; margin-right: 8px;" />aiux <span style="font-weight: 400; color: ${ON_NAVY};">${input.edition === 'weekly' ? 'weekly' : 'daily'}</span></td>
-    <td align="right" style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${MONO}; font-size: 11px; letter-spacing: 1px; color: ${ON_NAVY_MUTED};">${input.dateLabel} · ${storyLabel}</td>
+    <td style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${FONT}; font-size: 14px; font-weight: 700; letter-spacing: -0.2px; color: #ffffff; white-space: nowrap;"><img src="${mark}" alt="aiux" width="26" height="26" style="display: inline-block; width: 26px; height: 26px; border: 0; vertical-align: middle; margin-right: 8px;" />aiux <span style="font-weight: 400; color: ${ON_NAVY};">${input.edition === 'weekly' ? 'weekly' : 'daily'}</span></td>
+    <td align="right" style="padding: 0 0 14px; border-bottom: 1px solid #2c3650; font-family: ${MONO}; font-size: 11px; letter-spacing: 1px; color: ${ON_NAVY_MUTED}; white-space: nowrap;">${input.dateLabel}<span class="aiux-phone-hide"> · ${storyLabel}</span></td>
   </tr></table>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 22px 0 0;"><tr>
-    <td valign="middle" style="padding: 0 16px 0 0;">
+    <td class="aiux-band-text" valign="middle" style="padding: 0 16px 0 0;">
       <h2 class="aiux-idea" style="margin: 0; font-family: ${FONT}; font-size: 30px; font-weight: 800; line-height: 1.12; letter-spacing: -0.8px; color: #ffffff;">${TITLE_OPEN}${escapeHtml(stripIssuePrefix(input.headline))}${TITLE_CLOSE}</h2>
     </td>
     <td class="aiux-band-art-cell" valign="middle" width="150" align="right" style="width: 150px;">
@@ -239,7 +249,7 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
     ? `<img src="${story.badgeIconUrl}" alt="" width="16" height="16" style="display: block; width: 16px; min-width: 16px; max-width: none; height: 16px; border: 0;" />`
     : `<span class="aiux-mono" style="display: block; width: 16px; height: 16px; line-height: 16px; border-radius: 4px; background-color: ${NAVY}; color: #ffffff; font-family: ${FONT}; font-size: 9px; font-weight: 800; text-align: center; letter-spacing: 0;">${escapeHtml(monogram(story.badgeLabel))}</span>`;
   const pattern = story.pattern
-    ? `<td align="right" class="aiux-rule" style="padding: 18px 0 0; border-top: 1px solid ${HAIR};"><a href="${siteUrl}/patterns/${story.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; text-align: left; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span><span style="color: ${NAVY} !important;">${escapeHtml(story.pattern.title)}&nbsp;→</span></a></td>`
+    ? `<td align="right" class="aiux-foot-cell aiux-foot-pill" style="padding: 0;"><a href="${siteUrl}/patterns/${story.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; text-align: left; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span><span style="color: ${NAVY} !important;">${escapeHtml(story.pattern.title)}&nbsp;→</span></a></td>`
     : '';
   return `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 20px;"><tr><td class="aiux-card" bgcolor="#ffffff" style="background-color: #ffffff; border-radius: 14px; padding: 30px 22px 26px;">
@@ -252,10 +262,12 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
     <p class="aiux-sub" style="margin: 0 0 6px; font-family: ${FONT}; font-size: 10px; font-weight: 700; letter-spacing: 1.4px; color: ${SLATE};">DESIGNER'S TAKEAWAY</p>
     <p class="aiux-ink" style="margin: 0; font-family: ${FONT}; font-size: 15px; line-height: 1.6; font-weight: 500; color: ${NAVY};">${escapeHtml(story.takeaway)}</p>
   </td></tr></table>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr>
-    <td class="aiux-rule" style="padding: 18px 12px 0 0; border-top: 1px solid ${HAIR}; font-family: ${FONT}; font-size: 13px; font-weight: 500; white-space: nowrap;">${link(story.sourceUrl, 'Source →', SLATE, '', 'aiux-sub')}</td>
-    ${pattern}
-  </tr></table>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr><td class="aiux-rule" style="padding: 18px 0 0; border-top: 1px solid ${HAIR};">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td class="aiux-foot-cell" style="padding: 0 12px 0 0; font-family: ${FONT}; font-size: 13px; font-weight: 500; white-space: nowrap;">${link(story.sourceUrl, 'Source →', SLATE, '', 'aiux-sub')}</td>
+      ${pattern}
+    </tr></table>
+  </td></tr></table>
 </td></tr></table>`.trim();
 }
 
@@ -284,8 +296,8 @@ ${emailStyleBlock(input.siteUrl)}
 <div style="font-family: ${FONT}; color: ${NAVY}; max-width: 680px; margin: 0 auto;">
 <table class="aiux-tint" role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${TINT}" style="background-color: ${TINT}; border-radius: 16px;">
 ${renderBand(input)}
-<tr><td style="padding: 20px 6px 24px;">
-  <p class="aiux-sub" style="margin: 0 0 12px 8px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${SLATE};">${escapeHtml(input.storiesLabel ?? "TODAY'S STORIES")}</p>
+<tr><td class="aiux-stories" style="padding: 20px 6px 24px;">
+  <p class="aiux-sub aiux-stories-label" style="margin: 0 0 12px 8px; font-family: ${FONT}; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: ${SLATE};">${escapeHtml(input.storiesLabel ?? "TODAY'S STORIES")}</p>
   ${stories.join('\n  ')}
   ${panels.map((p) => renderPanel(p, input.siteUrl)).join('\n  ')}
   ${input.cta ? renderCta(input.cta, input.siteUrl) : ''}
