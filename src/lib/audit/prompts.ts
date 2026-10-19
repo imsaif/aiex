@@ -172,6 +172,7 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - For multi-screenshot uploads, distribute findings across the screenshots they actually apply to via \`screenshotIndex\`. Do not duplicate the same finding across screens.
 - Resource URLs should point to real pattern pages: aiuxdesign.guide/patterns/<pattern-slug>
 - Return ONLY valid JSON. No preamble, no markdown fences.
+- Inside any JSON string (findings, evidence, \`worthChecking\` questions), quote UI labels with single quotes ('Explain'), never double quotes. An unescaped double quote breaks the whole response.
 `;
 
   const autonomous = productType === 'ai-agent' ? autonomousAgentPatterns : '';
