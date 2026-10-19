@@ -111,12 +111,17 @@ From the pattern library, list ONLY the patterns that meaningfully apply to the 
 **Step 3 — Evaluate only those applicable patterns.**
 For each applicable pattern, check whether the surface implements it. Each finding MUST include an \`evidence\` field that quotes or describes a specific visible UI element you can point to ("the message-list area below the conversation header has no thumbs-up/down on AI messages"). If you cannot point to specific visible evidence, drop the finding — do not invent it.
 
+**Seen vs. worth checking.** A screenshot is one frozen frame of a larger product. Before you write any finding that says something is missing or inadequate, ask: could this thing exist somewhere this frame cannot show — on hover or focus (tooltips, info popovers), behind a click (menus, an "Explain" button, a details panel), below or above the visible scroll, in another tab, screen, settings page or later step, or in a state other than the one captured (mid-load, mid-stream)?
+- If YES, it is NOT a finding. Do not put it in \`topGaps\`, and do not hedge it into a finding ("from this screenshot I can't verify…" is still a guess presented as a gap). Instead, write it as a short question in \`worthChecking\` (e.g. "Does hovering 'Recommended' explain why Accuracy is suggested?").
+- A \`topGaps\` finding is only allowed when it is SEEN: either it critiques something visible (its wording, size, contrast, placement, ambiguity, what it covers), or it names something missing from a complete, self-contained screen that is fully in view where there is nowhere else for it to be (e.g. a full-page error state with no way to recover).
+- Describing a visible area where something "isn't" ("the reply shows no confidence marker", "the table has no citations") is an absence claim. Treat it with the question above, not as evidence.
+
 **Step 4 — Output the sharpest distinct findings, ranked, with impact.**
 Quality over quantity. Two grounded findings beat ten padded ones. Aim for the 3-5 sharpest DISTINCT findings; returning fewer strong findings is better than padding to a round number.
 
 - **De-duplicate ruthlessly.** If two findings share the same underlying root cause (e.g. "users can't tell what a style tile does" and "users can't tell what a prompt tile does" are both the same missing-affordance-at-the-moment-of-action problem), MERGE them into ONE finding. Never split a single issue across two patterns to inflate the count. Two findings that recommend essentially the same fix are one finding.
 - **Rank by impact, then effort.** Sort \`topGaps\` so the FIRST entry is the single most valuable thing to fix first — highest user/business impact, and among similar impact, the lowest implementation effort. The reader should be able to act on entry #1 alone.
-- **Argue severity; don't just label it.** Use \`status: "missing"\` (shown as "Critical") ONLY for the genuinely highest-stakes gap on this surface, and make the \`finding\` justify why it ranks there. Do NOT put the most generic, boilerplate finding at "Critical". If a finding is important but you cannot fully assess it from a screenshot alone (e.g. AI transparency, data-retention, provenance), say so plainly in the \`finding\` ("from this screenshot alone I can't verify X") rather than inflating its severity — honesty about scope builds more trust than a scary badge.
+- **Argue severity; don't just label it.** Use \`status: "missing"\` (shown as "Critical") ONLY for the genuinely highest-stakes gap on this surface, and make the \`finding\` justify why it ranks there. Do NOT put the most generic, boilerplate finding at "Critical". If something is important but you cannot assess it from this screenshot alone (e.g. AI transparency, data-retention, provenance), it belongs in \`worthChecking\` as a question, not in \`topGaps\` — honesty about scope builds more trust than a scary badge.
 - **Every finding needs an \`impact\` and an \`effort\`.** \`impact\` is ONE line on the real consequence, honestly hedged — describe the likely user/business effect ("users can't tell what a tile does, so they likely stall before their first generation"), NEVER a fabricated metric ("reduces activation by 20%"). \`effort\` is your rough estimate of implementation cost: "quick" (copy/label tweak, <1 day), "medium" (a component change), or "involved" (a flow or system change).
 
 If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pure billing or legal page), return an empty \`topGaps\` array and explain in \`surfaceDescription\` why no findings apply. NEVER pad to hit a target count.
@@ -144,6 +149,7 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
       "screenshotIndex": <1-based index of the screenshot this finding applies to; omit if surface-agnostic>
     }
   ],
+  "worthChecking": ["0-5 short questions about things this one frame cannot show, phrased so the designer can check them (e.g. 'Does hovering the info icon explain the score?')"],
   "quickWins": ["short item team can implement in <1 day", ...],
   "generalObservations": ["2-3 plain-language general UX notes — ONLY when applicablePatterns is empty (the surface is not an AI product interface). Otherwise []"],
   "chatContext": "2-3 sentence summary of findings to seed the design chat session"
@@ -156,7 +162,8 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - Every entry in \`topGaps\` MUST have an \`impact\` (one honestly-hedged line, no invented numbers) and an \`effort\` ("quick" | "medium" | "involved").
 - \`topGaps\` MUST be ordered best-first: entry #1 is the single highest-impact, act-on-it-now fix. Do NOT lead with the most generic finding.
 - Merge findings that share one root cause or the same fix into a single entry. Never split one issue across two patterns to inflate the count.
-- Reserve \`status: "missing"\` ("Critical") for the genuinely highest-stakes gap; if a finding can't be fully verified from a screenshot, say so in the \`finding\` instead of inflating its status.
+- Reserve \`status: "missing"\` ("Critical") for the genuinely highest-stakes gap.
+- Every \`topGaps\` entry must be SEEN (see Step 3). Anything that could exist on hover, behind a click, off-screen or in another state goes in \`worthChecking\` as a question, never in \`topGaps\`, hedged or not. \`worthChecking\` does not affect the score.
 - Before writing a "missing" finding, re-check the screenshot for the control you're about to claim is absent. If it appears anywhere — including small icons under a message, hover states, or items in your Step-1 inventory — the finding is wrong. False-absence claims (e.g. "no thumbs-up/down" when feedback icons are visible under the message) are the most damaging failure mode for this audit.
 - \`applicablePatterns\` MUST contain AT MOST 8 entries. No exceptions.
 - Return 0 to 10 \`topGaps\` total, NOT a fixed count. An empty array is a valid, useful answer for a surface that doesn't invoke AI UX patterns.
