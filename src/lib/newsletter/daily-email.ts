@@ -61,8 +61,8 @@ export const emailStyleBlock = (siteUrl: string) => `<style>
   .aiux-card { padding: 24px 16px 22px !important; }
   .aiux-panel { padding: 12px 12px !important; }
   .aiux-idea-panel { padding: 22px 16px 20px !important; }
-  .aiux-foot-cell { display: block !important; width: 100% !important; padding: 0 !important; text-align: left !important; }
-  .aiux-foot-pill { padding-top: 12px !important; }
+  .aiux-phone-only { display: inline !important; max-height: none !important; overflow: visible !important; }
+  .aiux-pill-label { display: none !important; }
   .aiux-cta { background-image: url('${siteUrl}/images/newsletter/cta-grid-light.png') !important; background-size: 200px 133px !important; background-position: right bottom !important; padding-right: 22px !important; }
 }
 @media (prefers-color-scheme: dark) {
@@ -181,6 +181,21 @@ export function syncBandTitle(html: string, title: string): string {
   return html.slice(0, start + TITLE_OPEN.length) + escapeHtml(stripIssuePrefix(title)) + html.slice(end);
 }
 
+/** Short form of a pattern name for the phone pill (whose PATTERN label is
+ *  hidden to make room): whole words up to `max`
+ *  characters, then "…". "Workspace-Native Agent Integration" → "Workspace-Native…". */
+export function shortPatternTitle(title: string, max = 23): string {
+  if (title.length <= max) return title;
+  const words = title.split(' ');
+  let out = '';
+  for (const w of words) {
+    const next = out ? `${out} ${w}` : w;
+    if (next.length > max - 1) break;
+    out = next;
+  }
+  return `${out || title.slice(0, max - 1)}…`;
+}
+
 /** First letter or digit of a source name, for sources with no known logo. */
 export function monogram(label: string): string {
   const match = label.match(/[A-Za-z0-9]/);
@@ -240,6 +255,16 @@ function renderPanel(panel: EmailPanel, siteUrl: string): string {
 </td></tr></table>`.trim();
 }
 
+// The pill's pattern name: full on desktop, shortened on phones so Source and
+// the pill share one row at 360px. The phone span is hidden by default, so a
+// client that ignores the media query shows only the full name.
+function patternName(title: string): string {
+  const full = `${escapeHtml(title)}&nbsp;→`;
+  const short = shortPatternTitle(title);
+  if (short === title) return `<span style="color: ${NAVY} !important;">${full}</span>`;
+  return `<span class="aiux-phone-hide" style="color: ${NAVY} !important;">${full}</span><span class="aiux-phone-only" style="display: none; max-height: 0; overflow: hidden; color: ${NAVY} !important;">${escapeHtml(short)}&nbsp;→</span>`;
+}
+
 function renderStory(story: DailyEmailStory, siteUrl: string): string {
   // The logo sits in its own cell, vertically centred against the label: inline
   // images and spans aligned to the text baseline sat a few pixels off. The size
@@ -249,7 +274,7 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
     ? `<img src="${story.badgeIconUrl}" alt="" width="16" height="16" style="display: block; width: 16px; min-width: 16px; max-width: none; height: 16px; border: 0;" />`
     : `<span class="aiux-mono" style="display: block; width: 16px; height: 16px; line-height: 16px; border-radius: 4px; background-color: ${NAVY}; color: #ffffff; font-family: ${FONT}; font-size: 9px; font-weight: 800; text-align: center; letter-spacing: 0;">${escapeHtml(monogram(story.badgeLabel))}</span>`;
   const pattern = story.pattern
-    ? `<td align="right" class="aiux-foot-cell aiux-foot-pill" style="padding: 0;"><a href="${siteUrl}/patterns/${story.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; text-align: left; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span><span style="color: ${NAVY} !important;">${escapeHtml(story.pattern.title)}&nbsp;→</span></a></td>`
+    ? `<td align="right" style="padding: 0; white-space: nowrap;"><a href="${siteUrl}/patterns/${story.pattern.slug}" target="_blank" rel="noopener" class="aiux-pill aiux-ink" style="display: inline-block; text-align: left; padding: 7px 12px; border: 1px solid ${PILL}; border-radius: 999px; font-family: ${FONT}; font-size: 12px; font-weight: 600; color: ${NAVY} !important; text-decoration: none !important; font-style: normal !important;"><span class="aiux-sub aiux-pill-label" style="font-size: 10px; font-weight: 700; letter-spacing: 1px; color: ${SLATE} !important; margin-right: 6px;">PATTERN</span>${patternName(story.pattern.title)}</a></td>`
     : '';
   return `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 20px;"><tr><td class="aiux-card" bgcolor="#ffffff" style="background-color: #ffffff; border-radius: 14px; padding: 30px 22px 26px;">
@@ -264,7 +289,7 @@ function renderStory(story: DailyEmailStory, siteUrl: string): string {
   </td></tr></table>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 24px 0 0;"><tr><td class="aiux-rule" style="padding: 18px 0 0; border-top: 1px solid ${HAIR};">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-      <td class="aiux-foot-cell" style="padding: 0 12px 0 0; font-family: ${FONT}; font-size: 13px; font-weight: 500; white-space: nowrap;">${link(story.sourceUrl, 'Source →', SLATE, '', 'aiux-sub')}</td>
+      <td style="padding: 0 12px 0 0; font-family: ${FONT}; font-size: 13px; font-weight: 500; white-space: nowrap;">${link(story.sourceUrl, 'Source&nbsp;↗', SLATE, '', 'aiux-sub')}</td>
       ${pattern}
     </tr></table>
   </td></tr></table>

@@ -226,3 +226,37 @@ export function buildFormTable(joined: SourceCount[], active: SourceCount[]): Fo
     return b.joined - a.joined;
   });
 }
+
+export interface DeviceRow {
+  device: 'phone' | 'tablet' | 'desktop';
+  label: string;
+  readers: number;
+  share: number;
+}
+
+const DEVICE_LABELS = { phone: 'Phone', tablet: 'Tablet', desktop: 'Desktop' } as const;
+
+/**
+ * Newsletter readers by device: unique recipients who clicked from each device,
+ * scanner clicks left out. Someone who clicked from both counts once on each.
+ * Shares are of readers with a known device.
+ */
+export function emailDeviceStats(events: EventRow[]): DeviceRow[] {
+  const sets = { phone: new Set<string>(), tablet: new Set<string>(), desktop: new Set<string>() };
+  for (const row of events) {
+    if (row.name !== 'email_clicked') continue;
+    const p = row.properties as { recipient?: string; secondsAfterSend?: number; device?: string } | null;
+    if (!p?.recipient || !p.device || !(p.device in sets)) continue;
+    if (typeof p.secondsAfterSend === 'number' && p.secondsAfterSend < SCANNER_CLICK_SECONDS) continue;
+    sets[p.device as keyof typeof sets].add(p.recipient);
+  }
+  const total = sets.phone.size + sets.tablet.size + sets.desktop.size;
+  return (['phone', 'desktop', 'tablet'] as const)
+    .map((device) => ({
+      device,
+      label: DEVICE_LABELS[device],
+      readers: sets[device].size,
+      share: total > 0 ? Math.round((sets[device].size / total) * 100) : 0,
+    }))
+    .filter((r) => r.device !== 'tablet' || r.readers > 0);
+}

@@ -44,6 +44,7 @@ export default async function GrowthPage() {
   const lastWeek = d.weeks[3].loads;
   const prevWeek = d.weeks[2].loads;
   const maxLoads = Math.max(1, ...d.weeks.map((w) => w.loads));
+  const emailReaders = d.emailDevices.reduce((n, r) => n + r.readers, 0);
   const maxForm = Math.max(1, ...d.byForm.map((f) => f.joined));
   const formTotal = d.byForm.reduce((n, f) => n + f.joined, 0);
   const topForm = d.byForm.find((f) => f.label !== FORM_NOT_RECORDED);
@@ -82,6 +83,30 @@ export default async function GrowthPage() {
         <Stat label="Skill packs" value={fmt(d.skillPacks)} note="Downloaded, last 4 weeks" />
         <Stat label="Audits finished" value={fmt(d.auditsFinished)} note="Last 4 weeks" />
       </div>
+
+      <Card className="mb-default">
+        <div className="flex flex-wrap items-baseline justify-between gap-tight">
+          <h2 className="text-lg font-bold text-text-primary">Newsletter readers by device</h2>
+          <p className="text-sm text-text-secondary">From link clicks · last 4 weeks (opens do not say which device)</p>
+        </div>
+        {emailReaders === 0 ? (
+          <p className="mt-default text-text-secondary">Fills in from the next send: clicks before 19 Oct 2026 were not saved with a device.</p>
+        ) : (
+          <ul className="mt-default divide-y divide-border-primary text-sm">
+            {d.emailDevices.map((r) => (
+              <li key={r.device} className="grid grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-snug py-tight">
+                <span className="font-semibold text-text-primary">{r.label}</span>
+                <span className="h-2 rounded-pill bg-background-secondary">
+                  <span className="block h-2 rounded-pill bg-accent-primary" style={{ width: `${r.share}%` }} />
+                </span>
+                <span className="text-right text-text-secondary">
+                  <strong className="text-text-primary">{r.share}%</strong> · {r.readers} reader{r.readers === 1 ? '' : 's'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
 
       <Card className="mb-default">
         <div className="flex flex-wrap items-baseline justify-between gap-tight">

@@ -1,7 +1,7 @@
 import { classifyVisit, decodeVisit, encodeVisit } from '../visit-source';
 import { isSyntheticUserAgent } from '../bots';
-import { buildChannelTable, buildFormTable, buildPostTable, emailClickStats, formLabel, pickFocus } from '../growth';
-import { toEmailEventRow } from '../email-events';
+import { buildChannelTable, buildFormTable, buildPostTable, emailClickStats, emailDeviceStats, formLabel, pickFocus } from '../growth';
+import { deviceFromUserAgent, toEmailEventRow } from '../email-events';
 
 const HOST = 'www.aiuxdesign.guide';
 
@@ -189,5 +189,32 @@ describe('newsletter links are not posts', () => {
     const t = buildChannelTable(views, []);
     expect(t.find((r) => r.channel === 'newsletter')).toMatchObject({ posts: 0, signupsPerPost: null });
     expect(buildPostTable(views, []).map((r) => r.ref)).toEqual(['weekly']);
+  });
+});
+
+describe('newsletter readers by device', () => {
+  it('reads the device from a click user agent', () => {
+    expect(deviceFromUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148')).toBe('phone');
+    expect(deviceFromUserAgent('Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 Chrome/141 Mobile Safari/537.36')).toBe('phone');
+    expect(deviceFromUserAgent('Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) AppleWebKit/605.1.15')).toBe('tablet');
+    expect(deviceFromUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/141 Safari/537.36')).toBe('desktop');
+    expect(deviceFromUserAgent(undefined)).toBe('unknown');
+  });
+
+  it('stores the device on click rows', () => {
+    const row = toEmailEventRow({
+      type: 'email.clicked',
+      data: { broadcast_id: 'b', to: ['a@b.com'], created_at: '2026-10-20T03:30:00Z', click: { link: 'https://x.com', timestamp: '2026-10-20T08:00:00Z', userAgent: 'Mozilla/5.0 (iPhone) Mobile/15E148' } },
+    });
+    expect(row?.properties.device).toBe('phone');
+  });
+
+  it('counts unique readers per device, skipping scanners', () => {
+    const c = (recipient: string, device: string, secondsAfterSend = 600) => ({ name: 'email_clicked', properties: { recipient, device, secondsAfterSend } });
+    const rows = emailDeviceStats([c('r1', 'phone'), c('r1', 'phone'), c('r2', 'phone'), c('r3', 'desktop'), c('r4', 'desktop', 2), c('r5', 'unknown')]);
+    expect(rows).toEqual([
+      { device: 'phone', label: 'Phone', readers: 2, share: 67 },
+      { device: 'desktop', label: 'Desktop', readers: 1, share: 33 },
+    ]);
   });
 });

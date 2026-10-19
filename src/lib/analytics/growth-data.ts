@@ -15,6 +15,8 @@ import {
   type PostRow,
   type FormRow,
   buildFormTable,
+  type DeviceRow,
+  emailDeviceStats,
 } from './growth';
 
 const DAY = 86_400_000;
@@ -62,13 +64,15 @@ export interface GrowthData {
   trackingSince: Date | null;
   /** Which signup form people used, from the subscriber list itself. */
   byForm: FormRow[];
+  /** Newsletter readers by device, from clicks in the last 4 weeks. */
+  emailDevices: DeviceRow[];
 }
 
 export async function getGrowthData(now = new Date()): Promise<GrowthData> {
   const since = new Date(now.getTime() - WINDOW_DAYS * DAY);
   const weekAgo = new Date(now.getTime() - 7 * DAY);
 
-  const [loads, joined, left, active, conversions, pageViews, firstView, lastDelivery, forms, formsActive] = await Promise.all([
+  const [loads, joined, left, active, conversions, pageViews, firstView, lastDelivery, forms, formsActive, emailClicks] = await Promise.all([
     prisma.webVitalMetric.findMany({
       where: { metric: 'TTFB', createdAt: { gte: since } },
       select: { path: true, value: true, createdAt: true },
@@ -94,6 +98,7 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
     }),
     prisma.subscriber.groupBy({ by: ['source'], where: { subscribedAt: { gte: since } }, _count: true }),
     prisma.subscriber.groupBy({ by: ['source'], where: { subscribedAt: { gte: since }, active: true }, _count: true }),
+    prisma.uiEvent.findMany({ where: { name: 'email_clicked', createdAt: { gte: since } }, select: { name: true, properties: true } }),
   ]);
 
   const realLoads = loads.filter((l) => !(SPEED_TEST_PATHS.includes(l.path) && l.value < 80));
@@ -127,6 +132,7 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
     focus: pickFocus(channels),
     posts: buildPostTable(pageViews, signups).slice(0, 8),
     trackingSince: firstView?.createdAt ?? null,
+    emailDevices: emailDeviceStats(emailClicks),
     byForm: buildFormTable(
       forms.map((f) => ({ source: f.source, count: f._count })),
       formsActive.map((f) => ({ source: f.source, count: f._count })),
