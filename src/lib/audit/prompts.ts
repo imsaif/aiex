@@ -101,7 +101,7 @@ You MUST follow these steps in order. Skipping a step produces low-quality findi
 **Step 1 — Describe each surface (write \`surfaceDescription\`).**
 For every screenshot, identify what specific surface it is (e.g., "Claude chat thread mid-conversation", "Settings → Usage page showing weekly limits", "Empty-state of new chat"). Note the visible UI elements: input field, send button, message list, settings rows, billing breakdown, etc. If multiple screenshots are provided, describe each separately by index (1-based).
 
-Inventory specifically: enumerate the visible interactive controls (buttons, icons, inputs, status indicators, model selectors, sidebar items). This list anchors every later "X is missing" finding — if you didn't list a control here and then claim it's absent in a finding, you are probably hallucinating its absence. Re-look at the screenshot before claiming any UI is missing.
+Inventory specifically: enumerate the visible interactive controls (buttons, icons, inputs, status indicators, model selectors, sidebar items). This list anchors every later finding: findings critique what is on it. A control that is NOT on the list is usually not a finding at all, because one frame can't show hover states, menus, other screens or what's below the scroll. Turn it into a \`worthChecking\` question instead.
 
 **Step 2 — Select applicable patterns (write \`applicablePatterns\`).**
 From the pattern library, list ONLY the patterns that meaningfully apply to the specific surface(s) shown. A settings/billing/navigation surface does NOT need Confidence Visualization, Error Recovery, Explainable AI, or HITL — those apply to surfaces where the AI produces substantive output. Most surfaces meaningfully invoke 3-7 patterns, not 20.
@@ -109,7 +109,7 @@ From the pattern library, list ONLY the patterns that meaningfully apply to the 
 **Hard cap: \`applicablePatterns\` MUST contain AT MOST 8 entries.** If you find yourself adding a 9th, you are padding — drop the weakest fit before adding. A short, ruthless list beats a long, padded one every time. For a text-only surface (e.g. terminal output, raw code, plain prose) with no visible UI affordances, the right answer is often 0-2 patterns, not 8.
 
 **Step 3 — Evaluate only those applicable patterns.**
-For each applicable pattern, check whether the surface implements it. Each finding MUST include an \`evidence\` field that quotes or describes a specific visible UI element you can point to ("the message-list area below the conversation header has no thumbs-up/down on AI messages"). If you cannot point to specific visible evidence, drop the finding — do not invent it.
+For each applicable pattern, check whether the surface implements it. Each finding MUST include an \`evidence\` field that quotes or describes a specific visible UI element you can point to ("the 'Proceed with caution' line is grey 11px text under the score, easy to miss next to the bold percentage"). If you cannot point to specific visible evidence, drop the finding — do not invent it.
 
 **Seen vs. worth checking.** A screenshot is one frozen frame of a larger product. Before you write any finding that says something is missing or inadequate, ask: could this thing exist somewhere this frame cannot show — on hover or focus (tooltips, info popovers), behind a click (menus, an "Explain" button, a details panel), below or above the visible scroll, in another tab, screen, settings page or later step, or in a state other than the one captured (mid-load, mid-stream)?
 - If YES, it is NOT a finding. Do not put it in \`topGaps\`, and do not hedge it into a finding ("from this screenshot I can't verify…" is still a guess presented as a gap). Instead, write it as a short question in \`worthChecking\` (e.g. "Does hovering 'Recommended' explain why Accuracy is suggested?").
@@ -141,7 +141,7 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
       "pattern": "pattern name",
       "status": "missing" | "needs-improvement" | "good",
       "finding": "specific observation about THIS surface, anchored on what you actually see",
-      "evidence": "the specific UI element your finding is grounded in (e.g., 'the input box at the bottom shows no character/token counter')",
+      "evidence": "the specific visible UI element your finding is grounded in (e.g., 'the thumbs-down sits directly under the error message, so it is unclear whether it rates the answer or the outage')",
       "impact": "one line on the real user/business consequence, honestly hedged — never a fabricated metric",
       "effort": "quick" | "medium" | "involved",
       "recommendation": "specific actionable fix for THIS surface, not a generic pattern restatement",
