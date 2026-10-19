@@ -1306,17 +1306,15 @@ function voicePublisherLabel(item: NewsletterItem): string | null {
 // digest's own pubDate (~route.ts:637). Displaying that as the story date is
 // misleading: a Jul-21 article featured in the Jul-23 digest reads as "Jul 23",
 // and an evergreen piece TLDR re-surfaces reads as today. For these items we show
-// provenance ("via TLDR Design") in place of a fabricated date. Only TLDR Design
+// no date at all rather than a fabricated one (until 2026-10-19 it said "via TLDR
+// Design", dropped because no other source names its relay). Only TLDR Design
 // uses the digest scraper today; add any future digest-scraped source here.
 const DIGEST_DATED_SOURCES: ReadonlySet<string> = new Set<string>(['TLDR Design']);
 
-// The right-cell label for a story card: normally the item's date, but for
-// digest-scraped items (see above) the date is not the article's real date, so we
-// return "via <digest>" instead. Returns null when the item's own date is trusted.
-function digestProvenanceLabel(item: NewsletterItem): string | null {
-  return item.sourceName && DIGEST_DATED_SOURCES.has(item.sourceName)
-    ? `via ${item.sourceName}`
-    : null;
+// The date beside a story's source: the item's own date, or '' for digest-scraped
+// items (see above), whose date is the digest's and not the article's.
+function storyDateLabel(item: NewsletterItem): string {
+  return item.sourceName && DIGEST_DATED_SOURCES.has(item.sourceName) ? '' : item.date;
 }
 
 // Resolve a selected item's sourceUrl back to its pool NewsItem (exact link, then
@@ -1895,7 +1893,7 @@ function toEmailStories(items: NewsletterItem[]) {
     return {
       badgeLabel: publisherLabel ?? item.product,
       badgeIconUrl: publisherLabel ? '' : (getProductIconUrl(item.product) ?? ''),
-      metaLabel: digestProvenanceLabel(item) ?? item.date,
+      metaLabel: storyDateLabel(item),
       headline: item.headline,
       takeaway: item.designerTakeaway,
       sourceUrl: stripFeedUtm(item.sourceUrl),

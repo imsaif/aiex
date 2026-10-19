@@ -7,6 +7,16 @@ import { createHash } from 'crypto';
 export const EMAIL_EVENT_KINDS = ['delivered', 'clicked', 'bounced', 'complained'] as const;
 export type EmailEventKind = (typeof EMAIL_EVENT_KINDS)[number];
 
+export type EmailDevice = 'phone' | 'tablet' | 'desktop' | 'unknown';
+
+/** Phone, tablet or desktop from a browser user agent. */
+export function deviceFromUserAgent(ua: string | undefined | null): EmailDevice {
+  if (!ua) return 'unknown';
+  if (/iPad|Tablet|Android(?!.*Mobile)/i.test(ua)) return 'tablet';
+  if (/iPhone|iPod|Android.*Mobile|Mobile Safari|Windows Phone|Mobile\b/i.test(ua)) return 'phone';
+  return 'desktop';
+}
+
 export interface ResendEmailWebhook {
   type?: string;
   created_at?: string;
@@ -16,7 +26,7 @@ export interface ResendEmailWebhook {
     created_at?: string;
     to?: string[];
     subject?: string;
-    click?: { link?: string; timestamp?: string };
+    click?: { link?: string; timestamp?: string; userAgent?: string };
   };
 }
 
@@ -30,6 +40,8 @@ export interface EmailEventRow {
     link?: string;
     /** Seconds from the email being created to the click. Link scanners click within a few seconds. */
     secondsAfterSend?: number;
+    /** From the click's user agent. Opens carry no device, and Gmail proxies images, so clicks are the only device signal. */
+    device?: EmailDevice;
   };
 }
 
@@ -61,6 +73,7 @@ export function toEmailEventRow(event: ResendEmailWebhook): EmailEventRow | null
     // The unsubscribe link is not interest in the issue.
     if (!link || /unsubscribe/i.test(link)) return null;
     row.properties.link = link.slice(0, 300);
+    row.properties.device = deviceFromUserAgent(data.click?.userAgent);
     const sent = Date.parse(data.created_at || '');
     const clicked = Date.parse(data.click?.timestamp || '');
     if (Number.isFinite(sent) && Number.isFinite(clicked)) {
