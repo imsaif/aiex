@@ -318,7 +318,6 @@ export async function POST(request: NextRequest) {
         quickWins: finalData.quickWins || [],
         generalObservations: finalData.generalObservations || [],
         worthChecking: finalData.worthChecking || [],
-        surfaceKind: finalData.surfaceKind || 'product',
         chatContext: finalData.chatContext || '',
         productContext: {
           productType: productType!,

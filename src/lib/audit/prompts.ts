@@ -103,11 +103,6 @@ For every screenshot, identify what specific surface it is (e.g., "Claude chat t
 
 Inventory specifically: enumerate the visible interactive controls (buttons, icons, inputs, status indicators, model selectors, sidebar items). This list anchors every later finding: findings critique what is on it. A control that is NOT on the list is usually not a finding at all, because one frame can't show hover states, menus, other screens or what's below the scroll. Turn it into a \`worthChecking\` question instead.
 
-**Step 1b — Real product screen or marketing material? (write \`surfaceKind\`).**
-Decide whether each screenshot is a real screen someone uses in the product, or material made to promote or explain it: a marketing or landing page, a promo shot or hero image, a documentation or blog illustration, an ad, a frame from a product video with captions or overlays, cards or diagrams lifted from a website. Signals of marketing: headline-style copy aimed at buyers ('Your AI assistant for every team', 'Start free trial', 'Book a demo'), captions or titles laid over the UI, a device mockup or polished composition, a single idealised state, a site's top navigation for pricing/blog/sign-up rather than the app's own navigation. A real screen that is cropped, mid-load or partly covered by a cookie banner is still a real screen.
-- If it is real, set \`surfaceKind\` to "product" and continue normally.
-- If it is marketing material, set \`surfaceKind\` to "marketing", and then: \`applicablePatterns\` = [], \`topGaps\` = [], \`score\` and \`maxScore\` = null. In \`surfaceDescription\`, say plainly that this looks like marketing material rather than a screen from the product itself, and that promo images show the product at its best, so gaps found here may not exist in the real thing; ask for a screenshot of the product in use. Give 2-3 \`generalObservations\` about what is actually shown (copy, layout, claims). Do not audit AI patterns on it.
-
 **Step 2 — Select applicable patterns (write \`applicablePatterns\`).**
 From the pattern library, list ONLY the patterns that meaningfully apply to the specific surface(s) shown. A settings/billing/navigation surface does NOT need Confidence Visualization, Error Recovery, Explainable AI, or HITL — those apply to surfaces where the AI produces substantive output. Most surfaces meaningfully invoke 3-7 patterns, not 20.
 
@@ -138,7 +133,6 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 {
   "score": <number 0-36 — how well the surface(s) implement applicable patterns; if no patterns apply, return null>,
   "maxScore": <number — count of patterns in applicablePatterns; if none apply, return null>,
-  "surfaceKind": "product" | "marketing",
   "productTypeSummary": "one sentence about what product this is",
   "surfaceDescription": "Per-screenshot: '[1] <what surface 1 is>. [2] <what surface 2 is>.' If only 1 screenshot, just describe it. If no AI UX patterns apply to any surface, say so here and explain why.",
   "applicablePatterns": ["pattern name 1", "pattern name 2", ...],
@@ -174,7 +168,6 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - \`applicablePatterns\` MUST contain AT MOST 8 entries. No exceptions.
 - Return 0 to 10 \`topGaps\` total, NOT a fixed count. An empty array is a valid, useful answer for a surface that doesn't invoke AI UX patterns.
 - Never list a pattern in \`topGaps\` if it isn't in \`applicablePatterns\`.
-- If \`surfaceKind\` is "marketing", return no \`applicablePatterns\` and no \`topGaps\`, explain in \`surfaceDescription\` and ask for a real product screenshot (see Step 1b).
 - When \`applicablePatterns\` is empty (the surface is NOT an AI product interface — e.g. a marketing page, checkout, blog, generic website), populate \`generalObservations\` with 2-3 concise, genuinely useful general UX notes about what you see, so the user still gets value. Leave \`generalObservations\` empty (\`[]\`) whenever any AI pattern applies.
 - For multi-screenshot uploads, distribute findings across the screenshots they actually apply to via \`screenshotIndex\`. Do not duplicate the same finding across screens.
 - Resource URLs should point to real pattern pages: aiuxdesign.guide/patterns/<pattern-slug>

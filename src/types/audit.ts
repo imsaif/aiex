@@ -181,9 +181,6 @@ export const ClaudeAnalysisResponseSchema = z.object({
   // other states). Kept out of topGaps so guesses aren't presented as findings;
   // not scored. See the "Seen vs. worth checking" rule in prompts.ts.
   worthChecking: z.array(z.string()).optional().default([]),
-  // Real product screen vs marketing/promo material. Marketing images get no
-  // pattern gaps (promo shots show the product at its best). See Step 1b.
-  surfaceKind: z.enum(['product', 'marketing']).optional(),
   chatContext: z.string().optional().default(''),
   // Legacy fields the route still passes through for backward compat
   detectedComponent: z.string().optional(),
