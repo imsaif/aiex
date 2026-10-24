@@ -21,7 +21,7 @@ export const sessiondegradationprevention: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when long conversations erode safety or quality: multi-hour chats, 'the AI gets too agreeable over time', boundary drift, session limits and refreshed checks. Session Degradation Prevention keeps late-session behavior as safe as the first message.",
+      "Use when designing or building an AI product with long conversations where safety or quality can erode: multi-hour chats, an assistant that grows more agreeable over time, boundary drift, session limits and refreshed checks. Design guidance for Session Degradation Prevention: how the product being built keeps late-session behaviour as careful as the first message.",
     problem: "AI safety weakens during extended conversations - the system becomes more agreeable and less cautious. ChatGPT maintained harmful conversations for 4+ hours with degrading boundaries.",
     solution: "Strengthen safety checks over time with circuit breaker patterns, session limits, and mandatory breaks.",
     overview: "Safety should strengthen during long conversations and sensitive topics, not weaken.",

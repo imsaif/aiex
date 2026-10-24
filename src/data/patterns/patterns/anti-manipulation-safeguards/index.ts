@@ -21,7 +21,7 @@ export const antimanipulationsafeguards: Pattern = {
   complexity: 9,
   content: {
     skillDescription:
-      "Use when users may disguise harmful requests: jailbreak attempts, 'it is just fiction or roleplay or hypothetical' framing, prompt manipulation, safety bypasses. Anti-Manipulation Safeguards detect real intent behind the framing.",
+      "Use when designing or building the safety layer of an AI product against disguised harmful requests: jailbreak attempts, fiction or roleplay framing, prompt manipulation, safety bypasses. Design guidance for Anti-Manipulation Safeguards: how the product being built should judge intent consistently whatever the framing.",
     problem: "Users bypass safety with 'fiction research,' 'roleplay,' 'hypothetical' framing. Real case: Adam Raine (16) bypassed ChatGPT safety using fiction excuse and received harmful information.",
     solution: "Detect actual intent beyond framing. Identify bypass patterns and treat all harmful requests consistently.",
     overview: "Real safety requires understanding actual intent, not just stated framing.",

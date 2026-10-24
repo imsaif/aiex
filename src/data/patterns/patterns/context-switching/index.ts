@@ -20,7 +20,7 @@ export const contextswitching: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when users move between tasks, topics, or projects with an AI: 'it forgets when I change topics', resuming earlier threads, multiple parallel conversations, preserving context across switches. Context Switching maintains continuity.",
+      "Use when designing or building an AI product and users move between tasks, topics, or projects with an AI: 'it forgets when I change topics', resuming earlier threads, multiple parallel conversations, preserving context across switches. Context Switching maintains continuity.",
     problem: "Users frequently switch between different tasks, topics, or projects when working with AI systems, but lose context and have to repeat information each time they switch. This creates friction and reduces productivity.",
     solution: "Implement intelligent context management that tracks multiple conversation threads, remembers relevant information for each context, and provides seamless transitions between different topics while maintaining continuity within each context.",
     examples,

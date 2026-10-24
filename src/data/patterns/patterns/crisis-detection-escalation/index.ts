@@ -21,7 +21,7 @@ export const crisisdetectionescalation: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when users might express self-harm or crisis: suicide or harm signals in messages, 'what if a user says something alarming', hotline resources, escalation to humans. Crisis Detection and Escalation routes people to real help immediately.",
+      "Use when designing or building an AI product that may receive messages about self-harm or crisis: how the product spots risk signals, which current hotline or human it routes the person to, and how escalation works. Design guidance for Crisis Detection and Escalation in the product being built; it does not respond to anyone in crisis itself.",
     problem: "AI systems fail to respond appropriately to crisis signals, sometimes providing harmful encouragement instead of resources. Real case: Zane Shamblin chatted with ChatGPT for hours expressing suicidal intent; the bot responded encouragingly instead of escalating.",
     solution: "Use multi-layer detection (keywords, context, behavior, manipulation) to catch crisis signals at multiple levels and immediately provide resources.",
     overview: "Crisis detection is critical safety infrastructure addressing foreseeable harm documented in recent OpenAI lawsuits.",

@@ -19,7 +19,7 @@ export const universalaccesspatterns: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when the AI product must work for everyone: screen readers, low literacy, language diversity, motor differences, 'is this accessible', assistive technology support. Universal Access Patterns remove ability and language barriers.",
+      "Use when designing or building an AI product that must work for everyone: screen readers, low literacy, language diversity, motor differences, 'is this accessible', assistive technology support. Universal Access Patterns remove ability and language barriers.",
     problem: "Many AI interfaces are designed for able-bodied, literate users with specific language backgrounds, creating barriers for users with disabilities, different language needs, or varying levels of technical expertise. This excludes large populations from benefiting from AI capabilities.",
     solution: "Design AI systems that support multiple interaction modalities (voice, text, gesture, visual), integrate seamlessly with assistive technologies, provide multilingual support, and offer adjustable complexity levels. Ensure equitable access for all users regardless of ability, language, or expertise.",
     examples,

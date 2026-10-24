@@ -18,7 +18,7 @@ export const errorrecovery: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when the AI fails or hits something it cannot handle: error states, fallbacks, 'what happens when the model is wrong or down', retry paths, degraded modes. Error Recovery and Graceful Degradation fails clearly with a way forward.",
+      "Use when designing or building an AI product and the AI fails or hits something it cannot handle: error states, fallbacks, 'what happens when the model is wrong or down', retry paths, degraded modes. Error Recovery and Graceful Degradation fails clearly with a way forward.",
     problem: "AI systems inevitably make mistakes or encounter unhandleable situations, potentially frustrating users.",
     solution: "Design graceful degradation and clear recovery paths to maintain user trust when AI fails.",
     examples,

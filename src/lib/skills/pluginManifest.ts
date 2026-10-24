@@ -38,7 +38,7 @@ export const MARKETPLACE_NAME = 'aiux-skills';
  * The number lives here once because it is written into two manifests, and two
  * literals are two chances to update only one.
  */
-export const PLUGIN_VERSION = '1.1.0';
+export const PLUGIN_VERSION = '1.2.0';
 const REPO = 'https://github.com/imsaif/aiux-skills';
 
 /**
@@ -59,6 +59,8 @@ export function pluginManifest(patterns: Pattern[], site: string): string {
         version: PLUGIN_VERSION,
         author: { name: 'Imran Mohammed', url: site },
         homepage: site,
+        // Read only by Anthropic's plugin directory for the listing; Claude Code ignores it.
+        icon: './icon.png',
         repository: REPO,
         license: 'MIT',
         keywords: ['ai', 'ux', 'design', 'patterns', 'accessibility', 'design-system'],

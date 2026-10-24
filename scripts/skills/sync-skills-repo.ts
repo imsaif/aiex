@@ -30,17 +30,6 @@ if (!target || !fs.existsSync(target)) {
   process.exit(1);
 }
 
-/** The funnel travels inside the artifact: every skill links back. */
-function skillFooter(slug: string): string {
-  return [
-    '',
-    '---',
-    '',
-    `Generated from [aiuxdesign.guide](${SITE}/?${UTM}), a library of ${patterns.length} AI UX patterns from shipped products. Full pattern with examples and demos: [${SITE}/patterns/${slug}](${SITE}/patterns/${slug}?${UTM}). Not sure which patterns your product needs? [Run the free audit](${SITE}/audit?${UTM}).`,
-    '',
-  ].join('\n');
-}
-
 function readme(): string {
   const bySkill = [...patterns].sort((a, b) => a.title.localeCompare(b.title));
   const rows = bySkill
@@ -58,7 +47,13 @@ A skill is persistent design guidance for your coding agent: install it once and
 
 ## Install
 
-All of them:
+In Claude Code, as a plugin (all ${patterns.length} skills, updates with the plugin):
+
+\`\`\`
+/plugin install aiux --marketplace imsaif/aiux-skills
+\`\`\`
+
+Or with the skills CLI, all of them:
 
 \`\`\`bash
 npx skills add imsaif/aiux-skills
@@ -124,13 +119,17 @@ for (const pattern of patterns) {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(
     path.join(dir, 'SKILL.md'),
-    composeSkillMd(pattern).trimEnd() + '\n' + skillFooter(pattern.slug)
+    // No footer: Anthropic's directory review (2026-10-10) asked each skill to end at its
+    // reference link, because everything in SKILL.md loads every time the skill runs.
+    composeSkillMd(pattern).trimEnd() + '\n'
   );
   written += 1;
 }
 
 fs.writeFileSync(path.join(target, 'README.md'), readme());
 fs.writeFileSync(path.join(target, 'LICENSE'), LICENSE);
+// Directory listing icon, referenced as ./icon.png by plugin.json.
+fs.copyFileSync(path.join(process.cwd(), 'scripts/skills/assets/icon.png'), path.join(target, 'icon.png'));
 
 const pluginDir = path.join(target, '.claude-plugin');
 fs.mkdirSync(pluginDir, { recursive: true });

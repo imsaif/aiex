@@ -26,7 +26,7 @@ export const workspaceNativeAgents: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when AI should live inside an existing tool rather than beside it: 'stop making users switch to a chat app', embedded copilots in editors or CRMs, in-context actions, meeting users where they work. Workspace-Native Agent Integration removes context-switching overhead.",
+      "Use when designing or building an AI product and AI should live inside an existing tool rather than beside it: 'stop making users switch to a chat app', embedded copilots in editors or CRMs, in-context actions, meeting users where they work. Workspace-Native Agent Integration removes context-switching overhead.",
     problem: "AI agents are being added to existing professional tools but feel like separate tools, creating context-switching overhead.",
     solution: "Embed AI capabilities directly into existing workflow contexts where users already work, rather than requiring switch to separate interfaces.",
     examples,

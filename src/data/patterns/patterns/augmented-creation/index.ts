@@ -17,7 +17,7 @@ export const augmentedcreation: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when AI helps people make content rather than making it for them: co-writing, draft generation with human editing, creative tools, AI-assisted design or writing. Augmented Creation keeps the user as the author with AI as collaborator.",
+      "Use when designing or building an AI product and AI helps people make content rather than making it for them: co-writing, draft generation with human editing, creative tools, AI-assisted design or writing. Augmented Creation keeps the user as the author with AI as collaborator.",
     problem: "Content creation is time-consuming, especially with creative blocks or need for high-quality output.",
     solution: "Provide AI tools that collaborate with users, offering suggestions and improvements while maintaining human control and authorship.",
     examples,
