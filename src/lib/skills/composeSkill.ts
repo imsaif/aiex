@@ -100,10 +100,12 @@ export function composeSkillMd(pattern: Pattern): string {
     lines.push('');
   }
 
+  // The reference link is the last line: Anthropic's directory review (2026-10-10)
+  // asked each skill to end at it, since all of SKILL.md loads every time it runs.
   lines.push(
-    `Reference: ${SITE}/patterns/${pattern.slug}`,
-    '',
     'When this applies, make the smallest change that genuinely realises the pattern. Do not add UI the product does not need, and say what you changed and why.',
+    '',
+    `Reference: ${SITE}/patterns/${pattern.slug}`,
     '',
   );
 
