@@ -20,7 +20,7 @@ export const feedbackloops: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when user corrections should improve the AI: thumbs up or down, edit-and-learn, 'it keeps repeating the same mistake', preference learning, ratings that actually change behavior. Feedback Loops turn corrections into cumulative improvement.",
+      "Use when designing or building an AI product and user corrections should improve the AI: thumbs up or down, edit-and-learn, 'it keeps repeating the same mistake', preference learning, ratings that actually change behavior. Feedback Loops turn corrections into cumulative improvement.",
     problem: "AI systems remain static despite user interactions, failing to learn from corrections and preferences, causing repeated mistakes and generic experiences.",
     solution: "Implement feedback mechanisms that capture user corrections, preferences, and interactions to improve AI performance. Make learning visible and allow users to shape AI behavior.",
     examples,

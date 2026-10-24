@@ -21,7 +21,7 @@ export const vulnerableuserprotection: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when minors or at-risk users may be present: age gating, dependency risks, mental-health-sensitive contexts, 'what if a teenager uses this', graduated protections. Vulnerable User Protection detects vulnerability and adjusts safeguards.",
+      "Use when designing or building an AI product that minors or at-risk people may use: age gating, dependency risks, mental-health-sensitive contexts, graduated protections. Design guidance for Vulnerable User Protection: how the product being built should recognise risk and adjust its safeguards.",
     problem: "Systems fail to protect minors, crisis users, and those with mental health challenges. Replika enabled romantic interactions with minors and created unhealthy dependency patterns.",
     solution: "Detect user vulnerability and apply graduated protections (age, crisis, mental health, dependency).",
     overview: "Different users need different protections based on vulnerability.",

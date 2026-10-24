@@ -14,7 +14,7 @@ export const humanintheloop: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when AI output needs human review, approval, or sign-off before it takes effect or reaches someone: approval queues, 'a person checks before send', moderation of AI answers, override and reject controls. Human-in-the-Loop keeps automation accountable to human judgment.",
+      "Use when designing or building an AI product and AI output needs human review, approval, or sign-off before it takes effect or reaches someone: approval queues, 'a person checks before send', moderation of AI answers, override and reject controls. Human-in-the-Loop keeps automation accountable to human judgment.",
     problem: "Fully automated AI systems risk critical errors and lack transparency. Users need review and override capabilities for safety and trust.",
     solution: "Design systems for human intervention, review, or approval of AI outputs. Provide clear handoff points, easy override mechanisms, and transparent explanations.",
     examples: [

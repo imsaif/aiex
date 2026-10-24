@@ -20,7 +20,7 @@ export const gracefulhandoff: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when control passes between AI and human: taking over from automation, 'let me finish this manually', resuming automation after manual edits, no lost progress at the switch. Graceful Handoff makes transitions seamless in both directions.",
+      "Use when designing or building an AI product and control passes between AI and human: taking over from automation, 'let me finish this manually', resuming automation after manual edits, no lost progress at the switch. Graceful Handoff makes transitions seamless in both directions.",
     problem: "Users feel trapped by automation or lose progress when switching between AI and manual control, causing frustration and interruptions.",
     solution: "Design clear mechanisms for smooth transitions between AI assistance and manual control. Preserve context and state across transitions for seamless resumption.",
     examples,

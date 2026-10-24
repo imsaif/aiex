@@ -14,7 +14,7 @@ export const multimodalinteraction: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when one input mode is not enough: combining voice, touch, text, images, or gesture, 'talk or type or point', accessibility through alternate modes, camera plus chat. Multimodal Interaction lets people interact the way the moment demands.",
+      "Use when designing or building an AI product and one input mode is not enough: combining voice, touch, text, images, or gesture, 'talk or type or point', accessibility through alternate modes, camera plus chat. Multimodal Interaction lets people interact the way the moment demands.",
     problem: "Single-mode interfaces limit user expression and accessibility. Users need flexible interaction methods that adapt to context and abilities.",
     solution: "Integrate multiple interaction modes (voice, touch, text, gestures), allowing users to switch or combine them based on preferences and situation.",
     examples: [

@@ -18,7 +18,7 @@ export const responsibleaidesign: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when fairness, bias, or accountability is at stake: bias audits, 'could this harm or exclude someone', ethical review of AI decisions, accountability for automated outcomes. Responsible AI Design builds these checks into the lifecycle.",
+      "Use when designing or building an AI product and fairness, bias, or accountability is at stake: bias audits, 'could this harm or exclude someone', ethical review of AI decisions, accountability for automated outcomes. Responsible AI Design builds these checks into the lifecycle.",
     problem: "AI systems can perpetuate biases, make unfair decisions, or cause harm without ethical design.",
     solution: "Prioritize fairness, transparency, accountability, and user welfare throughout the AI system lifecycle.",
     examples,

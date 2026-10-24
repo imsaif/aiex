@@ -20,7 +20,7 @@ export const actionaudittrail: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when users need to see or undo what an AI agent did: activity logs, 'what did the agent change', audit history, rollback of agent actions, reviewing multi-step runs. Action Audit Trail makes agent behavior reviewable and correctable after the fact.",
+      "Use when designing or building an AI product and users need to see or undo what an AI agent did: activity logs, 'what did the agent change', audit history, rollback of agent actions, reviewing multi-step runs. Action Audit Trail makes agent behavior reviewable and correctable after the fact.",
     problem: "After an agent has acted across multiple steps or systems, users need a clear, reviewable record of what happened. Traditional undo/redo doesn't work for agentic actions that span multiple systems, occur asynchronously, and have cascading consequences.",
     solution: "Provide a timestamped, structured log of every agent action grouped by task, with plain-language descriptions, reversibility color-coding, selective undo for individual actions, and before/after diff views for modifications.",
     examples,

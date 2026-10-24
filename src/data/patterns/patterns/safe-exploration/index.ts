@@ -19,7 +19,7 @@ export const safeexploration: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when users fear breaking something by trying the AI: sandbox or preview modes, 'let them experiment without consequences', undo-everything trials, test environments. Safe Exploration makes trying risk-free.",
+      "Use when designing or building an AI product and users fear breaking something by trying the AI: sandbox or preview modes, 'let them experiment without consequences', undo-everything trials, test environments. Safe Exploration makes trying risk-free.",
     problem: "Users want to experiment with AI capabilities but fear mistakes or unintended consequences.",
     solution: "Provide safe, controlled environments for exploring AI features with sandboxing, undo mechanisms, and clear safe/production boundaries.",
     examples,

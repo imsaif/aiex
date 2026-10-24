@@ -14,7 +14,7 @@ export const guidedlearning: Pattern = {
   hideFAQ: true,
   content: {
     skillDescription:
-      "Use when a complex AI feature overwhelms newcomers: step-by-step walkthroughs, wizards, 'users do not know where to start', tutorials that adapt to skill level. Guided Learning breaks the task into steps matched to the user's knowledge.",
+      "Use when designing or building an AI product and a complex AI feature overwhelms newcomers: step-by-step walkthroughs, wizards, 'users do not know where to start', tutorials that adapt to skill level. Guided Learning breaks the task into steps matched to the user's knowledge.",
     problem: "Complex AI systems overwhelm users with too many options, causing confusion and poor adoption.",
     solution: "Create step-by-step learning experiences with contextual hints and adaptive difficulty to progressively guide users.",
     examples: [
