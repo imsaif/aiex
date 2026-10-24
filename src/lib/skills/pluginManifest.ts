@@ -38,7 +38,7 @@ export const MARKETPLACE_NAME = 'aiux-skills';
  * The number lives here once because it is written into two manifests, and two
  * literals are two chances to update only one.
  */
-export const PLUGIN_VERSION = '1.2.0';
+export const PLUGIN_VERSION = '1.2.1';
 const REPO = 'https://github.com/imsaif/aiux-skills';
 
 /**
