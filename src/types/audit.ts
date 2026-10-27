@@ -121,6 +121,8 @@ export interface TopGap {
   resource: string | null;
   /** Quote of the visible UI element this finding is grounded in. Required for honest findings. */
   evidence?: string;
+  /** The problem in 12 words or fewer. The card leads with this; older audits don't have it. */
+  headline?: string;
   /** One-line business/UX consequence of the gap — why it matters, honestly hedged (no fabricated metrics). */
   impact?: string;
   /** Rough implementation effort, used to rank fixes (quickest high-impact gap leads). */
@@ -158,6 +160,7 @@ export const TopGapSchema = z.object({
   status: z.enum(['missing', 'needs-improvement', 'good']),
   finding: z.string().min(1),
   evidence: z.string().optional(),
+  headline: z.string().optional(),
   recommendation: z.string().optional().default(''),
   resource: z.string().nullable().optional(),
   impact: z.string().optional(),

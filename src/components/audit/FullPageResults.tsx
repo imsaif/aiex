@@ -961,17 +961,60 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
         {/* Sized up from text-lg/text-xs. This is the one place the page says
             what it is and what you now have; at the old size it read as a
             breadcrumb and got skipped. */}
+        {/* Header card (2026-10-27). The title used to float on the page
+            background; it now sits in a card with the screenshot that was
+            audited and a one-line summary, which replaces the old "What we
+            audited" rail panel. */}
         <div className="lg:flex lg:gap-8 lg:justify-center mb-6 sm:mb-8">
-          <div className="w-full lg:w-[768px] min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight mb-1.5">
-              Your audit results
-            </h1>
-            <p className="text-base sm:text-lg text-text-secondary leading-relaxed">
-              {isDemoMode
-                ? 'Review the gaps below and learn what you are missing in the design.'
-                : 'Gaps this screenshot shows, ready to download as Claude skills, and what to check in your product next.'}
-            </p>
-          </div>
+          <header className="w-full lg:w-[768px] min-w-0 rounded-card border border-border-primary bg-background-primary shadow-card p-default sm:p-loose flex items-start gap-default">
+            {heroScreenshotUrl && !isDemoMode && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={heroScreenshotUrl}
+                alt="The screenshot you audited"
+                className="hidden sm:block flex-shrink-0 w-28 h-20 object-cover object-top rounded-input border border-border-primary bg-background-secondary"
+              />
+            )}
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight">
+                Your audit results
+              </h1>
+              <p className="mt-1.5 text-base text-text-secondary leading-relaxed">
+                {isDemoMode
+                  ? 'Review the gaps below and learn what you are missing in the design.'
+                  : 'Gaps this screenshot shows, ready to download as Claude skills, and what to check in your product next.'}
+              </p>
+              {!isDemoMode && (() => {
+                const surfaceLabels: Record<string, string> = {
+                  'chat-interface': 'Chat interface',
+                  'ai-agent': 'AI agent',
+                  'recommendation-system': 'Recommendations',
+                  'content-generation': 'Content generation',
+                  'dashboard-analytics': 'Dashboard',
+                  'embedded-ai-feature': 'Embedded AI feature',
+                  'search-discovery': 'Search',
+                  'reports-documents': 'Reports & documents',
+                };
+                const productType = results?.productContext?.productType;
+                const toCheck = (results as ExtendedResults | null)?.worthChecking?.length || 0;
+                const facts = [
+                  productType ? surfaceLabels[productType] || 'AI product' : null,
+                  heroDeviceType === 'mobile' ? 'Mobile' : 'Desktop',
+                  `${issues.length} ${issues.length === 1 ? 'gap' : 'gaps'}`,
+                  toCheck > 0 ? `${toCheck} to check` : null,
+                ].filter(Boolean) as string[];
+                return (
+                  <ul className="mt-snug flex flex-wrap gap-tight" aria-label="Audit summary">
+                    {facts.map((f) => (
+                      <li key={f} className="px-2.5 py-0.5 rounded-pill bg-background-secondary text-sm font-medium text-text-secondary">
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                );
+              })()}
+            </div>
+          </header>
           <div className="hidden lg:block lg:w-[340px] lg:flex-shrink-0" aria-hidden />
         </div>
 
@@ -1211,44 +1254,8 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               Run another audit
             </button>
 
-            {/* What we audited. Open by default: it is the context for every finding above, not an optional extra */}
-            {(surfaceDescription || results.applicablePatterns?.length) && (
-              <details open className="rounded-2xl border border-border-primary bg-background-primary px-5 py-4">
-                <summary className="text-sm font-semibold uppercase tracking-wider text-text-tertiary cursor-pointer select-none">What we audited</summary>
-                {(() => {
-                  const productLabel: Record<string, string> = {
-                    'chat-interface': 'Chat interface',
-                    'ai-agent': 'AI agent',
-                    'recommendation-system': 'Recommendations',
-                    'content-generation': 'Content generation',
-                    other: 'AI product',
-                  };
-                  const productType = results.productContext?.productType;
-                  const facts: Array<{ label: string; value: string }> = [];
-                  if (productType) facts.push({ label: 'Surface', value: productLabel[productType] || productType });
-                  facts.push({ label: 'Device', value: heroDeviceType === 'mobile' ? 'Mobile' : 'Desktop' });
-                  if (allScreenshots.length > 0) facts.push({ label: 'Screenshots', value: String(allScreenshots.length) });
-                  if (results.applicablePatterns?.length) facts.push({ label: 'Applicable patterns', value: `${results.applicablePatterns.length} of 36` });
-                  if (issues.length > 0) facts.push({ label: 'Gaps found', value: String(issues.length) });
-                  return (
-                    <div className="mt-3">
-                      <dl className="rounded-lg border border-border-primary bg-background-secondary divide-y divide-border-primary mb-3">
-                        {facts.map((f) => (
-                          <div key={f.label} className="flex items-center justify-between gap-3 px-3.5 py-2.5">
-                            <dt className="text-sm text-text-secondary">{f.label}</dt>
-                            <dd className="text-base font-semibold text-text-primary text-right truncate">{f.value}</dd>
-                          </div>
-                        ))}
-                      </dl>
-                      {surfaceDescription && (
-                        <p className="text-sm text-text-secondary leading-relaxed">{surfaceDescription}</p>
-                      )}
-                    </div>
-                  );
-                })()}
-              </details>
-            )}
-
+            {/* "What we audited" panel removed 2026-10-27: its facts now sit in the
+                header card above the gaps, which Imran asked for in its place. */}
 
             {/* Screenshot — collapsible artifact with non-interactive markers */}
             {heroScreenshotUrl && (

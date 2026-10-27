@@ -139,12 +139,13 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
   "topGaps": [
     {
       "pattern": "pattern name",
+      "headline": "the problem in 12 words or fewer, plain words, no praise (e.g. 'Upload limit only appears after the file has already failed')",
       "status": "missing" | "needs-improvement" | "good",
-      "finding": "specific observation about THIS surface, anchored on what you actually see",
+      "finding": "what you saw on THIS surface, in at most 2 sentences and 40 words. Start with the problem; do not open with praise or 'X is good, however'",
       "evidence": "the specific visible UI element your finding is grounded in (e.g., 'the thumbs-down sits directly under the error message, so it is unclear whether it rates the answer or the outage')",
       "impact": "one line on the real user/business consequence, honestly hedged — never a fabricated metric",
       "effort": "quick" | "medium" | "involved",
-      "recommendation": "specific actionable fix for THIS surface, not a generic pattern restatement",
+      "recommendation": "one concrete change for THIS surface, at most 30 words, not a generic pattern restatement",
       "resource": "aiuxdesign.guide/patterns/<pattern-slug>" | null,
       "screenshotIndex": <1-based index of the screenshot this finding applies to; omit if surface-agnostic>
     }
@@ -161,6 +162,7 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - Every entry in \`topGaps\` MUST have an \`evidence\` field grounded in a specific visible UI element. No evidence → drop the finding.
 - Every entry in \`topGaps\` MUST have an \`impact\` (one honestly-hedged line, no invented numbers) and an \`effort\` ("quick" | "medium" | "involved").
 - \`topGaps\` MUST be ordered best-first: entry #1 is the single highest-impact, act-on-it-now fix. Do NOT lead with the most generic finding.
+- Keep every gap short: a \`headline\` of 12 words or fewer naming the problem, a \`finding\` of at most 2 sentences, a \`recommendation\` of at most 30 words. Readers scan; long findings bury the point.
 - Merge findings that share one root cause or the same fix into a single entry. Never split one issue across two patterns to inflate the count.
 - Reserve \`status: "missing"\` ("Critical") for the genuinely highest-stakes gap.
 - Every \`topGaps\` entry must be SEEN (see Step 3). Anything that could exist on hover, behind a click, off-screen or in another state goes in \`worthChecking\` as a question, never in \`topGaps\`, hedged or not. \`worthChecking\` does not affect the score.
