@@ -40,6 +40,7 @@ import CompanyLogoCarousel from '@/components/ui/CompanyLogoCarousel';
 import { companyLogos } from '@/data/company-logos';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { ClaudeMark } from '@/components/icons/ClaudeMark';
+import { WorthChecking } from './WorthChecking';
 
 interface ExtendedResults extends AnalysisResults {
   topGaps?: TopGap[];
@@ -50,6 +51,7 @@ interface ExtendedResults extends AnalysisResults {
   surfaceDescription?: string;
   applicablePatterns?: string[];
   generalObservations?: string[];
+  worthChecking?: string[];
 }
 
 interface FullPageResultsProps {
@@ -967,7 +969,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
             <p className="text-base sm:text-lg text-text-secondary leading-relaxed">
               {isDemoMode
                 ? 'Review the gaps below and learn what you are missing in the design.'
-                : 'The patterns your design is missing, ready to download as Claude skills.'}
+                : 'Gaps this screenshot shows, ready to download as Claude skills, and what to check in your product next.'}
             </p>
           </div>
           <div className="hidden lg:block lg:w-[340px] lg:flex-shrink-0" aria-hidden />
@@ -981,18 +983,29 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
           {/* Each gap is a skill the user can save. Framed as skills rather
               than findings because the audit's output is now the pack, not
               the report. */}
-          {/* No count label above the cards. The pack card already states how
-              many skills there are, the cards are numbered, and the page
-              subhead says what they are, so a third statement of the same fact
-              was just another line to read. */}
+          {/* Still no count above the cards (the pack card states it and the
+              cards are numbered). The heading is back because the page now has
+              two lists, and the note says plainly that these come from one
+              screenshot: an eval of 41 audits found most gaps were claims a
+              single screenshot can't prove. */}
           {topPinnedIssues.length > 0 && (
-            <section>
+            <section aria-labelledby="gaps-heading">
+              <h2 id="gaps-heading" className="type-eyebrow text-text-secondary mb-tight">
+                Gaps in this screenshot
+              </h2>
+              <p className="text-sm text-text-secondary mb-snug">
+                Based on one screenshot. Check before you fix: some may already exist elsewhere in your product.
+              </p>
               <div className="space-y-3">
                 {topPinnedIssues.map((gap, i) => (
                   <GapCard key={i} gap={gap} index={i + 1} />
                 ))}
               </div>
             </section>
+          )}
+
+          {!isDemoMode && (
+            <WorthChecking questions={(results as ExtendedResults | null)?.worthChecking || []} />
           )}
 
           {/* Guides matched to the surface that was audited.
