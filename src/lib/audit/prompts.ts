@@ -15,7 +15,7 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
 ## Pattern Library (full set)
 
 ### Core patterns
-- **Confidence Visualization**: Show uncertainty levels on AI outputs. Applies where the AI returns a substantive answer/result. Does NOT apply to settings, billing, navigation, account management.
+- **Confidence Visualization**: Show how sure the AI is about a score, prediction or classification it outputs (a detection score, a risk or match percentage, a forecast or predicted value, labels assigned to an image or record). Applies ONLY when the AI on screen outputs one of those. Does NOT apply to ordinary conversational replies, written or researched answers, summaries, recommendations, creative or generated content, settings, billing, navigation or account management.
 - **Explainable AI**: Show reasoning, sources, "why this?" options. Applies to AI-generated answers/recommendations. Does NOT apply to chrome, settings, or navigation.
 - **Progressive Disclosure**: Reveal complexity gradually. Applies to dense forms, long flows, or AI controls.
 - **Error Recovery**: Clear paths when AI fails or is wrong. Applies to surfaces where AI produces output that can fail.
@@ -75,14 +75,14 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
   // surface. It does NOT force selection; the "only if it genuinely applies" +
   // 8-pattern cap rules in the process still govern the final list.
   const emphasisByType: Record<ProductType, string[]> = {
-    'chat-interface': ['Conversational UI', 'Confidence Visualization', 'Error Recovery', 'Explainable AI', 'Session Degradation Prevention'],
+    'chat-interface': ['Conversational UI', 'Error Recovery', 'Explainable AI', 'Session Degradation Prevention'],
     'ai-agent': ['Intent Preview', 'Action Audit Trail', 'Escalation Pathways', 'Autonomy Spectrum', 'Agent Status & Monitoring', 'Agent Reflection & Learning'],
-    'recommendation-system': ['Explainable AI', 'Feedback Loops', 'Adaptive Interfaces', 'Confidence Visualization', 'Predictive Anticipation'],
+    'recommendation-system': ['Explainable AI', 'Feedback Loops', 'Adaptive Interfaces', 'Predictive Anticipation'],
     'content-generation': ['Augmented Creation', 'Safe Exploration', 'Human-in-the-Loop', 'Feedback Loops', 'Error Recovery'],
     'dashboard-analytics': ['Confidence Visualization', 'Explainable AI', 'Progressive Disclosure', 'Predictive Anticipation', 'Feedback Loops'],
     'embedded-ai-feature': ['Workspace-Native Agent Integration', 'Contextual Assistance', 'Ambient Intelligence', 'Augmented Creation', 'Progressive Enhancement', 'Human-in-the-Loop'],
-    'search-discovery': ['Explainable AI', 'Confidence Visualization', 'Feedback Loops', 'Predictive Anticipation', 'Guided Learning'],
-    'reports-documents': ['Explainable AI', 'Confidence Visualization', 'Human-in-the-Loop', 'Feedback Loops', 'Progressive Disclosure'],
+    'search-discovery': ['Explainable AI', 'Feedback Loops', 'Predictive Anticipation', 'Guided Learning'],
+    'reports-documents': ['Explainable AI', 'Human-in-the-Loop', 'Feedback Loops', 'Progressive Disclosure'],
     general: [],
   };
   const emphasisList = emphasisByType[productType] ?? [];
