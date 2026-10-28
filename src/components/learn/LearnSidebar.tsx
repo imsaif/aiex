@@ -90,6 +90,11 @@ async function getLatestIssues(): Promise<Array<{ slug: string; title: string }>
  * the rail before someone files it.
  */
 const COURSE_GROUPS: Array<{ label: string; slugs: string[] }> = [
+  // First: the site's own subject. Tool courses follow.
+  {
+    label: 'Designing AI products',
+    slugs: ['conversational-ui-guide', 'ai-evals-for-designers', 'ai-ux-skills-guide'],
+  },
   {
     label: 'AI coding tools',
     slugs: ['claude-code-learning-path', 'cursor-learning-path', 'github-copilot-learning-path', 'github-learning-path'],
@@ -99,10 +104,6 @@ const COURSE_GROUPS: Array<{ label: string; slugs: string[] }> = [
     // separate apps, so they sit together.
     label: 'Inside Claude',
     slugs: ['claude-design-learning-path', 'claude-docs-guide', 'claude-slides-guide'],
-  },
-  {
-    label: 'Designing AI products',
-    slugs: ['conversational-ui-guide', 'ai-evals-for-designers', 'ai-ux-skills-guide'],
   },
 ];
 
