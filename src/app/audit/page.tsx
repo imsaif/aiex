@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import AuditClient from '@/components/audit/AuditClient';
+import LearnShell from '@/components/learn/LearnShell';
+import LearnSidebar from '@/components/learn/LearnSidebar';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 
 export const revalidate = 86400;
@@ -30,10 +32,15 @@ export const metadata: Metadata = {
 export default function AuditPage() {
   return (
     <>
-      <Navbar />
-      {/* initialStep="screenshot" drops straight into upload. The demo step is
-          the homepage's marketing view and has no place here. */}
-      <AuditClient initialStep="screenshot" showSocialProof={false} />
+      {/* The tool lives inside the console (2026-10-28), the same shell as
+          Patterns, Skills and Courses, so it reads as part of one app instead
+          of a page floating on a dotted background. */}
+      <Navbar inConsole />
+      <LearnShell sidebar={<LearnSidebar active="audit" />}>
+        {/* initialStep="screenshot" drops straight into upload. The demo step
+            is the homepage's marketing view and has no place here. */}
+        <AuditClient initialStep="screenshot" showSocialProof={false} layout="console" />
+      </LearnShell>
       <ScrollToTop />
     </>
   );

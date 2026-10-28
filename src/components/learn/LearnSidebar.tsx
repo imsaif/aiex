@@ -6,6 +6,7 @@ import {
   TagIcon,
   CodeBracketIcon,
   MapIcon,
+  DocumentMagnifyingGlassIcon,
   Squares2X2Icon,
 } from '@heroicons/react/24/outline';
 import { guides } from '@/data/guides';
@@ -44,6 +45,9 @@ const EXPLORE = [
   { label: 'Map', href: '/guides', Icon: MapIcon },
   { label: 'Patterns', href: '/patterns', Icon: Squares2X2Icon },
   { label: 'Skills', href: '/skills', Icon: PuzzlePieceIcon },
+  // The audit tool joined the console on 2026-10-28 so it reads as part of the
+  // same app as Patterns and Skills instead of a separate floating page.
+  { label: 'Audit', href: '/audit', Icon: DocumentMagnifyingGlassIcon },
   {
     label: 'Open source',
     // The skills repo, not the site's. "Open source" next to Patterns and
@@ -305,7 +309,7 @@ export default async function LearnSidebar({
 }: {
   /** Which Explore row to mark as the current page. */
   /** 'none' on pages that are not an Explore row, such as Saved. */
-  active?: 'map' | 'patterns' | 'skills' | 'none';
+  active?: 'map' | 'patterns' | 'skills' | 'audit' | 'none';
   /** Set on a course or lesson page so that course opens in the rail. */
   currentGuideSlug?: string;
   currentLessonSlug?: string;
@@ -319,6 +323,8 @@ export default async function LearnSidebar({
       ? '/patterns'
       : active === 'skills'
         ? '/skills'
+        : active === 'audit'
+          ? '/audit'
         : currentGuideSlug
           ? null
           : '/guides';
