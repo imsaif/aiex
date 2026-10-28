@@ -20,6 +20,11 @@ export const MODULE_TITLES: Record<string, string> = {
   iteration: 'Iteration',
   'design-system': 'Design System',
   workflows: 'Workflows',
+  // AI Evals course, one module per phase of the eval loop.
+  'evals-why': 'Why Evals',
+  'evals-look': 'Look at Real Answers',
+  'evals-sort': 'Sort and Set the Standard',
+  'evals-automate': 'Automate and Fix',
 };
 
 // Short per-module "what you'll learn" descriptions used on the overview page.
@@ -36,6 +41,10 @@ export const MODULE_DESCRIPTIONS: Record<string, string> = {
   building: 'Implement the core parts of your interface.',
   advanced: 'Handle edge cases, errors, and complex flows.',
   polish: 'Accessibility, agentic patterns, and a production checklist.',
+  'evals-why': 'What an eval is, and why AI output needs a written standard.',
+  'evals-look': 'Choose test examples and design the screen you review them on.',
+  'evals-sort': 'Turn review notes into failure types and a yes or no rule.',
+  'evals-automate': 'Check an AI reviewer against your labels, then measure a fix.',
 };
 
 /** Pretty title for a module key, with a fallback to capitalised raw key. */
