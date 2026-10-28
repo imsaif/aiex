@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import LearnShell from '@/components/learn/LearnShell';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import { ContinueLearning } from '@/components/learn/CourseProgress';
@@ -43,6 +44,7 @@ export default function DashboardPage() {
           <DashboardClient courses={courseIndex} continueSlot={<ContinueLearning courses={continueCourses} />} />
         </main>
       </LearnShell>
+      <Footer />
     </>
   );
 }
