@@ -54,9 +54,9 @@ function DeviceFrame({ src, alt, deviceType }: { src: string; alt: string; devic
   if (deviceType === 'mobile') {
     return (
       <div className="relative h-full max-h-full flex items-center justify-center">
-        <div className="relative h-full max-h-[600px] aspect-[9/19] bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-gray-900 rounded-b-2xl z-10" />
-          <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-white">
+        <div className="relative h-full max-h-[600px] aspect-[9/19] bg-text-primary rounded-mockup p-2 shadow-2xl">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-5 bg-text-primary rounded-b-2xl z-dropdown" />
+          <div className="relative w-full h-full rounded-card overflow-hidden bg-background-primary">
             <img src={src} alt={alt} className="w-full h-full object-cover block" />
           </div>
         </div>
@@ -65,12 +65,12 @@ function DeviceFrame({ src, alt, deviceType }: { src: string; alt: string; devic
   }
   return (
     <div className="relative w-full h-full flex flex-col rounded-xl overflow-hidden border border-border-primary bg-background-primary shadow-lg">
-      <div className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-border-primary">
+      <div className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 bg-background-tertiary border-b border-border-primary">
         <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#FF5F57' }} />
         <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#FEBC2E' }} />
         <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#28C840' }} />
       </div>
-      <div className="flex-1 min-h-0 bg-white dark:bg-gray-900">
+      <div className="flex-1 min-h-0 bg-background-primary">
         <img src={src} alt={alt} className="w-full h-full object-contain block" />
       </div>
     </div>
@@ -212,7 +212,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
           fill these in. Sticky bottom Analyze CTA replaces the inline button. */}
       <div className="flex flex-col-reverse lg:flex-row lg:justify-center gap-4 lg:gap-6 items-stretch pb-24 lg:pb-0">
         {/* LEFT: Dropzone / staged previews — matches demo screenshot canvas (880×660) */}
-        <div className="w-full lg:w-[880px] lg:h-[660px] flex-shrink-0 flex flex-col">
+        <div className="w-full lg:flex-1 lg:min-w-0 lg:max-w-[880px] lg:h-[660px] flex flex-col">
           {hasImages ? (
             <div className="flex-1 flex flex-col gap-3">
               {/* Hero carousel — active image fills the canvas inside a device frame */}
@@ -233,18 +233,18 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                     <button
                       onClick={() => setActiveIndex((i) => (i - 1 + stagedImages.length) % stagedImages.length)}
                       aria-label="Previous screenshot"
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-dropdown"
                     >
                       <ChevronLeftIcon className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => setActiveIndex((i) => (i + 1) % stagedImages.length)}
                       aria-label="Next screenshot"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/60 hover:bg-black/80 text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-dropdown"
                     >
                       <ChevronRightIcon className="w-5 h-5" />
                     </button>
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-black/60 text-white text-xs rounded-full z-10">
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-black/60 text-white text-xs rounded-full z-dropdown">
                       {activeIndex + 1} / {stagedImages.length}
                     </div>
                   </>
@@ -253,7 +253,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
                 <button
                   onClick={() => removeImage(activeIndex)}
                   aria-label="Remove this screenshot"
-                  className="absolute top-3 right-3 w-8 h-8 bg-black/60 hover:bg-status-error text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-10"
+                  className="absolute top-3 right-3 w-8 h-8 bg-black/60 hover:bg-status-error text-white rounded-full flex items-center justify-center transition-colors cursor-pointer z-dropdown"
                 >
                   <XMarkIcon className="w-4 h-4" />
                 </button>
@@ -297,7 +297,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
               )}
 
               {limitMessage && (
-                <p className="text-sm text-amber-600 dark:text-amber-400 animate-fade-in text-center">
+                <p className="text-sm text-text-secondary animate-fade-in text-center">
                   Maximum 4 screenshots reached. Remove one to add another.
                 </p>
               )}
@@ -366,7 +366,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         </div>
 
         {/* RIGHT: floating cards — Progress stepper advances as the user acts. */}
-        <aside className="w-full lg:w-[360px] flex-shrink-0 flex flex-col gap-3 text-left">
+        <aside className="w-full lg:w-[320px] xl:w-[360px] flex-shrink-0 flex flex-col gap-3 text-left">
           <div className="mb-0.5">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">Audit your design</h2>
             <p className="text-text-secondary text-sm mt-1">
@@ -500,7 +500,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
             <button
               onClick={() => canAnalyze && onAnalyze(stagedImages)}
               disabled={!canAnalyze}
-              className="w-full inline-flex items-center justify-center px-6 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
+              className="w-full inline-flex items-center justify-center px-6 py-3 bg-accent-primary text-text-on-accent rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
             >
               {hasImages
                 ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`
@@ -512,14 +512,14 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
 
       {/* Mobile sticky Analyze bar — replaces the inline Analyze button on small
           screens so the action is always thumb-reachable. */}
-      <div className="lg:hidden fixed inset-x-0 bottom-0 z-30 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
+      <div className="lg:hidden fixed inset-x-0 bottom-0 z-overlay px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background-primary via-background-primary to-background-primary/0">
         {!canAnalyze && (
           <p className="mb-2 text-xs text-text-tertiary text-center">Add a screenshot to analyze.</p>
         )}
         <button
           onClick={() => canAnalyze && onAnalyze(stagedImages)}
           disabled={!canAnalyze}
-          className="w-full inline-flex items-center justify-center px-6 py-3.5 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base shadow-lg active:scale-95 transition-transform cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
+          className="w-full inline-flex items-center justify-center px-6 py-3.5 bg-accent-primary text-text-on-accent rounded-full font-semibold text-base shadow-lg active:scale-95 transition-transform cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
         >
           {hasImages
             ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`

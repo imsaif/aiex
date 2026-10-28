@@ -1,5 +1,7 @@
 'use client';
 
+import { AuditToolbar } from './AuditToolbar';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
@@ -43,12 +45,20 @@ interface AuditClientProps {
   initialStep?: AuditStep;
   /** Render the SocialProof block under the demo. Default true. */
   showSocialProof?: boolean;
+  /**
+   * 'page' (default): the homepage look, sections on a dotted ground.
+   * 'console': inside the console shell on /audit, with a tool bar and no
+   * dotted ground (2026-10-28).
+   */
+  layout?: 'page' | 'console';
 }
 
 export default function AuditClient({
   initialStep = 'demo',
   showSocialProof = true,
+  layout = 'page',
 }: AuditClientProps = {}) {
+  const inConsole = layout === 'console';
   // Multi-step flow state — landing on the demo result, then upload, then real results
   const [step, setStep] = useState<AuditStep>(initialStep);
   const [productType, setProductType] = useState<ProductType | null>(null);
@@ -361,8 +371,15 @@ export default function AuditClient({
       )}
 
       {isIntakeFlow && (
-        <section className="pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern">
+        <section
+          className={
+            inConsole
+              ? 'pt-loose pb-roomy'
+              : 'pt-4 sm:pt-6 md:pt-8 pb-8 sm:pb-12 md:pb-16 bg-background-console bg-dot-pattern'
+          }
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            {inConsole && <AuditToolbar phase="upload" />}
             {/* Back. Two different meanings depending on how the user got here,
                 and conflating them was a live bug: the demo-state reset below
                 was rendered unconditionally, so on /audit (where nobody passed
@@ -375,7 +392,7 @@ export default function AuditClient({
                 router.back() handles every entry point without threading a
                 ?from= param around; the fallback covers direct links and
                 bookmarks, where there is no same-origin history to return to. */}
-            <div className="mb-4 sm:mb-6">
+            {!inConsole && <div className="mb-4 sm:mb-6">
               <button
                 type="button"
                 onClick={() => {
@@ -417,7 +434,7 @@ export default function AuditClient({
                 </svg>
                 Back
               </button>
-            </div>
+            </div>}
 
             {showIntakeBanner && (
               <div className="mb-6 max-w-lg mx-auto">
@@ -442,8 +459,28 @@ export default function AuditClient({
       )}
 
       {isResultsView && (
-        <section className="bg-[#F0F1F5] dark:bg-[#162036] bg-dot-pattern">
+        <section className={inConsole ? 'pt-loose' : 'bg-background-console bg-dot-pattern'}>
+          {inConsole && (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+              <AuditToolbar
+                phase={isAnalyzing ? 'analyse' : 'results'}
+                actions={
+                  !isAnalyzing && (
+                    <button
+                      type="button"
+                      onClick={handleClear}
+                      className="inline-flex items-center gap-1.5 px-default py-tight rounded-pill border border-border-primary bg-background-primary text-sm font-medium text-text-primary hover:bg-background-secondary transition-colors"
+                    >
+                      <ArrowPathIcon className="w-4 h-4" aria-hidden />
+                      Run another audit
+                    </button>
+                  )
+                }
+              />
+            </div>
+          )}
           <FullPageResults
+            inConsole={inConsole}
             results={analysisResults}
             onNewAudit={handleClear}
             isAnalyzing={isAnalyzing}
