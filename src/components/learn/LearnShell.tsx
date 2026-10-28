@@ -254,7 +254,10 @@ export default function LearnShell({
               any open course group survive a collapse and expand.
               The right gutter keeps two-line lesson titles from running under
               the sticky toggle, which sits over this column. */}
-          <div className={collapsed ? 'lg:hidden' : 'lg:pr-4'}>{sidebar}</div>
+          {/* Full column height, so the rail's sticky nav has room to stay
+              pinned. Sized to its content, the wrapper ended where the nav did
+              and the rail scrolled away with the page (fixed 2026-10-28). */}
+          <div className={collapsed ? 'lg:hidden' : 'lg:h-full lg:pr-4'}>{sidebar}</div>
         </div>
 
         <div className="min-w-0 bg-background-primary px-6 lg:px-10">

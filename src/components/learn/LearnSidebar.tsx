@@ -363,7 +363,9 @@ export default async function LearnSidebar({
         <div className="mt-snug space-y-roomy">
         {groupedCourses().map((group) => (
         <div key={group.label}>
-        <p className="px-3 pb-tight type-caption font-medium text-text-secondary">{group.label}</p>
+        {/* Mono eyebrow, the same voice as the course numbers on /guides, so a
+            group name reads as a label and not as one more course. */}
+        <p className="px-3 pb-tight type-eyebrow font-mono font-normal uppercase text-text-secondary">{group.label}</p>
         <ul className="space-y-1.5">
           {group.courses.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
