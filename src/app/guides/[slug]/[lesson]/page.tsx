@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getGuideBySlug } from '@/data/guides';
+import { LessonDoneMarker } from '@/components/learn/CourseProgress';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -412,6 +413,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </section>
               )}
 
+                  {/* End of the lesson: reaching it marks the lesson finished (reader's browser only). */}
+                  <LessonDoneMarker course={courseSlug} lesson={lessonSlug} total={guide.lessons?.length ?? 0} />
                 </article>
 
                 <aside className="hidden xl:block">

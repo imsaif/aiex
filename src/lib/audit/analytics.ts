@@ -139,6 +139,14 @@ export const AUDIT_EVENT_NAMES = [
   // fired by PageViewTracker. Every event below also carries the visit's
   // source (channel, ref) and an anonymous visitor id; see beaconEvent.
   'page_viewed',
+  // Course progress (2026-10-28), kept in the reader's browser. Together these
+  // answer whether progress is used enough to justify sign-in: a lesson
+  // finished (properties: course, lesson, done, total), the rail showing at
+  // least one tick, the Saved page's Continue card shown, and clicked.
+  'course_lesson_completed',
+  'course_progress_seen',
+  'course_continue_shown',
+  'course_continue_clicked',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];

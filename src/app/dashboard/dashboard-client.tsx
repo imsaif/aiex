@@ -40,7 +40,14 @@ export interface CourseSummary {
   relatedPatterns: string[];
 }
 
-export default function DashboardClient({ courses = [] }: { courses?: CourseSummary[] }) {
+export default function DashboardClient({
+  courses = [],
+  continueSlot,
+}: {
+  courses?: CourseSummary[];
+  /** 'Continue where you left off' card; renders nothing until the reader has progress. */
+  continueSlot?: React.ReactNode;
+}) {
   const { savedSlugs, add: addPattern, remove: removePattern, clear: clearPatterns, isLoading } = useHandoffKit();
   const { savedAudits, save: saveAudit, remove: removeAudit, isLoading: auditsLoading } = useSavedAudits();
   const [packError, setPackError] = useState<string | null>(null);
@@ -243,11 +250,12 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
       <p className="text-lg text-text-secondary max-w-2xl">
         Patterns become skills. Audits are fixes for your product. Pick what to include.
       </p>
+      {continueSlot && <div className="mt-loose">{continueSlot}</div>}
     </div>
   );
 
   return (
-    <section className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <section className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
       {isLoading || auditsLoading ? (
         <>
           {header}

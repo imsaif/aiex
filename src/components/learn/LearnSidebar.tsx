@@ -15,6 +15,7 @@ import { getNewsletters } from '@/data/newsletters';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import { getModuleTitle } from '@/lib/guides/modules';
 import RailRevealCurrent from './RailRevealCurrent';
+import { LessonDoneTick, CourseProgressCount } from './CourseProgress';
 import { CourseToolMark } from '@/components/skills/AgentMarks';
 
 /**
@@ -173,11 +174,14 @@ function RailLink({
   current,
   external,
   Icon,
+  trailing,
 }: {
   href: string;
   children: React.ReactNode;
   current?: boolean;
   external?: boolean;
+  /** Small marker after the label, e.g. a finished-lesson tick. */
+  trailing?: React.ReactNode;
   Icon?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }) {
   // "You are here" is a location, not a button. It used to be a solid ink fill,
@@ -223,6 +227,7 @@ function RailLink({
     >
       {Icon && <Icon className="h-4 w-4 shrink-0" aria-hidden />}
       <span className="min-w-0 flex-1">{children}</span>
+      {trailing}
     </Link>
   );
 }
@@ -277,6 +282,7 @@ function CourseLessons({
                   <RailLink
                     href={lesson.url}
                     current={slug === currentLessonSlug}
+                    trailing={<LessonDoneTick course={guideSlug} lesson={slug} />}
                   >
                     {lesson.title}
                   </RailLink>
@@ -382,6 +388,7 @@ export default async function LearnSidebar({
                     <span className="min-w-0 flex-1">
                       {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
                     </span>
+                    <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                   </Link>
                 </li>
               );
@@ -422,6 +429,7 @@ export default async function LearnSidebar({
                     <span className="min-w-0 flex-1">
                       {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
                     </span>
+                    <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                   </summary>
 
                   <CourseLessons
