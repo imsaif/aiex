@@ -59,7 +59,7 @@ export const courseStudies: CourseStudy[] = [
       {
         type: 'text',
         content:
-          'The tool was run on 41 real screenshots, deliberately including messy ones: pricing pages, login screens, legal text, dashboards with no AI in them at all. I gave each audit one verdict, pass or fail, against a single question: **would you be happy if a real user got this audit?** Every fail got one plain line naming the first thing wrong. No categories yet.\n\nA second reviewer judged the same 41 independently. The two of us agreed on 28, and I made the final call on the rest. Each caught a different kind of mistake, which is the point of a second opinion: it shows where your own standard is vague.',
+          'The tool was run on 41 real screenshots, deliberately including messy ones: pricing pages, login screens, legal text, dashboards with no AI in them at all. I gave each audit one verdict, pass or fail, against a single question: **would you be happy if a real user got this audit?** Every fail got one plain line naming the first thing wrong. No categories yet.\n\nAn AI, acting as a second reviewer, judged the same 41 independently. We agreed on 28, and I made the final call on the rest. Each of us caught a different kind of mistake, which is the point of a second opinion: it shows where your own standard is vague.',
       },
       {
         type: 'image',
