@@ -76,9 +76,11 @@ export function CourseProgressCount({ course, total }: { course: string; total: 
   }, [course, done, total]);
   if (done === 0) return null;
   return (
-    <span className="block type-caption leading-snug tabular-nums text-text-secondary">
-      {done} of {total} done
-      <span className="sr-only"> lessons finished</span>
+    <span className="mt-1 flex">
+      <span className="rounded-pill bg-background-primary px-tight py-px type-caption leading-snug tabular-nums text-text-secondary shadow-card">
+        {done} of {total} done
+        <span className="sr-only"> lessons finished</span>
+      </span>
     </span>
   );
 }
