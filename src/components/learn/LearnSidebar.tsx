@@ -109,7 +109,7 @@ const COURSE_GROUPS: Array<{ label: string; slugs: string[] }> = [
 
 /** Rail-only names where the page title is tuned for search, not for a 240px list. */
 const RAIL_LABEL_BY_SLUG: Record<string, string> = {
-  'conversational-ui-guide': 'Conversational UI',
+  'conversational-ui-guide': 'Building Conversational UI',
 };
 
 function groupedCourses(): Array<{ label: string; courses: typeof guides }> {
