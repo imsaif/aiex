@@ -16,6 +16,7 @@ import { getNewsletters } from '@/data/newsletters';
 import { getLessonsForCourse } from '@/lib/guides/lesson-urls';
 import { getModuleTitle } from '@/lib/guides/modules';
 import RailRevealCurrent from './RailRevealCurrent';
+import { LessonDoneTick, CourseProgressCount } from './CourseProgress';
 import { CourseToolMark } from '@/components/skills/AgentMarks';
 
 /**
@@ -86,6 +87,49 @@ async function getLatestIssues(): Promise<Array<{ slug: string; title: string }>
 }
 
 /**
+ * Courses grouped by what the reader is doing (2026-10-28). Ten courses in one
+ * flat list read as "everywhere": tool courses, Claude's own apps and the
+ * product-design courses were interleaved in publish order. Any course not
+ * listed here still shows, under "Other", so a new course can't vanish from
+ * the rail before someone files it.
+ */
+const COURSE_GROUPS: Array<{ label: string; slugs: string[] }> = [
+  // First: the site's own subject. Tool courses follow.
+  {
+    label: 'Designing AI products',
+    slugs: ['conversational-ui-guide', 'ai-evals-for-designers', 'ai-ux-skills-guide'],
+  },
+  {
+    label: 'AI coding tools',
+    slugs: ['claude-code-learning-path', 'cursor-learning-path', 'github-copilot-learning-path', 'github-learning-path'],
+  },
+  {
+    // Since Sept 2026 these three live inside Claude chat rather than as
+    // separate apps, so they sit together.
+    label: 'Inside Claude',
+    slugs: ['claude-design-learning-path', 'claude-docs-guide', 'claude-slides-guide'],
+  },
+];
+
+/** Rail-only names where the page title is tuned for search, not for a 240px list. */
+const RAIL_LABEL_BY_SLUG: Record<string, string> = {
+  'conversational-ui-guide': 'Building Conversational UI',
+};
+
+function groupedCourses(): Array<{ label: string; courses: typeof guides }> {
+  const placed = new Set(COURSE_GROUPS.flatMap((g) => g.slugs));
+  const out = COURSE_GROUPS.map((g) => ({
+    label: g.label,
+    courses: g.slugs
+      .map((slug) => guides.find((guide) => guide.slug === slug))
+      .filter((guide): guide is (typeof guides)[number] => Boolean(guide)),
+  })).filter((g) => g.courses.length > 0);
+  const other = guides.filter((guide) => !placed.has(guide.slug));
+  if (other.length) out.push({ label: 'Other', courses: other });
+  return out;
+}
+
+/**
  * Short label for the rail. Six of the seven course titles end in some form of
  * "Course for Designers", so at 240px they all wrap to two lines and the rail
  * loses its rhythm. The group heading already says "Courses", so the suffix is
@@ -135,11 +179,14 @@ function RailLink({
   current,
   external,
   Icon,
+  trailing,
 }: {
   href: string;
   children: React.ReactNode;
   current?: boolean;
   external?: boolean;
+  /** Small marker after the label, e.g. a finished-lesson tick. */
+  trailing?: React.ReactNode;
   Icon?: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 }) {
   // "You are here" is a location, not a button. It used to be a solid ink fill,
@@ -185,6 +232,7 @@ function RailLink({
     >
       {Icon && <Icon className="h-4 w-4 shrink-0" aria-hidden />}
       <span className="min-w-0 flex-1">{children}</span>
+      {trailing}
     </Link>
   );
 }
@@ -239,6 +287,7 @@ function CourseLessons({
                   <RailLink
                     href={lesson.url}
                     current={slug === currentLessonSlug}
+                    trailing={<LessonDoneTick course={guideSlug} lesson={slug} />}
                   >
                     {lesson.title}
                   </RailLink>
@@ -259,7 +308,8 @@ export default async function LearnSidebar({
   currentIsOverview,
 }: {
   /** Which Explore row to mark as the current page. */
-  active?: 'map' | 'patterns' | 'skills' | 'audit';
+  /** 'none' on pages that are not an Explore row, such as Saved. */
+  active?: 'map' | 'patterns' | 'skills' | 'audit' | 'none';
   /** Set on a course or lesson page so that course opens in the rail. */
   currentGuideSlug?: string;
   currentLessonSlug?: string;
@@ -268,6 +318,7 @@ export default async function LearnSidebar({
   const issues = await getLatestIssues();
   // A course page is inside the map's area but is not the map itself.
   const activeHref =
+    active === 'none' ? null :
     active === 'patterns'
       ? '/patterns'
       : active === 'skills'
@@ -315,8 +366,14 @@ export default async function LearnSidebar({
 
       <div className="mb-9">
         <GroupLabel Icon={AcademicCapIcon}>Courses</GroupLabel>
-        <ul className="space-y-1">
-          {guides.map((guide) => {
+        <div className="mt-snug space-y-roomy">
+        {groupedCourses().map((group) => (
+        <div key={group.label}>
+        {/* Mono eyebrow, the same voice as the course numbers on /guides, so a
+            group name reads as a label and not as one more course. */}
+        <p className="px-3 pb-tight type-eyebrow font-mono font-normal uppercase text-text-secondary">{group.label}</p>
+        <ul className="space-y-1.5">
+          {group.courses.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
 
             // Only the course you are in carries its lessons. Every other
@@ -340,7 +397,8 @@ export default async function LearnSidebar({
                     </span>
                     <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
-                      {railLabel(guide.title)}
+                      {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
+                      <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                     </span>
                   </Link>
                 </li>
@@ -380,7 +438,8 @@ export default async function LearnSidebar({
                         so the column stays even. */}
                     <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
-                      {railLabel(guide.title)}
+                      {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
+                      <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                     </span>
                   </summary>
 
@@ -396,6 +455,9 @@ export default async function LearnSidebar({
             );
           })}
         </ul>
+        </div>
+        ))}
+        </div>
       </div>
 
       <div className="mb-9">

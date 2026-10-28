@@ -40,7 +40,14 @@ export interface CourseSummary {
   relatedPatterns: string[];
 }
 
-export default function DashboardClient({ courses = [] }: { courses?: CourseSummary[] }) {
+export default function DashboardClient({
+  courses = [],
+  continueSlot,
+}: {
+  courses?: CourseSummary[];
+  /** 'Continue where you left off' card; renders nothing until the reader has progress. */
+  continueSlot?: React.ReactNode;
+}) {
   const { savedSlugs, add: addPattern, remove: removePattern, clear: clearPatterns, isLoading } = useHandoffKit();
   const { savedAudits, save: saveAudit, remove: removeAudit, isLoading: auditsLoading } = useSavedAudits();
   const [packError, setPackError] = useState<string | null>(null);
@@ -231,23 +238,34 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
     }
   };
 
+  // The page holds two things since it moved into the console (2026-10-28):
+  // course progress and the pack. The page is named for the nav item that
+  // opens it, and each of the two gets its own heading below.
+  const pageHeader = (
+    <div className="mb-roomy">
+      <h1 className="type-h1 text-text-primary">Saved</h1>
+      <p className="mt-tight text-lg text-text-secondary max-w-2xl">
+        Your course progress, and the patterns and audits you have collected.
+      </p>
+      {continueSlot && <div className="mt-loose">{continueSlot}</div>}
+    </div>
+  );
+
+  // Deliberately short. The right rail already explains what the download
+  // contains and how it arrives, so repeating it here just doubles the
+  // reading before anyone reaches a control.
   const header = (
-    <div className="mb-8">
-      <p className="type-eyebrow text-accent-primary mb-2">Your dashboard</p>
-      <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-text-primary mb-3">
-        Your pack
-      </h1>
-      {/* Deliberately short. The right rail already explains what the download
-          contains and how it arrives, so repeating it here just doubles the
-          reading before anyone reaches a control. */}
-      <p className="text-lg text-text-secondary max-w-2xl">
+    <div className="mb-loose">
+      <h2 className="type-h3 text-text-primary">Your pack</h2>
+      <p className="mt-tight text-sm text-text-secondary max-w-2xl">
         Patterns become skills. Audits are fixes for your product. Pick what to include.
       </p>
     </div>
   );
 
   return (
-    <section className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+    <section className="max-w-[88rem] mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
+      {pageHeader}
       {isLoading || auditsLoading ? (
         <>
           {header}
@@ -261,15 +279,15 @@ export default function DashboardClient({ courses = [] }: { courses?: CourseSumm
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent-subtle">
             <BookmarkIcon className="h-7 w-7 text-accent-primary" aria-hidden="true" />
           </div>
-          <h2 className="text-2xl font-semibold text-text-primary mb-2">
+          <h3 className="text-2xl font-semibold text-text-primary mb-2">
             Nothing saved yet
-          </h2>
+          </h3>
           <p className="text-base text-text-secondary max-w-md mx-auto mb-6">
             Save a pattern from the library, or save an audit. Whatever you collect lands here.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
-              href="/"
+              href="/audit"
               className="inline-flex items-center gap-2 rounded-pill bg-accent-primary px-5 py-2.5 text-base font-medium text-white hover:bg-accent-hover transition-colors"
             >
               Run an audit

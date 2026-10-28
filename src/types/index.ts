@@ -282,7 +282,7 @@ export interface Course {
 /**
  * Guide tool types for organizing guides
  */
-export type GuideTool = 'Claude Code' | 'Claude Design' | 'Claude Docs' | 'Claude Slides' | 'Cursor' | 'GitHub' | 'GitHub Copilot' | 'Replit AI' | 'V0 by Vercel' | 'Figma' | 'Conversational UI' | 'Other';
+export type GuideTool = 'Claude Code' | 'Claude Design' | 'Claude Docs' | 'Claude Slides' | 'Cursor' | 'GitHub' | 'GitHub Copilot' | 'Replit AI' | 'V0 by Vercel' | 'Figma' | 'Conversational UI' | 'AI Evals' | 'Other';
 export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 
 /**
@@ -291,6 +291,12 @@ export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 export interface Guide {
   // Core identification
   id: string;
+  /**
+   * Course to continue with after this one's last lesson. Fills the empty
+   * "Up next" slot on the final lesson. Adds a link only; titles, slugs and
+   * metadata are untouched.
+   */
+  nextCourseSlug?: string;
   title: string;
   slug: string;
   description: string;

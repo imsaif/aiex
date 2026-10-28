@@ -8,6 +8,10 @@ html {
   -webkit-overflow-scrolling: touch;
   /* Prevent navbar jump when scrollbar appears/disappears */
   scrollbar-gutter: stable;
+  /* Thin and quiet where the OS always shows scrollbars (e.g. macOS with a
+     mouse). Still visible and draggable; only its weight is reduced. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-secondary) transparent;
 }
 
 html,

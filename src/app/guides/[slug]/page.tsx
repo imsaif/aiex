@@ -53,6 +53,10 @@ const TITLE_STEM_OVERRIDES: Record<string, string> = {
   'conversational-ui-guide': 'Build a Conversational Interface',
 };
 
+const TITLE_LESSON_COUNT_PINS: Record<string, number> = {
+  'conversational-ui-guide': 11,
+};
+
 export async function generateMetadata({ params }: GuidePageProps): Promise<Metadata> {
   const { slug } = await params;
   const guide = getGuideBySlug(slug);
@@ -70,7 +74,11 @@ export async function generateMetadata({ params }: GuidePageProps): Promise<Meta
   // Keep titles inside Google's ~60-65 char display window. Previously this
   // template produced 95+ char double-suffixed titles (audit #4).
   // `title.absolute` skips the layout's "%s | AI Design Patterns" template.
-  const lessonCount = guide.lessons?.length ?? 0;
+  // The count in the title is pinned where a course's ranking title predates
+  // a later lesson. Conversational UI ranks on "(11 Lessons)"; lesson 12
+  // (2026-10-28) is a short bridge to the evals course, and changing a title
+  // Google already ranks was judged not worth one more lesson in the count.
+  const lessonCount = TITLE_LESSON_COUNT_PINS[slug] ?? guide.lessons?.length ?? 0;
   const titleSuffix = lessonCount > 0 ? ` (${lessonCount} Lessons)` : '';
   const stem = TITLE_STEM_OVERRIDES[slug] ?? `${guide.tool} for Designers`;
   const absoluteTitle = `${stem} | Free Course${titleSuffix}`;

@@ -5988,6 +5988,9 @@ export const guides: Guide[] = [
     excerpt:
       'A practical guide to building conversational UIs: 11 lessons covering chat interfaces, voice assistants, streaming responses, conversation context, error recovery, agentic AI patterns, and accessibility. Includes code examples in React and design patterns used by ChatGPT, Claude, Slack, and Siri.',
     tool: 'Conversational UI' as const,
+    // After building the interface, check its answers: the evals course is the
+    // follow-on. Added 2026-10-28 as a link only; nothing SEO-facing changed.
+    nextCourseSlug: 'ai-evals-for-designers',
     useCase: 'Learning Path',
     skillLevel: 'Intermediate' as const,
     designDomain: 'UX Design',
@@ -7427,6 +7430,100 @@ export const guides: Guide[] = [
                 source: 'Medium',
                 description:
                   'Why ambient AI beats destination AI for most agentic tasks: the context-switching tax and the economics of interaction cost.',
+              },
+            ],
+          },
+        ],
+      },
+      // Lesson 12 (2026-10-28): a short bridge from building the interface to
+      // checking its answers, pointing at the AI Evals for Designers course.
+      // The course title stays pinned at "(11 Lessons)" for SEO; see
+      // TITLE_LESSON_COUNT_PINS in src/app/guides/[slug]/page.tsx.
+      {
+        id: 'lesson-12',
+        title: "Next Step: Check Your Chat's Answers With Evals",
+        duration: 3,
+        order: 12,
+        module: 'polish',
+        sections: [
+          {
+            type: 'intro',
+            content: 'The interface is built. The question that matters after launch is whether the answers inside it are any good. This lesson introduces evals, the method teams use to check AI answers against a written standard, and points to a full course on running one.',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Why a chat interface needs more than a design review',
+          },
+          {
+            type: 'text',
+            content: 'Every lesson so far designs the container: the bubbles, the streaming, the errors, the controls. What appears inside it is generated fresh every time. Ask the same question twice and the wording, the order and sometimes the conclusion can change. Ask something nobody planned for and the AI will still answer confidently.\n\nA design review checks a screen once. The answers in a chat need checking again and again, against a standard someone has written down. That repeatable check is an **eval**.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What an eval is',
+          },
+          {
+            type: 'text',
+            content: 'An eval has two parts: a written standard for what a good answer is, in plain words, and a repeatable way to check real answers against it. With both in place you can count how often the chat meets the standard, and see whether a change to the prompt or the model made it better or worse.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Collect real conversations',
+                content: [
+                  'Start with 30 to 50 real or realistic chats, including awkward ones: off-topic requests, frustrated users, questions the product cannot answer.',
+                ],
+              },
+              {
+                number: 2,
+                title: 'Read each answer and mark it',
+                content: [
+                  'Pass or fail, plus one line in plain words on the first thing that is wrong. No categories yet.',
+                ],
+              },
+              {
+                number: 3,
+                title: 'Group the notes and count',
+                content: [
+                  'Cluster the notes the way you would affinity-map research findings. The biggest group is the first thing to fix, and the first rule to write down.',
+                ],
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'The patterns in this course become checks',
+            content: 'Several earlier lessons turn into yes or no rules an eval can test on every release: the AI says what it cannot do and offers an alternative (Lesson 7), voice replies stay to two or three sentences (Lesson 8), and the AI asks before any irreversible action (Lesson 11).',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'From a real study',
+            content: 'An eval of an AI audit tool found it kept asking for confidence scores on ordinary chat replies, where nothing was being researched and certainty did not change what the user did next. Once that was written down as a rule and the tool was told when confidence actually matters, the wrong flags went from 8 to 0. Not every chat reply needs a confidence indicator; an eval is how you find out which ones do.',
+          },
+          {
+            type: 'further-reading',
+            title: 'Keep going',
+            links: [
+              {
+                title: 'AI Evals for Designers',
+                url: '/guides/ai-evals-for-designers',
+                source: 'aiuxdesign.guide course',
+                description:
+                  'Five lessons, from what an eval is to handing your standard to an AI reviewer and checking the fix worked, built on one real study.',
+              },
+              {
+                title: 'Evals FAQ by Hamel Husain and Shreya Shankar',
+                url: 'https://hamel.dev/blog/posts/evals-faq/',
+                source: 'hamel.dev',
+                description:
+                  'The method the course follows, answered question by question.',
               },
             ],
           },
@@ -10375,6 +10472,830 @@ Audience: Early-stage VCs in the design-tools space.`,
               "Know to verify fonts on your own brand before promising anything"
             ],
             "message": "Course complete. The Claude Docs course covers the writing half of this decision."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ai-evals-course",
+    "slug": "ai-evals-for-designers",
+    "title": "AI Evals for Designers",
+    "description": "An eval is a written standard for AI output and a repeatable way to check against it. Learn the method from zero, in design research terms, through one real study of an AI audit tool.",
+    "excerpt": "A 5-lesson course for designers and PMs who have never run an eval. It follows one real study from start to finish: 41 screenshots, two reviewers, six failure types, an AI reviewer checked against a person, and two fixes measured on fresh examples. Every engineering term is introduced with what engineers call it.",
+    "tool": "AI Evals",
+    "useCase": "Learning Path",
+    "skillLevel": "Beginner",
+    "designDomain": "Product Design",
+    "readTime": 25,
+    "author": "Design Team",
+    "publishedDate": "2026-10-28",
+    "lastUpdatedDate": "2026-10-28",
+    "status": "ready",
+    "thumbnail": "/images/og/og-pattern-default.png",
+    "tags": [
+      "ai-evals",
+      "evaluation",
+      "llm-as-judge",
+      "error-analysis",
+      "design-research",
+      "ai-quality",
+      "learning-path"
+    ],
+    "relatedPatterns": [
+      "confidence-visualization",
+      "feedback-loops",
+      "human-in-the-loop",
+      "trust-calibration"
+    ],
+    "lessonCount": 5,
+    "content": "",
+    "lessons": [
+      {
+        "id": "lesson-1",
+        "title": "What an Eval Is, and Why It Matters",
+        "duration": 5,
+        "order": 1,
+        "module": "evals-why",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "An AI feature can answer the same request differently every time, so the question \"is it good?\" needs a written standard and a way to check against it."
+          },
+          {
+            "type": "text",
+            "content": "Most of what designers ship behaves the same way every time. A button submits the form. A filter hides the rows that do not match. You can test it once, watch it work, and trust it the next day.\n\nAn AI feature does not work like that. Give it the same input twice and the wording, the order and sometimes the conclusion can change. Give it an input nobody planned for and it will still produce a confident answer. You cannot click through it once and call it done, because the next answer is a new answer."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "So how do you know if it is any good?"
+          },
+          {
+            "type": "text",
+            "content": "Usually someone tries a few examples, likes what they see, and the feature ships. That works until a user hits a case nobody tried. The team then argues about whether the answer was bad, because nobody wrote down what good looks like.\n\nAn **eval** fixes that. It has two parts:\n\n1. A written standard for what a good answer is, in plain words.\n2. A repeatable way to check real answers against that standard, so you can count how often the feature meets it and see whether a change made it better or worse."
+          },
+          {
+            "type": "text",
+            "content": "If that sounds like design research, it is. You recruit examples, watch what happens, take notes, cluster them, and write down what you learned. The only new part comes at the end: you can hand your written standard to an AI that applies it to hundreds of answers, and then check that it applies it the way you would."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "Checking AI output against a standard is an **evaluation**, almost always shortened to **eval** or **evals**. Hamel Husain and Shreya Shankar, whose evals FAQ this course draws on, describe evals as tests of whether the system does what you want. Model benchmarks with names like MMLU are a different thing: they compare models in general, and say little about your product."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The study this course follows"
+          },
+          {
+            "type": "text",
+            "content": "Every example in this course comes from one real study of the aiuxdesign.guide audit tool. You upload a screenshot of an AI product, and the tool returns a score, the design patterns that apply, and a list of **gaps**: things it says are missing or done badly, each with a fix.\n\nBefore the study, the tool already had a check. It ran three hand-picked chat screenshots, scored each answer 1 to 5 on five qualities chosen in advance, and used an AI to give those scores. Nobody had ever compared that AI's scores with a person's judgement."
+          },
+          {
+            "type": "table",
+            "rows": [
+              {
+                "label": "Before the study",
+                "content": "3 screenshots, all chat and agent screens. Five 1-to-5 scores chosen up front. An AI scorer that had never been checked against a person."
+              },
+              {
+                "label": "After the study",
+                "content": "41 screenshots matched to what real users upload. A pass or fail verdict from a person on every audit. Six named types of failure with counts. An AI reviewer checked against the person on examples it had never seen."
+              },
+              {
+                "label": "What it found",
+                "content": "On the first careful review, 12 of 41 audits failed. Once each piece of advice was checked against a written rule, 94 of 116 gaps turned out to be guesses about things a single screenshot cannot show."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "content": "Those numbers are small on purpose. A study of 41 examples is enough to learn the method and find the biggest problems. The whole study cost about $30 in AI usage. The hard part was judgement, which is the part designers and PMs are already trained for."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Start by checking what your product keeps"
+          },
+          {
+            "type": "text",
+            "content": "You can only review answers that were saved. When the study began, the audit tool stored the AI's one-paragraph description of each screen, the product type and the score. It did not store the screenshot or the advice the person actually read. So there was no way to look back at real audits and judge them, and the study had to generate fresh ones.\n\nAsk for the input and the full answer to be saved at the spec stage, the same way you would ask for analytics events. Screenshots and chat logs can contain personal data, so agree with your team what is kept, for how long, and who can see it."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "Saving what goes in and what comes out is **logging** or **tracing**. A **trace** is the saved record of one AI interaction: the input, the output, and the steps in between."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Test the whole journey"
+          },
+          {
+            "type": "text",
+            "content": "The old check handed the audit a product type picked by hand. Real users never get that. In the live product, the tool first guesses what kind of product the screenshot shows, and that guess decides which patterns it checks.\n\nWhen the study ran every screenshot through the real steps, the guess was wrong on the very first example: a Claude Code agent session was labelled a \"reports and documents\" product. It also changed between runs. A Perplexity screen with citations was \"search and discovery\" on one run and \"chat interface\" on the next, so the same upload could get different advice on different days. A check that skips a step your users go through is testing a version of the product nobody uses."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "Testing every step the user goes through is **end-to-end evaluation**. Running the same input more than once to see if the answer changes tests **consistency**, sometimes called **non-determinism** when the answers differ."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The loop you will learn"
+          },
+          {
+            "type": "text",
+            "content": "The rest of the course walks through eleven steps in four phases: look at real answers, sort what you find, automate the check, and fix the product. Most of the steps are judgement work a designer or PM can own. Engineers are needed to save the data, run the product at scale, wire up the AI reviewer and ship the fix."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/ai-evals-for-designers/eval-loop.webp",
+            "alt": "A diagram of eleven numbered steps in four phases. Look: save what the AI said, recruit your examples, run the real journey, review each answer pass or fail with a note, second reviewer then you make the call. Sort: sticky notes then an affinity map, pick one failure and write the rule down. Automate: judge each piece against the rule, keep half the examples back, brief an AI reviewer and check it agrees with you. Fix: fix the product, then run it all again, with an arrow looping back to step three. Each step has a box on the right with the engineering term.",
+            "label": "The whole loop. Solid boxes are steps a designer or PM can own; dashed boxes need an engineer. The right column gives the engineering term for each step."
+          },
+          {
+            "type": "completion",
+            "title": "You know what an eval is",
+            "items": [
+              "An eval is a written standard plus a repeatable way to check answers against it",
+              "It uses the same skills as design research",
+              "It starts with saving real inputs and answers, and running the whole journey"
+            ],
+            "message": "Next: choosing examples and designing the screen you review them on."
+          }
+        ]
+      },
+      {
+        "id": "lesson-2",
+        "title": "Your Examples and Your Review Screen",
+        "duration": 4,
+        "order": 2,
+        "module": "evals-look",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Pick your test examples the way you would recruit research participants, then design a review screen that makes judging each answer fast and fair."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Recruit examples like participants"
+          },
+          {
+            "type": "text",
+            "content": "You would not run a usability study with only your happiest customers. A test set deserves the same care. If every example is one the feature handles well, the check can only tell you it works.\n\nThe old audit check had three hand-picked chat screens. Real users mostly upload dashboards and chat threads, according to the site's own admin page. So the study built a set of 41 screenshots from four sources:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "3 screenshots from the old check, kept so the two could be compared",
+              "13 stills from the pattern library",
+              "14 frames taken from screen recordings of real AI products",
+              "11 live pages captured fresh, including pricing, login and legal pages, a government homepage, dashboards and a mobile AI chat"
+            ]
+          },
+          {
+            "type": "text",
+            "content": "Two kinds of example matter more than they look. The first is pages that should get **no** AI advice at all, such as a pricing page or a login form. If the tool invents AI problems there, you want to know. The second is messy captures. Some live pages came back with a cookie banner covering the screen, a welcome pop-up, or a \"Dashboard not found\" message. The study kept them, because real uploads are messy too.\n\nOne trap showed up early. The pattern-library images were chosen to show patterns done well, so a set made only from them leans positive. Mixing sources keeps the set closer to what users actually bring."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "The fixed collection of examples you test against is a **dataset** or **eval set**. Messy and awkward examples are **edge cases**. Examples that should produce nothing, like the pricing page, are **negative cases**."
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "How many to start with",
+            "content": "Hamel Husain and Shreya Shankar's FAQ suggests a minimum setup of 30 minutes reviewing 20 to 50 outputs whenever you make a significant change. That is a good first target. The study used 41."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Design the review screen like any other tool"
+          },
+          {
+            "type": "text",
+            "content": "Reviewing 41 audits by scrolling through raw data is slow and tiring, and tired reviewers make inconsistent calls. So the study built a small review page, and it was designed with the same care as any internal tool:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "**The input and the output side by side.** The screenshot on the left, the audit on the right, laid out the way a user sees it.",
+              "**One question.** \"Would you be happy if a real user got this audit?\"",
+              "**A yes or no answer.** Pass or fail, plus a short note on the first thing that is wrong.",
+              "**One keystroke per action.** P for pass, F for fail, N to write a note, arrow keys to move on.",
+              "**A progress bar and autosave,** so a review can be paused and picked up later without losing anything."
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/ai-evals-for-designers/review-page.webp",
+            "alt": "The study's review page. On the left, a screenshot of a ChatGPT answer about feedback loops. On the right, the audit: a score of 9 of 12, what the AI thinks the product is, what it says is on screen, five patterns it says apply, and the start of its top gaps. At the bottom sits one question, would you be happy if a real user got this audit, with Pass and Fail buttons and a note field.",
+            "label": "The review page from the study: screenshot on the left, the audit as a user would read it on the right, one question and two buttons at the bottom."
+          },
+          {
+            "type": "text",
+            "content": "The FAQ is direct about this part: \"Build a custom annotation tool. This is the single most impactful investment you can make for your AI evaluation workflow.\" Of the whole process, it is the step that looks most like ordinary design work. Show the output in the form the user sees it, keep all the context on one screen, ask one clear question, and make the next item one keystroke away.\n\nYou do not need an engineer for this. The study's page is a single HTML file built with an AI coding tool, and the FAQ notes that tools like these can build a tailored review interface in hours. Lesson 5 covers ready-made tools if you would rather not build one."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "A review screen is an **annotation tool** or **labelling interface**. Marking each answer pass or fail is **annotating** or **labelling**, and the verdicts you produce are **labels**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "What the first review found"
+          },
+          {
+            "type": "text",
+            "content": "The domain expert reviewed all 41 audits with the page: 29 passed and 12 failed. Every failure came with a note in plain words, such as \"all of the gaps here are assumed\". Those notes are the raw material for the next lesson."
+          },
+          {
+            "type": "completion",
+            "title": "You can set up a review",
+            "items": [
+              "Build a test set that mirrors real use, including messy and irrelevant examples",
+              "Design a review screen around one yes or no question",
+              "Write a short note on the first thing wrong with each failure"
+            ],
+            "message": "Next: turning those notes into named problems, and getting a second opinion."
+          }
+        ]
+      },
+      {
+        "id": "lesson-3",
+        "title": "Notes, Clusters and a Second Opinion",
+        "duration": 4,
+        "order": 3,
+        "module": "evals-sort",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Write plain notes first, cluster them the way you would affinity-map research findings, then let a second reviewer show you what you missed."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Sticky notes first, categories later"
+          },
+          {
+            "type": "text",
+            "content": "When you review an answer, write down the first thing that is wrong in plain words. Do not sort the notes into categories yet. Categories chosen in advance make you look for the problems you already expected and skim past the rest.\n\nThe FAQ recommends reviewing at least 30 examples yourself before you let an AI suggest problems, because early suggestions can steer your judgement. It also asks you to note problems that are not the model's fault, such as a missing feature or a confusing layout. Some of those turn out to be design fixes that need no eval at all."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Then cluster them"
+          },
+          {
+            "type": "text",
+            "content": "Once the notes are in, group them the way you would group findings from interviews. Name each group, then count how many failed audits fall into it. Counting matters, because it tells you which problem to work on first.\n\nIn the study, the notes fell into six groups. One audit can sit in more than one group, so the counts add up to more than the number of failed audits."
+          },
+          {
+            "type": "table",
+            "rows": [
+              {
+                "label": "States guesses as findings (7)",
+                "content": "The audit reports a gap it cannot see in one screenshot, such as a missing hover state, what is below the scroll, or whether undo exists, and presents it as fact."
+              },
+              {
+                "label": "Confidence on ordinary chat (7)",
+                "content": "It asks for confidence scores and explanations on normal chat replies, where nothing is being researched and certainty does not change what the user does next."
+              },
+              {
+                "label": "Wrong call on whether AI is there (5)",
+                "content": "It misses real AI, scoring Claude Code and an AI email summary at zero, or invents AI on a government search page and a marketing hero."
+              },
+              {
+                "label": "Audits pictures of a product (4)",
+                "content": "It treats marketing images, a documentation illustration and a near-empty welcome pop-up as a working interface."
+              },
+              {
+                "label": "Misreads the screen (3)",
+                "content": "It quotes text too small to read and calls a parked car \"moving\" on a car dashboard."
+              },
+              {
+                "label": "Fixes without context (1)",
+                "content": "It recommends adding things that may already exist elsewhere in the product, or that would add clutter."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "content": "The biggest group, \"states guesses as findings\", was not on anyone's list before the review started. That is the reason to write notes before choosing categories. The FAQ calls this activity \"the most important activity in evals\"."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "The whole notes-then-groups process is **error analysis**. Writing free-form notes is **open coding**. Clustering them is **axial coding**. The named, counted list of groups is a **failure taxonomy**, and each group is a **failure mode**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Get a second reviewer"
+          },
+          {
+            "type": "text",
+            "content": "One reviewer is a sample of one. The study added a second reviewer: a separate AI model that went through the same 41 audits with the same question and never saw the first reviewer's verdicts. It passed 24 and failed 17.\n\nThe two reviewers agreed on 28 of 41 audits. The interesting part was what each one caught:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "**The domain expert caught judgement problems.** Gaps that were guessed instead of seen, and screenshots that were not a working product at all.",
+              "**The second reviewer caught accuracy problems.** A car dashboard audit that called a parked car \"moving\", two real AI features scored as having no AI, and a government homepage treated as an AI product."
+            ]
+          },
+          {
+            "type": "text",
+            "content": "Both kinds were real failures. A second reviewer is useful mainly because it reads differently from you. A colleague, a researcher or an AI model can play the part, as long as they review without seeing your verdicts first."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "The expert makes the final call"
+          },
+          {
+            "type": "text",
+            "content": "A second reviewer does not get an equal vote. The domain expert ruled on each of the 13 disagreements, the way a design lead closes out a critique. Sometimes the expert sided with the second reviewer, and sometimes with their own first verdict. The final result was 23 pass and 18 fail. Those rulings became the answer key that everything later in the study was measured against.\n\nThe FAQ recommends the same setup for most small and medium teams: one trusted expert who makes the quality call. If you feel you need five experts to judge a single answer, the FAQ suggests the product scope may be too broad."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "How often two reviewers agree is **inter-rater agreement**, often measured with a statistic called **Cohen's kappa**. The person whose judgement counts is the **domain expert** or **subject matter expert (SME)**. The FAQ calls the single final decision-maker a **benevolent dictator**. The settled verdicts are the **ground truth**."
+          },
+          {
+            "type": "completion",
+            "title": "You can turn notes into failure types",
+            "items": [
+              "Write plain notes before choosing categories",
+              "Cluster and count them into named failure types",
+              "Use a blind second reviewer, then let the expert decide"
+            ],
+            "message": "Next: writing the standard down so it holds still."
+          }
+        ]
+      },
+      {
+        "id": "lesson-4",
+        "title": "Write the Standard Down",
+        "duration": 4,
+        "order": 4,
+        "module": "evals-sort",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "Your standard will sharpen as you review. Write it down as a yes or no rule, and judge the smallest piece of an answer that can be wrong."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Pick one failure to work on"
+          },
+          {
+            "type": "text",
+            "content": "Six failure types is too many to fix at once. If you change several things together, you cannot tell which change helped. The study picked one: \"states guesses as findings\". It was tied for the most common, it came from the expert's own notes, and it was the hardest of the six to check."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Turn it into a rule"
+          },
+          {
+            "type": "text",
+            "content": "A failure type is a label. A rule tells someone else how to apply it. The study settled on this one:"
+          },
+          {
+            "type": "callout",
+            "calloutType": "tip",
+            "title": "The rule",
+            "content": "A gap fails if it claims something is missing that a single screenshot cannot show. Hover states, content below the scroll, other screens, and what happens after a click all count as things a screenshot cannot show. A gap that says plainly \"this cannot be judged from one screenshot\" is fine."
+          },
+          {
+            "type": "text",
+            "content": "Notice that the rule is a yes or no question. Each gap is either a critique of something visible, or a guess about something that is not. There is no \"somewhat assumed\"."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Ask yes or no questions instead of 1-to-5 ratings"
+          },
+          {
+            "type": "text",
+            "content": "The old audit check scored each answer 1 to 5 on five qualities. One of its three examples was a plain chat screen whose own written notes said Confidence Visualization and Explainable AI did not apply there. The automated checks could not fail on that, and the 1-to-5 scorer never flagged it. A rating gives you a number like 3.6 that is hard to act on. A yes or no question forces a decision and tells you exactly which answers to look at.\n\nThe FAQ makes the same case: \"Binary evaluations force clearer thinking and more consistent labeling.\" If you want to track partial progress, split the quality into several yes or no checks and count how many pass."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "Yes or no checks are **binary** or **pass/fail evaluation**. A 1-to-5 rating is a **Likert scale**. The written rule is the **rubric** or the **evaluation criteria**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Judge the smallest piece that can be wrong"
+          },
+          {
+            "type": "text",
+            "content": "Judging a whole answer at once hides problems. You note the first thing wrong and skim the rest. So the study switched from judging each audit to judging each gap inside it: 116 gaps across the 41 audits, each marked \"seen\" or \"assumed\" by the expert before any AI reviewer was involved.\n\nThe difference is the one between \"this screen feels off\" and a line-by-line design review. A whole-answer verdict tells you something is wrong. A per-piece verdict tells you how much is wrong and where."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "How small a piece you judge is the **granularity** of your labels. Judging each gap separately is labelling **per item** instead of **per response**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Expect your standard to move"
+          },
+          {
+            "type": "text",
+            "content": "Here is what happened when each gap was checked against the written rule. **94 of the 116 gaps were assumed.** Yet in the first whole-audit review, the same expert had passed 29 of 41 audits, and many of those audits were full of exactly these gaps.\n\nThe audits had not changed. The standard had become clearer. Reviewing the first batch is what taught the expert what the standard should be, and writing it down made it possible to apply it evenly.\n\nShreya Shankar and her co-authors describe this effect in their research: \"users need criteria to grade outputs, but grading outputs helps users define criteria.\" It is normal, and it is the reason the FAQ advises against writing a rubric before you have looked at real answers."
+          },
+          {
+            "type": "steps",
+            "steps": [
+              {
+                "number": 1,
+                "title": "Review loosely first",
+                "content": "Pass or fail plus a note. This is where you discover what matters."
+              },
+              {
+                "number": 2,
+                "title": "Write the rule down",
+                "content": "Turn the clearest failure into a yes or no rule with examples of each side."
+              },
+              {
+                "number": 3,
+                "title": "Label again against the rule",
+                "content": "Judge each small piece. These labels are what you will measure everything else against."
+              },
+              {
+                "number": 4,
+                "title": "Keep the first-pass verdicts",
+                "content": "They are a record of where you started. They should not be quietly overwritten."
+              }
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "A standard that shifts as you look at more outputs is **criteria drift**. The careful, rule-based labels from step 3 are the **ground-truth labels** or **gold labels**."
+          },
+          {
+            "type": "completion",
+            "title": "You have a standard that holds still",
+            "items": [
+              "Pick one failure type and turn it into a written yes or no rule",
+              "Label each small piece of the answer against it",
+              "Expect your own verdicts to change, and keep the first pass as a record"
+            ],
+            "message": "Next: handing the rule to an AI reviewer, and checking whether a fix worked."
+          }
+        ]
+      },
+      {
+        "id": "lesson-5",
+        "title": "Hand It to an AI Reviewer, Then Fix",
+        "duration": 8,
+        "order": 5,
+        "module": "evals-automate",
+        "sections": [
+          {
+            "type": "intro",
+            "content": "An AI can apply your written rule to every answer, but only after you check it agrees with you on examples it has never seen. Then you can fix the product and measure it."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Brief an AI reviewer like a new team member"
+          },
+          {
+            "type": "text",
+            "content": "Labelling 116 gaps by hand took real time. Doing it after every product change is not realistic. So the next step is to write the rule as instructions for an AI model and let it label the gaps.\n\nThe first version of the AI reviewer caught 22 of the 50 assumed gaps it was tested on. Reading the ones it missed showed the rule was fuzzy in one place: it did not say clearly what counted as \"seen\". The expert's own labelled examples filled that in, and the next version caught 34 of 50. A third version closed a loophole, where a guess was written up as a critique of something visible, and caught 45 of 50.\n\nWhen an AI reviewer gets it wrong, check your rule before you blame the reviewer. A vague brief produces vague work from any new team member."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "An AI model that scores outputs against your rubric is an **LLM-as-judge**, also called a **judge**, **grader** or **evaluator**. Rewriting its instructions is **prompt iteration**. Checking its verdicts against yours is **judge validation** or **alignment**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Keep some examples back"
+          },
+          {
+            "type": "text",
+            "content": "Those three scores all came from the same half of the gaps. Before the first version ran, the 116 labelled gaps were split by screenshot into a tuning half and a held-back half. Nobody looked at the held-back half while rewriting the reviewer. When the third version was finished, it was frozen and run once on the held-back half."
+          },
+          {
+            "type": "table",
+            "rows": [
+              {
+                "label": "Version 1, tuning half",
+                "content": "Caught 22 of 50 assumed gaps. Raised 2 false alarms in 11 fine gaps."
+              },
+              {
+                "label": "Version 2, tuning half",
+                "content": "Caught 34 of 50. Raised 1 false alarm in 11."
+              },
+              {
+                "label": "Version 3, tuning half",
+                "content": "Caught 45 of 50. Raised 2 false alarms in 11."
+              },
+              {
+                "label": "Version 3, held-back half",
+                "content": "**Caught 41 of 44. Raised 5 false alarms in 11.**"
+              }
+            ]
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/ai-evals-for-designers/dev-test-split.webp",
+            "alt": "A diagram: 116 labelled pieces of advice split into a tuning half of 61 and a held-back half of 55. The tuning half feeds an AI reviewer that is rewritten from version 1 to 3, scoring 45 of 50 caught with 2 of 11 false alarms, marked looks better than it is. The frozen version runs once on the held-back half, scoring 41 of 44 caught with 5 of 11 false alarms, marked the honest number.",
+            "label": "Tune on one half, then test once on the half you never looked at. The two results tell different stories."
+          },
+          {
+            "type": "text",
+            "content": "On new examples the reviewer still caught almost every guess. It also raised far more false alarms: it called 5 of the 11 fine gaps assumed. The tuning half had hidden that. Without the held-back half, the study would have trusted a reviewer that looked close to perfect.\n\nThink of the tuning score as a prototype demo on the happy path you rehearsed. The score that counts comes from examples the reviewer has never seen, measured once."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "The half you tune on is the **dev set** (sometimes **train/dev**). The held-back half is the **test set** or **holdout**, and the practice is a **train/test split**. A reviewer that only works on the examples you tuned it with is **overfitting**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Report counts instead of percentages"
+          },
+          {
+            "type": "text",
+            "content": "\"Caught 41 of 44\" tells the reader how few examples there were. \"93%\" sounds more certain than 44 examples can support. With only 11 fine gaps in the held-back half, one extra false alarm moves the rate by nine points. The FAQ suggests 100 to 200 labelled examples per failure type before trusting an AI reviewer on its own. The study had 116 in total, which was enough to learn the method. It was not enough to stop checking the reviewer's work."
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "\"Caught 41 of 44 real problems\" is the **true positive rate**, also called **recall**. \"Raised 5 false alarms in 11\" is the **false positive rate**. Its flip side, correctly passing the good ones, is the **true negative rate**. How many examples you have is the **sample size**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Fix the product, then run the same check again"
+          },
+          {
+            "type": "text",
+            "content": "This is where the eval pays off. Change the product, run the same screenshots through it, let the frozen AI reviewer count the problem, and see whether the number moved.\n\n**Fix 1** told the audit to turn guesses into \"Worth checking\" questions instead of gaps. The AI reviewer then flagged 86 of 115 gaps as assumed, against 93 of 116 before. The number had hardly moved. The fix also broke 2 of the 41 audits, which came back as unreadable data that a real user would have seen as an error.\n\nReading the misses explained the weak result. The audit's instructions still contained examples shaped like the failure, such as \"has no thumbs-up/down\". The rule said one thing and the examples showed another, and the examples won. When you brief an AI, show it what good looks like.\n\n**Fix 2** replaced those examples. Assumed gaps fell to 73 of 107, honest gaps rose from 23 to 34, and all 41 audits ran cleanly."
+          },
+          {
+            "type": "image",
+            "src": "/images/guides/ai-evals-for-designers/did-the-fix-work.webp",
+            "alt": "A flow diagram: fix the product, re-run the same 41 examples, the AI reviewer counts with the same frozen brief, then a decision, number moved? Yes leads to a person skimming for new breakage and then shipping. No leads to finding out why by reading the misses, then fixing again. A note reads: two tries, fix 1 93 to 86 with 2 broken, fix 2 93 to 73 assumed, honest gaps 23 to 34.",
+            "label": "The fix loop. Both tries were measured on the 41 screenshots used while writing the fixes."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Test the fix on fresh examples"
+          },
+          {
+            "type": "text",
+            "content": "Those 41 screenshots were the ones everyone had been staring at while writing the fix. So the study ran the original and the fixed audit on 19 fresh screenshots nobody had looked at. On the original audit, 60 of 65 gaps were guesses. On the fixed audit, 50 of 57 were. That change is about the size of normal run-to-run variation.\n\nMost of fix 2's improvement on the 41 came from the wording fitting those 41. The same lesson as the held-back half applies to product fixes: check the change on examples you did not use to make it. When rewording stops moving the number on fresh examples, the next step is usually a structural change, such as an automatic second check on every gap, and that costs time and money of its own."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Check what the fix might have broken"
+          },
+          {
+            "type": "text",
+            "content": "The AI reviewer counts one failure type. A fix can break something else without that count noticing. So after fix 2, the expert reviewed all 41 audits again with the original question.\n\nThe result was 33 pass and 8 fail, against 29 and 12 on the first review. The expert also judged the new \"Worth checking\" questions, 148 of them, to be helpful to users. That decision had a design consequence: the fix could not ship until the results screen had a place to show those questions.\n\nThe same loop measured two more fixes:"
+          },
+          {
+            "type": "list",
+            "items": [
+              "**Confidence on ordinary chat.** The expert first marked 20 screens yes or no for whether knowing the AI's certainty would change what a user does. After a fix, the audit asked for Confidence Visualization where it was not needed on 0 screens, down from 8.",
+              "**Marketing images.** A fix to recognise marketing pictures still gave AI gaps to 6 of 12 marketing images, and it wrongly called 4 of 28 real product screens marketing. It hurt real screens, so it was reverted."
+            ]
+          },
+          {
+            "type": "callout",
+            "calloutType": "info",
+            "title": "What engineers call it",
+            "content": "Re-running the same examples after every change, to catch anything that got worse, is a **regression eval** or **regression test**. Fresh examples that played no part in the fix are an **out-of-sample** check. A person skimming the outputs before release is a **human spot-check**."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Tools you can use"
+          },
+          {
+            "type": "text",
+            "content": "You can run this whole method with tools a designer already knows. These were the options at the time of writing, October 2026:"
+          },
+          {
+            "type": "table",
+            "rows": [
+              {
+                "label": "A spreadsheet with an AI column",
+                "content": "One row per answer, a pass or fail column for you, an AI column for the reviewer, and a pivot table to compare the two. Reading screenshots needs an image-capable add-on or a paid Airtable plan, so check that before you start."
+              },
+              {
+                "label": "A review page an AI builds for you",
+                "content": "What the study used. A single HTML page built with Claude Code or a similar tool, with images kept on your own machine. The AI reviewer is a short script, so you need an AI coding tool to write and run it."
+              },
+              {
+                "label": "Braintrust",
+                "content": "The one vendor whose documentation covers uploading existing outputs, reviewing them, and passing screenshots to an AI judge. Comparing the judge with your labels means exporting both and counting yourself."
+              },
+              {
+                "label": "Langfuse",
+                "content": "A keyboard-driven review queue and a built-in view of how often the judge agrees with you. Its no-code path does not pass images to the judge, so it suits text-only features."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "content": "Most eval tools assume an engineer has already connected the live AI feature. If your answers already exist as files, check that the tool can import them, and that it can show the AI reviewer any images, before you commit. OpenAI's hosted Evals dashboard is scheduled to shut down on 30 November 2026, so avoid starting new work there."
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "content": "Glossary: plain words and engineering terms"
+          },
+          {
+            "type": "table",
+            "rows": [
+              {
+                "label": "Checking AI output against a standard",
+                "content": "**Evaluation**, **eval**, **evals**"
+              },
+              {
+                "label": "The saved record of one AI answer",
+                "content": "**Trace**, **log**"
+              },
+              {
+                "label": "The examples you test on",
+                "content": "**Dataset**, **eval set**"
+              },
+              {
+                "label": "Messy and irrelevant examples",
+                "content": "**Edge cases**, **negative cases**"
+              },
+              {
+                "label": "Testing the whole journey",
+                "content": "**End-to-end evaluation**"
+              },
+              {
+                "label": "The review screen",
+                "content": "**Annotation tool**, **labelling interface**"
+              },
+              {
+                "label": "Marking pass or fail with a note",
+                "content": "**Annotating**, **labelling**"
+              },
+              {
+                "label": "Sticky notes on what is wrong",
+                "content": "**Open coding**"
+              },
+              {
+                "label": "Affinity-mapping the notes",
+                "content": "**Axial coding**"
+              },
+              {
+                "label": "The named groups of problems",
+                "content": "**Failure modes**, **failure taxonomy**"
+              },
+              {
+                "label": "The whole notes-then-groups process",
+                "content": "**Error analysis**"
+              },
+              {
+                "label": "How often two reviewers agree",
+                "content": "**Inter-rater agreement**, **Cohen's kappa**"
+              },
+              {
+                "label": "The expert who makes the final call",
+                "content": "**Domain expert**, **SME**, **benevolent dictator**"
+              },
+              {
+                "label": "The written standard",
+                "content": "**Rubric**, **criteria**"
+              },
+              {
+                "label": "Your standard sharpening as you go",
+                "content": "**Criteria drift**"
+              },
+              {
+                "label": "The settled verdicts",
+                "content": "**Ground truth**, **gold labels**"
+              },
+              {
+                "label": "Judging each piece separately",
+                "content": "**Finer granularity**, **per-item labelling**"
+              },
+              {
+                "label": "Yes or no instead of 1 to 5",
+                "content": "**Binary evaluation** instead of a **Likert scale**"
+              },
+              {
+                "label": "An AI that applies your standard",
+                "content": "**LLM-as-judge**, **grader**, **evaluator**"
+              },
+              {
+                "label": "Improving its instructions",
+                "content": "**Prompt iteration**"
+              },
+              {
+                "label": "Checking it agrees with you",
+                "content": "**Judge validation**, **alignment**"
+              },
+              {
+                "label": "The half you tune on and the half you keep back",
+                "content": "**Dev set** and **test set**, **holdout**"
+              },
+              {
+                "label": "Only working on the examples you looked at",
+                "content": "**Overfitting**"
+              },
+              {
+                "label": "\"Caught 41 of 44 real problems\"",
+                "content": "**True positive rate**, **recall**"
+              },
+              {
+                "label": "\"Raised 5 false alarms in 11\"",
+                "content": "**False positive rate**"
+              },
+              {
+                "label": "Running the same check after every change",
+                "content": "**Regression eval**"
+              }
+            ]
+          },
+          {
+            "type": "further-reading",
+            "title": "Further reading",
+            "links": [
+              {
+                "title": "AI Evals: Everything You Need to Know",
+                "url": "https://hamel.dev/blog/posts/evals-faq/",
+                "source": "Hamel Husain and Shreya Shankar",
+                "description": "The evals FAQ this course draws on: 60 questions covering error analysis, judges, sample sizes and tooling."
+              },
+              {
+                "title": "Should I build a custom annotation tool or use something off the shelf?",
+                "url": "https://hamel.dev/blog/posts/evals-faq/should-i-build-a-custom-annotation-tool-or-use-something-off-the-shelf.html",
+                "source": "Evals FAQ",
+                "description": "The case for designing your own review screen, and when a ready-made tool fits better."
+              },
+              {
+                "title": "Why do you recommend binary pass/fail evaluations instead of 1-5 ratings?",
+                "url": "https://hamel.dev/blog/posts/evals-faq/why-do-you-recommend-binary-passfail-evaluations-instead-of-1-5-ratings-likert-scales.html",
+                "source": "Evals FAQ",
+                "description": "Why yes or no questions produce more consistent verdicts than rating scales."
+              },
+              {
+                "title": "How many examples do I need for an eval?",
+                "url": "https://hamel.dev/blog/posts/evals-faq/how-many-examples-do-i-need-for-an-eval.html",
+                "source": "Evals FAQ",
+                "description": "Sample sizes for finding problems, for checking an AI judge, and for a repeatable test set."
+              },
+              {
+                "title": "How do I know if I can trust my automated eval?",
+                "url": "https://hamel.dev/blog/posts/evals-faq/how-do-i-know-if-i-can-trust-my-automated-eval.html",
+                "source": "Evals FAQ",
+                "description": "Checking a judge against human labels, and spotting when it has overfit to the examples you tuned it on."
+              }
+            ]
+          },
+          {
+            "type": "completion",
+            "title": "You can run the whole loop",
+            "items": [
+              "Brief an AI reviewer from your rule and check it on held-back examples",
+              "Report results as counts",
+              "Measure each fix on the same examples, then on fresh ones",
+              "Re-review by hand for anything the count cannot see"
+            ],
+            "message": "Course complete. Pick one AI feature you work on, save 20 to 50 real answers, and review them with one yes or no question."
           }
         ]
       }

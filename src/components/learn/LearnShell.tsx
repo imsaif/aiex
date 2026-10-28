@@ -27,14 +27,14 @@ import { useScrollLock } from '@/hooks/useScrollLock';
  * layout looked pushed to one side. The token steps are only 5 units apart, so
  * the border is doing the work, not the tint.
  *
- * Wider than the site's usual max-w-7xl (1280px). The rail costs 260px before
+ * Wider than the site's usual max-w-7xl (1280px). The rail costs 280px before
  * any content, so at 1280 the reading column was narrower than on a page with
  * no rail at all.
  *
  * ## Why this is a client component
  *
  * The rail collapses. Lesson screenshots are the widest thing on these pages
- * and the rail spends 260px on navigation the reader has already used, so on a
+ * and the rail spends 280px on navigation the reader has already used, so on a
  * laptop the picture is the thing being squeezed. Collapsing is a per-reader
  * preference, which means state, which means a client component. Children are
  * still rendered on the server and passed in as props, so nothing below this
@@ -146,7 +146,7 @@ export default function LearnShell({
 
   // Collapsed, the rail keeps a narrow strip rather than disappearing: a
   // control that vanishes entirely leaves the reader hunting for the way back.
-  const railWidth = collapsed ? '48px' : '260px';
+  const railWidth = collapsed ? '48px' : '280px';
 
   // The third column only appears at xl, where there is room for it without
   // squeezing the reading column.
@@ -254,7 +254,10 @@ export default function LearnShell({
               any open course group survive a collapse and expand.
               The right gutter keeps two-line lesson titles from running under
               the sticky toggle, which sits over this column. */}
-          <div className={collapsed ? 'lg:hidden' : 'lg:pr-8'}>{sidebar}</div>
+          {/* Full column height, so the rail's sticky nav has room to stay
+              pinned. Sized to its content, the wrapper ended where the nav did
+              and the rail scrolled away with the page (fixed 2026-10-28). */}
+          <div className={collapsed ? 'lg:hidden' : 'lg:h-full lg:pr-4'}>{sidebar}</div>
         </div>
 
         <div className="min-w-0 bg-background-primary px-6 lg:px-10">

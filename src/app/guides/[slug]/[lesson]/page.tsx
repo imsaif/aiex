@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { getGuideBySlug } from '@/data/guides';
+import { LessonDoneMarker } from '@/components/learn/CourseProgress';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
@@ -185,6 +187,13 @@ export default async function LessonPage({ params }: LessonPageProps) {
   const { guide, lesson, lessonSlug, lessonIndex } = resolved;
   const allLessons = getLessonsForCourse(courseSlug);
   const { previous, next } = getLessonNeighbors(courseSlug, lessonIndex);
+  // On a course's last lesson, Up next points to its follow-on course if one is set.
+  const nextCourse = !next && guide.nextCourseSlug ? getGuideBySlug(guide.nextCourseSlug) : null;
+  const upNext = next
+    ? { url: next.url, title: next.title, label: 'Up next' }
+    : nextCourse
+      ? { url: `/guides/${nextCourse.slug}`, title: nextCourse.title, label: 'Next course' }
+      : null;
 
   const sections = (lesson.sections as LessonSection[] | undefined) || [];
   const firstProse = sections.find((s) => s.type === 'intro' || s.type === 'text');
@@ -404,6 +413,8 @@ export default async function LessonPage({ params }: LessonPageProps) {
                 </section>
               )}
 
+                  {/* End of the lesson: reaching it marks the lesson finished (reader's browser only). */}
+                  <LessonDoneMarker course={courseSlug} lesson={lessonSlug} total={guide.lessons?.length ?? 0} />
                 </article>
 
                 <aside className="hidden xl:block">
@@ -448,17 +459,17 @@ export default async function LessonPage({ params }: LessonPageProps) {
                   <div className="hidden sm:block" />
                 )}
 
-                {next ? (
+                {upNext ? (
                   <Link prefetch={false}
-                    href={next.url}
+                    href={upNext.url}
                     className="group flex items-center justify-between gap-4 bg-background-rail py-8 pl-8 pr-6"
                   >
                     <span className="min-w-0">
                       <span className="type-caption block text-text-secondary">
-                        Up next
+                        {upNext.label}
                       </span>
                       <span className="type-lead block font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
-                        {next.title}
+                        {upNext.title}
                       </span>
                     </span>
                     <span
