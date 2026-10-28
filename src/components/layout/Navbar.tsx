@@ -78,7 +78,7 @@ const Navbar = ({
   };
 
   return (
-    // The content width is 1600px either way, so the logo and the nav items do
+    // The content width is 1760px either way, so the logo and the nav items do
     // not move when you cross between the console and the rest of the site —
     // that shift was visible as a jump. Only the surround changes: off the
     // console the bar is a plain full-width band, because those pages have
@@ -94,8 +94,8 @@ const Navbar = ({
       <div
         className={
           inConsole
-            ? 'mx-auto max-w-[1600px] border-b border-border-primary bg-surface-primary px-6 py-3 lg:border-x'
-            : 'mx-auto max-w-[1600px] px-6'
+            ? 'mx-auto max-w-[1760px] border-b border-border-primary bg-surface-primary px-6 py-3 lg:border-x'
+            : 'mx-auto max-w-[1760px] px-6'
         }
       >
         <div className="flex items-center justify-between">
