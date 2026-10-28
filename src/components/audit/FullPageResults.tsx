@@ -67,6 +67,8 @@ interface FullPageResultsProps {
   isPaywalled?: boolean;
   auditCount?: number;
   isUnlocked?: boolean;
+  /** Rendered inside the console on /audit: the tool bar above owns 'Run another audit'. */
+  inConsole?: boolean;
 }
 
 interface ChatMessage {
@@ -489,7 +491,7 @@ function EmptyAuditState({
   );
 }
 
-export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled, auditCount, isUnlocked }: FullPageResultsProps) {
+export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, screenshotUrl, screenshotDeviceType, screenshots, onStartRealAudit, auditsRemaining, isPaywalled, auditCount, isUnlocked, inConsole }: FullPageResultsProps) {
   // Normalize: prefer the multi-screenshot prop, fall back to the single-screenshot props for backwards compat.
   const allScreenshots = screenshots && screenshots.length > 0
     ? screenshots
@@ -953,7 +955,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
 
   return (
     <div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 lg:pb-32">
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 pb-24 lg:pb-32 ${inConsole ? 'pt-0' : 'pt-8 sm:pt-12'}`}>
 
         {/* Results header — wrapped in the same two-column geometry (768px slot
             + rail spacer) so the title/description line up with the gap cards.
@@ -1242,6 +1244,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 removing it also removed the `service_cta_clicked` event, so
                 there is no measurement behind that call any more: putting it
                 back later means starting the evidence over. */}
+            {!inConsole && (
             <button
               type="button"
               onClick={() => {
@@ -1253,6 +1256,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               <ArrowPathIcon className="w-4 h-4" />
               Run another audit
             </button>
+            )}
 
             {/* "What we audited" panel removed 2026-10-27: its facts now sit in the
                 header card above the gaps, which Imran asked for in its place. */}
