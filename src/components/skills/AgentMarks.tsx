@@ -197,9 +197,36 @@ function SlidesMark() {
   );
 }
 
+/**
+ * AI Evals is a subject like Conversational UI, but the chat bubble would say
+ * the wrong thing about it. A filled box with a tick cut out of it reads as
+ * "checked", which is what an eval does, and stays two shapes at 14px.
+ */
+function EvalsMark() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-3.5 w-3.5 shrink-0"
+      aria-hidden="true"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <path
+        d="m7.5 12.5 3 3 6-6.5"
+        fill="none"
+        stroke="var(--background-rail)"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 const COURSE_TOOL_MARKS: Record<string, () => React.ReactElement> = {
   'Claude Docs': DocMark,
   'Claude Slides': SlidesMark,
+  'AI Evals': EvalsMark,
 };
 
 export function CourseToolMark({ tool }: { tool?: string }) {

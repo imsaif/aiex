@@ -101,6 +101,14 @@ const GUIDE_TO_PATTERNS: Record<string, string[]> = {
     'vulnerable-user-protection',
     'mixed-initiative-control',
   ],
+  // Last on purpose: pattern pages cap "Practice in Courses" at 3 in insertion
+  // order, so this only surfaces where fewer courses already teach the pattern.
+  'ai-evals-for-designers': [
+    'confidence-visualization',
+    'feedback-loops',
+    'human-in-the-loop',
+    'trust-calibration',
+  ],
 };
 
 /** For a given pattern slug, return guide slugs that teach it in practice. */
