@@ -82,6 +82,48 @@ async function getLatestIssues(): Promise<Array<{ slug: string; title: string }>
 }
 
 /**
+ * Courses grouped by what the reader is doing (2026-10-28). Ten courses in one
+ * flat list read as "everywhere": tool courses, Claude's own apps and the
+ * product-design courses were interleaved in publish order. Any course not
+ * listed here still shows, under "Other", so a new course can't vanish from
+ * the rail before someone files it.
+ */
+const COURSE_GROUPS: Array<{ label: string; slugs: string[] }> = [
+  {
+    label: 'AI coding tools',
+    slugs: ['claude-code-learning-path', 'cursor-learning-path', 'github-copilot-learning-path', 'github-learning-path'],
+  },
+  {
+    // Since Sept 2026 these three live inside Claude chat rather than as
+    // separate apps, so they sit together.
+    label: 'Inside Claude',
+    slugs: ['claude-design-learning-path', 'claude-docs-guide', 'claude-slides-guide'],
+  },
+  {
+    label: 'Designing AI products',
+    slugs: ['conversational-ui-guide', 'ai-evals-for-designers', 'ai-ux-skills-guide'],
+  },
+];
+
+/** Rail-only names where the page title is tuned for search, not for a 240px list. */
+const RAIL_LABEL_BY_SLUG: Record<string, string> = {
+  'conversational-ui-guide': 'Conversational UI',
+};
+
+function groupedCourses(): Array<{ label: string; courses: typeof guides }> {
+  const placed = new Set(COURSE_GROUPS.flatMap((g) => g.slugs));
+  const out = COURSE_GROUPS.map((g) => ({
+    label: g.label,
+    courses: g.slugs
+      .map((slug) => guides.find((guide) => guide.slug === slug))
+      .filter((guide): guide is (typeof guides)[number] => Boolean(guide)),
+  })).filter((g) => g.courses.length > 0);
+  const other = guides.filter((guide) => !placed.has(guide.slug));
+  if (other.length) out.push({ label: 'Other', courses: other });
+  return out;
+}
+
+/**
  * Short label for the rail. Six of the seven course titles end in some form of
  * "Course for Designers", so at 240px they all wrap to two lines and the rail
  * loses its rhythm. The group heading already says "Courses", so the suffix is
@@ -309,8 +351,12 @@ export default async function LearnSidebar({
 
       <div className="mb-9">
         <GroupLabel Icon={AcademicCapIcon}>Courses</GroupLabel>
+        <div className="space-y-5">
+        {groupedCourses().map((group) => (
+        <div key={group.label}>
+        <p className="px-3 pb-1 type-caption font-medium text-text-secondary">{group.label}</p>
         <ul className="space-y-1">
-          {guides.map((guide) => {
+          {group.courses.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
 
             // Only the course you are in carries its lessons. Every other
@@ -334,7 +380,7 @@ export default async function LearnSidebar({
                     </span>
                     <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
-                      {railLabel(guide.title)}
+                      {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
                     </span>
                   </Link>
                 </li>
@@ -374,7 +420,7 @@ export default async function LearnSidebar({
                         so the column stays even. */}
                     <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
-                      {railLabel(guide.title)}
+                      {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
                     </span>
                   </summary>
 
@@ -390,6 +436,9 @@ export default async function LearnSidebar({
             );
           })}
         </ul>
+        </div>
+        ))}
+        </div>
       </div>
 
       <div className="mb-9">
