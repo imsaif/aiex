@@ -5988,6 +5988,9 @@ export const guides: Guide[] = [
     excerpt:
       'A practical guide to building conversational UIs: 11 lessons covering chat interfaces, voice assistants, streaming responses, conversation context, error recovery, agentic AI patterns, and accessibility. Includes code examples in React and design patterns used by ChatGPT, Claude, Slack, and Siri.',
     tool: 'Conversational UI' as const,
+    // After building the interface, check its answers: the evals course is the
+    // follow-on. Added 2026-10-28 as a link only; nothing SEO-facing changed.
+    nextCourseSlug: 'ai-evals-for-designers',
     useCase: 'Learning Path',
     skillLevel: 'Intermediate' as const,
     designDomain: 'UX Design',
@@ -7427,6 +7430,100 @@ export const guides: Guide[] = [
                 source: 'Medium',
                 description:
                   'Why ambient AI beats destination AI for most agentic tasks: the context-switching tax and the economics of interaction cost.',
+              },
+            ],
+          },
+        ],
+      },
+      // Lesson 12 (2026-10-28): a short bridge from building the interface to
+      // checking its answers, pointing at the AI Evals for Designers course.
+      // The course title stays pinned at "(11 Lessons)" for SEO; see
+      // TITLE_LESSON_COUNT_PINS in src/app/guides/[slug]/page.tsx.
+      {
+        id: 'lesson-12',
+        title: "Next Step: Check Your Chat's Answers With Evals",
+        duration: 3,
+        order: 12,
+        module: 'polish',
+        sections: [
+          {
+            type: 'intro',
+            content: 'The interface is built. The question that matters after launch is whether the answers inside it are any good. This lesson introduces evals, the method teams use to check AI answers against a written standard, and points to a full course on running one.',
+            icon: 'check',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'Why a chat interface needs more than a design review',
+          },
+          {
+            type: 'text',
+            content: 'Every lesson so far designs the container: the bubbles, the streaming, the errors, the controls. What appears inside it is generated fresh every time. Ask the same question twice and the wording, the order and sometimes the conclusion can change. Ask something nobody planned for and the AI will still answer confidently.\n\nA design review checks a screen once. The answers in a chat need checking again and again, against a standard someone has written down. That repeatable check is an **eval**.',
+          },
+          {
+            type: 'heading',
+            level: 'h3',
+            content: 'What an eval is',
+          },
+          {
+            type: 'text',
+            content: 'An eval has two parts: a written standard for what a good answer is, in plain words, and a repeatable way to check real answers against it. With both in place you can count how often the chat meets the standard, and see whether a change to the prompt or the model made it better or worse.',
+          },
+          {
+            type: 'steps',
+            steps: [
+              {
+                number: 1,
+                title: 'Collect real conversations',
+                content: [
+                  'Start with 30 to 50 real or realistic chats, including awkward ones: off-topic requests, frustrated users, questions the product cannot answer.',
+                ],
+              },
+              {
+                number: 2,
+                title: 'Read each answer and mark it',
+                content: [
+                  'Pass or fail, plus one line in plain words on the first thing that is wrong. No categories yet.',
+                ],
+              },
+              {
+                number: 3,
+                title: 'Group the notes and count',
+                content: [
+                  'Cluster the notes the way you would affinity-map research findings. The biggest group is the first thing to fix, and the first rule to write down.',
+                ],
+              },
+            ],
+          },
+          {
+            type: 'callout',
+            calloutType: 'tip',
+            title: 'The patterns in this course become checks',
+            content: 'Several earlier lessons turn into yes or no rules an eval can test on every release: the AI says what it cannot do and offers an alternative (Lesson 7), voice replies stay to two or three sentences (Lesson 8), and the AI asks before any irreversible action (Lesson 11).',
+          },
+          {
+            type: 'callout',
+            calloutType: 'info',
+            title: 'From a real study',
+            content: 'An eval of an AI audit tool found it kept asking for confidence scores on ordinary chat replies, where nothing was being researched and certainty did not change what the user did next. Once that was written down as a rule and the tool was told when confidence actually matters, the wrong flags went from 8 to 0. Not every chat reply needs a confidence indicator; an eval is how you find out which ones do.',
+          },
+          {
+            type: 'further-reading',
+            title: 'Keep going',
+            links: [
+              {
+                title: 'AI Evals for Designers',
+                url: '/guides/ai-evals-for-designers',
+                source: 'aiuxdesign.guide course',
+                description:
+                  'Five lessons, from what an eval is to handing your standard to an AI reviewer and checking the fix worked, built on one real study.',
+              },
+              {
+                title: 'Evals FAQ by Hamel Husain and Shreya Shankar',
+                url: 'https://hamel.dev/blog/posts/evals-faq/',
+                source: 'hamel.dev',
+                description:
+                  'The method the course follows, answered question by question.',
               },
             ],
           },

@@ -291,6 +291,12 @@ export type GuideSkillLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 export interface Guide {
   // Core identification
   id: string;
+  /**
+   * Course to continue with after this one's last lesson. Fills the empty
+   * "Up next" slot on the final lesson. Adds a link only; titles, slugs and
+   * metadata are untouched.
+   */
+  nextCourseSlug?: string;
   title: string;
   slug: string;
   description: string;
