@@ -61,7 +61,10 @@ export function LessonDoneTick({ course, lesson }: { course: string; lesson: str
 
 let progressSeenSent = false;
 
-/** "3/12" on a course row once the reader has finished at least one lesson. */
+/**
+ * "3 of 12 done" under a course name once the reader has finished a lesson.
+ * Sits below the name rather than beside it, so it never forces a wrap.
+ */
 export function CourseProgressCount({ course, total }: { course: string; total: number }) {
   const progress = useProgress();
   const done = Math.min(progress?.[course]?.lessons.length ?? 0, total);
@@ -73,8 +76,8 @@ export function CourseProgressCount({ course, total }: { course: string; total: 
   }, [course, done, total]);
   if (done === 0) return null;
   return (
-    <span className="ml-auto shrink-0 rounded-pill bg-background-primary px-1.5 type-caption tabular-nums text-text-secondary">
-      {done}/{total}
+    <span className="block type-caption leading-snug tabular-nums text-text-secondary">
+      {done} of {total} done
       <span className="sr-only"> lessons finished</span>
     </span>
   );

@@ -390,8 +390,8 @@ export default async function LearnSidebar({
                     <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
                       {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
+                      <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                     </span>
-                    <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                   </Link>
                 </li>
               );
@@ -431,8 +431,8 @@ export default async function LearnSidebar({
                     <CourseToolMark tool={guide.tool} />
                     <span className="min-w-0 flex-1">
                       {RAIL_LABEL_BY_SLUG[guide.slug] ?? railLabel(guide.title)}
+                      <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                     </span>
-                    <CourseProgressCount course={guide.slug} total={guide.lessons?.length ?? 0} />
                   </summary>
 
                   <CourseLessons
