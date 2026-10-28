@@ -1,4 +1,8 @@
 import { Metadata } from 'next';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import LearnShell from '@/components/learn/LearnShell';
+import LearnSidebar from '@/components/learn/LearnSidebar';
 import { notFound } from 'next/navigation';
 import {
   getNewsletterBySlug,
@@ -144,12 +148,18 @@ export default async function NewsletterPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
-      <NewsletterDetailClient
-        newsletter={newsletter}
-        previousNewsletter={previous}
-        nextNewsletter={next}
-      />
-      <RelatedPatternsForNews newsletterId={newsletter.id} />
+      {/* Inside the console (2026-10-28). URL, title, metadata and the
+          Article JSON-LD are unchanged; only the frame moved. */}
+      <Navbar inConsole />
+      <LearnShell sidebar={<LearnSidebar active="none" />}>
+        <NewsletterDetailClient
+          newsletter={newsletter}
+          previousNewsletter={previous}
+          nextNewsletter={next}
+        />
+        <RelatedPatternsForNews newsletterId={newsletter.id} />
+      </LearnShell>
+      <Footer />
     </>
   );
 }

@@ -3,8 +3,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import dynamic from 'next/dynamic';
 import { Newsletter, NewsletterTag } from '@/types';
@@ -228,11 +226,10 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
   }, []);
 
   return (
-    <main className="min-h-screen bg-background-primary text-text-primary">
-      <Navbar />
+    <main className="text-text-primary">
 
       {/* Hero Section - with background + grain */}
-      <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+      <section className="pt-10 md:pt-12 pb-10 md:pb-12">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             {/* Info Chip */}
@@ -298,7 +295,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                         aria-pressed={showAll === key}
                         className={`px-5 py-2.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                           showAll === key
-                            ? 'bg-accent-primary text-white dark:text-gray-900'
+                            ? 'bg-accent-primary text-text-on-accent'
                             : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'
                         }`}
                       >
@@ -316,7 +313,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                     onClick={() => setTypeFilter(type)}
                     className={`px-5 py-2.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                       typeFilter === type
-                        ? 'bg-accent-primary text-white dark:text-gray-900'
+                        ? 'bg-accent-primary text-text-on-accent'
                         : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary'
                     }`}
                   >
@@ -376,7 +373,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                       )}
                       className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${
                         isSelected
-                          ? 'bg-accent-primary text-white dark:text-gray-900 cursor-pointer'
+                          ? 'bg-accent-primary text-text-on-accent cursor-pointer'
                           : isUnavailable
                             ? 'bg-background-tertiary text-text-tertiary opacity-40 cursor-not-allowed'
                             : 'bg-background-tertiary text-text-secondary hover:bg-background-secondary cursor-pointer'
@@ -679,7 +676,7 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
                   <button
                     type="submit"
                     disabled={stickyStatus === 'loading'}
-                    className="px-6 py-3 text-base font-semibold rounded-full bg-accent-primary text-white dark:text-gray-900 hover:bg-accent-hover transition-colors disabled:opacity-50 whitespace-nowrap cursor-pointer"
+                    className="px-6 py-3 text-base font-semibold rounded-full bg-accent-primary text-text-on-accent hover:bg-accent-hover transition-colors disabled:opacity-50 whitespace-nowrap cursor-pointer"
                   >
                     {stickyStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
                   </button>
@@ -702,7 +699,6 @@ export default function NewsClient({ initialNewsletters }: NewsClientProps) {
         </div>
       )}
 
-      <Footer />
       <ScrollToTop />
     </main>
   );
