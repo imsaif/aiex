@@ -121,6 +121,8 @@ export interface TopGap {
   resource: string | null;
   /** Quote of the visible UI element this finding is grounded in. Required for honest findings. */
   evidence?: string;
+  /** The problem in 12 words or fewer. The card leads with this; older audits don't have it. */
+  headline?: string;
   /** One-line business/UX consequence of the gap — why it matters, honestly hedged (no fabricated metrics). */
   impact?: string;
   /** Rough implementation effort, used to rank fixes (quickest high-impact gap leads). */
@@ -158,6 +160,7 @@ export const TopGapSchema = z.object({
   status: z.enum(['missing', 'needs-improvement', 'good']),
   finding: z.string().min(1),
   evidence: z.string().optional(),
+  headline: z.string().optional(),
   recommendation: z.string().optional().default(''),
   resource: z.string().nullable().optional(),
   impact: z.string().optional(),
@@ -177,6 +180,10 @@ export const ClaudeAnalysisResponseSchema = z.object({
   // an AI product interface (0 applicable patterns) so the run still returns value
   // instead of a blank "0 gaps". See the no_ai_surface handling in the analyze route.
   generalObservations: z.array(z.string()).optional().default([]),
+  // Questions about things one screenshot can't show (hover, clicks, off-screen,
+  // other states). Kept out of topGaps so guesses aren't presented as findings;
+  // not scored. See the "Seen vs. worth checking" rule in prompts.ts.
+  worthChecking: z.array(z.string()).optional().default([]),
   chatContext: z.string().optional().default(''),
   // Legacy fields the route still passes through for backward compat
   detectedComponent: z.string().optional(),

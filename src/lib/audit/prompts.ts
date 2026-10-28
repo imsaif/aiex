@@ -15,7 +15,7 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
 ## Pattern Library (full set)
 
 ### Core patterns
-- **Confidence Visualization**: Show uncertainty levels on AI outputs. Applies where the AI returns a substantive answer/result. Does NOT apply to settings, billing, navigation, account management.
+- **Confidence Visualization**: Show how sure the AI is about a score, prediction or classification it outputs (a detection score, a risk or match percentage, a forecast or predicted value, labels assigned to an image or record). Applies ONLY when the AI on screen outputs one of those. Does NOT apply to ordinary conversational replies, written or researched answers, summaries, recommendations, creative or generated content, settings, billing, navigation or account management.
 - **Explainable AI**: Show reasoning, sources, "why this?" options. Applies to AI-generated answers/recommendations. Does NOT apply to chrome, settings, or navigation.
 - **Progressive Disclosure**: Reveal complexity gradually. Applies to dense forms, long flows, or AI controls.
 - **Error Recovery**: Clear paths when AI fails or is wrong. Applies to surfaces where AI produces output that can fail.
@@ -75,14 +75,14 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
   // surface. It does NOT force selection; the "only if it genuinely applies" +
   // 8-pattern cap rules in the process still govern the final list.
   const emphasisByType: Record<ProductType, string[]> = {
-    'chat-interface': ['Conversational UI', 'Confidence Visualization', 'Error Recovery', 'Explainable AI', 'Session Degradation Prevention'],
+    'chat-interface': ['Conversational UI', 'Error Recovery', 'Explainable AI', 'Session Degradation Prevention'],
     'ai-agent': ['Intent Preview', 'Action Audit Trail', 'Escalation Pathways', 'Autonomy Spectrum', 'Agent Status & Monitoring', 'Agent Reflection & Learning'],
-    'recommendation-system': ['Explainable AI', 'Feedback Loops', 'Adaptive Interfaces', 'Confidence Visualization', 'Predictive Anticipation'],
+    'recommendation-system': ['Explainable AI', 'Feedback Loops', 'Adaptive Interfaces', 'Predictive Anticipation'],
     'content-generation': ['Augmented Creation', 'Safe Exploration', 'Human-in-the-Loop', 'Feedback Loops', 'Error Recovery'],
     'dashboard-analytics': ['Confidence Visualization', 'Explainable AI', 'Progressive Disclosure', 'Predictive Anticipation', 'Feedback Loops'],
     'embedded-ai-feature': ['Workspace-Native Agent Integration', 'Contextual Assistance', 'Ambient Intelligence', 'Augmented Creation', 'Progressive Enhancement', 'Human-in-the-Loop'],
-    'search-discovery': ['Explainable AI', 'Confidence Visualization', 'Feedback Loops', 'Predictive Anticipation', 'Guided Learning'],
-    'reports-documents': ['Explainable AI', 'Confidence Visualization', 'Human-in-the-Loop', 'Feedback Loops', 'Progressive Disclosure'],
+    'search-discovery': ['Explainable AI', 'Feedback Loops', 'Predictive Anticipation', 'Guided Learning'],
+    'reports-documents': ['Explainable AI', 'Human-in-the-Loop', 'Feedback Loops', 'Progressive Disclosure'],
     general: [],
   };
   const emphasisList = emphasisByType[productType] ?? [];
@@ -101,7 +101,7 @@ You MUST follow these steps in order. Skipping a step produces low-quality findi
 **Step 1 — Describe each surface (write \`surfaceDescription\`).**
 For every screenshot, identify what specific surface it is (e.g., "Claude chat thread mid-conversation", "Settings → Usage page showing weekly limits", "Empty-state of new chat"). Note the visible UI elements: input field, send button, message list, settings rows, billing breakdown, etc. If multiple screenshots are provided, describe each separately by index (1-based).
 
-Inventory specifically: enumerate the visible interactive controls (buttons, icons, inputs, status indicators, model selectors, sidebar items). This list anchors every later "X is missing" finding — if you didn't list a control here and then claim it's absent in a finding, you are probably hallucinating its absence. Re-look at the screenshot before claiming any UI is missing.
+Inventory specifically: enumerate the visible interactive controls (buttons, icons, inputs, status indicators, model selectors, sidebar items). This list anchors every later finding: findings critique what is on it. A control that is NOT on the list is usually not a finding at all, because one frame can't show hover states, menus, other screens or what's below the scroll. Turn it into a \`worthChecking\` question instead.
 
 **Step 2 — Select applicable patterns (write \`applicablePatterns\`).**
 From the pattern library, list ONLY the patterns that meaningfully apply to the specific surface(s) shown. A settings/billing/navigation surface does NOT need Confidence Visualization, Error Recovery, Explainable AI, or HITL — those apply to surfaces where the AI produces substantive output. Most surfaces meaningfully invoke 3-7 patterns, not 20.
@@ -109,14 +109,19 @@ From the pattern library, list ONLY the patterns that meaningfully apply to the 
 **Hard cap: \`applicablePatterns\` MUST contain AT MOST 8 entries.** If you find yourself adding a 9th, you are padding — drop the weakest fit before adding. A short, ruthless list beats a long, padded one every time. For a text-only surface (e.g. terminal output, raw code, plain prose) with no visible UI affordances, the right answer is often 0-2 patterns, not 8.
 
 **Step 3 — Evaluate only those applicable patterns.**
-For each applicable pattern, check whether the surface implements it. Each finding MUST include an \`evidence\` field that quotes or describes a specific visible UI element you can point to ("the message-list area below the conversation header has no thumbs-up/down on AI messages"). If you cannot point to specific visible evidence, drop the finding — do not invent it.
+For each applicable pattern, check whether the surface implements it. Each finding MUST include an \`evidence\` field that quotes or describes a specific visible UI element you can point to ("the 'Proceed with caution' line is grey 11px text under the score, easy to miss next to the bold percentage"). If you cannot point to specific visible evidence, drop the finding — do not invent it.
+
+**Seen vs. worth checking.** A screenshot is one frozen frame of a larger product. Before you write any finding that says something is missing or inadequate, ask: could this thing exist somewhere this frame cannot show — on hover or focus (tooltips, info popovers), behind a click (menus, an "Explain" button, a details panel), below or above the visible scroll, in another tab, screen, settings page or later step, or in a state other than the one captured (mid-load, mid-stream)?
+- If YES, it is NOT a finding. Do not put it in \`topGaps\`, and do not hedge it into a finding ("from this screenshot I can't verify…" is still a guess presented as a gap). Instead, write it as a short question in \`worthChecking\` (e.g. "Does hovering 'Recommended' explain why Accuracy is suggested?").
+- A \`topGaps\` finding is only allowed when it is SEEN: either it critiques something visible (its wording, size, contrast, placement, ambiguity, what it covers), or it names something missing from a complete, self-contained screen that is fully in view where there is nowhere else for it to be (e.g. a full-page error state with no way to recover).
+- Describing a visible area where something "isn't" ("the reply shows no confidence marker", "the table has no citations") is an absence claim. Treat it with the question above, not as evidence.
 
 **Step 4 — Output the sharpest distinct findings, ranked, with impact.**
 Quality over quantity. Two grounded findings beat ten padded ones. Aim for the 3-5 sharpest DISTINCT findings; returning fewer strong findings is better than padding to a round number.
 
 - **De-duplicate ruthlessly.** If two findings share the same underlying root cause (e.g. "users can't tell what a style tile does" and "users can't tell what a prompt tile does" are both the same missing-affordance-at-the-moment-of-action problem), MERGE them into ONE finding. Never split a single issue across two patterns to inflate the count. Two findings that recommend essentially the same fix are one finding.
 - **Rank by impact, then effort.** Sort \`topGaps\` so the FIRST entry is the single most valuable thing to fix first — highest user/business impact, and among similar impact, the lowest implementation effort. The reader should be able to act on entry #1 alone.
-- **Argue severity; don't just label it.** Use \`status: "missing"\` (shown as "Critical") ONLY for the genuinely highest-stakes gap on this surface, and make the \`finding\` justify why it ranks there. Do NOT put the most generic, boilerplate finding at "Critical". If a finding is important but you cannot fully assess it from a screenshot alone (e.g. AI transparency, data-retention, provenance), say so plainly in the \`finding\` ("from this screenshot alone I can't verify X") rather than inflating its severity — honesty about scope builds more trust than a scary badge.
+- **Argue severity; don't just label it.** Use \`status: "missing"\` (shown as "Critical") ONLY for the genuinely highest-stakes gap on this surface, and make the \`finding\` justify why it ranks there. Do NOT put the most generic, boilerplate finding at "Critical". If something is important but you cannot assess it from this screenshot alone (e.g. AI transparency, data-retention, provenance), it belongs in \`worthChecking\` as a question, not in \`topGaps\` — honesty about scope builds more trust than a scary badge.
 - **Every finding needs an \`impact\` and an \`effort\`.** \`impact\` is ONE line on the real consequence, honestly hedged — describe the likely user/business effect ("users can't tell what a tile does, so they likely stall before their first generation"), NEVER a fabricated metric ("reduces activation by 20%"). \`effort\` is your rough estimate of implementation cost: "quick" (copy/label tweak, <1 day), "medium" (a component change), or "involved" (a flow or system change).
 
 If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pure billing or legal page), return an empty \`topGaps\` array and explain in \`surfaceDescription\` why no findings apply. NEVER pad to hit a target count.
@@ -134,16 +139,18 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
   "topGaps": [
     {
       "pattern": "pattern name",
+      "headline": "the problem in 12 words or fewer, plain words, no praise (e.g. 'Upload limit only appears after the file has already failed')",
       "status": "missing" | "needs-improvement" | "good",
-      "finding": "specific observation about THIS surface, anchored on what you actually see",
-      "evidence": "the specific UI element your finding is grounded in (e.g., 'the input box at the bottom shows no character/token counter')",
+      "finding": "what you saw on THIS surface, in at most 2 sentences and 40 words. Start with the problem; do not open with praise or 'X is good, however'",
+      "evidence": "the specific visible UI element your finding is grounded in (e.g., 'the thumbs-down sits directly under the error message, so it is unclear whether it rates the answer or the outage')",
       "impact": "one line on the real user/business consequence, honestly hedged — never a fabricated metric",
       "effort": "quick" | "medium" | "involved",
-      "recommendation": "specific actionable fix for THIS surface, not a generic pattern restatement",
+      "recommendation": "one concrete change for THIS surface, at most 30 words, not a generic pattern restatement",
       "resource": "aiuxdesign.guide/patterns/<pattern-slug>" | null,
       "screenshotIndex": <1-based index of the screenshot this finding applies to; omit if surface-agnostic>
     }
   ],
+  "worthChecking": ["0-5 short questions about things this one frame cannot show, phrased so the designer can check them (e.g. 'Does hovering the info icon explain the score?')"],
   "quickWins": ["short item team can implement in <1 day", ...],
   "generalObservations": ["2-3 plain-language general UX notes — ONLY when applicablePatterns is empty (the surface is not an AI product interface). Otherwise []"],
   "chatContext": "2-3 sentence summary of findings to seed the design chat session"
@@ -155,8 +162,10 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - Every entry in \`topGaps\` MUST have an \`evidence\` field grounded in a specific visible UI element. No evidence → drop the finding.
 - Every entry in \`topGaps\` MUST have an \`impact\` (one honestly-hedged line, no invented numbers) and an \`effort\` ("quick" | "medium" | "involved").
 - \`topGaps\` MUST be ordered best-first: entry #1 is the single highest-impact, act-on-it-now fix. Do NOT lead with the most generic finding.
+- Keep every gap short: a \`headline\` of 12 words or fewer naming the problem, a \`finding\` of at most 2 sentences, a \`recommendation\` of at most 30 words. Readers scan; long findings bury the point.
 - Merge findings that share one root cause or the same fix into a single entry. Never split one issue across two patterns to inflate the count.
-- Reserve \`status: "missing"\` ("Critical") for the genuinely highest-stakes gap; if a finding can't be fully verified from a screenshot, say so in the \`finding\` instead of inflating its status.
+- Reserve \`status: "missing"\` ("Critical") for the genuinely highest-stakes gap.
+- Every \`topGaps\` entry must be SEEN (see Step 3). Anything that could exist on hover, behind a click, off-screen or in another state goes in \`worthChecking\` as a question, never in \`topGaps\`, hedged or not. \`worthChecking\` does not affect the score.
 - Before writing a "missing" finding, re-check the screenshot for the control you're about to claim is absent. If it appears anywhere — including small icons under a message, hover states, or items in your Step-1 inventory — the finding is wrong. False-absence claims (e.g. "no thumbs-up/down" when feedback icons are visible under the message) are the most damaging failure mode for this audit.
 - \`applicablePatterns\` MUST contain AT MOST 8 entries. No exceptions.
 - Return 0 to 10 \`topGaps\` total, NOT a fixed count. An empty array is a valid, useful answer for a surface that doesn't invoke AI UX patterns.
@@ -165,6 +174,7 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - For multi-screenshot uploads, distribute findings across the screenshots they actually apply to via \`screenshotIndex\`. Do not duplicate the same finding across screens.
 - Resource URLs should point to real pattern pages: aiuxdesign.guide/patterns/<pattern-slug>
 - Return ONLY valid JSON. No preamble, no markdown fences.
+- Inside any JSON string (findings, evidence, \`worthChecking\` questions), quote UI labels with single quotes ('Explain'), never double quotes. An unescaped double quote breaks the whole response.
 `;
 
   const autonomous = productType === 'ai-agent' ? autonomousAgentPatterns : '';

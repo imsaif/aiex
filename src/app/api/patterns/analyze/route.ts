@@ -317,6 +317,7 @@ export async function POST(request: NextRequest) {
         topGaps: finalData.topGaps || [],
         quickWins: finalData.quickWins || [],
         generalObservations: finalData.generalObservations || [],
+        worthChecking: finalData.worthChecking || [],
         chatContext: finalData.chatContext || '',
         productContext: {
           productType: productType!,

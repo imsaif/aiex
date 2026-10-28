@@ -57,6 +57,11 @@ export function extractJsonObject(text: string): string | null {
   return null;
 }
 
+/** Replace \' (an invalid JSON escape) with ', leaving \\' (escaped backslash, then quote) alone. */
+export function repairInvalidEscapes(json: string): string {
+  return json.replace(/(^|[^\\])((?:\\\\)*)\\'/g, "$1$2'");
+}
+
 /**
  * Parse and validate a Claude analyze response. Never throws.
  *
@@ -75,12 +80,21 @@ export function parseAnalysisResponse(text: string): ParseAnalysisResult {
   try {
     parsed = JSON.parse(candidate);
   } catch (err) {
-    return {
-      ok: false,
-      reason: 'invalid-json',
-      detail: err instanceof Error ? err.message : 'JSON.parse threw',
-      raw,
-    };
+    // The model sometimes writes \' inside a string (the prompt asks it to
+    // single-quote UI labels). \' is never valid JSON, so turning an unescaped
+    // \' into ' can't change a response that was already valid. Retry once.
+    const repaired = repairInvalidEscapes(candidate);
+    try {
+      if (repaired === candidate) throw err;
+      parsed = JSON.parse(repaired);
+    } catch {
+      return {
+        ok: false,
+        reason: 'invalid-json',
+        detail: err instanceof Error ? err.message : 'JSON.parse threw',
+        raw,
+      };
+    }
   }
 
   const result = ClaudeAnalysisResponseSchema.safeParse(parsed);
