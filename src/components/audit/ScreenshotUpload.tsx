@@ -500,7 +500,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
             <button
               onClick={() => canAnalyze && onAnalyze(stagedImages)}
               disabled={!canAnalyze}
-              className="w-full inline-flex items-center justify-center px-6 py-3 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
+              className="w-full inline-flex items-center justify-center px-6 py-3 bg-accent-primary text-text-on-accent rounded-full font-semibold text-base hover:bg-accent-hover transition-colors active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-accent-primary"
             >
               {hasImages
                 ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`
@@ -519,7 +519,7 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
         <button
           onClick={() => canAnalyze && onAnalyze(stagedImages)}
           disabled={!canAnalyze}
-          className="w-full inline-flex items-center justify-center px-6 py-3.5 bg-accent-primary text-white dark:text-gray-900 rounded-full font-semibold text-base shadow-lg active:scale-95 transition-transform cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
+          className="w-full inline-flex items-center justify-center px-6 py-3.5 bg-accent-primary text-text-on-accent rounded-full font-semibold text-base shadow-lg active:scale-95 transition-transform cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed min-h-[48px]"
         >
           {hasImages
             ? `Analyze ${stagedImages.length} ${stagedImages.length === 1 ? 'Screenshot' : 'Screenshots'}`
