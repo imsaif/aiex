@@ -359,11 +359,11 @@ export default async function LearnSidebar({
 
       <div className="mb-9">
         <GroupLabel Icon={AcademicCapIcon}>Courses</GroupLabel>
-        <div className="space-y-5">
+        <div className="mt-snug space-y-roomy">
         {groupedCourses().map((group) => (
         <div key={group.label}>
-        <p className="px-3 pb-1 type-caption font-medium text-text-secondary">{group.label}</p>
-        <ul className="space-y-1">
+        <p className="px-3 pb-tight type-caption font-medium text-text-secondary">{group.label}</p>
+        <ul className="space-y-1.5">
           {group.courses.map((guide) => {
             const isCurrent = guide.slug === currentGuideSlug;
 
