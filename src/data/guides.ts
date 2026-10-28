@@ -10476,7 +10476,7 @@ Audience: Early-stage VCs in the design-tools space.`,
           },
           {
             "type": "text",
-            "content": "Those numbers are small on purpose. A study of 41 examples is enough to learn the method and find the biggest problems. The whole study cost about $15 in AI usage. The hard part was judgement, which is the part designers and PMs are already trained for."
+            "content": "Those numbers are small on purpose. A study of 41 examples is enough to learn the method and find the biggest problems. The whole study cost about $30 in AI usage. The hard part was judgement, which is the part designers and PMs are already trained for."
           },
           {
             "type": "heading",
@@ -10602,7 +10602,7 @@ Audience: Early-stage VCs in the design-tools space.`,
           {
             "type": "image",
             "src": "/images/guides/ai-evals-for-designers/review-page.webp",
-            "alt": "The study's review page. On the left, a screenshot of a Perplexity answer with citations. On the right, the audit: a score of 5 of 6, what the AI thinks the product is, what it says is on screen, five patterns it says apply, and the start of its top gaps. At the bottom sits one question, would you be happy if a real user got this audit, with Pass and Fail buttons and a note field.",
+            "alt": "The study's review page. On the left, a screenshot of a ChatGPT answer about feedback loops. On the right, the audit: a score of 9 of 12, what the AI thinks the product is, what it says is on screen, five patterns it says apply, and the start of its top gaps. At the bottom sits one question, would you be happy if a real user got this audit, with Pass and Fail buttons and a note field.",
             "label": "The review page from the study: screenshot on the left, the audit as a user would read it on the right, one question and two buttons at the bottom."
           },
           {
