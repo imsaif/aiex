@@ -1,4 +1,8 @@
 import { Metadata } from 'next';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import LearnShell from '@/components/learn/LearnShell';
+import LearnSidebar from '@/components/learn/LearnSidebar';
 import { getNewsletters, getAllTags } from '@/data/newsletters';
 import { prisma } from '@/lib/prisma';
 import { productsForIssue, computeReadMinutes } from '@/lib/newsletter/products';
@@ -159,7 +163,13 @@ export default async function NewsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(newsPageSchema) }}
       />
-      <NewsClient initialNewsletters={allNewsletters} availableTags={tags} />
+      {/* Inside the console (2026-10-28), like every other section. URLs,
+          titles, metadata and JSON-LD are unchanged; only the frame moved. */}
+      <Navbar inConsole />
+      <LearnShell sidebar={<LearnSidebar active="none" />}>
+        <NewsClient initialNewsletters={allNewsletters} availableTags={tags} />
+      </LearnShell>
+      <Footer />
     </>
   );
 }

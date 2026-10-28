@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import ScrollToTop from '@/components/ui/ScrollToTop';
 import dynamic from 'next/dynamic';
 import { Newsletter } from '@/types';
@@ -66,11 +64,10 @@ export default function NewsletterDetailClient({
   }, [newsletter.content]);
 
   return (
-    <main className="min-h-screen bg-background-primary text-text-primary">
-      <Navbar />
+    <main className="text-text-primary">
 
       {/* Header */}
-      <section className="pt-12 md:pt-16 pb-8 bg-[#F0F1F5] dark:bg-[#162036] bg-grain">
+      <section className="pt-10 md:pt-12 pb-8">
         <div className="max-w-4xl mx-auto px-6">
           {/* Back link */}
           <Link prefetch={false}
@@ -215,7 +212,6 @@ export default function NewsletterDetailClient({
         </div>
       </div>
 
-      <Footer />
       <ScrollToTop />
     </main>
   );
