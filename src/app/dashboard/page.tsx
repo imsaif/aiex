@@ -38,7 +38,7 @@ export default function DashboardPage() {
     // audit tool. It was the last page left on the old dotted ground.
     <>
       <Navbar inConsole />
-      <LearnShell sidebar={<LearnSidebar />}>
+      <LearnShell sidebar={<LearnSidebar active="none" />}>
         <main className="text-text-primary">
           <DashboardClient courses={courseIndex} continueSlot={<ContinueLearning courses={continueCourses} />} />
         </main>

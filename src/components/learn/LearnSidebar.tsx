@@ -110,7 +110,7 @@ const COURSE_GROUPS: Array<{ label: string; slugs: string[] }> = [
 /** Rail-only names where the page title is tuned for search, not for a 240px list. */
 const RAIL_LABEL_BY_SLUG: Record<string, string> = {
   'conversational-ui-guide': 'Conversational UI',
-  'ai-evals-for-designers': 'AI Evals',
+  'ai-evals-for-designers': 'Designing Evals',
 };
 
 function groupedCourses(): Array<{ label: string; courses: typeof guides }> {
@@ -305,7 +305,8 @@ export default async function LearnSidebar({
   currentIsOverview,
 }: {
   /** Which Explore row to mark as the current page. */
-  active?: 'map' | 'patterns' | 'skills';
+  /** 'none' on pages that are not an Explore row, such as Saved. */
+  active?: 'map' | 'patterns' | 'skills' | 'none';
   /** Set on a course or lesson page so that course opens in the rail. */
   currentGuideSlug?: string;
   currentLessonSlug?: string;
@@ -314,6 +315,7 @@ export default async function LearnSidebar({
   const issues = await getLatestIssues();
   // A course page is inside the map's area but is not the map itself.
   const activeHref =
+    active === 'none' ? null :
     active === 'patterns'
       ? '/patterns'
       : active === 'skills'
