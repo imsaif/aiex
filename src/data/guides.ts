@@ -11255,6 +11255,12 @@ Audience: Early-stage VCs in the design-tools space.`,
             "title": "Further reading",
             "links": [
               {
+                "title": "The study behind this course",
+                "url": "/guides/ai-evals-for-designers/the-study",
+                "source": "aiuxdesign.guide",
+                "description": "The full eval this course was built from: 41 audits reviewed by hand, two fixes measured, and what is still wrong."
+              },
+              {
                 "title": "AI Evals: Everything You Need to Know",
                 "url": "https://hamel.dev/blog/posts/evals-faq/",
                 "source": "Hamel Husain and Shreya Shankar",
