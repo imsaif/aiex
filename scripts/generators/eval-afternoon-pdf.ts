@@ -1,6 +1,6 @@
 /**
- * Builds public/downloads/eval-your-ai-product.pdf from src/data/eval-afternoon.ts,
- * the same data the /eval-your-ai-product page renders, so the PDF and the page
+ * Builds public/downloads/ai-evals-checklist.pdf from src/data/eval-afternoon.ts,
+ * the same data the /ai-evals-checklist page renders, so the PDF and the page
  * cannot drift. Re-run after editing the steps:
  *
  *   npx tsx scripts/generators/eval-afternoon-pdf.ts
@@ -35,19 +35,19 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
   <p class="lead">${esc(EVAL_AFTERNOON.lead)}</p>
   <ol>${EVAL_AFTERNOON.steps
     .map(
-      (s) => `<li><span class="n">${String(s.number).padStart(2, '0')}</span><div><h2>${esc(s.title)}</h2><p>${esc(s.body)}</p><p class="ex"><b>From a real study:</b> ${esc(s.example)}</p></div></li>`
+      (s) => `<li><span class="n">${String(s.number).padStart(2, '0')}</span><div><h2>${esc(s.title)}</h2><p>${esc(s.body)}</p><p class="ex"><b>In the study:</b> ${esc(s.example)}</p></div></li>`
     )
     .join('')}</ol>
   <table><thead><tr>${EVAL_AFTERNOON.sheetColumns.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead>
   <tbody>${Array.from({ length: 10 }, (_, i) => `<tr><td>${i + 1}</td>${'<td></td>'.repeat(EVAL_AFTERNOON.sheetColumns.length - 1)}</tr>`).join('')}</tbody></table>
-  <div class="foot"><span>Full method: aiuxdesign.guide/guides/ai-evals-for-designers</span><span>Review sheet: aiuxdesign.guide/eval-your-ai-product</span></div>
+  <div class="foot"><span>Full method: aiuxdesign.guide/guides/ai-evals-for-designers</span><span>Review sheet: aiuxdesign.guide/ai-evals-checklist</span></div>
 </body></html>`;
 
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage();
   await page.setContent(html, { waitUntil: 'load' });
-  const out = path.join(__dirname, '../../public/downloads/eval-your-ai-product.pdf');
+  const out = path.join(__dirname, '../../public/downloads/ai-evals-checklist.pdf');
   await page.pdf({ path: out, format: 'A4', printBackground: true, preferCSSPageSize: true });
   await browser.close();
   console.log('wrote', out);

@@ -18,7 +18,7 @@ export function EvalDownload() {
   const download = () => {
     const a = document.createElement('a');
     a.href = EVAL_PDF_PATH;
-    a.download = 'eval-your-ai-product.pdf';
+    a.download = 'ai-evals-checklist.pdf';
     document.body.appendChild(a);
     a.click();
     a.remove();

@@ -149,7 +149,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/eval-your-ai-product`,
+      url: `${baseUrl}/ai-evals-checklist`,
       lastModified: new Date('2026-10-29'),
       changeFrequency: 'monthly',
       priority: 0.7,
