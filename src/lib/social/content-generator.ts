@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { WRITING_RULES, cleanCopy } from './copy-rules';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -10,13 +11,18 @@ interface NewsletterItem {
   description: string;
   sourceUrl: string;
   patternSlug?: string;
+  /** Per-story "Designer's Takeaway" (daily format since Oct 2026). */
+  designerTakeaway?: string;
 }
 
-interface NewsletterData {
+export interface NewsletterData {
   title: string;
   summary: string;
   type: 'daily' | 'weekly';
   items: NewsletterItem[];
+  /** Today's Idea / This Week's Idea. Stored as structuredData.takeaway = { title, body }. */
+  idea?: { title: string; body: string; patternSlug?: string };
+  /** Pre-Oct 2026 issues stored the takeaway as a plain string. */
   takeaway?: string;
   stealThisWeek?: {
     product: string;
@@ -29,10 +35,12 @@ interface NewsletterData {
     description: string;
     slug: string;
   };
+  /** Pattern drawing the issue's navy band used; the social images reuse it. */
+  bandSlug?: string;
 }
 
 interface TwitterContent {
-  content: string; // Main tweet or hook tweet for thread
+  content: string; // Hook tweet: the drafted take
   threadContent?: string[]; // Additional tweets for thread
   hashtags: string[];
 }
@@ -53,17 +61,83 @@ interface GeneratedSocialContent {
   reddit: RedditContent;
 }
 
+/** The issue as plain text for a prompt: stories with their takeaways, then the idea. */
+export function buildIssueContext(data: NewsletterData): string {
+  const stories = data.items
+    .map((item, i) => {
+      const takeaway = item.designerTakeaway ? `\n   Designer's Takeaway: ${item.designerTakeaway}` : '';
+      return `${i + 1}. ${item.product}: ${item.headline}. ${item.description}${takeaway}`;
+    })
+    .join('\n');
+  const idea = data.idea
+    ? `\n\n${data.type === 'weekly' ? "This Week's Idea" : "Today's Idea"}: ${data.idea.title}. ${data.idea.body}`
+    : data.takeaway
+      ? `\n\nTakeaway: ${data.takeaway}`
+      : '';
+  const extras = [
+    data.stealThisWeek ? `Featured: ${data.stealThisWeek.product}, ${data.stealThisWeek.feature}` : '',
+    data.patternToKnow ? `Pattern: ${data.patternToKnow.name}, ${data.patternToKnow.description}` : '',
+  ].filter(Boolean);
+  return `Title: ${data.title}
+Summary: ${data.summary}
+
+Stories:
+${stories}${idea}${extras.length ? `\n\n${extras.join('\n')}` : ''}`;
+}
+
+function parseJson(text: string): Record<string, unknown> {
+  const match = text.match(/```json\n?([\s\S]*?)\n?```/) || text.match(/\{[\s\S]*\}/);
+  return JSON.parse(match ? match[1] || match[0] : text);
+}
+
 /**
- * Generates social media content for both Twitter/X and LinkedIn
- * from newsletter structured data
+ * The take: one or two sentences of opinion that open both the LinkedIn post and
+ * the X thread, drafted from Today's Idea and the stories' Designer's Takeaways.
+ * Imran reviews and edits it in the Social tab. It states a view on the news and
+ * never claims an experience (see WRITING_RULES).
+ */
+export async function generateTake(newsletterData: NewsletterData): Promise<string> {
+  const response = await anthropic.messages.create({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 300,
+    system:
+      "You write the opening line of a designer's daily social post about AI product news. Plain, specific and opinionated, in the voice of a senior product designer.",
+    messages: [
+      {
+        role: 'user',
+        content: `${buildIssueContext(newsletterData)}
+
+Write the take: one or two sentences (under 240 characters) stating what designers should conclude from today's issue. Build it from the idea and the Designer's Takeaways. Name the concrete thing, not the theme. It must make sense on its own as the first tweet of a thread.
+
+${WRITING_RULES}
+
+Respond with JSON only: {"take": "..."}`,
+      },
+    ],
+  });
+  const content = response.content[0];
+  if (content.type !== 'text') throw new Error('Unexpected response type from Claude');
+  try {
+    const take = parseJson(content.text).take;
+    if (typeof take === 'string' && take.trim()) return cleanCopy(take);
+  } catch (error) {
+    console.error('Failed to parse take:', error);
+  }
+  return cleanCopy(newsletterData.idea?.title || newsletterData.title);
+}
+
+/**
+ * Generates the X thread, LinkedIn post and Reddit post for one issue. The take is
+ * drafted first so both social posts open with the same line.
  */
 export async function generateSocialContent(
   newsletterData: NewsletterData,
   newsletterUrl: string
 ): Promise<GeneratedSocialContent> {
+  const take = await generateTake(newsletterData);
   const [twitterContent, linkedInContent, redditContent] = await Promise.all([
-    generateTwitterContent(newsletterData, newsletterUrl),
-    generateLinkedInContent(newsletterData, newsletterUrl),
+    generateTwitterContent(newsletterData, newsletterUrl, take),
+    generateLinkedInContent(newsletterData, newsletterUrl, take),
     generateRedditContent(newsletterData, newsletterUrl),
   ]);
 
@@ -75,19 +149,21 @@ export async function generateSocialContent(
 }
 
 /**
- * Generates Twitter/X content from newsletter data
- * Creates an opinion thread: hook tweet + one opinionated take per story + closing tweet
+ * Generates the X thread: the take as the hook tweet, one opinion per story, then
+ * a closing tweet with the issue link.
  */
 export async function generateTwitterContent(
   newsletterData: NewsletterData,
-  newsletterUrl: string
+  newsletterUrl: string,
+  take?: string
 ): Promise<TwitterContent> {
-  const prompt = buildTwitterOpinionThreadPrompt(newsletterData, newsletterUrl);
+  const hook = take ?? (await generateTake(newsletterData));
+  const prompt = buildTwitterOpinionThreadPrompt(newsletterData, newsletterUrl, hook);
 
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 2048,
-    system: `You are a sharp, opinionated voice in the AI design and product space. You write for X (Twitter). Your posts are standalone opinions — not summaries, not teasers, not newsletter promotions. You write like someone who has a point of view and isn't afraid to state it plainly. Each tweet in a thread should hit hard on its own.`,
+    system: `You are a senior product designer with clear opinions about AI products, writing for X. Each tweet is a standalone opinion about what a story means for designers, stated plainly.`,
     messages: [
       {
         role: 'user',
@@ -102,35 +178,35 @@ export async function generateTwitterContent(
   }
 
   try {
-    // Extract JSON from the response (may be wrapped in markdown code blocks)
-    const jsonMatch = content.text.match(/```json\n?([\s\S]*?)\n?```/) ||
-                      content.text.match(/\{[\s\S]*\}/);
-    const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content.text;
-    const parsed = JSON.parse(jsonStr);
-
+    const parsed = parseJson(content.text);
+    const thread = Array.isArray(parsed.thread)
+      ? (parsed.thread as unknown[]).filter((t): t is string => typeof t === 'string')
+      : [];
     return {
-      content: parsed.hookTweet,
-      threadContent: parsed.thread,
-      hashtags: parsed.hashtags || [],
+      content: hook,
+      threadContent: thread.map(cleanCopy),
+      hashtags: (parsed.hashtags as string[]) || [],
     };
   } catch (error) {
     console.error('Failed to parse Twitter content:', error);
-    // Fallback to a simple format
     return {
-      content: `${newsletterData.title}\n\nCheck out the latest AI+UX insights: ${newsletterUrl}`,
+      content: hook,
+      threadContent: [`Today's issue: ${newsletterUrl}`],
       hashtags: ['AIUX', 'DesignPatterns'],
     };
   }
 }
 
 /**
- * Generates LinkedIn content from newsletter data
+ * Generates the LinkedIn post. The take is the opening paragraph.
  */
 export async function generateLinkedInContent(
   newsletterData: NewsletterData,
-  newsletterUrl: string
+  newsletterUrl: string,
+  take?: string
 ): Promise<LinkedInContent> {
-  const prompt = buildLinkedInPrompt(newsletterData, newsletterUrl);
+  const opening = take ?? (await generateTake(newsletterData));
+  const prompt = buildLinkedInPrompt(newsletterData, newsletterUrl, opening);
 
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
@@ -149,105 +225,66 @@ export async function generateLinkedInContent(
   }
 
   try {
-    // Extract JSON from the response
-    const jsonMatch = content.text.match(/```json\n?([\s\S]*?)\n?```/) ||
-                      content.text.match(/\{[\s\S]*\}/);
-    const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content.text;
-    const parsed = JSON.parse(jsonStr);
-
+    const parsed = parseJson(content.text);
     return {
-      content: parsed.post,
-      hashtags: parsed.hashtags || [],
+      // The take always leads, whatever the model did with its own opening.
+      content: `${opening}\n\n${cleanCopy(String(parsed.post ?? ''))}`.trim(),
+      hashtags: (parsed.hashtags as string[]) || [],
     };
   } catch (error) {
     console.error('Failed to parse LinkedIn content:', error);
-    // Fallback to a simple format
     return {
-      content: `${newsletterData.title}\n\n${newsletterData.summary}\n\nRead more: ${newsletterUrl}`,
+      content: `${opening}\n\n${cleanCopy(newsletterData.summary)}\n\nToday's issue: ${newsletterUrl}`,
       hashtags: ['AIUX', 'DesignPatterns', 'ProductDesign'],
     };
   }
 }
 
-function buildTwitterOpinionThreadPrompt(data: NewsletterData, url: string): string {
-  const itemsList = data.items
-    .map((item, i) => `${i + 1}. ${item.product}: ${item.headline} — ${item.description}`)
-    .join('\n');
-
+function buildTwitterOpinionThreadPrompt(data: NewsletterData, url: string, hook: string): string {
   const storyCount = data.items.length;
 
-  return `Here is today's AI UX newsletter content:
+  return `Here is today's AI UX newsletter:
 
-Title: ${data.title}
-Summary: ${data.summary}
+${buildIssueContext(data)}
 
-Stories:
-${itemsList}
+The thread's first tweet is already written. It is the author's take:
+"${hook}"
 
-${data.takeaway ? `Takeaway: ${data.takeaway}` : ''}
-${data.stealThisWeek ? `Featured: ${data.stealThisWeek.product} — ${data.stealThisWeek.feature}` : ''}
-${data.patternToKnow ? `Pattern: ${data.patternToKnow.name} — ${data.patternToKnow.description}` : ''}
+Write the rest of the thread for X:
 
-Your task:
-Write an opinion thread for X. The thread has 3 parts:
+1. One tweet per story (${storyCount} tweets). For EACH story, one tweet under 280 characters with a clear opinion about what it MEANS for designers and product builders, not a recap of what happened. Use the story's Designer's Takeaway as the starting point. Each tweet must make sense on its own.
 
-1. **Hook tweet** — A bold, opinionated opening that sets the theme across today's ${storyCount} stories. This is the tweet people see first. Make them want to read the thread.
-
-2. **One tweet per story** (${storyCount} tweets) — For EACH story above, write one tweet (under 280 chars) with a strong opinion about what that story MEANS for designers and product builders. Not what happened — what it implies. Each tweet should stand on its own.
-
-3. **Closing tweet** — Tie it together with a sharp takeaway. End with the newsletter link: ${url}
+2. A closing tweet that names the one thing to do this week, ending with the issue link: ${url}
 
 Rules:
-- Every tweet must be under 280 characters
-- Start each tweet with the insight or opinion, not the news event
-- Use emojis naturally within tweets to add personality and visual interest (e.g. 🔥, 👀, 🤔, 💡, ⚡, 🚀, 🎯) — place them mid-sentence or at the end, not as the very first character
-- No "here's what happened" or "let's break it down" framing
-- Write in first person or as direct statements
-- Each tweet must make sense on its own — not dependent on the previous one
-- The hook should NOT list stories or say "X things happened today"
-- Suggest 2-3 relevant hashtags (not included in character count)
+- Every tweet under 280 characters
+- Start each tweet with the opinion, not the news event
+- No "here's what happened", "let's break it down" or thread emoji
+- Suggest 2-3 relevant hashtags (kept out of the tweets)
 
-Example of a BAD hook:
-"5 big AI stories dropped today. Let me break them down 🧵"
-
-Example of a GOOD hook:
-"The AI product landscape shifted this week in ways most teams aren't ready for. A few things worth paying attention to 👀"
+${WRITING_RULES}
 
 Example of a BAD story tweet:
 "Google announced Gemini 2.0 with impressive multimodal capabilities and agentic features."
 
 Example of a GOOD story tweet:
-"Google positioning Gemini as an agent platform isn't a model upgrade — it's a bet that the next interface isn't a chatbox, it's an autonomous worker 🤔 Design teams need to start thinking about supervision UX, not conversation UX."
+"Gemini as an agent platform means the next interface is a worker you supervise. Design teams should start on supervision UX: what the agent is doing, and how to stop it."
 
 Respond with JSON only:
 {
-  "hookTweet": "Your bold opening tweet",
   "thread": [
     "Opinion tweet about story 1",
     "Opinion tweet about story 2",
-    "Opinion tweet about story 3",
-    "Closing tweet with takeaway and link"
+    "Closing tweet with the one thing to do and the link"
   ],
   "hashtags": ["hashtag1", "hashtag2"]
 }`;
 }
 
 function buildRedditPrompt(data: NewsletterData, url: string): string {
-  const itemsList = data.items
-    .map((item, i) => `${i + 1}. ${item.product}: ${item.headline} — ${item.description}`)
-    .join('\n');
-
   return `Here is today's AI UX newsletter content:
 
-Title: ${data.title}
-Summary: ${data.summary}
-
-Stories:
-${itemsList}
-
-${data.takeaway ? `Takeaway: ${data.takeaway}` : ''}
-${data.stealThisWeek ? `Featured: ${data.stealThisWeek.product} — ${data.stealThisWeek.feature}` : ''}
-${data.patternToKnow ? `Pattern: ${data.patternToKnow.name} — ${data.patternToKnow.description}` : ''}
+${buildIssueContext(data)}
 
 Newsletter link: ${url}
 
@@ -284,40 +321,31 @@ Respond with JSON only:
 }`;
 }
 
-function buildLinkedInPrompt(data: NewsletterData, url: string): string {
-  const itemsList = data.items
-    .map((item) => `- ${item.product}: ${item.headline} - ${item.description}`)
-    .join('\n');
+function buildLinkedInPrompt(data: NewsletterData, url: string, opening: string): string {
+  return `You write LinkedIn posts for a senior product designer who runs an AI UX newsletter. Write today's post from the issue below.
 
-  return `You are a social media expert for an AI+UX design newsletter. Create a professional LinkedIn post about the latest newsletter edition.
+${buildIssueContext(data)}
 
-Newsletter Title: ${data.title}
-Summary: ${data.summary}
-Type: ${data.type}
+Issue URL: ${url}
 
-Items covered:
-${itemsList}
+The post's opening paragraph is already written. It is the author's take:
+"${opening}"
 
-${data.takeaway ? `Key Takeaway: ${data.takeaway}` : ''}
-${data.stealThisWeek ? `Featured: ${data.stealThisWeek.product} - ${data.stealThisWeek.feature}: ${data.stealThisWeek.description || data.stealThisWeek.insight || ''}` : ''}
-${data.patternToKnow ? `Design Pattern Spotlight: ${data.patternToKnow.name} - ${data.patternToKnow.description}` : ''}
-
-Newsletter URL: ${url}
+Write everything AFTER that opening. Do not repeat or rephrase it.
 
 Requirements:
-- Length: 1000-1300 characters (optimal for LinkedIn engagement)
-- Structure:
-  1. Opening hook (1-2 lines) - question or bold statement
-  2. Key insights (bullet points or short paragraphs) - use a relevant emoji at the start of each item (e.g. 🔍 for research, 🚀 for launches, 🛡️ for security, 🛒 for commerce, 📊 for analytics)
-  3. Call-to-action with link
-- Professional but engaging tone — use emojis to add visual interest like top LinkedIn creators do
-- Add value beyond just summarizing
-- Suggest 3-5 relevant hashtags
+- 700-1100 characters for your part
+- Two or three short paragraphs or a short list: what happened in the stories that back the take, and what a designer should do about it. Use the Designer's Takeaways.
+- End with one line pointing to the full issue, with the URL
+- Professional, plain and specific. Add value beyond summarising.
+- Suggest 3-5 relevant hashtags (kept out of the post text)
+
+${WRITING_RULES}
 
 Respond with JSON only:
 {
-  "post": "Your full LinkedIn post text here including the URL at the end",
-  "hashtags": ["hashtag1", "hashtag2", "hashtag3", "hashtag4"]
+  "post": "Everything after the opening, including the URL at the end",
+  "hashtags": ["hashtag1", "hashtag2", "hashtag3"]
 }`;
 }
 
@@ -349,14 +377,11 @@ export async function generateRedditContent(
   }
 
   try {
-    const jsonMatch = content.text.match(/```json\n?([\s\S]*?)\n?```/) ||
-                      content.text.match(/\{[\s\S]*\}/);
-    const jsonStr = jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : content.text;
-    const parsed = JSON.parse(jsonStr);
+    const parsed = parseJson(content.text);
 
     return {
-      title: parsed.title,
-      content: parsed.body,
+      title: cleanCopy(String(parsed.title ?? '')),
+      content: cleanCopy(String(parsed.body ?? '')),
     };
   } catch (error) {
     console.error('Failed to parse Reddit content:', error);
@@ -385,7 +410,8 @@ export async function regeneratePlatformContent(
 }
 
 /**
- * Parses structured data from a newsletter draft
+ * Parses structured data from a newsletter draft. Handles both shapes of
+ * `takeaway`: the Oct 2026 `{ title, body }` idea, and the older plain string.
  */
 export function parseNewsletterStructuredData(structuredData: unknown): NewsletterData | null {
   if (!structuredData || typeof structuredData !== 'object') {
@@ -393,14 +419,21 @@ export function parseNewsletterStructuredData(structuredData: unknown): Newslett
   }
 
   const data = structuredData as Record<string, unknown>;
+  const rawTakeaway = data.takeaway;
+  const idea =
+    rawTakeaway && typeof rawTakeaway === 'object' && typeof (rawTakeaway as { title?: unknown }).title === 'string'
+      ? (rawTakeaway as NewsletterData['idea'])
+      : undefined;
 
   return {
     title: (data.title as string) || '',
     summary: (data.summary as string) || '',
     type: ((data.type as string) === 'weekly' ? 'weekly' : 'daily') as 'daily' | 'weekly',
     items: (data.items as NewsletterItem[]) || [],
-    takeaway: data.takeaway as string | undefined,
+    idea,
+    takeaway: typeof rawTakeaway === 'string' ? rawTakeaway : undefined,
     stealThisWeek: data.stealThisWeek as NewsletterData['stealThisWeek'],
     patternToKnow: data.patternToKnow as NewsletterData['patternToKnow'],
+    bandSlug: typeof data.bandSlug === 'string' ? data.bandSlug : undefined,
   };
 }
