@@ -79,7 +79,7 @@ export default function EvalAfternoonPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howTo) }} />
       <Navbar inConsole />
       <LearnShell sidebar={<LearnSidebar active="none" />}>
-        <main id="main-content" className="pt-10 pb-16 text-text-primary">
+        <main id="main-content" className="mx-auto max-w-5xl pt-10 pb-16 text-text-primary">
           <nav className="mb-6 text-sm text-text-secondary" aria-label="Breadcrumb">
             <ol className="flex flex-wrap items-center gap-tight">
               <li>
