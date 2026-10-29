@@ -21,6 +21,11 @@ const PAGE_CONFIG: Record<string, { title: string; subtitle: string; icon: strin
     subtitle: 'A 4-page toolkit to test how AI agents read, understand, and represent your product.',
     icon: 'ClipboardCheck',
   },
+  'eval-your-ai-product': {
+    title: 'Eval Your AI Product\nin an Afternoon',
+    subtitle: 'Five steps for designers: 20 real answers, pass or fail, one rule, re-check. Free checklist.',
+    icon: 'ClipboardCheck',
+  },
   'agentic-ux-checklist': {
     title: 'Agentic UX\nChecklist',
     subtitle: 'An 8-pattern checklist for designing trustworthy AI agents. Free PDF download.',

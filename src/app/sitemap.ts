@@ -149,6 +149,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/eval-your-ai-product`,
+      lastModified: new Date('2026-10-29'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/agentic-ux-checklist`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

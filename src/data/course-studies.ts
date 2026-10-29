@@ -178,6 +178,12 @@ export const courseStudies: CourseStudy[] = [
             description: 'The evals FAQ this study followed.',
           },
           {
+            title: 'Eval Your AI Product in an Afternoon',
+            url: '/eval-your-ai-product',
+            source: 'aiuxdesign.guide',
+            description: 'The same method as five steps you can run in about two hours, with a review sheet.',
+          },
+          {
             title: 'Run the AI UX audit tool',
             url: '/audit',
             source: 'aiuxdesign.guide',
