@@ -7,6 +7,7 @@ import LearnSidebar from '@/components/learn/LearnSidebar';
 import { EVAL_AFTERNOON } from '@/data/eval-afternoon';
 import { siteConfig } from '@/config/seo';
 import { EvalDownload } from './eval-download';
+import { RevealStep } from './reveal-step';
 import { MarkArtifact, RecheckArtifact } from './worked-example';
 import {
   ClockIcon,
@@ -99,19 +100,22 @@ export default function EvalAfternoonPage() {
 
           {/* The five steps, written for any AI product. Examples on the right are
               made-up illustrations for common products, labelled as such. */}
-          <ol className="relative mt-roomy max-w-5xl">
-            <span className="absolute left-4 top-2 bottom-2 w-px bg-border-primary md:left-5" aria-hidden />
+          <ol className="mt-roomy max-w-5xl">
             {steps.map((step) => {
               const StepIcon = STEP_ICONS[step.number - 1];
               return (
-              <li
+              <RevealStep
                 key={step.number}
                 id={`step-${step.number}`}
-                className="relative scroll-mt-24 pb-roomy pl-12 last:pb-0 md:grid md:grid-cols-[minmax(0,1fr)_20rem] md:gap-loose md:pl-16"
+                last={step.number === steps.length}
+                className="relative scroll-mt-24 pb-roomy pl-12 last:pb-0 md:pl-16"
+                innerClassName="md:grid md:grid-cols-[minmax(0,1fr)_20rem] md:gap-loose"
+                marker={
+                  <span className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent md:h-10 md:w-10">
+                    <StepIcon className="h-4 w-4 md:h-5 md:w-5" aria-hidden />
+                  </span>
+                }
               >
-                <span className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent md:h-10 md:w-10">
-                  <StepIcon className="h-4 w-4 md:h-5 md:w-5" aria-hidden />
-                </span>
                 <div className="md:pt-1">
                   <p className="type-eyebrow font-mono text-text-secondary">Step {step.number}</p>
                   <h2 className="type-h3 mt-1 text-text-primary">{step.title}</h2>
@@ -140,7 +144,7 @@ export default function EvalAfternoonPage() {
                     })}
                   </ul>
                 </div>
-              </li>
+              </RevealStep>
               );
             })}
           </ol>
