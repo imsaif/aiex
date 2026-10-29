@@ -103,13 +103,13 @@ export const EVAL_AFTERNOON = {
  * One real audit from the study, followed through all five steps on the page.
  * Source: ~/Desktop/evals-study (f-chat-claude). The screenshot is cropped to
  * the chat reply; the full capture showed private sidebar titles and tabs.
- * Imran's note is his label, punctuation tidied only.
+ * Imran's note is his label, reworded with his approval (2026-10-29).
  */
 export const WORKED_EXAMPLE = {
   image: '/images/resources/ai-evals-checklist/claude-chat-audit.webp',
   imageAlt: 'A Claude chat reply explaining two collapsed audit findings, with copy, thumbs up, thumbs down and retry buttons below it.',
   topGapBefore: { pattern: 'Confidence Visualization', status: 'Missing' },
-  note: 'Not every chat interface needs confidence visualization. Same with explainable AI: it assumes this is the final state of the UI, whereas I can highlight and ask Claude to follow up. All the gaps here seem irrelevant to a simple chat UI.',
+  note: 'Not every chat needs a confidence score. The same goes for explainable AI: the audit treated this as the finished screen, when I can highlight any part and ask Claude to follow up. None of these gaps fit a simple chat.',
   after: {
     topGap: 'Progressive Disclosure: collapsed audit-finding cards are unresolvable from within the chat',
     worthChecking: [
