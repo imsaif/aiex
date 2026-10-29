@@ -8,7 +8,27 @@ import { EVAL_AFTERNOON } from '@/data/eval-afternoon';
 import { siteConfig } from '@/config/seo';
 import { EvalDownload } from './eval-download';
 import { MarkArtifact, RecheckArtifact } from './worked-example';
-import { ClockIcon } from '@heroicons/react/24/outline';
+import {
+  ClockIcon,
+  InboxStackIcon,
+  HandThumbUpIcon,
+  RectangleGroupIcon,
+  ScaleIcon,
+  ArrowPathIcon,
+  ChatBubbleLeftRightIcon,
+  PencilSquareIcon,
+  MagnifyingGlassIcon,
+  CubeIcon,
+} from '@heroicons/react/24/outline';
+
+// One mark per step, and one per kind of product in the examples.
+const STEP_ICONS = [InboxStackIcon, HandThumbUpIcon, RectangleGroupIcon, ScaleIcon, ArrowPathIcon];
+const PRODUCT_ICONS: Record<string, typeof CubeIcon> = {
+  'Support bot': ChatBubbleLeftRightIcon,
+  'Writing assistant': PencilSquareIcon,
+  'Search or summary': MagnifyingGlassIcon,
+  'Any product': CubeIcon,
+};
 
 /**
  * The quick version of the AI Evals for Designers course (2026-10-29): five
@@ -81,17 +101,20 @@ export default function EvalAfternoonPage() {
               made-up illustrations for common products, labelled as such. */}
           <ol className="relative mt-roomy max-w-5xl">
             <span className="absolute left-4 top-2 bottom-2 w-px bg-border-primary md:left-5" aria-hidden />
-            {steps.map((step) => (
+            {steps.map((step) => {
+              const StepIcon = STEP_ICONS[step.number - 1];
+              return (
               <li
                 key={step.number}
                 id={`step-${step.number}`}
                 className="relative scroll-mt-24 pb-roomy pl-12 last:pb-0 md:grid md:grid-cols-[minmax(0,1fr)_20rem] md:gap-loose md:pl-16"
               >
-                <span className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary type-caption font-mono font-semibold text-text-on-accent md:h-10 md:w-10">
-                  {step.number}
+                <span className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary text-text-on-accent md:h-10 md:w-10">
+                  <StepIcon className="h-4 w-4 md:h-5 md:w-5" aria-hidden />
                 </span>
                 <div className="md:pt-1">
-                  <h2 className="type-h3 text-text-primary">{step.title}</h2>
+                  <p className="type-eyebrow font-mono text-text-secondary">Step {step.number}</p>
+                  <h2 className="type-h3 mt-1 text-text-primary">{step.title}</h2>
                   <p className="mt-tight text-text-secondary">{step.body}</p>
                   <p className="mt-snug inline-flex items-center gap-1 type-caption text-text-secondary">
                     <ClockIcon className="h-4 w-4" aria-hidden />
@@ -101,16 +124,25 @@ export default function EvalAfternoonPage() {
                 <div className="mt-default rounded-card border border-border-primary bg-surface-primary p-default md:mt-0">
                   <p className="type-eyebrow text-text-secondary">For example</p>
                   <ul className="mt-snug space-y-snug">
-                    {step.examples.map((ex, i) => (
-                      <li key={i} className="text-sm">
-                        <span className="block type-caption font-semibold text-text-secondary">{ex.product}</span>
-                        <span className="text-text-primary">{ex.text}</span>
-                      </li>
-                    ))}
+                    {step.examples.map((ex, i) => {
+                      const ProductIcon = PRODUCT_ICONS[ex.product] ?? CubeIcon;
+                      return (
+                        <li key={i} className="flex gap-snug text-sm">
+                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-input bg-background-secondary">
+                            <ProductIcon className="h-4 w-4 text-text-secondary" aria-hidden />
+                          </span>
+                          <span>
+                            <span className="block type-caption font-semibold text-text-secondary">{ex.product}</span>
+                            <span className="text-text-primary">{ex.text}</span>
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </li>
-            ))}
+              );
+            })}
           </ol>
 
           {/* The real study, told as one case. Its failures were specific to a
@@ -150,39 +182,14 @@ export default function EvalAfternoonPage() {
           </section>
 
           <section className="mt-roomy max-w-4xl" aria-labelledby="downloads-heading">
-            <h2 id="downloads-heading" className="type-h2 text-text-primary">
-              Run it on your product
-            </h2>
-            <div className="mt-default">
-              <EvalDownload />
-            </div>
-          </section>
-
-          <section className="mt-roomy max-w-3xl border-t border-border-primary pt-loose" aria-labelledby="next-heading">
-            <h2 id="next-heading" className="type-h3 text-text-primary">
-              When you want more
-            </h2>
-            <p className="mt-tight text-text-secondary">
-              After one pass you know where your product fails and what to fix first. To check every release
-              without re-reading everything by hand, the course shows how to hand your rule to an AI reviewer and test
-              that it agrees with you.
-            </p>
-            <div className="mt-default flex flex-wrap gap-snug">
-              <Link
-                prefetch={false}
-                href="/guides/ai-evals-for-designers"
-                className="rounded-pill bg-accent-primary px-loose py-tight text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover"
-              >
+            <EvalDownload />
+            <p className="mt-loose text-text-secondary">
+              Want to check every release without re-reading by hand? The{' '}
+              <Link prefetch={false} href="/guides/ai-evals-for-designers" className="font-semibold text-text-primary underline underline-offset-4 hover:text-accent-primary">
                 AI Evals for Designers course
-              </Link>
-              <Link
-                prefetch={false}
-                href="/guides/ai-evals-for-designers/the-study"
-                className="rounded-pill border border-border-secondary px-loose py-tight text-sm font-semibold text-text-primary transition-colors hover:border-accent-primary"
-              >
-                Read the full study
-              </Link>
-            </div>
+              </Link>{' '}
+              shows how to hand your rule to an AI reviewer.
+            </p>
           </section>
         </main>
       </LearnShell>
