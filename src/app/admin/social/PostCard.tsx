@@ -1,6 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { findExperienceClaims } from '@/lib/social/copy-rules';
 
 export interface SocialAccount {
   id: string;
@@ -236,6 +237,9 @@ function PostBody({
   const isEditing = editingPostId === post.id;
   const redditTitle = cfg.showRedditTitle ? post.threadContent?.[0] || '' : '';
   const charCount = isEditing ? editedContent.length : post.content.length;
+  const claims = findExperienceClaims(
+    [isEditing ? editedContent : post.content, ...(post.threadContent ?? [])].join('\n')
+  );
 
   return (
     <div className="flex flex-col flex-1">
@@ -269,6 +273,13 @@ function PostBody({
           </div>
         ) : (
           <p className="text-text-primary text-sm whitespace-pre-wrap">{post.content}</p>
+        )}
+
+        {/* Drafts post under your name: flag any experience the model claimed for you. */}
+        {claims.length > 0 && (
+          <p className="mt-3 rounded-input border border-status-warning/40 bg-status-warning/10 px-snug py-tight text-sm text-text-primary">
+            Check before posting: this draft says {claims.map((c) => `"${c}"`).join(', ')}. Keep it only if you did it.
+          </p>
         )}
 
         {/* Twitter thread */}

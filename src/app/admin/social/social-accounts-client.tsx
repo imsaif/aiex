@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { newestIssue, shouldAutoDraft } from '@/lib/social/daily';
 import { PostCard, type SocialAccount, type SocialPost } from './PostCard';
 import PatternDeepDiveSection from './PatternDeepDiveSection';
 
@@ -22,7 +23,10 @@ export default function SocialAccountsClient({
   initialSuccess,
   initialError,
 }: SocialAccountsClientProps) {
-  const [mode, setMode] = useState<'deepdive' | 'newsletter'>('deepdive');
+  // Newsletter mode first: the daily habit is reviewing today's drafts.
+  const [mode, setMode] = useState<'deepdive' | 'newsletter'>('newsletter');
+  // Issues whose drafts were already written on open, so a reload never repeats it.
+  const autoDrafted = useRef<Set<string>>(new Set());
   const [accounts, setAccounts] = useState<SocialAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(
@@ -72,6 +76,9 @@ export default function SocialAccountsClient({
       const data = await res.json();
       if (data.drafts && Array.isArray(data.drafts)) {
         setNewsletters(data.drafts);
+        // Land on the newest issue so today's drafts are the first thing on screen.
+        const newest = newestIssue<Newsletter>(data.drafts);
+        setSelectedNewsletter((current) => current ?? newest);
       }
     } catch (error) {
       console.error('Failed to fetch newsletters:', error);
@@ -80,27 +87,38 @@ export default function SocialAccountsClient({
     }
   };
 
-  const fetchSocialPosts = useCallback(async (newsletterId: string) => {
+  const fetchSocialPosts = useCallback(async (newsletterId: string): Promise<SocialPost[] | null> => {
     setIsLoadingSocialPosts(true);
     try {
       const res = await fetch(`/api/social/posts?newsletterId=${newsletterId}`);
       const data = await res.json();
       if (data.posts) {
         setSocialPosts(data.posts);
+        return data.posts;
       }
     } catch (error) {
       console.error('Failed to fetch social posts:', error);
     } finally {
       setIsLoadingSocialPosts(false);
     }
+    return null;
   }, []);
 
   useEffect(() => {
-    if (selectedNewsletter) {
-      fetchSocialPosts(selectedNewsletter.id);
-    } else {
+    if (!selectedNewsletter) {
       setSocialPosts([]);
+      return;
     }
+    const issue = selectedNewsletter;
+    fetchSocialPosts(issue.id).then((posts) => {
+      // A fresh issue with nothing drafted yet gets its drafts written now, once.
+      if (posts && shouldAutoDraft(issue, posts.length) && !autoDrafted.current.has(issue.id)) {
+        autoDrafted.current.add(issue.id);
+        generateSocialPosts(false, undefined, issue);
+      }
+    });
+    // generateSocialPosts is recreated every render; the ref guard makes it safe to leave out.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedNewsletter, fetchSocialPosts]);
 
   const disconnectAccount = async (accountId: string) => {
@@ -151,8 +169,12 @@ export default function SocialAccountsClient({
   };
 
   // Social media functions
-  const generateSocialPosts = async (regenerate = false, platform?: 'twitter' | 'linkedin' | 'reddit') => {
-    if (!selectedNewsletter) return;
+  const generateSocialPosts = async (
+    regenerate = false,
+    platform?: 'twitter' | 'linkedin' | 'reddit',
+    issue: Newsletter | null = selectedNewsletter
+  ) => {
+    if (!issue) return;
     setIsGeneratingSocial(true);
     setSocialMessage(null);
 
@@ -161,7 +183,7 @@ export default function SocialAccountsClient({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          newsletterId: selectedNewsletter.id,
+          newsletterId: issue.id,
           regenerate,
           platform,
         }),
@@ -174,7 +196,7 @@ export default function SocialAccountsClient({
           type: 'success',
           text: regenerate ? 'Social posts regenerated!' : 'Social posts generated!',
         });
-        await fetchSocialPosts(selectedNewsletter.id);
+        await fetchSocialPosts(issue.id);
       } else {
         throw new Error(data.error || 'Failed to generate posts');
       }
