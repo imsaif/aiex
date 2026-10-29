@@ -35,7 +35,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
   <p class="lead">${esc(EVAL_AFTERNOON.lead)}</p>
   <ol>${EVAL_AFTERNOON.steps
     .map(
-      (s) => `<li><span class="n">${String(s.number).padStart(2, '0')}</span><div><h2>${esc(s.title)}</h2><p>${esc(s.body)}</p><p class="ex"><b>In the study:</b> ${esc(s.example)}</p></div></li>`
+      (s) => `<li><span class="n">${String(s.number).padStart(2, '0')}</span><div><h2>${esc(s.title)}</h2><p>${esc(s.body)}</p><p class="ex"><b>For example:</b> ${s.examples.map((e) => esc(e.product + ': ' + e.text)).join(' · ')}</p></div></li>`
     )
     .join('')}</ol>
   <table><thead><tr>${EVAL_AFTERNOON.sheetColumns.map((c) => `<th>${esc(c)}</th>`).join('')}</tr></thead>

@@ -2,9 +2,9 @@ import { XCircleIcon, CheckCircleIcon, QuestionMarkCircleIcon } from '@heroicons
 import { WORKED_EXAMPLE as W } from '@/data/eval-afternoon';
 
 /**
- * The real material from one audit in the study, one piece per step. Nothing
- * here is illustrative: the screenshot, the verdicts, Imran's note, the group
- * counts and the before/after all come from the study files.
+ * Real material from one audit in the study, for the "How we did it" section.
+ * Nothing here is illustrative: the screenshot, the verdicts, Imran's note and
+ * the before/after all come from the study files.
  */
 
 function Card({ label, children }: { label: string; children: React.ReactNode }) {
@@ -28,9 +28,9 @@ function Verdict({ pass }: { pass: boolean }) {
   );
 }
 
-export function CollectArtifact() {
+export function MarkArtifact() {
   return (
-    <Card label="Answer 1 of 41 · a Claude chat">
+    <Card label="One of the 41 · a Claude chat, before the fixes">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={W.image}
@@ -40,67 +40,16 @@ export function CollectArtifact() {
         loading="lazy"
         className="w-full rounded-input border border-border-primary"
       />
-      <p className="mt-snug text-sm text-text-secondary">
-        The audit&apos;s top gap for it:{' '}
-        <span className="font-semibold text-text-primary">
-          {W.topGapBefore.pattern} · {W.topGapBefore.status}
+      <div className="mt-snug flex flex-wrap items-center gap-tight">
+        <Verdict pass={false} />
+        <span className="text-sm text-text-secondary">
+          Top gap: {W.topGapBefore.pattern} · {W.topGapBefore.status}
         </span>
-      </p>
-    </Card>
-  );
-}
-
-export function MarkArtifact() {
-  return (
-    <Card label="The verdict and the note">
-      <Verdict pass={false} />
+      </div>
       <blockquote className="mt-snug border-l-2 border-status-error/50 pl-snug text-text-primary">
         &ldquo;{W.note}&rdquo;
       </blockquote>
       <p className="mt-tight type-caption text-text-secondary">Imran&apos;s note on this audit</p>
-    </Card>
-  );
-}
-
-export function GroupArtifact() {
-  const max = Math.max(...W.groups.map((g) => g.fails));
-  return (
-    <Card label="All 41 notes, grouped · failed audits per group">
-      <ul className="space-y-tight">
-        {W.groups.map((g) => (
-          <li key={g.name}>
-            <div className="flex items-baseline justify-between gap-tight text-sm">
-              <span className={g.thisAudit ? 'font-semibold text-text-primary' : 'text-text-secondary'}>
-                {g.name}
-                {g.thisAudit && <span className="ml-tight type-caption text-text-secondary">· this audit</span>}
-              </span>
-              <span className="tabular-nums text-text-secondary">{g.fails}</span>
-            </div>
-            <span className="mt-1 block h-2 overflow-hidden rounded-pill bg-background-secondary" aria-hidden>
-              <span
-                className={`block h-full rounded-pill ${g.thisAudit ? 'bg-accent-primary' : 'bg-border-secondary'}`}
-                style={{ width: `${(g.fails / max) * 100}%` }}
-              />
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-snug type-caption text-text-secondary">One audit can sit in more than one group.</p>
-    </Card>
-  );
-}
-
-export function RuleArtifact() {
-  return (
-    <Card label="The two rules written from the biggest groups">
-      <ol className="space-y-tight">
-        {W.rules.map((r, i) => (
-          <li key={r} className="flex gap-snug rounded-input bg-background-secondary p-snug text-sm text-text-primary">
-            <span className="type-eyebrow font-mono text-text-secondary">{i + 1}</span>
-            <span>{r}</span>
-          </li>
-        ))}
-      </ol>
     </Card>
   );
 }
@@ -144,11 +93,3 @@ export function RecheckArtifact() {
     </Card>
   );
 }
-
-export const ARTIFACTS: Record<number, () => React.ReactElement> = {
-  1: CollectArtifact,
-  2: MarkArtifact,
-  3: GroupArtifact,
-  4: RuleArtifact,
-  5: RecheckArtifact,
-};
