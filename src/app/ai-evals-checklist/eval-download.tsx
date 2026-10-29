@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowDownTrayIcon, TableCellsIcon } from '@heroicons/react/24/outline';
+import { ArrowDownTrayIcon, DocumentTextIcon, TableCellsIcon } from '@heroicons/react/24/outline';
 import { EVAL_PDF_PATH, EVAL_SHEET_PATH } from '@/data/eval-afternoon';
 
 /**
- * The PDF is behind an email (same newsletter signup the other checklists
- * use, source 'eval-checklist'); the review sheet is open, so it can be
- * shared freely. Existing subscribers are let straight through by the
- * subscribe route for PDF sources.
+ * Download panel in the same dark "What's inside" style as the other resource
+ * pages (toolkit, checklists), built on tokens. The PDF is behind the
+ * newsletter signup (source 'eval-checklist'); the review sheet is open.
+ * Existing subscribers are let straight through by the subscribe route.
  */
 export function EvalDownload() {
   const [email, setEmail] = useState('');
@@ -53,65 +53,75 @@ export function EvalDownload() {
     }
   };
 
-  return (
-    <div className="grid gap-default md:grid-cols-2">
-      <div className="rounded-card border border-border-primary bg-surface-primary p-loose">
-        <ArrowDownTrayIcon className="h-6 w-6 text-text-primary" aria-hidden />
-        <h3 className="type-h3 mt-snug text-text-primary">One-page PDF</h3>
-        <p className="mt-tight text-sm text-text-secondary">
-          The five steps and a blank review table, to print or keep beside you while you review.
-        </p>
-        {status === 'success' ? (
-          <p className="mt-default text-sm text-text-primary" role="status">
-            Your download has started.{' '}
-            <button type="button" onClick={download} className="underline underline-offset-2">
-              Download again
-            </button>
-          </p>
-        ) : (
-          <form onSubmit={submit} className="mt-default flex flex-col gap-tight sm:flex-row">
-            <label htmlFor="eval-email" className="sr-only">
-              Email
-            </label>
-            <input
-              id="eval-email"
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@company.com"
-              className="min-w-0 flex-1 rounded-pill border border-border-secondary bg-background-primary px-default py-tight text-sm text-text-primary placeholder:text-text-secondary focus:border-accent-primary focus:outline-none"
-            />
-            <button
-              type="submit"
-              disabled={status === 'loading'}
-              className="rounded-pill bg-accent-primary px-loose py-tight text-sm font-semibold text-text-on-accent transition-colors hover:bg-accent-hover disabled:opacity-60"
-            >
-              {status === 'loading' ? 'Sending…' : 'Get the PDF'}
-            </button>
-          </form>
-        )}
-        {status === 'error' && (
-          <p className="mt-tight text-sm text-status-error" role="alert">
-            {message}
-          </p>
-        )}
-        <p className="mt-tight type-caption text-text-secondary">Also signs you up to AI UX Daily. Unsubscribe any time.</p>
-      </div>
+  const items = [
+    { Icon: DocumentTextIcon, name: 'One-page checklist (PDF)', text: 'The five steps and a blank review table, to print or keep open while you review.' },
+    { Icon: TableCellsIcon, name: 'Review sheet', text: 'Input, output, pass or fail, first thing wrong, group. Opens in Google Sheets, Excel or Numbers.' },
+  ];
 
-      <div className="rounded-card border border-border-primary bg-surface-primary p-loose">
-        <TableCellsIcon className="h-6 w-6 text-text-primary" aria-hidden />
-        <h3 className="type-h3 mt-snug text-text-primary">Review sheet</h3>
-        <p className="mt-tight text-sm text-text-secondary">
-          A spreadsheet with the columns already set up: input, output, pass or fail, the first thing wrong, and group.
-          Opens in Google Sheets, Excel or Numbers.
-        </p>
+  return (
+    <div className="rounded-card bg-accent-primary p-loose text-text-on-accent md:p-roomy">
+      <p className="type-eyebrow text-text-on-accent/70">What&apos;s inside</p>
+      <ul className="mt-default grid gap-snug md:grid-cols-2">
+        {items.map(({ Icon, name, text }) => (
+          <li key={name} className="flex gap-snug rounded-card border border-text-on-accent/20 p-default">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-input bg-text-on-accent/10">
+              <Icon className="h-5 w-5" aria-hidden />
+            </span>
+            <span>
+              <span className="block font-semibold">{name}</span>
+              <span className="mt-1 block text-sm text-text-on-accent/70">{text}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-loose grid gap-default md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+        <div>
+          {status === 'success' ? (
+            <p className="font-semibold" role="status">
+              Your checklist is downloading.{' '}
+              <button type="button" onClick={download} className="underline underline-offset-2">
+                Download again
+              </button>
+            </p>
+          ) : (
+            <form onSubmit={submit} className="flex flex-col gap-tight sm:flex-row">
+              <label htmlFor="eval-email" className="sr-only">
+                Email
+              </label>
+              <input
+                id="eval-email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@company.com"
+                className="min-w-0 flex-1 rounded-pill border border-text-on-accent/30 bg-transparent px-default py-snug text-text-on-accent placeholder:text-text-on-accent/50 focus:border-text-on-accent focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="inline-flex items-center justify-center gap-tight rounded-pill bg-background-primary px-loose py-snug font-semibold text-text-primary transition-opacity hover:opacity-90 disabled:opacity-60"
+              >
+                <ArrowDownTrayIcon className="h-5 w-5" aria-hidden />
+                {status === 'loading' ? 'Sending…' : 'Get the PDF'}
+              </button>
+            </form>
+          )}
+          {status === 'error' && (
+            <p className="mt-tight text-sm font-semibold" role="alert">
+              {message}
+            </p>
+          )}
+          <p className="mt-tight text-sm text-text-on-accent/70">Free · also signs you up to AI UX Daily · unsubscribe any time</p>
+        </div>
         <a
           href={EVAL_SHEET_PATH}
-          download="eval-review-sheet.csv"
-          className="mt-default inline-flex rounded-pill border border-border-secondary px-loose py-tight text-sm font-semibold text-text-primary transition-colors hover:border-accent-primary"
+          download="ai-evals-review-sheet.csv"
+          className="inline-flex items-center justify-center gap-tight rounded-pill border border-text-on-accent/40 px-loose py-snug font-semibold transition-colors hover:border-text-on-accent"
         >
-          Download the sheet
+          <TableCellsIcon className="h-5 w-5" aria-hidden />
+          Review sheet, no email
         </a>
       </div>
     </div>

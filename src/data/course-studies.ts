@@ -75,7 +75,7 @@ export const courseStudies: CourseStudy[] = [
       {
         type: 'text',
         content:
-          'Grouped like an affinity map, the notes fell into six kinds of failure. The biggest by far was the tool **reporting things a screenshot cannot show as if it had seen them**: how a feature behaves over time, what happens after a click, whether the product learns from feedback. A screenshot is one frame. Advice about the rest of the film is a guess.\n\nThat became the written standard: every piece of advice is either **seen** (it points at something on the screen) or **assumed** (it depends on something the screen cannot show). Of 116 pieces of advice, 93 were assumed.',
+          'Grouped like an affinity map, the notes fell into six kinds of failure. Two tied for biggest, at 7 failed audits each. One was the tool **reporting things a screenshot cannot show as if it had seen them**: hover states, what sits below the scroll, whether undo exists, what happens on click. A screenshot is one frame, so advice about the rest is a guess. The other was **asking for confidence scores on ordinary chat replies**, where nothing was being researched and certainty would not change what the user did next.\n\nThe first became the written standard: every piece of advice is either **seen** (it points at something on the screen) or **assumed** (it depends on something the screen cannot show). Of 116 pieces of advice, 93 were assumed.',
       },
       {
         type: 'heading',

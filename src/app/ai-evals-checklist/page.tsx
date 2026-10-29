@@ -7,8 +7,8 @@ import LearnSidebar from '@/components/learn/LearnSidebar';
 import { EVAL_AFTERNOON } from '@/data/eval-afternoon';
 import { siteConfig } from '@/config/seo';
 import { EvalDownload } from './eval-download';
-import { STEP_ICONS, STEP_VISUALS } from './step-visuals';
-import { BeakerIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { ARTIFACTS } from './worked-example';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
 /**
  * The quick version of the AI Evals for Designers course (2026-10-29): five
@@ -77,73 +77,45 @@ export default function EvalAfternoonPage() {
             <p className="type-lead mt-default text-text-secondary">{lead}</p>
           </header>
 
-          {/* Overview: the whole afternoon at a glance. */}
-          <ol className="mt-roomy grid max-w-5xl grid-cols-2 gap-snug sm:grid-cols-5" aria-label="The five steps">
+          <p className="mt-loose max-w-3xl text-text-secondary">
+            Below, one real answer from the study goes through all five steps: a Claude chat that the audit tool got
+            wrong, and what changed once the problem was found and fixed.
+          </p>
+
+          {/* A timeline: each step's instruction beside the real material from that
+              point in the study. One line joins the steps down the page. */}
+          <ol className="relative mt-roomy max-w-5xl">
+            <span className="absolute left-4 top-2 bottom-2 w-px bg-border-primary md:left-5" aria-hidden />
             {steps.map((step) => {
-              const Icon = STEP_ICONS[step.number];
+              const Artifact = ARTIFACTS[step.number];
               return (
-                <li key={step.number}>
-                  <a
-                    href={`#step-${step.number}`}
-                    className="group flex h-full flex-col gap-tight rounded-card border border-border-primary bg-surface-primary p-snug transition-colors hover:border-accent-primary"
-                  >
-                    <span className="flex items-center justify-between">
-                      <span className="flex h-9 w-9 items-center justify-center rounded-input bg-accent-subtle">
-                        <Icon className="h-5 w-5 text-accent-primary" aria-hidden />
-                      </span>
-                      <span className="type-caption font-mono text-text-secondary">{String(step.number).padStart(2, '0')}</span>
-                    </span>
-                    <span className="font-semibold text-text-primary">{step.short}</span>
-                    <span className="type-caption text-text-secondary">~{step.minutes} min</span>
-                  </a>
+                <li
+                  key={step.number}
+                  id={`step-${step.number}`}
+                  className="relative scroll-mt-24 pb-roomy pl-12 last:pb-0 md:grid md:grid-cols-[17rem_minmax(0,1fr)] md:gap-loose md:pl-16"
+                >
+                  <span className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-pill bg-accent-primary type-caption font-mono font-semibold text-text-on-accent md:h-10 md:w-10">
+                    {step.number}
+                  </span>
+                  <div className="md:pt-1">
+                    <h2 className="type-h3 text-text-primary">{step.title}</h2>
+                    <p className="mt-tight text-text-secondary">{step.body}</p>
+                    <p className="mt-snug inline-flex items-center gap-1 type-caption text-text-secondary">
+                      <ClockIcon className="h-4 w-4" aria-hidden />
+                      About {step.minutes} min for 20 answers
+                    </p>
+                  </div>
+                  <div className="mt-default md:mt-0">
+                    <Artifact />
+                  </div>
                 </li>
               );
             })}
           </ol>
 
-          {/* The steps, each with a diagram of the work. */}
-          <div className="mt-roomy max-w-5xl space-y-default">
-            {steps.map((step) => {
-              const Icon = STEP_ICONS[step.number];
-              const Visual = STEP_VISUALS[step.number];
-              return (
-                <section
-                  key={step.number}
-                  id={`step-${step.number}`}
-                  className="scroll-mt-24 grid gap-loose rounded-card border border-border-primary bg-surface-primary p-loose md:grid-cols-[minmax(0,1fr)_17rem]"
-                  aria-labelledby={`step-${step.number}-title`}
-                >
-                  <div>
-                    <div className="flex items-center gap-snug">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-input bg-accent-subtle">
-                        <Icon className="h-5 w-5 text-accent-primary" aria-hidden />
-                      </span>
-                      <span className="type-eyebrow font-mono text-text-secondary">Step {step.number}</span>
-                      <span className="ml-auto inline-flex items-center gap-1 type-caption text-text-secondary">
-                        <ClockIcon className="h-4 w-4" aria-hidden />~{step.minutes} min
-                      </span>
-                    </div>
-                    <h2 id={`step-${step.number}-title`} className="type-h3 mt-snug text-text-primary">
-                      {step.title}
-                    </h2>
-                    <p className="mt-tight text-text-secondary">{step.body}</p>
-                    <p className="mt-default flex gap-tight border-l-2 border-accent-primary/40 pl-snug text-sm text-text-secondary">
-                      <BeakerIcon className="mt-0.5 h-4 w-4 shrink-0 text-text-secondary" aria-hidden />
-                      <span>
-                        <span className="font-semibold text-text-primary">In the study: </span>
-                        {step.example}
-                      </span>
-                    </p>
-                  </div>
-                  <Visual />
-                </section>
-              );
-            })}
-          </div>
-
           <section className="mt-roomy max-w-4xl" aria-labelledby="downloads-heading">
             <h2 id="downloads-heading" className="type-h2 text-text-primary">
-              Take it with you
+              Run it on your product
             </h2>
             <div className="mt-default">
               <EvalDownload />
