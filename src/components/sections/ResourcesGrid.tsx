@@ -108,6 +108,18 @@ const RESOURCES: Resource[] = [
     linkType: 'internal',
   },
   {
+    id: 'ai-evals-checklist',
+    title: 'AI Evals for Designers: Quick Checklist',
+    description: 'Five steps to find where your AI product fails: 20 real answers, pass or fail, one rule, re-check. Free review sheet and PDF.',
+    icon: <SparklesIcon className={ICON_CLASS} />,
+    category: 'Downloads',
+    type: 'PDF',
+    tags: ['evals', 'checklist', 'testing', 'quality'],
+    href: '/ai-evals-checklist',
+    ctaText: 'Get Checklist',
+    linkType: 'internal',
+  },
+  {
     id: 'agentic-ux-checklist',
     title: 'Agentic UX Checklist',
     description: '8 design patterns for building AI agents users trust. Covers autonomy, transparency, escalation, and control.',

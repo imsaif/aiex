@@ -27,6 +27,8 @@ export const NEWSLETTER_SOURCES = [
   'audit-unlock',
   'agentic-checklist',
   'accessibility-checklist',
+  // /ai-evals-checklist one-page PDF (2026-10-29).
+  'eval-checklist',
   'design-with-claude',
   'guides',
   'guides-hero',
@@ -53,4 +55,6 @@ export const PDF_DOWNLOAD_SOURCES: NewsletterSource[] = [
   'audit-kit',
   'agentic-checklist',
   'accessibility-checklist',
+  // /ai-evals-checklist one-page PDF (2026-10-29).
+  'eval-checklist',
 ];

@@ -3,6 +3,7 @@ import { patterns } from '@/data/patterns';
 import categories from '@/data/categories';
 import { guides } from '@/data/guides';
 import { getAllLessonParams } from '@/lib/guides/lesson-urls';
+import { courseStudies } from '@/data/course-studies';
 import { siteConfig } from '@/config/seo';
 import { getNewsletters } from '@/data/newsletters';
 import { EVENTS } from '@/data/events';
@@ -148,6 +149,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/ai-evals-checklist`,
+      lastModified: new Date('2026-10-29'),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/agentic-ux-checklist`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -225,6 +232,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   );
 
+  // Course companion studies (src/data/course-studies.ts): one article per
+  // course, at /guides/<course>/<slug>, not part of the lesson list.
+  const studyPages: MetadataRoute.Sitemap = courseStudies.map((s) => ({
+    url: `${baseUrl}/guides/${s.courseSlug}/${s.slug}`,
+    lastModified: new Date(s.publishedDate),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
+
   // News article pages — merge DB-published drafts with static newsletters,
   // mirroring /news/page.tsx (static slug wins on collision).
   const staticNews = getNewsletters();
@@ -254,6 +270,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...patternPages,
     ...guidePages,
     ...lessonPages,
+    ...studyPages,
     ...newsPages,
   ];
 }
