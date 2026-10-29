@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { newestIssue, shouldAutoDraft } from '@/lib/social/daily';
+import SlidesPanel from './SlidesPanel';
 import { PostCard, type SocialAccount, type SocialPost } from './PostCard';
 import PatternDeepDiveSection from './PatternDeepDiveSection';
 
@@ -517,6 +518,17 @@ export default function SocialAccountsClient({
                 onCopyTitle={(title) => copyToClipboardWithToast(title, 'Reddit title copied!')}
               />
             </div>
+          )}
+
+          {/* The four newsletter-style images, with alt text */}
+          {selectedNewsletter && (
+            <SlidesPanel
+              newsletterId={selectedNewsletter.id}
+              onCopied={(text) => {
+                setSocialMessage({ type: 'success', text });
+                setTimeout(() => setSocialMessage(null), 3000);
+              }}
+            />
           )}
 
           {/* BOTTOM ROW: Share Image + Connected Accounts + Setup */}
