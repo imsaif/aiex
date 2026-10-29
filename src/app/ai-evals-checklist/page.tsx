@@ -93,8 +93,7 @@ export default function EvalAfternoonPage() {
           </nav>
 
           <header className="max-w-3xl">
-            <p className="type-eyebrow text-text-secondary">Free checklist · about 2 hours</p>
-            <h1 className="type-h1 mt-tight text-text-primary">{title}</h1>
+            <h1 className="type-h1 text-text-primary">{title}</h1>
             <p className="type-lead mt-default text-text-secondary">{lead}</p>
           </header>
 

@@ -79,8 +79,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
   .page:last-child { page-break-after: auto; }
   .brand { display: flex; justify-content: space-between; align-items: center; color: ${C.muted}; font-size: 8pt; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; }
   .brand b { color: ${C.ink}; letter-spacing: 0; text-transform: none; font-size: 10.5pt; font-weight: 700; }
-  .kicker { margin-top: 7mm; font-size: 7.5pt; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: ${C.muted}; }
-  h1 { font-size: 21pt; line-height: 1.12; margin: 2mm 0 2mm; font-weight: 700; letter-spacing: -.01em; }
+  h1 { font-size: 21pt; line-height: 1.12; margin: 8mm 0 2mm; font-weight: 700; letter-spacing: -.01em; }
   .lead { color: ${C.text}; font-size: 10.5pt; margin: 0 0 5.5mm; max-width: 150mm; }
   .step { display: grid; grid-template-columns: 9mm 1fr 66mm; gap: 0 5mm; position: relative; padding-bottom: 3.6mm; }
   .step::before { content: ''; position: absolute; left: 4.5mm; top: 9.5mm; bottom: 0; width: 1px; background: ${C.line}; }
@@ -108,7 +107,6 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 </style></head><body>
   <div class="page">
     <div class="brand"><b>aiux</b><span>aiuxdesign.guide</span></div>
-    <div class="kicker">Free checklist · about 2 hours</div>
     <h1>${esc(title)}</h1>
     <p class="lead">${esc(lead)}</p>
     ${stepsHtml}
