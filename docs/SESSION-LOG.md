@@ -36,6 +36,14 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-10-30 (MacBook)
+- **Pattern:** Daily social posts from the newsletter (admin Social tab)
+- **Status:** Merged — PR #163 on `master` (`8d85649`), deploy verified live (read-only), main checkout updated, worktree removed
+- **Files Changed:** `src/lib/social/{copy-rules,daily,slides,content-generator}.ts`, `src/app/api/social/slides/route.tsx`, `src/app/admin/social/{SlidesPanel,PostCard,social-accounts-client}.tsx`
+- **Tests Added/Modified:** `src/lib/social/__tests__/{copy-rules,content-generator,daily,slides}.test.ts` (21 tests, force-added)
+- **Notes:** Made /admin/social a daily habit: it opens on the newest issue and writes drafts on open if the issue is under 36h old and has none; a drafted take (from Today's Idea and the Designer's Takeaways) leads both the LinkedIn post and the X thread; no emojis or em dashes (prompted and stripped by `cleanCopy`), with a warning on invented "I tested" claims; four 1080x1350 newsletter-style images per issue at `/api/social/slides?id=&n=1..4` (`format=json` for alt text), with Download all and Copy alt text. The evals study page and quick checklist (PRs #158-#162) also shipped this session.
+- **The finding worth remembering:** the social generator had read `structuredData.takeaway` as a string since the Oct 2026 newsletter redesign, so it was sending the model `[object Object]` and never saw the per-story takeaways. Local dev points at the prod DB, so opening /admin/social locally writes real drafts.
+
 ### Session 2026-10-14 (MacBook)
 - **Pattern:** Newsletter on Resend + admin Growth dashboard + Vercel usage
 - **Status:** Merged — PRs #142 to #152 on `master`, deploys verified live, main checkout updated, worktrees removed
