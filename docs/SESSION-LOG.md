@@ -36,6 +36,14 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-10-30 12:30 (MacBook)
+- **Pattern:** Social tab honours the edited newsletter title
+- **Status:** Merged — PR #164 on `master` (`59fb5e6`), verified live on /admin/social, main checkout updated, worktree removed
+- **Files Changed:** `src/app/api/social/slides/route.tsx`, `src/app/api/social/generate/route.ts`
+- **Tests Added/Modified:** 0
+- **Notes:** The LinkedIn/X slide images and the post generator preferred `structuredData.title`/`summary` over the `NewsletterDraft.title`/`summary` columns, so title edits in the newsletter admin never reached them. Flipped both to prefer the columns and fall back to the generated copy.
+- **The finding worth remembering:** the newsletter admin's draft PATCH only writes the columns, never `structuredData`; anything reading the issue's title should read the column first.
+
 ### Session 2026-10-30 (MacBook)
 - **Pattern:** Daily social posts from the newsletter (admin Social tab)
 - **Status:** Merged — PR #163 on `master` (`8d85649`), deploy verified live (read-only), main checkout updated, worktree removed
