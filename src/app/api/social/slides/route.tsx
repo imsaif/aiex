@@ -32,8 +32,8 @@ export async function GET(request: NextRequest) {
 
   const data = parseNewsletterStructuredData(newsletter.structuredData);
   if (!data) return new Response('Newsletter has no structured data', { status: 400 });
-  data.title = data.title || newsletter.title;
-  data.summary = data.summary || newsletter.summary;
+  data.title = newsletter.title || data.title;
+  data.summary = newsletter.summary || data.summary;
   data.type = newsletter.type === 'weekly' ? 'weekly' : 'daily';
 
   const dateLabel = new Date(newsletter.publishDate).toLocaleDateString('en-US', {
