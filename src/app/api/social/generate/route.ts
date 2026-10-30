@@ -73,9 +73,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Add title and summary from newsletter if not in structured data
-    newsletterData.title = newsletterData.title || newsletter.title;
-    newsletterData.summary = newsletterData.summary || newsletter.summary;
+    // Prefer the edited title and summary; fall back to the generated ones
+    newsletterData.title = newsletter.title || newsletterData.title;
+    newsletterData.summary = newsletter.summary || newsletterData.summary;
     newsletterData.type = (newsletter.type as 'daily' | 'weekly') || newsletterData.type;
 
     // Newsletter URL
