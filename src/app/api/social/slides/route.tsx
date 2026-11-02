@@ -189,7 +189,7 @@ function SlideImage({
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
             <Label text={slide.label} onNavy />
-            <div style={{ display: 'flex', fontSize: slide.title.length > 70 ? 74 : 88, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>
+            <div style={{ display: 'flex', fontSize: slide.title.length > 70 ? 62 : 72, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2 }}>
               {slide.title}
             </div>
             <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.4, color: C.onNavy, maxWidth: 880 }}>{slide.summary}</div>
