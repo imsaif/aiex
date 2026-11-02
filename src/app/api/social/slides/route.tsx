@@ -82,6 +82,8 @@ export async function GET(request: NextRequest) {
   const { regular, bold } = await loadFonts();
   const assets = {
     mark: `${origin}/images/email/aiux-mark.png`,
+    // Noto Emoji 1f914 (Apache-2.0), kept locally so the slide never depends on an emoji CDN.
+    thinking: `${origin}/images/social/thinking.svg`,
     band: `${origin}/images/newsletter/band/${data.bandSlug || data.idea?.patternSlug || DEFAULT_BAND_SLUG}.png`,
   };
 
@@ -103,7 +105,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-type Assets = { mark: string; band: string };
+type Assets = { mark: string; band: string; thinking: string };
 
 function Header({ n, assets, onNavy, edition }: { n: number; assets: Assets; onNavy: boolean; edition: string }) {
   return (
@@ -279,27 +281,30 @@ function SlideImage({
             <div
               style={{
                 display: 'flex',
-                alignItems: 'flex-start',
-                gap: 24,
+                alignItems: 'center',
+                gap: 32,
                 marginTop: 'auto',
                 backgroundColor: C.navy,
                 borderRadius: 28,
                 padding: '30px 40px',
               }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexShrink: 0,
-                  backgroundColor: C.white,
-                  color: C.navy,
-                  borderRadius: 999,
-                  padding: '6px 18px',
-                  fontSize: 24,
-                  fontWeight: 700,
-                }}
-              >
-                Hmm.
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={assets.thinking} width={64} height={64} alt="" />
+                <div
+                  style={{
+                    display: 'flex',
+                    backgroundColor: C.white,
+                    color: C.navy,
+                    borderRadius: 999,
+                    padding: '4px 16px',
+                    fontSize: 22,
+                    fontWeight: 700,
+                  }}
+                >
+                  Hmm.
+                </div>
               </div>
               <div style={{ display: 'flex', flex: 1, fontSize: 30, lineHeight: 1.5, color: C.onNavy }}>{slide.aside}</div>
             </div>
