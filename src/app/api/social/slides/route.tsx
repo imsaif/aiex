@@ -258,13 +258,20 @@ function SlideImage({
             {slide.body}
           </div>
           {slide.question && (
-            <div style={{ display: 'flex', gap: 24, marginTop: 8 }}>
-              <div style={{ display: 'flex', width: 6, borderRadius: 3, backgroundColor: C.navy }} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
-                <Label text="Ask in your next design review" onNavy={false} />
-                <div style={{ display: 'flex', fontSize: 40, fontWeight: 700, lineHeight: 1.3, letterSpacing: -0.6 }}>
-                  {slide.question}
-                </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+                backgroundColor: C.white,
+                border: `3px solid ${C.navy}`,
+                borderRadius: 28,
+                padding: '30px 40px 34px',
+              }}
+            >
+              <Label text="Ask in your next design review" onNavy={false} />
+              <div style={{ display: 'flex', fontSize: 38, fontWeight: 700, lineHeight: 1.3, letterSpacing: -0.6 }}>
+                {slide.question}
               </div>
             </div>
           )}
@@ -275,17 +282,17 @@ function SlideImage({
                 alignItems: 'flex-start',
                 gap: 24,
                 marginTop: 'auto',
-                border: `2px solid ${C.ideaPanel}`,
+                backgroundColor: C.navy,
                 borderRadius: 28,
-                padding: '28px 36px',
+                padding: '30px 40px',
               }}
             >
               <div
                 style={{
                   display: 'flex',
                   flexShrink: 0,
-                  backgroundColor: C.navy,
-                  color: C.white,
+                  backgroundColor: C.white,
+                  color: C.navy,
                   borderRadius: 999,
                   padding: '6px 18px',
                   fontSize: 24,
@@ -294,7 +301,7 @@ function SlideImage({
               >
                 Hmm.
               </div>
-              <div style={{ display: 'flex', flex: 1, fontSize: 30, lineHeight: 1.5, color: C.slate }}>{slide.aside}</div>
+              <div style={{ display: 'flex', flex: 1, fontSize: 30, lineHeight: 1.5, color: C.onNavy }}>{slide.aside}</div>
             </div>
           )}
         </div>
