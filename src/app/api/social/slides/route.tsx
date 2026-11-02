@@ -220,15 +220,15 @@ function SlideImage({
       {slide.kind === 'idea' && (
         <div style={{ display: 'flex', flexDirection: 'column', padding: '72px 72px 0', gap: 30 }}>
           <Label text={slide.label} onNavy={false} />
-          <div style={{ display: 'flex', fontSize: 72, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>{slide.title}</div>
+          <div style={{ display: 'flex', fontSize: 62, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2 }}>{slide.title}</div>
           <div
             style={{
               display: 'flex',
               backgroundColor: C.ideaPanel,
               borderRadius: 28,
               padding: '44px 48px',
-              fontSize: 38,
-              lineHeight: 1.42,
+              fontSize: 34,
+              lineHeight: 1.5,
             }}
           >
             {slide.body}
@@ -240,7 +240,7 @@ function SlideImage({
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
             <Label text={slide.label} onNavy />
-            <div style={{ display: 'flex', fontSize: 84, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>{slide.title}</div>
+            <div style={{ display: 'flex', fontSize: 68, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2 }}>{slide.title}</div>
             <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.4, color: C.onNavy, maxWidth: 860 }}>{slide.body}</div>
             <div
               style={{
