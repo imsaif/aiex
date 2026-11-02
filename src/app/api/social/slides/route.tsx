@@ -5,6 +5,7 @@ import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { loadFonts } from '@/app/api/og/shared';
 import { parseNewsletterStructuredData } from '@/lib/social/content-generator';
 import { DEFAULT_BAND_SLUG } from '@/lib/newsletter/band';
+import { patterns } from '@/data/patterns';
 import { storyIconPaths } from '@/lib/social/story-icons';
 import { resolveStoryLogo } from '@/lib/social/story-logos';
 import { buildSlides, SLIDE_COLORS as C, SLIDE_COUNT, SLIDE_HEIGHT, SLIDE_WIDTH, type Slide } from '@/lib/social/slides';
@@ -56,9 +57,16 @@ export async function GET(request: NextRequest) {
   }
 
   const { regular, bold } = await loadFonts();
+  // The idea slide names the pattern it maps to and shows that pattern's drawing.
+  const ideaSlug = data.idea?.patternSlug || data.bandSlug || DEFAULT_BAND_SLUG;
   const assets = {
     mark: `${origin}/images/email/aiux-mark.png`,
     band: `${origin}/images/newsletter/band/${data.bandSlug || data.idea?.patternSlug || DEFAULT_BAND_SLUG}.png`,
+    ideaBand: `${origin}/images/newsletter/band/${ideaSlug}.png`,
+    ideaPattern: {
+      slug: ideaSlug,
+      title: patterns.find((p) => p.slug === ideaSlug)?.title ?? null,
+    },
   };
 
   const slide = slides[n - 1];
@@ -79,7 +87,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-type Assets = { mark: string; band: string };
+type Assets = { mark: string; band: string; ideaBand: string; ideaPattern: { slug: string; title: string | null } };
 
 function Header({ n, assets, onNavy, edition }: { n: number; assets: Assets; onNavy: boolean; edition: string }) {
   return (
@@ -218,7 +226,7 @@ function SlideImage({
       )}
 
       {slide.kind === 'idea' && (
-        <div style={{ display: 'flex', flexDirection: 'column', padding: '72px 72px 0', gap: 30 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '72px 72px 72px', gap: 30 }}>
           <Label text={slide.label} onNavy={false} />
           <div style={{ display: 'flex', fontSize: 62, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>{slide.title}</div>
           <div
@@ -233,6 +241,32 @@ function SlideImage({
           >
             {slide.body}
           </div>
+          {assets.ideaPattern.title && (
+            <div
+              style={{
+                display: 'flex',
+                marginTop: 'auto',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                backgroundColor: C.navy,
+                borderRadius: 28,
+                padding: '0 0 0 48px',
+                overflow: 'hidden',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
+                <Label text="The pattern" onNavy />
+                <div style={{ display: 'flex', fontSize: 44, fontWeight: 700, lineHeight: 1.2, color: C.white }}>
+                  {assets.ideaPattern.title}
+                </div>
+                <div style={{ display: 'flex', fontSize: 24, color: C.onNavy }}>
+                  {`aiuxdesign.guide/patterns/${assets.ideaPattern.slug}`}
+                </div>
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={assets.ideaBand} width={300} height={300} alt="" />
+            </div>
+          )}
         </div>
       )}
 
