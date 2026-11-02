@@ -5,6 +5,8 @@ import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { loadFonts } from '@/app/api/og/shared';
 import { parseNewsletterStructuredData } from '@/lib/social/content-generator';
 import { DEFAULT_BAND_SLUG } from '@/lib/newsletter/band';
+import { storyIconPaths } from '@/lib/social/story-icons';
+import { resolveStoryLogo } from '@/lib/social/story-logos';
 import { buildSlides, SLIDE_COLORS as C, SLIDE_COUNT, SLIDE_HEIGHT, SLIDE_WIDTH, type Slide } from '@/lib/social/slides';
 
 export const runtime = 'nodejs';
@@ -59,7 +61,11 @@ export async function GET(request: NextRequest) {
     band: `${origin}/images/newsletter/band/${data.bandSlug || data.idea?.patternSlug || DEFAULT_BAND_SLUG}.png`,
   };
 
-  return new ImageResponse(<SlideImage slide={slides[n - 1]} n={n} assets={assets} edition={data.type} />, {
+  const slide = slides[n - 1];
+  const logos =
+    slide.kind === 'stories' ? await Promise.all(slide.stories.map((s) => resolveStoryLogo(s.product, origin))) : [];
+
+  return new ImageResponse(<SlideImage slide={slide} n={n} assets={assets} edition={data.type} logos={logos} />, {
     width: SLIDE_WIDTH,
     height: SLIDE_HEIGHT,
     fonts: [
@@ -123,7 +129,47 @@ function BandArt({ src, size }: { src: string; size: number }) {
   );
 }
 
-function SlideImage({ slide, n, assets, edition }: { slide: Slide; n: number; assets: Assets; edition: string }) {
+function StoryMark({ logo, patternSlug }: { logo: string | null; patternSlug?: string }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexShrink: 0,
+        width: 64,
+        height: 64,
+        borderRadius: 18,
+        backgroundColor: C.tint,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {logo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logo} width={36} height={36} alt="" />
+      ) : (
+        <svg width={34} height={34} viewBox="0 0 24 24" fill="none" stroke={C.navy} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+          {storyIconPaths(patternSlug).map((d, j) => (
+            <path key={j} d={d} />
+          ))}
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function SlideImage({
+  slide,
+  n,
+  assets,
+  edition,
+  logos,
+}: {
+  slide: Slide;
+  n: number;
+  assets: Assets;
+  edition: string;
+  logos: (string | null)[];
+}) {
   const onNavy = slide.kind === 'cover' || slide.kind === 'link';
   return (
     <div
@@ -159,25 +205,9 @@ function SlideImage({ slide, n, assets, edition }: { slide: Slide; n: number; as
           {slide.stories.map((story, i) => (
             <div
               key={i}
-              style={{ display: 'flex', gap: 28, alignItems: 'flex-start', backgroundColor: C.white, borderRadius: 28, padding: '28px 36px' }}
+              style={{ display: 'flex', gap: 28, alignItems: 'center', backgroundColor: C.white, borderRadius: 28, padding: '28px 36px' }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexShrink: 0,
-                  width: 60,
-                  height: 60,
-                  borderRadius: 30,
-                  backgroundColor: C.navy,
-                  color: C.white,
-                  fontSize: 28,
-                  fontWeight: 700,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {String(i + 1)}
-              </div>
+              <StoryMark logo={logos[i] ?? null} patternSlug={story.patternSlug} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
                 <div style={{ display: 'flex', fontSize: 22, letterSpacing: 2, textTransform: 'uppercase', color: C.slate }}>{story.product}</div>
                 <div style={{ display: 'flex', fontSize: 31, fontWeight: 700, lineHeight: 1.25 }}>{story.headline}</div>

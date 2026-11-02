@@ -35,7 +35,7 @@ const IDEA_BODY_MAX = 330;
 
 export type Slide =
   | { kind: 'cover'; label: string; title: string; summary: string; alt: string }
-  | { kind: 'stories'; label: string; title: string; stories: { product: string; headline: string }[]; alt: string }
+  | { kind: 'stories'; label: string; title: string; stories: { product: string; headline: string; patternSlug?: string }[]; alt: string }
   | { kind: 'idea'; label: string; title: string; body: string; alt: string }
   | { kind: 'link'; label: string; title: string; body: string; url: string; alt: string };
 
@@ -61,6 +61,7 @@ export function buildSlides(data: NewsletterData, opts: { dateLabel: string }): 
   const stories = data.items.slice(0, MAX_STORIES).map((item) => ({
     product: cleanCopy(item.product || ''),
     headline: clip(item.headline || '', HEADLINE_MAX),
+    patternSlug: item.patternSlug,
   }));
 
   // Today's Idea, or for older issues the lead story's takeaway, or the plain takeaway string.
