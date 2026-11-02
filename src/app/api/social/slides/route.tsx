@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { loadFonts } from '@/app/api/og/shared';
-import { parseNewsletterStructuredData } from '@/lib/social/content-generator';
+import { generateReviewQuestion, parseNewsletterStructuredData } from '@/lib/social/content-generator';
 import { DEFAULT_BAND_SLUG } from '@/lib/newsletter/band';
 import { patterns } from '@/data/patterns';
 import { storyIconPaths } from '@/lib/social/story-icons';
@@ -45,6 +45,23 @@ export async function GET(request: NextRequest) {
     year: 'numeric',
     timeZone: 'UTC',
   });
+  // The idea slide's review question is written once, on first need, and kept on the issue.
+  const needsIdea = searchParams.get('format') === 'json' || searchParams.get('n') === '3';
+  if (needsIdea && !data.reviewQuestion) {
+    const question = await generateReviewQuestion(data);
+    if (question) {
+      data.reviewQuestion = question;
+      try {
+        await prisma.newsletterDraft.update({
+          where: { id },
+          data: { structuredData: { ...(newsletter.structuredData as Record<string, unknown>), reviewQuestion: question } },
+        });
+      } catch (error) {
+        console.error('Failed to store review question:', error);
+      }
+    }
+  }
+
   const slides = buildSlides(data, { dateLabel });
 
   if (searchParams.get('format') === 'json') {
@@ -226,7 +243,7 @@ function SlideImage({
       )}
 
       {slide.kind === 'idea' && (
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '72px 72px 72px', gap: 30 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '64px 72px 64px', gap: 28 }}>
           <Label text={slide.label} onNavy={false} />
           <div style={{ display: 'flex', fontSize: 62, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>{slide.title}</div>
           <div
@@ -234,13 +251,24 @@ function SlideImage({
               display: 'flex',
               backgroundColor: C.ideaPanel,
               borderRadius: 28,
-              padding: '44px 48px',
-              fontSize: 34,
-              lineHeight: 1.65,
+              padding: '36px 44px',
+              fontSize: 32,
+              lineHeight: 1.6,
             }}
           >
             {slide.body}
           </div>
+          {slide.question && (
+            <div style={{ display: 'flex', gap: 24, marginTop: 8 }}>
+              <div style={{ display: 'flex', width: 6, borderRadius: 3, backgroundColor: C.navy }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
+                <Label text="Ask in your next design review" onNavy={false} />
+                <div style={{ display: 'flex', fontSize: 40, fontWeight: 700, lineHeight: 1.3, letterSpacing: -0.6 }}>
+                  {slide.question}
+                </div>
+              </div>
+            </div>
+          )}
           {assets.ideaPattern.title && (
             <div
               style={{
@@ -254,9 +282,9 @@ function SlideImage({
                 overflow: 'hidden',
               }}
             >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14, flex: 1 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
                 <Label text="The pattern" onNavy />
-                <div style={{ display: 'flex', fontSize: 44, fontWeight: 700, lineHeight: 1.2, color: C.white }}>
+                <div style={{ display: 'flex', fontSize: 38, fontWeight: 700, lineHeight: 1.2, color: C.white }}>
                   {assets.ideaPattern.title}
                 </div>
                 <div style={{ display: 'flex', fontSize: 24, color: C.onNavy }}>
@@ -264,7 +292,7 @@ function SlideImage({
                 </div>
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={assets.ideaBand} width={300} height={300} alt="" />
+              <img src={assets.ideaBand} width={220} height={220} alt="" />
             </div>
           )}
         </div>

@@ -36,7 +36,7 @@ const IDEA_BODY_MAX = 330;
 export type Slide =
   | { kind: 'cover'; label: string; title: string; summary: string; alt: string }
   | { kind: 'stories'; label: string; title: string; stories: { product: string; headline: string; patternSlug?: string }[]; alt: string }
-  | { kind: 'idea'; label: string; title: string; body: string; alt: string }
+  | { kind: 'idea'; label: string; title: string; body: string; question?: string; alt: string }
   | { kind: 'link'; label: string; title: string; body: string; url: string; alt: string };
 
 /** "AI UX Daily: Figma ships agents" → "Figma ships agents". The mark already says it. */
@@ -91,7 +91,10 @@ export function buildSlides(data: NewsletterData, opts: { dateLabel: string }): 
       label: ideaLabel,
       title: clip(ideaTitle, 90),
       body: clip(ideaBody, IDEA_BODY_MAX),
-      alt: `${ideaLabel}: ${clip(ideaTitle, 90)}. ${clip(ideaBody, IDEA_BODY_MAX)}`,
+      question: data.reviewQuestion ? clip(data.reviewQuestion, 110) : undefined,
+      alt: `${ideaLabel}: ${clip(ideaTitle, 90)}. ${clip(ideaBody, IDEA_BODY_MAX)}${
+        data.reviewQuestion ? ` Ask in your next design review: ${data.reviewQuestion}` : ''
+      }`,
     },
     {
       kind: 'link',
