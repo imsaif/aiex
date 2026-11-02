@@ -1,10 +1,13 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@/generated/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { loadFonts } from '@/app/api/og/shared';
-import { parseNewsletterStructuredData } from '@/lib/social/content-generator';
+import { generateAside, generateReviewQuestion, parseNewsletterStructuredData } from '@/lib/social/content-generator';
 import { DEFAULT_BAND_SLUG } from '@/lib/newsletter/band';
+import { storyIconPaths } from '@/lib/social/story-icons';
+import { resolveStoryLogo } from '@/lib/social/story-logos';
 import { buildSlides, SLIDE_COLORS as C, SLIDE_COUNT, SLIDE_HEIGHT, SLIDE_WIDTH, type Slide } from '@/lib/social/slides';
 
 export const runtime = 'nodejs';
@@ -42,6 +45,29 @@ export async function GET(request: NextRequest) {
     year: 'numeric',
     timeZone: 'UTC',
   });
+  // Slide 3's review question and aside are written once, on first need, and kept on the issue.
+  const format = searchParams.get('format');
+  const want = searchParams.get('n');
+  const extras: Record<string, string> = {};
+  if ((format === 'json' || want === '3') && !data.reviewQuestion) {
+    const question = await generateReviewQuestion(data);
+    if (question) extras.reviewQuestion = data.reviewQuestion = question;
+  }
+  if ((format === 'json' || want === '3') && !data.aside) {
+    const aside = await generateAside(data);
+    if (aside) extras.aside = data.aside = aside;
+  }
+  if (Object.keys(extras).length) {
+    try {
+      await prisma.newsletterDraft.update({
+        where: { id },
+        data: { structuredData: { ...(newsletter.structuredData as Prisma.JsonObject), ...extras } },
+      });
+    } catch (error) {
+      console.error('Failed to store slide extras:', error);
+    }
+  }
+
   const slides = buildSlides(data, { dateLabel });
 
   if (searchParams.get('format') === 'json') {
@@ -56,10 +82,16 @@ export async function GET(request: NextRequest) {
   const { regular, bold } = await loadFonts();
   const assets = {
     mark: `${origin}/images/email/aiux-mark.png`,
+    // Noto Emoji 1f914 (Apache-2.0), kept locally so the slide never depends on an emoji CDN.
+    thinking: `${origin}/images/social/thinking.svg`,
     band: `${origin}/images/newsletter/band/${data.bandSlug || data.idea?.patternSlug || DEFAULT_BAND_SLUG}.png`,
   };
 
-  return new ImageResponse(<SlideImage slide={slides[n - 1]} n={n} assets={assets} edition={data.type} />, {
+  const slide = slides[n - 1];
+  const logos =
+    slide.kind === 'stories' ? await Promise.all(slide.stories.map((s) => resolveStoryLogo(s.product, origin))) : [];
+
+  return new ImageResponse(<SlideImage slide={slide} n={n} assets={assets} edition={data.type} logos={logos} />, {
     width: SLIDE_WIDTH,
     height: SLIDE_HEIGHT,
     fonts: [
@@ -73,7 +105,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-type Assets = { mark: string; band: string };
+type Assets = { mark: string; band: string; thinking: string };
 
 function Header({ n, assets, onNavy, edition }: { n: number; assets: Assets; onNavy: boolean; edition: string }) {
   return (
@@ -123,7 +155,47 @@ function BandArt({ src, size }: { src: string; size: number }) {
   );
 }
 
-function SlideImage({ slide, n, assets, edition }: { slide: Slide; n: number; assets: Assets; edition: string }) {
+function StoryMark({ logo, patternSlug }: { logo: string | null; patternSlug?: string }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexShrink: 0,
+        width: 64,
+        height: 64,
+        borderRadius: 18,
+        backgroundColor: C.tint,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      {logo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={logo} width={36} height={36} alt="" />
+      ) : (
+        <svg width={34} height={34} viewBox="0 0 24 24" fill="none" stroke={C.navy} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+          {storyIconPaths(patternSlug).map((d, j) => (
+            <path key={j} d={d} />
+          ))}
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function SlideImage({
+  slide,
+  n,
+  assets,
+  edition,
+  logos,
+}: {
+  slide: Slide;
+  n: number;
+  assets: Assets;
+  edition: string;
+  logos: (string | null)[];
+}) {
   const onNavy = slide.kind === 'cover' || slide.kind === 'link';
   return (
     <div
@@ -143,44 +215,28 @@ function SlideImage({ slide, n, assets, edition }: { slide: Slide; n: number; as
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
             <Label text={slide.label} onNavy />
-            <div style={{ display: 'flex', fontSize: slide.title.length > 70 ? 74 : 88, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>
+            <div style={{ display: 'flex', fontSize: slide.title.length > 70 ? 62 : 72, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>
               {slide.title}
             </div>
-            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.4, color: C.onNavy, maxWidth: 880 }}>{slide.summary}</div>
+            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.6, color: C.onNavy, maxWidth: 880 }}>{slide.summary}</div>
           </div>
           <BandArt src={assets.band} size={430} />
         </div>
       )}
 
       {slide.kind === 'stories' && (
-        <div style={{ display: 'flex', flexDirection: 'column', padding: '56px 72px 0', gap: 18 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', padding: '48px 72px 0', gap: 16 }}>
           <Label text={slide.label} onNavy={false} />
-          <div style={{ display: 'flex', fontSize: 60, fontWeight: 700, letterSpacing: -1.5, marginBottom: 20 }}>{slide.title}</div>
+          <div style={{ display: 'flex', fontSize: 60, fontWeight: 700, letterSpacing: -1.5, marginBottom: 12 }}>{slide.title}</div>
           {slide.stories.map((story, i) => (
             <div
               key={i}
-              style={{ display: 'flex', gap: 28, alignItems: 'flex-start', backgroundColor: C.white, borderRadius: 28, padding: '28px 36px' }}
+              style={{ display: 'flex', gap: 28, alignItems: 'center', backgroundColor: C.white, borderRadius: 28, padding: '22px 36px' }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexShrink: 0,
-                  width: 60,
-                  height: 60,
-                  borderRadius: 30,
-                  backgroundColor: C.navy,
-                  color: C.white,
-                  fontSize: 28,
-                  fontWeight: 700,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {String(i + 1)}
-              </div>
+              <StoryMark logo={logos[i] ?? null} patternSlug={story.patternSlug} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
                 <div style={{ display: 'flex', fontSize: 22, letterSpacing: 2, textTransform: 'uppercase', color: C.slate }}>{story.product}</div>
-                <div style={{ display: 'flex', fontSize: 31, fontWeight: 700, lineHeight: 1.25 }}>{story.headline}</div>
+                <div style={{ display: 'flex', fontSize: 31, fontWeight: 700, lineHeight: 1.4 }}>{story.headline}</div>
               </div>
             </div>
           ))}
@@ -188,21 +244,71 @@ function SlideImage({ slide, n, assets, edition }: { slide: Slide; n: number; as
       )}
 
       {slide.kind === 'idea' && (
-        <div style={{ display: 'flex', flexDirection: 'column', padding: '72px 72px 0', gap: 30 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '64px 72px 64px', gap: 28 }}>
           <Label text={slide.label} onNavy={false} />
-          <div style={{ display: 'flex', fontSize: 72, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>{slide.title}</div>
+          <div style={{ display: 'flex', fontSize: 62, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>{slide.title}</div>
           <div
             style={{
               display: 'flex',
               backgroundColor: C.ideaPanel,
               borderRadius: 28,
-              padding: '44px 48px',
-              fontSize: 38,
-              lineHeight: 1.42,
+              padding: '36px 44px',
+              fontSize: 32,
+              lineHeight: 1.6,
             }}
           >
             {slide.body}
           </div>
+          {slide.question && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+                backgroundColor: C.white,
+                border: `3px solid ${C.navy}`,
+                borderRadius: 28,
+                padding: '30px 40px 34px',
+              }}
+            >
+              <Label text="Ask in your next design review" onNavy={false} />
+              <div style={{ display: 'flex', fontSize: 38, fontWeight: 700, lineHeight: 1.3, letterSpacing: -0.6 }}>
+                {slide.question}
+              </div>
+            </div>
+          )}
+          {slide.aside && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 32,
+                marginTop: 'auto',
+                backgroundColor: C.navy,
+                borderRadius: 28,
+                padding: '30px 40px',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={assets.thinking} width={64} height={64} alt="" />
+                <div
+                  style={{
+                    display: 'flex',
+                    backgroundColor: C.white,
+                    color: C.navy,
+                    borderRadius: 999,
+                    padding: '4px 16px',
+                    fontSize: 22,
+                    fontWeight: 700,
+                  }}
+                >
+                  Hmm.
+                </div>
+              </div>
+              <div style={{ display: 'flex', flex: 1, fontSize: 30, lineHeight: 1.5, color: C.onNavy }}>{slide.aside}</div>
+            </div>
+          )}
         </div>
       )}
 
@@ -210,8 +316,8 @@ function SlideImage({ slide, n, assets, edition }: { slide: Slide; n: number; as
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
             <Label text={slide.label} onNavy />
-            <div style={{ display: 'flex', fontSize: 84, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>{slide.title}</div>
-            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.4, color: C.onNavy, maxWidth: 860 }}>{slide.body}</div>
+            <div style={{ display: 'flex', fontSize: 68, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>{slide.title}</div>
+            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.6, color: C.onNavy, maxWidth: 860 }}>{slide.body}</div>
             <div
               style={{
                 display: 'flex',

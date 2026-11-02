@@ -37,6 +37,10 @@ export interface NewsletterData {
   };
   /** Pattern drawing the issue's navy band used; the social images reuse it. */
   bandSlug?: string;
+  /** The idea slide's design-review question. Generated on first render, stored as structuredData.reviewQuestion. */
+  reviewQuestion?: string;
+  /** The last slide's skeptical aside about one story. Stored as structuredData.aside. */
+  aside?: string;
 }
 
 interface TwitterContent {
@@ -124,6 +128,92 @@ Respond with JSON only: {"take": "..."}`,
     console.error('Failed to parse take:', error);
   }
   return cleanCopy(newsletterData.idea?.title || newsletterData.title);
+}
+
+/**
+ * The review question on the idea slide: one question a designer can bring to
+ * their next design review, so the issue leaves them with something to ask, not
+ * just something to know. Generated once per issue and stored on it.
+ */
+export async function generateReviewQuestion(newsletterData: NewsletterData): Promise<string | null> {
+  try {
+    const response = await anthropic.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 200,
+      system:
+        'You write one question a product designer can ask in their next design review, drawn from a newsletter about AI products. Concrete, answerable by looking at a real product, in plain words.',
+      messages: [
+        {
+          role: 'user',
+          content: `${buildIssueContext(newsletterData)}
+
+Write ONE question (under 90 characters, ending in "?") that a designer could ask about their own product in a design review, based on the idea above. It must point at a specific screen, flow, state or decision they can go and check, using "our" or "we". Not a rhetorical question, not a question about the news itself.
+
+Good: "Which actions can our agent take without asking the user first?"
+Bad: "Are we ready for the agentic future?"
+
+${WRITING_RULES}
+
+Respond with JSON only: {"question": "..."}`,
+        },
+      ],
+    });
+    const content = response.content[0];
+    if (content.type !== 'text') return null;
+    const question = parseJson(content.text).question;
+    if (typeof question === 'string' && question.trim().endsWith('?')) return cleanCopy(question.trim());
+  } catch (error) {
+    console.error('Failed to generate review question:', error);
+  }
+  return null;
+}
+
+/**
+ * The aside on the last slide: one wry, skeptical line that questions a story in
+ * the issue rather than preaching about it. Built only from facts in the issue
+ * text, so it can never introduce an unverified claim. Generated once, stored.
+ */
+export async function generateAside(newsletterData: NewsletterData): Promise<string | null> {
+  const ASIDE_MAX = 120;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const response = await anthropic.messages.create({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 200,
+        system:
+          'You write one wry, curious aside about a story in an AI design newsletter. You poke at the news the way a sharp designer would over coffee: skeptical, a little playful, never preachy, never mean.',
+        messages: [
+          {
+            role: 'user',
+            content: `${buildIssueContext(newsletterData)}
+
+Write ONE aside about ONE of the stories above: a short statement of the odd or ironic thing in it, then a question it leaves open. Name the company or product. Under ${ASIDE_MAX} characters in total. It MUST end with "?".
+
+Rules:
+- Use ONLY facts stated in the text above. No outside facts, numbers, dates or trivia.
+- No advice, no "designers should", no lesson, no mention of design or designers.
+- Not a pun, not a joke format, no emoji.
+
+Good (invented company, for tone only): "Acme's assistant now answers every email for you. Who reads the answers?"
+Bad: "AI agents are changing everything, and designers need to keep up!"
+
+${WRITING_RULES}
+
+Respond with JSON only: {"aside": "..."}`,
+          },
+        ],
+      });
+      const content = response.content[0];
+      if (content.type !== 'text') continue;
+      const aside = parseJson(content.text).aside;
+      if (typeof aside !== 'string') continue;
+      const clean = cleanCopy(aside.trim());
+      if (clean.endsWith('?') && clean.length <= ASIDE_MAX + 10) return clean;
+    } catch (error) {
+      console.error('Failed to generate aside:', error);
+    }
+  }
+  return null;
 }
 
 /**
@@ -435,5 +525,7 @@ export function parseNewsletterStructuredData(structuredData: unknown): Newslett
     stealThisWeek: data.stealThisWeek as NewsletterData['stealThisWeek'],
     patternToKnow: data.patternToKnow as NewsletterData['patternToKnow'],
     bandSlug: typeof data.bandSlug === 'string' ? data.bandSlug : undefined,
+    reviewQuestion: typeof data.reviewQuestion === 'string' ? data.reviewQuestion : undefined,
+    aside: typeof data.aside === 'string' ? data.aside : undefined,
   };
 }
