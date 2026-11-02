@@ -1,11 +1,11 @@
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@/generated/prisma';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { loadFonts } from '@/app/api/og/shared';
-import { generateReviewQuestion, parseNewsletterStructuredData } from '@/lib/social/content-generator';
+import { generateAside, generateReviewQuestion, parseNewsletterStructuredData } from '@/lib/social/content-generator';
 import { DEFAULT_BAND_SLUG } from '@/lib/newsletter/band';
-import { patterns } from '@/data/patterns';
 import { storyIconPaths } from '@/lib/social/story-icons';
 import { resolveStoryLogo } from '@/lib/social/story-logos';
 import { buildSlides, SLIDE_COLORS as C, SLIDE_COUNT, SLIDE_HEIGHT, SLIDE_WIDTH, type Slide } from '@/lib/social/slides';
@@ -45,20 +45,26 @@ export async function GET(request: NextRequest) {
     year: 'numeric',
     timeZone: 'UTC',
   });
-  // The idea slide's review question is written once, on first need, and kept on the issue.
-  const needsIdea = searchParams.get('format') === 'json' || searchParams.get('n') === '3';
-  if (needsIdea && !data.reviewQuestion) {
+  // Slide 3's review question and aside are written once, on first need, and kept on the issue.
+  const format = searchParams.get('format');
+  const want = searchParams.get('n');
+  const extras: Record<string, string> = {};
+  if ((format === 'json' || want === '3') && !data.reviewQuestion) {
     const question = await generateReviewQuestion(data);
-    if (question) {
-      data.reviewQuestion = question;
-      try {
-        await prisma.newsletterDraft.update({
-          where: { id },
-          data: { structuredData: { ...(newsletter.structuredData as Record<string, unknown>), reviewQuestion: question } },
-        });
-      } catch (error) {
-        console.error('Failed to store review question:', error);
-      }
+    if (question) extras.reviewQuestion = data.reviewQuestion = question;
+  }
+  if ((format === 'json' || want === '3') && !data.aside) {
+    const aside = await generateAside(data);
+    if (aside) extras.aside = data.aside = aside;
+  }
+  if (Object.keys(extras).length) {
+    try {
+      await prisma.newsletterDraft.update({
+        where: { id },
+        data: { structuredData: { ...(newsletter.structuredData as Prisma.JsonObject), ...extras } },
+      });
+    } catch (error) {
+      console.error('Failed to store slide extras:', error);
     }
   }
 
@@ -74,16 +80,9 @@ export async function GET(request: NextRequest) {
   }
 
   const { regular, bold } = await loadFonts();
-  // The idea slide names the pattern it maps to and shows that pattern's drawing.
-  const ideaSlug = data.idea?.patternSlug || data.bandSlug || DEFAULT_BAND_SLUG;
   const assets = {
     mark: `${origin}/images/email/aiux-mark.png`,
     band: `${origin}/images/newsletter/band/${data.bandSlug || data.idea?.patternSlug || DEFAULT_BAND_SLUG}.png`,
-    ideaBand: `${origin}/images/newsletter/band/${ideaSlug}.png`,
-    ideaPattern: {
-      slug: ideaSlug,
-      title: patterns.find((p) => p.slug === ideaSlug)?.title ?? null,
-    },
   };
 
   const slide = slides[n - 1];
@@ -104,7 +103,7 @@ export async function GET(request: NextRequest) {
   });
 }
 
-type Assets = { mark: string; band: string; ideaBand: string; ideaPattern: { slug: string; title: string | null } };
+type Assets = { mark: string; band: string };
 
 function Header({ n, assets, onNavy, edition }: { n: number; assets: Assets; onNavy: boolean; edition: string }) {
   return (
@@ -269,30 +268,33 @@ function SlideImage({
               </div>
             </div>
           )}
-          {assets.ideaPattern.title && (
+          {slide.aside && (
             <div
               style={{
                 display: 'flex',
+                alignItems: 'flex-start',
+                gap: 24,
                 marginTop: 'auto',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: C.navy,
+                border: `2px solid ${C.ideaPanel}`,
                 borderRadius: 28,
-                padding: '0 0 0 48px',
-                overflow: 'hidden',
+                padding: '28px 36px',
               }}
             >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, flex: 1 }}>
-                <Label text="The pattern" onNavy />
-                <div style={{ display: 'flex', fontSize: 38, fontWeight: 700, lineHeight: 1.2, color: C.white }}>
-                  {assets.ideaPattern.title}
-                </div>
-                <div style={{ display: 'flex', fontSize: 24, color: C.onNavy }}>
-                  {`aiuxdesign.guide/patterns/${assets.ideaPattern.slug}`}
-                </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexShrink: 0,
+                  backgroundColor: C.navy,
+                  color: C.white,
+                  borderRadius: 999,
+                  padding: '6px 18px',
+                  fontSize: 24,
+                  fontWeight: 700,
+                }}
+              >
+                Hmm.
               </div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={assets.ideaBand} width={220} height={220} alt="" />
+              <div style={{ display: 'flex', flex: 1, fontSize: 30, lineHeight: 1.5, color: C.slate }}>{slide.aside}</div>
             </div>
           )}
         </div>
