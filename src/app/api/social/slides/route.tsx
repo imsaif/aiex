@@ -189,28 +189,28 @@ function SlideImage({
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
             <Label text={slide.label} onNavy />
-            <div style={{ display: 'flex', fontSize: slide.title.length > 70 ? 62 : 72, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2 }}>
+            <div style={{ display: 'flex', fontSize: slide.title.length > 70 ? 62 : 72, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>
               {slide.title}
             </div>
-            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.4, color: C.onNavy, maxWidth: 880 }}>{slide.summary}</div>
+            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.6, color: C.onNavy, maxWidth: 880 }}>{slide.summary}</div>
           </div>
           <BandArt src={assets.band} size={430} />
         </div>
       )}
 
       {slide.kind === 'stories' && (
-        <div style={{ display: 'flex', flexDirection: 'column', padding: '56px 72px 0', gap: 18 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', padding: '48px 72px 0', gap: 16 }}>
           <Label text={slide.label} onNavy={false} />
-          <div style={{ display: 'flex', fontSize: 60, fontWeight: 700, letterSpacing: -1.5, marginBottom: 20 }}>{slide.title}</div>
+          <div style={{ display: 'flex', fontSize: 60, fontWeight: 700, letterSpacing: -1.5, marginBottom: 12 }}>{slide.title}</div>
           {slide.stories.map((story, i) => (
             <div
               key={i}
-              style={{ display: 'flex', gap: 28, alignItems: 'center', backgroundColor: C.white, borderRadius: 28, padding: '28px 36px' }}
+              style={{ display: 'flex', gap: 28, alignItems: 'center', backgroundColor: C.white, borderRadius: 28, padding: '22px 36px' }}
             >
               <StoryMark logo={logos[i] ?? null} patternSlug={story.patternSlug} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
                 <div style={{ display: 'flex', fontSize: 22, letterSpacing: 2, textTransform: 'uppercase', color: C.slate }}>{story.product}</div>
-                <div style={{ display: 'flex', fontSize: 31, fontWeight: 700, lineHeight: 1.25 }}>{story.headline}</div>
+                <div style={{ display: 'flex', fontSize: 31, fontWeight: 700, lineHeight: 1.4 }}>{story.headline}</div>
               </div>
             </div>
           ))}
@@ -220,7 +220,7 @@ function SlideImage({
       {slide.kind === 'idea' && (
         <div style={{ display: 'flex', flexDirection: 'column', padding: '72px 72px 0', gap: 30 }}>
           <Label text={slide.label} onNavy={false} />
-          <div style={{ display: 'flex', fontSize: 62, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2 }}>{slide.title}</div>
+          <div style={{ display: 'flex', fontSize: 62, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>{slide.title}</div>
           <div
             style={{
               display: 'flex',
@@ -228,7 +228,7 @@ function SlideImage({
               borderRadius: 28,
               padding: '44px 48px',
               fontSize: 34,
-              lineHeight: 1.5,
+              lineHeight: 1.65,
             }}
           >
             {slide.body}
@@ -240,8 +240,8 @@ function SlideImage({
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
             <Label text={slide.label} onNavy />
-            <div style={{ display: 'flex', fontSize: 68, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2 }}>{slide.title}</div>
-            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.4, color: C.onNavy, maxWidth: 860 }}>{slide.body}</div>
+            <div style={{ display: 'flex', fontSize: 68, fontWeight: 700, lineHeight: 1.3, letterSpacing: -1.2 }}>{slide.title}</div>
+            <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.6, color: C.onNavy, maxWidth: 860 }}>{slide.body}</div>
             <div
               style={{
                 display: 'flex',
