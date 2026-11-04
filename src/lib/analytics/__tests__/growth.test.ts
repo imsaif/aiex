@@ -1,6 +1,6 @@
 import { classifyVisit, decodeVisit, encodeVisit } from '../visit-source';
 import { isSyntheticUserAgent } from '../bots';
-import { buildChannelTable, buildFormTable, buildPostTable, emailClickStats, emailDeviceStats, formLabel, pickFocus } from '../growth';
+import { buildChannelTable, buildFormTable, buildPostTable, emailClickStats, emailDeviceStats, formLabel, pickFocus, withoutPostSendReadings } from '../growth';
 import { deviceFromUserAgent, toEmailEventRow } from '../email-events';
 
 const HOST = 'www.aiuxdesign.guide';
@@ -138,6 +138,24 @@ describe('email events', () => {
       ev('email_clicked', 'r1', 600), ev('email_clicked', 'r1', 900), ev('email_clicked', 'r2', 3),
     ]);
     expect(stats).toEqual({ delivered: 4, clickers: 1, rate: 25 });
+  });
+});
+
+describe('withoutPostSendReadings', () => {
+  const sent = new Date('2026-11-04T05:45:00.000Z');
+  const at = (iso: string) => ({ createdAt: new Date(iso) });
+
+  it('drops readings in the 10 minutes after a send and keeps the rest', () => {
+    const before = at('2026-11-04T05:44:59.000Z');
+    const inside = at('2026-11-04T05:46:30.000Z');
+    const lastInside = at('2026-11-04T05:54:59.000Z');
+    const after = at('2026-11-04T05:55:00.000Z');
+    expect(withoutPostSendReadings([before, inside, lastInside, after], [sent])).toEqual([before, after]);
+  });
+
+  it('keeps everything when nothing was sent', () => {
+    const rows = [at('2026-11-04T05:46:30.000Z')];
+    expect(withoutPostSendReadings(rows, [])).toEqual(rows);
   });
 });
 

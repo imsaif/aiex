@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { prisma } from '@/lib/prisma';
@@ -18,16 +19,18 @@ import {
 // stays out of the index — it would otherwise compete with /news for the issue
 // titles it echoes.
 export const metadata: Metadata = {
-  title: 'Thanks for voting',
+  title: 'Your answer',
   robots: { index: false, follow: false },
 };
 
-// Every request writes and reads a vote, so nothing here may be cached.
+// Tallies are read live, so nothing here may be cached.
 export const dynamic = 'force-dynamic';
 
 interface PollPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ c?: string }>;
+  // c: the answer whose email link was opened (a highlight, not a vote).
+  // voted: the answer just confirmed, set by the redirect after the tap.
+  searchParams: Promise<{ c?: string; voted?: string }>;
 }
 
 /**
@@ -90,9 +93,28 @@ async function tallyFor(issueSlug: string, poll: PollDefinition) {
   };
 }
 
+/**
+ * The only place a vote is recorded. Mail scanners open every link in an email
+ * in real Chrome within minutes of a send, so opening /poll/<slug>?c=yes cannot
+ * count: on Nov 4 2026 all 29 votes were cast that way. They load pages but do
+ * not tap buttons.
+ */
+async function submitVote(issueSlug: string, choiceId: string) {
+  'use server';
+
+  const issue = await prisma.newsletterDraft.findFirst({
+    where: { slug: issueSlug, status: 'published' },
+    select: { structuredData: true },
+  });
+  if (issue && isValidChoice(pollFromStructuredData(issue.structuredData), choiceId)) {
+    await recordVote(issueSlug, choiceId);
+  }
+  redirect(`/poll/${encodeURIComponent(issueSlug)}?voted=${encodeURIComponent(choiceId)}`);
+}
+
 export default async function PollPage({ params, searchParams }: PollPageProps) {
   const { slug } = await params;
-  const { c } = await searchParams;
+  const { c, voted } = await searchParams;
 
   // Only issues that went out have a live poll. A draft still in review, or a
   // rejected one, is treated like an unknown issue: no title shown, no vote
@@ -104,14 +126,58 @@ export default async function PollPage({ params, searchParams }: PollPageProps) 
 
   const poll = pollFromStructuredData(issue?.structuredData);
 
-  // An unknown issue or an unknown choice records nothing, but still shows the
-  // page. A reader who clicked a link in good faith should never see a 404
-  // because an issue was regenerated underneath them.
-  const counted = !!issue && isValidChoice(poll, c);
-  if (counted) await recordVote(slug, c!);
+  // A live issue with no confirmed answer yet: ask for the tap, record nothing.
+  const counted = !!issue && isValidChoice(poll, voted);
+  if (issue && !counted) {
+    const highlighted = isValidChoice(poll, c) ? c : undefined;
+    return (
+      <main className="min-h-screen bg-background-primary text-text-primary">
+        <Navbar />
 
+        <section className="pt-12 md:pt-16 pb-16 md:pb-24">
+          <div className="max-w-2xl mx-auto px-6">
+            <h1 className="text-3xl md:text-4xl font-bold mb-3">
+              {highlighted ? 'Tap to confirm your answer' : 'Pick your answer'}
+            </h1>
+            <p className="text-text-secondary mb-10">
+              {poll.question}
+              {issue.title ? ` · ${issue.title}` : ''}
+            </p>
+
+            <div className="space-y-3 mb-6">
+              {poll.choices.map((choice) => (
+                <form key={choice.id} action={submitVote.bind(null, slug, choice.id)}>
+                  <button
+                    type="submit"
+                    className={
+                      choice.id === highlighted
+                        ? 'w-full rounded-pill bg-accent-primary px-7 py-3.5 font-semibold text-white transition-colors hover:bg-accent-hover'
+                        : 'w-full rounded-pill border border-border-primary px-7 py-3.5 font-semibold text-text-primary transition-colors hover:bg-background-secondary'
+                    }
+                  >
+                    {choice.label}
+                  </button>
+                </form>
+              ))}
+            </div>
+
+            <p className="text-sm text-text-secondary">
+              Email security tools open every link in a newsletter, so opening this
+              page does not count as a vote.
+            </p>
+          </div>
+        </section>
+
+        <Footer />
+      </main>
+    );
+  }
+
+  // An unknown issue records nothing but still shows the page. A reader who
+  // clicked a link in good faith should never see a 404 because an issue was
+  // regenerated underneath them.
   const { total, rows } = await tallyFor(slug, poll);
-  const chosen = counted ? c : undefined;
+  const chosen = counted ? voted : undefined;
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">

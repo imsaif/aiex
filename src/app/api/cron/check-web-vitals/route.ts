@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { prisma } from '@/lib/prisma';
+import { withoutPostSendReadings } from '@/lib/analytics/growth';
 
 // Daily field-CWV regression check. Computes rolling p75 per metric over a
 // window and emails the admin when a Core Web Vital breaches its "good"
@@ -42,10 +43,24 @@ export async function GET(request: NextRequest) {
   const hours = Math.min(Math.max(Number(new URL(request.url).searchParams.get('hours')) || 72, 1), 720);
   const since = new Date(Date.now() - hours * 60 * 60 * 1000);
 
-  const rows = await prisma.webVitalMetric.findMany({
+  const allRows = await prisma.webVitalMetric.findMany({
     where: { createdAt: { gte: since } },
-    select: { metric: true, value: true, path: true, device: true },
+    select: { metric: true, value: true, path: true, device: true, createdAt: true },
   });
+
+  // Mail scanners load the newsletter's links right after each send, which
+  // reads as a site-wide slowdown. See withoutPostSendReadings. An issue can be
+  // sent days after it was generated, so look back further than the window.
+  const recentIssues = await prisma.newsletterDraft.findMany({
+    where: { createdAt: { gte: new Date(since.getTime() - 7 * 86_400_000) } },
+    select: { structuredData: true },
+  });
+  const sentAt = recentIssues.flatMap((issue) => {
+    const iso = (issue.structuredData as { send?: { sentAt?: string } } | null)?.send?.sentAt;
+    return iso ? [new Date(iso)] : [];
+  });
+  const rows = withoutPostSendReadings(allRows, sentAt);
+  const excludedAfterSend = allRows.length - rows.length;
 
   // Aggregate p75 per metric (overall + mobile) and find the worst path per metric.
   const summary = REPORTED_METRICS.map((metric) => {
@@ -77,7 +92,7 @@ export async function GET(request: NextRequest) {
   const breaches = summary.filter((s) => s.breached);
 
   if (breaches.length > 0) {
-    await sendVitalsAlert(breaches, summary, hours).catch((err) =>
+    await sendVitalsAlert(breaches, summary, hours, excludedAfterSend).catch((err) =>
       console.error('[check-web-vitals] alert send failed:', err)
     );
   }
@@ -91,6 +106,7 @@ export async function GET(request: NextRequest) {
     ok: breaches.length === 0,
     windowHours: hours,
     totalSamples: rows.length,
+    excludedAfterSend,
     breaches: breaches.map((b) => b.metric),
     summary: summary.map((s) => ({
       metric: s.metric,
@@ -116,7 +132,7 @@ type Summary = {
   worstPath: { path: string; p75: number; n: number } | null;
 };
 
-async function sendVitalsAlert(breaches: Summary[], all: Summary[], hours: number) {
+async function sendVitalsAlert(breaches: Summary[], all: Summary[], hours: number, excludedAfterSend: number) {
   if (!resend || !process.env.ADMIN_EMAIL) return;
 
   const breachList = breaches
@@ -149,7 +165,7 @@ async function sendVitalsAlert(breaches: Summary[], all: Summary[], hours: numbe
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <h1 style="font-size: 22px; color: #dc2626;">Real-user Core Web Vitals regressed</h1>
-        <p>Rolling <strong>p75</strong> over the last ${hours}h breached the "good" threshold for ${breaches.length} metric(s). This is field data (real users), not a lab run.</p>
+        <p>Rolling <strong>p75</strong> over the last ${hours}h breached the "good" threshold for ${breaches.length} metric(s). This is field data, not a lab run. ${excludedAfterSend} readings from the 10 minutes after a newsletter send were left out, because mail scanners open its links then.</p>
 
         <h2 style="font-size: 16px; margin-top: 24px; color: #dc2626;">Breaches</h2>
         <ul style="line-height: 1.6;">${breachList}</ul>
