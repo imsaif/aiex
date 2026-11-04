@@ -57,7 +57,7 @@ export interface WrapEmailInput {
   /** The issue HTML exactly as stored (a fragment, may contain <style> blocks). */
   content: string;
   siteUrl: string;
-  /** Issue slug, used as utm_campaign. */
+  /** Issue slug, used for the Read online link and as utm_campaign. */
   campaign: string;
   /** Mailing address required by CAN-SPAM. */
   postalAddress: string;
@@ -68,8 +68,8 @@ export interface WrapEmailInput {
 /**
  * Turns a stored issue into a complete email: a full document with the
  * <style> blocks moved into <head> (Gmail ignores them in <body>), our own site
- * links tagged, and a footer with the unsubscribe link and postal address,
- * which beehiiv's footer used to provide.
+ * links tagged, a "Read online" link to the issue's /news page, and a footer with
+ * the unsubscribe link and postal address. beehiiv used to provide the last two.
  */
 export function wrapEmail({ content, siteUrl, campaign, postalAddress, unsubscribeUrl }: WrapEmailInput): string {
   const styles: string[] = [];
@@ -77,6 +77,10 @@ export function wrapEmail({ content, siteUrl, campaign, postalAddress, unsubscri
     styles.push(block);
     return '';
   });
+  const readOnline = tagSiteLinks(`
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 680px; margin: 0 auto;"><tr><td align="right" style="padding: 0 24px 12px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6; color: #5b6478;">
+  <a href="${siteUrl}/news/${campaign}" style="color: #5b6478 !important; text-decoration: underline;">Read online</a>
+</td></tr></table>`, siteUrl, campaign);
   const footer = `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 680px; margin: 0 auto;"><tr><td align="center" style="padding: 28px 24px 36px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.6; color: #5b6478;">
   You're getting AI UX Daily because you subscribed at <a href="${siteUrl}" style="color: #5b6478 !important; text-decoration: underline;">aiuxdesign.guide</a>.<br />
@@ -88,6 +92,7 @@ export function wrapEmail({ content, siteUrl, campaign, postalAddress, unsubscri
 ${styles.join('\n')}
 </head>
 <body style="margin: 0; padding: 16px 0; background-color: #ffffff;">
+${readOnline}
 ${body}
 ${footer}
 </body></html>`;
