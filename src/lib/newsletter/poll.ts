@@ -5,7 +5,7 @@ import { createHash } from 'crypto';
  *
  * An email poll is a set of ordinary links, one per answer, pointing at
  * /poll/<issueSlug>?c=<choiceId>. No JavaScript, no embed, works in every mail
- * client — which is how beehiiv's own poll works too.
+ * client. The link opens a page where the reader confirms with one tap.
  *
  * Votes are ANONYMOUS by design, and that is a constraint rather than a
  * preference: the newsletter ships by pasting one HTML document into a beehiiv
@@ -87,13 +87,13 @@ export function voterHash(
 }
 
 /**
- * Filters out the clicks that are not people.
+ * Second line of defence behind the confirm tap on /poll/<slug>.
  *
- * Mail providers and link scanners fetch every URL in an email before the
- * reader ever sees it, and beehiiv wraps our links in its own click tracker on
- * the way out. Recording those would swamp a poll that has historically drawn
- * about three votes. Anything without a browser-shaped user-agent, and any
- * browser prefetch, is served the results page but has its vote dropped.
+ * Opening the link is not a vote: since Nov 2026 only a tap on the page records
+ * one, because mail scanners run real Chrome with ordinary user-agents, which
+ * this check cannot see. Measured on Nov 4 2026: all 29 votes arrived within
+ * 10 minutes of the first, split across every answer. This still drops the
+ * tools that announce themselves, should any of them submit the form.
  */
 export function isLikelyBot(userAgent: string | null, secPurpose: string | null): boolean {
   if (secPurpose && secPurpose.toLowerCase().includes('prefetch')) return true;

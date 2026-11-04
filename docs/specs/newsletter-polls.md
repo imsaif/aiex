@@ -48,9 +48,14 @@ an issue two ways.
 `src/app/poll/[slug]/page.tsx` — a server component, not an API route, so the
 click lands on a real page rather than a redirect:
 
+**Changed Nov 2026:** opening the link no longer votes. Mail scanners open every
+link in real Chrome within minutes of a send, and cast all 29 votes on the Nov 4
+issue. `c` now only highlights an answer on a confirm page, and a tap on one of
+its buttons records the vote. Steps 3 and 4 below happen after that tap.
+
 1. Read `slug` and `c`.
-2. Validate `c` against the choice set for that issue. Unknown choice → record
-   nothing, show the results page anyway.
+2. Validate `c` against the choice set for that issue. Unknown choice → nothing
+   highlighted, the reader picks from all answers.
 3. Write a `PollVote` row.
 4. Render a thank-you that shows the running tally for that issue, plus the
    audit CTA. A vote is the highest-intent moment in the whole issue — do not
