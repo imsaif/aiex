@@ -10,8 +10,26 @@ export const AUDIT_DONE_EVENT = 'audit_session_completed';
 export const FOCUS_MIN_SIGNUPS = 5;
 export const FOCUS_MIN_VISITORS = 100;
 
-/** Clicks this soon after sending are corporate link scanners, not readers. */
-export const SCANNER_CLICK_SECONDS = 15;
+/**
+ * Clicks this soon after sending are treated as corporate link scanners. Raised
+ * from 15s in Nov 2026: scanners were clicking for minutes, and clickers per
+ * issue fell from about 26 to about 3 at this cut. A real reader who clicks
+ * inside the window goes uncounted, which is the accepted cost.
+ */
+export const SCANNER_CLICK_SECONDS = 600;
+
+/**
+ * Drops page-speed readings taken in the scanner window after each send. The
+ * same scanners open the newsletter's links in slow sandboxed browsers, and on
+ * Nov 4 2026 that took 72h LCP p75 from 1.4s to 6s with no page any slower.
+ */
+export function withoutPostSendReadings<T extends { createdAt: Date }>(rows: T[], sentAt: Date[]): T[] {
+  const windowMs = SCANNER_CLICK_SECONDS * 1000;
+  return rows.filter((row) => {
+    const t = row.createdAt.getTime();
+    return !sentAt.some((s) => t >= s.getTime() && t < s.getTime() + windowMs);
+  });
+}
 
 export interface EventRow {
   name: string;
