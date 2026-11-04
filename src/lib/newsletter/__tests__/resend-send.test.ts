@@ -37,6 +37,12 @@ describe('wrapEmail', () => {
     expect(html).toContain(`href="${UNSUBSCRIBE_PLACEHOLDER}"`);
     expect(html).toContain('PO Box 1 &lt;Hyderabad&gt;');
   });
+
+  it("puts a tagged Read online link to the issue's page above the issue", () => {
+    expect(html).toContain('href="https://www.aiuxdesign.guide/news/oct-10?utm_source=newsletter&amp;utm_medium=email&amp;utm_campaign=oct-10"');
+    expect(html.indexOf('Read online')).toBeLessThan(html.indexOf('Issue</div>'));
+    expect(html.indexOf('Read online')).toBeGreaterThan(html.indexOf('<body'));
+  });
 });
 
 describe('wantsDaily', () => {
