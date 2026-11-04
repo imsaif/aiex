@@ -1,6 +1,6 @@
 import { classifyVisit, decodeVisit, encodeVisit } from '../visit-source';
 import { isSyntheticUserAgent } from '../bots';
-import { buildChannelTable, buildFormTable, buildPostTable, emailClickStats, emailDeviceStats, formLabel, pickFocus, withoutPostSendReadings } from '../growth';
+import { buildChannelTable, buildFormTable, buildPostTable, emailClickStats, emailDeviceStats, formLabel, inScannerWindow, pickFocus, withoutPostSendReadings, withoutScannerEventsWhere } from '../growth';
 import { deviceFromUserAgent, toEmailEventRow } from '../email-events';
 
 const HOST = 'www.aiuxdesign.guide';
@@ -156,6 +156,25 @@ describe('withoutPostSendReadings', () => {
   it('keeps everything when nothing was sent', () => {
     const rows = [at('2026-11-04T05:46:30.000Z')];
     expect(withoutPostSendReadings(rows, [])).toEqual(rows);
+  });
+});
+
+describe('scanner window', () => {
+  const sent = new Date('2026-11-04T05:45:00.000Z');
+
+  it('covers the 10 minutes after a send, for votes and events alike', () => {
+    expect(inScannerWindow(new Date('2026-11-04T05:44:59.000Z'), [sent])).toBe(false);
+    expect(inScannerWindow(new Date('2026-11-04T05:54:59.000Z'), [sent])).toBe(true);
+    expect(inScannerWindow(new Date('2026-11-04T05:55:00.000Z'), [sent])).toBe(false);
+    expect(inScannerWindow(sent, [])).toBe(false);
+  });
+
+  it('filters view events only, and adds nothing when nothing was sent', () => {
+    expect(withoutScannerEventsWhere([])).toEqual({});
+    const { NOT } = withoutScannerEventsWhere([sent]) as { NOT: { name: { in: string[] }; OR: { createdAt: { gte: Date; lt: Date } }[] } };
+    expect(NOT.name.in).toContain('audit_upload_viewed');
+    expect(NOT.name.in).not.toContain('audit_session_completed');
+    expect(NOT.OR[0].createdAt).toEqual({ gte: sent, lt: new Date('2026-11-04T05:55:00.000Z') });
   });
 });
 

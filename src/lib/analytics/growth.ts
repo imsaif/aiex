@@ -24,11 +24,41 @@ export const SCANNER_CLICK_SECONDS = 600;
  * Nov 4 2026 that took 72h LCP p75 from 1.4s to 6s with no page any slower.
  */
 export function withoutPostSendReadings<T extends { createdAt: Date }>(rows: T[], sentAt: Date[]): T[] {
-  const windowMs = SCANNER_CLICK_SECONDS * 1000;
-  return rows.filter((row) => {
-    const t = row.createdAt.getTime();
-    return !sentAt.some((s) => t >= s.getTime() && t < s.getTime() + windowMs);
-  });
+  return rows.filter((row) => !inScannerWindow(row.createdAt, sentAt));
+}
+
+export function inScannerWindow(at: Date, sentAt: Date[]): boolean {
+  const t = at.getTime();
+  return sentAt.some((s) => t >= s.getTime() && t < s.getTime() + SCANNER_CLICK_SECONDS * 1000);
+}
+
+/**
+ * Events a scanner fires by opening a page or pressing whatever it finds. In the
+ * 28 days to Nov 4 2026, 76% of audit_upload_viewed and 85% of newsletter
+ * page_viewed fell in the window, and one visitor pressed all three sample
+ * buttons on /audit in the same second. Finished audits and skill downloads had
+ * none in the window, so outcomes are deliberately not listed here.
+ */
+export const SCANNER_REACHABLE_EVENTS = [
+  'page_viewed',
+  'audit_demo_viewed',
+  'audit_upload_viewed',
+  'audit_sample_screenshot_clicked',
+  'skills_gate_shown',
+  'call_offer_shown',
+];
+
+/** Query clause that leaves those events out of the scanner window after each send. */
+export function withoutScannerEventsWhere(sentAt: Date[]) {
+  if (sentAt.length === 0) return {};
+  return {
+    NOT: {
+      name: { in: SCANNER_REACHABLE_EVENTS },
+      OR: sentAt.map((s) => ({
+        createdAt: { gte: s, lt: new Date(s.getTime() + SCANNER_CLICK_SECONDS * 1000) },
+      })),
+    },
+  };
 }
 
 export interface EventRow {

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { prisma } from '@/lib/prisma';
+import { inScannerWindow } from '@/lib/analytics/growth';
 import { AUDIT_PATH } from '@/lib/audit/constants';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import {
@@ -96,8 +97,12 @@ async function tallyFor(issueSlug: string, poll: PollDefinition) {
 /**
  * The only place a vote is recorded. Mail scanners open every link in an email
  * in real Chrome within minutes of a send, so opening /poll/<slug>?c=yes cannot
- * count: on Nov 4 2026 all 29 votes were cast that way. They load pages but do
- * not tap buttons.
+ * count: on Nov 4 2026 all 29 votes were cast that way.
+ *
+ * The tap alone is not proof either, because some scanners press buttons: one
+ * visitor pressed all three sample buttons on /audit in the same second. So a
+ * tap in the scanner window after this issue's send is thanked but not counted.
+ * A real reader that fast goes uncounted, the same cost the click counts accept.
  */
 async function submitVote(issueSlug: string, choiceId: string) {
   'use server';
@@ -106,7 +111,9 @@ async function submitVote(issueSlug: string, choiceId: string) {
     where: { slug: issueSlug, status: 'published' },
     select: { structuredData: true },
   });
-  if (issue && isValidChoice(pollFromStructuredData(issue.structuredData), choiceId)) {
+  const sentIso = (issue?.structuredData as { send?: { sentAt?: string } } | null)?.send?.sentAt;
+  const tooSoon = !!sentIso && inScannerWindow(new Date(), [new Date(sentIso)]);
+  if (issue && !tooSoon && isValidChoice(pollFromStructuredData(issue.structuredData), choiceId)) {
     await recordVote(issueSlug, choiceId);
   }
   redirect(`/poll/${encodeURIComponent(issueSlug)}?voted=${encodeURIComponent(choiceId)}`);
