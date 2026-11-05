@@ -1,0 +1,28 @@
+name: Audit smoke check
+
+# A few real audits with plain pass-or-fail rules, only when the audit's prompt
+# or the way its answer is read changes.
+on:
+  pull_request:
+    paths:
+      - 'src/lib/audit/prompts.ts'
+      - 'src/lib/audit/parseAnalysis.ts'
+      - 'src/app/api/patterns/analyze/route.ts'
+      - 'tests/audit-evals/smoke*.ts'
+
+jobs:
+  smoke:
+    # Secrets aren't available to pull requests from forks.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run eval:audit:smoke
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
