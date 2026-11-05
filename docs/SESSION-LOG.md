@@ -36,6 +36,13 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-11-05 (MacBook)
+- **Pattern:** False LCP alert traced to mail scanners; polls, speed alert, click counts and funnel made scanner-resistant; Read online link
+- **Status:** Merged: PRs #166, #167, #168 on `master`, deploys verified, main checkout updated, worktrees removed
+- **Files Changed:** about 12 across the three PRs (all landed by PR, so the update script reads 0 from a clean tree)
+- **Tests Added/Modified:** new cases in `growth.test.ts` and `resend-send.test.ts`; 28 and 9 passing
+- **Notes:** The daily LCP alert (p75 6s) was no regression: software, most likely mail security, opens newsletter links in slow desktop Chrome within minutes of each send, and LCP without those 10 minutes is about 1.4s. Fixes: poll votes need a tap on a confirm page (#166), speed alert and click counts skip the 10 minutes after a send (#166), Read online link added at send time (#167), page views and funnel view events filtered and poll taps in the window ignored (#168). All 2,648 poll votes were fake or unprovable and were deleted (backup on the Desktop as `aiex-poll-votes-backup-2026-11-04.json`). Corrected numbers over 28 days: newsletter visitors 851 to 114, reached audit upload 568 to 138, finished audits unchanged at 20. Some scanners press buttons, so a click event alone is not proof of a person. **Still open:** a real poll vote has not been seen saved; the 10-minute tap rule has not yet met a send; crawlers outside the window remain in the numbers; `audit-upgrade-review.ts` reads raw events. Detail in the incident row in `.claude/rules/performance.md`.
+
 ### Session 2026-10-14 (MacBook)
 - **Pattern:** Newsletter on Resend + admin Growth dashboard + Vercel usage
 - **Status:** Merged — PRs #142 to #152 on `master`, deploys verified live, main checkout updated, worktrees removed
