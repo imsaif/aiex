@@ -1268,7 +1268,7 @@ Follow the 4-step analysis process from the system prompt strictly. Describe eac
 exports[`buildUserPrompt matches snapshot for productType=chat-interface 1`] = `
 "The wider product is a conversational AI / chat product. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.
+The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty \`applicablePatterns\`.
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only."
 `;
@@ -1276,7 +1276,7 @@ Follow the 4-step analysis process from the system prompt strictly. Describe eac
 exports[`buildUserPrompt matches snapshot for productType=content-generation 1`] = `
 "The wider product is a content generation tool. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.
+The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty \`applicablePatterns\`.
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only."
 `;
@@ -1284,7 +1284,7 @@ Follow the 4-step analysis process from the system prompt strictly. Describe eac
 exports[`buildUserPrompt matches snapshot for productType=dashboard-analytics 1`] = `
 "The wider product is an AI dashboard / analytics product. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.
+The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty \`applicablePatterns\`.
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only."
 `;
@@ -1300,7 +1300,7 @@ Follow the 4-step analysis process from the system prompt strictly. Describe eac
 exports[`buildUserPrompt matches snapshot for productType=general 1`] = `
 "The wider product is an AI-powered product. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.
+The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty \`applicablePatterns\`.
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only."
 `;
@@ -1308,7 +1308,7 @@ Follow the 4-step analysis process from the system prompt strictly. Describe eac
 exports[`buildUserPrompt matches snapshot for productType=recommendation-system 1`] = `
 "The wider product is a recommendation system. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.
+The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty \`applicablePatterns\`.
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only."
 `;
@@ -1316,7 +1316,7 @@ Follow the 4-step analysis process from the system prompt strictly. Describe eac
 exports[`buildUserPrompt matches snapshot for productType=reports-documents 1`] = `
 "The wider product is an AI reports / document / data-extraction product. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.
+The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty \`applicablePatterns\`.
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only."
 `;
@@ -1324,7 +1324,7 @@ Follow the 4-step analysis process from the system prompt strictly. Describe eac
 exports[`buildUserPrompt matches snapshot for productType=search-discovery 1`] = `
 "The wider product is an AI search / discovery product. The screenshot(s) below may show any surface within that product (chat, settings, billing, onboarding, empty state, etc.) — DO NOT assume every screen needs the same set of patterns.
 
-The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.
+The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty \`applicablePatterns\`.
 
 Follow the 4-step analysis process from the system prompt strictly. Describe each surface first, then select only the patterns that genuinely apply, then evaluate with grounded evidence. Return strict JSON only."
 `;

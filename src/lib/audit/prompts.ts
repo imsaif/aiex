@@ -208,7 +208,7 @@ export function buildUserPrompt(
     ? 'Because this is an agentic product, the agentic pattern set may apply — but only to surfaces that actually show agent action, planning, or status. Do not flag agentic patterns on settings or billing surfaces.'
     : productType === 'embedded-ai-feature'
       ? 'This is AI embedded inside a host tool, so Workspace-Native Agent Integration and related embedded patterns may apply. Use the autonomous-agent pattern set (Intent Preview, Plan Summary, Action Audit Trail, etc.) only if the surface clearly shows autonomous action.'
-      : 'The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise.';
+      : 'The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty `applicablePatterns`.';
 
   // User-supplied description is informative context only. The system prompt's
   // evidence-first rules still apply: findings must reference visible UI, and
