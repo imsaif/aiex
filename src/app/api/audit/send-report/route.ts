@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       from: 'AI UX Patterns <imran@aiuxdesign.guide>',
       replyTo: 'imranrizom@gmail.com',
       to: email,
-      subject: `Your AI UX Audit Report - Score: ${results.score}/${results.maxScore}`,
+      subject: 'Your AI UX Audit Report',
       html: emailHtml,
     });
 
@@ -241,25 +241,12 @@ function getPatternProducts(patternId: string): string {
   return PATTERN_PRODUCTS[patternId] || 'leading AI products';
 }
 
-function getBenchmark(productType?: string): { range: string; note: string } {
-  const benchmarks: Record<string, { range: string; note: string }> = {
-    'chat-interface': { range: '14-20', note: 'Chat interfaces typically score higher on conversational patterns but often miss transparency and feedback mechanisms' },
-    'ai-agent': { range: '10-16', note: 'Agentic products are newer and often lack trust, control, and escalation patterns that users need' },
-    'recommendation-system': { range: '12-18', note: 'Recommendation systems tend to be strong on personalization but often miss explainability and user control' },
-    'content-generation': { range: '13-19', note: 'Content generation tools usually handle creation well but often lack confidence indicators and safe exploration' },
-    'other': { range: '10-18', note: 'AI products vary widely, but most have room to improve transparency and user feedback' },
-  };
-  return benchmarks[productType || 'other'] || benchmarks['other'];
-}
-
 function generateAuditReportEmail(results: AnalysisResults, productContext?: { productType: string; productDescription: string; aiRole: string[] }): string {
   const allPatterns = Object.values(results.patterns);
   const goodPatterns = allPatterns.filter(p => p.status === 'well-implemented');
   const weakPatterns = allPatterns.filter(p => p.status === 'weak');
   const missingPatterns = allPatterns.filter(p => p.status === 'missing');
   const topPriorities = getTopPriorities(results.patterns);
-  const percentage = Math.round((results.score / results.maxScore) * 100);
-  const benchmark = getBenchmark(productContext?.productType);
 
   // Email design tokens — kept in sync with the newsletter renderer in
   // src/app/api/cron/generate-newsletter/route.ts and the Beehiiv welcome
@@ -363,7 +350,7 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
           <p style="margin: 12px 0 0 0; font-size: 13px; color: ${navy}; line-height: 1.5;"><strong style="color: ${navy};">AI capabilities:</strong> ${productContext.aiRole.join(', ')}</p>
           ` : ''}
           <p style="margin: 12px 0 0 0; font-size: 12px; color: ${mutedText}; line-height: 1.5;">
-            Your screenshot was analyzed against ${results.maxScore} research-backed UX patterns for AI products. Each pattern was scored as well-implemented, weak, or missing based on visible interface elements.
+            Your screenshot was checked against our library of research-backed UX patterns for AI products. Each pattern that applied was rated as well-implemented, weak, or missing based on visible interface elements.
           </p>
         </div>
 
@@ -376,27 +363,19 @@ function generateAuditReportEmail(results: AnalysisResults, productContext?: { p
           <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: ${bgLight}; border-radius: 8px;">
             <tr>
               <td style="padding: 16px 20px; text-align: center; width: 33%;">
-                <p style="margin: 0; font-size: 28px; font-weight: 700; color: ${navy};">${results.score}<span style="font-size: 16px; color: ${mutedText};">/${results.maxScore}</span></p>
-                <p style="margin: 2px 0 0 0; font-size: 12px; color: ${mutedText};">${percentage}% detected</p>
-              </td>
-              <td style="padding: 16px 20px; text-align: center; width: 22%; border-left: 1px solid ${border};">
                 <p style="margin: 0; font-size: 20px; font-weight: 700; color: ${navy};">${goodPatterns.length}</p>
                 <p style="margin: 2px 0 0 0; font-size: 12px; color: ${mutedText};">Strong</p>
               </td>
-              <td style="padding: 16px 20px; text-align: center; width: 22%; border-left: 1px solid ${border};">
+              <td style="padding: 16px 20px; text-align: center; width: 33%; border-left: 1px solid ${border};">
                 <p style="margin: 0; font-size: 20px; font-weight: 700; color: ${navy};">${weakPatterns.length}</p>
                 <p style="margin: 2px 0 0 0; font-size: 12px; color: ${mutedText};">Improve</p>
               </td>
-              <td style="padding: 16px 20px; text-align: center; width: 22%; border-left: 1px solid ${border};">
+              <td style="padding: 16px 20px; text-align: center; width: 33%; border-left: 1px solid ${border};">
                 <p style="margin: 0; font-size: 20px; font-weight: 700; color: ${navy};">${missingPatterns.length}</p>
                 <p style="margin: 2px 0 0 0; font-size: 12px; color: ${mutedText};">Missing</p>
               </td>
             </tr>
           </table>
-
-          <p style="margin: 16px 0 0 0; font-size: 13px; color: ${mutedText}; text-align: center;">
-            Similar ${productContext ? formatProductType(productContext.productType).toLowerCase() + 's' : 'products'} typically score <strong style="color: ${navy};">${benchmark.range}</strong> out of ${results.maxScore}. ${benchmark.note}.
-          </p>
         </div>
 
         ${goodPatterns.length > 0 ? `
