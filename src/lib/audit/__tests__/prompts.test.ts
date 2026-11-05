@@ -18,28 +18,13 @@ describe('buildSystemPrompt', () => {
     expect(buildSystemPrompt(productType)).toMatchSnapshot();
   });
 
-  it('includes the autonomous-agent pattern block ONLY for ai-agent', () => {
+  it('offers the full library whatever the product-type guess (a wrong guess must not remove patterns)', () => {
     for (const pt of PRODUCT_TYPES) {
       const out = buildSystemPrompt(pt);
-      if (pt === 'ai-agent') {
-        expect(out).toMatch(/Agentic patterns/);
-        expect(out).toMatch(/Autonomy Spectrum/);
-        expect(out).toMatch(/Action Audit Trail/);
-      } else {
-        expect(out).not.toMatch(/Agentic patterns \(only for/);
-        expect(out).not.toMatch(/Autonomy Spectrum/);
-      }
-    }
-  });
-
-  it('surfaces the embedded/learning-agent patterns for ai-agent AND embedded-ai-feature only', () => {
-    for (const pt of PRODUCT_TYPES) {
-      const out = buildSystemPrompt(pt);
-      if (pt === 'ai-agent' || pt === 'embedded-ai-feature') {
-        expect(out).toMatch(/Workspace-Native Agent Integration/);
-      } else {
-        expect(out).not.toMatch(/Workspace-Native Agent Integration/);
-      }
+      expect(out).toMatch(/Agentic patterns \(only for agentic/);
+      expect(out).toMatch(/Autonomy Spectrum/);
+      expect(out).toMatch(/Action Audit Trail/);
+      expect(out).toMatch(/Workspace-Native Agent Integration/);
     }
   });
 
@@ -104,12 +89,13 @@ describe('buildUserPrompt', () => {
     expect(out).toMatch(/Do not flag agentic patterns on settings or billing/);
   });
 
-  it('warns against assuming agentic patterns on non-agent products', () => {
-    // embedded-ai-feature gets its own caveat (embedded patterns MAY apply, but
-    // the autonomous-agent set probably doesn't), so it's excluded here.
+  it('ties agentic patterns to what the surface shows, not to the guessed product type', () => {
+    // embedded-ai-feature gets its own caveat, so it's excluded here.
     for (const pt of PRODUCT_TYPES.filter((p) => p !== 'ai-agent' && p !== 'embedded-ai-feature')) {
       const out = buildUserPrompt(pt);
-      expect(out).toMatch(/agentic pattern set probably does NOT apply/);
+      expect(out).toMatch(/product type is only a guess/);
+      expect(out).toMatch(/only if the surface itself clearly shows/);
+      expect(out).not.toMatch(/probably does NOT apply/);
     }
   });
 
