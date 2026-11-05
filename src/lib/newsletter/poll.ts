@@ -87,7 +87,8 @@ export function voterHash(
 }
 
 /**
- * Second line of defence behind the confirm tap on /poll/<slug>.
+ * Third line of defence on /poll/<slug>, behind the confirm tap and the rule
+ * that ignores taps in the minutes after a send.
  *
  * Opening the link is not a vote: since Nov 2026 only a tap on the page records
  * one, because mail scanners run real Chrome with ordinary user-agents, which

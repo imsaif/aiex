@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAdminAuth } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
+import { withoutScannerEventsWhere } from '@/lib/analytics/growth';
+import { sendTimesSince } from '@/lib/analytics/send-times';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,6 +75,10 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
   //
   // AND rather than spread: both clauses use a top-level `OR`, and merging them
   // into one object literal would silently drop the first.
+  //
+  // Mail scanners open the audit from every newsletter, which made the "reached"
+  // step mostly machines. AuditSample is server truth and needs no such filter.
+  const sentAt = includeTest ? [] : await sendTimesSince(since);
   const eventWhere = includeTest
     ? { createdAt: { gte: since } }
     : {
@@ -80,6 +86,7 @@ export const GET = withAdminAuth(async (request: NextRequest) => {
           { createdAt: { gte: since } },
           realRole,
           adminHashes.length > 0 ? { OR: [{ ipHash: null }, { ipHash: { notIn: adminHashes } }] } : {},
+          withoutScannerEventsWhere(sentAt),
         ],
       };
 

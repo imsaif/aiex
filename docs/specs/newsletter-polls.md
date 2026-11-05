@@ -48,6 +48,9 @@ an issue two ways.
 `src/app/poll/[slug]/page.tsx` — a server component, not an API route, so the
 click lands on a real page rather than a redirect:
 
+**Also changed Nov 2026:** some scanners press buttons too, so a tap in the 10
+minutes after the issue's send is thanked but not counted.
+
 **Changed Nov 2026:** opening the link no longer votes. Mail scanners open every
 link in real Chrome within minutes of a send, and cast all 29 votes on the Nov 4
 issue. `c` now only highlights an answer on a confirm page, and a tap on one of

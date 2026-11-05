@@ -17,7 +17,10 @@ import {
   buildFormTable,
   type DeviceRow,
   emailDeviceStats,
+  withoutPostSendReadings,
+  withoutScannerEventsWhere,
 } from './growth';
+import { sendTimesSince } from './send-times';
 
 const DAY = 86_400_000;
 const WINDOW_DAYS = 28;
@@ -71,6 +74,7 @@ export interface GrowthData {
 export async function getGrowthData(now = new Date()): Promise<GrowthData> {
   const since = new Date(now.getTime() - WINDOW_DAYS * DAY);
   const weekAgo = new Date(now.getTime() - 7 * DAY);
+  const sentAt = await sendTimesSince(since);
 
   const [loads, joined, left, active, conversions, pageViews, firstView, lastDelivery, forms, formsActive, emailClicks] = await Promise.all([
     prisma.webVitalMetric.findMany({
@@ -85,7 +89,7 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
       select: { name: true, properties: true },
     }),
     prisma.uiEvent.findMany({
-      where: { ...realPeople, createdAt: { gte: since }, name: 'page_viewed' },
+      where: { ...realPeople, ...withoutScannerEventsWhere(sentAt), createdAt: { gte: since }, name: 'page_viewed' },
       select: { name: true, properties: true },
     }),
     prisma.uiEvent.findFirst({ where: { name: 'page_viewed' }, orderBy: { createdAt: 'asc' }, select: { createdAt: true } }),
@@ -101,7 +105,7 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
     prisma.uiEvent.findMany({ where: { name: 'email_clicked', createdAt: { gte: since } }, select: { name: true, properties: true } }),
   ]);
 
-  const realLoads = loads.filter((l) => !(SPEED_TEST_PATHS.includes(l.path) && l.value < 80));
+  const realLoads = withoutPostSendReadings(loads, sentAt).filter((l) => !(SPEED_TEST_PATHS.includes(l.path) && l.value < 80));
   const weeks = [3, 2, 1, 0].map((i) => {
     const start = new Date(now.getTime() - (i + 1) * 7 * DAY);
     const end = new Date(now.getTime() - i * 7 * DAY);

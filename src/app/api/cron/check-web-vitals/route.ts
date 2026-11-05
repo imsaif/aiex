@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { prisma } from '@/lib/prisma';
 import { withoutPostSendReadings } from '@/lib/analytics/growth';
+import { sendTimesSince } from '@/lib/analytics/send-times';
 
 // Daily field-CWV regression check. Computes rolling p75 per metric over a
 // window and emails the admin when a Core Web Vital breaches its "good"
@@ -49,17 +50,8 @@ export async function GET(request: NextRequest) {
   });
 
   // Mail scanners load the newsletter's links right after each send, which
-  // reads as a site-wide slowdown. See withoutPostSendReadings. An issue can be
-  // sent days after it was generated, so look back further than the window.
-  const recentIssues = await prisma.newsletterDraft.findMany({
-    where: { createdAt: { gte: new Date(since.getTime() - 7 * 86_400_000) } },
-    select: { structuredData: true },
-  });
-  const sentAt = recentIssues.flatMap((issue) => {
-    const iso = (issue.structuredData as { send?: { sentAt?: string } } | null)?.send?.sentAt;
-    return iso ? [new Date(iso)] : [];
-  });
-  const rows = withoutPostSendReadings(allRows, sentAt);
+  // reads as a site-wide slowdown. See withoutPostSendReadings.
+  const rows = withoutPostSendReadings(allRows, await sendTimesSince(since));
   const excludedAfterSend = allRows.length - rows.length;
 
   // Aggregate p75 per metric (overall + mobile) and find the worst path per metric.
