@@ -156,6 +156,27 @@ model AuditSample {
   @@index([sessionId])
 }
 
+// A real audit kept for review: the screenshots, the AI's answer and how the run
+// went. Visitors are told before upload, and the daily check-web-vitals cron
+// deletes rows after 30 days. Never select `images` in a list query.
+model AuditRecord {
+  id                String   @id @default(cuid())
+  createdAt         DateTime @default(now())
+  sessionId         String? // results.id, the join key to UiEvent.sessionId (ratings)
+  outcome           String
+  productType       String?
+  productTypeSource String? // auto | manual | sample
+  deviceType        String?
+  images            Bytes[]
+  rawAnswer         String?
+  steps             Json?
+  ipHash            String?
+  role              String?
+
+  @@index([createdAt])
+  @@index([sessionId])
+}
+
 model PatternIntent {
   id                String   @id @default(cuid())
   createdAt         DateTime @default(now())

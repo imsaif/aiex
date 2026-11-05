@@ -62,6 +62,7 @@ export default function AuditClient({
   // Multi-step flow state — landing on the demo result, then upload, then real results
   const [step, setStep] = useState<AuditStep>(initialStep);
   const [productType, setProductType] = useState<ProductType | null>(null);
+  const [productTypeSource, setProductTypeSource] = useState<string | null>(null);
 
   const router = useRouter();
   const startsOnDemo = initialStep === 'demo';
@@ -189,6 +190,8 @@ export default function AuditClient({
           images: imagesPayload,
           deviceType: primaryDeviceType,
           productType,
+          productTypeSource,
+          isSample: isSampleRun,
           ...(role ? { role } : {}),
         }),
       });
@@ -247,7 +250,7 @@ export default function AuditClient({
     } finally {
       setIsAnalyzing(false);
     }
-  }, [productType, incrementAuditCount]);
+  }, [productType, productTypeSource, incrementAuditCount]);
 
   // Handle analyze from ScreenshotUpload — user clicked "Analyze"
   const handleScreenshotUpload = useCallback(async (images: UploadedImage[]) => {
@@ -277,6 +280,7 @@ export default function AuditClient({
     setIsDemoMode(false);
     setStep('screenshot');
     setProductType(null);
+    setProductTypeSource(null);
   }, [isPaywalled]);
 
   // Determine if we're in the upload-intake step (only the upload screen renders the intake chrome)
@@ -415,6 +419,7 @@ export default function AuditClient({
                   setAuditSessionId(null);
                   setIsDemoMode(true);
                   setProductType(null);
+                  setProductTypeSource(null);
                 }}
                 className="inline-flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
               >
@@ -446,6 +451,7 @@ export default function AuditClient({
               productType={productType}
               onProductTypeChange={(type, source) => {
                 setProductType(type);
+                setProductTypeSource(source);
                 // Not a funnel "step" — it is the product type being resolved,
                 // by a manual pick, auto-classification, or a sample load. The
                 // auto case is the log's best proxy for a real upload, since

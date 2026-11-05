@@ -5,6 +5,7 @@ import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
 import { parseAnalysisResponse } from '@/lib/audit/parseAnalysis';
 import { recordAuditSample } from '@/lib/audit/sample';
 import { auditTraceLabel, auditTraceStep, promptFingerprint } from '@/lib/audit/trace';
+import { saveAuditRecord, shouldSaveAuditRecord } from '@/lib/audit/record';
 import { clampScore } from '@/lib/audit/score';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock';
@@ -115,13 +116,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, imageBase64, images, deviceType, productType, productDescription, aiRole, role: bodyRole } = body as {
+    const { context, imageBase64, images, deviceType, productType, productTypeSource, isSample, productDescription, aiRole, role: bodyRole } = body as {
       context: ContextData;
       imageBase64: string;
       images?: Array<{ base64: string; deviceType: DeviceType }>;
       deviceType?: DeviceType;
       // New context-first fields
       productType?: ProductType;
+      productTypeSource?: string;
+      isSample?: boolean;
       productDescription?: string;
       aiRole?: string[];
       role?: string;
@@ -262,7 +265,35 @@ export async function POST(request: NextRequest) {
       'read-answer',
       parseResult.ok ? { ok: true } : { ok: false, reason: parseResult.reason, detail: parseResult.detail },
     );
+    const modelDurationMs = Date.now() - modelStartedAt;
+    const rawAnswer = textContent.text;
+    const keepRecord = (outcome: string, sessionId: string | null, extraSteps: Record<string, unknown> = {}) => {
+      if (!shouldSaveAuditRecord({ role, isSample: !!isSample })) return;
+      after(() =>
+        saveAuditRecord({
+          sessionId,
+          outcome,
+          productType: productType ?? null,
+          productTypeSource: typeof productTypeSource === 'string' ? productTypeSource.slice(0, 16) : null,
+          deviceType: deviceType ?? null,
+          images: imageList.map((img) => img.base64),
+          rawAnswer,
+          steps: {
+            model: response.model,
+            stopReason: response.stop_reason,
+            usage: response.usage,
+            modelDurationMs,
+            totalMs: Date.now() - startedAt,
+            systemPromptFingerprint: systemPrompt ? promptFingerprint(systemPrompt) : null,
+            ...extraSteps,
+          },
+          ip,
+          role,
+        })
+      );
+    };
     if (!parseResult.ok) {
+      keepRecord('parse_error', null, { reason: parseResult.reason, detail: parseResult.detail });
       console.error(
         '[Pattern Audit] Response parse failed:',
         parseResult.reason,
@@ -394,6 +425,7 @@ export async function POST(request: NextRequest) {
         },
         totalMs: Date.now() - startedAt,
       });
+      keepRecord(outcome, id);
 
       after(() =>
         recordAuditSample({
