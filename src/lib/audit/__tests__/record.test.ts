@@ -2,11 +2,12 @@ import { deleteExpiredAuditRecords, saveAuditRecord, shouldSaveAuditRecord } fro
 import { prisma } from '@/lib/prisma';
 
 jest.mock('@/lib/prisma', () => ({
-  prisma: { auditRecord: { create: jest.fn(), deleteMany: jest.fn() } },
+  prisma: { auditRecord: { create: jest.fn(), deleteMany: jest.fn() }, uiEvent: { deleteMany: jest.fn() } },
 }));
 
 const create = prisma.auditRecord.create as jest.Mock;
 const deleteMany = prisma.auditRecord.deleteMany as jest.Mock;
+const deleteEvents = prisma.uiEvent.deleteMany as jest.Mock;
 
 const base = {
   sessionId: 'audit-1',
@@ -24,6 +25,8 @@ const base = {
 beforeEach(() => {
   create.mockReset();
   deleteMany.mockReset();
+  deleteEvents.mockReset();
+  deleteEvents.mockResolvedValue({ count: 0 });
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
@@ -59,6 +62,20 @@ describe('saveAuditRecord', () => {
     expect(data).not.toHaveProperty('ip');
   });
 
+  it('drops a role or product-type source that is not a known shape', async () => {
+    create.mockResolvedValue({});
+    await saveAuditRecord({ ...base, role: 'x'.repeat(500), productTypeSource: 'anything' });
+    const { data } = create.mock.calls[0][0];
+    expect(data.role).toBeNull();
+    expect(data.productTypeSource).toBeNull();
+  });
+
+  it.each(['auto', 'manual', 'sample'])('keeps the %s product-type source', async (source) => {
+    create.mockResolvedValue({});
+    await saveAuditRecord({ ...base, productTypeSource: source });
+    expect(create.mock.calls[0][0].data.productTypeSource).toBe(source);
+  });
+
   it.each(['no_ai_surface', 'parse_error'])('keeps the raw answer for a %s run', async (outcome) => {
     create.mockResolvedValue({});
     await saveAuditRecord({ ...base, outcome, rawAnswer: 'not json' });
@@ -77,5 +94,14 @@ describe('deleteExpiredAuditRecords', () => {
     expect(cutoff.toISOString()).toBe('2026-10-06T00:00:00.000Z');
     const twentyNineDaysOld = new Date('2026-10-07T00:00:00Z');
     expect(twentyNineDaysOld > cutoff).toBe(true);
+  });
+
+  it('deletes ratings on the same schedule, and no other events', async () => {
+    deleteMany.mockResolvedValue({ count: 0 });
+    const now = new Date('2026-11-05T00:00:00Z');
+    await deleteExpiredAuditRecords(now);
+    expect(deleteEvents).toHaveBeenCalledWith({
+      where: { name: 'audit_gap_rated', createdAt: { lt: new Date('2026-10-06T00:00:00.000Z') } },
+    });
   });
 });

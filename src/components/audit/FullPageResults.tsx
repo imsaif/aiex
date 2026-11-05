@@ -1043,7 +1043,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               </p>
               <div className="space-y-3">
                 {topPinnedIssues.map((gap, i) => (
-                  <GapCard key={i} gap={gap} index={i + 1} ratable />
+                  <GapCard key={i} gap={gap} index={i + 1} ratable={!isDemoMode} />
                 ))}
               </div>
             </section>
