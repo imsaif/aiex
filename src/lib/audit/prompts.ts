@@ -45,8 +45,10 @@ Your job is to be HONEST about what you can and cannot see. A grounded "this sur
 - **Vulnerable User Protection**: Safeguards for vulnerable populations.
 `;
 
-  // Autonomous-action agent patterns — only surfaced for `ai-agent`, so they
-  // aren't over-applied to passive surfaces.
+  // Always offered, whatever the product-type guess. Tracing (2026-11-05) showed
+  // a wrong guess removed the patterns that fit: Claude Code guessed as a reports
+  // product got 0 patterns, and 5 gaps when set to ai-agent. The heading below is
+  // what keeps them off passive surfaces.
   const autonomousAgentPatterns = `
 ### Agentic patterns (only for agentic / autonomous-action surfaces)
 - **Autonomy Spectrum**: Graduated autonomy per task type (auto / approval / human-only).
@@ -177,10 +179,7 @@ If the surface(s) shown don't meaningfully invoke any AI UX patterns (e.g., a pu
 - Inside any JSON string (findings, evidence, \`worthChecking\` questions), quote UI labels with single quotes ('Explain'), never double quotes. An unescaped double quote breaks the whole response.
 `;
 
-  const autonomous = productType === 'ai-agent' ? autonomousAgentPatterns : '';
-  const embedded = productType === 'ai-agent' || productType === 'embedded-ai-feature' ? embeddedAgentPatterns : '';
-
-  return basePatterns + autonomous + embedded + emphasis + process + outputFormat;
+  return basePatterns + autonomousAgentPatterns + embeddedAgentPatterns + emphasis + process + outputFormat;
 }
 
 /**
@@ -208,8 +207,8 @@ export function buildUserPrompt(
   const productCaveat = productType === 'ai-agent'
     ? 'Because this is an agentic product, the agentic pattern set may apply — but only to surfaces that actually show agent action, planning, or status. Do not flag agentic patterns on settings or billing surfaces.'
     : productType === 'embedded-ai-feature'
-      ? 'This is AI embedded inside a host tool, so Workspace-Native Agent Integration and related embedded patterns may apply — but the autonomous-agent pattern set (Intent Preview, Plan Summary, Action Audit Trail, etc.) probably does NOT unless the surface clearly shows autonomous action.'
-      : 'The agentic pattern set probably does NOT apply unless the surface clearly shows autonomous agent activity.';
+      ? 'This is AI embedded inside a host tool, so Workspace-Native Agent Integration and related embedded patterns may apply. Use the autonomous-agent pattern set (Intent Preview, Plan Summary, Action Audit Trail, etc.) only if the surface clearly shows autonomous action.'
+      : 'The product type is only a guess. Use the agentic and embedded pattern sets only if the surface itself clearly shows an agent acting, planning or reporting status, or AI embedded in a host tool. If it does, use them even though the product type above suggests otherwise. If the screen shows no AI output or AI controls, do not assume its content came from AI: return an empty `applicablePatterns`.';
 
   // User-supplied description is informative context only. The system prompt's
   // evidence-first rules still apply: findings must reference visible UI, and

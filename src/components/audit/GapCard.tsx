@@ -15,6 +15,8 @@ interface GapCardProps {
   prominent?: boolean;
   /** Marks the single highest-priority gap — shows a "Start here" badge. */
   isTopPriority?: boolean;
+  /** Asks "Was this useful?" Only for real results, never demo cards. */
+  ratable?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }
@@ -41,8 +43,9 @@ const severityConfig = {
  * matters" and the fix at similar weight) gave no sense of where to look first.
  * Older audits have no headline, so they fall back to the full finding.
  */
-export function GapCard({ gap, index, isHighlighted, prominent, isTopPriority, onMouseEnter, onMouseLeave }: GapCardProps) {
+export function GapCard({ gap, index, isHighlighted, prominent, isTopPriority, ratable, onMouseEnter, onMouseLeave }: GapCardProps) {
   const [open, setOpen] = useState(false);
+  const [useful, setUseful] = useState<boolean | null>(null);
   const detailsId = useId();
   const config = severityConfig[gap.status] || severityConfig.missing;
   const Icon = config.icon;
@@ -94,6 +97,12 @@ export function GapCard({ gap, index, isHighlighted, prominent, isTopPriority, o
     }
     return <span>{gap.pattern}</span>;
   })();
+
+  const rate = (answer: boolean) => {
+    if (answer === useful) return;
+    setUseful(answer);
+    trackAuditEvent('audit_gap_rated', { pattern: gap.pattern, position: index ?? null, useful: answer });
+  };
 
   return (
     <article
@@ -190,6 +199,27 @@ export function GapCard({ gap, index, isHighlighted, prominent, isTopPriority, o
               </dl>
             </div>
           </div>
+        </div>
+      )}
+
+      {ratable && (
+        <div className="mt-snug flex items-center gap-tight flex-wrap">
+          <span className="text-sm text-text-secondary">Was this useful?</span>
+          {([['Yes', true], ['No', false]] as const).map(([label, answer]) => (
+            <button
+              key={label}
+              type="button"
+              aria-pressed={useful === answer}
+              onClick={() => rate(answer)}
+              className={`min-h-11 min-w-11 px-3 rounded-pill border text-sm font-medium transition-colors duration-150 ease-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary ${
+                useful === answer
+                  ? 'border-accent-primary bg-accent-subtle text-text-primary'
+                  : 'border-border-primary text-text-secondary hover:text-text-primary'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       )}
     </article>

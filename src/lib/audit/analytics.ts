@@ -24,6 +24,7 @@ export const AUDIT_EVENT_NAMES = [
   // 18 people clicked a demo pin in 30 days — which is not worth carrying, so the
   // pin tracking went too. Historical rows for both names remain queryable.
   'audit_gap_found',
+  'audit_gap_rated',
   'audit_resource_clicked',
   'audit_chat_message_sent',
   'audit_session_completed',

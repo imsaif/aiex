@@ -324,7 +324,7 @@ function EmptyAuditState({
                 We scanned for {PATTERN_COUNT} AI UX patterns
               </h2>
               <p className="text-lg text-text-secondary leading-relaxed mb-8">
-                These patterns cover behaviors like confidence cues, error recovery, and explainability. None showed up in your screenshot, which usually means the surface isn&apos;t displaying AI output yet.
+                These patterns cover behaviors like confidence cues, error recovery, and explainability. None clearly applied to this screenshot. If your product does use AI, try a screen that shows it working.
               </p>
               <div className="flex items-center gap-4 flex-wrap">
                 <button
@@ -1043,7 +1043,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
               </p>
               <div className="space-y-3">
                 {topPinnedIssues.map((gap, i) => (
-                  <GapCard key={i} gap={gap} index={i + 1} />
+                  <GapCard key={i} gap={gap} index={i + 1} ratable={!isDemoMode} />
                 ))}
               </div>
             </section>

@@ -492,6 +492,14 @@ export function ScreenshotUpload({ productType, onProductTypeChange, onAnalyze }
             </ul>
           </div>
 
+          {/* Shown on every screen size, before anything is analysed. */}
+          <p className="text-sm text-text-secondary leading-relaxed">
+            Your screenshots go to Anthropic&apos;s Claude for analysis. We keep screenshots and results for 30 days to improve the audit, so please don&apos;t upload anything confidential.{' '}
+            <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-text-primary transition-colors">
+              Privacy policy
+            </a>
+          </p>
+
           {/* Analyze CTA (desktop). */}
           <div className="hidden lg:block mt-0.5">
             {!canAnalyze && (

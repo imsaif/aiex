@@ -4,6 +4,8 @@ import { buildContextAwarePrompt } from '@/lib/patterns/detection-prompts';
 import { buildSystemPrompt, buildUserPrompt } from '@/lib/audit/prompts';
 import { parseAnalysisResponse } from '@/lib/audit/parseAnalysis';
 import { recordAuditSample } from '@/lib/audit/sample';
+import { auditTraceLabel, auditTraceStep, promptFingerprint } from '@/lib/audit/trace';
+import { saveAuditRecord, shouldSaveAuditRecord } from '@/lib/audit/record';
 import { clampScore } from '@/lib/audit/score';
 import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { buildMockResponse, isE2EMode, pickScenario } from '@/lib/audit/e2e-mock';
@@ -41,6 +43,7 @@ function detectMediaType(base64: string): 'image/png' | 'image/jpeg' | 'image/we
 
 export async function POST(request: NextRequest) {
   const startedAt = Date.now();
+  const traceLabel = auditTraceLabel(request);
   const userAgent = request.headers.get('user-agent');
   // Get client IP for rate limiting
   const forwardedFor = request.headers.get('x-forwarded-for');
@@ -113,13 +116,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { context, imageBase64, images, deviceType, productType, productDescription, aiRole, role: bodyRole } = body as {
+    const { context, imageBase64, images, deviceType, productType, productTypeSource, isSample, productDescription, aiRole, role: bodyRole } = body as {
       context: ContextData;
       imageBase64: string;
       images?: Array<{ base64: string; deviceType: DeviceType }>;
       deviceType?: DeviceType;
       // New context-first fields
       productType?: ProductType;
+      productTypeSource?: string;
+      isSample?: boolean;
       productDescription?: string;
       aiRole?: string[];
       role?: string;
@@ -201,6 +206,17 @@ export async function POST(request: NextRequest) {
       console.log('[Pattern Audit] Legacy analysis:', context?.interfaceType, '| Device:', deviceType || 'unknown', '| Images:', imageList.length);
     }
 
+    auditTraceStep(traceLabel, 'build-prompt', {
+      productType: productType ?? null,
+      deviceType: deviceType ?? null,
+      imageCount: imageList.length,
+      imageBase64Chars: imageList.reduce((sum, img) => sum + img.base64.length, 0),
+      systemPromptFingerprint: systemPrompt ? promptFingerprint(systemPrompt) : null,
+      systemPromptChars: systemPrompt?.length ?? 0,
+      userPrompt,
+    });
+    const modelStartedAt = Date.now();
+
     // Call Claude Vision API
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
@@ -236,7 +252,48 @@ export async function POST(request: NextRequest) {
     // Result so we can surface upstream model failures as 502 instead of a
     // generic 500 (and so the user sees a real error instead of a blank UI).
     const parseResult = parseAnalysisResponse(textContent.text);
+    auditTraceStep(traceLabel, 'model-answer', {
+      model: response.model,
+      maxTokens: 4096,
+      durationMs: Date.now() - modelStartedAt,
+      stopReason: response.stop_reason,
+      usage: response.usage,
+      rawText: textContent.text,
+    });
+    auditTraceStep(
+      traceLabel,
+      'read-answer',
+      parseResult.ok ? { ok: true } : { ok: false, reason: parseResult.reason, detail: parseResult.detail },
+    );
+    const modelDurationMs = Date.now() - modelStartedAt;
+    const rawAnswer = textContent.text;
+    const keepRecord = (outcome: string, sessionId: string | null, extraSteps: Record<string, unknown> = {}) => {
+      if (!shouldSaveAuditRecord({ role, isSample: !!isSample })) return;
+      after(() =>
+        saveAuditRecord({
+          sessionId,
+          outcome,
+          productType: productType ?? null,
+          productTypeSource: typeof productTypeSource === 'string' ? productTypeSource.slice(0, 16) : null,
+          deviceType: deviceType ?? null,
+          images: imageList.map((img) => img.base64),
+          rawAnswer,
+          steps: {
+            model: response.model,
+            stopReason: response.stop_reason,
+            usage: response.usage,
+            modelDurationMs,
+            totalMs: Date.now() - startedAt,
+            systemPromptFingerprint: systemPrompt ? promptFingerprint(systemPrompt) : null,
+            ...extraSteps,
+          },
+          ip,
+          role,
+        })
+      );
+    };
     if (!parseResult.ok) {
+      keepRecord('parse_error', null, { reason: parseResult.reason, detail: parseResult.detail });
       console.error(
         '[Pattern Audit] Response parse failed:',
         parseResult.reason,
@@ -349,6 +406,27 @@ export async function POST(request: NextRequest) {
             ? 'empty_gaps'
             : 'success';
 
+      auditTraceStep(traceLabel, 'shape-result', {
+        outcome,
+        modelScore: finalData.score ?? null,
+        modelMaxScore: finalData.maxScore ?? null,
+        shownScore: results.score,
+        shownMaxScore: results.maxScore,
+        scoreChanged: results.score !== (finalData.score ?? 0),
+        maxScoreFilledIn: finalData.maxScore == null,
+        fieldsLeftEmpty: (
+          ['productTypeSummary', 'surfaceDescription', 'applicablePatterns', 'topGaps', 'quickWins', 'generalObservations', 'worthChecking', 'chatContext'] as const
+        ).filter((field) => !finalData[field] || finalData[field]?.length === 0),
+        counts: {
+          applicablePatterns: results.applicablePatterns.length,
+          topGaps: results.topGaps.length,
+          quickWins: results.quickWins.length,
+          worthChecking: results.worthChecking.length,
+        },
+        totalMs: Date.now() - startedAt,
+      });
+      keepRecord(outcome, id);
+
       after(() =>
         recordAuditSample({
           outcome,
@@ -428,6 +506,10 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('[Pattern Audit] Error:', error);
+    auditTraceStep(traceLabel, 'error', {
+      message: error instanceof Error ? error.message : String(error),
+      totalMs: Date.now() - startedAt,
+    });
 
     after(() =>
       recordAuditSample({

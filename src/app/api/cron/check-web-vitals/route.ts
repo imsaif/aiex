@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { prisma } from '@/lib/prisma';
 import { withoutPostSendReadings } from '@/lib/analytics/growth';
 import { sendTimesSince } from '@/lib/analytics/send-times';
+import { deleteExpiredAuditRecords } from '@/lib/audit/record';
 
 // Daily field-CWV regression check. Computes rolling p75 per metric over a
 // window and emails the admin when a Core Web Vital breaches its "good"
@@ -93,6 +94,12 @@ export async function GET(request: NextRequest) {
   prisma.webVitalMetric
     .deleteMany({ where: { createdAt: { lt: new Date(Date.now() - RETENTION_DAYS * 86_400_000) } } })
     .catch(() => {});
+
+  // Visitors are told kept audits are deleted after 30 days. Awaited so the
+  // function isn't frozen before the delete lands.
+  await deleteExpiredAuditRecords().catch((err) =>
+    console.error('[check-web-vitals] audit record cleanup failed:', err)
+  );
 
   return NextResponse.json({
     ok: breaches.length === 0,

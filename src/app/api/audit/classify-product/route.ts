@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import type { ProductType } from '@/types/audit';
 import { isE2EMode } from '@/lib/audit/e2e-mock';
+import { auditTraceLabel, auditTraceStep } from '@/lib/audit/trace';
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 
@@ -49,6 +50,8 @@ export async function POST(request: NextRequest) {
 
     const base64 = image.includes(',') ? image.split(',')[1] : image;
     const mediaType = detectMediaType(base64);
+    const traceLabel = auditTraceLabel(request);
+    const callStartedAt = Date.now();
 
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
@@ -88,6 +91,15 @@ Respond with ONLY the slug, nothing else. If none fit, respond with: general`,
       .toLowerCase();
 
     const match = VALID_TYPES.find((t) => text.includes(t));
+    auditTraceStep(traceLabel, 'guess-product-type', {
+      model: 'claude-haiku-4-5-20251001',
+      durationMs: Date.now() - callStartedAt,
+      stopReason: response.stop_reason,
+      usage: response.usage,
+      rawAnswer: text,
+      productType: match ?? 'general',
+      fellBackToGeneral: !match,
+    });
     return NextResponse.json({ productType: match ?? 'general' });
   } catch (err) {
     console.error('[classify-product] error:', err);

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const lastUpdated = 'October 19, 2025';
+  const lastUpdated = 'November 5, 2026';
 
   return (
     <main className="min-h-screen bg-background-primary text-text-primary">
@@ -64,6 +64,20 @@ export default function PrivacyPage() {
               </ul>
             </div>
 
+            {/* AI UX Audit */}
+            <div>
+              <h2 className="text-2xl font-bold mb-4 text-text-primary">AI UX Audit</h2>
+              <p className="text-text-secondary leading-relaxed mb-4">
+                When you run an audit, your screenshots are sent to Anthropic&apos;s Claude for analysis. To check and improve the quality of the audit:
+              </p>
+              <ul className="space-y-2 text-text-secondary ml-6 list-disc">
+                <li><strong className="text-text-primary">What we keep:</strong> Your screenshots, the audit results, technical details of the run, any ratings you give, and a hashed version of your IP address</li>
+                <li><strong className="text-text-primary">How long:</strong> We delete kept audits after 30 days</li>
+                <li><strong className="text-text-primary">Please don&apos;t upload:</strong> Confidential material or other people&apos;s personal information</li>
+                <li><strong className="text-text-primary">Deletion:</strong> To ask us to delete your audit sooner, contact us using the details below</li>
+              </ul>
+            </div>
+
             {/* How We Use Your Information */}
             <div>
               <h2 className="text-2xl font-bold mb-4 text-text-primary">How We Use Your Information</h2>
@@ -86,7 +100,7 @@ export default function PrivacyPage() {
                 We take the security of your data seriously:
               </p>
               <ul className="space-y-2 text-text-secondary ml-6 list-disc">
-                <li><strong className="text-text-primary">Storage:</strong> Email addresses are stored in a secure SQLite database managed through Prisma ORM</li>
+                <li><strong className="text-text-primary">Storage:</strong> Email addresses and kept audits are stored in a Postgres database hosted by Neon</li>
                 <li><strong className="text-text-primary">Email Services:</strong> We use Beehiiv for newsletter delivery and welcome emails, and Resend for transactional emails (such as audit reports you request)</li>
                 <li><strong className="text-text-primary">Access Control:</strong> Only authorized personnel have access to subscriber data</li>
                 <li><strong className="text-text-primary">Encryption:</strong> Data transmission is encrypted using HTTPS</li>
@@ -104,6 +118,8 @@ export default function PrivacyPage() {
                 <li><strong className="text-text-primary">Vercel:</strong> Hosting and analytics (privacy policy: <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">vercel.com/legal/privacy-policy</a>)</li>
                 <li><strong className="text-text-primary">Beehiiv:</strong> Newsletter delivery and subscriber management (privacy policy: <a href="https://www.beehiiv.com/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">beehiiv.com/privacy</a>)</li>
                 <li><strong className="text-text-primary">Resend:</strong> Transactional email delivery (privacy policy: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">resend.com/legal/privacy-policy</a>)</li>
+                <li><strong className="text-text-primary">Anthropic:</strong> Analyzes audit screenshots (privacy policy: <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">anthropic.com/legal/privacy</a>)</li>
+                <li><strong className="text-text-primary">Neon:</strong> Database hosting (privacy policy: <a href="https://neon.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-accent-primary hover:text-accent-hover">neon.com/privacy-policy</a>)</li>
               </ul>
             </div>
 
