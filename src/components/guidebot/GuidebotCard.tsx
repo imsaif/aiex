@@ -6,6 +6,7 @@ import { GuidebotIcon } from './GuidebotIcon';
 import Button from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { Input } from '@/components/ui/Input';
+import { trackAuditEvent } from '@/lib/audit/analytics';
 
 interface Turn {
   role: 'user' | 'assistant';
@@ -27,6 +28,7 @@ function renderAnswer(text: string): ReactNode[] {
       <a
         key={i}
         href={part.replace(/[.,]+$/, '')}
+        onClick={() => trackAuditEvent('guidebot_link_clicked', { href: part.replace(/[.,]+$/, '') })}
         className="text-accent-primary underline underline-offset-2 break-all"
       >
         {part.replace(/^https?:\/\/(www\.)?/, '')}
@@ -86,7 +88,13 @@ export function GuidebotCard() {
           <p className="type-h3 text-text-primary">Not sure where to start?</p>
           <p className="type-body text-text-secondary">Ask Guidebot. It knows every pattern, course and lesson on the site.</p>
         </div>
-        <Button variant="secondary" onClick={() => setOpen(true)}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setOpen(true);
+            trackAuditEvent('guidebot_opened');
+          }}
+        >
           Ask Guidebot
         </Button>
       </div>
@@ -136,7 +144,7 @@ export function GuidebotCard() {
               <Input
                 id="guidebot-question"
                 aria-label="Your question"
-                placeholder="Ask about a pattern, a course or a lesson"
+                placeholder="Ask about a pattern or course"
                 value={draft}
                 maxLength={600}
                 onChange={(e) => setDraft(e.target.value)}

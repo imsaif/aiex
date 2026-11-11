@@ -4,6 +4,7 @@ import { checkAdminAuth } from '@/lib/admin-auth';
 import { getGrowthData } from '@/lib/analytics/growth-data';
 import { CHANNEL_LABELS } from '@/lib/analytics/visit-source';
 import { FORM_NOT_RECORDED } from '@/lib/analytics/growth';
+import { getGuidebotUsage } from '@/lib/guidebot/usage';
 import LinkTagger from './link-tagger';
 
 export const metadata: Metadata = {
@@ -40,7 +41,7 @@ export default async function GrowthPage() {
     );
   }
 
-  const d = await getGrowthData();
+  const [d, g] = await Promise.all([getGrowthData(), getGuidebotUsage()]);
   const lastWeek = d.weeks[3].loads;
   const prevWeek = d.weeks[2].loads;
   const maxLoads = Math.max(1, ...d.weeks.map((w) => w.loads));
@@ -180,6 +181,56 @@ export default async function GrowthPage() {
               </tbody>
             </table>
           </div>
+        )}
+      </Card>
+
+      <Card className="mb-default">
+        <div className="flex flex-wrap items-baseline justify-between gap-tight">
+          <h2 className="text-lg font-bold text-text-primary">Guidebot</h2>
+          <p className="text-sm text-text-secondary">The chat on /guides · last 4 weeks</p>
+        </div>
+        <div className="mt-default grid grid-cols-2 gap-default sm:grid-cols-5 text-sm">
+          <div>
+            <p className="text-text-secondary">Opened it</p>
+            <p className="text-2xl font-bold text-text-primary">{fmt(g.openedBy)}</p>
+            <p className="text-text-secondary">people</p>
+          </div>
+          <div>
+            <p className="text-text-secondary">Asked</p>
+            <p className="text-2xl font-bold text-text-primary">{fmt(g.askedBy)}</p>
+            <p className="text-text-secondary">people · {fmt(g.questions)} questions</p>
+          </div>
+          <div>
+            <p className="text-text-secondary">Clicked a link</p>
+            <p className="text-2xl font-bold text-text-primary">{fmt(g.clickedBy)}</p>
+            <p className="text-text-secondary">people · {fmt(g.clicks)} clicks</p>
+          </div>
+          <div>
+            <p className="text-text-secondary">Handed to you</p>
+            <p className="text-2xl font-bold text-text-primary">{fmt(g.handoffs)}</p>
+            <p className="text-text-secondary">support requests</p>
+          </div>
+          <div>
+            <p className="text-text-secondary">Cost</p>
+            <p className="text-2xl font-bold text-text-primary">${g.costUsd.toFixed(2)}</p>
+            <p className="text-text-secondary">model use</p>
+          </div>
+        </div>
+        {g.recent.length === 0 ? (
+          <p className="mt-default text-sm text-text-secondary">No questions from visitors yet.</p>
+        ) : (
+          <>
+            <h3 className="mt-loose text-sm font-semibold text-text-primary">Latest questions</h3>
+            <ul className="mt-tight divide-y divide-border-primary text-sm">
+              {g.recent.map((q, i) => (
+                <li key={i} className="flex gap-snug py-tight">
+                  <span className="w-16 shrink-0 text-text-secondary">{day(q.at)}</span>
+                  <span className="flex-1 text-text-primary">{q.question}</span>
+                  {q.handoff && <span className="shrink-0 font-semibold text-text-primary">Handed to you</span>}
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </Card>
 

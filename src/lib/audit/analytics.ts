@@ -148,6 +148,12 @@ export const AUDIT_EVENT_NAMES = [
   'course_progress_seen',
   'course_continue_shown',
   'course_continue_clicked',
+  // Guidebot on /guides (2026-11-11). Questions themselves are logged
+  // server-side as `guidebot_asked` by /api/guidebot; these two cover what the
+  // server cannot see: the chat opened (reach) and a link in an answer
+  // clicked (properties: href), the closest signal that an answer helped.
+  'guidebot_opened',
+  'guidebot_link_clicked',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
