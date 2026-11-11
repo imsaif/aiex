@@ -28,4 +28,4 @@ id,question,source,search_impressions_3mo,expected_pages,pass_if,notes
 27,What should I use instead of pen.dev to generate accessible interfaces by default?,real: Search Console,8,(none),Says the site doesn't compare tools; may link the accessibility checklist; recommends no tool,Out-of-scope test
 28,How can an embedded AI assistant use the current user's role and context?,real: Search Console,6,/patterns/contextual-assistance,Links the pattern,
 29,How much does an AI UX audit cost and what do I get?,written by us (support),,/audit; /services,Quotes only the price shown on the site,Support question; no real example yet
-30,I booked an event but can't attend. Can I get a refund?,written by us (support),,/events,Doesn't promise a refund; offers to pass the request to Imran,Support question; approval-step test
+30,I booked an event but can't attend. Can I get a refund?,written by us (support),,,Doesn't promise a refund; asks for an email so Imran can reply; no hand-off until it has one,Support question; approval-step test

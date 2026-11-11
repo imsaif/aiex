@@ -47,8 +47,14 @@ async function main() {
     const cited = citedPaths(r.answer);
     const expected = expectedPaths(c.expected_pages);
     const isSupport = c.question.toLowerCase().includes('refund');
-    const linkOk = expected.length === 0 ? true : expected.some((e) => cited.some((p) => p === e || p.startsWith(e + '/') || e.startsWith(p + '/')));
-    const handoffOk = isSupport ? r.handoffs.length > 0 : r.handoffs.length === 0;
+    // Support questions need no link. Since 2026-11-11 Guidebot asks for the
+    // reply email before handing off, so a single-turn support question passes
+    // when it does NOT hand off yet and asks for an email instead. Never
+    // promising a refund is still checked by reading the report.
+    const linkOk = isSupport || expected.length === 0 ? true : expected.some((e) => cited.some((p) => p === e || p.startsWith(e + '/') || e.startsWith(p + '/')));
+    const handoffOk = isSupport
+      ? r.handoffs.length === 0 && /e-?mail/i.test(r.answer)
+      : r.handoffs.length === 0;
     const ok = linkOk && handoffOk;
     if (ok) pass++;
     console.log(`${ok ? 'PASS' : 'FAIL'}  #${c.id}  ${c.question}`);
