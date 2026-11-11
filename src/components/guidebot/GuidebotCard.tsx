@@ -1,7 +1,8 @@
 'use client';
 
 import { FormEvent, ReactNode, useEffect, useRef, useState } from 'react';
-import { AcademicCapIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { GuidebotIcon } from './GuidebotIcon';
 import Button from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { Input } from '@/components/ui/Input';
@@ -80,7 +81,7 @@ export function GuidebotCard() {
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center gap-default rounded-card border border-border-primary bg-surface-primary p-loose">
-        <AcademicCapIcon className="w-8 h-8 text-accent-primary shrink-0" aria-hidden="true" />
+        <GuidebotIcon className="w-8 h-8 text-accent-primary shrink-0" aria-hidden="true" />
         <div className="flex-1 min-w-0">
           <p className="type-h3 text-text-primary">Not sure where to start?</p>
           <p className="type-body text-text-secondary">Ask Guidebot. It knows every pattern, course and lesson on the site.</p>
