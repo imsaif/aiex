@@ -84,10 +84,7 @@ export function GuidebotCard() {
         <div className="flex-1 min-w-0">
           <p className="type-eyebrow text-accent-primary">Guidebot</p>
           <p className="type-h3 text-text-primary">Not sure where to start?</p>
-          <p className="type-body text-text-secondary">
-            Ask a question. Guidebot answers from this site&apos;s patterns and courses, and points you to the page that
-            teaches more.
-          </p>
+          <p className="type-body text-text-secondary">Ask Guidebot anything about AI UX.</p>
         </div>
         <Button variant="primary" onClick={() => setOpen(true)}>
           Ask Guidebot
@@ -98,7 +95,6 @@ export function GuidebotCard() {
         open={open}
         onClose={() => setOpen(false)}
         title="Guidebot"
-        description="Answers come only from aiuxdesign.guide's own lessons and patterns."
         size="lg"
       >
         <div className="flex flex-col gap-default">
