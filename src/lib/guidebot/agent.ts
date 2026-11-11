@@ -95,8 +95,21 @@ function runTool(name: string, input: Record<string, string>, handoffs: Guidebot
   }
 }
 
-export async function askGuidebot(question: string, client = new Anthropic()): Promise<GuidebotResult> {
-  const messages: Anthropic.MessageParam[] = [{ role: 'user', content: question }];
+/** Earlier turns of the same chat, as plain text, oldest first. */
+export interface GuidebotTurn {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export async function askGuidebot(
+  question: string,
+  client = new Anthropic(),
+  history: GuidebotTurn[] = []
+): Promise<GuidebotResult> {
+  const messages: Anthropic.MessageParam[] = [
+    ...history.map((t) => ({ role: t.role, content: t.content })),
+    { role: 'user', content: question },
+  ];
   const result: GuidebotResult = { answer: '', toolCalls: [], handoffs: [], inputTokens: 0, outputTokens: 0, stopReason: null };
 
   // Safety net only: the loop really ends when Claude stops asking for tools.

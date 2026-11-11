@@ -11,6 +11,7 @@ import LearnSection from '@/components/learn/LearnSection';
 import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
 import ConsoleSignup from '@/components/learn/ConsoleSignup';
+import GuidebotCard from '@/components/guidebot/GuidebotCard';
 import { NewspaperIcon } from '@heroicons/react/24/outline';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
@@ -229,6 +230,10 @@ export default async function GuidesPage() {
                   ))}
             </ol>
 
+            {/* Guidebot: for a visitor whose question isn't one of the chips above. */}
+            <div className="mt-loose">
+              <GuidebotCard />
+            </div>
           </div>
         </section>
 
