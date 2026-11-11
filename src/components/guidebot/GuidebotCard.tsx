@@ -82,7 +82,6 @@ export function GuidebotCard() {
       <div className="flex flex-col sm:flex-row sm:items-center gap-default rounded-card border border-border-primary bg-surface-primary p-loose">
         <ChatBubbleLeftRightIcon className="w-8 h-8 text-accent-primary shrink-0" aria-hidden="true" />
         <div className="flex-1 min-w-0">
-          <p className="type-eyebrow text-accent-primary">Guidebot</p>
           <p className="type-h3 text-text-primary">Not sure where to start?</p>
           <p className="type-body text-text-secondary">Ask Guidebot. It knows every pattern, course and lesson on the site.</p>
         </div>
