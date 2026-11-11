@@ -36,6 +36,14 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-11-11 (MacBook)
+- **Pattern:** Guidebot (site guide chat on /guides) + sitewide dark-mode button fix
+- **Status:** Merged — PRs #171 (dark mode) and #172 (Guidebot) on `master`, deploys verified live, main checkout updated, worktrees removed
+- **Files Changed:** see `git log 98b3528..d49d9bc`
+- **Tests Added/Modified:** `scripts/guidebot-eval.ts` + `docs/guidebot-test-set.csv` (30 questions, 28 from Search Console); runs 26, 24, then 28/30
+- **Notes:** Guidebot is a Haiku 5.5 agent loop with three tools (search_site, read_page, hand_off_to_imran), 15 questions per visitor per day on the live site only, every question logged as `guidebot_asked`; `guidebot_opened` and `guidebot_link_clicked` added, plus a Guidebot card on /admin/growth (opens, askers, link clicks, hand-offs, cost, starter picks vs typed). Dark mode: buttons showed white text on white on footer-less pages (/audit, /, /events) because `data-theme` (which Tailwind's `dark:` keys off) was only set by ThemeToggle in the footer; an inline head script now sets it before paint everywhere.
+- **The finding worth remembering:** a live two-turn test caught the hand-off emailing twice per request (once before the visitor gave an address); making `visitor_email` a required tool input fixed it where the prompt alone had not. The same exam swung 26 → 24 → 28 with no change in between, so one eval run is a reading, not a score. Also: Imran's own Chrome sends no client beacons at all (likely a blocker), so client events can't be checked from his browser; questions are server-logged and unaffected.
+
 ### Session 2026-10-14 (MacBook)
 - **Pattern:** Newsletter on Resend + admin Growth dashboard + Vercel usage
 - **Status:** Merged — PRs #142 to #152 on `master`, deploys verified live, main checkout updated, worktrees removed
