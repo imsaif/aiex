@@ -84,7 +84,7 @@ export function GuidebotCard() {
         <div className="flex-1 min-w-0">
           <p className="type-eyebrow text-accent-primary">Guidebot</p>
           <p className="type-h3 text-text-primary">Not sure where to start?</p>
-          <p className="type-body text-text-secondary">Ask Guidebot anything about AI UX.</p>
+          <p className="type-body text-text-secondary">Ask Guidebot. It knows every pattern, course and lesson on the site.</p>
         </div>
         <Button variant="primary" onClick={() => setOpen(true)}>
           Ask Guidebot
