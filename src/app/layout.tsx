@@ -49,8 +49,37 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={satoshi.variable}>
+    <html lang="en" className={satoshi.variable} suppressHydrationWarning>
       <head>
+        {/* Theme flag, set before first paint on every page. Colour tokens follow
+            the OS through prefers-color-scheme, but Tailwind's dark: variant keys
+            off data-theme (tailwind.config darkMode). That attribute used to be set
+            only by ThemeToggle, which lives in the footer, so on pages without the
+            footer (/audit, the homepage, events...) and before hydration everywhere,
+            a dark-OS visitor got dark tokens with light-mode dark: classes: the
+            primary button rendered white text on a white fill. Same logic as
+            ThemeToggle: an explicit choice wins, otherwise follow the OS. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var html = document.documentElement;
+                  var system = window.matchMedia('(prefers-color-scheme: dark)');
+                  var apply = function (dark) {
+                    html.setAttribute('data-theme', dark ? 'dark' : 'light');
+                    html.style.colorScheme = dark ? 'dark' : 'light';
+                  };
+                  var choice = localStorage.getItem('theme-choice');
+                  apply(choice ? choice === 'dark' : system.matches);
+                  system.addEventListener('change', function (e) {
+                    if (!localStorage.getItem('theme-choice')) apply(e.matches);
+                  });
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         {/* Machine-readable product design decisions for AI tools and LLMs */}
         <link rel="gist-design" href="/aiuxdesign.gist.design" type="text/markdown" />
         {/* ChunkLoadError recovery — auto-reload on stale chunk after deploy */}
