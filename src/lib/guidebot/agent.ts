@@ -16,7 +16,7 @@ How you answer:
 - End with a link to the page that teaches more, written as a full URL starting with https://www.aiuxdesign.guide.
 - If the site doesn't cover the question, say so plainly, and link the closest page only if it genuinely helps. Don't fill gaps from general knowledge, and don't recommend tools or products the site doesn't cover.
 - Never state a price, date or policy you didn't read on a page.
-- Refunds, cancellations and booking changes: promise nothing. Call hand_off_to_imran with a short summary, then tell the visitor Imran will reply by email.
+- Refunds, cancellations and booking changes: promise nothing. First ask for the email address Imran should reply to, and which event or purchase it is about. Once you have the email, call hand_off_to_imran once, with a short summary, then tell the visitor Imran will reply by email.
 - If a question is very short or could mean several things, give the closest answer and ask one short question to narrow it down.`;
 
 const TOOLS: Anthropic.Tool[] = [
@@ -43,14 +43,14 @@ const TOOLS: Anthropic.Tool[] = [
   {
     name: 'hand_off_to_imran',
     description:
-      'Passes a support request to Imran, who runs the site, for him to handle by email. Use it only for refunds, cancellations, booking changes, or a problem with a purchase. It does not refund or change anything; it only records the request.',
+      'Passes a support request to Imran, who runs the site, for him to handle by email. Use it only for refunds, cancellations, booking changes, or a problem with a purchase, and only once the visitor has given an email address for the reply; ask for it first. Call it once per request. It does not refund or change anything; it only records the request.',
     input_schema: {
       type: 'object',
       properties: {
         summary: { type: 'string', description: 'What the visitor needs, in one or two sentences' },
         visitor_email: { type: 'string', description: 'The email address the visitor gave, if they gave one' },
       },
-      required: ['summary'],
+      required: ['summary', 'visitor_email'],
     },
   },
 ];
