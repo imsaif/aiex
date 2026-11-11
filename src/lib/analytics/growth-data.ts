@@ -40,7 +40,7 @@ const SPEED_TEST_PATHS = [
 ];
 
 /** Real people only: not the owner, not test sessions, not robots logged before the filter. */
-const realPeople: Prisma.UiEventWhereInput = {
+export const realPeople: Prisma.UiEventWhereInput = {
   AND: [
     { OR: [{ role: null }, { role: { notIn: ['admin', 'test', 'monitor'] } }] },
     // Server-written rows (signups) have no user agent; a bare NOT would drop
