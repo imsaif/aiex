@@ -1,0 +1,31 @@
+id,question,source,search_impressions_3mo,expected_pages,pass_if,notes
+1,What does calibrated trust mean in practice?,"real: Search Console (""what does calibrated trust mean in practice"" and variants)",900,/patterns/trust-calibration,Explains the term in plain words and links the pattern,Biggest real question cluster on the site
+2,Can prediction apps show confidence levels?,real: Search Console,216,/patterns/confidence-visualization,Says yes with how; links the pattern,
+3,What is Claude Docs?,"real: Search Console (""what is claude docs"" and variants)",700,/guides/claude-docs-guide/what-a-doc-is-and-why-it-is-not-a-chat,Explains and links the lesson,
+4,What is a repository in Claude Code?,real: Search Console,390,/guides/claude-code-learning-path/create-a-repository-on-github,Explains a repository for a non-developer and links the lesson,
+5,How do I add a repository to Claude Code?,real: Search Console,75,/guides/claude-code-learning-path/connect-your-local-project-to-github,Links the step-by-step lesson,
+6,Figma best practices,real: Search Console,381,/guides/claude-code-learning-path/figma-to-code-best-practices,Links the lesson; doesn't invent general Figma advice the site doesn't give,Short query: tests whether it asks or assumes Figma-to-code
+7,Conversational UI examples,real: Search Console,410,/patterns/conversational-ui; /guides/conversational-ui-guide/anatomy-of-a-chat-interface,Links the pattern and the guide,Highest-traffic page on the site
+8,How do you design fallback and error-recovery paths in a conversational AI script?,real: Search Console,139,/patterns/error-recovery,Explains and links the pattern,
+9,What might adaptive interfaces look like at scale?,real: Search Console,114,/patterns/adaptive-interfaces,Links the pattern,
+10,What is tab completion in Cursor?,real: Search Console,140,/guides/cursor-learning-path/use-tab-completions,Explains and links the lesson,
+11,How do I start learning AI?,real: Search Console,65,/guides (learning map),Points to the learning map or a first course,Confirm where the learning map lives
+12,Chat design pattern,real: Search Console,64,/patterns/conversational-ui,Links the pattern,
+13,How do I export a design system from Claude Design?,real: Search Console,110,/guides/claude-design-learning-path/extracting-your-design-system,Links the lesson,
+14,What is context switching in AI?,real: Search Console,90,/patterns/context-switching,Explains and links the pattern,
+15,What are tweaks in Claude Design?,real: Search Console,95,/guides/claude-design-learning-path/tweaks-explore-variations-without-chat,Explains and links the lesson,
+16,How do I publish a design system in Claude Design?,real: Search Console,40,/guides/claude-design-learning-path/publishing-and-applying-your-design-system,Links the lesson,
+17,How do I delete a design system in Claude Design?,real: Search Console,30,/guides/claude-design-learning-path/publishing-and-applying-your-design-system,Answers only if the lesson covers deletion; otherwise says the site doesn't cover it,Check the lesson; tests honesty about gaps
+18,Claude Team vs Enterprise,real: Search Console,14,/guides/claude-design-learning-path/team-and-enterprise-setup,Links the lesson; no invented plan details or prices,
+19,How do I build AI feedback loops for continuous learning?,real: Search Console,15,/patterns/feedback-loops,Links the pattern,
+20,Progressive disclosure UX examples,real: Search Console,79,/patterns/progressive-disclosure,Links the pattern,
+21,What is guided learning?,real: Search Console,11,/patterns/guided-learning,Explains and links the pattern,
+22,How do I use Claude Design?,real: Search Console,15,/guides/claude-design-learning-path,Links the course start,
+23,How do I enable Claude Design?,real: Search Console,9,/guides/claude-design-learning-path/what-claude-design-is-and-isnt,Answers from the lesson and flags if the lesson may be out of date,Claude Design moved into Claude chat in Sep 2026; tests stale content
+24,How can product teams stop losing AI context when switching between tools?,real: Search Console,31,/patterns/context-switching,Links the pattern,
+25,AI summary confidence score UI design patterns,real: Search Console,7,/patterns/confidence-visualization,Links the pattern,
+26,How do I track how many steps it takes a user to finish a task with an AI agent?,real: Search Console,7,/patterns/agent-status-monitoring; /patterns/action-audit-trail,Links the closest patterns and says if the site doesn't cover measurement directly,Unsure the site covers this; tests partial answers
+27,What should I use instead of pen.dev to generate accessible interfaces by default?,real: Search Console,8,(none),Says the site doesn't compare tools; may link the accessibility checklist; recommends no tool,Out-of-scope test
+28,How can an embedded AI assistant use the current user's role and context?,real: Search Console,6,/patterns/contextual-assistance,Links the pattern,
+29,How much does an AI UX audit cost and what do I get?,written by us (support),,/audit; /services,Quotes only the price shown on the site,Support question; no real example yet
+30,I booked an event but can't attend. Can I get a refund?,written by us (support),,/events,Doesn't promise a refund; offers to pass the request to Imran,Support question; approval-step test
