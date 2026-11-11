@@ -1,4 +1,4 @@
-# Site guide: brief (draft, 10 Nov 2026)
+# Guidebot: brief (draft, 10-11 Nov 2026)
 
 A chat on aiuxdesign.guide that knows the site's content and points each visitor to the right page, and answers simple support questions. Inspired by AIHero's "Ask AIHero Bot" (it knows every article, video and skill on that site). We take the idea, not their look or character.
 
@@ -53,7 +53,7 @@ Everything already in the repo as data or pages:
 
 ## Decisions (Imran, 10-11 Nov 2026)
 
-1. **Name: Ask aiux** (proposed by Claude, awaiting Imran's yes). "Guides" is already a site section, so the chat is named as an action, after the site's brand.
+1. **Name: Guidebot** (Imran, 11 Nov). A character, distinct from the Guides section (the tool guides). Personality: patient and educational for someone new to AI UX; explains a term before using it and ends by pointing to the page that teaches more.
 2. **Where it appears:** on the learning map, as a "not sure where to start?" card that opens the chat.
 3. **Voice:** an educational guide. It explains, then points to the page that teaches more.
 4. **Hand-off inbox:** imranrizom@gmail.com.
