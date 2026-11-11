@@ -51,10 +51,10 @@ Everything already in the repo as data or pages:
 | MCP | Later: the site's content offered as an MCP server |
 | Claude Code | Built in this repo with its rules and skills |
 
-## Open questions for Imran
+## Decisions (Imran, 10-11 Nov 2026)
 
-1. **Name.** "Guides" is already a section of the site (tool guides). What should the chat be called so the two don't get confused?
-2. **Where it appears.** A button on every page, a card on the learning map (like AIHero's "Not sure where to start?"), or both?
-3. **Voice.** How should it sound?
-4. **Hand-off address.** Which inbox receives cases passed to you?
-5. **Real questions.** Which mailbox holds the visitor questions we should build the test set from?
+1. **Name: Ask aiux** (proposed by Claude, awaiting Imran's yes). "Guides" is already a site section, so the chat is named as an action, after the site's brand.
+2. **Where it appears:** on the learning map, as a "not sure where to start?" card that opens the chat.
+3. **Voice:** an educational guide. It explains, then points to the page that teaches more.
+4. **Hand-off inbox:** imranrizom@gmail.com.
+5. **Test questions:** real visitor questions from the same Gmail inbox. Personal details are removed before any question goes into the test set.
