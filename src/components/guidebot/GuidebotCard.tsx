@@ -85,7 +85,7 @@ export function GuidebotCard() {
           <p className="type-h3 text-text-primary">Not sure where to start?</p>
           <p className="type-body text-text-secondary">Ask Guidebot. It knows every pattern, course and lesson on the site.</p>
         </div>
-        <Button variant="primary" onClick={() => setOpen(true)}>
+        <Button variant="secondary" onClick={() => setOpen(true)}>
           Ask Guidebot
         </Button>
       </div>
