@@ -7,18 +7,12 @@ import Button from '@/components/ui/Button';
 import { Dialog } from '@/components/ui/Dialog';
 import { Input } from '@/components/ui/Input';
 import { trackAuditEvent } from '@/lib/audit/analytics';
+import { GUIDEBOT_STARTERS } from '@/lib/guidebot/starters';
 
 interface Turn {
   role: 'user' | 'assistant';
   content: string;
 }
-
-// Real questions people searched to reach this site (Search Console, Aug-Nov 2026).
-const STARTERS = [
-  'What does calibrated trust mean in practice?',
-  'What is Claude Docs?',
-  'How do I start learning AI UX?',
-];
 
 /** Plain text with site links made clickable and **bold** markers dropped. */
 function renderAnswer(text: string): ReactNode[] {
@@ -46,6 +40,21 @@ export function GuidebotCard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // The dialog focuses its first button on open, which drew a heavy outline
+  // round the first starter and made it look already chosen. With a mouse or
+  // trackpad, put the cursor in the question box instead; on touch screens
+  // that would raise the keyboard over the starters, so focus the panel.
+  useEffect(() => {
+    if (!open) return;
+    const id = requestAnimationFrame(() => {
+      const fine = window.matchMedia('(pointer: fine)').matches;
+      (fine ? inputRef.current : panelRef.current)?.focus();
+    });
+    return () => cancelAnimationFrame(id);
+  }, [open]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: 'end' });
@@ -105,13 +114,13 @@ export function GuidebotCard() {
         title="Guidebot"
         size="lg"
       >
-        <div className="flex flex-col gap-default">
+        <div ref={panelRef} tabIndex={-1} className="flex flex-col gap-default outline-none">
           <div className="flex flex-col gap-snug max-h-[55vh] overflow-y-auto" aria-live="polite">
             {turns.length === 0 && (
               <div className="flex flex-col gap-snug">
                 <p className="type-body text-text-secondary">Try one of the questions people ask most:</p>
                 <div className="flex flex-wrap gap-tight">
-                  {STARTERS.map((s) => (
+                  {GUIDEBOT_STARTERS.map((s) => (
                     <Button key={s} variant="outline" size="sm" onClick={() => void ask(s)}>
                       {s}
                     </Button>
@@ -143,6 +152,7 @@ export function GuidebotCard() {
             <div className="flex-1 min-w-0">
               <Input
                 id="guidebot-question"
+                ref={inputRef}
                 aria-label="Your question"
                 placeholder="Ask about a pattern or course"
                 value={draft}

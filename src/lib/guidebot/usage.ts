@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { realPeople } from '@/lib/analytics/growth-data';
 import { GUIDEBOT_EVENT } from './limits';
+import { GUIDEBOT_STARTERS } from './starters';
 
 const DAY = 86_400_000;
 const WINDOW_DAYS = 28;
@@ -10,8 +11,12 @@ const COST_PER_INPUT = 0.1 / 1e6;
 const COST_PER_OUTPUT = 0.5 / 1e6;
 
 export interface GuidebotUsage {
-  /** People who opened the chat (anonymous visitor id). */
+  /** People who opened the chat (anonymous visitor id), and total opens. Starters show on every open. */
   openedBy: number;
+  opens: number;
+  /** Questions that were a starter, per starter, and questions typed by the visitor. */
+  starters: Array<{ question: string; picked: number }>;
+  typed: number;
   /** People who asked at least one question (hashed IP; the server has no visitor id). */
   askedBy: number;
   questions: number;
@@ -43,6 +48,8 @@ export async function getGuidebotUsage(now = new Date()): Promise<GuidebotUsage>
   const askers = new Set<string>();
   const clickers = new Set<string>();
   let questions = 0;
+  let opens = 0;
+  const picked = new Map<string, number>(GUIDEBOT_STARTERS.map((q) => [q, 0]));
   let handoffs = 0;
   let clicks = 0;
   let inTok = 0;
@@ -52,6 +59,7 @@ export async function getGuidebotUsage(now = new Date()): Promise<GuidebotUsage>
   for (const r of rows) {
     const p = r.properties as Props;
     if (r.name === 'guidebot_opened') {
+      opens++;
       const v = vid(p);
       if (v) openers.add(v);
     } else if (r.name === 'guidebot_link_clicked') {
@@ -60,6 +68,9 @@ export async function getGuidebotUsage(now = new Date()): Promise<GuidebotUsage>
       if (v) clickers.add(v);
     } else {
       questions++;
+      if (typeof p?.question === 'string' && picked.has(p.question)) {
+        picked.set(p.question, (picked.get(p.question) ?? 0) + 1);
+      }
       if (r.ipHash) askers.add(r.ipHash);
       if (p?.handoff === true) handoffs++;
       inTok += typeof p?.inputTokens === 'number' ? p.inputTokens : 0;
@@ -72,6 +83,9 @@ export async function getGuidebotUsage(now = new Date()): Promise<GuidebotUsage>
 
   return {
     openedBy: openers.size,
+    opens,
+    starters: GUIDEBOT_STARTERS.map((q) => ({ question: q, picked: picked.get(q) ?? 0 })),
+    typed: questions - Array.from(picked.values()).reduce((a, b) => a + b, 0),
     askedBy: askers.size,
     questions,
     handoffs,

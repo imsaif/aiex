@@ -216,6 +216,21 @@ export default async function GrowthPage() {
             <p className="text-text-secondary">model use</p>
           </div>
         </div>
+        <h3 className="mt-loose text-sm font-semibold text-text-primary">Starter questions</h3>
+        <p className="mt-1 text-sm text-text-secondary">
+          Shown {fmt(g.opens)} time{g.opens === 1 ? '' : 's'} (every chat open) · {fmt(g.typed)} question{g.typed === 1 ? '' : 's'} typed instead
+        </p>
+        <ul className="mt-tight divide-y divide-border-primary text-sm">
+          {g.starters.map((s) => (
+            <li key={s.question} className="flex gap-snug py-tight">
+              <span className="flex-1 text-text-primary">{s.question}</span>
+              <span className="shrink-0 text-text-secondary">
+                <strong className="text-text-primary">{s.picked}</strong> picked
+                {g.opens > 0 ? ` · ${Math.round((s.picked / g.opens) * 100)}% of opens` : ''}
+              </span>
+            </li>
+          ))}
+        </ul>
         {g.recent.length === 0 ? (
           <p className="mt-default text-sm text-text-secondary">No questions from visitors yet.</p>
         ) : (
