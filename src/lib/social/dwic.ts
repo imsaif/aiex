@@ -1,68 +1,30 @@
 /**
- * Social assets for designwithclaude.com (dwic) articles, made in the aiux admin.
+ * Social assets for designwithclaude.com (dwic) articles, in the same design as the aiux
+ * newsletter: the four 1080x1350 slides (src/lib/social/slide-render.tsx) and the 1200x630
+ * share card (src/lib/social/og-card.tsx). Only the logo, wordmark and band art differ.
  *
- * Unlike the newsletter slides, dwic has no newsletter in this database: each article's
- * slide text is written here by hand, and the admin can edit any field before rendering.
- * Edits travel to the image route as an override object (see encodeOverrides), so nothing
- * is stored server-side. This module decides what each image SAYS; the route only draws it.
- *
- * Images: a 1200x627 LinkedIn link card, and a four-slide 1080x1350 carousel.
+ * dwic has no newsletter in this database, so each article's text is written here by hand.
+ * Edit it here; the admin picks the article and renders it.
  */
-
-export const DWIC_COLORS = {
-  navy: '#162036',
-  tint: '#EEF0F6',
-  white: '#ffffff',
-  slate: '#475569',
-  onNavy: '#cbd5e1',
-  onNavyMuted: '#94a3b8',
-  rule: '#2c3650',
-  panel: '#DCE1EC',
-} as const;
-
-export const DWIC_SITE = 'designwithclaude.com';
-export const CARD_WIDTH = 1200;
-export const CARD_HEIGHT = 627;
-export const DWIC_SLIDE_COUNT = 4;
-
-/** Every editable piece of text for one article. Flat, so the admin can render one field per key. */
-export type DwicText = {
-  post: string;
-  cardTitle: string;
-  cardBody: string;
-  coverLabel: string;
-  coverTitle: string;
-  coverBody: string;
-  pointsLabel: string;
-  pointsTitle: string;
-  point1Code: string;
-  point1Claim: string;
-  point2Code: string;
-  point2Claim: string;
-  point3Code: string;
-  point3Claim: string;
-  stepsLabel: string;
-  stepsTitle: string;
-  step1Answer: string;
-  step1Question: string;
-  step2Answer: string;
-  step2Question: string;
-  step3Answer: string;
-  step3Question: string;
-  step4Answer: string;
-  stepsNote: string;
-  linkTitle: string;
-  linkBody: string;
-  linkUrl: string;
-};
+import type { Slide } from './slides';
 
 export type DwicArticle = {
   slug: string;
   title: string;
   url: string;
-  /** Doodle under /public/images/social, without extension. A "-light" twin is used on navy. */
-  art: string;
-  text: DwicText;
+  /** Short date for the share card, e.g. "Nov 13, 2026". */
+  date: string;
+  /** Doodle under /public/images/social, white on navy, 116x160. */
+  band: string;
+  /** Ready-to-paste LinkedIn post. */
+  post: string;
+  /** Fills the four slides, in the same slots as a newsletter issue. */
+  cover: { label: string; title: string; summary: string };
+  stories: { label: string; title: string; items: { product: string; headline: string }[] };
+  idea: { label: string; title: string; body: string; question?: string; aside?: string };
+  link: { label: string; title: string; body: string; url: string };
+  /** Rows on the share card, like the newsletter's story list. */
+  card: { items: { product: string; headline: string }[]; ctaText: string; ctaButton: string };
 };
 
 export const DWIC_ARTICLES: DwicArticle[] = [
@@ -70,46 +32,55 @@ export const DWIC_ARTICLES: DwicArticle[] = [
     slug: 'building-empathy-in-the-terminal',
     title: 'Building empathy in the terminal',
     url: 'https://www.designwithclaude.com/design-research/building-empathy-in-the-terminal',
-    art: 'dwic-empathy',
-    text: {
-      post: [
-        'AI coding tools let you go from an idea to something live without ever meeting a user.',
-        '',
-        "Anthropic's AI Fluency for Builders course rates empathy as one of the steps AI is weakest at. So I built a way to put it back inside the terminal, without letting the AI pretend to be the user.",
-        '',
-        'Three ideas from the essay:',
-        '1. Your code already says who you think your users are. A required phone field is a claim about people.',
-        '2. Ask about a moment that already happened, not what someone says they would do.',
-        '3. Label how you know what you know: observed, reported, public, recalled, assumed.',
-        '',
-        'Full essay: https://www.designwithclaude.com/design-research/building-empathy-in-the-terminal',
-      ].join('\n'),
-      cardTitle: 'Building empathy in the terminal',
-      cardBody: 'AI coding tools let you ship without meeting a user. How to put empathy back into that loop, without inventing one.',
-      coverLabel: 'Design Research · Essay',
-      coverTitle: 'Building empathy in the terminal',
-      coverBody: 'AI coding tools let you go from an idea to something live without ever meeting a user. Here is how to put empathy back into that loop.',
-      pointsLabel: 'Your code already says who you think your users are',
-      pointsTitle: 'Read a line of code as a sentence about people',
-      point1Code: '<input name="phone" required />',
-      point1Claim: 'Everyone has a phone number, and will give it before seeing anything.',
-      point2Code: 'const STEPS = [5 steps]',
-      point2Claim: 'People will push through all five before they get any value.',
-      point3Code: '"You entered an invalid phone number."',
-      point3Claim: 'When something goes wrong, it is the user’s mistake.',
-      stepsLabel: 'Three questions, then stop',
-      stepsTitle: 'From a belief to a real moment',
-      step1Answer: '“Users want it to be simple.”',
-      step1Question: 'Who, specifically?',
-      step2Answer: '“Freelancers.”',
-      step2Question: 'When did you last see them do it?',
-      step3Answer: '“Priya, last Thursday, sending an invoice.”',
-      step3Question: 'What did they do instead?',
-      step4Answer: '“She gave up and sent it from Word.”',
-      stepsNote: 'No real person after three questions? It gets recorded as an assumption, not a fact.',
-      linkTitle: 'Never invent a user.',
-      linkBody: 'dwic reads your code for what it assumes about people, and records only what you confirm.',
-      linkUrl: 'designwithclaude.com/design-research',
+    date: 'Nov 13, 2026',
+    band: 'dwic-empathy-light',
+    post: [
+      'AI coding tools let you go from an idea to something live without ever meeting a user.',
+      '',
+      "Anthropic's AI Fluency for Builders course rates empathy as one of the steps AI is weakest at. So I built a way to put it back inside the terminal, without letting the AI pretend to be the user.",
+      '',
+      'Three ideas from the essay:',
+      '1. Your code already says who you think your users are. A required phone field is a claim about people.',
+      '2. Ask about a moment that already happened, not what someone says they would do.',
+      '3. Label how you know what you know: observed, reported, public, recalled, assumed.',
+      '',
+      'Full essay: https://www.designwithclaude.com/design-research/building-empathy-in-the-terminal',
+    ].join('\n'),
+    cover: {
+      label: 'Design Research · Essay',
+      title: 'Building empathy in the terminal',
+      summary: 'AI coding tools let you go from an idea to something live without ever meeting a user. Here is how to put empathy back into that loop.',
+    },
+    stories: {
+      label: 'Your code already says it',
+      title: 'Three lines, read as claims about people',
+      items: [
+        { product: 'A required phone field', headline: 'Everyone has a phone number, and will give it before seeing anything.' },
+        { product: 'Five setup steps', headline: 'People will push through all five before they get any value.' },
+        { product: 'An error message', headline: '“You entered an invalid phone number.” When something breaks, it’s the user’s fault.' },
+      ],
+    },
+    idea: {
+      label: 'The method',
+      title: 'Three questions, then stop',
+      body: 'Who, specifically? When did you last see them do it? What did they do instead? If there is still no real person after three, it gets recorded as an assumption, not a fact.',
+      question: 'When did you last see someone actually go through this flow?',
+      aside: 'A demo you remember counts. It just gets labelled “recalled”, never “observed”.',
+    },
+    link: {
+      label: 'The full essay',
+      title: 'Never invent a user.',
+      body: 'dwic reads your code for what it assumes about people, and records only what you confirm.',
+      url: 'designwithclaude.com/design-research',
+    },
+    card: {
+      items: [
+        { product: 'Code', headline: 'A required phone field is a claim about people' },
+        { product: 'Questions', headline: 'Ask about a moment that happened, not a wish' },
+        { product: 'Evidence', headline: 'Label it: observed, reported, recalled, assumed' },
+      ],
+      ctaText: 'How dwic puts empathy back into Claude Code',
+      ctaButton: 'Read the essay →',
     },
   },
 ];
@@ -118,57 +89,24 @@ export function findArticle(slug: string | null): DwicArticle | undefined {
   return DWIC_ARTICLES.find((a) => a.slug === slug);
 }
 
-/** Defaults with the admin's edits laid over them. Unknown keys and non-strings are ignored. */
-export function mergeText(base: DwicText, overrides: unknown): DwicText {
-  const out: DwicText = { ...base };
-  if (overrides && typeof overrides === 'object') {
-    for (const [k, v] of Object.entries(overrides as Record<string, unknown>)) {
-      if (k in out && typeof v === 'string') out[k as keyof DwicText] = v.slice(0, 2000);
-    }
-  }
-  return out;
-}
-
-/** Browser-side: the edits as a URL-safe string for the image route's `t` parameter. */
-export function encodeOverrides(overrides: Partial<DwicText>): string {
-  const json = JSON.stringify(overrides);
-  const bytes = new TextEncoder().encode(json);
-  let bin = '';
-  bytes.forEach((b) => (bin += String.fromCharCode(b)));
-  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-/** Server-side: the inverse of encodeOverrides. Returns {} on anything malformed. */
-export function decodeOverrides(t: string | null): Record<string, unknown> {
-  if (!t) return {};
-  try {
-    return JSON.parse(Buffer.from(t, 'base64url').toString('utf8'));
-  } catch {
-    return {};
-  }
-}
-
-export type DwicImageId = 'card' | '1' | '2' | '3' | '4';
-export const DWIC_IMAGES: { id: DwicImageId; kind: string; label: string }[] = [
-  { id: 'card', kind: 'link-card', label: 'LinkedIn link card' },
-  { id: '1', kind: 'cover', label: 'Slide 1' },
-  { id: '2', kind: 'points', label: 'Slide 2' },
-  { id: '3', kind: 'steps', label: 'Slide 3' },
-  { id: '4', kind: 'link', label: 'Slide 4' },
-];
-
-/** Alt text for each image, ready to paste into LinkedIn's alt text box. */
-export function altText(id: DwicImageId, t: DwicText): string {
-  switch (id) {
-    case 'card':
-      return `${t.cardTitle}. ${t.cardBody} ${DWIC_SITE}`;
-    case '1':
-      return `${t.coverLabel}. ${t.coverTitle}. ${t.coverBody}`;
-    case '2':
-      return `${t.pointsTitle}. ${t.point1Code} means: ${t.point1Claim} ${t.point2Code} means: ${t.point2Claim} ${t.point3Code} means: ${t.point3Claim}`;
-    case '3':
-      return `${t.stepsTitle}. ${t.step1Answer} ${t.step1Question} ${t.step2Answer} ${t.step2Question} ${t.step3Answer} ${t.step3Question} ${t.step4Answer} ${t.stepsNote}`;
-    case '4':
-      return `${t.linkTitle} ${t.linkBody} Read it at ${t.linkUrl}.`;
-  }
+/** The four slides, in the newsletter's Slide shape so the shared renderer draws them unchanged. */
+export function buildDwicSlides(a: DwicArticle): Slide[] {
+  return [
+    { kind: 'cover', ...a.cover, alt: `${a.cover.label}. ${a.cover.title}. ${a.cover.summary}` },
+    {
+      kind: 'stories',
+      label: a.stories.label,
+      title: a.stories.title,
+      stories: a.stories.items,
+      alt: `${a.stories.title}: ${a.stories.items.map((s, i) => `${i + 1}. ${s.product}: ${s.headline}`).join(' ')}`,
+    },
+    {
+      kind: 'idea',
+      ...a.idea,
+      alt: `${a.idea.label}: ${a.idea.title}. ${a.idea.body}${a.idea.question ? ` Ask in your next design review: ${a.idea.question}` : ''}${
+        a.idea.aside ? ` Hmm. ${a.idea.aside}` : ''
+      }`,
+    },
+    { kind: 'link', ...a.link, alt: `${a.link.title} ${a.link.body} Read it at ${a.link.url}.` },
+  ];
 }
