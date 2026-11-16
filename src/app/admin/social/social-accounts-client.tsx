@@ -5,6 +5,7 @@ import { newestIssue, shouldAutoDraft } from '@/lib/social/daily';
 import SlidesPanel from './SlidesPanel';
 import { PostCard, type SocialAccount, type SocialPost } from './PostCard';
 import PatternDeepDiveSection from './PatternDeepDiveSection';
+import DwicPanel from './DwicPanel';
 
 interface Newsletter {
   id: string;
@@ -26,6 +27,8 @@ export default function SocialAccountsClient({
 }: SocialAccountsClientProps) {
   // Newsletter mode first: the daily habit is reviewing today's drafts.
   const [mode, setMode] = useState<'deepdive' | 'newsletter'>('newsletter');
+  // Which product the assets are for: aiux (this site) or designwithclaude.com (dwic).
+  const [project, setProject] = useState<'aiux' | 'dwic'>('aiux');
   // Issues whose drafts were already written on open, so a reload never repeats it.
   const autoDrafted = useRef<Set<string>>(new Set());
   const [accounts, setAccounts] = useState<SocialAccount[]>([]);
@@ -324,6 +327,31 @@ export default function SocialAccountsClient({
         </p>
       </header>
 
+      {/* Project picker */}
+      <label className="mb-6 flex items-center gap-3 text-sm text-text-secondary">
+        Project
+        <select
+          id="social-project"
+          value={project}
+          onChange={(e) => setProject(e.target.value as 'aiux' | 'dwic')}
+          className="px-3 py-2 rounded-md border border-border-primary bg-surface-primary text-text-primary"
+        >
+          <option value="aiux">aiux · aiuxdesign.guide</option>
+          <option value="dwic">dwic · designwithclaude.com</option>
+        </select>
+      </label>
+
+      {project === 'dwic' ? (
+        <>
+          {socialMessage && (
+            <div className="mb-4 p-3 rounded-lg bg-status-success/10 text-status-success border border-status-success/20 text-sm">
+              {socialMessage.text}
+            </div>
+          )}
+          <DwicPanel onCopied={(text) => { setSocialMessage({ type: 'success', text }); setTimeout(() => setSocialMessage(null), 3000); }} />
+        </>
+      ) : (
+        <>
       {/* Mode tabs */}
       <div className="mb-8 inline-flex rounded-lg border border-border-primary bg-surface-primary p-1">
         <button
@@ -732,6 +760,8 @@ SOCIAL_TOKEN_SECRET=your_32_byte_hex_secret`}
             </div>
           )}
         </div>
+      )}
+        </>
       )}
         </>
       )}
