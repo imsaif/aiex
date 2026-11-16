@@ -5,7 +5,7 @@ import { newestIssue, shouldAutoDraft } from '@/lib/social/daily';
 import SlidesPanel from './SlidesPanel';
 import { PostCard, type SocialAccount, type SocialPost } from './PostCard';
 import PatternDeepDiveSection from './PatternDeepDiveSection';
-import DwicPanel from './DwicPanel';
+import DwicArticlePanel from './DwicArticlePanel';
 
 interface Newsletter {
   id: string;
@@ -348,7 +348,12 @@ export default function SocialAccountsClient({
               {socialMessage.text}
             </div>
           )}
-          <DwicPanel onCopied={(text) => { setSocialMessage({ type: 'success', text }); setTimeout(() => setSocialMessage(null), 3000); }} />
+          <DwicArticlePanel
+            onCopied={(text) => {
+              setSocialMessage({ type: 'success', text });
+              setTimeout(() => setSocialMessage(null), 3000);
+            }}
+          />
         </>
       ) : (
         <>
@@ -551,7 +556,8 @@ export default function SocialAccountsClient({
           {/* The four newsletter-style images, with alt text */}
           {selectedNewsletter && (
             <SlidesPanel
-              newsletterId={selectedNewsletter.id}
+              base={`/api/social/slides?id=${selectedNewsletter.id}`}
+              prefix="aiux"
               onCopied={(text) => {
                 setSocialMessage({ type: 'success', text });
                 setTimeout(() => setSocialMessage(null), 3000);

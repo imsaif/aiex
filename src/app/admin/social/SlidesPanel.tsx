@@ -9,10 +9,19 @@ interface SlideInfo {
 }
 
 /**
- * The four newsletter-style images for an issue's LinkedIn post and X thread,
- * each with its alt text ready to paste into LinkedIn's or X's alt text box.
+ * The four newsletter-style images for a LinkedIn post and X thread, each with its alt
+ * text ready to paste into LinkedIn's or X's alt text box. `base` is the slide route
+ * with its query (an aiux issue or a dwic article); `prefix` names the downloads.
  */
-export default function SlidesPanel({ newsletterId, onCopied }: { newsletterId: string; onCopied: (text: string) => void }) {
+export default function SlidesPanel({
+  base,
+  prefix,
+  onCopied,
+}: {
+  base: string;
+  prefix: string;
+  onCopied: (text: string) => void;
+}) {
   const [slides, setSlides] = useState<SlideInfo[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +29,7 @@ export default function SlidesPanel({ newsletterId, onCopied }: { newsletterId: 
     let cancelled = false;
     setSlides(null);
     setError(null);
-    fetch(`/api/social/slides?id=${newsletterId}&format=json`)
+    fetch(`${base}&format=json`)
       .then(async (res) => {
         if (!res.ok) throw new Error(await res.text());
         return res.json();
@@ -30,9 +39,9 @@ export default function SlidesPanel({ newsletterId, onCopied }: { newsletterId: 
     return () => {
       cancelled = true;
     };
-  }, [newsletterId]);
+  }, [base]);
 
-  const src = (n: number) => `/api/social/slides?id=${newsletterId}&n=${n}`;
+  const src = (n: number) => `${base}&n=${n}`;
 
   const downloadAll = async () => {
     if (!slides) return;
@@ -40,7 +49,7 @@ export default function SlidesPanel({ newsletterId, onCopied }: { newsletterId: 
       const blob = await fetch(src(slide.n)).then((r) => r.blob());
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = `aiux-${slide.n}-${slide.kind}.png`;
+      link.download = `${prefix}-${slide.n}-${slide.kind}.png`;
       link.click();
       URL.revokeObjectURL(link.href);
     }
@@ -80,7 +89,7 @@ export default function SlidesPanel({ newsletterId, onCopied }: { newsletterId: 
               <div className="flex gap-2">
                 <a
                   href={src(slide.n)}
-                  download={`aiux-${slide.n}-${slide.kind}.png`}
+                  download={`${prefix}-${slide.n}-${slide.kind}.png`}
                   className="px-2 py-1 bg-background-tertiary text-text-secondary rounded-md hover:bg-border-primary transition-colors text-sm"
                 >
                   Download
