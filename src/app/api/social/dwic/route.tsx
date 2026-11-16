@@ -105,13 +105,12 @@ function Label({ text, onNavy }: { text: string; onNavy: boolean }) {
   );
 }
 
-function Art({ src, width }: { src: string; width: number }) {
+function Icon({ src }: { src: string }) {
   // The doodles are 116x160; keep their proportions.
-  const height = Math.round((width * 160) / 116);
   return (
-    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto', padding: '0 72px 64px' }}>
+    <div style={{ display: 'flex' }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} width={width} height={height} alt="" />
+      <img src={src} width={96} height={132} alt="" />
     </div>
   );
 }
@@ -136,15 +135,11 @@ function LinkCard({ t, assets }: { t: DwicText; assets: Assets }) {
           <span>designwithclaude</span>
           <span style={{ fontWeight: 400, color: C.onNavyMuted }}>Design Research</span>
         </div>
-        <div style={{ display: 'flex', fontSize: t.cardTitle.length > 40 ? 58 : 66, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2, maxWidth: 820 }}>
+        <div style={{ display: 'flex', fontSize: t.cardTitle.length > 40 ? 58 : 66, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.2, maxWidth: 960 }}>
           {t.cardTitle}
         </div>
-        <div style={{ display: 'flex', fontSize: 28, lineHeight: 1.5, color: C.onNavy, maxWidth: 780 }}>{t.cardBody}</div>
+        <div style={{ display: 'flex', fontSize: 30, lineHeight: 1.5, color: C.onNavy, maxWidth: 900 }}>{t.cardBody}</div>
         <div style={{ display: 'flex', marginTop: 'auto', fontSize: 24, color: C.onNavyMuted }}>{DWIC_SITE}</div>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'flex-end' }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={assets.artLight} width={200} height={276} alt="" />
       </div>
     </div>
   );
@@ -178,15 +173,15 @@ function Slide({ n, t, assets }: { n: number; t: DwicText; assets: Assets }) {
       <Header n={n} assets={assets} onNavy={onNavy} />
 
       {n === 1 && (
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '0 72px 40px' }}>
+            <Icon src={assets.artLight} />
             <Label text={t.coverLabel} onNavy />
             <div style={{ display: 'flex', fontSize: t.coverTitle.length > 40 ? 72 : 84, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.5 }}>
               {t.coverTitle}
             </div>
             <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.6, color: C.onNavy, maxWidth: 880 }}>{t.coverBody}</div>
           </div>
-          <Art src={assets.artLight} width={230} />
         </div>
       )}
 
@@ -245,8 +240,9 @@ function Slide({ n, t, assets }: { n: number; t: DwicText; assets: Assets }) {
       )}
 
       {n === 4 && (
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '80px 72px 0' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 34, padding: '0 72px 40px' }}>
+            <Icon src={assets.artLight} />
             <Label text="Read the essay" onNavy />
             <div style={{ display: 'flex', fontSize: 76, fontWeight: 700, lineHeight: 1.15, letterSpacing: -1.5 }}>{t.linkTitle}</div>
             <div style={{ display: 'flex', fontSize: 34, lineHeight: 1.6, color: C.onNavy, maxWidth: 860 }}>{t.linkBody}</div>
@@ -266,7 +262,6 @@ function Slide({ n, t, assets }: { n: number; t: DwicText; assets: Assets }) {
               {t.linkUrl}
             </div>
           </div>
-          <Art src={assets.artLight} width={200} />
         </div>
       )}
     </div>
