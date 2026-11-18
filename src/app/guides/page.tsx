@@ -199,8 +199,13 @@ export default async function GuidesPage() {
                   {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
                   lessons · {PATTERN_COUNT} patterns · all free, no account
                 </p>
+          </div>
 
-
+          {/* The card and list run the full width, so their right edge lines
+              up with the newsletter band below. Capped at 950px they stopped
+              short of it and left a lopsided gap on wide screens. Only the
+              sentence above keeps the reading measure. */}
+          <div>
                 {/* Guidebot first, the five questions under it as the
                     fallback (2026-11-18). Below the questions it had zero real
                     opens in its first week; first on the page tests whether
