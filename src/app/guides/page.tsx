@@ -201,21 +201,24 @@ export default async function GuidesPage() {
                 </p>
 
 
-                {/* A plain numbered list, not boxed chips: boxed, the
-                    questions looked like the Guidebot card below and made it
-                    read as a sixth question. Each jumps to its section. */}
-                <MapQuestionList
-                  questions={learnMap.map(({ id, ordinal, question }) => ({
-                    id,
-                    ordinal,
-                    question,
-                  }))}
-                />
+                {/* Guidebot first, the five questions under it as the
+                    fallback (2026-11-18). Below the questions it had zero real
+                    opens in its first week; first on the page tests whether
+                    anyone uses it when it is the obvious way in. */}
+                <GuidebotCard />
 
-            {/* Guidebot: for a visitor whose question isn't one of the five above. */}
-            <div className="mt-loose">
-              <GuidebotCard />
-            </div>
+                {/* A plain numbered list, not boxed chips: boxed, the
+                    questions looked like the Guidebot card and read as more of
+                    the same. Each jumps to its section. */}
+                <div className="mt-loose">
+                  <MapQuestionList
+                    questions={learnMap.map(({ id, ordinal, question }) => ({
+                      id,
+                      ordinal,
+                      question,
+                    }))}
+                  />
+                </div>
           </div>
         </section>
 
