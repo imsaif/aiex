@@ -12,6 +12,7 @@ import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
 import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import GuidebotCard from '@/components/guidebot/GuidebotCard';
+import MapQuestionList from '@/components/learn/MapQuestionList';
 import { NewspaperIcon } from '@heroicons/react/24/outline';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
@@ -200,37 +201,18 @@ export default async function GuidesPage() {
                 </p>
 
 
-                {/* Boxed chips in two columns, matching the reference. Each
-                    jumps to its section; the arrow says "this goes down the
-                    page" rather than off to another page. */}
-                <ol className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  {learnMap.map((section) => (
-                    <li key={section.id}>
-                      <a
-                        href={`#${section.id}`}
-                        className="group flex h-full items-center gap-3 rounded-card border border-border-primary bg-surface-primary px-4 py-4 transition-colors hover:border-accent-primary/40"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="type-eyebrow font-mono text-text-secondary"
-                        >
-                          {section.ordinal}
-                        </span>
-                        <span className="type-body flex-1 font-semibold text-text-primary group-hover:text-accent-primary">
-                          {section.question}
-                        </span>
-                        <span
-                          aria-hidden="true"
-                          className="type-body text-text-secondary group-hover:text-accent-primary"
-                        >
-                          ↓
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-            </ol>
+                {/* A plain numbered list, not boxed chips: boxed, the
+                    questions looked like the Guidebot card below and made it
+                    read as a sixth question. Each jumps to its section. */}
+                <MapQuestionList
+                  questions={learnMap.map(({ id, ordinal, question }) => ({
+                    id,
+                    ordinal,
+                    question,
+                  }))}
+                />
 
-            {/* Guidebot: for a visitor whose question isn't one of the chips above. */}
+            {/* Guidebot: for a visitor whose question isn't one of the five above. */}
             <div className="mt-loose">
               <GuidebotCard />
             </div>

@@ -154,6 +154,9 @@ export const AUDIT_EVENT_NAMES = [
   // clicked (properties: href), the closest signal that an answer helped.
   'guidebot_opened',
   'guidebot_link_clicked',
+  // /guides map: one of the five questions at the top clicked (properties:
+  // section). Added 2026-11-18 with the switch from boxed chips to a list.
+  'map_question_clicked',
 ] as const;
 
 export type AuditEvent = (typeof AUDIT_EVENT_NAMES)[number];
