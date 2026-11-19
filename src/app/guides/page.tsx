@@ -194,8 +194,9 @@ export default async function GuidesPage() {
 
           <div className="max-w-[950px]">
                 <p className="type-h3 mb-9 font-normal leading-relaxed text-text-secondary">
-                  Pick the question that sounds like you. Each one opens onto
-                  the courses, patterns and checklists that answer it.
+                  Ask Guidebot, or pick the question that sounds like you.
+                  Each one opens onto the courses, patterns and checklists
+                  that answer it.
                 </p>
                 <p className="type-eyebrow uppercase text-text-secondary mb-10">
                   {guides.length} courses ·{' '}
