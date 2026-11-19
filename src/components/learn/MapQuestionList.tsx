@@ -9,38 +9,50 @@ interface MapQuestion {
 }
 
 /**
- * The five questions at the top of /guides, as a plain numbered list rather
- * than boxed cards. Boxed, they looked like the Guidebot card under them, so
- * Guidebot read as a sixth question. Unboxed, they read as one path from 01
- * to 05. Each click is logged with the section it jumps to.
+ * The five questions at the top of /guides, under Guidebot. Two columns of
+ * plain text, no boxes and no rules: boxed, they looked like the Guidebot card
+ * and read as more of the same; as full-width ruled rows, each line was mostly
+ * empty rule and the list read like a table. The label ties them to Guidebot
+ * as the other way in. Each click is logged with the section it jumps to.
  */
 export default function MapQuestionList({ questions }: { questions: MapQuestion[] }) {
   return (
-    <ol className="divide-y divide-border-primary border-y border-border-primary">
-      {questions.map((q) => (
-        <li key={q.id}>
-          <a
-            href={`#${q.id}`}
-            onClick={() => trackAuditEvent('map_question_clicked', { section: q.id })}
-            className="group flex items-center gap-3 py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-primary"
-          >
-            <span aria-hidden="true" className="type-eyebrow font-mono text-text-secondary">
-              {q.ordinal}
-            </span>
-            {/* The arrow follows the question rather than sitting at the far
-                right edge, where on a wide column it read as detached. */}
-            <span className="type-body font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
-              {q.question}
-            </span>
-            <span
-              aria-hidden="true"
-              className="type-body text-text-secondary transition-[color,transform] duration-150 ease-out group-hover:translate-y-0.5 group-hover:text-accent-primary motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
+    <nav aria-labelledby="map-questions-label">
+      <p id="map-questions-label" className="type-caption mb-loose text-text-secondary">
+        Or jump to a question
+      </p>
+      <ol className="grid grid-cols-1 gap-x-roomy gap-y-loose md:grid-cols-2">
+        {questions.map((q) => (
+          <li key={q.id}>
+            <a
+              href={`#${q.id}`}
+              onClick={() => trackAuditEvent('map_question_clicked', { section: q.id })}
+              className="group block rounded-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-4"
             >
-              ↓
-            </span>
-          </a>
-        </li>
-      ))}
-    </ol>
+              <span
+                aria-hidden="true"
+                className="type-eyebrow mb-tight block font-mono text-accent-primary"
+              >
+                {q.ordinal}
+              </span>
+              <span className="type-lead font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+                {/* The last word and the arrow wrap together, so the arrow
+                    never lands on a line of its own on a phone. */}
+                {q.question.slice(0, q.question.lastIndexOf(' ') + 1)}
+                <span className="whitespace-nowrap">
+                {q.question.slice(q.question.lastIndexOf(' ') + 1)}
+                <span
+                  aria-hidden="true"
+                  className="ml-2 inline-block text-text-secondary transition-[color,transform] duration-150 ease-out group-hover:translate-y-0.5 group-hover:text-accent-primary motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
+                >
+                  ↓
+                </span>
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
   );
 }
