@@ -169,6 +169,9 @@ export default async function GuidesPage() {
             table of contents and jumps into the matching section. Questions
             come from learnMap so the hero cannot drift from the map below. */}
         <section className="border-b border-border-primary pt-16 pb-12">
+          {/* Same centred 1100px column as the map sections below, so the
+              hero, the newsletter band and the sections share both edges. */}
+          <div className="mx-auto max-w-[1100px]">
           {/* The eyebrow and title sit outside the prose measure. They used to
               be inside it and set at h1 rather than display, because at 56px
               the question wrapped to two lines within 950px and a two-line
@@ -225,6 +228,7 @@ export default async function GuidesPage() {
                   />
                 </div>
           </div>
+          </div>
         </section>
 
         {/* The email offer, on its own line under the header rather than tucked
@@ -234,7 +238,8 @@ export default async function GuidesPage() {
             competing with the chips that are the reason anyone is here. As its
             own band it is unmistakably secondary, gets the full width, and
             matches /patterns and /skills. */}
-        <section className="flex flex-col gap-snug border-b border-border-primary py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
+        <section className="border-b border-border-primary py-6">
+          <div className="mx-auto flex max-w-[1100px] flex-col gap-snug lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
           <p className="flex items-center gap-2.5 type-caption text-text-secondary">
             <NewspaperIcon
               aria-hidden="true"
@@ -247,6 +252,7 @@ export default async function GuidesPage() {
             className="w-full lg:max-w-md"
             subheading=""
           />
+          </div>
         </section>
 
         {/* The Learn Map — five questions, each opening onto the content that
