@@ -209,16 +209,13 @@ export default async function GuidesPage() {
               short of it and left a lopsided gap on wide screens. Only the
               sentence above keeps the reading measure. */}
           <div>
-                {/* Guidebot first, the five questions under it as the
-                    fallback (2026-11-18). Below the questions it had zero real
-                    opens in its first week; first on the page tests whether
-                    anyone uses it when it is the obvious way in. */}
-                <GuidebotCard />
-
-                {/* A plain numbered list, not boxed chips: boxed, the
-                    questions looked like the Guidebot card and read as more of
-                    the same. Each jumps to its section. */}
-                <div className="mt-roomy">
+                {/* Guidebot and the five questions side by side from lg up,
+                    Guidebot on the left so it is still read first (2026-11-19).
+                    Below the questions it had zero real opens in its first
+                    week; this tests whether anyone uses it when it is an equal
+                    way in. Stacked, Guidebot first, below lg. */}
+                <div className="grid grid-cols-1 gap-roomy lg:grid-cols-2 lg:items-stretch">
+                  <GuidebotCard layout="stacked" />
                   <MapQuestionList
                     questions={learnMap.map(({ id, ordinal, question }) => ({
                       id,

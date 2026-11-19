@@ -33,7 +33,12 @@ function renderAnswer(text: string): ReactNode[] {
   );
 }
 
-export function GuidebotCard() {
+/**
+ * `row` (default): icon, copy and button in one line from `sm` up.
+ * `stacked`: icon, copy and button top to bottom at every width, filling its
+ * container's height; for a narrow column beside other content.
+ */
+export function GuidebotCard({ layout = 'row' }: { layout?: 'row' | 'stacked' } = {}) {
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState('');
@@ -91,7 +96,11 @@ export function GuidebotCard() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-default rounded-card border border-border-primary bg-surface-primary p-loose">
+      <div
+        className={`flex flex-col gap-default rounded-card border border-border-primary bg-surface-primary p-loose ${
+          layout === 'stacked' ? 'h-full items-start' : 'sm:flex-row sm:items-center'
+        }`}
+      >
         <GuidebotIcon className="w-8 h-8 text-accent-primary shrink-0" aria-hidden="true" />
         <div className="flex-1 min-w-0">
           <p className="type-h3 text-text-primary">Not sure where to start?</p>
