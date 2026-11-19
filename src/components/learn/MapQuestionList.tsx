@@ -21,7 +21,8 @@ export default function MapQuestionList({ questions }: { questions: MapQuestion[
       <p id="map-questions-label" className="type-caption mb-default text-text-secondary">
         Or jump to a question
       </p>
-      <ol className="grid grid-cols-1 gap-x-roomy gap-y-snug md:grid-cols-2">
+      {/* One column: five items in two columns left the last one alone. */}
+      <ol className="flex flex-col gap-snug">
         {questions.map((q) => (
           <li key={q.id}>
             <a
