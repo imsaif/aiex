@@ -1,27 +1,31 @@
 import type { SVGProps } from 'react';
 
 /**
- * Guidebot's mark: Heroicons' academic cap with the tassel removed and two
- * eyes on the board, so the cap itself reads as the character. Same 24px
- * outline grid and 1.5 stroke as the site's other icons.
+ * Guidebot's mark: an academic cap with no tassel and two eyes on the board,
+ * so the cap itself reads as the character. Solid since 2026-11-19: the cap is
+ * filled with currentColor (navy via text-accent-primary) and the eyes take
+ * the surface colour, so they read white on navy in light mode and flip with
+ * the accent in dark mode. A thin gap between board and band keeps the two
+ * shapes apart once filled.
  */
 export function GuidebotIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      fill="none"
+      fill="currentColor"
       stroke="currentColor"
-      strokeWidth={1.5}
-      strokeLinecap="round"
+      strokeWidth={1}
       strokeLinejoin="round"
       {...props}
     >
-      {/* Academic cap (Heroicons outline), board and band only */}
-      <path d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
+      {/* Board */}
+      <path d="M12 3.4 22.4 9.3 12 13.6 1.6 9.3Z" />
+      {/* Band, set just below the board */}
+      <path d="M4.5 11.6 12 14.9l7.5-3.3q.4 2.4.5 4.9-4.3 1.7-8 4.3-3.7-2.6-8-4.3.1-2.5.5-4.9Z" />
       {/* Eyes on the board */}
-      <circle cx="10.1" cy="8.6" r="0.85" fill="currentColor" stroke="none" />
-      <circle cx="13.9" cy="8.6" r="0.85" fill="currentColor" stroke="none" />
+      <circle cx="10" cy="8.7" r="1" fill="var(--surface-primary)" stroke="none" />
+      <circle cx="14" cy="8.7" r="1" fill="var(--surface-primary)" stroke="none" />
     </svg>
   );
 }

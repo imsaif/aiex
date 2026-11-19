@@ -12,6 +12,7 @@ import LearnSidebar from '@/components/learn/LearnSidebar';
 import LearnShell from '@/components/learn/LearnShell';
 import ConsoleSignup from '@/components/learn/ConsoleSignup';
 import GuidebotCard from '@/components/guidebot/GuidebotCard';
+import MapQuestionList from '@/components/learn/MapQuestionList';
 import { NewspaperIcon } from '@heroicons/react/24/outline';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import { siteConfig } from '@/config/seo';
@@ -168,6 +169,9 @@ export default async function GuidesPage() {
             table of contents and jumps into the matching section. Questions
             come from learnMap so the hero cannot drift from the map below. */}
         <section className="border-b border-border-primary pt-16 pb-12">
+          {/* Same centred 1100px column as the map sections below, so the
+              hero, the newsletter band and the sections share both edges. */}
+          <div className="mx-auto max-w-[1100px]">
           {/* The eyebrow and title sit outside the prose measure. They used to
               be inside it and set at h1 rather than display, because at 56px
               the question wrapped to two lines within 950px and a two-line
@@ -190,50 +194,38 @@ export default async function GuidesPage() {
 
           <div className="max-w-[950px]">
                 <p className="type-h3 mb-9 font-normal leading-relaxed text-text-secondary">
-                  Pick the question that sounds like you. Each one opens onto
-                  the courses, patterns and checklists that answer it.
+                  Ask Guidebot, or pick the question that sounds like you.
+                  Each one opens onto the courses, patterns and checklists
+                  that answer it.
                 </p>
                 <p className="type-eyebrow uppercase text-text-secondary mb-10">
                   {guides.length} courses ·{' '}
                   {guides.reduce((sum, g) => sum + (g.lessons?.length || 0), 0)}{' '}
                   lessons · {PATTERN_COUNT} patterns · all free, no account
                 </p>
+          </div>
 
-
-                {/* Boxed chips in two columns, matching the reference. Each
-                    jumps to its section; the arrow says "this goes down the
-                    page" rather than off to another page. */}
-                <ol className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  {learnMap.map((section) => (
-                    <li key={section.id}>
-                      <a
-                        href={`#${section.id}`}
-                        className="group flex h-full items-center gap-3 rounded-card border border-border-primary bg-surface-primary px-4 py-4 transition-colors hover:border-accent-primary/40"
-                      >
-                        <span
-                          aria-hidden="true"
-                          className="type-eyebrow font-mono text-text-secondary"
-                        >
-                          {section.ordinal}
-                        </span>
-                        <span className="type-body flex-1 font-semibold text-text-primary group-hover:text-accent-primary">
-                          {section.question}
-                        </span>
-                        <span
-                          aria-hidden="true"
-                          className="type-body text-text-secondary group-hover:text-accent-primary"
-                        >
-                          ↓
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-            </ol>
-
-            {/* Guidebot: for a visitor whose question isn't one of the chips above. */}
-            <div className="mt-loose">
-              <GuidebotCard />
-            </div>
+          {/* The card and list run the full width, so their right edge lines
+              up with the newsletter band below. Capped at 950px they stopped
+              short of it and left a lopsided gap on wide screens. Only the
+              sentence above keeps the reading measure. */}
+          <div>
+                {/* Guidebot and the five questions side by side from lg up,
+                    Guidebot on the left so it is still read first (2026-11-19).
+                    Below the questions it had zero real opens in its first
+                    week; this tests whether anyone uses it when it is an equal
+                    way in. Stacked, Guidebot first, below lg. */}
+                <div className="grid grid-cols-1 gap-roomy lg:grid-cols-2 lg:items-stretch">
+                  <GuidebotCard layout="stacked" />
+                  <MapQuestionList
+                    questions={learnMap.map(({ id, ordinal, question }) => ({
+                      id,
+                      ordinal,
+                      question,
+                    }))}
+                  />
+                </div>
+          </div>
           </div>
         </section>
 
@@ -244,7 +236,8 @@ export default async function GuidesPage() {
             competing with the chips that are the reason anyone is here. As its
             own band it is unmistakably secondary, gets the full width, and
             matches /patterns and /skills. */}
-        <section className="flex flex-col gap-snug border-b border-border-primary py-6 lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
+        <section className="border-b border-border-primary py-6">
+          <div className="mx-auto flex max-w-[1100px] flex-col gap-snug lg:flex-row lg:items-center lg:justify-between lg:gap-loose">
           <p className="flex items-center gap-2.5 type-caption text-text-secondary">
             <NewspaperIcon
               aria-hidden="true"
@@ -257,6 +250,7 @@ export default async function GuidesPage() {
             className="w-full lg:max-w-md"
             subheading=""
           />
+          </div>
         </section>
 
         {/* The Learn Map — five questions, each opening onto the content that
