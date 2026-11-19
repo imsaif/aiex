@@ -121,6 +121,7 @@ export function GuidebotCard({ layout = 'row' }: { layout?: 'row' | 'stacked' } 
         open={open}
         onClose={() => setOpen(false)}
         title="Guidebot"
+        titleIcon={<GuidebotIcon className="h-7 w-7 text-accent-primary" />}
         size="lg"
       >
         <div ref={panelRef} tabIndex={-1} className="flex flex-col gap-default outline-none">

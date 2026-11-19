@@ -11,6 +11,8 @@ export interface DialogProps {
   open: boolean;
   onClose: () => void;
   title?: string;
+  /** Optional decorative mark shown before the title, e.g. a character icon. */
+  titleIcon?: ReactNode;
   description?: string;
   size?: DialogSize;
   closeOnBackdrop?: boolean;
@@ -44,6 +46,7 @@ export function Dialog({
   open,
   onClose,
   title,
+  titleIcon,
   description,
   size = 'md',
   closeOnBackdrop = true,
@@ -90,7 +93,12 @@ export function Dialog({
         {(title || description) && (
           <header className="px-loose pt-loose pb-snug space-y-tight">
             {title && (
-              <h2 id={titleId} className="type-h3 text-text-primary">
+              <h2 id={titleId} className="type-h3 flex items-center gap-snug text-text-primary">
+                {titleIcon && (
+                  <span aria-hidden="true" className="shrink-0">
+                    {titleIcon}
+                  </span>
+                )}
                 {title}
               </h2>
             )}
