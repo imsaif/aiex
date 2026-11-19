@@ -218,7 +218,7 @@ export default async function GuidesPage() {
                 {/* A plain numbered list, not boxed chips: boxed, the
                     questions looked like the Guidebot card and read as more of
                     the same. Each jumps to its section. */}
-                <div className="mt-12">
+                <div className="mt-roomy">
                   <MapQuestionList
                     questions={learnMap.map(({ id, ordinal, question }) => ({
                       id,

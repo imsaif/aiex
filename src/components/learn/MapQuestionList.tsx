@@ -18,10 +18,10 @@ interface MapQuestion {
 export default function MapQuestionList({ questions }: { questions: MapQuestion[] }) {
   return (
     <nav aria-labelledby="map-questions-label">
-      <p id="map-questions-label" className="type-caption mb-loose text-text-secondary">
+      <p id="map-questions-label" className="type-caption mb-default text-text-secondary">
         Or jump to a question
       </p>
-      <ol className="grid grid-cols-1 gap-x-roomy gap-y-loose md:grid-cols-2">
+      <ol className="grid grid-cols-1 gap-x-roomy gap-y-snug md:grid-cols-2">
         {questions.map((q) => (
           <li key={q.id}>
             <a
@@ -29,13 +29,7 @@ export default function MapQuestionList({ questions }: { questions: MapQuestion[
               onClick={() => trackAuditEvent('map_question_clicked', { section: q.id })}
               className="group block rounded-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-4"
             >
-              <span
-                aria-hidden="true"
-                className="type-eyebrow mb-tight block font-mono text-accent-primary"
-              >
-                {q.ordinal}
-              </span>
-              <span className="type-lead font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+              <span className="type-body font-medium text-text-primary transition-colors group-hover:text-accent-primary">
                 {/* The last word and the arrow wrap together, so the arrow
                     never lands on a line of its own on a phone. */}
                 {q.question.slice(0, q.question.lastIndexOf(' ') + 1)}
