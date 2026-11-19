@@ -27,12 +27,14 @@ export default function MapQuestionList({ questions }: { questions: MapQuestion[
             <span aria-hidden="true" className="type-eyebrow font-mono text-text-secondary">
               {q.ordinal}
             </span>
-            <span className="type-body flex-1 font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
+            {/* The arrow follows the question rather than sitting at the far
+                right edge, where on a wide column it read as detached. */}
+            <span className="type-body font-semibold text-text-primary transition-colors group-hover:text-accent-primary">
               {q.question}
             </span>
             <span
               aria-hidden="true"
-              className="type-body text-text-secondary group-hover:text-accent-primary"
+              className="type-body text-text-secondary transition-[color,transform] duration-150 ease-out group-hover:translate-y-0.5 group-hover:text-accent-primary motion-reduce:transition-none motion-reduce:group-hover:translate-y-0"
             >
               ↓
             </span>
