@@ -6,6 +6,7 @@ import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 import { sendWelcomeEmail } from '@/lib/newsletter/welcome-email';
+import { sendSignupAlert } from '@/lib/newsletter/signup-alert';
 import { logSignup } from '@/lib/analytics/signup-event';
 
 const requestSchema = z.object({
@@ -73,6 +74,7 @@ export async function POST(request: NextRequest) {
     if (becameActive) {
       await sendWelcomeEmail(email);
       await logSignup(request, 'guides');
+      await sendSignupAlert(request, email, 'guides', !!existingSubscriber);
     }
 
     const token = generateGuideToken(email, guideSlug);
