@@ -353,7 +353,7 @@ export default function AuditClient({
       <Dialog
         open={showSkillsGate}
         onClose={dismissSkillsGate}
-        ariaLabel="Supercharge your design with Claude skills"
+        ariaLabel="Help your AI tool design better AI products"
         size="lg"
       >
         <SkillPackGate

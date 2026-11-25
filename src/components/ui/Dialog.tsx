@@ -88,7 +88,7 @@ export function Dialog({
         aria-labelledby={title ? titleId : undefined}
         aria-label={!title ? ariaLabel : undefined}
         aria-describedby={description ? descriptionId : undefined}
-        className={`relative z-modal w-full ${SIZE_CLASSES[size]} rounded-modal bg-surface-primary shadow-modal border border-border-primary animate-scale-in`}
+        className={`relative z-modal w-full max-h-full overflow-y-auto ${SIZE_CLASSES[size]} rounded-modal bg-surface-primary shadow-modal border border-border-primary animate-scale-in`}
       >
         {(title || description) && (
           <header className="px-loose pt-loose pb-snug space-y-tight">

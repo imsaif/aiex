@@ -424,7 +424,7 @@ export default function DashboardClient({
                   </div>
                   <p className="mt-2 text-sm text-text-secondary">
                     {format === 'zip'
-                      ? 'Unzips at your repo root. Nothing to run.'
+                      ? 'A folder you drop into your project. Your tool installs it.'
                       : 'One file. Claude Code writes the skills for you.'}
                   </p>
                 </fieldset>

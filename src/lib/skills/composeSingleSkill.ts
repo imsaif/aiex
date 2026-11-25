@@ -1,5 +1,6 @@
 import type { Pattern } from '@/types';
 import { composeSkillMd, skillName } from './composeSkill';
+import { PACK_FOLDER } from './packSteps';
 
 /**
  * The whole library packaged as ONE skill, for Claude's own skill uploader.
@@ -29,7 +30,7 @@ import { composeSkillMd, skillName } from './composeSkill';
  */
 
 /** Folder and frontmatter name for the combined skill. */
-export const SINGLE_SKILL_NAME = 'aiux-ai-ux-patterns';
+export const SINGLE_SKILL_NAME = PACK_FOLDER;
 
 /** Suggested filename for the combined download. */
 export function singleSkillFilename(): string {

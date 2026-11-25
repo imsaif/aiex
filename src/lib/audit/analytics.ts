@@ -78,6 +78,8 @@ export const AUDIT_EVENT_NAMES = [
   'skills_gate_dismissed',
   'skills_gate_submitted',
   'skills_gate_pack_downloaded',
+  // Opened the full walkthrough after downloading.
+  'skills_walkthrough_opened',
   // Newly instrumented CTAs (previously untracked)
   'audit_inspect_prompt_toggled',
   'audit_screenshot_locations_opened',
