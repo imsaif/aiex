@@ -21,7 +21,8 @@ concurrency:
 
 jobs:
   weekly:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest became 26.04 on 2026-11-13, which Playwright 1.57 cannot install on.
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     permissions:
       contents: read
