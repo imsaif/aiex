@@ -38,7 +38,7 @@ import type { PackTarget } from '@/lib/skills/packEmail';
 
 const BENEFITS = [
   `One skill file per pattern, all ${PATTERN_COUNT}`,
-  'Your AI tool reads the right one while it designs',
+  'Ask your AI tool to use them while it designs',
   'Daily AI UX newsletter (unsubscribe anytime)',
 ];
 

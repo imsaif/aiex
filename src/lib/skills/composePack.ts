@@ -2,7 +2,7 @@ import type { Pattern } from '@/types';
 import type { SavedAudit } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff } from '@/lib/handoff/composeCombined';
 import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
-import { INSTALL_PROMPT, PACK_FOLDER } from '@/lib/skills/packEmail';
+import { INSTALL_PROMPT, PACK_FOLDER, TRY_PROMPT } from '@/lib/skills/packEmail';
 
 /**
  * Builds the skill pack as a plain {path: contents} map, ready to zip.
@@ -43,7 +43,7 @@ function startHere(patterns: Pattern[], auditCount: number): string {
     '',
     `1. Put this whole folder (${PACK_FOLDER}) inside your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.`,
     `2. Tell your tool: "${INSTALL_PROMPT}" Say yes when it asks to add the files.`,
-    '3. Start a new chat. Your tool picks the right skill when your work matches it.',
+    `3. Start a new chat and try: "${TRY_PROMPT}" Ask for them by name; tools often skip skills unless you do.`,
     '',
     'Using the Claude app instead? It needs a different zip. Get it at https://www.aiuxdesign.guide (choose "Claude app").',
     '',

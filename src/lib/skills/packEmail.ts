@@ -19,6 +19,9 @@ export const PACK_FOLDER = 'aiux-skill-pack';
 /** What to say to a coding tool. Shown in the email, the pack and the site. */
 export const INSTALL_PROMPT = `Read START HERE in ${PACK_FOLDER} and install the skills.`;
 
+/** Skills often go unused unless asked for (audit, Nov 2026), so we say how. */
+export const TRY_PROMPT = 'Use the aiux skills to improve this screen.';
+
 // Email clients cannot read CSS variables and most strip <style> blocks, so the
 // brand values are hardcoded. They mirror globals.css.
 const NAVY = '#162036';
@@ -36,13 +39,14 @@ const CODE_STEPS = [
   `Open the attached zip. You get a folder called <strong>${PACK_FOLDER}</strong>.`,
   'Drag that folder into your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.',
   `Tell your tool: <strong>&ldquo;${INSTALL_PROMPT}&rdquo;</strong> Say yes when it asks to add the files.`,
-  'Start a new chat. Your tool now picks the right skill when your work matches it.',
+  `Start a new chat and try: <strong>&ldquo;${TRY_PROMPT}&rdquo;</strong> Ask for them by name; tools often skip skills unless you do.`,
 ];
 
 const CLAUDE_STEPS = [
   'Keep the attached zip closed. You upload it as it is.',
   'In Claude, open <strong>Customize &rarr; Skills</strong>, press <strong>+</strong>, then <strong>Create skill</strong>, then <strong>Upload a skill</strong>.',
   'Choose the zip. If Claude asks you to turn on code execution, turn it on; skills need it.',
+  `Start a new chat and try: <strong>&ldquo;${TRY_PROMPT}&rdquo;</strong>`,
 ];
 
 function stepsTable(steps: string[]): string {
