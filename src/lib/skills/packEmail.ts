@@ -26,8 +26,13 @@ export const INSTALL_PROMPT = `Read START HERE in ${PACK_FOLDER} and install the
 export const NOTES_LINE =
   'When building or changing any AI feature, check the aiux skills first and use the ones that fit.';
 
-/** Skills often go unused unless asked for, so we also say how. */
-export const TRY_PROMPT = 'Use the aiux skills to improve this screen.';
+/** What a designer can ask with nothing but a screenshot. */
+export const REVIEW_PROMPT = "Use the aiux skills to review this screen. What's missing, and why?";
+export const MORE_PROMPTS = [
+  'Use the aiux skills to compare these two versions.',
+  'Show me how to change this.',
+  'Write a brief for my developer.',
+];
 
 // Email clients cannot read CSS variables and most strip <style> blocks, so the
 // brand values are hardcoded. They mirror globals.css.
@@ -46,14 +51,14 @@ const CODE_STEPS = [
   `Open the attached zip. You get a folder called <strong>${PACK_FOLDER}</strong>.`,
   'Drag that folder into your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.',
   `Tell your tool: <strong>&ldquo;${INSTALL_PROMPT}&rdquo;</strong> Say yes when it asks to add the files, and one line in your project notes so it remembers to use them.`,
-  `Start a new chat and try: <strong>&ldquo;${TRY_PROMPT}&rdquo;</strong> If a skill is skipped, ask for it by name.`,
+  `Start a new chat, drag in a screenshot of any AI screen and say: <strong>&ldquo;${REVIEW_PROMPT}&rdquo;</strong>`,
 ];
 
 const CLAUDE_STEPS = [
   'Keep the attached zip closed. You upload it as it is.',
   'In Claude, open <strong>Customize &rarr; Skills</strong>, press <strong>+</strong>, then <strong>Create skill</strong>, then <strong>Upload a skill</strong>.',
   'Choose the zip. If Claude asks you to turn on code execution, turn it on; skills need it.',
-  `Start a new chat and try: <strong>&ldquo;${TRY_PROMPT}&rdquo;</strong>`,
+  `Start a new chat, add a screenshot of any AI screen and say: <strong>&ldquo;${REVIEW_PROMPT}&rdquo;</strong>`,
 ];
 
 function stepsTable(steps: string[]): string {

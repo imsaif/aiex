@@ -2,7 +2,7 @@ import type { Pattern } from '@/types';
 import type { SavedAudit } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff } from '@/lib/handoff/composeCombined';
 import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
-import { INSTALL_PROMPT, NOTES_LINE, PACK_FOLDER, TRY_PROMPT } from '@/lib/skills/packEmail';
+import { INSTALL_PROMPT, MORE_PROMPTS, NOTES_LINE, PACK_FOLDER, REVIEW_PROMPT } from '@/lib/skills/packEmail';
 
 /**
  * Builds the skill pack as a plain {path: contents} map, ready to zip.
@@ -34,16 +34,36 @@ const AUDIT_FILE = 'aiux-audit-fixes.md';
 function startHere(patterns: Pattern[], auditCount: number): string {
   const n = patterns.length;
   const lines: string[] = [
-    'YOUR AI UX SKILLS',
+    `YOUR ${n} AI UX SKILL${n === 1 ? '' : 'S'}`,
     'From aiuxdesign.guide',
     '',
-    `This folder has ${n} skill${n === 1 ? '' : 's'}. A skill is a short note your AI tool reads while it designs.`,
+    'A skill is a short note your AI tool reads while it designs. Each one covers one AI UX pattern: what it fixes and what to avoid.',
     '',
-    'TO INSTALL THEM',
     '',
-    `1. Put this whole folder (${PACK_FOLDER}) inside your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.`,
-    `2. Tell your tool: "${INSTALL_PROMPT}" Say yes when it asks to add the files, and one line in your project notes so it remembers to use them.`,
-    `3. Start a new chat and try: "${TRY_PROMPT}" If a skill is skipped, ask for it by name.`,
+    '1. SET UP, ONCE',
+    '',
+    'No project? Make an empty folder and open it in Claude Code.',
+    '',
+    `Put this whole folder (${PACK_FOLDER}) inside yours, the one you open in Claude Code, Cursor, GitHub Copilot or Codex. Then say:`,
+    '',
+    `   ${INSTALL_PROMPT}`,
+    '',
+    'Say yes when it asks to add the files. It also asks to add one line to a notes file your tool reads each time, so it remembers to use the skills. Then start a new chat.',
+    '',
+    '',
+    '2. TRY IT ON A SCREEN',
+    '',
+    'Take a screenshot of any AI screen, yours or one you use. Drag it into the chat and say:',
+    '',
+    `   ${REVIEW_PROMPT}`,
+    '',
+    '',
+    '3. USE IT AGAIN',
+    '',
+    ...MORE_PROMPTS.map((prompt) => `   ${prompt}`),
+    '',
+    'If it does not use a skill, ask for it by name.',
+    '',
     '',
     'Using the Claude app instead? It needs a different zip. Get it at https://www.aiuxdesign.guide (choose "Claude app").',
     '',
