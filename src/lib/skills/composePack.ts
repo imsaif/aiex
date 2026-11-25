@@ -2,7 +2,16 @@ import type { Pattern } from '@/types';
 import type { SavedAudit } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff } from '@/lib/handoff/composeCombined';
 import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
-import { INSTALL_PROMPT, MORE_PROMPTS, NOTES_LINE, PACK_FOLDER, REVIEW_PROMPT } from '@/lib/skills/packEmail';
+import {
+  DESIGN_REVIEW_PROMPT,
+  FIX_PROMPT,
+  INSTALL_PROMPT,
+  MORE_PROMPTS,
+  NOTES_LINE,
+  PACK_FOLDER,
+  SCREEN_REVIEW_PROMPT,
+  guideUrl,
+} from '@/lib/skills/packSteps';
 
 /**
  * Builds the skill pack as a plain {path: contents} map, ready to zip.
@@ -42,20 +51,28 @@ function startHere(patterns: Pattern[], auditCount: number): string {
     '',
     '1. SET UP, ONCE',
     '',
-    'No project? Make an empty folder and open it in Claude Code.',
-    '',
-    `Put this whole folder (${PACK_FOLDER}) inside yours, the one you open in Claude Code, Cursor, GitHub Copilot or Codex. Then say:`,
+    `Put this whole folder (${PACK_FOLDER}) in your project, the folder you open in Claude Code. No project? Make an empty folder and open that. Then say:`,
     '',
     `   ${INSTALL_PROMPT}`,
     '',
     'Say yes when it asks to add the files. It also asks to add one line to a notes file your tool reads each time, so it remembers to use the skills. Then start a new chat.',
     '',
     '',
-    '2. TRY IT ON A SCREEN',
+    '2. TRY IT',
     '',
-    'Take a screenshot of any AI screen, yours or one you use. Drag it into the chat and say:',
+    'If you have a project, say:',
     '',
-    `   ${REVIEW_PROMPT}`,
+    `   ${DESIGN_REVIEW_PROMPT}`,
+    '',
+    'Then:',
+    '',
+    `   ${FIX_PROMPT}`,
+    '',
+    'It can get things wrong, so check the change before you keep it.',
+    '',
+    'No project yet? Drag a screenshot of any AI screen into the chat and say:',
+    '',
+    `   ${SCREEN_REVIEW_PROMPT}`,
     '',
     '',
     '3. USE IT AGAIN',
@@ -64,6 +81,8 @@ function startHere(patterns: Pattern[], auditCount: number): string {
     '',
     'If it does not use a skill, ask for it by name.',
     '',
+    '',
+    `The full steps, with an example: ${guideUrl('code')}`,
     '',
     'Using the Claude app instead? It needs a different zip. Get it at https://www.aiuxdesign.guide (choose "Claude app").',
     '',

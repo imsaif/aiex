@@ -5,7 +5,8 @@ import patterns from '@/data/patterns';
 import { composeSkillPack, skillPackFilename } from '@/lib/skills/composePack';
 import { composeSingleSkillZipEntries, singleSkillFilename } from '@/lib/skills/composeSingleSkill';
 import { resend } from '@/lib/resend';
-import { PACK_TARGETS, renderPackEmail } from '@/lib/skills/packEmail';
+import { renderPackEmail } from '@/lib/skills/packEmail';
+import { PACK_TARGETS } from '@/lib/skills/packSteps';
 
 /**
  * Emails the skill pack to someone who just handed over their address.
@@ -29,7 +30,7 @@ import { PACK_TARGETS, renderPackEmail } from '@/lib/skills/packEmail';
 
 const sendSchema = z.object({
   email: z.string().email('Invalid email address'),
-  // Mirrors the form's chooser; see packEmail.ts for what each one means.
+  // Mirrors the form's chooser; see packSteps.ts for what each one means.
   target: z.enum(PACK_TARGETS).default('unsure'),
 });
 

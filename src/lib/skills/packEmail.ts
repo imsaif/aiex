@@ -1,38 +1,5 @@
 import { PATTERN_COUNT } from '@/data/pattern-count';
-
-/**
- * Where someone said they will use the skills.
- *
- *   code   a coding tool: Claude Code, Cursor, GitHub Copilot or Codex
- *   claude the Claude app, which takes one uploaded zip
- *   unsure not sure yet, or uses none of them
- *
- * 'unsure' gets the Claude app zip because it is the only route with no project
- * and no folders, plus a way to read the patterns without installing anything.
- */
-export const PACK_TARGETS = ['code', 'claude', 'unsure'] as const;
-export type PackTarget = (typeof PACK_TARGETS)[number];
-
-/** The folder a Mac or Windows unzip produces from aiux-skill-pack.zip. */
-export const PACK_FOLDER = 'aiux-skill-pack';
-
-/** What to say to a coding tool. Shown in the email, the pack and the site. */
-export const INSTALL_PROMPT = `Read START HERE in ${PACK_FOLDER} and install the skills.`;
-
-/**
- * The line an install adds to the project's notes. Without it Claude Code opened
- * a skill in 3 of 6 real edits; with it, 6 of 6 (audit, Nov 2026).
- */
-export const NOTES_LINE =
-  'When building or changing any AI feature, check the aiux skills first and use the ones that fit.';
-
-/** What a designer can ask with nothing but a screenshot. */
-export const REVIEW_PROMPT = "Use the aiux skills to review this screen. What's missing, and why?";
-export const MORE_PROMPTS = [
-  'Use the aiux skills to compare these two versions.',
-  'Show me how to change this.',
-  'Write a brief for my developer.',
-];
+import { PACK_GUIDES, guidePath, type PackStep, type PackTarget } from '@/lib/skills/packSteps';
 
 // Email clients cannot read CSS variables and most strip <style> blocks, so the
 // brand values are hardcoded. They mirror globals.css.
@@ -47,21 +14,10 @@ const SITE = 'https://www.aiuxdesign.guide';
 const link = (path: string, text: string) =>
   `<a href="${SITE}${path}" style="color:${NAVY};font-weight:600;text-decoration:underline;">${text}</a>`;
 
-const CODE_STEPS = [
-  `Open the attached zip. You get a folder called <strong>${PACK_FOLDER}</strong>.`,
-  'Drag that folder into your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.',
-  `Tell your tool: <strong>&ldquo;${INSTALL_PROMPT}&rdquo;</strong> Say yes when it asks to add the files, and one line in your project notes so it remembers to use them.`,
-  `Start a new chat, drag in a screenshot of any AI screen and say: <strong>&ldquo;${REVIEW_PROMPT}&rdquo;</strong>`,
-];
+const stepHtml = ({ text, say, then }: PackStep) =>
+  [text, say && `<strong>&ldquo;${say}&rdquo;</strong>`, then].filter(Boolean).join(' ');
 
-const CLAUDE_STEPS = [
-  'Keep the attached zip closed. You upload it as it is.',
-  'In Claude, open <strong>Customize &rarr; Skills</strong>, press <strong>+</strong>, then <strong>Create skill</strong>, then <strong>Upload a skill</strong>.',
-  'Choose the zip. If Claude asks you to turn on code execution, turn it on; skills need it.',
-  `Start a new chat, add a screenshot of any AI screen and say: <strong>&ldquo;${REVIEW_PROMPT}&rdquo;</strong>`,
-];
-
-function stepsTable(steps: string[]): string {
+function stepsTable(steps: PackStep[]): string {
   const rows = steps
     .map(
       (step, i) => `
@@ -69,28 +25,24 @@ function stepsTable(steps: string[]): string {
             <td style="padding:0 0 14px;vertical-align:top;width:28px;">
               <div style="width:22px;height:22px;border-radius:11px;background:${NAVY};color:#ffffff;font-size:12px;font-weight:700;line-height:22px;text-align:center;">${i + 1}</div>
             </td>
-            <td style="padding:0 0 14px 10px;font-size:15px;line-height:1.5;color:${BODY};">${step}</td>
+            <td style="padding:0 0 14px 10px;font-size:15px;line-height:1.5;color:${BODY};">${stepHtml(step)}</td>
           </tr>`
     )
     .join('');
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;${FONT}">${rows}</table>`;
 }
 
-const PARTS: Record<PackTarget, { heading: string; steps: string[]; after: string }> = {
-  code: {
-    heading: 'Set them up in your coding tool',
-    steps: CODE_STEPS,
-    after: `Prefer to read? Every pattern is written up at ${link('/patterns', 'aiuxdesign.guide/patterns')}, with real examples from shipped products.`,
-  },
-  claude: {
-    heading: 'Set them up in Claude',
-    steps: CLAUDE_STEPS,
-    after: `Prefer to read? Every pattern is written up at ${link('/patterns', 'aiuxdesign.guide/patterns')}.`,
-  },
+const READ = `You can also read all ${PATTERN_COUNT} patterns at ${link('/patterns', 'aiuxdesign.guide/patterns')}, with nothing to install.`;
+
+// 'unsure' is sent the Claude app zip, the only route with no project and no
+// folders, so it gets those steps plus a way to read without installing.
+const PARTS: Record<PackTarget, { heading: string; steps: PackStep[]; after: string }> = {
+  code: { heading: 'Set them up in Claude Code', steps: PACK_GUIDES.code.steps, after: READ },
+  claude: { heading: 'Set them up in the Claude app', steps: PACK_GUIDES.claude.steps, after: READ },
   unsure: {
-    heading: 'The easiest way to try them',
-    steps: CLAUDE_STEPS,
-    after: `Don't use Claude? You can read all ${PATTERN_COUNT} patterns at ${link('/patterns', 'aiuxdesign.guide/patterns')}, with nothing to install. Using Claude Code, Cursor, GitHub Copilot or Codex? ${link('/?skills=1', 'Get that version')} and choose Coding tool.`,
+    heading: 'If you use Claude, the easiest way to try them',
+    steps: PACK_GUIDES.claude.steps,
+    after: `${READ} Using Claude Code? ${link('/?skills=1', 'Get that version')} and choose Claude Code.`,
   },
 };
 
@@ -124,7 +76,7 @@ export function renderPackEmail(target: PackTarget): { subject: string; html: st
           </tr>
           <tr>
             <td style="padding:12px 32px 32px;">
-              <p style="margin:0;font-size:14px;line-height:1.6;color:${BODY};${FONT}">${after}</p>
+              <p style="margin:0;font-size:14px;line-height:1.6;color:${BODY};${FONT}">${link(guidePath(target), target === 'unsure' ? 'See an example first' : 'See the full steps and an example')}.<br><br>${after}</p>
             </td>
           </tr>
         </table>

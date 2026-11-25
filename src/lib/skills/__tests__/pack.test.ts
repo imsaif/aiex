@@ -1,7 +1,18 @@
 import patterns from '@/data/patterns';
 import { composeSkillInstaller, composeSkillPack, SKILLS_FOLDER, START_FILE } from '../composePack';
 import { composeSingleSkillZipEntries, SINGLE_SKILL_NAME } from '../composeSingleSkill';
-import { INSTALL_PROMPT, NOTES_LINE, PACK_FOLDER, PACK_TARGETS, renderPackEmail } from '../packEmail';
+import { renderPackEmail } from '../packEmail';
+import {
+  DESIGN_REVIEW_PROMPT,
+  FIX_PROMPT,
+  INSTALL_PROMPT,
+  NOTES_LINE,
+  PACK_FOLDER,
+  PACK_GUIDES,
+  PACK_TARGETS,
+  SCREEN_REVIEW_PROMPT,
+  guideUrl,
+} from '../packSteps';
 
 describe('coding tool pack', () => {
   const files = composeSkillPack(patterns, []);
@@ -31,7 +42,7 @@ describe('coding tool pack', () => {
   });
 
   it('never promises that skills load on their own', () => {
-    const text = [files[START_FILE], composeSkillInstaller(patterns, []).split('---')[0], ...PACK_TARGETS.map((t) => renderPackEmail(t).html)].join(' ');
+    const text = [files[START_FILE], composeSkillInstaller(patterns, []).split('---')[0], ...PACK_TARGETS.map((t) => renderPackEmail(t).html), JSON.stringify(PACK_GUIDES)].join(' ');
     expect(text).not.toMatch(/on its own|automatically|picks the right skill/i);
   });
 
@@ -69,5 +80,39 @@ describe('renderPackEmail', () => {
   it('gives someone unsure a way in without installing anything', () => {
     expect(renderPackEmail('unsure').html).toContain('/patterns');
     expect(renderPackEmail('unsure').html).toContain('nothing to install');
+  });
+});
+
+describe('what to do after downloading', () => {
+  it('leads with the tested design review, word for word, then the fix', () => {
+    expect(DESIGN_REVIEW_PROMPT).toBe(
+      "Use the aiux skills to do a design review of this project. Don't change anything yet."
+    );
+    const said = PACK_GUIDES.code.steps.map((s) => s.say).filter(Boolean);
+    expect(said).toEqual([INSTALL_PROMPT, DESIGN_REVIEW_PROMPT, FIX_PROMPT]);
+  });
+
+  it('gives the Claude app, which has no project, a screenshot review', () => {
+    const said = PACK_GUIDES.claude.steps.map((s) => s.say);
+    expect(said).toContain(SCREEN_REVIEW_PROMPT);
+    expect(said).not.toContain(DESIGN_REVIEW_PROMPT);
+  });
+
+  it('says the same words in START HERE and in the emails', () => {
+    const start = composeSkillPack(patterns, [])[START_FILE];
+    for (const words of [DESIGN_REVIEW_PROMPT, FIX_PROMPT, SCREEN_REVIEW_PROMPT, guideUrl('code')]) {
+      expect(start).toContain(words);
+    }
+    expect(renderPackEmail('code').html).toContain(DESIGN_REVIEW_PROMPT);
+  });
+
+  it.each([...PACK_TARGETS])('%s: the email links to its own page', (target) => {
+    expect(renderPackEmail(target).html).toContain(guideUrl(target));
+  });
+
+  it('uses no em dashes and names no label that is not on screen', () => {
+    const text = JSON.stringify(PACK_GUIDES) + PACK_TARGETS.map((t) => renderPackEmail(t).html).join(' ');
+    expect(text).not.toContain('\u2014');
+    expect(text).not.toMatch(/coding tool/i);
   });
 });
