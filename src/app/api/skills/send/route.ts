@@ -5,7 +5,7 @@ import patterns from '@/data/patterns';
 import { composeSkillPack, skillPackFilename } from '@/lib/skills/composePack';
 import { composeSingleSkillZipEntries, singleSkillFilename } from '@/lib/skills/composeSingleSkill';
 import { resend } from '@/lib/resend';
-import { PATTERN_COUNT } from '@/data/pattern-count';
+import { PACK_TARGETS, renderPackEmail } from '@/lib/skills/packEmail';
 
 /**
  * Emails the skill pack to someone who just handed over their address.
@@ -29,9 +29,8 @@ import { PATTERN_COUNT } from '@/data/pattern-count';
 
 const sendSchema = z.object({
   email: z.string().email('Invalid email address'),
-  // Mirrors the modal's chooser. 'code' is the project tree for Claude Code;
-  // 'claude' is the single skill folder Claude's own uploader accepts.
-  target: z.enum(['code', 'claude']).default('code'),
+  // Mirrors the form's chooser; see packEmail.ts for what each one means.
+  target: z.enum(PACK_TARGETS).default('unsure'),
 });
 
 export async function POST(request: NextRequest) {
@@ -46,112 +45,24 @@ export async function POST(request: NextRequest) {
     }
 
     const files =
-      target === 'claude'
-        ? composeSingleSkillZipEntries(patterns)
-        : composeSkillPack(patterns, []);
-    const filename = target === 'claude' ? singleSkillFilename() : skillPackFilename();
+      target === 'code'
+        ? composeSkillPack(patterns, [])
+        : composeSingleSkillZipEntries(patterns);
+    const filename = target === 'code' ? skillPackFilename() : singleSkillFilename();
 
     const zipped = zipSync(
       Object.fromEntries(Object.entries(files).map(([path, body]) => [path, strToU8(body)])),
       { level: 6 }
     );
 
-    // Brand values, hardcoded because email clients cannot read CSS variables and
-    // most strip <style> blocks entirely. These mirror globals.css: navy for
-    // headings and the button, near-white for the page, gray-200 for rules.
-    const NAVY = '#162036';
-    const BODY = '#20294C';
-    const PAGE = '#f9f9f9';
-    const CARD = '#ffffff';
-    const RULE = '#e5e7eb';
-
-    const steps =
-      target === 'claude'
-        ? [
-            'Open Claude and go to Customize &rarr; Skills.',
-            'Click <strong>+ Create skill</strong> and upload the attached zip.',
-            'Done. Claude Design and the Claude app both pick it up.',
-          ]
-        : [
-            'Unzip the attachment into your project.',
-            'The files land in <code style="background:' + PAGE + ';padding:2px 5px;border-radius:4px;">.claude/skills/</code>.',
-            'Claude Code reads them on its own. Nothing to remember at the prompt.',
-          ];
-
-    const stepsHtml = steps
-      .map(
-        (step, i) => `
-          <tr>
-            <td style="padding:0 0 14px;vertical-align:top;width:28px;">
-              <div style="width:22px;height:22px;border-radius:11px;background:${NAVY};color:#ffffff;font-size:12px;font-weight:700;line-height:22px;text-align:center;">${i + 1}</div>
-            </td>
-            <td style="padding:0 0 14px 10px;font-size:15px;line-height:1.5;color:${BODY};">${step}</td>
-          </tr>`
-      )
-      .join('');
-
-    const packLabel =
-      target === 'claude' ? 'Claude Design and the Claude app' : 'Claude Code';
+    const { subject, html } = renderPackEmail(target);
 
     await resend.emails.send({
       from: 'AIUX Design Guide <imran@aiuxdesign.guide>',
       replyTo: 'imranrizom@gmail.com',
       to: email,
-      subject: `Your ${PATTERN_COUNT} AI UX skills`,
-      html: `
-<body style="margin:0;padding:0;background:${PAGE};">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PAGE};padding:32px 16px;">
-    <tr>
-      <td align="center">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${CARD};border:1px solid ${RULE};border-radius:16px;">
-          <tr>
-            <td style="padding:32px 32px 0;">
-              <p style="margin:0 0 20px;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                AIUX Design Guide
-              </p>
-              <h1 style="margin:0 0 12px;font-size:26px;line-height:1.2;font-weight:700;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                Your ${PATTERN_COUNT} AI UX skills
-              </h1>
-              <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:${BODY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                They are attached, packaged for <strong style="color:${NAVY};">${packLabel}</strong>.
-                Each skill carries the thinking behind one pattern, what it fixes and what to avoid,
-                so you stop shipping AI slop and always know why a screen works that way.
-              </p>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:0 32px;">
-              <div style="height:1px;background:${RULE};"></div>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:24px 32px 8px;">
-              <p style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${NAVY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                Setting them up
-              </p>
-              <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                ${stepsHtml}
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:20px 32px 32px;">
-              <p style="margin:0;font-size:14px;line-height:1.6;color:${BODY};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                Every pattern is also written up at
-                <a href="https://www.aiuxdesign.guide/patterns" style="color:${NAVY};font-weight:600;text-decoration:underline;">aiuxdesign.guide/patterns</a>,
-                with real examples from shipped products and the reasoning behind each move.
-              </p>
-            </td>
-          </tr>
-        </table>
-        <p style="max-width:560px;margin:20px auto 0;font-size:12px;line-height:1.6;color:#6b7280;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-          You are also on the daily AI UX newsletter. Every issue has an unsubscribe link.
-        </p>
-      </td>
-    </tr>
-  </table>
-</body>
-      `,
+      subject,
+      html,
       attachments: [
         {
           filename,

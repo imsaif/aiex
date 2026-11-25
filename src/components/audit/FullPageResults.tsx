@@ -1207,7 +1207,7 @@ export function FullPageResults({ results, onNewAudit, isAnalyzing, isDemoMode, 
                 </div>
                 <p className="text-sm text-text-secondary leading-relaxed mb-3">
                   Every pattern this audit matched, plus the fixes for your screen.
-                  Unzips into <code className="text-xs font-mono text-text-primary">.claude/skills/</code>.
+                  Open START HERE in the folder to install them.
                 </p>
                 <button
                   onClick={handleDownloadPack}

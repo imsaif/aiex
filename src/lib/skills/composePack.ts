@@ -1,76 +1,73 @@
 import type { Pattern } from '@/types';
 import type { SavedAudit } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff } from '@/lib/handoff/composeCombined';
-import { SITE } from '@/lib/handoff/composeHandoff';
 import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
+import { INSTALL_PROMPT, PACK_FOLDER } from '@/lib/skills/packEmail';
 
 /**
- * Builds the dashboard skill pack as a plain {path: contents} map, ready to zip.
+ * Builds the skill pack as a plain {path: contents} map, ready to zip.
  *
- * The pack unzips at the repo root, so the paths here are repo-relative on
- * purpose. Two shapes ride together because they have different lifetimes:
+ * Nothing in here may start with a dot. The pack used to unzip to
+ * `.claude/skills/`, which Finder hides, so on a Mac it looked like a folder
+ * holding one README (Nov 2026). Double-clicking a zip also adds a wrapper
+ * folder, which left the skills nested where Claude Code does not load them at
+ * startup. So the skills travel in a visible folder and the reader's own tool
+ * puts them in place, following START HERE.
  *
- *   - Saved patterns become SKILLS. They are persistent guidance, so they belong
- *     in `.claude/skills/` where they shape every later conversation.
+ * Two shapes ride together because they have different lifetimes:
+ *
+ *   - Saved patterns become SKILLS: persistent guidance for later conversations.
  *   - Saved audits stay HANDOFF-SHAPED. They are one-shot fixes for gaps in the
  *     user's own product, so they ride along as a task file, not a skill.
  *
  * Kept free of `fflate` so the zip shape is testable without the zipper.
  */
 
+/** Plain text, not markdown: a double-click has to open it on any machine. */
+export const START_FILE = 'START HERE.txt';
+
+/** The visible folder the skills sit in. */
+export const SKILLS_FOLDER = 'skills';
+
 const AUDIT_FILE = 'aiux-audit-fixes.md';
 
-function packReadme(patterns: Pattern[], auditCount: number): string {
-  const patternCount = patterns.length;
+function startHere(patterns: Pattern[], auditCount: number): string {
+  const n = patterns.length;
   const lines: string[] = [
-    '# Your AI UX skill pack',
+    'YOUR AI UX SKILLS',
+    'From aiuxdesign.guide',
     '',
-    `From aiuxdesign.guide. This pack contains ${patternCount} skill${patternCount === 1 ? '' : 's'}` +
-      `${auditCount > 0 ? ` plus fixes from ${auditCount} saved audit${auditCount === 1 ? '' : 's'}` : ''}.`,
+    `This folder has ${n} skill${n === 1 ? '' : 's'}. A skill is a short note your AI tool reads while it designs.`,
     '',
-    '## How to use it',
+    'TO INSTALL THEM',
     '',
-    'Unzip this at the root of your repo. The skills land in `.claude/skills/`, where Claude Code picks them up automatically. Each skill triggers on its own when you work on a surface that pattern covers, so there is nothing to run.',
+    `1. Put this whole folder (${PACK_FOLDER}) inside your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.`,
+    `2. Tell your tool: "${INSTALL_PROMPT}" Say yes when it asks to add the files.`,
+    '3. Start a new chat. Your tool picks the right skill when your work matches it.',
+    '',
+    'Using the Claude app instead? It needs a different zip. Get it at https://www.aiuxdesign.guide (choose "Claude app").',
+    '',
+    'Just want to read? Every pattern is at https://www.aiuxdesign.guide/patterns',
     '',
   ];
 
   if (auditCount > 0) {
     lines.push(
-      `\`${AUDIT_FILE}\` is different. It is a one-off task list of the gaps we found in your own product, so hand it to Claude Code once and work through it. It is not a skill, because those fixes stop applying once they are done.`,
+      `${AUDIT_FILE} is different. It lists the gaps found in your own product. Give it to your tool once, work through it, then delete it.`,
       '',
     );
   }
 
   lines.push(
-    '## What is in here',
     '',
-    '```',
-    'README.md',
-    '.claude/skills/aiux-<pattern>/SKILL.md',
-    ...(auditCount > 0 ? [AUDIT_FILE] : []),
-    '```',
+    'FOR THE AI TOOL DOING THE INSTALL',
+    '',
+    `Copy every folder inside "${SKILLS_FOLDER}" to the project root, keeping the folder names:`,
+    '- Claude Code: .claude/skills/',
+    '- Cursor, GitHub Copilot or Codex: .agents/skills/',
+    'Each skill must end up as <that folder>/<skill name>/SKILL.md. Create the folder if it is missing. Do not change the files or run anything in them. If a skill with the same name already exists, ask before replacing it. Then say how many skills you installed and where, and that a new chat is needed to load them.',
     '',
   );
-
-  const example = patterns[0];
-  if (example) {
-    // The only remaining pointer to the per-skill URLs. The pattern page used to
-    // hand out this command directly; it no longer does, so if this section goes
-    // the route at /skills/aiux-<slug>.md has no consumer left.
-    const name = skillName(example);
-    lines.push(
-      '## Updating one skill later',
-      '',
-      'Each skill is also served on its own, so you can refresh a single one without downloading the pack again:',
-      '',
-      '```',
-      `curl -fsSL ${SITE}/skills/${name}.md -o .claude/skills/${name}/SKILL.md`,
-      '```',
-      '',
-      'Swap the skill name for whichever one you want to refresh.',
-      '',
-    );
-  }
 
   return lines.join('\n');
 }
@@ -78,11 +75,11 @@ function packReadme(patterns: Pattern[], auditCount: number): string {
 /** Map of zip-relative path to file contents. */
 export function composeSkillPack(patterns: Pattern[], audits: SavedAudit[]): Record<string, string> {
   const files: Record<string, string> = {
-    'README.md': packReadme(patterns, audits.length),
+    [START_FILE]: startHere(patterns, audits.length),
   };
 
   patterns.forEach((pattern) => {
-    files[`.claude/skills/${skillName(pattern)}/SKILL.md`] = composeSkillMd(pattern);
+    files[`${SKILLS_FOLDER}/${skillName(pattern)}/SKILL.md`] = composeSkillMd(pattern);
   });
 
   if (audits.length > 0) {
@@ -96,7 +93,7 @@ export function composeSkillPack(patterns: Pattern[], audits: SavedAudit[]): Rec
 
 /** Suggested filename for the downloaded pack. */
 export function skillPackFilename(): string {
-  return 'aiux-skill-pack.zip';
+  return `${PACK_FOLDER}.zip`;
 }
 
 /** Suggested filename for the single-file installer. */

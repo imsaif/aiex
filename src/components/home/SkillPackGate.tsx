@@ -9,12 +9,14 @@ import {
   ArrowUturnLeftIcon,
   CommandLineIcon,
   SwatchIcon,
+  QuestionMarkCircleIcon,
   CheckCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import type { NewsletterSource } from '@/types/newsletter';
+import type { PackTarget } from '@/lib/skills/packEmail';
 
 /**
  * Homepage-only email gate for the full pattern skill pack.
@@ -36,63 +38,81 @@ import type { NewsletterSource } from '@/types/newsletter';
 
 const BENEFITS = [
   `One skill file per pattern, all ${PATTERN_COUNT}`,
-  'Drop them in .claude/skills and Claude applies them as it builds',
+  'Your AI tool reads the right one while it designs',
   'Daily AI UX newsletter (unsubscribe anytime)',
 ];
 
-/**
- * "Also works with ..." with the tool cycling underneath it.
- *
- * Sits on the same row as the "Where will you use them?" legend, which had a
- * wide empty right-hand side. It answers the question that row invites without
- * adding another line of copy: the two named options are Claude surfaces, and a
- * reader whose day is spent in Cursor needs to know they are not excluded.
- *
- * Accessibility: the rotating half is decoration, so it is aria-hidden and the
- * full list is stated once in visually hidden text. The names never disappear
- * for a screen reader, and nothing here is announced three times over. Motion
- * stops entirely under prefers-reduced-motion, where it settles on the first
- * tool rather than flickering through them.
- */
-const ALSO_WORKS_WITH = [
-  { name: 'Cursor', logo: '/images/logos/simple-icons/cursor.svg' },
-  { name: 'GitHub Copilot', logo: '/images/logos/simple-icons/githubcopilot.svg' },
-  { name: 'Codex', logo: '/images/logos/simple-icons/openai.svg' },
+const TARGETS: { value: PackTarget; icon: typeof CommandLineIcon; label: string; hint: string }[] = [
+  {
+    value: 'code',
+    icon: CommandLineIcon,
+    label: 'Coding tool',
+    hint: 'Claude Code, Cursor, GitHub Copilot or Codex. The email has the steps.',
+  },
+  {
+    value: 'claude',
+    icon: SwatchIcon,
+    label: 'Claude app',
+    hint: 'One upload in Claude, on the web or desktop.',
+  },
+  {
+    value: 'unsure',
+    icon: QuestionMarkCircleIcon,
+    label: 'Not sure yet',
+    hint: 'We send the simplest version, and a link to read the patterns with nothing to install.',
+  },
 ];
 
-function CyclingTool() {
-  const [index, setIndex] = useState(0);
+const CHOOSE_ERROR = 'Choose where you will use them, or pick Not sure yet.';
 
-  useEffect(() => {
-    const reduced =
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
-
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % ALSO_WORKS_WITH.length);
-    }, 3600);
-    return () => window.clearInterval(id);
-  }, []);
-
+/**
+ * Where the skills will be used. Nothing is selected to start with: a preset
+ * answer sent Claude Code instructions to people who never chose Claude Code.
+ *
+ * One control, not three more cards. A segmented control reads as a single
+ * choice, and only the chosen option's hint is on screen.
+ */
+function TargetChooser({
+  value,
+  onChange,
+  invalid,
+}: {
+  value: PackTarget | null;
+  onChange: (next: PackTarget) => void;
+  invalid: boolean;
+}) {
   return (
-    <span aria-hidden="true" className="relative block w-6 h-6 shrink-0">
-      {/* Local SVGs, matching CompanyLogoCarousel's approach. The marks are
-          solid black, so they invert in dark mode to stay visible. */}
-      {ALSO_WORKS_WITH.map((tool, i) => (
-        /* eslint-disable-next-line @next/next/no-img-element */
-        <img
-          key={tool.name}
-          src={tool.logo}
-          alt=""
-          width={24}
-          height={24}
-          className={`absolute inset-0 w-6 h-6 dark:invert transition-opacity duration-700 ease-in-out ${
-            i === index ? 'opacity-70' : 'opacity-0'
-          }`}
-        />
-      ))}
-    </span>
+    <fieldset aria-describedby={invalid ? 'skill-pack-error' : undefined}>
+      <legend className="mb-2.5 text-sm text-text-secondary">Where will you use them?</legend>
+      <div className="inline-flex flex-wrap max-w-full p-1 rounded-card sm:rounded-pill border border-border-primary bg-surface-secondary">
+        {TARGETS.map((option) => (
+          <label key={option.value} className="relative cursor-pointer">
+            <input
+              type="radio"
+              name="skill-pack-target"
+              value={option.value}
+              checked={value === option.value}
+              onChange={() => onChange(option.value)}
+              className="sr-only peer"
+            />
+            {/* peer-* is a sibling combinator, so it styles this span but
+                cannot reach the icon nested inside it: that reads state. */}
+            <span className="flex items-center gap-2 px-4 py-2 rounded-pill text-sm font-medium text-text-secondary transition-colors peer-checked:bg-surface-primary peer-checked:text-text-primary peer-checked:shadow-card peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
+              <option.icon
+                className={`w-4 h-4 shrink-0 ${
+                  value === option.value ? 'text-accent-primary' : 'text-text-secondary'
+                }`}
+                aria-hidden="true"
+              />
+              {option.label}
+            </span>
+          </label>
+        ))}
+      </div>
+      <p className="mt-2.5 min-h-5 text-sm text-text-secondary" aria-live="polite">
+        {TARGETS.find((t) => t.value === value)?.hint}
+      </p>
+    </fieldset>
   );
 }
 
@@ -141,10 +161,9 @@ export function SkillPackGate({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  // Which package shape to build. See composeSingleSkill.ts for why one library
-  // needs two: Claude Code reads a project tree, Claude's own uploader takes one
-  // skill folder.
-  const [target, setTarget] = useState<'code' | 'claude'>('code');
+  // Which package to build; null until they choose. See composeSingleSkill.ts for
+  // why one library needs two packages.
+  const [chosen, setChosen] = useState<PackTarget | null>(null);
   const shown = useRef(false);
   // Attached to whichever variant's root element renders, so the impression
   // event can wait for that element to be on screen.
@@ -201,6 +220,13 @@ export function SkillPackGate({
       return;
     }
 
+    // The compact variant has no chooser, so it counts as not sure.
+    const target = chosen ?? (variant === 'compact' ? 'unsure' : null);
+    if (!target) {
+      setError(CHOOSE_ERROR);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -238,10 +264,10 @@ export function SkillPackGate({
 
       // Same guidance either way — only the arrangement differs.
       const files =
-        target === 'claude'
-          ? composeSingleSkillZipEntries(patterns)
-          : composeSkillPack(patterns, []);
-      const filename = target === 'claude' ? singleSkillFilename() : skillPackFilename();
+        target === 'code'
+          ? composeSkillPack(patterns, [])
+          : composeSingleSkillZipEntries(patterns);
+      const filename = target === 'code' ? skillPackFilename() : singleSkillFilename();
 
       const { zipSync, strToU8 } = await import('fflate');
       const zippable = Object.fromEntries(
@@ -346,21 +372,6 @@ export function SkillPackGate({
       },
     ];
 
-    const TARGETS = [
-      {
-        value: 'code' as const,
-        icon: CommandLineIcon,
-        label: 'Claude Code',
-        hint: 'Unzip into your project.',
-      },
-      {
-        value: 'claude' as const,
-        icon: SwatchIcon,
-        label: 'Claude Design',
-        hint: 'One upload at Customize → Skills. Works in the Claude app too.',
-      },
-    ];
-
     return (
       <div ref={rootRef as React.RefObject<HTMLDivElement>} className="py-1">
         {onDismiss && (
@@ -374,7 +385,7 @@ export function SkillPackGate({
           </button>
         )}
         <h2 className="pr-8 mb-3 text-xl sm:text-2xl font-semibold tracking-tight leading-[1.2] text-text-primary">
-          Supercharge your design with Claude skills
+          Supercharge your design with AI UX skills
         </h2>
 
         <p className="text-sm text-text-secondary">
@@ -396,59 +407,16 @@ export function SkillPackGate({
           ))}
         </div>
 
-        <fieldset className="mt-9">
-          <legend className="w-full mb-2.5">
-            <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-              <span className="text-sm text-text-secondary">Where will you use them?</span>
-              <span className="text-sm text-text-secondary">
-                Also works with
-                <span className="sr-only">
-                  {' '}
-                  {ALSO_WORKS_WITH.map((t) => t.name).join(', ')}.
-                </span>
-              </span>
-            </span>
-          </legend>
-
-          {/* One control, not two more cards. The benefit cards above are the
-              content of this modal and earn their boxes; repeating that shape
-              for the chooser gave the dialog five bordered rectangles in a
-              column. A segmented control reads as a single choice, and the hint
-              moves below it so only the relevant one is ever on screen. */}
-          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-          <div className="inline-flex p-1 rounded-pill border border-border-primary bg-surface-secondary">
-            {TARGETS.map((option) => (
-              <label key={option.value} className="relative cursor-pointer">
-                <input
-                  type="radio"
-                  name="skill-pack-target"
-                  value={option.value}
-                  checked={target === option.value}
-                  onChange={() => setTarget(option.value)}
-                  className="sr-only peer"
-                />
-                {/* peer-* is a sibling combinator, so it styles this span but
-                    cannot reach the icon nested inside it — that reads state. */}
-                <span className="flex items-center gap-2 px-4 py-2 rounded-pill text-sm font-medium text-text-secondary transition-colors peer-checked:bg-surface-primary peer-checked:text-text-primary peer-checked:shadow-card peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
-                  <option.icon
-                    className={`w-4 h-4 shrink-0 ${
-                      target === option.value ? 'text-accent-primary' : 'text-text-secondary'
-                    }`}
-                    aria-hidden="true"
-                  />
-                  {option.label}
-                </span>
-              </label>
-            ))}
-          </div>
-
-            <CyclingTool />
-          </div>
-
-          <p className="mt-2.5 text-sm text-text-secondary">
-            {TARGETS.find((t) => t.value === target)?.hint}
-          </p>
-        </fieldset>
+        <div className="mt-9">
+          <TargetChooser
+            value={chosen}
+            onChange={(next) => {
+              setChosen(next);
+              if (error === CHOOSE_ERROR) setError(null);
+            }}
+            invalid={error === CHOOSE_ERROR}
+          />
+        </div>
 
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
           <label htmlFor="skill-pack-email" className="sr-only">
@@ -583,11 +551,11 @@ export function SkillPackGate({
           id="skill-pack-heading"
           className="text-2xl sm:text-3xl font-semibold tracking-tight leading-[1.15] text-text-primary"
         >
-          Take all {PATTERN_COUNT} patterns as Claude skills
+          Take all {PATTERN_COUNT} patterns as skills for your AI tool
         </h2>
         <p className="mt-3 text-sm sm:text-base text-text-secondary leading-relaxed">
-          Get the whole library as skill files, so Claude applies these patterns while it
-          builds instead of after you catch them in review.
+          A skill is a short note your AI tool reads while it designs. Get one for every
+          pattern, for Claude, Cursor, GitHub Copilot or Codex.
         </p>
 
         <ul className="mt-6 space-y-2 text-left inline-block">
@@ -608,7 +576,18 @@ export function SkillPackGate({
             Your pack is downloading. Check your Downloads folder.
           </p>
         ) : (
-          <form onSubmit={handleSubmit} className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          <>
+          <div className="mt-8">
+            <TargetChooser
+              value={chosen}
+              onChange={(next) => {
+                setChosen(next);
+                if (error === CHOOSE_ERROR) setError(null);
+              }}
+              invalid={error === CHOOSE_ERROR}
+            />
+          </div>
+          <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
             <label htmlFor="skill-pack-email" className="sr-only">
               Email address
             </label>
@@ -633,6 +612,7 @@ export function SkillPackGate({
               {isLoading ? 'Building your pack…' : `Send me the ${PATTERN_COUNT} skills`}
             </button>
           </form>
+          </>
         )}
 
         {error && (
