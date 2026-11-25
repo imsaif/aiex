@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { checkRateLimit, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 import { addSubscriberToBeehiiv } from '@/lib/beehiiv';
 import { sendWelcomeEmail } from '@/lib/newsletter/welcome-email';
+import { sendSignupAlert } from '@/lib/newsletter/signup-alert';
 import { logSignup } from '@/lib/analytics/signup-event';
 import { validateEmailSecurity } from '@/lib/email-validation';
 import { NEWSLETTER_SOURCES, PDF_DOWNLOAD_SOURCES } from '@/types/newsletter';
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
     // welcome stopped sending after the downgrade. Never throws.
     await sendWelcomeEmail(email);
     await logSignup(request, source);
+    await sendSignupAlert(request, email, source, !!existingSubscriber);
 
     const message = isPdfFlow
       ? 'Your download is ready!'
