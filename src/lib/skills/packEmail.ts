@@ -19,7 +19,14 @@ export const PACK_FOLDER = 'aiux-skill-pack';
 /** What to say to a coding tool. Shown in the email, the pack and the site. */
 export const INSTALL_PROMPT = `Read START HERE in ${PACK_FOLDER} and install the skills.`;
 
-/** Skills often go unused unless asked for (audit, Nov 2026), so we say how. */
+/**
+ * The line an install adds to the project's notes. Without it Claude Code opened
+ * a skill in 3 of 6 real edits; with it, 6 of 6 (audit, Nov 2026).
+ */
+export const NOTES_LINE =
+  'When building or changing any AI feature, check the aiux skills first and use the ones that fit.';
+
+/** Skills often go unused unless asked for, so we also say how. */
 export const TRY_PROMPT = 'Use the aiux skills to improve this screen.';
 
 // Email clients cannot read CSS variables and most strip <style> blocks, so the
@@ -38,8 +45,8 @@ const link = (path: string, text: string) =>
 const CODE_STEPS = [
   `Open the attached zip. You get a folder called <strong>${PACK_FOLDER}</strong>.`,
   'Drag that folder into your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.',
-  `Tell your tool: <strong>&ldquo;${INSTALL_PROMPT}&rdquo;</strong> Say yes when it asks to add the files.`,
-  `Start a new chat and try: <strong>&ldquo;${TRY_PROMPT}&rdquo;</strong> Ask for them by name; tools often skip skills unless you do.`,
+  `Tell your tool: <strong>&ldquo;${INSTALL_PROMPT}&rdquo;</strong> Say yes when it asks to add the files, and one line in your project notes so it remembers to use them.`,
+  `Start a new chat and try: <strong>&ldquo;${TRY_PROMPT}&rdquo;</strong> If a skill is skipped, ask for it by name.`,
 ];
 
 const CLAUDE_STEPS = [

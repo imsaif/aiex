@@ -1,7 +1,7 @@
 import patterns from '@/data/patterns';
-import { composeSkillPack, SKILLS_FOLDER, START_FILE } from '../composePack';
+import { composeSkillInstaller, composeSkillPack, SKILLS_FOLDER, START_FILE } from '../composePack';
 import { composeSingleSkillZipEntries, SINGLE_SKILL_NAME } from '../composeSingleSkill';
-import { INSTALL_PROMPT, PACK_FOLDER, PACK_TARGETS, renderPackEmail } from '../packEmail';
+import { INSTALL_PROMPT, NOTES_LINE, PACK_FOLDER, PACK_TARGETS, renderPackEmail } from '../packEmail';
 
 describe('coding tool pack', () => {
   const files = composeSkillPack(patterns, []);
@@ -22,6 +22,17 @@ describe('coding tool pack', () => {
     expect(files[START_FILE]).toContain('.claude/skills/');
     expect(files[START_FILE]).toContain('.agents/skills/');
     expect(files[START_FILE]).toContain(PACK_FOLDER);
+  });
+
+  it('has the install add the notes line, and ask first', () => {
+    expect(files[START_FILE]).toContain(NOTES_LINE);
+    expect(files[START_FILE]).toContain('ask the person before adding');
+    expect(composeSkillInstaller(patterns, [])).toContain(NOTES_LINE);
+  });
+
+  it('never promises that skills load on their own', () => {
+    const text = [files[START_FILE], composeSkillInstaller(patterns, []).split('---')[0], ...PACK_TARGETS.map((t) => renderPackEmail(t).html)].join(' ');
+    expect(text).not.toMatch(/on its own|automatically|picks the right skill/i);
   });
 
   it('names each skill after its folder, which Copilot requires', () => {

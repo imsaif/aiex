@@ -2,7 +2,7 @@ import type { Pattern } from '@/types';
 import type { SavedAudit } from '@/hooks/useSavedAudits';
 import { composeCombinedHandoff } from '@/lib/handoff/composeCombined';
 import { composeSkillMd, skillName } from '@/lib/skills/composeSkill';
-import { INSTALL_PROMPT, PACK_FOLDER, TRY_PROMPT } from '@/lib/skills/packEmail';
+import { INSTALL_PROMPT, NOTES_LINE, PACK_FOLDER, TRY_PROMPT } from '@/lib/skills/packEmail';
 
 /**
  * Builds the skill pack as a plain {path: contents} map, ready to zip.
@@ -42,8 +42,8 @@ function startHere(patterns: Pattern[], auditCount: number): string {
     'TO INSTALL THEM',
     '',
     `1. Put this whole folder (${PACK_FOLDER}) inside your project, the folder you open in Claude Code, Cursor, GitHub Copilot or Codex.`,
-    `2. Tell your tool: "${INSTALL_PROMPT}" Say yes when it asks to add the files.`,
-    `3. Start a new chat and try: "${TRY_PROMPT}" Ask for them by name; tools often skip skills unless you do.`,
+    `2. Tell your tool: "${INSTALL_PROMPT}" Say yes when it asks to add the files, and one line in your project notes so it remembers to use them.`,
+    `3. Start a new chat and try: "${TRY_PROMPT}" If a skill is skipped, ask for it by name.`,
     '',
     'Using the Claude app instead? It needs a different zip. Get it at https://www.aiuxdesign.guide (choose "Claude app").',
     '',
@@ -65,7 +65,13 @@ function startHere(patterns: Pattern[], auditCount: number): string {
     `Copy every folder inside "${SKILLS_FOLDER}" to the project root, keeping the folder names:`,
     '- Claude Code: .claude/skills/',
     '- Cursor, GitHub Copilot or Codex: .agents/skills/',
-    'Each skill must end up as <that folder>/<skill name>/SKILL.md. Create the folder if it is missing. Do not change the files or run anything in them. If a skill with the same name already exists, ask before replacing it. Then say how many skills you installed and where, and that a new chat is needed to load them.',
+    'Each skill must end up as <that folder>/<skill name>/SKILL.md. Create the folder if it is missing. Do not change the files or run anything in them. If a skill with the same name already exists, ask before replacing it.',
+    '',
+    "Then ask the person before adding this one line to the project's notes file at the project root (CLAUDE.md for Claude Code, AGENTS.md for the others). Create the file if it is missing, keep everything already in it, and skip it if the line is already there:",
+    '',
+    NOTES_LINE,
+    '',
+    'Finally, say how many skills you installed and where, whether you added the line, and that a new chat is needed to load them.',
     '',
   );
 
@@ -132,7 +138,11 @@ export function composeSkillInstaller(patterns: Pattern[], audits: SavedAudit[])
     '',
     'The paths are relative, so work from the root of the repo these skills are for. If this file was opened outside a project, install the skills to ~/.claude/skills/ instead (user-level, available in every repo) and say where you put them.',
     '',
-    'Nothing else in this file needs running. Once the files exist, each skill triggers on its own when the work matches what it covers.',
+    "Then ask me before adding this one line to the project's notes file (CLAUDE.md), keeping everything already in it:",
+    '',
+    `> ${NOTES_LINE}`,
+    '',
+    'Nothing else in this file needs running. A new chat is needed to load the skills.',
     '',
     '---',
     '',
