@@ -9428,7 +9428,7 @@ Audience: Early-stage VCs in the design-tools space.`,
               {
                 number: 1,
                 title: 'Choose Folder (.zip) on your dashboard',
-                content: 'Downloads aiux-skill-pack.zip. Open it and you get a folder with START HERE and one skill per saved pattern.',
+                content: 'Downloads aiux-skills.zip. Open it and you get a folder with START HERE and one skill per saved pattern.',
                 icon: 'download',
               },
               {
@@ -9449,7 +9449,7 @@ Audience: Early-stage VCs in the design-tools space.`,
             type: 'code',
             language: 'text',
             label: 'Tell Claude Code',
-            code: 'Read START HERE in aiux-skill-pack and install the skills.',
+            code: 'Read START HERE in aiux-skills and install the skills.',
           },
           {
             type: 'heading',

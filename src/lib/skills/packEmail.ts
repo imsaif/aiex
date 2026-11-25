@@ -14,8 +14,8 @@ const SITE = 'https://www.aiuxdesign.guide';
 const link = (path: string, text: string) =>
   `<a href="${SITE}${path}" style="color:${NAVY};font-weight:600;text-decoration:underline;">${text}</a>`;
 
-const stepHtml = ({ text, say, then }: PackStep) =>
-  [text, say && `<strong>&ldquo;${say}&rdquo;</strong>`, then].filter(Boolean).join(' ');
+const stepHtml = ({ text, say, expect, then }: PackStep) =>
+  [text, say && `<strong>&ldquo;${say}&rdquo;</strong>`, expect, then].filter(Boolean).join(' ');
 
 function stepsTable(steps: PackStep[]): string {
   const rows = steps

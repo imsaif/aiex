@@ -83,7 +83,7 @@ function TargetChooser({
               />
               {/* peer-* is a sibling combinator, so it styles this span but
                   cannot reach the icon nested inside it: that reads state. */}
-              <span className="flex items-center gap-2 px-4 py-2 rounded-pill text-sm font-medium text-text-secondary transition-colors peer-checked:bg-surface-primary peer-checked:text-text-primary peer-checked:shadow-card peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
+              <span className="flex items-center gap-2 px-4 py-2 rounded-pill border-2 border-transparent text-sm font-medium text-text-secondary transition-colors peer-checked:border-accent-primary peer-checked:bg-surface-primary peer-checked:font-semibold peer-checked:text-text-primary peer-focus-visible:ring-2 peer-focus-visible:ring-accent-primary peer-focus-visible:ring-offset-2">
                 <Icon
                   className={`w-4 h-4 shrink-0 ${
                     value === target ? 'text-accent-primary' : 'text-text-secondary'
@@ -107,6 +107,8 @@ function TargetChooser({
  * What the skills teach, as three examples. These describe the skills, not a
  * promised result: in the November 2026 tests Claude often asked first without
  * them, and no result offered undo, which an earlier card promised.
+ *
+ * Drawn buttons stay grey so the form's own button is the only solid one.
  */
 const mini = 'inline-block rounded-input px-2.5 py-1 text-sm font-medium';
 
@@ -134,7 +136,7 @@ const SKILL_CARDS = [
         </span>
         <span className="flex gap-tight">
           <span className={`${mini} border border-border-primary bg-surface-primary text-text-primary`}>Cancel</span>
-          <span className={`${mini} bg-accent-primary text-text-on-accent`}>Send</span>
+          <span className={`${mini} bg-border-primary text-text-primary`}>Send</span>
         </span>
       </>
     ),
@@ -149,7 +151,7 @@ const SKILL_CARDS = [
           <ExclamationTriangleIcon className="mt-0.5 h-4 w-4 shrink-0 text-status-error" />
           Not sent: address not found
         </span>
-        <span className={`${mini} bg-accent-primary text-text-on-accent`}>Edit address</span>
+        <span className={`${mini} bg-border-primary text-text-primary`}>Edit address</span>
       </>
     ),
   },

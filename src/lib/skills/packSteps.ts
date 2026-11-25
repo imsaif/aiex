@@ -11,11 +11,18 @@ import { PATTERN_COUNT } from '@/data/pattern-count';
 export const PACK_TARGETS = ['code', 'claude', 'unsure'] as const;
 export type PackTarget = (typeof PACK_TARGETS)[number];
 
-/** The folder a Mac or Windows unzip produces from aiux-skill-pack.zip. */
-export const PACK_FOLDER = 'aiux-skill-pack';
+/**
+ * One name whichever choice they make: the zip, the folder it unzips to, and
+ * the skill inside the Claude app zip. The contents differ by choice, so every
+ * page says how to tell which zip you have.
+ */
+export const PACK_FOLDER = 'aiux-skills';
+
+/** What the Claude Code zip has at the top, and the Claude app zip does not. */
+export const INSTALL_FILE = 'START HERE';
 
 /** What to say to a coding tool. Shown in the email, the pack and the site. */
-export const INSTALL_PROMPT = `Read START HERE in ${PACK_FOLDER} and install the skills.`;
+export const INSTALL_PROMPT = `Read ${INSTALL_FILE} in ${PACK_FOLDER} and install the skills.`;
 
 /**
  * The line an install adds to the project's notes. Without it Claude Code opened
@@ -37,23 +44,35 @@ export const FIX_PROMPT = 'Fix the most important one.';
 export const SCREEN_REVIEW_PROMPT =
   "Use the aiux skills to review this screen. What's missing, and why?";
 export const CHANGE_PROMPT = 'Show me how to change this.';
-export const MORE_PROMPTS = [
-  'Use the aiux skills to compare these two versions.',
-  CHANGE_PROMPT,
-  'Write a brief for my developer.',
+export const MORE = [
+  { title: 'Compare two versions', say: 'Use the aiux skills to compare these two versions.' },
+  { title: 'See how to change it', say: CHANGE_PROMPT },
+  { title: 'Hand it over', say: 'Write a brief for my developer.' },
 ];
+export const MORE_PROMPTS = MORE.map((m) => m.say);
 
 const SITE = 'https://www.aiuxdesign.guide';
 
+export interface PackHelp {
+  question: string;
+  answer: string;
+  /** Link text to reopen the dialog for the right zip. */
+  getZip?: string;
+}
+
 export interface PackStep {
+  /** Heading on the full page. */
+  title: string;
   /** The instruction. Plain text, so every surface can render it. */
   text: string;
   /** Words to type to the tool, exactly. */
   say?: string;
-  /** What happens next, or what to check. */
+  /** What they will see. The full page draws this instead of saying it. */
+  expect?: string;
+  /** What to do or check afterwards. */
   then?: string;
   /** Extra help, on the full page only. */
-  more?: string;
+  help?: PackHelp[];
 }
 
 export interface PackGuide {
@@ -76,29 +95,50 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
     target: 'code',
     slug: 'claude-code',
     label: 'Claude Code',
-    hint: 'Works inside your project. The steps come next.',
+    hint: 'Works inside your project.',
     doneTitle: `Your ${PATTERN_COUNT} skills are downloading`,
     doneIntro: 'Four steps. We are emailing you a copy too.',
     pageTitle: 'Use your skills in Claude Code',
     pageIntro: 'Set them up once, then try them on something you are already working on.',
     steps: [
       {
-        text: `Open the zip and put the ${PACK_FOLDER} folder in your project.`,
-        then: 'Inside it you should see START HERE and a skills folder.',
-        more: `Your project is the folder you open in Claude Code. If you have none, make an empty folder and open that. If the folder is called "${PACK_FOLDER} (1)", rename it to ${PACK_FOLDER}.`,
+        title: 'Add the folder to your project',
+        text: `Open the zip and put the ${PACK_FOLDER} folder in your project, the folder you open in Claude Code.`,
+        help: [
+          { question: 'No project?', answer: 'Make an empty folder and open that in Claude Code.' },
+          {
+            question: `Don't see ${INSTALL_FILE}?`,
+            answer: 'If you see SKILL.md, you have the Claude app zip.',
+            getZip: 'Get the Claude Code one',
+          },
+          {
+            question: `Is the folder called "${PACK_FOLDER} (1)" or "${PACK_FOLDER} 2"?`,
+            answer: `You have downloaded it before. Rename this one to ${PACK_FOLDER}, so the next step finds it.`,
+          },
+        ],
       },
       {
+        title: 'Install the skills',
         text: 'In Claude Code, say:',
         say: INSTALL_PROMPT,
-        then: 'It asks before it adds the files, and before it adds one line to your project notes so it remembers to use them. Say yes.',
+        expect: 'It asks before it adds the files, and before it adds one line to your project notes. Say yes to both.',
+        then: 'Then start a new chat, so the skills load.',
       },
       {
-        text: 'Start a new chat, so the skills load. Then say:',
+        title: 'Ask for a design review',
+        text: 'In the new chat, say:',
         say: DESIGN_REVIEW_PROMPT,
-        then: 'It opens several aiux skills, then lists what it found and what to fix first. It can get things wrong, so check what it says.',
-        more: `No project to review yet? Drag in a screenshot of any AI screen and say: "${SCREEN_REVIEW_PROMPT}"`,
+        expect: 'It opens several aiux skills, then lists what it found and what to fix first.',
+        then: 'It can get things wrong, so check what it says.',
+        help: [
+          {
+            question: 'Only have a screenshot?',
+            answer: `Drag it in and say: "${SCREEN_REVIEW_PROMPT}"`,
+          },
+        ],
       },
       {
+        title: 'Fix the most important one',
         text: 'Then say:',
         say: FIX_PROMPT,
         then: 'Check the change before you keep it.',
@@ -116,19 +156,29 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
     pageIntro: 'Upload the zip once, then try it on a screenshot.',
     steps: [
       {
-        text: 'In Claude, open Customize, then Skills.',
-        more: 'Keep the zip closed. You upload it as it is.',
+        title: 'Open Skills in Claude',
+        text: 'On the web or desktop, open Customize, then Skills.',
       },
       {
-        text: 'Press +, then Create skill, then Upload a skill, and choose the zip.',
-        then: 'If Claude asks you to turn on code execution, turn it on. Skills need it.',
+        title: 'Upload the zip',
+        text: `Press +, then Create skill, then Upload a skill, and choose ${PACK_FOLDER}.zip. Keep it closed.`,
+        expect: 'If Claude asks you to turn on code execution, turn it on. Skills need it.',
+        help: [
+          {
+            question: 'Does Claude refuse the zip?',
+            answer: `If you open it and see ${INSTALL_FILE}, you have the Claude Code zip.`,
+            getZip: 'Get the Claude app one',
+          },
+        ],
       },
       {
+        title: 'Ask what is missing',
         text: 'Start a new chat, add a screenshot of any AI screen and say:',
         say: SCREEN_REVIEW_PROMPT,
         then: 'It can get things wrong, so check what it says.',
       },
       {
+        title: 'Ask how to change it',
         text: 'Then say:',
         say: CHANGE_PROMPT,
       },
@@ -144,9 +194,9 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
     pageTitle: 'See what the skills do first',
     pageIntro: 'Read one example, then choose how you want to use them.',
     steps: [
-      { text: 'Read one example: a screen, what the skills found and what changed.' },
-      { text: 'If you use Claude, upload the zip when you are ready. The Claude app page shows how.' },
-      { text: `Or read all ${PATTERN_COUNT} patterns on the site, with nothing to install.` },
+      { title: 'See an example', text: 'Read one example: a screen, what the skills found and what changed.' },
+      { title: 'Set them up later', text: 'If you use Claude, upload the zip when you are ready. The Claude app page shows how.' },
+      { title: 'Just read', text: `Or read all ${PATTERN_COUNT} patterns on the site, with nothing to install.` },
     ],
   },
 };

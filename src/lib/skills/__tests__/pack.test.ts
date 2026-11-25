@@ -1,10 +1,11 @@
 import patterns from '@/data/patterns';
-import { composeSkillInstaller, composeSkillPack, SKILLS_FOLDER, START_FILE } from '../composePack';
-import { composeSingleSkillZipEntries, SINGLE_SKILL_NAME } from '../composeSingleSkill';
+import { composeSkillInstaller, composeSkillPack, skillPackFilename, SKILLS_FOLDER, START_FILE } from '../composePack';
+import { composeSingleSkillZipEntries, singleSkillFilename, SINGLE_SKILL_NAME } from '../composeSingleSkill';
 import { renderPackEmail } from '../packEmail';
 import {
   DESIGN_REVIEW_PROMPT,
   FIX_PROMPT,
+  INSTALL_FILE,
   INSTALL_PROMPT,
   NOTES_LINE,
   PACK_FOLDER,
@@ -51,6 +52,28 @@ describe('coding tool pack', () => {
       const folder = p.split('/')[1];
       expect(files[p]).toMatch(new RegExp(`^name: "?${folder}"?$`, 'm'));
     }
+  });
+});
+
+describe('one name for every choice', () => {
+  it('names both zips, the folder and the Claude app skill aiux-skills', () => {
+    expect(PACK_FOLDER).toBe('aiux-skills');
+    expect(SINGLE_SKILL_NAME).toBe(PACK_FOLDER);
+    expect(skillPackFilename()).toBe('aiux-skills.zip');
+    expect(singleSkillFilename()).toBe('aiux-skills.zip');
+  });
+
+  it('can tell the two zips apart by what the pages say to look for', () => {
+    const code = Object.keys(composeSkillPack(patterns, []));
+    const app = Object.keys(composeSingleSkillZipEntries(patterns));
+    expect(code).toContain(START_FILE);
+    expect(START_FILE).toContain(INSTALL_FILE);
+    expect(code).not.toContain('SKILL.md');
+    expect(app.some((p) => p.includes(INSTALL_FILE))).toBe(false);
+    expect(app).toContain('aiux-skills/SKILL.md');
+    const help = JSON.stringify([PACK_GUIDES.code.steps, PACK_GUIDES.claude.steps]);
+    expect(help).toContain('you have the Claude app zip');
+    expect(help).toContain('you have the Claude Code zip');
   });
 });
 
