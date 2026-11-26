@@ -37,23 +37,20 @@ export function SkillFormatMarks() {
         Uses the open skills format, read by Claude Code, the Claude app, Cursor, GitHub Copilot and Codex.
       </span>
       <span aria-hidden="true">Uses the open skills format, read by</span>
-      <span aria-hidden="true" className="inline-flex items-center gap-tight rounded-pill border border-band-border px-snug py-1 font-semibold text-text-on-band">
-        <span className="relative h-4 w-4 shrink-0">
+      <span aria-hidden="true" className="relative h-5 w-5 shrink-0">
           {TOOLS.map((tool, i) => (
             <Image
               key={tool.name}
               src={tool.logo}
               alt=""
-              width={16}
-              height={16}
+              width={20}
+              height={20}
               // Flat marks, turned white for the navy band.
-              className={`absolute inset-0 h-4 w-4 brightness-0 invert transition-opacity duration-500 ${
+              className={`absolute inset-0 h-5 w-5 brightness-0 invert transition-opacity duration-500 ${
                 i === index ? 'opacity-100' : 'opacity-0'
               }`}
             />
           ))}
-        </span>
-        <span className="min-w-[7.5rem]">{TOOLS[index].name}</span>
       </span>
     </p>
   );
