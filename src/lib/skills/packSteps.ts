@@ -135,7 +135,7 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
         help: [
           {
             question: 'Installed aiux skills before?',
-            answer: 'It tells you if an older copy is installed for all your projects. Say yes when it offers to remove it, so the new one is used.',
+            answer: 'It tells you if an older copy is installed for all your projects and offers to remove it. Say yes: if you keep it, Claude Code may use the old copy instead of the new one.',
           },
         ],
       },

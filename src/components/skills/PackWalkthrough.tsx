@@ -9,7 +9,7 @@ import {
   type PackStep,
   type PackTarget,
 } from '@/lib/skills/packSteps';
-import { FindingsFigure, FixFigure, FolderFigure, InstallFigure, UploadFigure, ZipFigure } from './PackFigures';
+import { FindingsFigure, FixFigure, FolderFigure, SHOTS, ShotFigure } from './PackFigures';
 import { SayLine } from './SayLine';
 
 const linkClass =
@@ -23,14 +23,27 @@ const FIX_FIGURE = <FixFigure title="What changed in that app" note={DRAWN} />;
 
 /** One picture per step, in step order. */
 const FIGURES: Record<Exclude<PackTarget, 'unsure'>, ReactNode[]> = {
-  code: [<FolderFigure key="1" />, <InstallFigure key="2" />, REVIEW_FIGURE, FIX_FIGURE],
+  code: [
+    <FolderFigure key="1" />,
+    <ShotFigure
+      key="2"
+      shots={[SHOTS.notesQuestion, SHOTS.installed]}
+      caption="Our test: it asked about the notes line, then confirmed all 38 were in."
+    />,
+    REVIEW_FIGURE,
+    FIX_FIGURE,
+  ],
   claude: [
-    <ZipFigure key="1" />,
-    <UploadFigure key="2" />,
-    <FindingsFigure
+    <ShotFigure key="1" shots={[SHOTS.plugins]} caption="The Plugins page. Add is at the top right." />,
+    <ShotFigure
+      key="2"
+      shots={[SHOTS.addMenu, SHOTS.added]}
+      caption="Upload plugin is first in the Add menu. Once uploaded, the plugin page says Added."
+    />,
+    <ShotFigure
       key="3"
-      title="The kind of thing it points out"
-      note="From a test on a small email app, shortened. Yours will differ."
+      shots={[SHOTS.ask, SHOTS.answer]}
+      caption="Our test: a screenshot of a chat window, then the start of its answer. Yours will differ."
     />,
     <FixFigure
       key="4"
