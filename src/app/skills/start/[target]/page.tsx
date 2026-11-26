@@ -107,7 +107,7 @@ export default async function SkillPackStartPage({ params }: Props) {
                   {MORE.map(({ title, say }) => (
                     <div key={title} className="space-y-tight">
                       <h3 className="text-base font-semibold text-text-primary">{title}</h3>
-                      <SayLine text={say} />
+                      <SayLine text={say} track={{ where: 'walkthrough_more', target: guide.target }} />
                     </div>
                   ))}
                 </div>

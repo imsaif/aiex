@@ -202,9 +202,12 @@ function DoneSteps({
   target,
   source,
   footer,
+  where = 'dialog',
 }: {
   target: PackTarget;
   source: NewsletterSource;
+  /** Which screen this sits on, so Copy presses can be told apart. */
+  where?: 'dialog' | 'pattern_page';
   footer?: React.ReactNode;
 }) {
   const guide = PACK_GUIDES[target];
@@ -246,7 +249,7 @@ function DoneSteps({
             </p>
           </>
         ) : (
-          <PackSteps steps={guide.steps} />
+          <PackSteps steps={guide.steps} track={{ where, target }} />
         )}
       </div>
 
@@ -494,7 +497,10 @@ export function SkillPackGate({
               footer={
                 <button
                   type="button"
-                  onClick={() => onDone?.()}
+                  onClick={() => {
+                    trackAuditEvent('skills_gate_audit_chosen', { source, target: chosen ?? 'unsure' });
+                    onDone?.();
+                  }}
                   className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5 -mx-1"
                 >
                   {AUDIT_LINK_AFTER}
@@ -707,7 +713,7 @@ export function SkillPackGate({
 
         {success ? (
           <div className="mt-8 overflow-hidden rounded-card border border-border-primary bg-surface-primary">
-            <DoneSteps target={chosen ?? 'unsure'} source={source} />
+            <DoneSteps target={chosen ?? 'unsure'} source={source} where="pattern_page" />
           </div>
         ) : (
           <>
