@@ -34,7 +34,7 @@ export function PackBand({
       <div
         aria-hidden="true"
         className={`pointer-events-none absolute hidden sm:block bg-[url('/images/newsletter/cta-grid.png')] bg-contain bg-no-repeat ${
-          large ? '-bottom-8 -right-16 h-72 w-[27rem]' : '-right-24 top-12 h-48 w-72 opacity-70'
+          large ? '-bottom-28 -right-44 h-72 w-[27rem] opacity-50' : '-right-24 top-12 h-48 w-72 opacity-70'
         }`}
       />
       <div className="relative flex items-center justify-between gap-snug border-b border-band-border pb-snug">
