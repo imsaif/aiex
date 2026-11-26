@@ -87,7 +87,63 @@ function linkifyPatterns(
 // pattern names in the plain parts. Unpaired asterisks are left as written.
 const BOLD_RE = /\*\*(.+?)\*\*/g;
 
+// Lesson copy also writes links as [label](/path). Nothing turned those into
+// links either: 14 of them in the Conversational UI course rendered as raw
+// brackets on the live site (found 2026-11-26). Split them out first, then
+// let the bold and pattern-name handling run on the text between them.
+const LINK_RE = /\[([^\]]+)\]\(((?:\/|https?:\/\/)[^)\s]+)\)/g;
+const lessonLinkClass =
+  'text-accent-primary underline underline-offset-4 hover:text-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input';
+
 function renderInline(
+  text: string,
+  keyPrefix: string,
+  linked?: Set<string>
+): React.ReactNode {
+  if (typeof text !== 'string' || !text.includes('](')) {
+    return renderBoldAndPatterns(text, keyPrefix, linked);
+  }
+  const parts: React.ReactNode[] = [];
+  let lastIdx = 0;
+  let n = 0;
+  let match: RegExpExecArray | null;
+  LINK_RE.lastIndex = 0;
+  while ((match = LINK_RE.exec(text)) !== null) {
+    const [whole, label, href] = match;
+    if (match.index > lastIdx) {
+      parts.push(
+        <React.Fragment key={`${keyPrefix}-lt-${n++}`}>
+          {renderBoldAndPatterns(text.slice(lastIdx, match.index), `${keyPrefix}-lt${n}`, linked)}
+        </React.Fragment>
+      );
+    }
+    // A pattern linked by hand should not be auto-linked again later.
+    const patternSlug = href.match(/^\/patterns\/([a-z0-9-]+)$/)?.[1];
+    if (patternSlug && linked) linked.add(patternSlug);
+    parts.push(
+      href.startsWith('/') ? (
+        <Link key={`${keyPrefix}-l-${n++}`} href={href} prefetch={false} className={lessonLinkClass}>
+          {label}
+        </Link>
+      ) : (
+        <a key={`${keyPrefix}-l-${n++}`} href={href} target="_blank" rel="noopener noreferrer" className={lessonLinkClass}>
+          {label}
+        </a>
+      )
+    );
+    lastIdx = match.index + whole.length;
+  }
+  if (lastIdx < text.length) {
+    parts.push(
+      <React.Fragment key={`${keyPrefix}-lt-${n++}`}>
+        {renderBoldAndPatterns(text.slice(lastIdx), `${keyPrefix}-lt${n}`, linked)}
+      </React.Fragment>
+    );
+  }
+  return <>{parts}</>;
+}
+
+function renderBoldAndPatterns(
   text: string,
   keyPrefix: string,
   linked?: Set<string>
