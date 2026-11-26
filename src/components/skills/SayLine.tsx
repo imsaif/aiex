@@ -25,7 +25,7 @@ export function SayLine({ text, strong = false }: { text: string; strong?: boole
   return (
     <div
       className={`flex items-start justify-between gap-snug rounded-card px-default py-snug ${
-        strong ? 'bg-accent-primary text-text-on-accent' : 'bg-surface-secondary text-text-primary'
+        strong ? 'bg-accent-primary text-text-on-accent' : 'bg-tint-panel text-text-primary'
       }`}
     >
       <p className={`min-w-0 py-0.5 font-medium ${strong ? 'type-body' : 'text-sm'}`}>{text}</p>

@@ -65,11 +65,12 @@ export function FolderFigure() {
 
 export function InstallFigure() {
   const asks = [
-    `To add the ${PATTERN_COUNT} skills`,
-    'To add one line to your project notes, so it remembers to use them',
+    `Copies the ${PATTERN_COUNT} skills into your project`,
+    'Asks before adding one line to your project notes, so it remembers to use them',
+    'Asks before removing any older aiux skills installed for all your projects',
   ];
   return (
-    <Figure title="It asks before it does two things. Say yes to both.">
+    <Figure title="What it does, as seen in our test">
       <ul className="space-y-tight">
         {asks.map((ask) => (
           <li key={ask} className="flex gap-tight text-text-primary">
@@ -95,8 +96,12 @@ export function ZipFigure() {
 
 export function UploadFigure() {
   return (
-    <Figure title="If Claude asks you to turn on code execution">
-      <p className="text-text-primary">Turn it on. Skills need it.</p>
+    <Figure title="You should see">
+      <p className="flex items-center gap-tight rounded-input bg-tint-card px-default py-snug text-text-primary">
+        <CheckIcon className="h-5 w-5 shrink-0" aria-hidden="true" />
+        Aiux skills is added and ready to use.
+      </p>
+      <p className="text-sm text-text-secondary">If Claude asks you to turn on code execution, turn it on. Skills need it.</p>
     </Figure>
   );
 }

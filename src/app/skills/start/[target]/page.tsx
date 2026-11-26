@@ -84,7 +84,10 @@ export default async function SkillPackStartPage({ params }: Props) {
           ) : (
             <>
               <PackWalkthrough target={guide.target} />
-              <Part title="Keep using it" note="If it skips the skills, ask for them by name">
+              <Part
+                title="Keep using it"
+                note={guide.target === 'claude' ? 'Start with /aiux-skills to be sure it uses them' : 'If it skips the skills, ask for them by name'}
+              >
                 <div className="grid gap-loose pt-loose @2xl:grid-cols-3">
                   {MORE.map(({ title, say }) => (
                     <div key={title} className="space-y-tight">

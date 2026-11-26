@@ -87,6 +87,18 @@ body {
   --accent-hover: #1e2a42;
   --accent-subtle: #f5f5f5;
 
+  /* Newsletter band — the navy band, pale tint and white cards of the daily
+   * email (src/lib/newsletter/daily-email.ts), so the skill-pack dialog and the
+   * email a subscriber gets read as one product. The band stays navy in both
+   * themes, like the email's. */
+  --band-surface: #162036;
+  --band-border: #2c3650;
+  --text-on-band: #ffffff;
+  --text-on-band-muted: #cbd5e1;
+  --tint-surface: #eef0f6;
+  --tint-card: #ffffff;
+  --tint-panel: #f3f5f9;
+
   /* Severity heat scale — failure-rate chips on the accessibility checklist.
    * Data-visualization colors (highest failure rate → lowest), theme-independent.
    * Consume via inline `style={{ backgroundColor: 'var(--severity-N)' }}`. */
@@ -285,6 +297,14 @@ body {
     --accent-hover: #e5e5e5;
     --accent-subtle: #171717;
 
+    --band-surface: #1a2338;
+    --band-border: #2c3650;
+    --text-on-band: #ffffff;
+    --text-on-band-muted: #cbd5e1;
+    --tint-surface: #141821;
+    --tint-card: #1c2130;
+    --tint-panel: #242b3c;
+
     /* Shadow overrides — deeper + cooler against dark surfaces */
     --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
     --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
@@ -351,6 +371,14 @@ html[data-theme="dark"] {
   --text-on-accent: #162036;
   --accent-hover: #e5e5e5;
   --accent-subtle: #171717;
+
+  --band-surface: #1a2338;
+  --band-border: #2c3650;
+  --text-on-band: #ffffff;
+  --text-on-band-muted: #cbd5e1;
+  --tint-surface: #141821;
+  --tint-card: #1c2130;
+  --tint-panel: #242b3c;
 
   /* Shadow overrides — deeper + cooler against dark surfaces */
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -422,6 +450,18 @@ html[data-theme="light"] {
   --text-on-accent: #ffffff;   /* text sitting on accent-primary */
   --accent-hover: #1e2a42;
   --accent-subtle: #f5f5f5;
+
+  /* Newsletter band — the navy band, pale tint and white cards of the daily
+   * email (src/lib/newsletter/daily-email.ts), so the skill-pack dialog and the
+   * email a subscriber gets read as one product. The band stays navy in both
+   * themes, like the email's. */
+  --band-surface: #162036;
+  --band-border: #2c3650;
+  --text-on-band: #ffffff;
+  --text-on-band-muted: #cbd5e1;
+  --tint-surface: #eef0f6;
+  --tint-card: #ffffff;
+  --tint-panel: #f3f5f9;
 
   --background: var(--background-primary);
   --foreground: var(--text-primary);

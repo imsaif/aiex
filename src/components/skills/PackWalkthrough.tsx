@@ -30,7 +30,7 @@ const FIGURES: Record<Exclude<PackTarget, 'unsure'>, ReactNode[]> = {
     <FindingsFigure
       key="3"
       title="The kind of thing it points out"
-      note="From a test in Claude Code on a small email app, shortened. Yours will differ."
+      note="From a test on a small email app, shortened. Yours will differ."
     />,
     <FixFigure
       key="4"

@@ -3,6 +3,7 @@ import { composeSkillInstaller, composeSkillPack, skillPackFilename, SKILLS_FOLD
 import { composeSingleSkillZipEntries, singleSkillFilename, SINGLE_SKILL_NAME } from '../composeSingleSkill';
 import { renderPackEmail } from '../packEmail';
 import {
+  APP_REVIEW_PROMPT,
   DESIGN_REVIEW_PROMPT,
   FIX_PROMPT,
   INSTALL_FILE,
@@ -97,7 +98,8 @@ describe('renderPackEmail', () => {
 
   it('gives coding tools the install sentence and the app the upload path', () => {
     expect(renderPackEmail('code').html).toContain(INSTALL_PROMPT);
-    expect(renderPackEmail('claude').html).toContain('Upload a skill');
+    expect(renderPackEmail('claude').html).toContain('Upload plugin');
+    expect(renderPackEmail('claude').html).not.toContain('Customize');
   });
 
   it('gives someone unsure a way in without installing anything', () => {
@@ -117,7 +119,8 @@ describe('what to do after downloading', () => {
 
   it('gives the Claude app, which has no project, a screenshot review', () => {
     const said = PACK_GUIDES.claude.steps.map((s) => s.say);
-    expect(said).toContain(SCREEN_REVIEW_PROMPT);
+    expect(said).toContain(APP_REVIEW_PROMPT);
+    expect(APP_REVIEW_PROMPT.startsWith('/aiux-skills ')).toBe(true);
     expect(said).not.toContain(DESIGN_REVIEW_PROMPT);
   });
 
@@ -137,5 +140,12 @@ describe('what to do after downloading', () => {
     const text = JSON.stringify(PACK_GUIDES) + PACK_TARGETS.map((t) => renderPackEmail(t).html).join(' ');
     expect(text).not.toContain('\u2014');
     expect(text).not.toMatch(/coding tool/i);
+  });
+});
+
+describe('the Claude app skill', () => {
+  it('has a description with no long dash', () => {
+    const md = composeSingleSkillZipEntries(patterns)['aiux-skills/SKILL.md'];
+    expect(md).not.toContain('\u2014');
   });
 });

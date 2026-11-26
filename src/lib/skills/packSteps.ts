@@ -44,6 +44,12 @@ export const FIX_PROMPT = 'Fix the most important one.';
 export const SCREEN_REVIEW_PROMPT =
   "Use the aiux skills to review this screen. What's missing, and why?";
 export const CHANGE_PROMPT = 'Show me how to change this.';
+
+/**
+ * In the Claude app the uploaded skill can be called by name. Tested 26 Nov
+ * 2026: it read 9 pattern files before answering.
+ */
+export const APP_REVIEW_PROMPT = `/${PACK_FOLDER} review this screen. What's missing, and why?`;
 export const MORE = [
   { title: 'Compare two versions', say: 'Use the aiux skills to compare these two versions.' },
   { title: 'See how to change it', say: CHANGE_PROMPT },
@@ -121,12 +127,18 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
         title: 'Install the skills',
         text: 'In Claude Code, say:',
         say: INSTALL_PROMPT,
-        expect: 'It asks before it adds the files, and before it adds one line to your project notes. Say yes to both.',
-        then: 'Then start a new chat, so the skills load.',
+        expect: 'It asks before it adds one line to your project notes, so it remembers to use them. Say yes.',
+        then: 'It may also ask before adding the files. When it is done, you can delete the aiux-skills folder.',
+        help: [
+          {
+            question: 'Installed aiux skills before?',
+            answer: 'It tells you if an older copy is installed for all your projects. Say yes when it offers to remove it, so the new one is used.',
+          },
+        ],
       },
       {
         title: 'Ask for a design review',
-        text: 'In the new chat, say:',
+        text: 'Start a new chat, so the notes line is read. Then say:',
         say: DESIGN_REVIEW_PROMPT,
         expect: 'It opens several aiux skills, then lists what it found and what to fix first.',
         then: 'It can get things wrong, so check what it says.',
@@ -156,13 +168,13 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
     pageIntro: 'Upload the zip once, then try it on a screenshot.',
     steps: [
       {
-        title: 'Open Skills in Claude',
-        text: 'On the web or desktop, open Customize, then Skills.',
+        title: 'Open Plugins in Claude',
+        text: 'On the web or desktop, open Plugins in the sidebar.',
       },
       {
         title: 'Upload the zip',
-        text: `Press +, then Create skill, then Upload a skill, and choose ${PACK_FOLDER}.zip. Keep it closed.`,
-        expect: 'If Claude asks you to turn on code execution, turn it on. Skills need it.',
+        text: `Press Add, then Upload plugin, choose ${PACK_FOLDER}.zip and press Upload. Keep the zip closed.`,
+        expect: 'You should see "Aiux skills is added and ready to use."',
         help: [
           {
             question: 'Does Claude refuse the zip?',
@@ -173,8 +185,8 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
       },
       {
         title: 'Ask what is missing',
-        text: 'Start a new chat, add a screenshot of any AI screen and say:',
-        say: SCREEN_REVIEW_PROMPT,
+        text: `Start a new chat and add a screenshot of any AI screen. Typing /${PACK_FOLDER} first makes sure it uses the skills:`,
+        say: APP_REVIEW_PROMPT,
         then: 'It can get things wrong, so check what it says.',
       },
       {
