@@ -51,8 +51,9 @@ const TARGET_ICONS: Record<PackTarget, typeof CommandLineIcon> = {
 const CHOOSE_ERROR = 'Choose where you will use them, or pick Not sure yet.';
 
 /**
- * Where the skills will be used. Nothing is selected to start with: a preset
- * answer sent Claude Code instructions to people who never chose Claude Code.
+ * Where the skills will be used. Starts on Not sure yet (see the state in
+ * SkillPackGate): a Claude Code preset once sent Claude Code instructions to
+ * people who never chose it.
  *
  * One control, not three more cards. A segmented control reads as a single
  * choice, and only the chosen option's hint is on screen.
@@ -169,7 +170,9 @@ function CloseButton({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       aria-label="Close"
-      className="-mr-1.5 p-1.5 rounded-input text-text-on-band-muted hover:text-text-on-band focus:outline-none focus-visible:ring-2 focus-visible:ring-text-on-band transition-colors"
+      // Top right of the whole dialog. Phones stack the band on top, so there it
+      // sits on navy; side by side it sits on the white form column.
+      className="absolute right-4 top-4 z-dropdown p-1.5 rounded-input text-text-on-band-muted hover:text-text-on-band md:text-text-secondary md:hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
     >
       <XMarkIcon className="w-5 h-5" aria-hidden="true" />
     </button>
@@ -210,7 +213,7 @@ function DoneSteps({
       <PackBand title={guide.doneTitle} intro={guide.doneIntro} headingRef={headingRef} action={action} className="md:pb-roomy">
         {link}
       </PackBand>
-      <div className="bg-tint-surface p-default sm:p-loose md:p-roomy">
+      <div className="bg-tint-surface p-default sm:p-loose md:p-roomy md:pt-16">
         <div className="rounded-card bg-tint-card p-loose">
           <PackSteps steps={guide.steps} />
         </div>
@@ -265,9 +268,10 @@ export function SkillPackGate({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  // Which package to build; null until they choose. See composeSingleSkill.ts for
-  // why one library needs two packages.
-  const [chosen, setChosen] = useState<PackTarget | null>(null);
+  // Which package to build. Starts on Not sure yet: it is right whatever tool
+  // someone uses (an example first, then a choice). A Claude Code default once
+  // sent Claude Code steps to people who never chose it.
+  const [chosen, setChosen] = useState<PackTarget | null>('unsure');
   const shown = useRef(false);
   // Attached to whichever variant's root element renders, so the impression
   // event can wait for that element to be on screen.
@@ -428,11 +432,11 @@ export function SkillPackGate({
     // onDone, so nobody ever saw it and the download raced the route change.
     if (success) {
       return (
-        <div>
+        <div className="relative">
+          {onDismiss && <CloseButton onClick={onDismiss} />}
           <DoneSteps
             target={chosen ?? 'unsure'}
             source={source}
-            action={onDismiss && <CloseButton onClick={onDismiss} />}
             footer={
               <div className="mt-default text-right">
                 <button
@@ -450,12 +454,12 @@ export function SkillPackGate({
     }
 
     return (
-      <div ref={rootRef as React.RefObject<HTMLDivElement>}>
+      <div ref={rootRef as React.RefObject<HTMLDivElement>} className="relative">
+        {onDismiss && <CloseButton onClick={onDismiss} />}
         <div className="grid md:grid-cols-2">
         <PackBand
           title="Help your AI tool design better AI products"
           intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. Each one teaches it an AI UX pattern, like these:`}
-          action={onDismiss && <CloseButton onClick={onDismiss} />}
         >
           <ul className="space-y-snug">
             {SKILL_CARDS.map(({ title, body, pattern, picture }) => (
@@ -481,7 +485,7 @@ export function SkillPackGate({
         </PackBand>
 
         <div className="flex flex-col p-loose md:p-roomy md:pt-12">
-        <p className="mb-roomy text-xl font-semibold text-text-primary">Get all {PATTERN_COUNT} skills, free</p>
+        <p className="mb-roomy text-xl font-semibold text-text-primary">Get the skills, free</p>
         <div>
           <TargetChooser
             value={chosen}
@@ -493,7 +497,7 @@ export function SkillPackGate({
           />
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-loose flex flex-col gap-snug">
+        <form onSubmit={handleSubmit} className="mt-loose flex max-w-sm flex-col gap-snug">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -515,7 +519,7 @@ export function SkillPackGate({
             className="shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent-primary text-text-on-accent text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 disabled:opacity-60 transition-all"
           >
             <ArrowDownTrayIcon className="w-4 h-4" aria-hidden="true" />
-            {isLoading ? 'Sending…' : `Send all ${PATTERN_COUNT} skills`}
+            {isLoading ? 'Sending…' : 'Send me the skills'}
           </button>
         </form>
 
@@ -525,7 +529,7 @@ export function SkillPackGate({
           </p>
         )}
 
-        <p id="skill-pack-terms" className="mt-3 text-sm text-text-secondary">
+        <p id="skill-pack-terms" className="mt-3 max-w-sm text-sm text-text-secondary">
           Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
         </p>
 

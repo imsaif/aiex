@@ -1,6 +1,5 @@
 import type { ReactNode, Ref } from 'react';
 import Image from 'next/image';
-import { PATTERN_COUNT } from '@/data/pattern-count';
 
 /**
  * The daily email's navy band (src/lib/newsletter/daily-email.ts): aiux mark,
@@ -39,9 +38,6 @@ export function PackBand({
           aiux <span className="font-normal text-text-on-band-muted">skills</span>
         </p>
         <div className="flex items-center gap-snug">
-          <p className="hidden sm:block font-mono text-sm tracking-wide text-text-on-band-muted">
-            {PATTERN_COUNT} patterns · free
-          </p>
           {action}
         </div>
       </div>
