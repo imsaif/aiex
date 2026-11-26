@@ -189,7 +189,7 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
       },
       {
         title: 'Ask what is missing',
-        text: `Start a new chat and add a screenshot of any AI screen. Typing /${PACK_FOLDER} first makes sure it uses the skills:`,
+        text: `Press Try in chat on the plugin page. It opens a new chat with /${PACK_FOLDER} already typed, which makes sure it uses the skills. Add a screenshot of any AI screen and replace Claude's sample text with:`,
         say: APP_REVIEW_PROMPT,
         then: 'It can get things wrong, so check what it says.',
       },
