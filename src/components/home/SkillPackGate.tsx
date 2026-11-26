@@ -17,6 +17,7 @@ import type { NewsletterSource } from '@/types/newsletter';
 import { PACK_GUIDES, PACK_GUIDE_LIST, guidePath, type PackTarget } from '@/lib/skills/packSteps';
 import { PackSteps } from '@/components/skills/PackSteps';
 import { PackBand } from '@/components/skills/PackBand';
+import { SkillFormatMarks } from '@/components/skills/SkillFormatMarks';
 
 /**
  * Homepage-only email gate for the full pattern skill pack.
@@ -461,7 +462,9 @@ export function SkillPackGate({
           large
           title="Help your AI tool design better AI products"
           intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. It learns the patterns behind AI features people can trust, and checks your designs against them.`}
-        />
+        >
+          <SkillFormatMarks />
+        </PackBand>
 
         <div className="flex flex-col">
         <div className="bg-tint-surface p-loose md:px-roomy md:pt-roomy">
