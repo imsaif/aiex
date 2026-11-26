@@ -9,6 +9,7 @@ import {
   SwatchIcon,
   QuestionMarkCircleIcon,
   XMarkIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
@@ -16,7 +17,6 @@ import type { NewsletterSource } from '@/types/newsletter';
 import { PACK_GUIDES, PACK_GUIDE_LIST, guidePath, type PackTarget } from '@/lib/skills/packSteps';
 import { PackSteps } from '@/components/skills/PackSteps';
 import { PackBand } from '@/components/skills/PackBand';
-import Image from 'next/image';
 
 /**
  * Homepage-only email gate for the full pattern skill pack.
@@ -113,10 +113,52 @@ function TargetChooser({
  * email's PATTERN pill, so the dialog reads like the newsletter it signs people
  * up to.
  */
+const mini = 'inline-block rounded-input px-2.5 py-1 text-sm font-medium text-text-primary';
+
+// Drawn buttons stay grey so the form's own button is the only solid one.
 const SKILL_CARDS = [
-  { title: 'Show the source', body: 'So people can check the answer.', pattern: 'Explainable AI', slug: 'explainable-ai' },
-  { title: 'Ask first', body: 'Before it sends or deletes.', pattern: 'Human-in-the-Loop', slug: 'human-in-the-loop' },
-  { title: 'Help when it fails', body: 'Say what failed and what to do next.', pattern: 'Error Recovery', slug: 'error-recovery' },
+  {
+    title: 'Show the source',
+    body: 'So people can check the answer.',
+    pattern: 'Explainable AI',
+    picture: (
+      <>
+        <span className="h-2 w-full rounded-pill bg-border-primary" />
+        <span className="h-2 w-2/3 rounded-pill bg-border-primary" />
+        <span className="text-sm font-medium text-text-primary underline underline-offset-4">From Priya, Tuesday</span>
+      </>
+    ),
+  },
+  {
+    title: 'Ask first',
+    body: 'Before it sends or deletes.',
+    pattern: 'Human-in-the-Loop',
+    picture: (
+      <>
+        <span className="w-full truncate rounded-input border border-border-primary bg-tint-card px-2.5 py-1 text-sm text-text-primary">
+          Hi Priya, thanks for your time
+        </span>
+        <span className="flex gap-tight">
+          <span className={`${mini} border border-border-primary bg-tint-card`}>Cancel</span>
+          <span className={`${mini} bg-border-primary`}>Send</span>
+        </span>
+      </>
+    ),
+  },
+  {
+    title: 'Help when it fails',
+    body: 'Say what failed and what to do next.',
+    pattern: 'Error Recovery',
+    picture: (
+      <>
+        <span className="flex items-start gap-1.5 text-sm font-medium text-text-primary">
+          <ExclamationTriangleIcon className="mt-0.5 h-4 w-4 shrink-0 text-status-error" aria-hidden="true" />
+          Not sent: address not found
+        </span>
+        <span className={`${mini} bg-border-primary`}>Edit address</span>
+      </>
+    ),
+  },
 ];
 
 function PatternPill({ name }: { name: string }) {
@@ -385,7 +427,7 @@ export function SkillPackGate({
     // onDone, so nobody ever saw it and the download raced the route change.
     if (success) {
       return (
-        <div className="-m-loose">
+        <div>
           <DoneSteps
             target={chosen ?? 'unsure'}
             source={source}
@@ -405,7 +447,7 @@ export function SkillPackGate({
     }
 
     return (
-      <div ref={rootRef as React.RefObject<HTMLDivElement>} className="-m-loose">
+      <div ref={rootRef as React.RefObject<HTMLDivElement>}>
         <PackBand
           title="Help your AI tool design better AI products"
           intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. Each one teaches it an AI UX pattern.`}
@@ -415,23 +457,22 @@ export function SkillPackGate({
         <div className="bg-tint-surface p-default sm:p-loose">
           <p className="mb-snug type-eyebrow font-semibold uppercase text-text-secondary">What the skills teach</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-snug">
-            {SKILL_CARDS.map(({ title, body, pattern, slug }) => (
-              <div key={title} className="flex flex-col items-start rounded-card bg-tint-card p-default">
-                {/* The email's band art, cropped to the icon: the PNG is mostly grid. */}
-                <span aria-hidden="true" className="hidden sm:block mb-snug h-12 w-12 overflow-hidden rounded-input">
-                  <Image
-                    src={`/images/newsletter/band/${slug}.png`}
-                    alt=""
-                    width={96}
-                    height={96}
-                    className="-m-6 h-24 w-24 max-w-none"
-                  />
-                </span>
-                <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
-                <p className="mt-1 mb-snug text-sm text-text-secondary leading-relaxed">{body}</p>
-                <span className="mt-auto">
-                  <PatternPill name={pattern} />
-                </span>
+            {SKILL_CARDS.map(({ title, body, pattern, picture }) => (
+              <div key={title} className="flex flex-col overflow-hidden rounded-card bg-tint-card">
+                {/* Dropped on phones, where three stacked pictures push the form away. */}
+                <div
+                  aria-hidden="true"
+                  className="hidden sm:flex min-h-28 flex-col items-start justify-center gap-tight border-b border-border-primary bg-tint-panel p-default"
+                >
+                  {picture}
+                </div>
+                <div className="flex flex-1 flex-col items-start p-default">
+                  <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
+                  <p className="mt-1 mb-snug text-sm text-text-secondary leading-relaxed">{body}</p>
+                  <span className="mt-auto">
+                    <PatternPill name={pattern} />
+                  </span>
+                </div>
               </div>
             ))}
           </div>
