@@ -48,7 +48,7 @@ const SHOT_DIR = '/images/skills/walkthrough/';
 
 export const SHOTS = {
   plugins: { src: `${SHOT_DIR}app-1-plugins.png`, width: 1360, height: 220, alt: 'The Plugins page in Claude, with an Add button at the top right' },
-  addMenu: { src: `${SHOT_DIR}app-2-add-menu.png`, width: 1360, height: 420, alt: 'The Add menu open, with Upload plugin at the top' },
+  addMenu: { src: `${SHOT_DIR}app-2-add-menu.png`, width: 1360, height: 250, alt: 'The Add menu open, with Upload plugin at the top' },
   added: { src: `${SHOT_DIR}app-2-added.png`, width: 1360, height: 660, alt: 'The Aiux skills plugin page showing Added' },
   ask: { src: `${SHOT_DIR}app-3-ask.png`, width: 925, height: 350, alt: 'A Claude chat with a screenshot attached and the review prompt typed' },
   answer: { src: `${SHOT_DIR}app-3-findings.png`, width: 520, height: 300, alt: "The start of Claude's answer, listing ranked gaps with the patterns behind each" },

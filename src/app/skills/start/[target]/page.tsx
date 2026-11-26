@@ -63,6 +63,12 @@ export default async function SkillPackStartPage({ params }: Props) {
             </Link>
             <h1 className="type-h1 text-balance text-text-primary">{guide.pageTitle}</h1>
             <p className="type-body mt-snug text-text-secondary">{guide.pageIntro}</p>
+            <p className="mt-tight text-sm text-text-secondary">
+              Part of the course{' '}
+              <Link href="/guides/ai-ux-skills-guide" prefetch={false} className={linkClass}>
+                Using AI UX Skills
+              </Link>
+            </p>
             <nav
               aria-label="Where you will use the skills"
               className="mt-roomy flex flex-wrap gap-x-loose border-b border-border-primary"
