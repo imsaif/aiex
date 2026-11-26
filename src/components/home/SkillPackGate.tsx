@@ -484,7 +484,9 @@ export function SkillPackGate({
           </ul>
         </PackBand>
 
-        <div className="flex flex-col p-loose md:p-roomy md:pt-12">
+        <div className="flex flex-col p-loose md:p-roomy">
+        {/* Centred between the top and the skip link, so the form sits mid-column. */}
+        <div className="md:my-auto">
         <p className="mb-roomy text-xl font-semibold text-text-primary">Get the skills, free</p>
         <div>
           <TargetChooser
@@ -536,7 +538,8 @@ export function SkillPackGate({
         {/* The no-email path, stated rather than implied. Someone who does not
             want to hand over an address should be able to see that they do not
             have to, without having to guess that the dialog is dismissible. */}
-        <div className="mt-auto pt-loose text-center">
+        </div>
+        <div className="mt-loose pt-default text-center">
           <button
             type="button"
             onClick={() => {
