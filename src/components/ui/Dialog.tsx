@@ -5,7 +5,7 @@ import { useScrollLock } from '@/hooks/useScrollLock';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 
-export type DialogSize = 'sm' | 'md' | 'lg';
+export type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export interface DialogProps {
   open: boolean;
@@ -34,6 +34,7 @@ const SIZE_CLASSES: Record<DialogSize, string> = {
   sm: 'max-w-md',
   md: 'max-w-lg',
   lg: 'max-w-2xl',
+  xl: 'max-w-5xl',
 };
 
 /**

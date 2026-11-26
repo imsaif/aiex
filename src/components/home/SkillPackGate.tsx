@@ -69,7 +69,7 @@ function TargetChooser({
   return (
     <fieldset aria-describedby={invalid ? 'skill-pack-error' : undefined}>
       <legend className="mb-2.5 text-sm text-text-secondary">Where will you use them?</legend>
-      <div className="inline-flex flex-wrap max-w-full p-1 rounded-card sm:rounded-pill border border-border-primary bg-surface-secondary">
+      <div className="inline-flex flex-wrap lg:flex-nowrap max-w-full p-1 rounded-card lg:rounded-pill border border-border-primary bg-surface-secondary">
         {PACK_GUIDE_LIST.map(({ target, label }) => {
           const Icon = TARGET_ICONS[target];
           return (
@@ -113,7 +113,9 @@ function TargetChooser({
  * email's PATTERN pill, so the dialog reads like the newsletter it signs people
  * up to.
  */
-const mini = 'inline-block rounded-input px-2.5 py-1 text-sm font-medium text-text-primary';
+// Outlined on white so each reads as a button against the grey panel, while the
+// form's own button stays the only solid one.
+const mini = 'inline-block rounded-input border border-border-secondary bg-tint-card px-2.5 py-1 text-sm font-medium text-text-primary';
 
 // Drawn buttons stay grey so the form's own button is the only solid one.
 const SKILL_CARDS = [
@@ -135,12 +137,12 @@ const SKILL_CARDS = [
     pattern: 'Human-in-the-Loop',
     picture: (
       <>
-        <span className="w-full truncate rounded-input border border-border-primary bg-tint-card px-2.5 py-1 text-sm text-text-primary">
+        <span className="w-full truncate rounded-input border border-border-secondary bg-tint-card px-2.5 py-1 text-sm text-text-primary">
           Hi Priya, thanks for your time
         </span>
         <span className="flex gap-tight">
-          <span className={`${mini} border border-border-primary bg-tint-card`}>Cancel</span>
-          <span className={`${mini} bg-border-primary`}>Send</span>
+          <span className={mini}>Cancel</span>
+          <span className={`${mini} font-semibold`}>Send</span>
         </span>
       </>
     ),
@@ -155,20 +157,11 @@ const SKILL_CARDS = [
           <ExclamationTriangleIcon className="mt-0.5 h-4 w-4 shrink-0 text-status-error" aria-hidden="true" />
           Not sent: address not found
         </span>
-        <span className={`${mini} bg-border-primary`}>Edit address</span>
+        <span className={`${mini} font-semibold`}>Edit address</span>
       </>
     ),
   },
 ];
-
-function PatternPill({ name }: { name: string }) {
-  return (
-    <span className="inline-flex flex-col rounded-input border border-border-primary px-2.5 py-1">
-      <span className="text-[0.625rem] font-bold tracking-widest text-text-secondary">PATTERN</span>
-      <span className="text-sm font-semibold text-text-primary">{name}</span>
-    </span>
-  );
-}
 
 function CloseButton({ onClick }: { onClick: () => void }) {
   return (
@@ -188,10 +181,12 @@ function DoneSteps({
   target,
   source,
   action,
+  footer,
 }: {
   target: PackTarget;
   source: NewsletterSource;
   action?: React.ReactNode;
+  footer?: React.ReactNode;
 }) {
   const guide = PACK_GUIDES[target];
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -199,21 +194,27 @@ function DoneSteps({
   // The form they were in has gone, so put focus on what replaced it.
   useEffect(() => headingRef.current?.focus(), []);
 
+  const link = (
+    <Link
+      href={guidePath(target)}
+      prefetch={false}
+      onClick={() => trackAuditEvent('skills_walkthrough_opened', { source, target })}
+      className="inline-flex items-center justify-center px-6 py-3 rounded-pill bg-text-on-band text-band-surface text-sm font-semibold hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-text-on-band focus-visible:ring-offset-2 focus-visible:ring-offset-band-surface transition-opacity"
+    >
+      {target === 'unsure' ? 'See the example' : 'See an example and the full steps'}
+    </Link>
+  );
+
   return (
-    <div className="text-left motion-safe:animate-[fadeIn_180ms_ease-out]">
-      <PackBand title={guide.doneTitle} intro={guide.doneIntro} headingRef={headingRef} action={action} />
-      <div className="bg-tint-surface p-default sm:p-loose">
+    <div className="grid text-left motion-safe:animate-[fadeIn_180ms_ease-out] md:grid-cols-2">
+      <PackBand title={guide.doneTitle} intro={guide.doneIntro} headingRef={headingRef} action={action} className="md:pb-roomy">
+        {link}
+      </PackBand>
+      <div className="bg-tint-surface p-default sm:p-loose md:p-roomy">
         <div className="rounded-card bg-tint-card p-loose">
           <PackSteps steps={guide.steps} />
         </div>
-        <Link
-          href={guidePath(target)}
-          prefetch={false}
-          onClick={() => trackAuditEvent('skills_walkthrough_opened', { source, target })}
-          className="mt-loose inline-flex items-center justify-center px-6 py-3 rounded-pill bg-accent-primary text-text-on-accent text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 transition-all"
-        >
-          {target === 'unsure' ? 'See the example' : 'See an example and the full steps'}
-        </Link>
+        {footer}
       </div>
     </div>
   );
@@ -432,53 +433,55 @@ export function SkillPackGate({
             target={chosen ?? 'unsure'}
             source={source}
             action={onDismiss && <CloseButton onClick={onDismiss} />}
+            footer={
+              <div className="mt-default text-right">
+                <button
+                  type="button"
+                  onClick={() => onDone?.()}
+                  className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
+                >
+                  Go to the audit
+                </button>
+              </div>
+            }
           />
-          <div className="border-t border-border-primary px-loose py-default text-center">
-            <button
-              type="button"
-              onClick={() => onDone?.()}
-              className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
-            >
-              Go to the audit
-            </button>
-          </div>
         </div>
       );
     }
 
     return (
       <div ref={rootRef as React.RefObject<HTMLDivElement>}>
+        <div className="grid md:grid-cols-2">
         <PackBand
           title="Help your AI tool design better AI products"
-          intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. Each one teaches it an AI UX pattern.`}
+          intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. Each one teaches it an AI UX pattern, like these:`}
           action={onDismiss && <CloseButton onClick={onDismiss} />}
-        />
-
-        <div className="bg-tint-surface p-default sm:p-loose">
-          <p className="mb-snug type-eyebrow font-semibold uppercase text-text-secondary">What the skills teach</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-snug">
+        >
+          <ul className="space-y-snug">
             {SKILL_CARDS.map(({ title, body, pattern, picture }) => (
-              <div key={title} className="flex flex-col overflow-hidden rounded-card bg-tint-card">
-                {/* Dropped on phones, where three stacked pictures push the form away. */}
+              <li key={title} className="flex overflow-hidden rounded-card bg-tint-card">
+                {/* Dropped on phones, where three pictures push the form away. */}
                 <div
                   aria-hidden="true"
-                  className="hidden sm:flex min-h-28 flex-col items-start justify-center gap-tight border-b border-border-primary bg-tint-panel p-default"
+                  className="hidden sm:flex w-40 shrink-0 flex-col items-start justify-center gap-1.5 bg-tint-panel p-snug [&_*]:text-xs"
                 >
                   {picture}
                 </div>
-                <div className="flex flex-1 flex-col items-start p-default">
+                <div className="min-w-0 flex-1 p-default">
                   <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
-                  <p className="mt-1 mb-snug text-sm text-text-secondary leading-relaxed">{body}</p>
-                  <span className="mt-auto">
-                    <PatternPill name={pattern} />
-                  </span>
+                  <p className="text-sm text-text-secondary leading-snug">{body}</p>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    <span className="text-[0.625rem] font-bold tracking-widest">PATTERN</span>{' '}
+                    <span className="font-semibold text-text-primary">{pattern}</span>
+                  </p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </PackBand>
 
-        <div className="p-loose">
+        <div className="flex flex-col p-loose md:p-roomy md:pt-12">
+        <p className="mb-roomy text-xl font-semibold text-text-primary">Get all {PATTERN_COUNT} skills, free</p>
         <div>
           <TargetChooser
             value={chosen}
@@ -490,7 +493,7 @@ export function SkillPackGate({
           />
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
+        <form onSubmit={handleSubmit} className="mt-loose flex flex-col gap-snug">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -529,7 +532,7 @@ export function SkillPackGate({
         {/* The no-email path, stated rather than implied. Someone who does not
             want to hand over an address should be able to see that they do not
             have to, without having to guess that the dialog is dismissible. */}
-        <div className="mt-loose pt-default border-t border-border-primary text-center">
+        <div className="mt-auto pt-loose text-center">
           <button
             type="button"
             onClick={() => {
@@ -540,6 +543,7 @@ export function SkillPackGate({
           >
             No thanks, take me to the audit
           </button>
+        </div>
         </div>
         </div>
       </div>
