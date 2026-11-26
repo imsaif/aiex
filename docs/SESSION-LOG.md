@@ -36,6 +36,12 @@
 ## Recent Sessions
 
 _This section tracks the last 10 work sessions across all machines. It's automatically updated by the /save command._
+### Session 2026-11-25/26 (MacBook)
+- **Pattern:** Skill pack: live install tests, dialog redesign, walkthrough pages, course lesson, tracking
+- **Status:** Merged — PRs #182 to #185 on `master`, each verified live, main checkout updated, worktrees removed
+- **Tests Added/Modified:** `src/lib/skills/__tests__/pack.test.ts`, `src/components/ui/__tests__/LessonRendererLinks.test.tsx`, `src/components/skills/__tests__/SayLineTracking.test.tsx` (all force-added)
+- **Notes:** Tested the pack live (email, Claude app upload, fresh Claude Code install) and fixed what it found (#183): Claude app route is Plugins > Add > Upload plugin (not Customize), Try in chat pre-types `/aiux-skills` plus Claude's own sample line, START HERE now asks about older personal copies. Redesigned the dialog with the newsletter navy band (form and after-Send), rebuilt `/skills/start/*` around cropped real screenshots, rewrote Using AI UX Skills lesson 4 around the one zip. #184 made the lesson renderer turn `[label](/path)` into links (14 were raw text on prod in the Conversational UI course). #185 added `skills_say_copied` (where/target/step) and `skills_gate_audit_chosen`.
+- **The finding worth remembering:** a kept older personal copy in `~/.claude/skills` can win over the new project copy in Claude Code. Try in chat's pre-typed line cannot be set by the plugin (no manifest/frontmatter field; `argument-hint` tested, ignored). The weekly QA run failed Nov 16 and 23 (Playwright vs ubuntu 26.04), fixed by the Nov 25 pin. Open: 4 session-id tests in `src/lib/audit/__tests__/analytics.test.ts` fail on master; phone header icons lack accessible names; `/audit` has no h1.
 ### Session 2026-10-14 (MacBook)
 - **Pattern:** Newsletter on Resend + admin Growth dashboard + Vercel usage
 - **Status:** Merged — PRs #142 to #152 on `master`, deploys verified live, main checkout updated, worktrees removed
