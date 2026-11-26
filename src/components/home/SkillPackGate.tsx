@@ -6,7 +6,7 @@ import {
   CheckIcon,
   ArrowDownTrayIcon,
   CommandLineIcon,
-  SwatchIcon,
+  ChatBubbleOvalLeftIcon,
   QuestionMarkCircleIcon,
   XMarkIcon,
   ExclamationTriangleIcon,
@@ -44,7 +44,7 @@ const BENEFITS = [
 
 const TARGET_ICONS: Record<PackTarget, typeof CommandLineIcon> = {
   code: CommandLineIcon,
-  claude: SwatchIcon,
+  claude: ChatBubbleOvalLeftIcon,
   unsure: QuestionMarkCircleIcon,
 };
 
