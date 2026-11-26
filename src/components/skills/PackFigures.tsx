@@ -29,7 +29,7 @@ const drawnButton = 'inline-block rounded-input px-3 py-1.5 text-sm font-medium 
 
 function Figure({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <figure className="space-y-default rounded-card bg-surface-secondary p-loose">
+    <figure className="space-y-default rounded-card bg-tint-surface p-loose">
       <figcaption className="text-sm font-semibold text-text-primary">{title}</figcaption>
       {children}
     </figure>

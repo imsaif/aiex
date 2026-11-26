@@ -69,7 +69,7 @@ function Row({ number, figure, children }: { number?: number; figure: ReactNode;
     <div className="grid items-start gap-loose border-b border-border-primary py-10 last:border-b-0 last:pb-0 @3xl:grid-cols-2 @3xl:gap-12">
       <div className="flex gap-default">
         {number && (
-          <span aria-hidden="true" className="type-h3 w-5 shrink-0 text-text-secondary">
+          <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-secondary text-sm font-semibold text-text-primary">
             {number}
           </span>
         )}

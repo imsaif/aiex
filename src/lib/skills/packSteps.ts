@@ -91,6 +91,8 @@ export interface PackGuide {
   /** Dialog heading once the download has started. */
   doneTitle: string;
   doneIntro: string;
+  /** Label above the steps once the download has started. */
+  stepsLabel: string;
   pageTitle: string;
   pageIntro: string;
   steps: PackStep[];
@@ -103,7 +105,8 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
     label: 'Claude Code',
     hint: 'Works inside your project.',
     doneTitle: 'Your skills are downloading',
-    doneIntro: 'Four steps. We are emailing you a copy too.',
+    doneIntro: `Look for ${PACK_FOLDER}.zip. We emailed you a copy too.`,
+    stepsLabel: 'Four steps in Claude Code',
     pageTitle: 'Use your skills in Claude Code',
     pageIntro: 'Set them up once, then try them on something you are already working on.',
     steps: [
@@ -162,8 +165,9 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
     slug: 'claude-app',
     label: 'Claude app',
     hint: 'One upload in Claude, on the web or desktop.',
-    doneTitle: 'Your skills are downloading, as one file',
-    doneIntro: 'Four steps. Keep the zip closed. We are emailing you a copy too.',
+    doneTitle: 'Your skills are downloading',
+    doneIntro: `Look for ${PACK_FOLDER}.zip and keep it closed. We emailed you a copy too.`,
+    stepsLabel: 'Four steps in the Claude app',
     pageTitle: 'Use your skills in the Claude app',
     pageIntro: 'Upload the zip once, then try it on a screenshot.',
     steps: [
@@ -201,8 +205,9 @@ export const PACK_GUIDES: Record<PackTarget, PackGuide> = {
     slug: 'not-sure',
     label: 'Not sure yet',
     hint: 'See an example first. You can set them up later.',
-    doneTitle: 'Start with an example',
-    doneIntro: 'Your skills are downloading, but you do not need them yet.',
+    doneTitle: 'Your skills are downloading',
+    doneIntro: "You don't need them yet. Start with what they found on a real app.",
+    stepsLabel: 'What the skills found on a small email app',
     pageTitle: 'See what the skills do first',
     pageIntro: 'Read one example, then choose how you want to use them.',
     steps: [

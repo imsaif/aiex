@@ -7,6 +7,7 @@ import {
   ArrowDownTrayIcon,
   CommandLineIcon,
   ChatBubbleOvalLeftIcon,
+  CheckCircleIcon,
   QuestionMarkCircleIcon,
   XMarkIcon,
   ExclamationTriangleIcon,
@@ -48,6 +49,11 @@ const TARGET_ICONS: Record<PackTarget, typeof CommandLineIcon> = {
   claude: ChatBubbleOvalLeftIcon,
   unsure: QuestionMarkCircleIcon,
 };
+
+// The audit is the free screenshot check on this site. Say so: "the audit"
+// meant nothing to someone who had not seen it.
+const AUDIT_LINK_SKIP = 'No thanks, audit a screenshot here instead';
+const AUDIT_LINK_AFTER = 'Or audit a screenshot here, nothing to install';
 
 const CHOOSE_ERROR = 'Choose where you will use them, or pick Not sure yet.';
 
@@ -180,16 +186,25 @@ function CloseButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-/** The steps for whatever they chose, once the download has started. */
+/** The three findings from the real review, shown to people who chose Not sure yet. */
+const EXAMPLE_FINDINGS = [
+  { quote: 'One click does both the writing and the sending.', pattern: 'Human-in-the-Loop' },
+  { quote: 'Failures are invisible \u2026 the user may believe the email went out.', pattern: 'Error Recovery' },
+  { quote: 'It has no link back to the source messages.', pattern: 'Confidence and trust' },
+];
+
+/**
+ * What replaces the form once the download has started: a confirmation strip,
+ * then that choice's steps, then the way to the full walkthrough. The navy band
+ * beside it stays put, so the dialog does not jump.
+ */
 function DoneSteps({
   target,
   source,
-  action,
   footer,
 }: {
   target: PackTarget;
   source: NewsletterSource;
-  action?: React.ReactNode;
   footer?: React.ReactNode;
 }) {
   const guide = PACK_GUIDES[target];
@@ -198,26 +213,52 @@ function DoneSteps({
   // The form they were in has gone, so put focus on what replaced it.
   useEffect(() => headingRef.current?.focus(), []);
 
-  const link = (
-    <Link
-      href={guidePath(target)}
-      prefetch={false}
-      onClick={() => trackAuditEvent('skills_walkthrough_opened', { source, target })}
-      className="inline-flex items-center justify-center px-6 py-3 rounded-pill bg-text-on-band text-band-surface text-sm font-semibold hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-text-on-band focus-visible:ring-offset-2 focus-visible:ring-offset-band-surface transition-opacity"
-    >
-      {target === 'unsure' ? 'See the example' : 'See an example and the full steps'}
-    </Link>
-  );
-
   return (
-    <div className="grid text-left motion-safe:animate-[fadeIn_180ms_ease-out] md:grid-cols-2">
-      <PackBand title={guide.doneTitle} intro={guide.doneIntro} headingRef={headingRef} action={action} className="md:pb-roomy">
-        {link}
-      </PackBand>
-      <div className="bg-tint-surface p-default sm:p-loose md:p-roomy md:pt-16">
-        <div className="rounded-card bg-tint-card p-loose">
-          <PackSteps steps={guide.steps} />
+    <div className="flex h-full flex-col text-left motion-safe:animate-[fadeIn_180ms_ease-out]">
+      <div className="flex items-start gap-snug bg-tint-surface px-loose pb-loose pt-roomy md:px-roomy">
+        <CheckCircleIcon className="h-9 w-9 shrink-0 text-text-primary" aria-hidden="true" />
+        <div className="min-w-0 pr-8">
+          <h2
+            ref={headingRef}
+            tabIndex={-1}
+            className="scroll-mt-8 text-xl font-semibold leading-tight text-text-primary focus:outline-none"
+          >
+            {guide.doneTitle}
+          </h2>
+          <p className="mt-1 text-sm text-text-secondary">{guide.doneIntro}</p>
         </div>
+      </div>
+
+      <div className="flex-1 px-loose pt-loose md:px-roomy">
+        <p className="mb-snug type-eyebrow font-semibold uppercase text-text-secondary">{guide.stepsLabel}</p>
+        {target === 'unsure' ? (
+          <>
+            <ul className="space-y-tight" aria-label={guide.stepsLabel}>
+              {EXAMPLE_FINDINGS.map((f) => (
+                <li key={f.pattern} className="rounded-card border border-border-primary bg-tint-card p-default shadow-card">
+                  <p className="text-sm font-semibold text-text-primary">&ldquo;{f.quote}&rdquo;</p>
+                  <p className="text-sm text-text-secondary">{f.pattern}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-snug text-sm text-text-secondary">
+              Asked to fix the first, it added a draft preview with Send and Cancel.
+            </p>
+          </>
+        ) : (
+          <PackSteps steps={guide.steps} />
+        )}
+      </div>
+
+      <div className="flex flex-col items-start gap-snug px-loose pb-loose pt-loose md:px-roomy">
+        <Link
+          href={guidePath(target)}
+          prefetch={false}
+          onClick={() => trackAuditEvent('skills_walkthrough_opened', { source, target })}
+          className="inline-flex items-center justify-center px-6 py-3 rounded-pill bg-accent-primary text-text-on-accent text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 transition-colors"
+        >
+          {target === 'unsure' ? 'See the whole example' : 'See an example and the full steps'}
+        </Link>
         {footer}
       </div>
     </div>
@@ -428,6 +469,16 @@ export function SkillPackGate({
   // would cost the one qualification step the site has. Skipping is tracked, so
   // the skip rate is itself the finding.
   if (variant === 'interstitial') {
+    const band = (
+        <PackBand
+        large
+        title="Help your AI tool design better AI products"
+        intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. It learns the patterns behind AI features people can trust, and checks your designs against them.`}
+      >
+        <SkillFormatMarks />
+      </PackBand>
+    );
+
     // Confirm before continuing rather than navigating on the same tick the
     // download starts. The previous version set this state and immediately called
     // onDone, so nobody ever saw it and the download raced the route change.
@@ -435,21 +486,22 @@ export function SkillPackGate({
       return (
         <div className="relative">
           {onDismiss && <CloseButton onClick={onDismiss} />}
-          <DoneSteps
-            target={chosen ?? 'unsure'}
-            source={source}
-            footer={
-              <div className="mt-default text-right">
+          <div className="grid md:grid-cols-2">
+            {band}
+            <DoneSteps
+              target={chosen ?? 'unsure'}
+              source={source}
+              footer={
                 <button
                   type="button"
                   onClick={() => onDone?.()}
-                  className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
+                  className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5 -mx-1"
                 >
-                  Go to the audit
+                  {AUDIT_LINK_AFTER}
                 </button>
-              </div>
-            }
-          />
+              }
+            />
+          </div>
         </div>
       );
     }
@@ -458,13 +510,7 @@ export function SkillPackGate({
       <div ref={rootRef as React.RefObject<HTMLDivElement>} className="relative">
         {onDismiss && <CloseButton onClick={onDismiss} />}
         <div className="grid md:grid-cols-2">
-        <PackBand
-          large
-          title="Help your AI tool design better AI products"
-          intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. It learns the patterns behind AI features people can trust, and checks your designs against them.`}
-        >
-          <SkillFormatMarks />
-        </PackBand>
+        {band}
 
         <div className="flex flex-col">
         <div className="bg-tint-surface p-loose md:px-roomy md:pt-roomy">
@@ -556,7 +602,7 @@ export function SkillPackGate({
             }}
             className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
           >
-            No thanks, take me to the audit
+            {AUDIT_LINK_SKIP}
           </button>
         </div>
         </div>
@@ -660,7 +706,7 @@ export function SkillPackGate({
         </ul>
 
         {success ? (
-          <div className="mt-8 overflow-hidden rounded-card border border-border-primary">
+          <div className="mt-8 overflow-hidden rounded-card border border-border-primary bg-surface-primary">
             <DoneSteps target={chosen ?? 'unsure'} source={source} />
           </div>
         ) : (

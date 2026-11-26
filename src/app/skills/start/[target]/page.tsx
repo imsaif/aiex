@@ -51,12 +51,18 @@ export default async function SkillPackStartPage({ params }: Props) {
       <Navbar inConsole />
       <LearnShell sidebar={<LearnSidebar active="skills" />}>
         <div className="space-y-16 pb-20 pt-16">
-          <header>
-            <h1 className="type-h1 text-balance text-text-primary">{guide.pageTitle}</h1>
-            <p className="type-body mt-snug text-text-secondary">{guide.pageIntro}</p>
+          {/* The navy band from the dialog and the daily email, so the page someone
+              lands on from either reads as the same product. */}
+          <header className="relative overflow-hidden rounded-card bg-band-surface px-loose pt-roomy md:px-12 md:pt-12">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-16 -right-24 hidden md:block h-72 w-[27rem] bg-[url('/images/newsletter/cta-grid.png')] bg-contain bg-no-repeat opacity-80"
+            />
+            <h1 className="relative type-h1 max-w-2xl text-balance text-text-on-band">{guide.pageTitle}</h1>
+            <p className="relative type-body mt-snug max-w-2xl text-text-on-band-muted">{guide.pageIntro}</p>
             <nav
               aria-label="Where you will use the skills"
-              className="mt-roomy flex flex-wrap gap-x-loose border-b border-border-primary"
+              className="relative mt-roomy flex flex-wrap gap-x-loose border-t border-band-border"
             >
               {PACK_GUIDE_LIST.map((g) => {
                 const current = g.slug === guide.slug;
@@ -66,10 +72,10 @@ export default async function SkillPackStartPage({ params }: Props) {
                     href={guidePath(g.target)}
                     prefetch={false}
                     aria-current={current ? 'page' : undefined}
-                    className={`-mb-px border-b-2 text-base py-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary ${
+                    className={`border-b-2 text-base py-snug transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-text-on-band ${
                       current
-                        ? 'border-accent-primary font-semibold text-text-primary'
-                        : 'border-transparent font-medium text-text-secondary hover:text-text-primary'
+                        ? 'border-text-on-band font-semibold text-text-on-band'
+                        : 'border-transparent font-medium text-text-on-band-muted hover:text-text-on-band'
                     }`}
                   >
                     {g.label}
