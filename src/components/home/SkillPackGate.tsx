@@ -6,16 +6,19 @@ import {
   CheckIcon,
   ArrowDownTrayIcon,
   CommandLineIcon,
-  SwatchIcon,
+  ChatBubbleOvalLeftIcon,
+  CheckCircleIcon,
   QuestionMarkCircleIcon,
-  ExclamationTriangleIcon,
   XMarkIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 import { trackAuditEvent } from '@/lib/audit/analytics';
 import { PATTERN_COUNT } from '@/data/pattern-count';
 import type { NewsletterSource } from '@/types/newsletter';
 import { PACK_GUIDES, PACK_GUIDE_LIST, guidePath, type PackTarget } from '@/lib/skills/packSteps';
 import { PackSteps } from '@/components/skills/PackSteps';
+import { PackBand } from '@/components/skills/PackBand';
+import { SkillFormatMarks } from '@/components/skills/SkillFormatMarks';
 
 /**
  * Homepage-only email gate for the full pattern skill pack.
@@ -43,15 +46,21 @@ const BENEFITS = [
 
 const TARGET_ICONS: Record<PackTarget, typeof CommandLineIcon> = {
   code: CommandLineIcon,
-  claude: SwatchIcon,
+  claude: ChatBubbleOvalLeftIcon,
   unsure: QuestionMarkCircleIcon,
 };
+
+// The audit is the free screenshot check on this site. Say so: "the audit"
+// meant nothing to someone who had not seen it.
+const AUDIT_LINK_SKIP = 'No thanks, audit a screenshot here instead';
+const AUDIT_LINK_AFTER = 'Or audit a screenshot here, nothing to install';
 
 const CHOOSE_ERROR = 'Choose where you will use them, or pick Not sure yet.';
 
 /**
- * Where the skills will be used. Nothing is selected to start with: a preset
- * answer sent Claude Code instructions to people who never chose Claude Code.
+ * Where the skills will be used. Starts on Not sure yet (see the state in
+ * SkillPackGate): a Claude Code preset once sent Claude Code instructions to
+ * people who never chose it.
  *
  * One control, not three more cards. A segmented control reads as a single
  * choice, and only the chosen option's hint is on screen.
@@ -68,7 +77,7 @@ function TargetChooser({
   return (
     <fieldset aria-describedby={invalid ? 'skill-pack-error' : undefined}>
       <legend className="mb-2.5 text-sm text-text-secondary">Where will you use them?</legend>
-      <div className="inline-flex flex-wrap max-w-full p-1 rounded-card sm:rounded-pill border border-border-primary bg-surface-secondary">
+      <div className="inline-flex flex-wrap lg:flex-nowrap max-w-full p-1 rounded-card lg:rounded-pill border border-border-primary bg-surface-secondary">
         {PACK_GUIDE_LIST.map(({ target, label }) => {
           const Icon = TARGET_ICONS[target];
           return (
@@ -108,10 +117,15 @@ function TargetChooser({
  * promised result: in the November 2026 tests Claude often asked first without
  * them, and no result offered undo, which an earlier card promised.
  *
- * Drawn buttons stay grey so the form's own button is the only solid one.
+ * Each card carries its pattern's icon from the daily email's band art, and the
+ * email's PATTERN pill, so the dialog reads like the newsletter it signs people
+ * up to.
  */
-const mini = 'inline-block rounded-input px-2.5 py-1 text-sm font-medium';
+// Outlined on white so each reads as a button against the grey panel, while the
+// form's own button stays the only solid one.
+const mini = 'inline-block rounded-input border border-border-secondary bg-tint-card px-2.5 py-1 text-sm font-medium text-text-primary';
 
+// Drawn buttons stay grey so the form's own button is the only solid one.
 const SKILL_CARDS = [
   {
     title: 'Show the source',
@@ -131,12 +145,12 @@ const SKILL_CARDS = [
     pattern: 'Human-in-the-Loop',
     picture: (
       <>
-        <span className="w-full truncate rounded-input border border-border-primary bg-surface-primary px-2.5 py-1 text-sm text-text-primary">
+        <span className="w-full truncate rounded-input border border-border-secondary bg-tint-card px-2.5 py-1 text-sm text-text-primary">
           Hi Priya, thanks for your time
         </span>
         <span className="flex gap-tight">
-          <span className={`${mini} border border-border-primary bg-surface-primary text-text-primary`}>Cancel</span>
-          <span className={`${mini} bg-border-primary text-text-primary`}>Send</span>
+          <span className={mini}>Cancel</span>
+          <span className={`${mini} font-semibold`}>Send</span>
         </span>
       </>
     ),
@@ -148,17 +162,51 @@ const SKILL_CARDS = [
     picture: (
       <>
         <span className="flex items-start gap-1.5 text-sm font-medium text-text-primary">
-          <ExclamationTriangleIcon className="mt-0.5 h-4 w-4 shrink-0 text-status-error" />
+          <ExclamationTriangleIcon className="mt-0.5 h-4 w-4 shrink-0 text-status-error" aria-hidden="true" />
           Not sent: address not found
         </span>
-        <span className={`${mini} bg-border-primary text-text-primary`}>Edit address</span>
+        <span className={`${mini} font-semibold`}>Edit address</span>
       </>
     ),
   },
 ];
 
-/** The steps for whatever they chose, once the download has started. */
-function DoneSteps({ target, source }: { target: PackTarget; source: NewsletterSource }) {
+function CloseButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Close"
+      // Top right of the whole dialog. Phones stack the band on top, so there it
+      // sits on navy; side by side it sits on the white form column.
+      className="absolute right-4 top-4 z-dropdown p-1.5 rounded-input text-text-on-band-muted hover:text-text-on-band md:text-text-secondary md:hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
+    >
+      <XMarkIcon className="w-5 h-5" aria-hidden="true" />
+    </button>
+  );
+}
+
+/** The three findings from the real review, shown to people who chose Not sure yet. */
+const EXAMPLE_FINDINGS = [
+  { quote: 'One click does both the writing and the sending.', pattern: 'Human-in-the-Loop' },
+  { quote: 'Failures are invisible \u2026 the user may believe the email went out.', pattern: 'Error Recovery' },
+  { quote: 'It has no link back to the source messages.', pattern: 'Confidence and trust' },
+];
+
+/**
+ * What replaces the form once the download has started: a confirmation strip,
+ * then that choice's steps, then the way to the full walkthrough. The navy band
+ * beside it stays put, so the dialog does not jump.
+ */
+function DoneSteps({
+  target,
+  source,
+  footer,
+}: {
+  target: PackTarget;
+  source: NewsletterSource;
+  footer?: React.ReactNode;
+}) {
   const guide = PACK_GUIDES[target];
   const headingRef = useRef<HTMLHeadingElement>(null);
 
@@ -166,24 +214,53 @@ function DoneSteps({ target, source }: { target: PackTarget; source: NewsletterS
   useEffect(() => headingRef.current?.focus(), []);
 
   return (
-    <div className="text-left motion-safe:animate-[fadeIn_180ms_ease-out]">
-      <h2
-        ref={headingRef}
-        tabIndex={-1}
-        className="scroll-mt-8 pr-8 text-xl sm:text-2xl font-semibold tracking-tight leading-[1.2] text-text-primary focus:outline-none"
-      >
-        {guide.doneTitle}
-      </h2>
-      <p className="mt-2 mb-6 text-sm text-text-secondary">{guide.doneIntro}</p>
-      <PackSteps steps={guide.steps} />
-      <Link
-        href={guidePath(target)}
-        prefetch={false}
-        onClick={() => trackAuditEvent('skills_walkthrough_opened', { source, target })}
-        className="mt-7 inline-flex items-center justify-center px-6 py-3 rounded-pill bg-accent-primary text-text-on-accent text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 transition-all"
-      >
-        {target === 'unsure' ? 'See the example' : 'See an example and the full steps'}
-      </Link>
+    <div className="flex h-full flex-col text-left motion-safe:animate-[fadeIn_180ms_ease-out]">
+      <div className="flex items-start gap-snug bg-tint-surface px-loose pb-loose pt-roomy md:px-roomy">
+        <CheckCircleIcon className="h-9 w-9 shrink-0 text-text-primary" aria-hidden="true" />
+        <div className="min-w-0 pr-8">
+          <h2
+            ref={headingRef}
+            tabIndex={-1}
+            className="scroll-mt-8 text-xl font-semibold leading-tight text-text-primary focus:outline-none"
+          >
+            {guide.doneTitle}
+          </h2>
+          <p className="mt-1 text-sm text-text-secondary">{guide.doneIntro}</p>
+        </div>
+      </div>
+
+      <div className="flex-1 px-loose pt-loose md:px-roomy">
+        <p className="mb-snug type-eyebrow font-semibold uppercase text-text-secondary">{guide.stepsLabel}</p>
+        {target === 'unsure' ? (
+          <>
+            <ul className="space-y-tight" aria-label={guide.stepsLabel}>
+              {EXAMPLE_FINDINGS.map((f) => (
+                <li key={f.pattern} className="rounded-card border border-border-primary bg-tint-card p-default shadow-card">
+                  <p className="text-sm font-semibold text-text-primary">&ldquo;{f.quote}&rdquo;</p>
+                  <p className="text-sm text-text-secondary">{f.pattern}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-snug text-sm text-text-secondary">
+              Asked to fix the first, it added a draft preview with Send and Cancel.
+            </p>
+          </>
+        ) : (
+          <PackSteps steps={guide.steps} />
+        )}
+      </div>
+
+      <div className="flex flex-col items-start gap-snug px-loose pb-loose pt-loose md:px-roomy">
+        <Link
+          href={guidePath(target)}
+          prefetch={false}
+          onClick={() => trackAuditEvent('skills_walkthrough_opened', { source, target })}
+          className="inline-flex items-center justify-center px-6 py-3 rounded-pill bg-accent-primary text-text-on-accent text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 transition-colors"
+        >
+          {target === 'unsure' ? 'See the whole example' : 'See an example and the full steps'}
+        </Link>
+        {footer}
+      </div>
     </div>
   );
 }
@@ -233,9 +310,10 @@ export function SkillPackGate({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  // Which package to build; null until they choose. See composeSingleSkill.ts for
-  // why one library needs two packages.
-  const [chosen, setChosen] = useState<PackTarget | null>(null);
+  // Which package to build. Starts on Not sure yet: it is right whatever tool
+  // someone uses (an example first, then a choice). A Claude Code default once
+  // sent Claude Code steps to people who never chose it.
+  const [chosen, setChosen] = useState<PackTarget | null>('unsure');
   const shown = useRef(false);
   // Attached to whichever variant's root element renders, so the impression
   // event can wait for that element to be on screen.
@@ -391,81 +469,79 @@ export function SkillPackGate({
   // would cost the one qualification step the site has. Skipping is tracked, so
   // the skip rate is itself the finding.
   if (variant === 'interstitial') {
+    const band = (
+        <PackBand
+        large
+        title="Help your AI tool design better AI products"
+        intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. It learns the patterns behind AI features people can trust, and checks your designs against them.`}
+      >
+        <SkillFormatMarks />
+      </PackBand>
+    );
+
     // Confirm before continuing rather than navigating on the same tick the
     // download starts. The previous version set this state and immediately called
     // onDone, so nobody ever saw it and the download raced the route change.
     if (success) {
       return (
-        <div className="py-1">
-          {onDismiss && (
-            <button
-              type="button"
-              onClick={onDismiss}
-              aria-label="Close"
-              className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
-            >
-              <XMarkIcon className="w-5 h-5" aria-hidden="true" />
-            </button>
-          )}
-          <DoneSteps target={chosen ?? 'unsure'} source={source} />
-          <div className="mt-7 pt-5 border-t border-border-primary text-center">
-            <button
-              type="button"
-              onClick={() => onDone?.()}
-              className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
-            >
-              Start my audit
-            </button>
+        <div className="relative">
+          {onDismiss && <CloseButton onClick={onDismiss} />}
+          <div className="grid md:grid-cols-2">
+            {band}
+            <DoneSteps
+              target={chosen ?? 'unsure'}
+              source={source}
+              footer={
+                <button
+                  type="button"
+                  onClick={() => onDone?.()}
+                  className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5 -mx-1"
+                >
+                  {AUDIT_LINK_AFTER}
+                </button>
+              }
+            />
           </div>
         </div>
       );
     }
 
     return (
-      <div ref={rootRef as React.RefObject<HTMLDivElement>} className="py-1">
-        {onDismiss && (
-          <button
-            type="button"
-            onClick={onDismiss}
-            aria-label="Close"
-            className="absolute top-4 right-4 p-1.5 rounded-input text-text-secondary hover:text-text-primary hover:bg-surface-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-colors"
-          >
-            <XMarkIcon className="w-5 h-5" aria-hidden="true" />
-          </button>
-        )}
-        <h2 className="pr-8 mb-3 text-xl sm:text-2xl font-semibold tracking-tight leading-[1.2] text-text-primary">
-          Help your AI tool design better AI products
-        </h2>
+      <div ref={rootRef as React.RefObject<HTMLDivElement>} className="relative">
+        {onDismiss && <CloseButton onClick={onDismiss} />}
+        <div className="grid md:grid-cols-2">
+        {band}
 
-        <p className="text-sm text-text-secondary">
-          Add {PATTERN_COUNT} skills to the AI tool you already use. Each one teaches it an AI UX pattern, like these:
-        </p>
-
-        <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {SKILL_CARDS.map(({ title, body, pattern, picture }) => (
-            <div
-              key={title}
-              className="flex flex-col overflow-hidden rounded-card border border-border-primary bg-surface-primary"
-            >
-              {/* Dropped on phones, where three stacked pictures push the form away. */}
-              <div
-                aria-hidden="true"
-                className="hidden sm:flex min-h-32 flex-col items-start justify-center gap-tight bg-surface-secondary p-default"
-              >
-                {picture}
-              </div>
-              <div className="flex flex-1 flex-col items-start p-default">
-                <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
-                <p className="mt-1 mb-3 text-sm text-text-secondary leading-relaxed">{body}</p>
-                <span className="mt-auto rounded-pill border border-border-primary bg-surface-secondary px-2.5 py-0.5 text-sm text-text-primary">
-                  {pattern}
-                </span>
-              </div>
-            </div>
-          ))}
+        <div className="flex flex-col">
+        <div className="bg-tint-surface p-loose md:px-roomy md:pt-roomy">
+          <p className="mb-snug type-eyebrow font-semibold uppercase text-text-secondary">Like these</p>
+          <ul className="space-y-tight" aria-label="What the skills teach">
+            {SKILL_CARDS.map(({ title, body, pattern, picture }) => (
+              <li key={title} className="flex overflow-hidden rounded-card border border-border-primary bg-tint-card shadow-card">
+                {/* Dropped on phones, where three pictures push the form away. */}
+                <div
+                  aria-hidden="true"
+                  className="hidden sm:flex w-40 shrink-0 flex-col items-start justify-center gap-1.5 border-r border-border-primary bg-tint-panel p-snug [&_*]:text-xs"
+                >
+                  {picture}
+                </div>
+                <div className="min-w-0 flex-1 p-default">
+                  <h3 className="text-sm font-semibold text-text-primary leading-snug">{title}</h3>
+                  <p className="text-sm text-text-secondary leading-snug">{body}</p>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    Pattern: <span className="font-semibold text-text-primary">{pattern}</span>
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="mt-9">
+        <div className="flex flex-1 flex-col p-loose md:px-roomy">
+        {/* Sized to the three choices, so the email field and button line up
+            with them. The small print wraps inside that width instead. */}
+        <div className="inline-flex max-w-full flex-col self-start">
+        <div>
           <TargetChooser
             value={chosen}
             onChange={(next) => {
@@ -476,7 +552,7 @@ export function SkillPackGate({
           />
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-5 flex flex-col sm:flex-row gap-2">
+        <form onSubmit={handleSubmit} className="mt-default flex flex-col gap-snug">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -498,24 +574,26 @@ export function SkillPackGate({
             className="shrink-0 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-pill bg-accent-primary text-text-on-accent text-sm font-semibold hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 disabled:opacity-60 transition-all"
           >
             <ArrowDownTrayIcon className="w-4 h-4" aria-hidden="true" />
-            {isLoading ? 'Sending…' : `Send all ${PATTERN_COUNT} skills`}
+            {isLoading ? 'Sending…' : 'Send me the skills'}
           </button>
         </form>
 
         {error && (
-          <p id="skill-pack-error" role="alert" className="mt-2 text-sm text-status-error">
+          <p id="skill-pack-error" role="alert" className="mt-2 w-0 min-w-full text-sm text-status-error">
             {error}
           </p>
         )}
 
-        <p id="skill-pack-terms" className="mt-3 text-sm text-text-secondary">
+        <p id="skill-pack-terms" className="mt-3 w-0 min-w-full text-sm text-text-secondary">
           Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
         </p>
+        </div>
 
         {/* The no-email path, stated rather than implied. Someone who does not
             want to hand over an address should be able to see that they do not
             have to, without having to guess that the dialog is dismissible. */}
-        <div className="mt-7 pt-5 border-t border-border-primary text-center">
+        </div>
+        <div className="px-loose pb-loose text-center md:px-roomy">
           <button
             type="button"
             onClick={() => {
@@ -524,8 +602,10 @@ export function SkillPackGate({
             }}
             className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
           >
-            No thanks, start my audit
+            {AUDIT_LINK_SKIP}
           </button>
+        </div>
+        </div>
         </div>
       </div>
     );
@@ -626,7 +706,7 @@ export function SkillPackGate({
         </ul>
 
         {success ? (
-          <div className="mt-8 rounded-card border border-border-primary bg-surface-primary p-loose">
+          <div className="mt-8 overflow-hidden rounded-card border border-border-primary bg-surface-primary">
             <DoneSteps target={chosen ?? 'unsure'} source={source} />
           </div>
         ) : (

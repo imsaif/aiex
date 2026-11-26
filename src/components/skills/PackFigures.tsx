@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { CheckIcon, DocumentIcon, FolderIcon } from '@heroicons/react/24/outline';
-import { PATTERN_COUNT } from '@/data/pattern-count';
+import Image from 'next/image';
+import { DocumentIcon, FolderIcon } from '@heroicons/react/24/outline';
 import { INSTALL_FILE, PACK_FOLDER } from '@/lib/skills/packSteps';
 
 /**
@@ -29,9 +29,51 @@ const drawnButton = 'inline-block rounded-input px-3 py-1.5 text-sm font-medium 
 
 function Figure({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <figure className="space-y-default rounded-card bg-surface-secondary p-loose">
+    <figure className="space-y-default rounded-card bg-tint-surface p-loose">
       <figcaption className="text-sm font-semibold text-text-primary">{title}</figcaption>
       {children}
+    </figure>
+  );
+}
+
+/** One real screenshot from the November 2026 tests, cropped to what matters. */
+export interface Shot {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
+const SHOT_DIR = '/images/skills/walkthrough/';
+
+export const SHOTS = {
+  plugins: { src: `${SHOT_DIR}app-1-plugins.png`, width: 1360, height: 220, alt: 'The Plugins page in Claude, with an Add button at the top right' },
+  addMenu: { src: `${SHOT_DIR}app-2-add-menu.png`, width: 1360, height: 250, alt: 'The Add menu open, with Upload plugin at the top' },
+  added: { src: `${SHOT_DIR}app-2-added.png`, width: 1360, height: 660, alt: 'The Aiux skills plugin page showing Added' },
+  ask: { src: `${SHOT_DIR}app-3-ask.png`, width: 925, height: 350, alt: 'A Claude chat with a screenshot attached and the review prompt typed' },
+  answer: { src: `${SHOT_DIR}app-3-findings.png`, width: 520, height: 300, alt: "The start of Claude's answer, listing ranked gaps with the patterns behind each" },
+  notesQuestion: { src: `${SHOT_DIR}code-2-notes-question.png`, width: 1782, height: 682, alt: 'Claude Code asking whether to add one line to the project notes, with Yes, add it recommended' },
+  installed: { src: `${SHOT_DIR}code-2-summary.png`, width: 1782, height: 160, alt: 'Claude Code saying it installed all 38 skills and created the notes file' },
+} satisfies Record<string, Shot>;
+
+/** Screenshots on the tint, each with a hairline so white screens keep an edge. */
+export function ShotFigure({ shots, caption }: { shots: Shot[]; caption: string }) {
+  return (
+    <figure className="space-y-snug">
+      <div className="space-y-snug rounded-card bg-tint-surface p-snug">
+        {shots.map((shot) => (
+          <Image
+            key={shot.src}
+            src={shot.src}
+            width={shot.width}
+            height={shot.height}
+            alt={shot.alt}
+            sizes="(min-width: 1280px) 560px, (min-width: 768px) 50vw, 100vw"
+            className="h-auto w-full rounded-input border border-border-primary bg-white shadow-card"
+          />
+        ))}
+      </div>
+      <figcaption className="text-sm text-text-secondary">{caption}</figcaption>
     </figure>
   );
 }
@@ -59,44 +101,6 @@ export function FolderFigure() {
           skills
         </li>
       </ul>
-    </Figure>
-  );
-}
-
-export function InstallFigure() {
-  const asks = [
-    `To add the ${PATTERN_COUNT} skills`,
-    'To add one line to your project notes, so it remembers to use them',
-  ];
-  return (
-    <Figure title="It asks before it does two things. Say yes to both.">
-      <ul className="space-y-tight">
-        {asks.map((ask) => (
-          <li key={ask} className="flex gap-tight text-text-primary">
-            <CheckIcon className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
-            {ask}
-          </li>
-        ))}
-      </ul>
-    </Figure>
-  );
-}
-
-export function ZipFigure() {
-  return (
-    <Figure title="The zip to use. Keep it closed.">
-      <p className="flex items-center gap-tight font-semibold text-text-primary">
-        <DocumentIcon className="h-5 w-5 shrink-0 text-text-secondary" aria-hidden="true" />
-        {PACK_FOLDER}.zip
-      </p>
-    </Figure>
-  );
-}
-
-export function UploadFigure() {
-  return (
-    <Figure title="If Claude asks you to turn on code execution">
-      <p className="text-text-primary">Turn it on. Skills need it.</p>
     </Figure>
   );
 }

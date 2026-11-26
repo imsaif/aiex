@@ -55,7 +55,7 @@ function composeRouterMd(patterns: Pattern[]): string {
   const lines: string[] = [
     '---',
     `name: ${SINGLE_SKILL_NAME}`,
-    `description: "Use when designing, reviewing or building any AI-powered interface — chat, agents, suggestions, automation, or AI inside an existing product. Covers ${patterns.length} AI UX patterns: how the interface should show its reasoning, ask before it acts, recover from wrong answers, hand off to a person, and stay understandable. Load a reference file from references/ for the pattern that matches the task."`,
+    `description: "Use when designing, reviewing or building any AI-powered interface: chat, agents, suggestions, automation, or AI inside an existing product. Covers ${patterns.length} AI UX patterns: how the interface should show its reasoning, ask before it acts, recover from wrong answers, hand off to a person, and stay understandable. Load a reference file from references/ for the pattern that matches the task."`,
     '---',
     '',
     '# AI UX patterns',
@@ -66,7 +66,7 @@ function composeRouterMd(patterns: Pattern[]): string {
     '',
     '1. Read the index below and pick the patterns that match what is being designed or built.',
     '2. Open the matching file in `references/` and follow the moves in it.',
-    '3. Apply more than one when they overlap — most AI surfaces need several.',
+    '3. Apply more than one when they overlap. Most AI surfaces need several.',
     '',
     'Do not guess at a pattern from its name alone. The reference files carry the',
     'specifics, including what to avoid, and those are the part worth following.',
@@ -78,7 +78,7 @@ function composeRouterMd(patterns: Pattern[]): string {
   patterns.forEach((pattern) => {
     const why = oneLine(pattern.content?.problem || pattern.description || '');
     const summary = why.length > 160 ? `${why.slice(0, 157).trimEnd()}...` : why;
-    lines.push(`- **${pattern.title}** — \`${referencePath(pattern)}\``);
+    lines.push(`- **${pattern.title}**: \`${referencePath(pattern)}\``);
     if (summary) lines.push(`  ${summary}`);
   });
 

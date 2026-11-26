@@ -5,7 +5,7 @@ import { useScrollLock } from '@/hooks/useScrollLock';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 
-export type DialogSize = 'sm' | 'md' | 'lg';
+export type DialogSize = 'sm' | 'md' | 'lg' | 'xl';
 
 export interface DialogProps {
   open: boolean;
@@ -20,6 +20,12 @@ export interface DialogProps {
   /** Accessible label when `title` isn't visible. */
   ariaLabel?: string;
   children?: ReactNode;
+  /**
+   * Drop the panel's outline and inner padding, for content that runs edge to
+   * edge (the skill-pack dialog's navy band). The outline otherwise shows as a
+   * light rim around a dark band.
+   */
+  bare?: boolean;
   /** Optional element rendered in a footer row (right-aligned). */
   footer?: ReactNode;
 }
@@ -28,6 +34,7 @@ const SIZE_CLASSES: Record<DialogSize, string> = {
   sm: 'max-w-md',
   md: 'max-w-lg',
   lg: 'max-w-2xl',
+  xl: 'max-w-5xl',
 };
 
 /**
@@ -52,6 +59,7 @@ export function Dialog({
   closeOnBackdrop = true,
   closeOnEscape = true,
   ariaLabel,
+  bare = false,
   children,
   footer,
 }: DialogProps) {
@@ -88,7 +96,7 @@ export function Dialog({
         aria-labelledby={title ? titleId : undefined}
         aria-label={!title ? ariaLabel : undefined}
         aria-describedby={description ? descriptionId : undefined}
-        className={`relative z-modal w-full max-h-full overflow-y-auto ${SIZE_CLASSES[size]} rounded-modal bg-surface-primary shadow-modal border border-border-primary animate-scale-in`}
+        className={`relative z-modal w-full max-h-full overflow-y-auto ${SIZE_CLASSES[size]} rounded-modal bg-surface-primary shadow-modal ${bare ? '' : 'border border-border-primary'} animate-scale-in`}
       >
         {(title || description) && (
           <header className="px-loose pt-loose pb-snug space-y-tight">
@@ -110,7 +118,7 @@ export function Dialog({
           </header>
         )}
 
-        <div className={title || description ? 'px-loose pb-loose' : 'p-loose'}>{children}</div>
+        <div className={bare ? '' : title || description ? 'px-loose pb-loose' : 'p-loose'}>{children}</div>
 
         {footer && (
           <footer className="flex items-center justify-end gap-snug px-loose py-default border-t border-border-primary">

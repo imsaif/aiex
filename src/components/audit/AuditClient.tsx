@@ -354,7 +354,8 @@ export default function AuditClient({
         open={showSkillsGate}
         onClose={dismissSkillsGate}
         ariaLabel="Help your AI tool design better AI products"
-        size="lg"
+        size="xl"
+        bare
       >
         <SkillPackGate
           variant="interstitial"

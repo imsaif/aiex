@@ -36,6 +36,18 @@ export default {
           // between themes, so this has to invert with it — call sites were
           // hand-rolling `text-white dark:text-gray-900` instead.
           'on-accent': 'var(--text-on-accent)',
+          'on-band': 'var(--text-on-band)',
+          'on-band-muted': 'var(--text-on-band-muted)',
+        },
+        // The newsletter's band, tint and cards (see globals.css).
+        band: {
+          surface: 'var(--band-surface)',
+          border: 'var(--band-border)',
+        },
+        tint: {
+          surface: 'var(--tint-surface)',
+          card: 'var(--tint-card)',
+          panel: 'var(--tint-panel)',
         },
         // Minimal accent colors for interactive elements
         accent: {

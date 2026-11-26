@@ -76,7 +76,7 @@ export async function runOneAudit(
   // two labels. Escape and backdrop-click are NOT equivalent here — those only
   // dismiss the dialog and leave you on the homepage.
   const skipSkillsGate = page.getByRole('button', {
-    name: /no thanks, start my audit|skip, just start my audit/i,
+    name: /no thanks, audit a screenshot here instead|no thanks, take me to the audit|no thanks, start my audit|skip, just start my audit/i,
   });
   const gateAppeared = await skipSkillsGate
     .waitFor({ state: 'visible', timeout: 5_000 })

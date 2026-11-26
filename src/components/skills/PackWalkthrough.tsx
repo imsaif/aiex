@@ -9,7 +9,7 @@ import {
   type PackStep,
   type PackTarget,
 } from '@/lib/skills/packSteps';
-import { FindingsFigure, FixFigure, FolderFigure, InstallFigure, UploadFigure, ZipFigure } from './PackFigures';
+import { FindingsFigure, FixFigure, FolderFigure, SHOTS, ShotFigure } from './PackFigures';
 import { SayLine } from './SayLine';
 
 const linkClass =
@@ -23,14 +23,27 @@ const FIX_FIGURE = <FixFigure title="What changed in that app" note={DRAWN} />;
 
 /** One picture per step, in step order. */
 const FIGURES: Record<Exclude<PackTarget, 'unsure'>, ReactNode[]> = {
-  code: [<FolderFigure key="1" />, <InstallFigure key="2" />, REVIEW_FIGURE, FIX_FIGURE],
+  code: [
+    <FolderFigure key="1" />,
+    <ShotFigure
+      key="2"
+      shots={[SHOTS.notesQuestion, SHOTS.installed]}
+      caption="Our test: it asked about the notes line, then confirmed all 38 were in."
+    />,
+    REVIEW_FIGURE,
+    FIX_FIGURE,
+  ],
   claude: [
-    <ZipFigure key="1" />,
-    <UploadFigure key="2" />,
-    <FindingsFigure
+    <ShotFigure key="1" shots={[SHOTS.plugins]} caption="The Plugins page. Add is at the top right." />,
+    <ShotFigure
+      key="2"
+      shots={[SHOTS.addMenu, SHOTS.added]}
+      caption="Upload plugin is first in the Add menu. Once uploaded, the plugin page says Added."
+    />,
+    <ShotFigure
       key="3"
-      title="The kind of thing it points out"
-      note="From a test in Claude Code on a small email app, shortened. Yours will differ."
+      shots={[SHOTS.ask, SHOTS.answer]}
+      caption="Our test: a screenshot of a chat window, then the start of its answer. Yours will differ."
     />,
     <FixFigure
       key="4"
@@ -69,7 +82,7 @@ function Row({ number, figure, children }: { number?: number; figure: ReactNode;
     <div className="grid items-start gap-loose border-b border-border-primary py-10 last:border-b-0 last:pb-0 @3xl:grid-cols-2 @3xl:gap-12">
       <div className="flex gap-default">
         {number && (
-          <span aria-hidden="true" className="type-h3 w-5 shrink-0 text-text-secondary">
+          <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-secondary text-sm font-semibold text-text-primary">
             {number}
           </span>
         )}

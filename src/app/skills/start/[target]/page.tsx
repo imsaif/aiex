@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { notFound } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -52,8 +53,22 @@ export default async function SkillPackStartPage({ params }: Props) {
       <LearnShell sidebar={<LearnSidebar active="skills" />}>
         <div className="space-y-16 pb-20 pt-16">
           <header>
+            <Link
+              href="/skills"
+              prefetch={false}
+              className="mb-default inline-flex items-center gap-1.5 rounded-input text-sm font-medium text-text-secondary transition-colors hover:text-text-primary hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary"
+            >
+              <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
+              All skills
+            </Link>
             <h1 className="type-h1 text-balance text-text-primary">{guide.pageTitle}</h1>
             <p className="type-body mt-snug text-text-secondary">{guide.pageIntro}</p>
+            <p className="mt-tight text-sm text-text-secondary">
+              Part of the course{' '}
+              <Link href="/guides/ai-ux-skills-guide" prefetch={false} className={linkClass}>
+                Using AI UX Skills
+              </Link>
+            </p>
             <nav
               aria-label="Where you will use the skills"
               className="mt-roomy flex flex-wrap gap-x-loose border-b border-border-primary"
@@ -84,7 +99,10 @@ export default async function SkillPackStartPage({ params }: Props) {
           ) : (
             <>
               <PackWalkthrough target={guide.target} />
-              <Part title="Keep using it" note="If it skips the skills, ask for them by name">
+              <Part
+                title="Keep using it"
+                note={guide.target === 'claude' ? 'Start with /aiux-skills to be sure it uses them' : 'If it skips the skills, ask for them by name'}
+              >
                 <div className="grid gap-loose pt-loose @2xl:grid-cols-3">
                   {MORE.map(({ title, say }) => (
                     <div key={title} className="space-y-tight">
