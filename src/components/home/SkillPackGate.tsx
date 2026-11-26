@@ -439,7 +439,7 @@ export function SkillPackGate({
               onClick={() => onDone?.()}
               className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
             >
-              Start my audit
+              Go to the audit
             </button>
           </div>
         </div>
@@ -538,7 +538,7 @@ export function SkillPackGate({
             }}
             className="text-sm font-medium text-text-primary underline underline-offset-4 hover:text-accent-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary rounded-input px-1 py-0.5"
           >
-            No thanks, start my audit
+            No thanks, take me to the audit
           </button>
         </div>
         </div>
