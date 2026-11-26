@@ -458,36 +458,40 @@ export function SkillPackGate({
         {onDismiss && <CloseButton onClick={onDismiss} />}
         <div className="grid md:grid-cols-2">
         <PackBand
+          large
           title="Help your AI tool design better AI products"
-          intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. Each one teaches it an AI UX pattern, like these:`}
-        >
-          <ul className="space-y-snug">
+          intro={`Add ${PATTERN_COUNT} skills to the AI tool you already use. It learns the patterns behind AI features people can trust, and checks your designs against them.`}
+        />
+
+        <div className="flex flex-col">
+        <div className="bg-tint-surface p-loose md:px-roomy md:pt-roomy">
+          <p className="mb-snug type-eyebrow font-semibold uppercase text-text-secondary">Like these</p>
+          <ul className="space-y-tight" aria-label="What the skills teach">
             {SKILL_CARDS.map(({ title, body, pattern, picture }) => (
-              <li key={title} className="flex overflow-hidden rounded-card bg-tint-card">
+              <li key={title} className="flex overflow-hidden rounded-card border border-border-primary bg-tint-card shadow-card">
                 {/* Dropped on phones, where three pictures push the form away. */}
                 <div
                   aria-hidden="true"
-                  className="hidden sm:flex w-40 shrink-0 flex-col items-start justify-center gap-1.5 bg-tint-panel p-snug [&_*]:text-xs"
+                  className="hidden sm:flex w-40 shrink-0 flex-col items-start justify-center gap-1.5 border-r border-border-primary bg-tint-panel p-snug [&_*]:text-xs"
                 >
                   {picture}
                 </div>
                 <div className="min-w-0 flex-1 p-default">
-                  <p className="text-sm font-semibold text-text-primary leading-snug">{title}</p>
+                  <h3 className="text-sm font-semibold text-text-primary leading-snug">{title}</h3>
                   <p className="text-sm text-text-secondary leading-snug">{body}</p>
                   <p className="mt-1 text-sm text-text-secondary">
-                    <span className="text-[0.625rem] font-bold tracking-widest">PATTERN</span>{' '}
-                    <span className="font-semibold text-text-primary">{pattern}</span>
+                    Pattern: <span className="font-semibold text-text-primary">{pattern}</span>
                   </p>
                 </div>
               </li>
             ))}
           </ul>
-        </PackBand>
+        </div>
 
-        <div className="flex flex-col p-loose md:p-roomy">
-        {/* Centred between the top and the skip link, so the form sits mid-column. */}
-        <div className="md:my-auto">
-        <p className="mb-roomy text-xl font-semibold text-text-primary">Get the skills, free</p>
+        <div className="flex flex-1 flex-col p-loose md:px-roomy">
+        {/* Sized to the three choices, so the email field and button line up
+            with them. The small print wraps inside that width instead. */}
+        <div className="inline-flex max-w-full flex-col self-start">
         <div>
           <TargetChooser
             value={chosen}
@@ -499,7 +503,7 @@ export function SkillPackGate({
           />
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-loose flex max-w-sm flex-col gap-snug">
+        <form onSubmit={handleSubmit} className="mt-default flex flex-col gap-snug">
           <label htmlFor="skill-pack-email" className="sr-only">
             Email address
           </label>
@@ -526,20 +530,21 @@ export function SkillPackGate({
         </form>
 
         {error && (
-          <p id="skill-pack-error" role="alert" className="mt-2 text-sm text-status-error">
+          <p id="skill-pack-error" role="alert" className="mt-2 w-0 min-w-full text-sm text-status-error">
             {error}
           </p>
         )}
 
-        <p id="skill-pack-terms" className="mt-3 max-w-sm text-sm text-text-secondary">
+        <p id="skill-pack-terms" className="mt-3 w-0 min-w-full text-sm text-text-secondary">
           Free and MIT licensed. Includes the daily newsletter, unsubscribe anytime.
         </p>
+        </div>
 
         {/* The no-email path, stated rather than implied. Someone who does not
             want to hand over an address should be able to see that they do not
             have to, without having to guess that the dialog is dismissible. */}
         </div>
-        <div className="mt-loose pt-default text-center">
+        <div className="px-loose pb-loose text-center md:px-roomy">
           <button
             type="button"
             onClick={() => {

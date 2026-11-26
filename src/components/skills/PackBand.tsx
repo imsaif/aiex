@@ -15,6 +15,7 @@ export function PackBand({
   action,
   children,
   className = '',
+  large = false,
 }: {
   title: string;
   intro: string;
@@ -25,12 +26,16 @@ export function PackBand({
   /** Shown under the intro, inside the band. */
   children?: ReactNode;
   className?: string;
+  /** A large headline centred in a tall band, for side-by-side layouts. */
+  large?: boolean;
 }) {
   return (
-    <div className={`relative overflow-hidden bg-band-surface px-loose pb-loose pt-default md:px-roomy md:pb-10 md:pt-loose ${className}`}>
+    <div className={`relative flex flex-col overflow-hidden bg-band-surface px-loose pb-loose pt-default md:px-roomy md:pb-10 md:pt-loose ${className}`}>
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-24 top-12 hidden sm:block h-48 w-72 bg-[url('/images/newsletter/cta-grid.png')] bg-contain bg-no-repeat opacity-70"
+        className={`pointer-events-none absolute hidden sm:block bg-[url('/images/newsletter/cta-grid.png')] bg-contain bg-no-repeat ${
+          large ? '-bottom-8 -right-16 h-72 w-[27rem]' : '-right-24 top-12 h-48 w-72 opacity-70'
+        }`}
       />
       <div className="relative flex items-center justify-between gap-snug border-b border-band-border pb-snug">
         <p className="flex items-center gap-tight text-sm font-bold text-text-on-band">
@@ -41,16 +46,18 @@ export function PackBand({
           {action}
         </div>
       </div>
+      <div className={large ? 'md:my-auto md:py-roomy' : ''}>
       <h2
         id={headingId}
         ref={headingRef}
         tabIndex={headingRef ? -1 : undefined}
-        className="relative mt-loose max-w-lg scroll-mt-8 text-balance text-2xl sm:text-[1.75rem] font-extrabold leading-[1.12] tracking-tight text-text-on-band focus:outline-none"
+        className={`relative mt-loose max-w-lg scroll-mt-8 text-balance font-extrabold leading-[1.1] tracking-tight text-text-on-band focus:outline-none ${large ? 'text-3xl md:text-[2.6rem]' : 'text-2xl sm:text-[1.75rem]'}`}
       >
         {title}
       </h2>
-      <p className="relative mt-snug max-w-lg text-sm sm:text-base text-text-on-band-muted">{intro}</p>
+      <p className={`relative mt-snug max-w-lg text-text-on-band-muted ${large ? 'text-base md:text-lg' : 'text-sm sm:text-base'}`}>{intro}</p>
       {children && <div className="relative mt-roomy">{children}</div>}
+      </div>
     </div>
   );
 }
