@@ -93,12 +93,12 @@ function Row({ number, figure, children }: { number?: number; figure: ReactNode;
   );
 }
 
-function StepBody({ step }: { step: PackStep }) {
+function StepBody({ step, target, number }: { step: PackStep; target: PackTarget; number: number }) {
   return (
     <>
       <h3 className="type-h3 text-text-primary">{step.title}</h3>
       <p className="type-body text-text-secondary">{step.text}</p>
-      {step.say && <SayLine text={step.say} strong />}
+      {step.say && <SayLine text={step.say} strong track={{ where: 'walkthrough', target, step: number }} />}
       {step.then && <p className="type-body text-text-secondary">{step.then}</p>}
       {step.help?.map((h) => (
         <details key={h.question} className="text-sm text-text-secondary">
@@ -132,7 +132,7 @@ export function PackWalkthrough({ target }: { target: Exclude<PackTarget, 'unsur
         <Part key={title} title={title} note={note}>
           {steps.slice(from, to).map((step, i) => (
             <Row key={step.title} number={from + i + 1} figure={FIGURES[target][from + i]}>
-              <StepBody step={step} />
+              <StepBody step={step} target={target} number={from + i + 1} />
             </Row>
           ))}
         </Part>

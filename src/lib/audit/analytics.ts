@@ -80,6 +80,11 @@ export const AUDIT_EVENT_NAMES = [
   'skills_gate_pack_downloaded',
   // Opened the full walkthrough after downloading.
   'skills_walkthrough_opened',
+  // Pressed Copy on a line to say to their AI tool (dialog, walkthrough or
+  // pattern page). The clearest sign someone went on to install, not just download.
+  'skills_say_copied',
+  // After the download, chose to audit a screenshot on the site instead.
+  'skills_gate_audit_chosen',
   // Newly instrumented CTAs (previously untracked)
   'audit_inspect_prompt_toggled',
   'audit_screenshot_locations_opened',
