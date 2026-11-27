@@ -41,6 +41,8 @@ function readme(): string {
 
   return `# AIUX Skills for Claude Code
 
+[![Skills Directory security grade](https://www.skillsdirectory.com/api/skills/imsaif-aiux-human-in-the-loop/badge)](https://www.skillsdirectory.com/skills/imsaif-aiux-human-in-the-loop)
+
 ${patterns.length} Claude Code skills, one per AI UX design pattern, generated from [aiuxdesign.guide](${SITE}/?${UTM}).
 
 A skill is persistent design guidance for your coding agent: install it once and it triggers on its own whenever your work matches, with no prompting. Each skill carries one pattern's judgment (the symptoms it applies to and the moves that make it real), distilled from how 50+ shipped AI products design their experiences.
