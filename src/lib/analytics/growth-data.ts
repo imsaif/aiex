@@ -17,27 +17,12 @@ import {
   buildFormTable,
   type DeviceRow,
   emailDeviceStats,
-  withoutPostSendReadings,
   withoutScannerEventsWhere,
 } from './growth';
 import { sendTimesSince } from './send-times';
 
 const DAY = 86_400_000;
 const WINDOW_DAYS = 28;
-
-// The eight URLs the nightly speed test loads. Rows written before the robot
-// filter shipped (2026-10) can only be told apart by their tell-tale speed:
-// pages "loading" in under 80 ms. These age out of the 30-day vitals log.
-const SPEED_TEST_PATHS = [
-  '/',
-  '/audit',
-  '/news',
-  '/agent-readability-audit-kit',
-  '/patterns/conversational-ui',
-  '/patterns/graceful-handoff',
-  '/patterns/explainable-ai',
-  '/patterns/progressive-disclosure',
-];
 
 /** Real people only: not the owner, not test sessions, not robots logged before the filter. */
 export const realPeople: Prisma.UiEventWhereInput = {
@@ -56,7 +41,8 @@ export const realPeople: Prisma.UiEventWhereInput = {
 
 export interface GrowthData {
   since: Date;
-  weeks: Array<{ start: Date; loads: number }>;
+  /** Real page views per week, oldest first. */
+  weeks: Array<{ start: Date; views: number }>;
   subscribers: { joined: number; left: number; active: number };
   skillPacks: number;
   auditsFinished: number;
@@ -76,11 +62,7 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
   const weekAgo = new Date(now.getTime() - 7 * DAY);
   const sentAt = await sendTimesSince(since);
 
-  const [loads, joined, left, active, conversions, pageViews, firstView, lastDelivery, forms, formsActive, emailClicks] = await Promise.all([
-    prisma.webVitalMetric.findMany({
-      where: { metric: 'TTFB', createdAt: { gte: since } },
-      select: { path: true, value: true, createdAt: true },
-    }),
+  const [joined, left, active, conversions, pageViews, firstView, lastDelivery, forms, formsActive, emailClicks] = await Promise.all([
     prisma.subscriber.count({ where: { subscribedAt: { gte: weekAgo } } }),
     prisma.subscriber.count({ where: { unsubscribedAt: { gte: weekAgo } } }),
     prisma.subscriber.count({ where: { active: true } }),
@@ -90,7 +72,7 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
     }),
     prisma.uiEvent.findMany({
       where: { ...realPeople, ...withoutScannerEventsWhere(sentAt), createdAt: { gte: since }, name: 'page_viewed' },
-      select: { name: true, properties: true },
+      select: { name: true, properties: true, createdAt: true },
     }),
     prisma.uiEvent.findFirst({ where: { name: 'page_viewed' }, orderBy: { createdAt: 'asc' }, select: { createdAt: true } }),
     prisma.uiEvent.findFirst({
@@ -105,11 +87,12 @@ export async function getGrowthData(now = new Date()): Promise<GrowthData> {
     prisma.uiEvent.findMany({ where: { name: 'email_clicked', createdAt: { gte: since } }, select: { name: true, properties: true } }),
   ]);
 
-  const realLoads = withoutPostSendReadings(loads, sentAt).filter((l) => !(SPEED_TEST_PATHS.includes(l.path) && l.value < 80));
+  // Counted from page_viewed events, not speed readings: these carry a user
+  // agent, so robots are filtered out (a crawler once faked a traffic slump).
   const weeks = [3, 2, 1, 0].map((i) => {
     const start = new Date(now.getTime() - (i + 1) * 7 * DAY);
     const end = new Date(now.getTime() - i * 7 * DAY);
-    return { start, loads: realLoads.filter((l) => l.createdAt >= start && l.createdAt < end).length };
+    return { start, views: pageViews.filter((v) => v.createdAt >= start && v.createdAt < end).length };
   });
 
   let email: GrowthData['email'] = { delivered: 0, clickers: 0, rate: null, subject: null, sentAt: null };

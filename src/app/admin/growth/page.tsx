@@ -42,9 +42,9 @@ export default async function GrowthPage() {
   }
 
   const [d, g] = await Promise.all([getGrowthData(), getGuidebotUsage()]);
-  const lastWeek = d.weeks[3].loads;
-  const prevWeek = d.weeks[2].loads;
-  const maxLoads = Math.max(1, ...d.weeks.map((w) => w.loads));
+  const lastWeek = d.weeks[3].views;
+  const prevWeek = d.weeks[2].views;
+  const maxViews = Math.max(1, ...d.weeks.map((w) => w.views));
   const emailReaders = d.emailDevices.reduce((n, r) => n + r.readers, 0);
   const maxForm = Math.max(1, ...d.byForm.map((f) => f.joined));
   const formTotal = d.byForm.reduce((n, f) => n + f.joined, 0);
@@ -70,7 +70,7 @@ export default async function GrowthPage() {
       </section>
 
       <div className="mb-default grid grid-cols-1 gap-default sm:grid-cols-2 lg:grid-cols-5">
-        <Stat label="Page loads" value={fmt(lastWeek)} note={`Last 7 days · ${fmt(prevWeek)} the week before`} />
+        <Stat label="Page views" value={fmt(lastWeek)} note={`Last 7 days · ${fmt(prevWeek)} the week before`} />
         <Stat
           label="New subscribers"
           value={`${d.subscribers.joined - d.subscribers.left >= 0 ? '+' : ''}${d.subscribers.joined - d.subscribers.left}`}
@@ -251,13 +251,12 @@ export default async function GrowthPage() {
 
       <div className="grid grid-cols-1 gap-default lg:grid-cols-2">
         <Card>
-          <h2 className="text-lg font-bold text-text-primary">Page loads per week</h2>
-          <p className="mt-1 text-sm text-text-secondary">Full page loads; clicks between pages are not in this chart.</p>
+          <h2 className="text-lg font-bold text-text-primary">Page views per week</h2>
           <div className="mt-default flex h-40 items-end gap-default border-b border-border-primary">
             {d.weeks.map((w) => (
               <div key={w.start.toISOString()} className="flex h-full flex-1 flex-col items-center justify-end">
-                <span className="mb-1 text-xs font-bold text-text-primary">{fmt(w.loads)}</span>
-                <div className="w-full rounded-t bg-accent-primary" style={{ height: `${Math.round((w.loads / maxLoads) * 100)}%` }} />
+                <span className="mb-1 text-xs font-bold text-text-primary">{fmt(w.views)}</span>
+                <div className="w-full rounded-t bg-accent-primary" style={{ height: `${Math.round((w.views / maxViews) * 100)}%` }} />
               </div>
             ))}
           </div>
